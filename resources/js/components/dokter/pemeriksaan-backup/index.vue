@@ -1,0 +1,541 @@
+<template>
+<div class="inner" ref="roottable">
+	<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
+	<div class="tab-content">
+		<div class="content-tab-in" v-if="tab.content.today">
+			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+		</div>
+		<div class="content-tab-in" v-else-if="tab.content.triase">
+			<Datatable ref="DatatableTriase" :module="moduletriase" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+		</div>
+		<div class="content-tab-in" v-else="tab.content.pending">
+			<Datatable ref="DatatablePending" :module="modulepending" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+		</div>
+	</div>
+	<Loader ref="Loader"></Loader>
+</div>
+<FormDetail ref="FormDetail" @dialog="dialog" @parsingForm="parsingForm"></FormDetail>
+<FormCetakan ref="FormCetakan" @dialog="dialog" @parsingForm="parsingForm"></FormCetakan>
+<FormHistori ref="FormHistori"></FormHistori>
+<FormHistoriDokter ref="FormHistoriDokter"></FormHistoriDokter>
+</template>
+
+<script>
+var vm;
+import { defineAsyncComponent } from 'vue';
+import { nullAndZero, datename } from '../../../module/Manipulation.js';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+import Swal from 'sweetalert2';
+export default {
+	emits: ["titletrigger", "repatch"],
+	beforeUnmount:function() {},
+	components: { toast, Swal, 
+		FormDetail: defineAsyncComponent(() => import('./FormDetail.vue')),
+		FormCetakan: defineAsyncComponent(() => import('./FormCetakan.vue')),
+		FormHistori: defineAsyncComponent(() => import('./FormHistori.vue')),
+		FormHistoriDokter: defineAsyncComponent(() => import('./FormHistoriDokter.vue')),
+		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+	},
+	created: function () {},
+	mounted: function () {
+		vm = this;
+		setTimeout(() => { this.titletrigger(); }, 250);
+		vm.loadmain();
+	},
+	data: function () { return {
+		uri: 'detail',
+		position: '',
+		attach: {
+			link : {
+				list: '/dokter/pemeriksaan/list',
+				add: '/dokter/pemeriksaan/add',
+				detail: '/dokter/pemeriksaan/detail',
+				cetakan: '/dokter/pemeriksaan/cetakan',
+				suratistirahat: '/dokter/pemeriksaan/suratistirahat',
+				suratkonsul: '/dokter/pemeriksaan/suratkonsul',
+				suratbalasankonsul: '/dokter/pemeriksaan/suratbalasankonsul',
+				resepkacamata: '/dokter/pemeriksaan/resepkacamata',
+				histori: '/rawatjalan/pemeriksaan/histori',
+				historidokter: '/dokter/pemeriksaan/histori',
+				call: '/dokter/pemeriksaan/call',
+				listpending: '/dokter/pemeriksaan/listpending',
+				listtriase: '/dokter/pemeriksaan/listtriase',
+			}, url: '', data: null
+		},
+		column: [
+			{ value: 'no_pendaftaran', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
+			{ value: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
+			{ value: 'status_dokter', label: 'status', type: 'text', search: false, close: false, button: false },
+			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
+		],
+		columnpending: [
+			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
+			{ value: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'text', search: true, close: false, button: false },
+			{ value: 'tanggal_lahir', label: 'Tanggal Lahir', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
+			{ value: 'berkebutuhan_khusus', label: 'Triase?', type: 'text', search: false, close: false, button: false },
+			{ value: 'status_dokter', label: 'status', type: 'text', search: false, close: false, button: false },
+			{ value: 'btnhtmlpending', label: '', type: 'text', search: false, close: false, button: false }
+		],
+		columntriase: [
+			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
+			{ value: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'text', search: true, close: false, button: false },
+			{ value: 'tanggal_lahir', label: 'Tanggal Lahir', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
+			{ value: 'status_dokter', label: 'status', type: 'text', search: false, close: false, button: false },
+			{ value: 'btnhtmltriase', label: '', type: 'text', search: false, close: false, button: false },
+		],
+		module: { data: [], column: [], total: 0, ispaging: true },
+		modulepending: { data: [], column: [], total: 0, ispaging: true },
+		moduletriase: { data: [], column: [], total: 0, ispaging: true },
+		tab: {
+			button: [
+				{ value: 'today', label: 'Pasien Rawat Jalan', class: 'tab-active' },
+				{ value: 'triase', label: 'Pasien Triase', class: 'tab-no-active' },
+				{ value: 'pending', label: 'Pasien Pending', class: 'tab-no-active' },
+			],
+			content: { today: true, triase: false, pending: false }
+		},
+		posisieksternal: 'today'
+	}},
+	methods: {
+
+		/*************************************************************************************************************************
+		* Bagian fungsi yang opsional untuk manipulasi data dan string
+		*************************************************************************************************************************/
+		nullAndZero, datename,
+
+		changesTab: function (values, index, classes) {
+			if (classes != 'tab-active') {
+				for (let i = 0; i < vm.tab.button.length; i++) { 
+					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; 
+				}
+				vm.tab.button[index].class = 'tab-active';
+				vm.tab.content[values] = true;
+
+				if (values == 'pending') {
+					vm.loadpending();
+					vm.posisieksternal = 'pending';
+				}
+				else if (values == 'triase') {
+					vm.loadtriase();
+					vm.posisieksternal = 'triase';
+				}
+				else {
+					vm.posisieksternal = 'today';
+					vm.loadmain();
+				}
+			}
+		},
+
+		/*************************************************************************************************************************
+		* Bagian fungsi untuk pemrosesan table
+		*************************************************************************************************************************/
+
+		btnhtml:function(_item, _index) {
+			let str = [
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'bell', color: 'btn-info', posisi: 'panggil', tooltip: 'Panggil Pasien', item: _item, index: _index, show: true },
+				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Histori RO', item: _item, index: _index, show: true },
+				{ icon: 'book', color: 'btn-success', posisi: 'historidokter', tooltip: 'Histori Dokter', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-info', posisi: 'cetakan', tooltip: 'Data Cetakan', item: _item, index: _index, show: true },
+			]
+			return str;
+		},
+
+		btnhtmlpending:function(_item, _index) {
+			let str = [
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Histori RO', item: _item, index: _index, show: true },
+				{ icon: 'book', color: 'btn-success', posisi: 'historidokter', tooltip: 'Histori Dokter', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-info', posisi: 'cetakan', tooltip: 'Data Cetakan', item: _item, index: _index, show: true },
+			]
+			return str;
+		},
+
+		btnhtmltriase:function(_item, _index) {
+			let str = [
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Histori RO', item: _item, index: _index, show: true },
+				{ icon: 'book', color: 'btn-success', posisi: 'historidokter', tooltip: 'Histori Dokter', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-info', posisi: 'cetakan', tooltip: 'Data Cetakan', item: _item, index: _index, show: true },
+			]
+			return str;
+		},
+
+		nopendaftaran:function(data) {
+			if (data.status_antrian_dokter == 'active') {
+				return data.no_pendaftaran + '<div class="badge badge-success">'+ data.status_antrian_dokter +'</div>';
+			}
+			else {
+				return data.no_pendaftaran;
+			}
+		},
+
+		statusdokter:function(data) {
+			if (data.status_dokter == 'Belum Diperiksa') {
+				return '<div class="badge badge-danger">'+data.status_dokter+'</div>';
+			}
+			return '<div class="badge badge-success">'+data.status_dokter+'</div>'
+		},
+
+		converter: function (data, index, column, identity) {
+			let _tmp = '';
+			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', style: 'width: 240px' } }
+			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'status_dokter') { _tmp = { value: vm.statusdokter(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
+			else { _tmp = { value: column, ishtml: 'text', style: '' } }
+			return _tmp != '' ? _tmp : 'empty';
+		},
+
+		converterpending: function (data, index, column, identity) {
+			let _tmp = '';
+			if (identity == 'btnhtmlpending') { _tmp = { value: vm.btnhtmlpending(data, index), ishtml: 'button', style: 'width: 200px' } }
+			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'status_dokter') { _tmp = { value: vm.statusdokter(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
+			else { _tmp = { value: column, ishtml: 'text', style: '' } }
+			return _tmp != '' ? _tmp : 'empty';
+		},
+
+		convertertriase: function (data, index, column, identity) {
+			let _tmp = '';
+			if (identity == 'btnhtmltriase') { _tmp = { value: vm.btnhtmltriase(data, index), ishtml: 'button', style: 'width: 200px' } }
+			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else { _tmp = { value: column, ishtml: 'text', style: '' } }
+			return _tmp != '' ? _tmp : 'empty';
+		},
+
+		tablebutton:function(posisi, data, index) {
+			if (posisi == 'detail') {
+				vm.$refs.FormDetail.aturulang();
+				vm.position = "detaildata";
+				vm.$refs.FormDetail.show('detaildata', 'Detail Data', data.uuid);
+				setTimeout(() => { vm.loadingModal('formdetail'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.detail;
+				vm.executions();
+			}
+			else if (posisi == 'cetakan') {
+				vm.$refs.FormCetakan.aturulang();
+				vm.position = "cetakandata";
+				vm.$refs.FormCetakan.show('cetakandata', 'Halaman Cetakan Data', data.uuid);
+				setTimeout(() => { vm.loadingModal('formcetakan'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.cetakan;
+				vm.executions();
+			}
+			else if (posisi == 'histori') {
+				vm.$refs.FormHistori.aturulang();
+				vm.position = "historidata";
+				vm.$refs.FormHistori.show('historidata', 'Histori Pemeriksaan RO', data.uuid);
+				setTimeout(() => { vm.loadingModal('formhistori'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.histori;
+				vm.executions();
+			}
+			else if (posisi == 'historidokter') {
+				vm.$refs.FormHistoriDokter.aturulang();
+				vm.position = "historidokter";
+				vm.$refs.FormHistoriDokter.show('historidokter', 'Histori Pemeriksaan Dokter', data.uuid);
+				setTimeout(() => { vm.loadingModal('formhistoridokter'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.historidokter;
+				vm.executions();
+			}
+			else if (posisi == 'panggil') {
+				vm.position = 'call';
+				vm.attach.url = vm.attach.link.call;
+				console.log(data)
+				vm.attach.data = new FormData();
+				let number = data.no_pendaftaran.split("-");
+				number = parseInt(number[1]);
+				vm.attach.data.append('number', number);
+				vm.attach.data.append('ruang_poliklinik', data.ruang_poliklinik);
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.data.append('pengguna_uuid', data.pengguna_uuid);
+				if (data.ruang_poliklinik != 0) {
+					vm.dialog('Yakin ingin memanggil nomor antrian pasien ini.', 'Ya, panggil', 'call');
+				}
+				
+			}
+		},
+
+		loadingModal: function (position) { 
+			if (position == 'formdetail') { vm.$refs.FormDetail.loaderprocess();  }
+			else if (position == 'formcetakan') { vm.$refs.FormCetakan.loaderprocess();  }
+			else if (position == 'formhistori') { vm.$refs.FormHistori.loaderprocess();  }
+			else if (position == 'formhistoridokter') { vm.$refs.FormHistoriDokter.loaderprocess();  }
+		},
+
+		parsingForm:function(data, key) {
+			vm.attach.data = data;
+			if (key == 'add') { vm.position = 'updatedata'; vm.attach.url = vm.attach.link.add; }
+			else if (key == 'suratistirahat') { vm.position = 'suratistirahat'; vm.attach.url = vm.attach.link.suratistirahat; }
+			else if (key == 'suratkonsul') { vm.position = 'suratkonsul'; vm.attach.url = vm.attach.link.suratkonsul; }
+			else if (key == 'suratbalasankonsul') { vm.position = 'suratbalasankonsul'; vm.attach.url = vm.attach.link.suratbalasankonsul; }
+			else if (key == 'resepkacamata') { vm.position = 'resepkacamata'; vm.attach.url = vm.attach.link.resepkacamata; }
+		},
+
+		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
+		setDatatablepending: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnpending.length; j++) { col.push(vm.converterpending(data[i], i, data[i][vm.columnpending[j].value] ? data[i][vm.columnpending[j].value] :vm.columnpending[j].value, vm.columnpending[j].value)); } temporer.push(col); } vm.modulepending.data = temporer; vm.modulepending.total = total; return temporer; },
+		setDatatabletriase: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columntriase.length; j++) { col.push(vm.convertertriase(data[i], i, data[i][vm.columntriase[j].value] ? data[i][vm.columntriase[j].value] :vm.columntriase[j].value, vm.columntriase[j].value)); } temporer.push(col); } vm.moduletriase.data = temporer; vm.moduletriase.total = total; return temporer; },
+		tableload:function(pos = 'main') { 
+			if (pos == 'main') {
+				vm.attach.url = vm.attach.link.list; 
+				vm.attach.data = new FormData(); 
+				vm.attach.data.append('search', ''); 
+				vm.attach.data.append('column', ''); 
+				vm.attach.data.append('page', 1); 
+			}
+			else if (pos == 'triase') {
+				vm.attach.url = vm.attach.link.listtriase; 
+				vm.attach.data = new FormData(); 
+				vm.attach.data.append('search', ''); 
+				vm.attach.data.append('column', ''); 
+				vm.attach.data.append('page', 1);
+			}
+			else {
+				vm.attach.url = vm.attach.link.listpending; 
+				vm.attach.data = new FormData(); 
+				vm.attach.data.append('search', ''); 
+				vm.attach.data.append('column', ''); 
+				vm.attach.data.append('page', 1); 
+			}
+			
+			vm.executions(); 
+		},
+		tablereload:function(data = new FormData(), pos = 'main') { 
+			if (vm.posisieksternal == 'pending') {
+				if (pos == 'outer') {
+					vm.$refs.DatatablePending.skeleton(); 
+				}
+				vm.attach.url = vm.attach.link.listpending; 
+				vm.attach.data = data; 
+			}
+			else if (vm.posisieksternal == 'triase') {
+				if (pos == 'outer') {
+					vm.$refs.DatatableTriase.skeleton(); 
+				}
+				vm.attach.url = vm.attach.link.listtriase; 
+				vm.attach.data = data; 
+			}
+			else {
+				if (pos == 'outer') {
+					vm.$refs.Datatable.skeleton(); 
+				}
+				vm.attach.url = vm.attach.link.list; 
+				vm.attach.data = data; 
+			}
+			vm.position = 'externaltable'; 
+			vm.executions();
+		},
+
+		/*************************************************************************************************************************
+		* Bagian fungsi untuk pemrosesan message, fungsi untuk error dan success
+		*************************************************************************************************************************/
+
+		loadmain: () => { vm.position = 'loadmain'; vm.firstloader(); vm.tableload(); },
+
+		loadpending:function() {
+			vm.position = 'loadpending'; 
+			vm.firstloader(); 
+			vm.tableload('pending');
+		},
+
+		loadtriase:function() {
+			vm.position = 'loadtriase'; 
+			vm.firstloader(); 
+			vm.tableload('triase');
+		},
+
+		gagal: function (error) {
+			if (vm.$debugs) { console.log(error.response); } let active = 0;
+			vm.message('error', 1);
+			if (vm.position == 'loadmain') { vm.firstloader(); active = 1; }
+			else if (vm.position == 'loadpending') { vm.firstloader(); active = 1; }
+			else if (vm.position == 'loadtriase') { vm.firstloader(); active = 1; }
+			else if (vm.position == 'externaltable') { 
+				if (vm.posisieksternal='pending') {
+					vm.$refs.DatatablePending.skeleton(); 
+					vm.$refs.DatatablePending.backpage(); 
+				}
+				else if (vm.posisieksternal='triase') {
+					vm.$refs.DatatableTriase.skeleton(); 
+					vm.$refs.DatatableTriase.backpage(); 
+				}
+				else {
+					vm.$refs.Datatable.skeleton(); 
+					vm.$refs.Datatable.backpage(); 
+				} 
+			}
+			else if (vm.position == 'call') { vm.$refs.Datatable.skeleton(); }
+			else if (vm.position == 'updatedata') { vm.loadingModal('formdetail'); }
+			else if (vm.position == 'suratistirahat') { vm.loadingModal('formcetakan'); }
+			else if (vm.position == 'suratkonsul') { vm.loadingModal('formcetakan'); }
+			else if (vm.position == 'suratbalasankonsul') { vm.loadingModal('formcetakan'); }
+			else if (vm.position == 'resepkacamata') { vm.loadingModal('formcetakan'); }
+			else if (vm.position == 'detaildata') { vm.loadingModal('formdetail'); vm.$refs.FormDetail.hide();  }
+			else if (vm.position == 'cetakandata') { vm.loadingModal('formcetakan'); vm.$refs.FormCetakan.hide();  }
+			else if (vm.position == 'historidata') { vm.loadingModal('formhistori'); vm.$refs.FormHistori.hide();  }
+			else if (vm.position == 'historidokter') { vm.loadingModal('formhistoridokter'); vm.$refs.FormHistoriDokter.hide();  }
+			
+			/* Bagian ini tidak perlu diubah */
+			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
+		},
+
+		berhasil: function (response) {
+			if (vm.$debugs) { console.log(response.data); } let active = 1;
+			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
+	
+			if (vm.position == 'loadmain') { 
+				vm.posisieksternal='today';
+				vm.firstloader();
+				vm.$refs.Datatable.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total); 
+				vm.$refs.Datatable.paging(); 
+				active = 0;
+			}
+			else if (vm.position == 'loadpending') { 
+				vm.posisieksternal='pending';
+				vm.firstloader();
+				vm.$refs.DatatablePending.update(vm.columnpending, vm.setDatatablepending(response.data.data, response.data.total), response.data.total); 
+				vm.$refs.DatatablePending.paging(); 
+				active = 0;
+			}
+			else if (vm.position == 'loadtriase') { 
+				vm.posisieksternal='triase';
+				vm.firstloader();
+				vm.$refs.DatatableTriase.update(vm.columntriase, vm.setDatatabletriase(response.data.data, response.data.total), response.data.total); 
+				vm.$refs.DatatableTriase.paging(); 
+				active = 0;
+			}
+			else if (vm.position == 'externaltable') { 
+
+				if (vm.posisieksternal=='pending') {
+					vm.$refs.DatatablePending.update('', vm.setDatatablepending(response.data.data, response.data.total), response.data.total); 
+					vm.$refs.DatatablePending.skeleton(); 
+					vm.$refs.DatatablePending.paging(); 
+					active = 0;
+				}
+				else if (vm.posisieksternal=='triase') {
+					vm.$refs.DatatableTriase.update('', vm.setDatatabletriase(response.data.data, response.data.total), response.data.total); 
+					vm.$refs.DatatableTriase.skeleton(); 
+					vm.$refs.DatatableTriase.paging(); 
+					active = 0;
+				}
+				else {
+					vm.$refs.Datatable.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total); 
+					vm.$refs.Datatable.skeleton(); 
+					vm.$refs.Datatable.paging(); 
+					active = 0;
+				}
+
+				
+			}
+			else if (vm.position == 'call') { 
+				vm.tablereload();
+				active = 0;
+			}
+			else if (vm.position == 'detaildata') {
+				vm.$refs.FormDetail.setdataform(response); 
+				vm.position = "updatedata"; 
+				active = 0; 
+			}
+			else if (vm.position == 'cetakandata') {
+				vm.$refs.FormCetakan.setdataform(response); 
+				vm.position = "updatedata"; 
+				active = 0; 
+			}
+			else if (vm.position == 'historidata') {
+				vm.$refs.FormHistori.setdataform(response); 
+				//vm.position = "updatedata"; 
+				active = 0; 
+			}
+			else if (vm.position == 'historidokter') {
+				vm.loadingModal('formhistoridokter');
+				vm.$refs.FormHistoriDokter.setdataform(response); 
+				//vm.position = "updatedata"; 
+				active = 0; 
+			}
+			else if (vm.position == 'updatedata') {
+				vm.loadingModal('formdetail');
+				vm.$refs.FormDetail.hide(); 
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
+			}
+			else if (vm.position == 'suratistirahat') {
+				vm.loadingModal('formcetakan');
+				vm.$refs.FormCetakan.setopentab(response, 'suratistirahat'); 
+			}
+			else if (vm.position == 'suratkonsul') {
+				vm.loadingModal('formcetakan');
+				vm.$refs.FormCetakan.setopentab(response, 'suratkonsul'); 
+			}
+			else if (vm.position == 'suratbalasankonsul') {
+				vm.loadingModal('formcetakan');
+				vm.$refs.FormCetakan.setopentab(response, 'suratbalasankonsul'); 
+			}
+			else if (vm.position == 'resepkacamata') {
+				vm.loadingModal('formcetakan');
+				vm.$refs.FormCetakan.setopentab(response, 'resepkacamata'); 
+			}
+			vm.message('success', active);
+		},
+
+		message: function (position, active) {
+			if (position == 'error') {
+				if (vm.position == 'loadmain') { vm.notification('Data gagal dimuat.', 3000, position); }
+				else if (vm.position == 'loadpending') { vm.notification('Data gagal dimuat.', 3000, position); }
+				else if (vm.position == 'loadtriase') { vm.notification('Data gagal dimuat.', 3000, position); }
+				else if (vm.position == 'externaltable') { vm.notification('Datalist tabel gagal dimuat.', 3000, position); }
+				else if (vm.position == 'call') { vm.notification('Gagal memanggil antrian pasien.', 3000, position); }
+				else if (vm.position == 'updatedata') { vm.notification('Penambahan/Pembaharuan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'suratistirahat') { vm.notification('Cetakan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'suratkonsul') { vm.notification('Cetakan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'suratbalasankonsul') { vm.notification('Cetakan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'resepkacamata') { vm.notification('Cetakan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'detaildata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
+				else if (vm.position == 'cetakandata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
+				else if (vm.position == 'historidata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
+				else if (vm.position == 'historidokter') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
+			}
+			else if (position == 'success' && active == 1) {
+				if (vm.position == 'updatedata') { vm.notification('Penambahan/Pembaharuan data berhasil diproses.', 3000, position); }
+				else if (vm.position == 'call') { vm.notification('Antrian pasien berhasil dipanggil.', 3000, position); }
+				else if (vm.position == 'removedata') { vm.notification('Penghapusan data berhasil diproses.', 3000, position); }
+			}
+		},
+
+		runconfirm: function (posisi) {
+			if (posisi == 'formdetail') { vm.loadingModal('formdetail'); }
+			else if (posisi == 'removedata') { vm.$refs.Datatable.skeleton(); }
+			else if (posisi == 'call') { vm.$refs.Datatable.skeleton(); }
+			vm.executions();
+		},
+
+		/*************************************************************************************************************************
+		* Bagian fungsi yang wajib disertakan disetiap index dan tidak perlu diubah-ubah
+		*************************************************************************************************************************/
+		executions: function () { axios.post(vm.attach.url, vm.attach.data, { headers: { 'Content-Type': 'multipart/form-data' } }).then(function (response) { if (response.data.data == '419') { window.location.href = '/masuk'; } setTimeout(function(){ vm.berhasil(response); }, 750, this); }).catch(function (error){ setTimeout(function(){ vm.gagal(error); }, 750, this); }); },
+		dialog: function (_text, _confirm, posisi) { Swal.fire({ title:"Apakah Anda Yakin?", text:_text, icon:"warning", showCancelButton:!0, confirmButtonColor:"#1c84ee", cancelButtonColor:"#fd625e", confirmButtonText: _confirm, cancelButtonText:"Tidak, batal!" }).then(function(e){ if (e.isConfirmed) { vm.runconfirm(posisi); } }); },
+		notification: function (message, timer, position) { if (position == 'error') { toast.error(message, { rtl: false, autoClose: timer }); } else { toast.success(message, { rtl: false, autoClose: timer }); } },
+		loadPatch: function () { vm.firstloader(); },
+		firstloader: function () { const left = this.$refs.roottable.getBoundingClientRect(); vm.$refs.Loader.running(left); },
+		unloadPatch: function (position) { vm.firstloader(); if (position == 'success') { vm.notification('Data berhasil dipatch.', 3000, position); } else if (position == 'error') { vm.notification('Data gagal dipatch.', 3000, position); } },
+		titletrigger: function () { let title = vm.$router.currentRoute._value.meta.title; vm.$emit('titletrigger', title); }
+	}
+}
+</script>

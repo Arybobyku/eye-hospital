@@ -1,0 +1,657 @@
+<?php
+
+namespace App\Http\Controllers\Bedah;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
+use DB;
+use Cookie;
+use Crypt;
+use PenggunaHelp;
+
+use App\Models\Bedah;
+use App\Models\LayananPasien;
+use App\Models\Registrasi;
+use App\Models\PaketBedah;
+use App\Models\ListPaketBedahBaru;
+use App\Models\Resep;
+use App\Models\ResepRacikan;
+use App\Models\CaraBayarKamar;
+use App\Models\KamarInap;
+use App\Models\JadwalKontrol;
+use App\Models\CaraBayarTindakanRawatJalan;
+
+
+class PasienBedahCtrl extends Controller
+{
+
+	private $take = 15, $error = 'next';
+
+	public function __construct() {
+		date_default_timezone_set("Asia/Jakarta");
+		$this->error = PenggunaHelp::acl(); 
+	}
+
+	public function list(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data unit');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; $column = $request->column;
+
+		if ($request->search != "") {
+			$data = Registrasi::where('delete_soft', '=', 1)
+								->where($column, 'ilike', '%'.$search.'%')
+								// ->whereDate('bedah_selesai', '=', date('Y-m-d'))
+								->where('bedah_status', '!=', 'Selesai Dioperasi')
+								->where('apakah_paket', '=', 'Ya')
+								->where(function($q){
+									$q->where('status', '=', 'Kunjungan')
+											->orWhere('status', '=', 'Rawat Inap')
+											->orWhere('status', '=', 'Rawat Jalan');
+								})
+								->orderBy('id', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+			$total = Registrasi::where('delete_soft', '=', 1)
+								->where($column, 'ilike', '%'.$search.'%')
+								// ->whereDate('bedah_selesai', '=', date('Y-m-d'))
+								->where('bedah_status', '!=', 'Selesai Dioperasi')
+								->where('apakah_paket', '=', 'Ya')
+								->where(function($q){
+									$q->where('status', '=', 'Kunjungan')
+											->orWhere('status', '=', 'Rawat Inap')
+											->orWhere('status', '=', 'Rawat Jalan');
+								})
+								->orderBy('id', 'desc')->count();
+		}
+		else {
+			$data = Registrasi::where('delete_soft', '=', 1)
+									->where('apakah_paket', '=', 'Ya')
+									// ->whereDate('bedah_selesai', '=', date('Y-m-d'))
+									->where('bedah_status', '!=', 'Selesai Dioperasi')
+									->where(function($q){
+										$q->where('status', '=', 'Kunjungan')
+												->orWhere('status', '=', 'Rawat Inap')
+												->orWhere('status', '=', 'Rawat Jalan');
+									})
+									->orderBy('id', 'desc')
+									->skip($skip)->take($this->take)
+									->get();
+
+			$total = Registrasi::where('delete_soft', '=', 1)
+									->where('apakah_paket', '=', 'Ya')
+									->where('bedah_status', '!=', 'Selesai Dioperasi')
+									// ->whereDate('bedah_selesai', '=', date('Y-m-d'))
+									->where(function($q){
+										$q->where('status', '=', 'Kunjungan')
+												->orWhere('status', '=', 'Rawat Inap')
+												->orWhere('status', '=', 'Rawat Jalan');
+									})
+									->orderBy('id', 'desc')
+									->count();
+
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+	
+	}
+
+	public function listselesai(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data unit');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; $column = $request->column;
+
+		if ($request->search != "") {
+			$data = Registrasi::where('delete_soft', '=', 1)
+								->where($column, 'ilike', '%'.$search.'%')
+								// ->whereDate('bedah_selesai', '=', date('Y-m-d'))
+								->where('bedah_status', '=', 'Selesai Dioperasi')
+								->where('apakah_paket', '=', 'Ya')
+								->where(function($q){
+									$q->where('status', '=', 'Kunjungan')
+											->orWhere('status', '=', 'Rawat Inap')
+											->orWhere('status', '=', 'Rawat Jalan');
+								})
+								->orderBy('id', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+			$total = Registrasi::where('delete_soft', '=', 1)
+								->where($column, 'ilike', '%'.$search.'%')
+								// ->whereDate('bedah_selesai', '=', date('Y-m-d'))
+								->where('bedah_status', '=', 'Selesai Dioperasi')
+								->where('apakah_paket', '=', 'Ya')
+								->where(function($q){
+									$q->where('status', '=', 'Kunjungan')
+											->orWhere('status', '=', 'Rawat Inap')
+											->orWhere('status', '=', 'Rawat Jalan');
+								})
+								->orderBy('id', 'desc')->count();
+		}
+		else {
+			$data = Registrasi::where('delete_soft', '=', 1)
+									->where('apakah_paket', '=', 'Ya')
+									// ->whereDate('bedah_selesai', '=', date('Y-m-d'))
+									->where('bedah_status', '=', 'Selesai Dioperasi')
+									->where(function($q){
+										$q->where('status', '=', 'Kunjungan')
+												->orWhere('status', '=', 'Rawat Inap')
+												->orWhere('status', '=', 'Rawat Jalan');
+									})
+									->orderBy('id', 'desc')
+									->skip($skip)->take($this->take)
+									->get();
+
+			$total = Registrasi::where('delete_soft', '=', 1)
+									->where('apakah_paket', '=', 'Ya')
+									->where('bedah_status', '=', 'Selesai Dioperasi')
+									// ->whereDate('bedah_selesai', '=', date('Y-m-d'))
+									->where(function($q){
+										$q->where('status', '=', 'Selesai')
+												->orWhere('status', '=', 'Rawat Inap')
+												->orWhere('status', '=', 'Rawat Jalan');
+									})
+									->orderBy('id', 'desc')
+									->count();
+
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+	
+	}
+
+	public function listhistori(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data unit');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; $column = $request->column;
+
+		if ($request->search != "") {
+			$data = Registrasi::where('delete_soft', '=', 1)
+								->where($column, 'ilike', '%'.$search.'%')
+								->where('apakah_paket', '=', 'Ya')
+								->where('bedah_status', '=', 'Selesai Dioperasi')
+								->where(function($q){
+									$q->where('status', '=', 'Selesai');
+								})
+								->whereDate('bedah_selesai', '!=', date('Y-m-d'))
+								->orderBy('id', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+			$total = Registrasi::where('delete_soft', '=', 1)
+								->where($column, 'ilike', '%'.$search.'%')
+								->where('apakah_paket', '=', 'Ya')
+								->whereDate('bedah_selesai', '!=', date('Y-m-d'))
+								->where('bedah_status', '=', 'Selesai Dioperasi')
+								->where(function($q){
+									$q->where('status', '=', 'Selesai');
+								})
+								->orderBy('id', 'desc')->count();
+		}
+		else {
+			$data = Registrasi::where('delete_soft', '=', 1)
+									->where('apakah_paket', '=', 'Ya')
+									->whereDate('bedah_selesai', '!=', date('Y-m-d'))
+									->where('bedah_status', '=', 'Selesai Dioperasi')
+									->where(function($q){
+										$q->where('status', '=', 'Selesai');
+									})
+									->orderBy('id', 'desc')
+									->skip($skip)->take($this->take)
+									->get();
+
+			$total = Registrasi::where('delete_soft', '=', 1)
+									->where('apakah_paket', '=', 'Ya')
+									->whereDate('bedah_selesai', '!=', date('Y-m-d'))
+									->where('bedah_status', '=', 'Selesai Dioperasi')
+									->where(function($q){
+										$q->where('status', '=', 'Selesai');
+									})
+									->orderBy('id', 'desc')
+									->count();
+
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+	
+	}
+
+	public function proses(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		$data = Registrasi::where('uuid', '=', $request->uuid)->first();
+		if ($data) {
+			//PenggunaHelp::log('Menghapus data unit dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
+		}
+
+		$arr = array('bedah_status' => 'Sedang Dioperasi', 'bedah_mulai' => date('Y-m-d H:i:s'));
+		
+		try{
+			DB::beginTransaction();
+
+			$update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+			
+			DB::commit();
+
+			return response()->json(['data' => 'berhasil']);
+		}
+		catch(Exception $e){ 
+			DB::rollback(); 
+			return response()->json(['hasil' => 'gagal']);
+		}
+	}
+
+	public function selesai(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		$data = Registrasi::where('uuid', '=', $request->uuid)->first();
+		if ($data) {
+			//PenggunaHelp::log('Menghapus data unit dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
+		}
+
+		$arr = array('bedah_status' => 'Selesai Dioperasi', 'bedah_selesai' => date('Y-m-d H:i:s'));
+		
+		try{
+			DB::beginTransaction();
+
+			$registrasi = Registrasi::where('uuid', '=', $data->uuid)->update($arr);
+			
+			DB::commit();
+
+			return response()->json(['data' => 'berhasil']);
+		}
+		catch(Exception $e){ 
+			DB::rollback(); 
+			return response()->json(['hasil' => 'gagal']);
+		}
+	}
+
+	public function detail(Request $request) {
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		$data = Registrasi::where('uuid', '=', $request->uuid)->first();
+		$paket = PaketBedah::where('uuid', '=', $data->paket_bedah_uuid)->first();
+		$list_paket = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $data->paket_bedah_uuid)->get();
+		return response()->json(['paket' => $paket, 'list_paket' => $list_paket]);
+	}
+
+	public function getlayanan(Request $request) {
+		$data = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+		$layanan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
+								->where('layanan_uuid', '!=', 'obatan')
+								->where('jenis', '=', $request->jenis)->get();
+		return response()->json(['data' => $data, 'layanan' => $layanan]);
+	}
+
+	public function getresep(Request $request) {
+		$data = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+		$obat = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
+						->where('jenis', '=', $request->jenis)
+						->orderBy('id', 'desc')->get();
+
+		$obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)
+						->where('jenis', '=', $request->jenis)
+						->orderBy('id', 'desc')->get();
+		return response()->json(['data' => $data, 'obat' => $obat, 'obatracikan' => $obatracikan ]);
+	}
+
+	public function add(Request $request) {
+		$reg = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+
+		$item = new LayananPasien();
+		$item->uuid = Uuid::uuid4();
+		$item->registrasi_uuid = $request->registrasi_uuid;
+		$item->no_pendaftaran = $reg->no_pendaftaran;
+		$item->registrasi_kode = $reg->kode;
+		$item->registrasi_nomor = $reg->nomor;
+		$item->registrasi_jenis = $reg->jenis;
+		$item->pasien_uuid = $reg->pasien_uuid;
+		$item->rekam_medis = $reg->rekam_medis;
+		$item->nama_pasien = $reg->nama_pasien;
+		$item->pengguna_uuid = $reg->pengguna_uuid;
+		$item->nama_dokter = $reg->nama_dokter;
+						
+		$item->tanggal = date('Y-m-d');
+		$item->waktu = date('H:i');
+					
+		$item->carabayar_uuid = $reg->carabayar_uuid;
+		$item->carabayar_nama = $reg->carabayar_nama;
+
+		$item->layanan_uuid = $request->layanan_uuid;
+		$item->nama_layanan = $request->nama_layanan;
+		$item->tarif = $request->tarif;
+		$item->total = $request->tarif;
+		$item->jenis = $request->jenis;
+		$item->save();
+
+		$data = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+
+		$layanan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
+								->where('layanan_uuid', '!=', 'obatan')
+								->where('jenis', '=', $request->jenis)->get();
+		return response()->json(['data' => $data, 'layanan' => $layanan]);
+	}
+
+	public function remove(Request $request){
+		$remove = LayananPasien::where('uuid', '=', $request->uuid)->delete();
+
+		$data = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+		$layanan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
+								->where('layanan_uuid', '!=', 'obatan')
+								->where('jenis', '=', $request->jenis)->get();
+		return response()->json(['data' => $data, 'layanan' => $layanan]);
+	}
+
+	public function getobat(Request $request) {
+		$data = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
+								->where('jenis', '=', $request->jenis.' (Obatan)')->get();
+		return response()->json(['data' => $data]);
+	}
+
+	public function addobat(Request $request) {
+
+		$reg = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+		
+		$item = new Resep();
+		$item->uuid = Uuid::uuid4();
+		$item->registrasi_uuid = $reg->uuid;
+		$item->no_pendaftaran = $reg->no_pendaftaran;
+		$item->registrasi_kode = $reg->kode;
+		$item->registrasi_nomor = $reg->nomor;
+		$item->registrasi_jenis = $reg->jenis;
+		$item->pasien_uuid = $reg->pasien_uuid;
+		$item->rekam_medis = $reg->rekam_medis;
+		$item->nama_pasien = $reg->nama_pasien;
+		$item->dokter_uuid = $reg->pengguna_uuid;
+		$item->nama_dokter = $reg->nama_dokter;
+							
+		$item->tanggal = date('Y-m-d');
+		$item->waktu = date('H:i');
+
+		$item->obat_uuid = $request->obat_uuid;
+		$item->nama_obat = $request->nama;
+		$item->kategori = $request->kategori;
+		$item->formularium = $request->formularium;
+		$item->golongan = $request->golongan;
+		$item->satuan_uuid_besar = $request->satuan_uuid_besar;
+		$item->nama_satuan_besar = $request->nama_satuan_besar;
+		$item->satuan_uuid_kecil = $request->satuan_uuid_kecil;
+		$item->nama_satuan_kecil = $request->nama_satuan_kecil;
+		$item->hitung_besar = $request->hitung_besar;
+		$item->hitung_kecil = $request->hitung_kecil;
+		$item->harga_netto = $request->harga_netto;
+		$item->harga_netto_discount = $request->harga_netto_discount;
+		$item->harga_netto_ppn = $request->harga_netto_ppn;
+		$item->hpp = $request->hpp;
+		$item->hja_resep = $request->hja_resep;
+		$item->hja_non_resep = $request->hja_non_resep;
+		$item->hja_resep_besar = $request->hja_resep_besar;
+		$item->hja_non_resep_besar = $request->hja_non_resep_besar;
+		$item->margin_resep = $request->margin_resep;
+		$item->margin_non_resep = $request->margin_non_resep;
+		$item->jumlah_kecil = $request->jumlah_kecil;
+		$item->jumlah_besar = $request->jumlah_besar;
+		$item->signa = $request->signa;
+		$item->total = $request->total;
+		$item->jenis = $request->jenis.' (Obatan)';
+		$item->save();
+
+		$tarif = (int) $request->hja_resep * (int) $request->jumlah_kecil;
+
+		$ceklayanan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
+									->where('nama_layanan', '=', 'Obat-Obatan '.$request->jenis)
+									->where('jenis', '=', $request->jenis)
+									->first();
+		
+		if ($ceklayanan) {
+			$tarif = $tarif + $ceklayanan->tarif;
+			$arr = array('tarif' => $tarif, 'total' => $tarif);
+			$update = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
+									->where('nama_layanan', '=', 'Obat-Obatan '.$request->jenis)
+									->where('jenis', '=', $request->jenis)
+									->update($arr);
+		}
+		else {
+			$item = new LayananPasien();
+			$item->uuid = Uuid::uuid4();
+			$item->registrasi_uuid = $request->registrasi_uuid;
+			$item->no_pendaftaran = $reg->no_pendaftaran;
+			$item->registrasi_kode = $reg->kode;
+			$item->registrasi_nomor = $reg->nomor;
+			$item->registrasi_jenis = $reg->jenis;
+			$item->pasien_uuid = $reg->pasien_uuid;
+			$item->rekam_medis = $reg->rekam_medis;
+			$item->nama_pasien = $reg->nama_pasien;
+			$item->pengguna_uuid = $reg->pengguna_uuid;
+			$item->nama_dokter = $reg->nama_dokter;
+							
+			$item->tanggal = date('Y-m-d');
+			$item->waktu = date('H:i');
+						
+			$item->carabayar_uuid = $reg->carabayar_uuid;
+			$item->carabayar_nama = $reg->carabayar_nama;
+
+			$item->layanan_uuid = 'obatan';
+			$item->nama_layanan = 'Obat-Obatan '.$request->jenis;
+			$item->tarif = $tarif;
+			$item->total = $tarif;
+			$item->jenis = $request->jenis;
+			$item->save();
+		}
+		
+		$arr = array('ada_obat' => 'Ya');
+		$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+
+		$data = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
+								->where('jenis', '=', $request->jenis.' (Obatan)')->get();
+		return response()->json(['data' => $data]);
+
+	}
+
+	public function removeobat(Request $request){
+		$resep = Resep::where('uuid', '=', $request->uuid)->first();
+
+		$tarif = (int) $resep->hja_resep * (int) $resep->jumlah_kecil;
+
+		$ceklayanan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
+									->where('nama_layanan', '=', 'Obat-Obatan '.$request->jenis)
+									->where('jenis', '=', $request->jenis)
+									->first();
+
+		if ($ceklayanan) {
+			$sisa = $ceklayanan->tarif - $tarif;
+
+			if ($sisa < 1) {
+				$remove = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
+									->where('nama_layanan', '=', 'Obat-Obatan '.$request->jenis)
+									->where('jenis', '=', $request->jenis)
+									->delete();
+			}
+			else {
+				$arr = array('tarif' => $sisa, 'total' => $sisa);
+				$update = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
+									->where('nama_layanan', '=', 'Obat-Obatan '.$request->jenis)
+									->where('jenis', '=', $request->jenis)
+									->update($arr);
+			}
+		}
+		$remove = Resep::where('uuid', '=', $request->registrasi_uuid)->delete();
+
+		$data = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
+								->where('jenis', '=', $request->jenis.' (Obatan)')->get();
+		return response()->json(['data' => $data]);
+	}
+
+	public function addresep(Request $request) {
+		$req = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+		$remove = Resep::where('registrasi_uuid', '=', $req->uuid)->where('jenis', '=', $request->jenis)->delete();
+		$obat = json_decode($request->obat);
+
+		$nama_layanan = 'Obat-obatan';
+		$tarif = 0;
+
+		foreach ($obat as $row) {
+			$item = new Resep();
+			$item->uuid = Uuid::uuid4();
+			$item->registrasi_uuid = $req->uuid;
+			$item->no_pendaftaran = $req->no_pendaftaran;
+			$item->registrasi_kode = $req->kode;
+			$item->registrasi_nomor = $req->nomor;
+			$item->registrasi_jenis = $req->jenis;
+			$item->pasien_uuid = $req->pasien_uuid;
+			$item->rekam_medis = $req->rekam_medis;
+			$item->nama_pasien = $req->nama_pasien;
+			$item->dokter_uuid = $req->pengguna_uuid;
+			$item->nama_dokter = $req->nama_dokter;
+					
+			$item->tanggal = date('Y-m-d');
+			$item->waktu = date('H:i');
+					
+			$item->obat_uuid = $row->obat_uuid;
+			$item->nama_obat = $row->nama;
+			$item->kategori = $row->kategori;
+			$item->formularium = $row->formularium;
+			$item->golongan = $row->golongan;
+			$item->satuan_uuid_besar = $row->satuan_uuid_besar;
+			$item->nama_satuan_besar = $row->nama_satuan_besar;
+			$item->satuan_uuid_kecil = $row->satuan_uuid_kecil;
+			$item->nama_satuan_kecil = $row->nama_satuan_kecil;
+			$item->hitung_besar = $row->hitung_besar;
+			$item->hitung_kecil = $row->hitung_kecil;
+			$item->harga_netto = $row->harga_netto;
+			$item->harga_netto_discount = $row->harga_netto_discount;
+			$item->harga_netto_ppn = $row->harga_netto_ppn;
+			$item->hpp = $row->hpp;
+			$item->hja_resep = $row->hja_resep;
+			$item->hja_non_resep = $row->hja_non_resep;
+			$item->hja_resep_besar = $row->hja_resep_besar;
+			$item->hja_non_resep_besar = $row->hja_non_resep_besar;
+			$item->margin_resep = $row->margin_resep;
+			$item->margin_non_resep = $row->margin_non_resep;
+			$item->jumlah_kecil = $row->jumlah_kecil;
+			$item->jumlah_besar = $row->jumlah_besar;
+			$item->signa = $row->signa;
+			$item->total = $row->total;
+			$item->jenis = $request->jenis;
+			$item->save();
+
+			$hasil = (int) $row->hja_resep * (int) $row->jumlah_kecil;
+			$tarif = $tarif + $hasil;
+		}
+
+		// Bagian obat racikan
+
+		$remove = ResepRacikan::where('registrasi_uuid', '=', $req->uuid)->where('jenis', '=', $request->jenis)->delete();
+
+		$obatracikan = json_decode($request->obatracikan);
+
+		$nama_layanan_racikan = 'Obat Racikan';
+		$tarifracikan = 0;
+
+		foreach ($obatracikan as $row) {
+			$item = new ResepRacikan();
+			$item->uuid = Uuid::uuid4();
+			$item->registrasi_uuid = $req->uuid;
+			$item->no_pendaftaran = $req->no_pendaftaran;
+			$item->registrasi_kode = $req->kode;
+			$item->registrasi_nomor = $req->nomor;
+			$item->registrasi_jenis = $req->jenis;
+			$item->pasien_uuid = $req->pasien_uuid;
+			$item->rekam_medis = $req->rekam_medis;
+			$item->nama_pasien = $req->nama_pasien;
+			$item->dokter_uuid = $req->pengguna_uuid;
+			$item->nama_dokter = $req->nama_dokter;
+			
+			$item->tanggal = date('Y-m-d');
+			$item->waktu = date('H:i');
+			
+			$item->label = $row->label;
+			$item->kemasan = $row->kemasan;
+			$item->jumlah = $row->jumlah;
+			$item->signa = $row->signa;
+			$item->total = $row->total;
+			$item->informasi = $row->informasi;
+			$item->jenis = $request->jenis;
+			$item->save();
+
+			$tarifracikan = $tarifracikan + $row->total;
+		}
+
+		if (count($obatracikan) > 0 || count($obat) > 0) {
+			$arr = array('ada_obat' => 'Ya');
+			$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+		}
+		else {
+			$arr = array('ada_obat' => 'Tidak');
+			$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+		}
+
+		$data = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+		$obat = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
+						->where('jenis', '=', $request->jenis)
+						->orderBy('id', 'desc')->get();
+
+		$obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)
+						->where('jenis', '=', $request->jenis)
+						->orderBy('id', 'desc')->get();
+		return response()->json(['data' => $data, 'obat' => $obat, 'obatracikan' => $obatracikan ]);
+	}
+public function addjadwalkontrol(Request $request) {
+		try{
+			$reg = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+
+			$cek = JadwalKontrol::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+			
+			if ($cek) {
+				$arr = array('tanggal' => $request->tanggal, 'waktu' => $request->waktu);
+				$update = JadwalKontrol::where('uuid', '=', $cek->uuid)->update($arr);	
+			}
+			else {
+				$item = new JadwalKontrol();
+				$item->uuid = Uuid::uuid4();
+				$item->registrasi_uuid = $reg->uuid;
+				$item->no_pendaftaran = $reg->no_pendaftaran;
+				$item->registrasi_kode = $reg->kode;
+				$item->registrasi_nomor = $reg->nomor;
+				$item->registrasi_jenis = $reg->jenis;
+				$item->pasien_uuid = $reg->pasien_uuid;
+				$item->rekam_medis = $reg->rekam_medis;
+				$item->nama_pasien = $reg->nama_pasien;
+				$item->pengguna_uuid = $reg->pengguna_uuid;
+				$item->nama_dokter = $reg->nama_dokter;
+								
+				$item->tanggal = $request->tanggal;
+				$item->waktu = $request->waktu;
+				$item->save();
+			}
+
+			return response()->json(['hasil' => 'berhasil']);
+		}
+		catch(Exception $e){ 
+			DB::rollback(); 
+			return response()->json(['hasil' => 'gagal']);
+		}
+	}
+
+	public function getjadwalkontrol(Request $request) {
+		$data = JadwalKontrol::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+		$tanggal = ''; $waktu = ''; $uuid = '';
+		if ($data) { $uuid = $data->uuid; $tanggal = $data->tanggal; $waktu = $data->waktu; }
+		return response()->json(['uuid' => $uuid, 'tanggal' => $tanggal, 'waktu' => $waktu]);
+	}
+
+}

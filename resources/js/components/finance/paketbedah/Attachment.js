@@ -1,0 +1,10 @@
+export const parseunit = (form) => {
+	let data = new FormData();
+	data.append('uuid', form.uuid);
+	data.append('nama', form.nama.value);
+	data.append('total', form.total.value);
+	data.append('keterangan', form.keterangan.value);
+	data.append('pengguna_uuid', form.select.dokter.value);
+	data.append('nama_dokter', form.select.dokter.label);
+	return data;
+}
