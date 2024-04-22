@@ -1,0 +1,631 @@
+<template>
+<div class="grid" v-if="form" ref="rootdiv" style="position: relative;">
+	<div class="col-6">
+		<Selected v-on:click="selectbox($event, form.select.caramasuk.name, form.select.caramasuk.statics)" 
+			:ref="form.select.caramasuk.name" @selecteditem="selecteditem" @selectclear="selectclear"
+			:selection="form.select.caramasuk"></Selected>
+
+		<Inputed :ref="form.rujukan.name" :form="form.rujukan"></Inputed>
+
+		<Selected v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)" 
+			:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
+			:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)"></Selected>
+
+		<Selected v-on:click="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)" 
+			:ref="form.select.asuransi.name" @selecteditem="selecteditem" @selectclear="selectclear"
+			:selection="form.select.asuransi" v-on:keyup="selectfilter($event, form.select.asuransi.name)"></Selected>
+
+		<Selected v-on:click="selectbox($event, form.select.dokter.name, form.select.dokter.statics)" 
+			:ref="form.select.dokter.name" @selecteditem="selecteditem" @selectclear="selectclear"
+			:selection="form.select.dokter" v-on:keyup="selectfilter($event, form.select.dokter.name)"></Selected>
+	</div>
+	<div class="col-6 form-ml">
+		<Inputed :ref="form.pjnama.name" :form="form.pjnama"></Inputed>
+		<Selected v-on:click="selectbox($event, form.select.jenisidentitas.name, form.select.jenisidentitas.statics)" 
+			:ref="form.select.jenisidentitas.name" @selecteditem="selecteditem" @selectclear="selectclear"
+			:selection="form.select.jenisidentitas"></Selected>
+		<Inputed :ref="form.pjnoidentitas.name" :form="form.pjnoidentitas"></Inputed>
+		<Inputed :ref="form.pjhubungan.name" :form="form.pjhubungan"></Inputed>
+		<Inputed :ref="form.pjalamat.name" :form="form.pjalamat"></Inputed>
+		<Inputed :ref="form.pjnohandphone.name" :form="form.pjnohandphone"></Inputed>
+	</div>
+	<div :style="cover" v-if="!ishide"></div>
+</div>
+<div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
+	<div class="col-8"></div>
+	<div class="col-4" style="text-align: right"  v-if="ishide">
+		<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
+		<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+	</div>
+	<div class="col-4" style="text-align: right"  v-else>
+		<button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan Rawat Inap</button>
+		<button class="button-modal-page button-modal-green" v-on:click="edit()">Edit Data</button>
+	</div>
+</div>
+</template>
+
+<script>
+import { defineAsyncComponent } from 'vue';
+import { formrawatjalan } from './FormDataInap.js';
+import { parserawatjalan } from './AttachmentInap.js';
+import { arrregistrasi } from '../../../module/DataArray.js';
+import { filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected } from '../../../module/SelectedFilter.js';
+import { initindexdb, indexdbprocessing } from '../../../module/Indexdb.js';
+var vm, body;
+export default {
+	emits: ["dialog", "parsingForm", "edit", "cancel"],
+	props: ['detail', 'iskunjungan'],
+	components: {
+		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
+		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
+	},
+	mounted:function() { 
+		vm = this; body = document.body;
+		vm.form = vm.formrawatjalan();
+		vm.arr = vm.arrregistrasi();
+		
+		setTimeout(() => {
+			vm.test = vm.iskunjungan;
+			vm.coverblock();
+			// vm.camerablock();
+		}, 250);
+		
+		window.onclick = function(event) { 
+			let a = event.target.className; 
+			
+			try { 
+				if (a.split(" ")) { 
+					a = a.split(" "); 
+					
+					if (a[0] != 'hospitals' && a[0] != 'click-title') { 
+						vm.selecthide(); 
+					} 
+				} 
+				if (event.target.className == '') { 
+					vm.selecthide(); 
+				} 
+			} 
+			catch { console.log('mistmatch'); } }
+	},
+	computed: {
+		ishide:function() {
+			if (vm.test) { vm.red = 'Cancel'; }
+			return vm.test ? false : true;
+		},
+	},
+	data: function() {
+		return {
+			isCameraOpen: false,
+      isPhotoTaken: false,
+      isShotPhoto: false,
+      isLoading: false,
+      link: '#',
+			green: 'Save Data',
+			red: 'Clear Form', test: null,
+			form: null, arr: null, cover: '', temporer: null,
+			camera_height: '',
+			width_number: 0,
+			height_number: 0,
+			isphotos: false,
+			camerastatus: 'stop',
+		}
+	},
+	methods: {
+
+		toggleCamera() {
+      if(this.isCameraOpen) {
+        this.isCameraOpen = false;
+        this.isPhotoTaken = false;
+        this.isShotPhoto = false;
+				vm.camerastatus = 'stop';
+				this.stopCameraStream();
+      } else {
+				vm.camerastatus = 'start';
+        this.isCameraOpen = true;
+        this.createCameraElement();
+      }
+    },
+
+		printout:function() {
+			console.log(vm.iskunjungan);
+			if (vm.iskunjungan) {
+				window.open('/customerservices/pasien/cetakidentitas/' + vm.iskunjungan.uuid, '_blank');
+			}
+			
+		},
+    
+    createCameraElement() {
+      this.isLoading = true;
+      const constraints = (window.constraints = {
+				audio: false,
+				video: true
+			});
+
+
+			navigator.mediaDevices
+				.getUserMedia(constraints)
+				.then(stream => {
+          this.isLoading = false;
+					this.$refs.camera.srcObject = stream;
+				})
+				.catch(error => {
+          this.isLoading = false;
+					alert("May the browser didn't support or there is some errors.");
+				});
+    },
+    
+    stopCameraStream() {
+      let tracks = this.$refs.camera.srcObject.getTracks();
+
+			tracks.forEach(track => {
+				track.stop();
+			});
+    },
+    
+    takePhoto() {
+
+			if (vm.camerastatus == 'start') {
+				if(!this.isPhotoTaken) {
+					this.isShotPhoto = true;
+
+					const FLASH_TIMEOUT = 50;
+
+					setTimeout(() => {
+						this.isShotPhoto = false;
+					}, FLASH_TIMEOUT);
+				}
+      
+				if (!this.isPhotoTaken) { 
+					this.isPhotoTaken = true; 
+					const context = this.$refs.canvas.getContext('2d');
+					context.drawImage(this.$refs.camera, 0, 0, vm.width_number, vm.height_number);
+					vm.form.photos = document.getElementById("photoTaken").toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
+					vm.camerastatus = 'stop';
+					this.stopCameraStream();
+				}
+			}
+			
+    },
+
+		reloadPhoto() {
+			if(this.isPhotoTaken) { this.isPhotoTaken = false; }
+			vm.form.photos = '';
+			if (vm.camerastatus == 'stop' && this.isCameraOpen) {
+				vm.camerastatus = 'start';
+        this.createCameraElement();
+			}
+		},
+    
+    downloadImage() {
+      const download = document.getElementById("downloadPhoto");
+      const canvas = document.getElementById("photoTaken").toDataURL("image/jpeg").replace("image/jpeg", "image/octet-stream");
+      console.log(canvas);
+			//download.setAttribute("href", canvas);
+    },
+
+		coverblock:function() {
+			const left = this.$refs.rootdiv.getBoundingClientRect();
+			vm.cover = 'width:'+(left.width+30)+'px;height:'+(left.height+30)+'px;border-radius:4px;position:absolute;left:-15px;top:-15px;background:rgba(0,0,0,0.4)';
+		},
+
+		camerablock:function() {
+			const left = this.$refs.camerainternal.getBoundingClientRect();
+			vm.camera_height = 'height:'+(left.width-(85+46))+'px';
+			vm.width_number = left.width - 20; // 446 => 466
+			vm.height_number = left.width-(85+46); // 335 => 381
+			
+		},
+
+		formrawatjalan, parserawatjalan, arrregistrasi,
+		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected, initindexdb, indexdbprocessing,
+
+		selectfilter: function (event, key) { vm.form = vm.filterselected(vm.form, key); },
+		selecthide:function() { vm.form = vm.hideselected(vm.form); },
+		selecteditem:function(item, key) { 
+			vm.form = vm.conditionselected(vm.form, item, key, 'address');
+			vm.form = vm.itemselected(vm.form, item, key); 
+			vm.manipulationform(key, item, true);
+		},
+		selectclear:function(key) { 
+			vm.form = vm.clearselected(vm.form, key);
+			vm.manipulationform(key, '', false);
+		},
+		selectbox:function(event, key, statics) {
+
+			if (!vm.form.select[key].disabled) {
+				let result = vm.boxselected(event, vm.form, key);
+				if (result._position == 'stop') { return ; }
+				else if (result._position == 'nextstop') { vm.form = result._form; }
+				else { vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block'; }
+			}
+		},
+
+		hurufbesar:function(event) {
+			let str = vm.form.nopendaftaran.value.toUpperCase(), tmp = '';
+			str = str.replace("-", "");
+			str = str.split("");
+			if (str.length > 0) {
+				if (str.length < 5) {
+					if (str[0].length === 1 && str[0].match(/[a-z]/i)) { str[0] = str[0] + '-'; }
+					else { vm.form.nopendaftaran.value = ''; return ; }
+					for (let i = 0; i < str.length; i++) { tmp += str[i]; }
+					vm.form.nopendaftaran.value = tmp;
+				}
+				else { let str = vm.form.nopendaftaran.value; str = str.substring(0, str.length - (str.length - 5)); vm.form.nopendaftaran.value = str; }	
+			}
+		},
+
+		action:function() {
+			let next = true;
+			for (const key in vm.form) {
+				if (key != 'select') { if (vm.form[key].required != '') { if (vm.form[key].value == '') { next = false; } } }
+				else {
+					for (const keyselect in vm.form.select) {
+						if (vm.form.select[keyselect].isrequired) { if (vm.form.select[keyselect].value == '') { next = false; } }
+					}
+				}
+			}
+			if (next) { 
+				vm.parsingForm(); vm.dialog();
+			}
+		},
+
+		redbutton:function() {
+			if (vm.red == 'Clear Form') { vm.form = vm.formrawatjalan(); }
+			else if (vm.red == 'Back') { vm.test = vm.temporer; }
+		},
+
+		greenbutton:function() {
+			if (vm.green == 'Save Data') { 
+				console.log(vm.form, 'dfdf')
+				vm.action();
+			}
+		},
+
+		seteditedv3:function(photosstatus) {
+			vm.isphotos = photosstatus;
+		},
+
+		seteditedv2:function(response, pj, photosstatus) {
+
+			if (pj != '') {
+				vm.form.pjnama.value = pj.nama ? pj.nama : '';
+				vm.form.pjhubungan.value = pj.hubungan ? pj.hubungan : '';
+				vm.form.pjalamat.value = pj.alamat ? pj.alamat : '';
+				vm.form.pjnoidentitas.value = pj.no_identitas ? pj.no_identitas : '';
+				vm.form.pjnohandphone.value = pj.no_handphone ? pj.no_handphone : '';
+				if (pj.jenis_identitas) {
+					vm.form.select.jenisidentitas.value = pj.jenis_identitas;
+					vm.form.select.jenisidentitas.label = pj.jenis_identitas;
+				}
+				else {
+					vm.form.select.jenisidentitas.value = '';
+					vm.form.select.jenisidentitas.label = 'Silahkan Pilih';
+				}
+			}
+			else {
+				vm.form.pjnama.value = '';
+				vm.form.pjhubungan.value = '';
+				vm.form.pjalamat.value = '';
+				vm.form.pjnoidentitas.value = '';
+				vm.form.pjnohandphone.value = '';
+				vm.form.select.jenisidentitas.value = '';
+				vm.form.select.jenisidentitas.label = 'Silahkan Pilih';
+			}
+			
+
+			vm.form.select.caramasuk.value = response.cara_masuk;
+			vm.form.select.caramasuk.label = response.cara_masuk;
+
+			let msg = response.rujukan;
+			vm.form.rujukan.value = msg != '-' ? msg : '';
+			
+			vm.form.select.carabayar.value = response.carabayar_uuid;
+			vm.form.select.carabayar.label = response.carabayar_nama;
+
+			if (response.asuransi_uuid || response.asuransi_uuid != '' || response.asuransi_uuid != '-') {
+				vm.form.select.asuransi.value =  response.asuransi_uuid;
+				vm.form.select.asuransi.label =  response.nama_asuransi;
+			}
+			else {
+				vm.form.select.asuransi.value = '';
+				vm.form.select.asuransi.label = 'Silahkan Pilih';
+			}
+
+			vm.form.select.dokter.value =  response.pengguna_uuid;
+			vm.form.select.dokter.label =  response.nama_dokter;
+
+			console.log(response);
+		},
+
+		setedited:function(response, photosstatus) {
+			
+			console.log(response);
+			vm.temporer = vm.test;
+			vm.test = null;
+			vm.red = 'Back';
+			vm.form.uuid = response.data.data.uuid;
+			vm.form.select.caramasuk.value = response.data.data.cara_masuk;
+			vm.form.select.caramasuk.label = response.data.data.cara_masuk;
+
+			let msg = response.data.data.rujukan;
+			vm.form.rujukan.value = msg != '-' ? msg : '';
+			
+			vm.form.select.carabayar.value = response.data.data.carabayar_uuid;
+			vm.form.select.carabayar.label = response.data.data.carabayar_nama;
+
+			if (response.data.data.asuransi_uuid || response.data.data.asuransi_uuid != '' || response.data.data.asuransi_uuid != '-') {
+				vm.form.select.asuransi.value =  response.data.data.asuransi_uuid;
+				vm.form.select.asuransi.label =  response.data.data.nama_asuransi;
+			}
+			else {
+				vm.form.select.asuransi.value = '';
+				vm.form.select.asuransi.label = 'Silahkan Pilih';
+			}
+
+			vm.form.select.dokter.value =  response.data.data.pengguna_uuid;
+			vm.form.select.dokter.label =  response.data.data.nama_dokter;
+
+			vm.form.pjnama.value = response.data.penanggungjawab.nama ? response.data.penanggungjawab.nama : '';
+			vm.form.pjhubungan.value = response.data.penanggungjawab.hubungan ? response.data.penanggungjawab.hubungan : '';
+			vm.form.pjalamat.value = response.data.penanggungjawab.alamat ? response.data.penanggungjawab.alamat : '';
+			vm.form.pjnoidentitas.value = response.data.penanggungjawab.no_identitas ? response.data.penanggungjawab.no_identitas : '';
+			vm.form.pjnohandphone.value = response.data.penanggungjawab.no_handphone ? response.data.penanggungjawab.no_handphone : '';
+			if (response.data.penanggungjawab.jenis_identitas) {
+				vm.form.select.jenisidentitas.value = response.data.penanggungjawab.jenis_identitas;
+				vm.form.select.jenisidentitas.label = response.data.penanggungjawab.jenis_identitas;
+			}
+			else {
+				vm.form.select.jenisidentitas.value = '';
+				vm.form.select.jenisidentitas.label = 'Silahkan Pilih';
+			}
+			
+		},
+
+		edit:function() {
+			vm.$emit('edit', vm.test, 'rawatinap');
+		},
+
+		cancel:function() {
+			vm.$emit('cancel', vm.test, 'rawatinap');
+		},
+
+		resetform:function() {
+			vm.form = vm.formrawatjalan();
+		},
+
+		parsingForm:function() { 
+			vm.$emit('parsingForm', vm.parserawatjalan(vm.form, vm.detail), 'rawatinap'); 
+		},
+
+		dialog:function(){
+			let text = '', button = '';
+			text = 'Yakin ingin menambah data pada halaman ini.';
+			button = 'Ya, tambah data';
+      vm.$emit('dialog', text, button, 'rawatinap');
+    },
+
+		manipulationform: function (key, item, active) {
+			if (key == 'caramasuk') {
+				if (item.value == 'Rujukan dari' && active) { 
+					vm.form.rujukan.disabled = false; 
+					vm.form.rujukan.required = 'required';
+				}
+				else { 
+					vm.form.rujukan.value = '';
+					vm.form.rujukan.disabled = true; 
+					vm.form.rujukan.required = ''; 
+				}
+			}
+			else if (key == 'carabayar') {
+				if (active) {
+					
+					vm.getIndexDB('asuransi', false);
+				}
+			}
+		},
+
+		getIndexDB:function(key, statics) {
+			vm.form.select[key].data = []; vm.form.select[key].filter = [];
+			if (statics) { vm.form.select[key].data = this.arr[key]; vm.form.select[key].filter = this.arr[key]; }
+			else {
+				vm.initindexdb(vm.$dbNameIndexDb, key)
+					.then(function(response){ 
+						vm.form = vm.indexdbprocessing(response, vm.form, key); 
+						console.log(vm.form.select.asuransi.data);
+						if (vm.form.select.asuransi.data.length < 1) {
+							vm.form.select.asuransi.disabled = true;
+							vm.form.select.asuransi.value = '';
+							vm.form.select.asuransi.label = 'Silahkan Pilih';
+							vm.form.select.asuransi.isrequired = false;
+						}
+						else if (vm.form.select.asuransi.data.length > 0) {
+							vm.form.select.asuransi.disabled = false;
+							vm.form.select.asuransi.isrequired = true;
+						}
+					})
+					.catch(function(error){ console.log(error); });
+			}
+		},
+	}
+}
+</script>
+<style>
+
+
+.web-camera-container {
+  margin-top: 10px;
+  /* margin-bottom: 2rem; */
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 100%;
+	position: relative;
+}
+.web-camera-container .camera-button {
+  margin-bottom: 2rem;
+}
+.web-camera-container .camera-box .camera-shutter {
+  opacity: 1;
+  background-color: #fff;
+  position: absolute;
+}
+
+.web-camera-container .camera-pra {
+  opacity: 1;
+	width: 100%;
+  background-color: #d5d5d5;
+  position: relative;
+}
+
+.web-camera-container .bagian-bawah {
+	width: 100%;
+	height: auto;
+	padding-top: 20px;
+	padding-bottom: 5px;
+}
+
+.web-camera-container .bagian-bawah table {
+	width: 100%;
+}
+
+.web-camera-container .bagian-bawah table tr td button {
+	border-radius: 5px;
+	border: 1px solid #0a5531;
+	background: #096438;
+	padding: 5px 10px;
+	color: #fff;
+	cursor: pointer;
+}
+
+.web-camera-container .camera-box .camera-shutter.flash {
+  opacity: 1;
+}
+.web-camera-container .camera-loading {
+  overflow: hidden;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  min-height: 150px;
+  margin: 3rem 0 0 -1.2rem;
+}
+.web-camera-container .camera-loading ul {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  z-index: 999999;
+  margin: 0;
+}
+.web-camera-container .camera-loading .loader-circle {
+  display: block;
+  height: 14px;
+  margin: 0 auto;
+  top: 50%;
+  left: 100%;
+  transform: translateY(-50%);
+  transform: translateX(-50%);
+  position: absolute;
+  width: 100%;
+  padding: 0;
+}
+.web-camera-container .camera-loading .loader-circle li {
+  display: block;
+  float: left;
+  width: 10px;
+  height: 10px;
+  line-height: 10px;
+  padding: 0;
+  position: relative;
+  margin: 0 0 0 4px;
+  background: #999;
+  animation: preload 1s infinite;
+  top: -50%;
+  border-radius: 100%;
+}
+.web-camera-container .camera-loading .loader-circle li:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.web-camera-container .camera-loading .loader-circle li:nth-child(3) {
+  animation-delay: 0.4s;
+}
+@keyframes preload {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+video {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+canvas {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+.lds-ellipsis {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+.lds-ellipsis div {
+  position: absolute;
+  top: 33px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: #fff;
+  animation-timing-function: cubic-bezier(0, 1, 1, 0);
+}
+.lds-ellipsis div:nth-child(1) {
+  left: 8px;
+  animation: lds-ellipsis1 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(2) {
+  left: 8px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(3) {
+  left: 32px;
+  animation: lds-ellipsis2 0.6s infinite;
+}
+.lds-ellipsis div:nth-child(4) {
+  left: 56px;
+  animation: lds-ellipsis3 0.6s infinite;
+}
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+</style>
