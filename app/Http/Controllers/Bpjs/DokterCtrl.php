@@ -8,7 +8,7 @@ use Ramsey\Uuid\Uuid;
 use DB;
 use Cookie;
 use Crypt;
-use Bpjs\Bridging\Vclaim\BridgeVclaim;
+use App\Services\Bpjs\Bridging\Vclaim\BridgeVclaim;
 
 
 class DokterCtrl extends Controller

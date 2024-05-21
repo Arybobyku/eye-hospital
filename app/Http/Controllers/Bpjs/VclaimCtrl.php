@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Bpjs;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
-use Bpjs\Bridging\Vclaim\BridgeVclaim;
+use App\Services\Bpjs\Bridging\Vclaim\BridgeVclaim;
 use DB;
 use Cookie;
 use Crypt;

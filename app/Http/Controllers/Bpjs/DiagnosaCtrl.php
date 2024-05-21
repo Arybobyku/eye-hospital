@@ -3,18 +3,20 @@
 namespace App\Http\Controllers\Bpjs;
 
 use App\Http\Controllers\Controller;
+use App\Models\MintaTerimaOpname;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use DB;
 use Cookie;
 use Crypt;
-use Bpjs\Bridging\Vclaim\BridgeVclaim;
+use App\Services\Bpjs\Bridging\Vclaim\BridgeVclaim;
 
 
 class DiagnosaCtrl extends Controller
 {
 
 	private $take = 15, $error = 'next';
+	private $bridging;
 
 
 	public function __construct()
@@ -52,7 +54,6 @@ class DiagnosaCtrl extends Controller
 		$data = $data->diagnosa;
 
 		return response()->json(['data' => $data, 'total' => $total]);
-
 	}
 
 	public function minta(Request $request)
@@ -270,5 +271,4 @@ class DiagnosaCtrl extends Controller
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
-
 }
