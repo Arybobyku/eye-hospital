@@ -146,7 +146,7 @@ class RawatInapCtrl extends Controller
 								// ->where('carabayar_nama', '!=', 'bpjs_sehat')
 								->orderBy('id', 'desc')->count();
 		}
-		
+		//
 		return response()->json(['data' => $data, 'total' => $total]);
 	
 	}
