@@ -67,29 +67,32 @@ class PemeriksaanCtrl extends Controller
 								// ->where('carabayar_nama', '!=', 'bpjs sehat')
 								// ->where('carabayar_nama', '!=', 'bpjs-sehat')
 								// ->where('carabayar_nama', '!=', 'bpjs_sehat')
-								->where('berkebutuhan_khusus', '=', 'Tidak')
-								->where('apakah_paket', '=', 'Tidak')
+								// ->where('berkebutuhan_khusus', '=', 'Tidak')
+								->where('berkebutuhan_khusus', '!=', 'Ya')
+								// ->where('apakah_paket', '=', 'Tidak')
 								->whereDate('tanggal', '=', date('Y-m-d'));
 			if (Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
 				$data = $data->where('pengguna_uuid', '=', Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
 			}
 			$data= $data->orderBy('status_dokter', 'asc')
 								->orderBy('posisi_antrian_dokter', 'asc')
-								->where(function($q) {
-									$q->where('status', 'Kunjungan')
-										->orWhere('status', 'Selesai')
-										->orWhere('status', 'Rawat Inap');
-								})
+								// ->where(function($q) {
+								// 	$q->where('status', 'Kunjungan')
+								// 		->orWhere('status', 'Selesai')
+								// 		->orWhere('status', 'Rawat Inap');
+								// })
+								->where('status_dokter', 'Belum Diperiksa')
 								->skip($skip)->take($this->take)
 								->get();
 
 			$total = Registrasi::where('delete_soft', '=', 1)
-								->where('apakah_paket', '=', 'Tidak')
-								->where(function($q) {
-									$q->where('status', 'Kunjungan')
-										->orWhere('status', 'Selesai')
-										->orWhere('status', 'Rawat Inap');
-								})
+								// ->where('apakah_paket', '=', 'Tidak')
+								// ->where(function($q) {
+								// 	$q->where('status', 'Kunjungan')
+								// 		->orWhere('status', 'Selesai')
+								// 		->orWhere('status', 'Rawat Inap');
+								// })
+								->where('status_dokter', 'Belum Diperiksa')
 								// ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
 								// ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
 								// ->where('carabayar_nama', '!=', 'bpjs kesehatan')
@@ -124,7 +127,7 @@ class PemeriksaanCtrl extends Controller
 			$data = Registrasi::where('delete_soft', '=', 1)
 									->orderBy('status_dokter', 'asc')
 									->orderBy('posisi_antrian_dokter', 'asc')
-									->where('apakah_paket', '=', 'Tidak')
+									// ->where('apakah_paket', '=', 'Tidak')
 								// 	->where('carabayar_nama', '!=', 'BPJS Kesehatan')
 								// ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
 								// ->where('carabayar_nama', '!=', 'bpjs kesehatan')
@@ -143,24 +146,26 @@ class PemeriksaanCtrl extends Controller
 								// ->where('carabayar_nama', '!=', 'bpjs sehat')
 								// ->where('carabayar_nama', '!=', 'bpjs-sehat')
 								// ->where('carabayar_nama', '!=', 'bpjs_sehat')
-									->where(function($q) {
-										$q->where('status', 'Kunjungan')
-											->orWhere('status', 'Selesai')
-											->orWhere('status', 'Rawat Inap');
-									});
+									// ->where(function($q) {
+									// 	$q->where('status', 'Kunjungan')
+									// 		->orWhere('status', 'Selesai')
+									// 		->orWhere('status', 'Rawat Inap');
+										// });
+									->where('status_dokter', 'Belum Diperiksa');
 
 			if (Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
 				$data = $data->where('pengguna_uuid', '=', Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
 			}
 
 			$data = $data->where('ruang_poliklinik', '!=', '0')
-									->where('berkebutuhan_khusus', '=', 'Tidak')
+									// ->where('berkebutuhan_khusus', '=', 'Tidak')
+									->where('berkebutuhan_khusus', '!=', 'Ya')
 									// ->whereDate('tanggal', '=', date('Y-m-d'))
 									->skip($skip)->take($this->take)
 									->get();
 
 			$total = Registrasi::where('delete_soft', '=', 1)
-								->where('ruang_poliklinik', '!=', '0')
+								->where('ruang_poliklinik', '!=', '0');
 								// ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
 								// ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
 								// ->where('carabayar_nama', '!=', 'bpjs kesehatan')
@@ -179,7 +184,7 @@ class PemeriksaanCtrl extends Controller
 								// ->where('carabayar_nama', '!=', 'bpjs sehat')
 								// ->where('carabayar_nama', '!=', 'bpjs-sehat')
 								// ->where('carabayar_nama', '!=', 'bpjs_sehat')
-								->where('apakah_paket', '=', 'Tidak');
+								// ->where('apakah_paket', '=', 'Tidak');
 
 			if (Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
 				$total = $total->where('pengguna_uuid', '=', Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
@@ -187,11 +192,12 @@ class PemeriksaanCtrl extends Controller
 								
 			$total = $total->where('berkebutuhan_khusus', '=', 'Tidak')
 								// ->whereDate('tanggal', '=', date('Y-m-d'))
-								->where(function($q) {
-									$q->where('status', 'Kunjungan')
-										->orWhere('status', 'Selesai')
-										->orWhere('status', 'Rawat Inap');
-								})
+								// ->where(function($q) {
+								// 	$q->where('status', 'Kunjungan')
+								// 		->orWhere('status', 'Selesai')
+								// 		->orWhere('status', 'Rawat Inap');
+								// })
+								->where('status_dokter', 'Belum Diperiksa')
 								->orderBy('posisi_antrian_dokter', 'asc')
 								->orderBy('status_dokter', 'asc')
 								->count();
@@ -216,35 +222,40 @@ class PemeriksaanCtrl extends Controller
 			$data = Registrasi::where('delete_soft', '=', 1)
 								->where($column, 'ilike', '%'.$search.'%')
 								->where('ruang_poliklinik', '!=', '0')
-								->where('berkebutuhan_khusus', '=', 'Tidak')
-								->where('apakah_paket', '=', 'Tidak');
+								// ->where('berkebutuhan_khusus', '=', 'Tidak')
+								->where('berkebutuhan_khusus', '!=', 'Ya');
+								// ->where('apakah_paket', '=', 'Tidak');
 			if (Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
 				$data = $data->where('pengguna_uuid', '=', Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
 			}
 			$data= $data->orderBy('status_dokter', 'asc')
 								->orderBy('posisi_antrian_dokter', 'asc')
-								->where(function($q) {
-									$q->where('status', 'Kunjungan')
-										->orWhere('status', 'Selesai')
-										->orWhere('status', 'Rawat Inap');
-								})
+								// ->where(function($q) {
+								// 	$q->where('status', 'Kunjungan')
+								// 		->orWhere('status', 'Selesai')
+								// 		->orWhere('status', 'Rawat Inap');
+								// })
+								->where('status_dokter', 'Sudah Diperiksa')
 								->skip($skip)->take($this->take)
 								->get();
 
 			$total = Registrasi::where('delete_soft', '=', 1)
 								->where('apakah_paket', '=', 'Tidak')
-								->where(function($q) {
-									$q->where('status', 'Kunjungan')
-										->orWhere('status', 'Selesai')
-										->orWhere('status', 'Rawat Inap');
-								})
+								// ->where(function($q) {
+								// 	$q->where('status', 'Kunjungan')
+								// 		->orWhere('status', 'Selesai')
+								// 		->orWhere('status', 'Rawat Inap');
+								// })
+								->where('status_dokter', 'Sudah Diperiksa')
 								->where('ruang_poliklinik', '!=', '0');
 
 			if (Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
 				$total = $total->where('pengguna_uuid', '=', Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
 			}
 								
-			$total = $total->where('berkebutuhan_khusus', '=', 'Tidak')
+			$total = $total    
+							    // ->where('berkebutuhan_khusus', '=', 'Tidak')
+								->where('berkebutuhan_khusus', '!=', 'Ya')
 								->where($column, 'ilike', '%'.$search.'%')
 								->orderBy('posisi_antrian_dokter', 'asc')
 								->orderBy('status_dokter', 'asc')->count();
@@ -252,11 +263,12 @@ class PemeriksaanCtrl extends Controller
 		else {
 			$data = Registrasi::where('delete_soft', '=', 1)
 									->orderBy('tanggal', 'desc')
-									->where(function($q) {
-										$q->where('status', 'Kunjungan')
-											->orWhere('status', 'Selesai')
-											->orWhere('status', 'Rawat Inap');
-									});
+									// ->where(function($q) {
+									// 	$q->where('status', 'Kunjungan')
+									// 		->orWhere('status', 'Selesai')
+									// 		->orWhere('status', 'Rawat Inap');
+									// });
+									->where('status_dokter', 'Sudah Diperiksa');
 
 			if (Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
 				$data = $data->where('pengguna_uuid', '=', Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
@@ -271,11 +283,13 @@ class PemeriksaanCtrl extends Controller
 				$total = $total->where('pengguna_uuid', '=', Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
 			}
 								
-			$total = $total->where(function($q) {
-									$q->where('status', 'Kunjungan')
-										->orWhere('status', 'Selesai')
-										->orWhere('status', 'Rawat Inap');
-								})
+			$total = $total
+								// ->where(function($q) {
+								// 	$q->where('status', 'Kunjungan')
+								// 		->orWhere('status', 'Selesai')
+								// 		->orWhere('status', 'Rawat Inap');
+								// })
+								->where('status_dokter', 'Sudah Diperiksa')
 								->count();
 
 		}
@@ -603,7 +617,7 @@ class PemeriksaanCtrl extends Controller
 					$item->jenis = 'One Day Care';
 					$item->keterangan = $request->keterangan;
 					
-					if ($request->carabayar_nama_odc == 'Umum') {
+					if ($request->carabayar_nama == 'Umum' || $request->carabayar_nama == 'BPJS Kesehatan') {
 						$item->tanggal_disetujui_asuransi = date('Y-m-d');
 						$item->jam_disetujui_asuransi = date('H:i');
 						$item->posisi = 'Disetujui';
@@ -662,7 +676,7 @@ class PemeriksaanCtrl extends Controller
 					$item->keterangan = $request->keterangan_bedah;
 					$item->keterangan_inap = $request->keterangan_inap;
 					
-					if ($request->carabayar_nama == 'Umum') {
+					if ($request->carabayar_nama == 'Umum' || $request->carabayar_nama == 'BPJS Kesehatan') {
 						$item->tanggal_disetujui_asuransi = date('Y-m-d');
 						$item->jam_disetujui_asuransi = date('H:i');
 						$item->posisi = 'Disetujui';
@@ -1232,7 +1246,7 @@ class PemeriksaanCtrl extends Controller
 					$item->defaults = 'Tidak';
 					$item->jenis = 'One Day Care';
 					$item->keterangan = $request->keterangan;
-					if ($request->carabayar_nama_odc == 'Umum') {
+					if ($request->carabayar_nama == 'Umum' || $request->carabayar_nama == 'BPJS Kesehatan') {
 						$item->tanggal_disetujui_asuransi = date('Y-m-d');
 						$item->jam_disetujui_asuransi = date('H:i');
 						$item->posisi = 'Disetujui';
@@ -1291,7 +1305,7 @@ class PemeriksaanCtrl extends Controller
 					$item->keterangan = $request->keterangan_bedah;
 					$item->keterangan_inap = $request->keterangan_inap;
 					
-					if ($request->carabayar_nama == 'Umum') {
+					if ($request->carabayar_nama == 'Umum' || $request->carabayar_nama == 'BPJS Kesehatan') {
 						$item->tanggal_disetujui_asuransi = date('Y-m-d');
 						$item->jam_disetujui_asuransi = date('H:i');
 						$item->posisi = 'Disetujui';
