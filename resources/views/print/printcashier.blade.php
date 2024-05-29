@@ -14,6 +14,7 @@
     </style>
 </head>
 <body>
+<!--	
 <div style="position:fixed; right: 13px; bottom: 10px;">
 	<?php
 		// KTP = Kwitansi Tagihan Pasien
@@ -26,6 +27,7 @@
 		echo $msg;
 	?>	
 </div>
+-->
 <?php $fullpath = storage_path('app/public/header.png');  ?>
 <?php
 $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
@@ -440,6 +442,7 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 		</tr>
 	</table>
 </div>
+<!--
 <div style="position: absolute; left: 16px; bottom: 15px">Dicetak pada 
 	@if ($registrasi->tanggal_bayar != '1990-01-01')
 		<?php
@@ -464,7 +467,9 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 		-
 	@endif
 	:
-	{{ date('i') }}:{{ date('s') }}</div>
+	{{ date('i') }}:{{ date('s') }}
+</div>
+-->
 <?php
 
 function bulans($bln) {
