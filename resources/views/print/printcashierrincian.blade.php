@@ -25,10 +25,10 @@
 						<td>: {{ $registrasi->no_invoice }}</td>
 					</tr>
 					<tr>
-						<td>Sudah Terima Dari</td>
+						<td>Jenis Pembayaran</td>
 						<td>: 
 							@if ($registrasi->carabayar_nama == 'Umum')
-								Pembayaran Pribadi
+								 Pembayaran Pribadi
 							@else
 								{{ $registrasi->carabayar_nama }}
 								@if ($registrasi->nama_asuransi != '' && $registrasi->nama_asuransi != 'Silahkan Pilih')
@@ -69,7 +69,7 @@
 				<table class="header-top">
 					<tr>
 						<td>Tanggal Cetak</td>
-						<td>: {{ tglse($registrasi->tanggal_bayar) }} {{ date('H') }}:{{ date('i') }}:{{ date('s') }}</td>
+						<td>: {{ tglse($registrasi->tanggal_bayar) }}</td>
 					</tr>
 					<tr><td>&nbsp;</td></tr>
 					<tr>
@@ -111,7 +111,7 @@
 				<table class="header-top">
 					<tr>
 						<td>Tanggal Masuk</td>
-						<td>: {{ tglse($registrasi->tanggal) }} {{ $registrasi->waktu }}</td>
+						<td>: {{ tglse($registrasi->tanggal) }}</td>
 					</tr>
 					<tr>
 						<td>Tipe Kunjungan</td>
@@ -692,7 +692,7 @@
 					@else
 						-
 					@endif
-					{{ date('H')}}:{{ date('i') }}<br />
+					<br />
 					<div style="padding-top: 7px; font-size: 10pt">Kasir</div>
 					<br /><br /><br /><br /><br />
 					<span style="text-decoration: underline; font-size: 10pt"><b>{{ \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'Nama')) }}</b></span>
