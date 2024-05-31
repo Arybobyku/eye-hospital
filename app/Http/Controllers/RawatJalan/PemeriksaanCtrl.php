@@ -146,7 +146,6 @@ class PemeriksaanCtrl extends Controller
 						// 		->where('carabayar_nama', '!=', 'bpjs_sehat')
 						->where(function($q){
 							$q->where('status', 'Kunjungan')
-							->orWhere('status', 'Rawat Inap')
 								->orWhere('status', 'Selesai');
 						})
 						->orderBy('status_ro', 'asc')
