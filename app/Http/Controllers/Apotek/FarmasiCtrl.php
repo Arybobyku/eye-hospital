@@ -111,7 +111,10 @@ class FarmasiCtrl extends Controller
 		$page = $request->page - 1; $skip = $page * $this->take;
 		$search = $request->search; $column = $request->column;
 
+		
+
 		if ($request->search != "") {
+	
 			$data = Registrasi::where('delete_soft', '=', 1)
 								->where($column, 'ilike', '%'.$search.'%')
 								->orderBy('no_kwitansi', 'asc')
@@ -137,7 +140,7 @@ class FarmasiCtrl extends Controller
 									$q->where('status_dokter', '=', 'Sudah Diperiksa');
 								})
 								->where($column, 'ilike', '%'.$search.'%')
-								->orderBy('no_kwitansi', 'asc')->count();
+								->orderBy('no_kwitansi', 'asc')->count();		
 		}
 		else {
 			$data = Registrasi::where('delete_soft', '=', 1)

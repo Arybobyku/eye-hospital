@@ -164,6 +164,8 @@ export default {
 					vm.posisieksternal = 'today';
 					vm.loadmain();
 				}
+
+				console.log('tes',values);
 			}
 		},
 
@@ -461,7 +463,6 @@ export default {
 				vm.attach.data.append('column', ''); 
 				vm.attach.data.append('page', 1);
 			}
-			
 			vm.executions(); 
 		},
 		tablereload:function(data = new FormData(), pos = 'main') { 
@@ -479,7 +480,8 @@ export default {
 				vm.attach.url = vm.attach.link.listbelibayar; 
 				vm.attach.data = data; 
 			}
-			else if (vm.posisieksternal == 'mainbayar') {
+		
+			else if (vm.posisieksternal == 'todaybayar') {
 				if (pos == 'outer') {
 					vm.$refs.DatatableBayar.skeleton(); 
 				}
@@ -493,6 +495,8 @@ export default {
 				vm.attach.url = vm.attach.link.list; 
 				vm.attach.data = data; 
 			}
+		
+				console.log('tessss',vm.posisieksternal);
 			vm.position = 'externaltable'; 
 			vm.executions();
 		},
