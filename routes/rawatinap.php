@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RawatJalan\PemeriksaanCtrl;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,13 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('addpaket', [PasienCtrl::class, 'addpaket'])->name('pemeriksaan-addpaket');
 		Route::post('removeobat', [PasienCtrl::class, 'removeobat'])->name('pemeriksaan-removeobat');
 		Route::post('pulang', [PasienCtrl::class, 'pulang'])->name('pemeriksaan-pulang');
+	});
+	Route::prefix('pemeriksaan')->group(function () {
+		Route::post('list', [PemeriksaanCtrl::class, 'list'])->name('pemeriksaan-list');
+		Route::post('detail', [PemeriksaanCtrl::class, 'detail'])->name('pemeriksaan-detail');
+		Route::post('add', [PemeriksaanCtrl::class, 'add'])->name('pemeriksaan-add');
+		Route::post('histori', [PemeriksaanCtrl::class, 'histori'])->name('pemeriksaan-histori');
+		Route::post('call', [PemeriksaanCtrl::class, 'call'])->name('pemeriksaan-call');
 	});
 
 });

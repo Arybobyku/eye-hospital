@@ -726,7 +726,7 @@ export default {
 			else if (posisi == 'formobat') { vm.loadingModal('formobat'); }
 			else if (posisi == 'terimadata') { vm.$refs.Datatable.skeleton(); }
 			else if (posisi == 'call') { vm.$refs.Datatable.skeleton(); }
-			else if (posisi == 'approvement') { vm.$refs.Datatable.skeleton(); }
+			else if (posisi == 'approvement') { vm.$refs.Datatable?.skeleton() ?? vm.$refs.DatatableBayar?.skeleton(); }
 			else if (posisi == 'batalbeli') { vm.$refs.DatatableBeli.skeleton(); }
 			else if (posisi == 'selesaibeli') { vm.$refs.DatatableBeli.skeleton(); }
 			vm.executions();
