@@ -164,6 +164,8 @@ export default {
 					vm.posisieksternal = 'today';
 					vm.loadmain();
 				}
+
+				console.log('tes',values);
 			}
 		},
 
@@ -462,7 +464,6 @@ export default {
 				vm.attach.data.append('column', ''); 
 				vm.attach.data.append('page', 1);
 			}
-			
 			vm.executions(); 
 		},
 		tablereload:function(data = new FormData(), pos = 'main') { 
