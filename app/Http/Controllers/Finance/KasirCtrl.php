@@ -48,7 +48,7 @@ class KasirCtrl extends Controller
 								->where(function($q){
 									$q->where('registrasi.jenis', '=', 'Rawat Jalan');
 								})
-								->orderBy('registrasi.no_kwitansi', 'asc')
+								->orderBy('registrasi.no_kwitansi', 'desc')
 								->where(function($q){
 									$q->where('registrasi.status', 'Kunjungan');
 								})
@@ -70,12 +70,12 @@ class KasirCtrl extends Controller
 									$q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
 								})
 								->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
-								->orderBy('registrasi.no_kwitansi', 'asc')->count();
+								->orderBy('registrasi.no_kwitansi', 'desc')->count();
 		}
 		else {
 			$data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
 									->where('registrasi.delete_soft', '=', 1)
-									->orderBy('registrasi.no_kwitansi', 'asc')
+									->orderBy('registrasi.no_kwitansi', 'desc')
 									->where(function($q){
 										$q->where('registrasi.jenis', '=', 'Rawat Jalan');
 									})
@@ -100,7 +100,7 @@ class KasirCtrl extends Controller
 								->where(function($q) {
 									$q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
 								})
-								->orderBy('registrasi.no_kwitansi', 'asc')->count();
+								->orderBy('registrasi.no_kwitansi', 'desc')->count();
 
 		}
 		
