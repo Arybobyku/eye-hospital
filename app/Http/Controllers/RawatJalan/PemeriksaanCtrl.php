@@ -43,6 +43,7 @@ class PemeriksaanCtrl extends Controller
 								->orderBy('status_ro', 'asc')
 								->where(function($q){
 									$q->where('status', 'Kunjungan')
+									->orWhere('status', 'Rawat Inap')
 										->orWhere('status', 'Selesai');
 								})
 								// ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
@@ -69,6 +70,7 @@ class PemeriksaanCtrl extends Controller
 			$total = Registrasi::where('delete_soft', '=', 1)
 								->where(function($q){
 									$q->where('status', 'Kunjungan')
+									->orWhere('status', 'Rawat Inap')
 										->orWhere('status', 'Selesai');
 								})
 								// ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
@@ -100,6 +102,7 @@ class PemeriksaanCtrl extends Controller
 									->orderBy('id', 'asc')
 									->where(function($q){
 										$q->where('status', 'Kunjungan')
+										->orWhere('status', 'Rawat Inap')
 											->orWhere('status', 'Selesai');
 									})
 								// 	->where('carabayar_nama', '!=', 'BPJS Kesehatan')
@@ -146,6 +149,7 @@ class PemeriksaanCtrl extends Controller
 						// 		->where('carabayar_nama', '!=', 'bpjs_sehat')
 						->where(function($q){
 							$q->where('status', 'Kunjungan')
+							->orWhere('status', 'Rawat Inap')
 								->orWhere('status', 'Selesai');
 						})
 						->orderBy('status_ro', 'asc')
