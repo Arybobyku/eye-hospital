@@ -181,6 +181,7 @@ export default {
 				show: true },
 				{ icon: 'check-square', color: 'btn-warning', posisi: 'approvement', tooltip: 'Approve Obat', item: _item, index: _index, 
 				show: _item.approvement_obat == 'no' ? true : false },
+
 			]
 			return str;
 		},
@@ -430,10 +431,10 @@ export default {
 			else if (key == 'editobat') { vm.position = 'editobat'; vm.attach.url = vm.attach.link.editobat; }
 		},
 
-		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
-		setDatatablebayar: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnbayar.length; j++) { col.push(vm.converterbayar(data[i], i, data[i][vm.columnbayar[j].value] ? data[i][vm.columnbayar[j].value] :vm.columnbayar[j].value, vm.columnbayar[j].value)); } temporer.push(col); } vm.modulebayar.data = temporer; vm.modulebayar.total = total; return temporer; },
-		setDatatablebeli: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnbeli.length; j++) { col.push(vm.converterbeli(data[i], i, data[i][vm.columnbeli[j].value] ? data[i][vm.columnbeli[j].value] :vm.columnbeli[j].value, vm.columnbeli[j].value)); } temporer.push(col); } vm.modulebeli.data = temporer; vm.modulebeli.total = total; return temporer; },
-		setDatatablebelibayar: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnbelibayar.length; j++) { col.push(vm.converterbelibayar(data[i], i, data[i][vm.columnbelibayar[j].value] ? data[i][vm.columnbelibayar[j].value] :vm.columnbelibayar[j].value, vm.columnbelibayar[j].value)); } temporer.push(col); } vm.modulebelibayar.data = temporer; vm.modulebelibayar.total = total; return temporer; },
+		setDatatable: 			function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) 			{ col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } 												temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
+		setDatatablebayar: 		function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnbayar.length; j++) 	{ col.push(vm.converterbayar(data[i], i, data[i][vm.columnbayar[j].value] ? data[i][vm.columnbayar[j].value] :vm.columnbayar[j].value, vm.columnbayar[j].value)); } 					temporer.push(col); } vm.modulebayar.data = temporer; vm.modulebayar.total = total; return temporer; },
+		setDatatablebeli: 		function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnbeli.length; j++) 		{ col.push(vm.converterbeli(data[i], i, data[i][vm.columnbeli[j].value] ? data[i][vm.columnbeli[j].value] :vm.columnbeli[j].value, vm.columnbeli[j].value)); } 							temporer.push(col); } vm.modulebeli.data = temporer; vm.modulebeli.total = total; return temporer; },
+		setDatatablebelibayar: 	function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnbelibayar.length; j++) { col.push(vm.converterbelibayar(data[i], i, data[i][vm.columnbelibayar[j].value] ? data[i][vm.columnbelibayar[j].value] :vm.columnbelibayar[j].value, vm.columnbelibayar[j].value)); } temporer.push(col); } vm.modulebelibayar.data = temporer; vm.modulebelibayar.total = total; return temporer; },
 		tableload:function(pos = 'main') { 
 			if (pos == 'main') {
 				vm.attach.url = vm.attach.link.list; 
@@ -472,6 +473,8 @@ export default {
 				}
 				vm.attach.url = vm.attach.link.listbeli; 
 				vm.attach.data = data; 
+				vm.position = 'externaltable'; 
+				vm.executions();
 			}
 			else if (vm.posisieksternal == 'belibayar') {
 				if (pos == 'outer') {
@@ -479,14 +482,18 @@ export default {
 				}
 				vm.attach.url = vm.attach.link.listbelibayar; 
 				vm.attach.data = data; 
+				vm.position = 'externaltable'; 
+
+				vm.executions();
 			}
-		
 			else if (vm.posisieksternal == 'todaybayar') {
 				if (pos == 'outer') {
 					vm.$refs.DatatableBayar.skeleton(); 
 				}
 				vm.attach.url = vm.attach.link.listbayar; 
 				vm.attach.data = data; 
+				vm.position = 'externaltable'; 	
+				vm.executions();
 			}
 			else {
 				if (pos == 'outer') {
@@ -494,11 +501,12 @@ export default {
 				}
 				vm.attach.url = vm.attach.link.list; 
 				vm.attach.data = data; 
+				vm.position = 'externaltable'; 
+				vm.executions();
 			}
-		
-				console.log('tessss',vm.posisieksternal);
-			vm.position = 'externaltable'; 
-			vm.executions();
+			console.log(vm.posisieksternal);
+			// vm.position = 'externaltable'; 
+			// vm.executions();
 		},
 
 		/*************************************************************************************************************************
