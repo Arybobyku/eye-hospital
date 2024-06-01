@@ -220,7 +220,7 @@ export const formkelurahan = () => {
 		},
 
 		nokwitansi:{
-			title: 'No Kwitansi', for_id: 'form_'+'nokwitansi', type: 'text', required: '', 
+			title: 'No Kwitansi 111', for_id: 'form_'+'nokwitansi', type: 'text', required: '', 
 			name: 'nokwitansi', value: '', disabled: false, show: true, kinds: ''
 		},
 
