@@ -13,6 +13,7 @@ use PenggunaHelp;
 use App\Models\PemeriksaanDokter;
 use App\Models\PemeriksaanRo;
 use App\Models\LayananPasien;
+use App\Models\ListPaketBedahBaru;
 use App\Models\Registrasi;
 use App\Models\Resep;
 use App\Models\ResepRacikan;
@@ -23,6 +24,7 @@ use App\Models\Pasien;
 use App\Models\CaraBayarKamar;
 use App\Jobs\SendPoliJob;
 use App\Jobs\SendAllJob;
+
 use Carbon\Carbon;
 
 class PemeriksaanCtrl extends Controller
@@ -419,8 +421,11 @@ class PemeriksaanCtrl extends Controller
 							$item->nama_dokter = $request->nama_dokter;
 						}
 					}
+					// 	var_dump($item);
+					// die();
 					$item->default = $row->default;
 					$item->save();
+				
 				}
 
 				$tindakanjalan = json_decode($request->tindakanjalan);
@@ -539,7 +544,10 @@ class PemeriksaanCtrl extends Controller
 					$item->total = $harga_kamar;
 					$item->jenis = 'Kamar Rawat Inap';
 					$item->default = 'Tidak';
+					// var_dump($item);
+					// die();
 					$item->save();
+					
 
 					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 
@@ -575,7 +583,7 @@ class PemeriksaanCtrl extends Controller
 				);	
 			
 				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
-
+				LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
 				$remove = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
 
 				if ($request->paket_uuid != '' && $request->paket_uuid != ' ' && $request->paket_uuid) {
@@ -634,6 +642,44 @@ class PemeriksaanCtrl extends Controller
 					$item->jam_masuk_permintaan = date('H:i');
 					$item->save();
 
+									$remove = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+
+					$listpaket = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $request->paket_uuid)->get();
+
+					foreach ($listpaket as $row) {
+						$item = new LayananPasien();
+						$item->uuid = Uuid::uuid4();
+						$item->registrasi_uuid = $request->registrasi_uuid;
+						$item->no_pendaftaran = $request->no_pendaftaran;
+						$item->registrasi_kode = $request->kode;
+						$item->registrasi_nomor = $request->nomor;
+						$item->registrasi_jenis = $request->jenis;
+						$item->pasien_uuid = $request->pasien_uuid;
+						$item->rekam_medis = $request->rekam_medis;
+						$item->nama_pasien = $request->nama_pasien;
+						$item->pengguna_uuid = $request->pengguna_uuid;
+						$item->nama_dokter = $request->nama_dokter;
+						
+						$item->tanggal = date('Y-m-d');
+						$item->waktu = date('H:i');
+					
+						$item->carabayar_uuid = $request->carabayar_uuid;
+						$item->carabayar_nama = $request->carabayar_nama_odc;
+						$item->layanan_uuid = $row->uuid;
+						
+						if ($row->nama == 'Honor Operator Bedah') {
+							$item->nama_layanan = $row->sub_label;
+						}
+						else {
+							$item->nama_layanan = $row->nama;
+						}
+						$item->tarif = $row->harga;
+						$item->total = $row->harga;
+						$item->jenis = $row->label;
+						$item->default = '-';
+						$item->others = 1;
+						$item->save();
+					}
 				}
 
 				if ($request->paket_uuid_bedah != '' && $request->paket_uuid_bedah != ' ' && $request->paket_uuid_bedah) {
@@ -676,6 +722,7 @@ class PemeriksaanCtrl extends Controller
 					$item->keterangan = $request->keterangan_bedah;
 					$item->keterangan_inap = $request->keterangan_inap;
 					
+					
 					if ($request->carabayar_nama == 'Umum' || $request->carabayar_nama == 'BPJS Kesehatan') {
 						$item->tanggal_disetujui_asuransi = date('Y-m-d');
 						$item->jam_disetujui_asuransi = date('H:i');
@@ -709,6 +756,8 @@ class PemeriksaanCtrl extends Controller
 					$item->harga_kamar = $harga_kamar;
 					
 					$item->save();
+
+				
 				}
 
 				$remove = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
@@ -1206,6 +1255,14 @@ class PemeriksaanCtrl extends Controller
 					$item->save();
 				}
 
+				$paketbedah = json_decode($request->paket_uuid);
+				
+				// if (count($paketbedah) > 0) {
+
+				// }
+				LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+				// UNTUK EDIT
+
 				$remove = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
 
 				if ($request->paket_uuid != '' && $request->paket_uuid != ' ' && $request->paket_uuid) {
@@ -1262,6 +1319,50 @@ class PemeriksaanCtrl extends Controller
 					$item->jam_masuk_permintaan = date('H:i');
 
 					$item->save();
+
+					$listpaket = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $request->paket_uuid)->get();
+					//UNTUK MASUKAN DETAIL PAKET KE TAGIHAN
+					foreach ($listpaket as $row) {
+						$item = new LayananPasien();
+						$item->uuid = Uuid::uuid4();
+						$item->registrasi_uuid = $request->registrasi_uuid;
+						$item->no_pendaftaran = $request->no_pendaftaran;
+						$item->registrasi_kode = $request->kode;
+						$item->registrasi_nomor = $request->nomor;
+						$item->registrasi_jenis = $request->jenis;
+						$item->pasien_uuid = $request->pasien_uuid;
+						$item->rekam_medis = $request->rekam_medis;
+						$item->nama_pasien = $request->nama_pasien;
+						$item->pengguna_uuid = $request->pengguna_uuid;
+						$item->nama_dokter = $request->nama_dokter;
+						
+						$item->tanggal = date('Y-m-d');
+						$item->waktu = date('H:i');
+					
+						$item->carabayar_uuid = $request->carabayar_uuid;
+						$item->carabayar_nama = $request->carabayar_nama_odc;
+						$item->layanan_uuid = $row->uuid;
+						
+						if ($row->nama == 'Honor Operator Bedah') {
+							$item->nama_layanan = $row->sub_label;
+						}
+						else {
+							$item->nama_layanan = $row->nama;
+						}
+						$item->tarif = $row->harga;
+						$item->total = $row->harga;
+						$item->jenis = $row->label;
+						$item->default = '-';
+						$item->others = 1;
+						$item->save();
+					}
+
+
+echo("kontol2");
+						// 					echo($layananodc->nama_pasien);
+						// $layananodc->save();
+										
+
 
 				}
 
@@ -1338,6 +1439,8 @@ class PemeriksaanCtrl extends Controller
 					$item->harga_kamar = $harga_kamar;
 
 					$item->save();
+
+
 				}
 
 				$no_kwitansi = '';
