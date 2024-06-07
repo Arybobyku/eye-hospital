@@ -114,6 +114,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 
 	Route::prefix('stockopname')->group(function () {
 		Route::post('list', [StockOpnameCtrl::class, 'list'])->name('stockopname-list');
+		Route::post('rincian', [StockOpnameCtrl::class, 'rincian'])->name('apotek-stockopname-rincian');
 	});
 
 	Route::prefix('accopname')->group(function () {

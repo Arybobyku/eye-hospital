@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Preview\KartuStockCtrl;
 use Illuminate\Support\Facades\Route;
 
 /*

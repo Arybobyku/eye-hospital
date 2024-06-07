@@ -8,6 +8,7 @@
 	<Loader ref="Loader"></Loader>
 </div>
 <FormUnit ref="FormUnit" @dialog="dialog" @parsingForm="parsingForm"></FormUnit>
+<DetailRincian ref="DetailRincian" @dialog="dialog"></DetailRincian>
 </template>
 
 <script>
@@ -23,6 +24,7 @@ export default {
 	components: { toast, Swal, 
 		FormUnit: defineAsyncComponent(() => import('./FormUnit.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+		DetailRincian: defineAsyncComponent(() => import('./DetailRincian.vue')),
 	},
 	created: function () {},
 	mounted: function () {
@@ -50,6 +52,7 @@ export default {
 			// { value: 'stockbesar', label: 'Stock Satuan Besar', type: 'text', search: false, close: false, button: false },
 			{ value: 'stockkecil', label: 'Stock Satuan Besar', type: 'text', search: false, close: false, button: false },
 			{ value: 'kalkulasi', label: 'Kalkulasi', type: 'text', search: false, close: false, button: false },
+			{ value: 'rincianhtml', label: '', type: 'text', search: false, close: false, button: false },
 			// { value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
 		],
 		module: { data: [], column: [], total: 0, ispaging: true },
@@ -73,6 +76,14 @@ export default {
 			return str;
 		},
 
+		rincianhtml:function(_item, _index) {
+			let str = [
+				{ icon: 'book', color: 'btn-warning', posisi: 'rincian', tooltip: 'Lihat rincian', item: _item, index: _index, show: true },
+			]
+			return str;
+		},
+
+
 		stockbesar:function (data) { return data.jumlah_kecil/data.hitung_kecil + ' ' + data.nama_satuan_besar },
 		stockkecil:function (data) { return vm.numberdigit(data.jumlah_kecil) + ' ' + data.nama_satuan_kecil },
 		kalkulasi:function (data) { 
@@ -84,6 +95,7 @@ export default {
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
+			else if (identity == 'rincianhtml') { _tmp = { value: vm.rincianhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'stockbesar') { _tmp = { value: vm.stockbesar(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'stockkecil') { _tmp = { value: vm.stockkecil(data), ishtml: 'html', style: '' }; }
@@ -114,6 +126,9 @@ export default {
 				vm.attach.data.append('uuid', data.uuid);
 				vm.attach.url = vm.attach.link.remove;
 				vm.dialog('Yakin ingin menghapus data yang terpilih dihalaman ini.', 'Ya, hapus data', 'removedata');
+			} else if (posisi == 'rincian') {
+				vm.position = "lihatrincian";
+				vm.$refs.DetailRincian.show('lihatrincian', `Rincian ${data.nama}`, '', data);
 			}
 		},
 

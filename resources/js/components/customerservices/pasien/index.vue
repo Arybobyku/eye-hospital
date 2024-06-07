@@ -20,6 +20,8 @@
 	<Loader ref="Loader"></Loader>
 </div>
 
+<FormPilihRoSuratSehat ref="FormPilihRoSuratSehat" @dialog="dialog" />
+<FormPilihRoSuratRo ref="FormPilihRoSuratRo" @dialog="dialog" />
 <FormPasien ref="FormPasien" @dialog="dialog" @parsingForm="parsingForm"></FormPasien>
 <FormDetail ref="FormDetail" @dialog="dialog" @parsingForm="parsingForm"></FormDetail>
 <FormRegistrasi ref="FormRegistrasi" @mainreload="mainreload"></FormRegistrasi>
@@ -40,6 +42,8 @@ import Swal from 'sweetalert2';
 export default {
 	emits: ["titletrigger", "repatch"],
 	components: { toast, Swal, 
+		FormPilihRoSuratSehat: defineAsyncComponent(() => import('./FormPilihRoSuratSehat.vue')),
+		FormPilihRoSuratRo: defineAsyncComponent(() => import('./FormPilihRoSuratRo.vue')),
 		FormPasien: defineAsyncComponent(() => import('./FormPasien.vue')),
 		FormDetail: defineAsyncComponent(() => import('./FormDetail.vue')),
 		FormCetakan: defineAsyncComponent(() => import('./FormCetakan.vue')),
@@ -188,7 +192,10 @@ export default {
 				{ icon: 'printer', color: 'btn-info', posisi: 'uploadfile', tooltip: 'Upload Surat Persetujuan', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cetakkartu', tooltip: 'Cetak Kartu', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaklabel', tooltip: 'Cetak Label', item: _item, index: _index, show: true },
-				{ icon: 'printer', color: 'btn-warning', posisi: 'cetakidentitas', tooltip: 'Cetak Identitas', item: _item, index: _index, show: true }
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetakidentitas', tooltip: 'Cetak Identitas', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratsakit', tooltip: 'Cetak Surat Sakit', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratsehat', tooltip: 'Cetak Surat Sehat', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratro', tooltip: 'Cetak Surat Keterangan Hasil Pemeriksaan Mata', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -207,7 +214,10 @@ export default {
 				{ icon: 'printer', color: 'btn-info', posisi: 'uploadfile', tooltip: 'Upload Surat Persetujuan', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cetakkartu', tooltip: 'Cetak Kartu', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaklabel', tooltip: 'Cetak Label', item: _item, index: _index, show: true },
-				{ icon: 'printer', color: 'btn-warning', posisi: 'cetakidentitas', tooltip: 'Cetak Identitas', item: _item, index: _index, show: true }
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetakidentitas', tooltip: 'Cetak Identitas', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratsakit', tooltip: 'Cetak Surat Sakit', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratsehat', tooltip: 'Cetak Surat Sehat', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratro', tooltip: 'Cetak Surat Keterangan Hasil Pemeriksaan Mata', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -389,6 +399,19 @@ export default {
 			}
 			else if (posisi == 'cetakidentitas') {
 				window.open('/customerservices/pasien/cetakidentitas/' + data.uuid, '_blank');
+			}
+			else if (posisi == 'cetaksuratsakit') {
+				window.open('/customerservices/pasien/cetaksuratsakit/' + data.uuid, '_blank');
+			}
+			else if (posisi == 'cetaksuratsehat') {
+				vm.position = "cetaksuratsehat";
+				vm.$refs.FormPilihRoSuratSehat.show(data.uuid);
+				setTimeout(() => { vm.loadingModal('cetaksuratsehat'); }, 250, this);
+			}
+			else if (posisi == 'cetaksuratro') {
+				vm.position = "cetaksuratro";
+				vm.$refs.FormPilihRoSuratRo.show(data.uuid);
+				setTimeout(() => { vm.loadingModal('cetaksuratro'); }, 250, this);
 			}
 		},
 

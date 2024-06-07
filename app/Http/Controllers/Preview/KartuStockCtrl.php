@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Preview;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Ramsey\Uuid\Uuid;
 use DB;
 use Cookie;
@@ -35,7 +36,7 @@ class KartuStockCtrl extends Controller
 		if ($posisi == 'kartustockall') { $uuid = 'all'; $nama = 'All Kartu Stock'; }
 
 		$filename = date('Y-m-d').'- Kartu Stock Obat-Alkes - '.$nama.'.xlsx';
-		return \Excel::download(new CetakKartuStock($posisi, $dari, $ke), $filename);
+		return Excel::download(new CetakKartuStock($posisi, $dari, $ke), $filename);
 	}
 
 }

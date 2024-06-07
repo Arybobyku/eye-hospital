@@ -4,6 +4,14 @@
 		
 	<div class="tab-content">
 		<div class="content-tab-in" v-if="tab.content.pasien">
+			<!-- <div class="flex justify-end mb-2">
+				<a href="/master/pasien/listexcel" download>
+					<button class="tooltip btn-success">
+						<vue-feather type="printer"></vue-feather>
+						<span class="tooltiptext">Cetak ke Excel</span>
+					</button>
+				</a>
+			</div> -->
 			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
 		</div>
 		<div class="content-tab-in" v-else-if="tab.content.pasienbelum">

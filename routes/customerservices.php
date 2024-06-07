@@ -43,6 +43,13 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::get('cetakkartu/{uuid}', [PasienCtrl::class, 'pdf'])->name('cs-pasien-pdf');
 		Route::get('cetaklabel/{uuid}', [PasienCtrl::class, 'label'])->name('cs-pasien-pdf');
 		Route::get('cetakidentitas/{uuid}', [PasienCtrl::class, 'identitaspasien'])->name('cs-identitaspasien-pdf');
+
+		Route::post('listpemeriksaan/{uuid}', [PasienCtrl::class, 'listpemeriksaan'])->name('cs-listpemeriksaan');
+
+		Route::get('cetaksuratsakit/{uuid}', [PasienCtrl::class, 'cetaksuratsakit'])->name('cs-cetaksuratsakit-docx');
+		Route::get('cetaksuratsehat/{uuid}', [PasienCtrl::class, 'cetaksuratsehat'])->name('cs-cetaksuratsehat-docx');
+		Route::get('cetaksuratro/{uuid}', [PasienCtrl::class, 'cetaksuratro'])->name('cs-cetaksuratro-docx');
+
 		Route::post('update', [PasienCtrl::class, 'update'])->name('cs-pasien-update');
 		Route::post('detail', [PasienCtrl::class, 'detail'])->name('cs-pasien-detail');
 		Route::post('uploadfile', [PasienCtrl::class, 'uploadfile'])->name('cs-pasien-uploadfile');

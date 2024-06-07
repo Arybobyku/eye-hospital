@@ -59,4 +59,42 @@ class StockOpnameCtrl extends Controller
 	
 	}
 
+	public function rincian(Request $request){
+		$mintaTerima = DB::table('minta_terima_opname')->where('obat_uuid', $request->obat_uuid)
+			->where('status', 'Diterima')
+			->where('delete_soft', 1)
+			->select(
+				DB::raw("'keluar' as jenis"), 
+				DB::raw("dari_nama_unit as domain"), 
+				DB::raw('minta_kecil::text as jumlah_kecil'), 
+				DB::raw('minta_besar::text as jumlah_besar'), 
+				'tanggal_terima as tanggal', 
+				'jam_terima as waktu', 
+				'created_at',
+			);
+		// Pakai kolom jumlah_kecil dan jumlah_besar
+		// Asumsi pembelian yang sudah approve saja yang dianggap obat masuk
+		$pembelian = DB::table('pembelian_detail', 'detail')
+			->join('pembelian', 'detail.pembelian_uuid', '=', 'pembelian.uuid')
+			->where('pembelian.status', 'approve')
+			->where('detail.obat_uuid', $request->obat_uuid)
+			->where('detail.delete_soft', 1)
+			->where('pembelian.delete_soft', 1)
+			->select(
+				DB::raw("'masuk' as jenis"), 
+				DB::raw("pembelian.nama_supplier as domain"), 
+				DB::raw('jumlah_kecil::text'), 
+				DB::raw('jumlah_besar::text'), 
+				DB::raw('DATE(detail.created_at) as tanggal'), 
+				DB::raw("to_char(detail.created_at, 'hh24:mi') as waktu"), 
+				'detail.created_at'
+			);
+		
+		$data = $mintaTerima
+			->union($pembelian)
+			->orderBy('created_at', 'DESC')
+			->paginate(15);
+
+		return response()->json($data);
+	}
 }

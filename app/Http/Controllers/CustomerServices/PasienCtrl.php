@@ -17,6 +17,7 @@ use App\Models\UploadSuratPersetujuan;
 use App\Models\Registrasi;
 use App\Models\SuratPersetujuan;
 use App\Models\PenanggungJawab;
+use PhpOffice\PhpWord\TemplateProcessor;
 use PDF;
 
 
@@ -594,8 +595,136 @@ class PasienCtrl extends Controller
     $registrasi = Registrasi::where('pasien_uuid', '=', $uuid)->orderBy('id', 'desc')->first();
     $pasien = Pasien::where('uuid', '=', $uuid)->orderBy('id', 'desc')->first();
     $penanggungjawab = PenanggungJawab::where('pasien_uuid', '=', $uuid)->orderBy('id', 'desc')->first();
-    $pdf->loadView('print.cetakidentitas', compact('pasien', 'registrasi', 'penanggungjawab'))->setPaper('a4', 'potrait');;
+    $pdf->loadView('print.cetakidentitas', compact('pasien', 'registrasi', 'penanggungjawab'))->setPaper('a4', 'potrait');
 		return $pdf->stream();
   }
 
+	public function listpemeriksaan($uuid){
+		$registrasi = Registrasi::select([
+			DB::raw("CONCAT(registrasi.kode, registrasi.nomor) as kode"), 'registrasi.tanggal', 'registrasi.uuid',
+			'registrasi.nama_dokter',
+			'p_ro.tekanan_darah', 'p_ro.berat_badan', 'p_ro.tinggi_badan', 'p_ro.suhu', 
+			'p_ro.ocular_dextra_autoref', 'p_ro.ocular_dextra_visus', 'p_ro.ocular_dextra_tonometri',
+			'p_ro.ocular_sinistra_autoref', 'p_ro.ocular_sinistra_visus', 'p_ro.ocular_sinistra_tonometri',
+		])->where('registrasi.pasien_uuid', $uuid)
+			->leftJoin('pemeriksaan_dokter', 'pemeriksaan_dokter.registrasi_uuid', '=', 'registrasi.uuid')
+			// Entah kenapa, pemeriksaan_ro dapat diinput lebih dari sekali untuk satu registrasi
+			->leftJoinSub(
+					fn($q) => $q->from('pemeriksaan_ro')->select([
+							'registrasi_uuid', 'tekanan_darah', 'berat_badan', 'tinggi_badan', 'suhu', 'ocular_dextra_autoref',
+							'ocular_dextra_visus', 'ocular_dextra_tonometri', 'ocular_sinistra_autoref',
+							'ocular_sinistra_visus', 'ocular_sinistra_tonometri'
+						])->selectRaw('RANK() OVER (PARTITION BY pasien_uuid ORDER BY created_at DESC) as urutan')
+					, 'p_ro', fn($q) => $q->on('p_ro.registrasi_uuid', '=', 'registrasi.uuid')->where('p_ro.urutan', '=', 1)
+			)
+			->orderBy('registrasi.created_at', 'DESC');
+
+		return response()->json($registrasi->get());
+	}
+
+	public function cetaksuratsakit($uuid){
+    $pasien = Pasien::where('uuid', '=', $uuid)->orderBy('id', 'desc')->first();
+
+		$values = [
+			'nama' => $pasien->nama,
+			'rekam_medis' => $pasien->rekam_medis,
+			'now' => now()->locale('id_ID')->isoFormat('MMMM YYYY')
+		];
+
+		$template = new TemplateProcessor(resource_path("doc_templates/suratsakit.docx"));
+		$template->setValues($values);
+
+		Storage::makeDirectory('tmp');
+		$storagePath = storage_path("/app/tmp/Surat Sakit - {$pasien->rekam_medis} - {$pasien->nama}.docx");
+
+		$template->saveAs($storagePath);
+
+		return response()->download($storagePath, "Surat Sakit - {$pasien->rekam_medis} - {$pasien->nama}.docx")
+				->deleteFileAfterSend();
+	}
+
+	public function cetaksuratsehat($uuid){
+		$pasien = Registrasi::select([
+			'pasien.tanggal_lahir', 'pasien.alamat', 'pasien.nama', 'pasien.rekam_medis',
+			'p_ro.tekanan_darah', 'p_ro.berat_badan', 'p_ro.tinggi_badan', 'p_ro.suhu',
+		])->where('registrasi.uuid', $uuid)
+			->join('pasien', 'pasien.uuid', '=', 'registrasi.pasien_uuid')
+			// Entah kenapa, pemeriksaan_ro dapat diinput lebih dari sekali untuk satu registrasi
+			->leftJoinSub(
+					fn($q) => $q->from('pemeriksaan_ro')->select([
+							'registrasi_uuid', 'tekanan_darah', 'berat_badan', 'tinggi_badan', 'suhu',
+						])->selectRaw('RANK() OVER (PARTITION BY pasien_uuid ORDER BY created_at DESC) as urutan')
+					, 'p_ro', fn($q) => $q->on('p_ro.registrasi_uuid', '=', 'registrasi.uuid')->where('p_ro.urutan', '=', 1)
+			)->first();
+
+		$values = [
+			'nama' => $pasien->nama,
+			'age' => now()->diffInYears(\Carbon\Carbon::parse($pasien->tanggal_lahir)),
+			'address' => $pasien->alamat,
+			'height' => $pasien->tinggi_badan,
+			'weight' => $pasien->berat_badan,
+			'blood_pressure' => $pasien->tekanan_darah,
+			'temp' => $pasien->suhu,
+			'now' => now()->locale('id_ID')->isoFormat('MMMM YYYY')
+		];
+
+		$template = new TemplateProcessor(resource_path("doc_templates/suratsehat.docx"));
+		$template->setValues($values);
+
+		Storage::makeDirectory('tmp');
+		$storagePath = storage_path("/app/tmp/Surat Sehat - {$pasien->rekam_medis} - {$pasien->nama}.docx");
+
+		$template->saveAs($storagePath);
+
+		return response()->download($storagePath, "Surat Sehat - {$pasien->rekam_medis} - {$pasien->nama}.docx")
+				->deleteFileAfterSend();
+	}
+
+	public function cetaksuratro($uuid){
+		$pasien = Registrasi::select([
+			'pasien.tanggal_lahir', 'pasien.alamat', 'pasien.nama', 'pasien.rekam_medis',
+			'registrasi.tanggal', DB::raw('pemeriksaan_dokter.tanggal as tanggal_periksa'),
+			'p_ro.ocular_dextra_autoref', 'p_ro.ocular_dextra_visus', 'p_ro.ocular_dextra_tonometri',
+			'p_ro.ocular_sinistra_autoref', 'p_ro.ocular_sinistra_visus', 'p_ro.ocular_sinistra_tonometri',
+		])->where('registrasi.uuid', $uuid)
+			->leftJoin('pemeriksaan_dokter', 'pemeriksaan_dokter.registrasi_uuid', '=', 'registrasi.uuid')
+			->join('pasien', 'pasien.uuid', '=', 'registrasi.pasien_uuid')
+			// Entah kenapa, pemeriksaan_ro dapat diinput lebih dari sekali untuk satu registrasi
+			->leftJoinSub(
+					fn($q) => $q->from('pemeriksaan_ro')->select([
+							'registrasi_uuid', 'tekanan_darah', 'berat_badan', 'tinggi_badan', 'suhu', 'ocular_dextra_autoref',
+							'ocular_dextra_visus', 'ocular_dextra_tonometri', 'ocular_sinistra_autoref',
+							'ocular_sinistra_visus', 'ocular_sinistra_tonometri'
+						])->selectRaw('RANK() OVER (PARTITION BY pasien_uuid ORDER BY created_at DESC) as urutan')
+					, 'p_ro', fn($q) => $q->on('p_ro.registrasi_uuid', '=', 'registrasi.uuid')->where('p_ro.urutan', '=', 1)
+			)->first();
+
+		$values = [
+			'nama' => $pasien->nama,
+			'rekam_medis' => $pasien->rekam_medis,
+			'tanggal' => $pasien->tanggal_periksa ?? $pasien->tanggal,
+			'autorefkeratometry_od' => $pasien->ocular_dextra_autoref,
+			'autorefkeratometry_os' => $pasien->ocular_sinistra_autoref,
+			'visus_od' => $pasien->ocular_dextra_visus,
+			'visus_os' => $pasien->ocular_sinistra_visus,
+			'tonometry_od' => $pasien->ocular_dextra_tonometri,
+			'tonometry_os' => $pasien->ocular_sinistra_tonometri,
+			'slit_lamp' => '',
+			'funduscopy' => '',
+			'diagnosa' => '',
+			'anjuran' => '',
+			'now' => now()->locale('id_ID')->isoFormat('MMMM YYYY')
+		];
+
+		$template = new TemplateProcessor(resource_path("doc_templates/suratro.docx"));
+		$template->setValues($values);
+
+		Storage::makeDirectory('tmp');
+		$storagePath = storage_path("/app/tmp/Surat RO - {$pasien->rekam_medis} - {$pasien->nama}.docx");
+
+		$template->saveAs($storagePath);
+
+		return response()->download($storagePath, "Surat RO - {$pasien->rekam_medis} - {$pasien->nama}.docx")
+				->deleteFileAfterSend();
+	}
 }

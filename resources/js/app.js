@@ -5,6 +5,8 @@ import router from './router.js';
 import VueFeather from 'vue-feather';
 import Loader from './section/Loader.vue';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 
 const app = createApp({});
 app.config.globalProperties.$dbNameIndexDb = 'indexDbHospital';
@@ -31,6 +33,7 @@ window.Echo = new Echo({
 
 app.component('data-component', Main);
 app.component(VueFeather.name, VueFeather);
+app.component('VueDatePicker', VueDatePicker);
 app.component('Loader', Loader)
 
 app.use(router).mount('#app')

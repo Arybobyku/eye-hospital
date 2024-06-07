@@ -63,17 +63,20 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="pagination" v-if="body.length > 0 && pagination.ispaging">
-		<a href="javascript:void(0)" v-on:click="prev()">&laquo;</a>
-		<a href="javascript:void(0)" v-for="item in pagination.data" v-on:click="page(item)" :class="item == pagination.page ? 'active' : ''">{{ item }}</a>
-		<a href="javascript:void(0)" v-on:click="next()">&raquo;</a>
+	<div style="display: flex; gap: 2rem; align-items: center; margin: 1rem 0rem;">
+		<strong style="margin-left: auto; font-size: 1.25rem; padding: 0;">Total: {{ pagination.total }}</strong>
+		<div class="pagination" style="margin-bottom: 0;" v-if="body.length > 0 && pagination.ispaging">
+			<a href="javascript:void(0)" v-on:click="prev()">&laquo;</a>
+			<a href="javascript:void(0)" v-for="item in pagination.data" v-on:click="page(item)" :class="item == pagination.page ? 'active' : ''">{{ item }}</a>
+			<a href="javascript:void(0)" v-on:click="next()">&raquo;</a>
+		</div>
 	</div>
 </template>
 
 <script>
 var vm;
 export default {
-	emits: ["tablereload", "tablebutton"],
+	emits: ["tablereload", "tablebutton", 'ready'],
 	props: { module: { type: Object } },
 	mounted:function() { 
 		vm = this; 
@@ -88,6 +91,8 @@ export default {
 				if (event.target.className == '') { vm.hidemenuothers(0); }
 			} 
 			catch { console.log('mistmatch'); } });
+
+		this.$nextTick(() => this.$emit('ready'));
 	},
 	data:() => {
 		return {

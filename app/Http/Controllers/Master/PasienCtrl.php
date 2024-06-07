@@ -94,9 +94,7 @@ class PasienCtrl extends Controller
 		}
 		
 		return response()->json(['data' => $data, 'total' => $total]);
-	
 	}
-
 
 	public function obat(Request $request) {
 
