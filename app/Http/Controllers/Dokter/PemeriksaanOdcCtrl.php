@@ -395,7 +395,7 @@ class PemeriksaanOdcCtrl extends Controller
 				}
 
 				$arr = array(
-					'status_dokter' => 'Sudah Diperiksa', 
+					'status_dokter' => 'Belum Diperiksa', 
 					'dokter_jam_update' => date('H:i'),
 					'catatan' => $request->catatan,
 					'paket_bedah_uuid' => $request->nama_paket != '' && $request->nama_paket != 'Silahkan Pilih' ? $request->paket_uuid : '-',
@@ -791,7 +791,7 @@ class PemeriksaanOdcCtrl extends Controller
 				}
 				$arr = array(
 					'ruang_poliklinik' => $request->ruang_poliklinik,
-					'status_dokter' => 'Sudah Diperiksa',
+					'status_dokter' => 'Belum Diperiksa',
 					'dokter_jam_selesai' => date('H:i'),
 					'catatan' => $request->catatan,
 					'no_invoice' => $no_invoice,

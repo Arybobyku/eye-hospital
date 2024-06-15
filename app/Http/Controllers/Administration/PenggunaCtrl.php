@@ -283,7 +283,10 @@ class PenggunaCtrl extends Controller
 			PenggunaHelp::log('Memblokir data pengguna dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
 		}
 
-		$arr = array('status' => 'block');
+		$arr = array(
+			'status' => 'block',
+			'delete_soft' => 0
+		);
 		
 		try{
 			DB::beginTransaction();
@@ -310,7 +313,10 @@ class PenggunaCtrl extends Controller
 			PenggunaHelp::log('Mengaktifkan data pengguna dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
 		}
 
-		$arr = array('status' => 'active');
+		$arr = array(
+			'status' => 'active',
+			'delete_soft' => 1
+		);
 		
 		try{
 			DB::beginTransaction();
