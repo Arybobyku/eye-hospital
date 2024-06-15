@@ -39,6 +39,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('list', [StockOpnameCtrl::class, 'list'])->name('apotek-stockopname-list');
 		Route::post('ambil', [StockOpnameCtrl::class, 'ambil'])->name('apotek-stockopname-ambil');
 		Route::post('kembali', [StockOpnameCtrl::class, 'kembali'])->name('apotek-stockopname-kembali');
+		Route::post('rincian', [StockOpnameCtrl::class, 'rincian'])->name('apotek-stockopname-rincian');
 	});
 
 	Route::prefix('farmasi')->group(function () {
