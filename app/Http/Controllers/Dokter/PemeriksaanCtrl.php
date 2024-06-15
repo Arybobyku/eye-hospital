@@ -587,6 +587,9 @@ class PemeriksaanCtrl extends Controller
 				$remove = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
 
 				if ($request->paket_uuid != '' && $request->paket_uuid != ' ' && $request->paket_uuid) {
+					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update([
+						"apakah_paket" => "Ya"
+					]);
 					
 					// Periksa asuransinya : jika asuransi maka masuk ke akun asuransi
 					//											 jika umum maka masuk ke dalam bagian umum
@@ -1267,6 +1270,10 @@ class PemeriksaanCtrl extends Controller
 
 				if ($request->paket_uuid != '' && $request->paket_uuid != ' ' && $request->paket_uuid) {
 					
+					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update([
+						"apakah_paket" => "Ya"
+					]);
+					
 					// Periksa asuransinya : jika asuransi maka masuk ke akun asuransi
 					//											 jika umum maka masuk ke dalam bagian umum
 					$jenis_pembayaran = '-';
@@ -1356,12 +1363,6 @@ class PemeriksaanCtrl extends Controller
 						$item->others = 1;
 						$item->save();
 					}
-
-
-echo("kontol2");
-						// 					echo($layananodc->nama_pasien);
-						// $layananodc->save();
-										
 
 
 				}
