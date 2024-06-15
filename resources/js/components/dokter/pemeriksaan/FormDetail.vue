@@ -394,6 +394,8 @@
 							<div class="content-tab-in" v-if="tab.content.rawatinapjalan">
 								<div class="grid">
 									<div class="col-9">
+
+								<DigitalSignature/>
 										<!-- <Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)" 
 											:ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
 											:selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.db_table)"
@@ -727,13 +729,10 @@
 									</div>
 								</div>
 							</div>
-
 						</div>
 
 					</div>
-
 				</div>
-
 				<div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
 					<div class="col-8"></div>
 					<div class="col-4" style="text-align: right"  v-if="ishide">
@@ -774,6 +773,7 @@ export default {
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
 		Textarea: defineAsyncComponent(() => import('../../../section/Textarea.vue')),
+		DigitalSignature: defineAsyncComponent(() => import('../../digital-signature/DigitalSignature.vue')),
 	},
 	computed: {
 		
