@@ -77,7 +77,8 @@ class PemeriksaanCtrl extends Controller
 				$data = $data->where('pengguna_uuid', '=', Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
 			}
 			$data= $data->orderBy('status_dokter', 'asc')
-								->orderBy('posisi_antrian_dokter', 'asc')
+								->orderBy('tanggal', 'desc')
+								->orderBy('posisi_antrian_dokter', 'asc')		
 								// ->where(function($q) {
 								// 	$q->where('status', 'Kunjungan')
 								// 		->orWhere('status', 'Selesai')
@@ -122,12 +123,14 @@ class PemeriksaanCtrl extends Controller
 			$total = $total->where('berkebutuhan_khusus', '=', 'Tidak')
 								->where($column, 'ilike', '%'.$search.'%')
 								->whereDate('tanggal', '=', date('Y-m-d'))
+								->orderBy('tanggal', 'desc')
 								->orderBy('posisi_antrian_dokter', 'asc')
 								->orderBy('status_dokter', 'asc')->count();
 		}
 		else {
 			$data = Registrasi::where('delete_soft', '=', 1)
 									->orderBy('status_dokter', 'asc')
+									->orderBy('tanggal', 'desc')
 									->orderBy('posisi_antrian_dokter', 'asc')
 									// ->where('apakah_paket', '=', 'Tidak')
 								// 	->where('carabayar_nama', '!=', 'BPJS Kesehatan')
