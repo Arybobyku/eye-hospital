@@ -7,84 +7,17 @@
 			</div>
 			<div class="modal-body" v-if="form">
 				<div class="grid">
-					<div class="col-4 form-mr">
-						<table class="table">
-							<tbody>
-								<tr>
-									<td>Tanggal Pendaftaran</td>
-									<td><strong>{{ datename(detail.tanggal) }}</strong></td>
-								</tr>
-								<tr>
-									<td>No Rekam Medis</td>
-									<td><strong>{{ detail.rekam_medis }}</strong></td>
-								</tr>
-								<tr>
-									<td>Nama Lengkap</td>
-									<td><strong>{{ detail.nama_pasien }}</strong></td>
-								</tr>
-								<tr>
-									<td>Tanggal Lahir</td>
-									<td><strong>{{ datename(detail.tanggal_lahir) }}</strong></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="col-4">
-						<table class="table">
-							<tbody>
-								<tr>
-									<td>Jenis Kelamin</td>
-									<td><strong>{{ detail.jenis_kelamin }}</strong></td>
-								</tr>
-								<tr>
-									<td>Nama Provinsi</td>
-									<td><strong>{{ detail.nama_provinsi }}</strong></td>
-								</tr>
-								<tr>
-									<td>Nama Kecamatan</td>
-									<td><strong>{{ detail.nama_kecamatan }}</strong></td>
-								</tr>
-								<tr>
-									<td>Alamat</td>
-									<td><strong>{{ detail.alamat }}</strong></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="col-4 form-ml">
-						<table class="table">
-							<tbody>
-								<tr>
-									<td>Nomor Handphone</td>
-									<td><strong>{{ detail.no_handphone }}</strong></td>
-								</tr>
-								<tr>
-									<td>Cara Bayar</td>
-									<td><strong>{{ detail.carabayar_nama }}</strong></td>
-								</tr>
-								<tr>
-									<td>Dokter yang menangani</td>
-									<td><strong>{{ detail.nama_dokter }}</strong></td>
-								</tr>
-								<tr>
-									<td>Triase</td>
-									<td><strong>{{ detail.berkebutuhan_khusus }}</strong></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class="col-12" v-if="detail.berkebutuhan_khusus!='Tidak'">
-						<table class="table">
-							<tbody>
-								<tr>
-									<td>Keterangan berkebutuhan Khusus</td>
-									<td><strong>{{ detail.keterangan_berkebutuhan }}</strong></td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
+						<div class="col-4 form-mr">
+							<ul class="list-detail">
+							<li>Tanggal Pendaftaran<span><strong>{{ datename(detail.tanggal) }}</strong></span></li>
+							<li>No Rekam Medis<span><strong>{{detail.rekam_medis}}</strong></span></li>
+							<li>Nama Lengkap<span><strong>{{detail.nama_pasien}}</strong></span></li>
+							<li>Tanggal Lahir<span><strong>{{datename(detail.tanggal_lahir) }}</strong></span></li>
+							<li>Jenis Kelamin<span><strong>{{detail.jenis_kelamin}}</strong></span></li>
+							</ul>
+						</div>
+					
+				
 					<!-- <div class="col-6 form-mr" style="margin-top: 10px;">
 						<Inputed :ref="form.panjar.name" :form="form.panjar"></Inputed>
 					</div>
@@ -93,17 +26,18 @@
 						<Inputed :ref="form.keteranganpanjar.name" :form="form.keteranganpanjar"></Inputed>
 					</div> -->
 
-
-					<div class="col-12">
+			
+					<div class="col-8">
 						
-						<div class="tab-lines"><div class="tab" style="width: 100%;"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
+						<div class="tab-lines">
+						<div class="tab" style="width: 100%;"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
 		
 						
 						<div class="tab-content">
-							<div style="position: relative;" class="content-tab-in" v-if="tab.content.ro">
+							<div class="content-tab-in" v-if="tab.content.ro">
 								<div class="grid">
 									<div class="col-12">
-										<table class="table embed" style="border: 0;" v-if="pemeriksaanro">
+										<table class="table embed" style="border: 0" v-if="pemeriksaanro">
 											<tr>
 												<td colspan="2">
 													<table class="table">
@@ -176,9 +110,17 @@
 													</table>
 												</td>
 											</tr>
+										</table>
+									</div>
+								</div>
+							</div>
+							<div style="position: relative;" class="content-tab-in" v-if="tab.content.vital">
+										<table class="table embed" style="width: 90%;"v-if="pemeriksaanro">
+												<tbody>
 
 											<tr>
 												<th style="text-align:left">Keluhan Utama</th>
+												
 												<td style="text-align: right;">{{ pemeriksaanro.keluhan_utama }}</td>
 											</tr>
 											<tr>
@@ -226,61 +168,63 @@
 												<th style="text-align:left">Skala Nyeri</th>
 												<td style="text-align: right;">{{ pemeriksaanro.skala_nyeri }}</td>
 											</tr>
-
 											<tr>
 												<th style="text-align:left">Lokasi Nyeri</th>
-												<td style="text-align: right;">{{ detail.lokasi_nyeri }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.lokasi_nyeri }}</td>
 											</tr>
 
 											<tr>
 												<th style="text-align:left">Durasi Nyeri</th>
-												<td style="text-align: right;">{{ detail.durasi_nyeri }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.durasi_nyeri }}</td>
 											</tr>
 
 											<tr>
 												<th style="text-align:left">Karakteristik Nyeri</th>
-												<td style="text-align: right;">{{ detail.karakteristik_nyeri }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.karakteristik_nyeri }}</td>
 											</tr>
 
 											<tr>
 												<th style="text-align:left">Keterangan Tambahan</th>
-												<td style="text-align: right;">{{ detail.keterangan_nyeri }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.keterangan_nyeri }}</td>
 											</tr>
 
 
 											<tr>
 												<th style="text-align:left">Penyakit yang pernah diderita</th>
-												<td style="text-align: right;">{{ detail.penyakit_pernah_diderita_lainnya }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.penyakit_pernah_diderita_lainnya }}</td>
 											</tr>
 
 											<tr>
 												<th style="text-align:left">Pernah Dioperasi</th>
-												<td style="text-align: right;">{{ detail.pernah_dioperasi }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.pernah_dioperasi }}</td>
 											</tr>
 
 											<tr>
 												<th style="text-align:left">Riwayat Alergi Makanan</th>
-												<td style="text-align: right;">{{ detail.riwayat_alergi_makanan }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.riwayat_alergi_makanan }}</td>
 											</tr>
 
 											<tr>
 												<th style="text-align:left">Riwayat Alergi Obatan</th>
-												<td style="text-align: right;">{{ detail.riwayat_alergi_obatan }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.riwayat_alergi_obatan }}</td>
 											</tr>
 
 											<tr>
 												<th style="text-align:left">Obat yang digunakan saat ini</th>
-												<td style="text-align: right;">{{ detail.obat_digunakan_saat_ini }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.obat_digunakan_saat_ini }}</td>
 											</tr>
 
 											<tr>
 												<th style="text-align:left">Penilaian Resiko Jatuh</th>
-												<td style="text-align: right;">{{ detail.penilaian_resiko_jatuh }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.penilaian_resiko_jatuh }}</td>
 											</tr>
+											</tbody>
+										
+						
 
 										</table>
-									</div>
-								</div>
+									
+									
 							</div>
 							<div style="position: relative;" class="content-tab-in" v-if="tab.content.pemeriksaan">
 								<div class="grid">
@@ -731,8 +675,8 @@
 						</div>
 
 					</div>
-
-				</div>
+					</div>
+				
 
 				<div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
 					<div class="col-8"></div>
@@ -746,6 +690,7 @@
 						<button class="button-modal-page button-modal-green" v-on:click="edit()">Edit Data</button>
 					</div>
 				</div>
+			
 			</div>
 			<Loader ref="Loader"></Loader>
 		</div>
@@ -855,6 +800,7 @@ export default {
 		tab: {
 			button: [
 					{ value: 'ro', label: 'Data RO', class: 'tab-active' },
+					{ value: 'vital', label: 'Vital Sign', class: 'tab-no-active' },
 					{ value: 'pemeriksaan', label: 'Pemeriksaan', class: 'tab-no-active' },
 					{ value: 'oculardextra', label: 'Ocular Dextra', class: 'tab-no-active' },
 					{ value: 'ocularsinistra', label: 'Ocular Sinistra', class: 'tab-no-active' },
