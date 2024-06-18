@@ -115,116 +115,110 @@
 								</div>
 							</div>
 							<div style="position: relative;" class="content-tab-in" v-if="tab.content.vital">
-										<table class="table embed" style="width: 90%;"v-if="pemeriksaanro">
-												<tbody>
+										<table class="table embed" style="width: 90%" v-if="pemeriksaanro">
+											<tbody>
+												<tr>
+													<th style="text-align:left">Keluhan Utama</th>
+													
+													<td style="text-align: right;">{{ pemeriksaanro.keluhan_utama }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Riwayat Penyakit</th>
+													<td style="text-align: right;">{{ pemeriksaanro.riwayat_penyakit }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Kasus Urgent</th>
+													<td style="text-align: right;">{{ pemeriksaanro.kasus_urgent }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Status Psikologi</th>
+													<td style="text-align: right;">{{ pemeriksaanro.status_psikologi }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Status Fungsional</th>
+													<td style="text-align: right;">{{ pemeriksaanro.status_fungsional }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Nadi</th>
+													<td style="text-align: right;">{{ pemeriksaanro.nadi }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Tinggi Badan</th>
+													<td style="text-align: right;">{{ pemeriksaanro.tinggi_badan }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Berat Badan</th>
+													<td style="text-align: right;">{{ pemeriksaanro.berat_badan }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Tekanan Darah</th>
+													<td style="text-align: right;">{{ pemeriksaanro.tekanan_darah }}</td>
+												</tr>
 
-											<tr>
-												<th style="text-align:left">Keluhan Utama</th>
-												
-												<td style="text-align: right;">{{ pemeriksaanro.keluhan_utama }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Riwayat Penyakit</th>
-												<td style="text-align: right;">{{ pemeriksaanro.riwayat_penyakit }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Kasus Urgent</th>
-												<td style="text-align: right;">{{ pemeriksaanro.kasus_urgent }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Status Psikologi</th>
-												<td style="text-align: right;">{{ pemeriksaanro.status_psikologi }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Status Fungsional</th>
-												<td style="text-align: right;">{{ pemeriksaanro.status_fungsional }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Nadi</th>
-												<td style="text-align: right;">{{ pemeriksaanro.nadi }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Tinggi Badan</th>
-												<td style="text-align: right;">{{ pemeriksaanro.tinggi_badan }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Berat Badan</th>
-												<td style="text-align: right;">{{ pemeriksaanro.berat_badan }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Tekanan Darah</th>
-												<td style="text-align: right;">{{ pemeriksaanro.tekanan_darah }}</td>
-											</tr>
+												<tr>
+													<th style="text-align:left">Nyeri</th>
+													<td style="text-align: right;">{{ pemeriksaanro.nyeri }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Nyeri hilang bila</th>
+													<td style="text-align: right;">{{ pemeriksaanro.nyeri_hilang_bila }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Skala Nyeri</th>
+													<td style="text-align: right;">{{ pemeriksaanro.skala_nyeri }}</td>
+												</tr>
+												<tr>
+													<th style="text-align:left">Lokasi Nyeri</th>
+													<td style="text-align: right;">{{ pemeriksaanro.lokasi_nyeri }}</td>
+												</tr>
 
-											<tr>
-												<th style="text-align:left">Nyeri</th>
-												<td style="text-align: right;">{{ pemeriksaanro.nyeri }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Nyeri hilang bila</th>
-												<td style="text-align: right;">{{ pemeriksaanro.nyeri_hilang_bila }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Skala Nyeri</th>
-												<td style="text-align: right;">{{ pemeriksaanro.skala_nyeri }}</td>
-											</tr>
-											<tr>
-												<th style="text-align:left">Lokasi Nyeri</th>
-												<td style="text-align: right;">{{ pemeriksaanro.lokasi_nyeri }}</td>
-											</tr>
+												<tr>
+													<th style="text-align:left">Durasi Nyeri</th>
+													<td style="text-align: right;">{{ pemeriksaanro.durasi_nyeri }}</td>
+												</tr>
 
-											<tr>
-												<th style="text-align:left">Durasi Nyeri</th>
-												<td style="text-align: right;">{{ pemeriksaanro.durasi_nyeri }}</td>
-											</tr>
+												<tr>
+													<th style="text-align:left">Karakteristik Nyeri</th>
+													<td style="text-align: right;">{{ pemeriksaanro.karakteristik_nyeri }}</td>
+												</tr>
 
-											<tr>
-												<th style="text-align:left">Karakteristik Nyeri</th>
-												<td style="text-align: right;">{{ pemeriksaanro.karakteristik_nyeri }}</td>
-											</tr>
-
-											<tr>
-												<th style="text-align:left">Keterangan Tambahan</th>
-												<td style="text-align: right;">{{ pemeriksaanro.keterangan_nyeri }}</td>
-											</tr>
+												<tr>
+													<th style="text-align:left">Keterangan Tambahan</th>
+													<td style="text-align: right;">{{ pemeriksaanro.keterangan_nyeri }}</td>
+												</tr>
 
 
-											<tr>
-												<th style="text-align:left">Penyakit yang pernah diderita</th>
-												<td style="text-align: right;">{{ pemeriksaanro.penyakit_pernah_diderita_lainnya }}</td>
-											</tr>
+												<tr>
+													<th style="text-align:left">Penyakit yang pernah diderita</th>
+													<td style="text-align: right;">{{ pemeriksaanro.penyakit_pernah_diderita_lainnya }}</td>
+												</tr>
 
-											<tr>
-												<th style="text-align:left">Pernah Dioperasi</th>
-												<td style="text-align: right;">{{ pemeriksaanro.pernah_dioperasi }}</td>
-											</tr>
+												<tr>
+													<th style="text-align:left">Pernah Dioperasi</th>
+													<td style="text-align: right;">{{ pemeriksaanro.pernah_dioperasi }}</td>
+												</tr>
 
-											<tr>
-												<th style="text-align:left">Riwayat Alergi Makanan</th>
-												<td style="text-align: right;">{{ pemeriksaanro.riwayat_alergi_makanan }}</td>
-											</tr>
+												<tr>
+													<th style="text-align:left">Riwayat Alergi Makanan</th>
+													<td style="text-align: right;">{{ pemeriksaanro.riwayat_alergi_makanan }}</td>
+												</tr>
 
-											<tr>
-												<th style="text-align:left">Riwayat Alergi Obatan</th>
-												<td style="text-align: right;">{{ pemeriksaanro.riwayat_alergi_obatan }}</td>
-											</tr>
+												<tr>
+													<th style="text-align:left">Riwayat Alergi Obatan</th>
+													<td style="text-align: right;">{{ pemeriksaanro.riwayat_alergi_obatan }}</td>
+												</tr>
 
-											<tr>
-												<th style="text-align:left">Obat yang digunakan saat ini</th>
-												<td style="text-align: right;">{{ pemeriksaanro.obat_digunakan_saat_ini }}</td>
-											</tr>
+												<tr>
+													<th style="text-align:left">Obat yang digunakan saat ini</th>
+													<td style="text-align: right;">{{ pemeriksaanro.obat_digunakan_saat_ini }}</td>
+												</tr>
 
-											<tr>
-												<th style="text-align:left">Penilaian Resiko Jatuh</th>
-												<td style="text-align: right;">{{ pemeriksaanro.penilaian_resiko_jatuh }}</td>
-											</tr>
+												<tr>
+													<th style="text-align:left">Penilaian Resiko Jatuh</th>
+													<td style="text-align: right;">{{ pemeriksaanro.penilaian_resiko_jatuh }}</td>
+												</tr>
 											</tbody>
-										
-						
-
 										</table>
-									
-									
 							</div>
 							<div style="position: relative;" class="content-tab-in" v-if="tab.content.pemeriksaan">
 								<div class="grid">
