@@ -15,9 +15,12 @@
 							<li>Tanggal Lahir<span><strong>{{datename(detail.tanggal_lahir) }}</strong></span></li>
 							<li>Jenis Kelamin<span><strong>{{detail.jenis_kelamin}}</strong></span></li>
 							</ul>
+
+							<label style="font-weight=bold;">Tanda tangan dokter</label>
+							<DigitalSignature style = "height:250px"/>
 						</div>
+						
 					
-				
 					<!-- <div class="col-6 form-mr" style="margin-top: 10px;">
 						<Inputed :ref="form.panjar.name" :form="form.panjar"></Inputed>
 					</div>
@@ -713,9 +716,9 @@ export default {
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
 		Textarea: defineAsyncComponent(() => import('../../../section/Textarea.vue')),
+		DigitalSignature: defineAsyncComponent(() => import('../../digital-signature/DigitalSignature.vue')),
 	},
 	computed: {
-		
 		htgquantity:function() {
 			console.log(vm.tempobatracikan)
 			if (vm.tempobatracikan) {
