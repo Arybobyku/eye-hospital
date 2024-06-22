@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Bedah\PrintBedahCtrl;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,5 +32,6 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::get('kasirbeli/{uuid}', [PrintKasirCtrl::class, 'printbeli']);
 	Route::get('panjar/{uuid}', [PrintKasirCtrl::class, 'panjar']);
 	Route::get('rekammedis/{uuid}', [PrintRekamMedisCtrl::class, 'print']);
+	Route::get('persetujuan/{uuid}', [PrintBedahCtrl::class, 'print']);
 
 });
