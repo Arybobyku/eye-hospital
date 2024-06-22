@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Print Invoice</title>
     <style>
+    @page { margin: 13px; }
     body { margin: 13px; }
         .wrap {
             width: 100%;
@@ -13,7 +14,6 @@
     </style>
 </head>
 <body>
-
 <?php $fullpath = storage_path('app/public/header.png');  ?>
 <div class="wrap">
 	<table style="width: 100%; text-align: center" border="0">
@@ -76,10 +76,10 @@
 						<td style="border: none; padding: 3px 5px">: {{ $registrasi->nomor }}</td>
 					</tr>
 					<tr>
-						<td style="border: none; padding: 3px 5px">Tanggal Pendaftaran</td>
+						<td style="border: none; padding: 3px 5px">Tanggal Kunjungan</td>
 						<td style="border: none; padding: 3px 5px">: 
 							<?php
-								$tglbayar = $registrasi->tanggal;
+								$tglpemeriksaan = $pemeriksaanro->tanggal;
 								$data = explode('-',$tglbayar);
 								$thn = $data[0]; $bln = $data[1]; $tgl = $data[2];
 								if ($bln == '01') { $bln = 'Januari'; }
@@ -95,7 +95,7 @@
 								else if ($bln == '11') { $bln = 'November'; }
 								else { $bln = 'Desember'; }
 							?>
-							{{ $tgl }} {{ $bln }} {{ $thn }} {{ $registrasi->waktu }}</td>
+							{{ $tgl }} {{ $bln }} {{ $thn }} {{ $pemeriksaanro->waktu }}</td>
 					</tr>
 				</table>
 			</td>

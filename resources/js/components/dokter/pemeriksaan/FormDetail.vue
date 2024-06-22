@@ -115,7 +115,7 @@
 								</div>
 							</div>
 							<div style="position: relative;" class="content-tab-in" v-if="tab.content.vital">
-										<table class="table embed" style="width: 90%;"v-if="pemeriksaanro">
+										<table class="table embed" style="width: 90%;" v-if="pemeriksaanro">
 												<tbody>
 
 											<tr>

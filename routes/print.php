@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Finance\PrintKasirCtrl;
 use App\Http\Controllers\Finance\PrintKasirInapCtrl;
 use App\Http\Controllers\RawatJalan\PrintRekamMedisCtrl;
+use App\Http\Controllers\Dokter\PrintROCtrl;
 
 Route::group(['middleware' => 'throttle: 250, 1'], function(){
 
@@ -31,5 +32,6 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::get('kasirbeli/{uuid}', [PrintKasirCtrl::class, 'printbeli']);
 	Route::get('panjar/{uuid}', [PrintKasirCtrl::class, 'panjar']);
 	Route::get('rekammedis/{uuid}', [PrintRekamMedisCtrl::class, 'print']);
+	Route::get('rm1.4/{uuid}', [PrintROCtrl::class, 'print']);
 
 });

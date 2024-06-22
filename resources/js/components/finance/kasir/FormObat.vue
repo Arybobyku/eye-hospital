@@ -101,7 +101,7 @@
 											</tbody>
 										</table>
 									</td>
-									<td>
+									<td> 
 										<table class="table">
 											<thead>
 												<tr>
