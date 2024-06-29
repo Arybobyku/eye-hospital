@@ -124,4 +124,26 @@ class PrintRekamMedisCtrl extends Controller
 
     return $pdf->stream();
   }
+  function printRm1dot7($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $ro = DB::table('pemeriksaan_ro')
+      ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
+      ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
+      ->get();
+
+    // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
+
+    $pdf->loadView(
+      'print-rekam-medis.rawat-jalan.rm1dot7',
+      compact(
+        'pasien',
+        'ro'
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
 }
