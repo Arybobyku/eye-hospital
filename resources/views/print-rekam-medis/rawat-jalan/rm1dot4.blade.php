@@ -67,31 +67,65 @@
                                 </table>
                             </tr>
                             <tr>
-                                <div style="margin-left: 10px;">Autoref: {{ $dataRo->ocular_dextra_autoref ?? '....' }}
+                                <div style="margin-left: 10px;">
+                                    <table>
+                                        <tr>
+                                            <td>Autoref</td>
+                                            <td>:</td>
+                                            <td colspan="2">{{ $dataRo->ocular_dextra_autoref ?? '....' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Keratometri</td>
+                                            <td>:</td>
+                                            <td>K1:
+                                                {{ keratometriFormat($dataRo->ocular_dextra_keratometri_k1 ?? '....') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2"></td>
+                                            <td>K2:
+                                                {{ keratometriFormat($dataRo->ocular_dextra_keratometri_k2 ?? '....') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tonommetri</td>
+                                            <td>:</td>
+                                            <td>{{ $dataRo->ocular_dextra_tonometri ?? '....' }} MmHg</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="margin-left: 10px; font-weight:bold">VISUS</td>
+                                            <td>:</td>
+                                            <td>{{ $dataRo->ocular_dextra_visus ?? '....' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="margin-left: 10px; font-weight:bold">BCVA</td>
+                                            <td>:</td>
+                                            <td>{{ $dataRo->ocular_dextra_bcva1 ?? '....' }} =>
+                                                {{ $dataRo->ocular_dextra_bcva2 ?? '....' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="margin-left: 10px; font-weight:bold">Add</td>
+                                            <td>:</td>
+                                            <td>{{ $dataRo->ocular_dextra_add }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Kacamata Lama</td>
+                                            <td>:</td>
+                                            <td>
+                                                Sph :
+                                                {{ $dataRo->ocular_dextra_kacamata_lama_sph ?? '....' }}
+                                                Cyl:
+                                                {{ $dataRo->ocular_dextra_kacamata_lama_cyl ?? '....' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>Addisi: {{ $dataRo->ocular_dextra_kacamata_lama_addisi ?? '....' }}
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div style="margin-left: 10px;">Keratometri: K1 :
-                                    {{ keratometriFormat($dataRo->ocular_dextra_keratometri_k1 ?? '....') }} </div>
-                                <div style="margin-left: 96px;">K2 :
-                                    {{ keratometriFormat($dataRo->ocular_dextra_keratometri_k2 ?? '....') }}
-                                </div>
-                                <br>
-                                <div style="margin-left: 10px;">Tonommetri:
-                                    {{ $dataRo->ocular_dextra_tonometri ?? '....' }} MmHg</div>
-                                <div style="margin-left: 10px; font-weight:bold">VISUS:
-                                    {{ $dataRo->ocular_dextra_visus ?? '....' }}</div>
-                                <div style="margin-left: 10px; font-weight:bold">BCVA:
-                                    {{ $dataRo->ocular_dextra_bcva1 ?? '....' }} ->
-                                    {{ $dataRo->ocular_dextra_bcva2 ?? '....' }}
-                                </div>
-                                <div style="margin-left: 10px; font-weight:bold">Add: {{ $dataRo->ocular_dextra_add }}
-                                </div>
-                                <br>
-                                <div style="margin-left: 10px;">Kacamata Lama : Sph :
-                                    {{ $dataRo->ocular_dextra_kacamata_lama_sph ?? '....' }} Cyl:
-                                    {{ $dataRo->ocular_dextra_kacamata_lama_cyl ?? '....' }}x..........
-                                </div>
-                                <div style="margin-left: 125px;">Addisi:
-                                    {{ $dataRo->ocular_dextra_kacamata_lama_addisi ?? '....' }} </div>
                                 <br>
                             </tr>
                         </table>
@@ -109,32 +143,78 @@
                                 </table>
                             </tr>
                             <tr>
-                                <div style="margin-left: 10px;">Autoref:
-                                    {{ $dataRo->ocular_sinistra_autoref ?? '....' }}
+                                <div style="margin-left: 10px;">
+                                    <table>
+                                        <tr>
+                                            <td>Autoref</td>
+                                            <td>:</td>
+                                            <td colspan="2">
+                                                {{ $dataRo->ocular_sinistra_autoref ?? '....' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Keratometri</td>
+                                            <td>:</td>
+                                            <td>K1:
+                                                {{ keratometriFormat($dataRo->ocular_sinistra_keratometri_k1 ?? '....') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>K2:
+                                                {{ keratometriFormat($dataRo->ocular_sinistra_keratometri_k2 ?? '....') }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Tonommetri</td>
+                                            <td>:</td>
+                                            <td>
+                                                {{ $dataRo->ocular_sinistra_tonometri ?? '....' }} MmHg
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="margin-left: 10px; font-weight:bold">VISUS</td>
+                                            <td>:</td>
+                                            <td>
+                                                {{ $dataRo->ocular_sinistra_visus ?? '....' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="margin-left: 10px; font-weight:bold">BCVA</td>
+                                            <td>:</td>
+                                            <td>
+                                                {{ $dataRo->ocular_dextra_bcva1 ?? '....' }}
+                                                =>
+                                                {{ $dataRo->ocular_sinistra_bcva2 ?? '....' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="margin-left: 10px; font-weight:bold">Add</td>
+                                            <td>:</td>
+                                            <td>
+                                                {{ $dataRo->ocular_sinistra_add }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Kacamata Lama</td>
+                                            <td>:</td>
+                                            <td>
+                                                Sph :
+                                                {{ $dataRo->ocular_sinistra_kacamata_lama_sph ?? '....' }} Cyl:
+                                                {{ $dataRo->ocular_sinistra_kacamata_lama_cyl ?? '....' }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td></td>
+                                            <td>
+                                                Addisi:
+                                                {{ $dataRo->ocular_sinistra_kacamata_lama_addisi ?? '....' }}
+                                            </td>
+                                        </tr>
+                                    </table>
                                 </div>
-                                <div style="margin-left: 10px;">Keratometri: K1 :
-                                    {{ keratometriFormat($dataRo->ocular_sinistra_keratometri_k1 ?? '....') }} </div>
-                                <div style="margin-left: 96px;">K2 :
-                                    {{ keratometriFormat($dataRo->ocular_sinistra_keratometri_k2 ?? '....') }}
-                                </div>
-                                <br>
-                                <div style="margin-left: 10px;">Tonommetri:
-                                    {{ $dataRo->ocular_sinistra_tonometri ?? '....' }} MmHg</div>
-                                <div style="margin-left: 10px; font-weight:bold">VISUS:
-                                    {{ $dataRo->ocular_sinistra_visus ?? '....' }}</div>
-                                <div style="margin-left: 10px; font-weight:bold">BCVA:
-                                    {{ $dataRo->ocular_dextra_bcva1 ?? '....' }} ->
-                                    {{ $dataRo->ocular_sinistra_bcva2 ?? '....' }}
-                                </div>
-                                <div style="margin-left: 10px; font-weight:bold">Add:
-                                    {{ $dataRo->ocular_sinistra_add }}</div>
-                                <br>
-                                <div style="margin-left: 10px;">Kacamata Lama : Sph :
-                                    {{ $dataRo->ocular_sinistra_kacamata_lama_sph ?? '....' }} Cyl:
-                                    {{ $dataRo->ocular_sinistra_kacamata_lama_cyl ?? '....' }} x ..........
-                                </div>
-                                <div style="margin-left: 125px;">Addisi:
-                                    {{ $dataRo->ocular_sinistra_kacamata_lama_addisi ?? '....' }} </div>
                                 <br>
                             </tr>
                         </table>
@@ -200,7 +280,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_sinistra_palpebra == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_sinistra_palpebra == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -211,7 +292,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_dextra_conjunctiva == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_dextra_conjunctiva == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -219,7 +301,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_sinistra_conjunctiva == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_sinistra_conjunctiva == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -230,7 +313,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_dextra_cornea == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_dextra_cornea == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -238,7 +322,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_sinistra_cornea == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_sinistra_cornea == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -249,7 +334,9 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox"  {{ $dataRo->ocular_dextra_bilik_mata_depan == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_dextra_bilik_mata_depan == 'Normal' ? 'Checked' : '' }}>
+                                </td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -257,7 +344,9 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_sinistra_bilik_mata_depan == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_sinistra_bilik_mata_depan == 'Normal' ? 'Checked' : '' }}>
+                                </td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -268,7 +357,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_dextra_pupil_dan_iris == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_dextra_pupil_dan_iris == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -276,7 +366,9 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_sinistra_pupil_dan_iris == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_sinistra_pupil_dan_iris == 'Normal' ? 'Checked' : '' }}>
+                                </td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -287,7 +379,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_dextra_lensa == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_dextra_lensa == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -295,7 +388,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_sinistra_lensa == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_sinistra_lensa == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -306,7 +400,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_dextra_vitreous == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_dextra_vitreous == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -314,7 +409,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_sinistra_vitreous == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_sinistra_vitreous == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -325,7 +421,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_dextra_funduscopy == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_dextra_funduscopy == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -333,7 +430,8 @@
                     <td class="tablee">
                         <table>
                             <tr>
-                                <td><input type="checkbox" {{ $dataRo->ocular_sinistra_funduscopy == 'Normal' ? 'Checked' : '' }}></td>
+                                <td><input type="checkbox"
+                                        {{ $dataRo->ocular_sinistra_funduscopy == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -349,7 +447,7 @@
                     <td>PEMERIKSAAN PENUNJANG :</td>
                 </tr>
                 <tr>
-                    <td>{{$dataRo->pemeriksaan_penunjang}}</td>
+                    <td>{{ $dataRo->pemeriksaan_penunjang }}</td>
                 </tr>
                 <br>
                 <br>
@@ -411,7 +509,9 @@
                 <br>
             </table>
         </div>
-        <div class="page_break"></div>
+        @if ($loop->index < count($ro) - 1)
+            <div class="page_break"></div>
+        @endif
     @endforeach
 </body>
 

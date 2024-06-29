@@ -140,12 +140,13 @@ export default {
 		tablebutton:function(posisi, data, index) {
 			if (posisi == 'rawatjalan') {
 				vm.position = "modalrawatjalan";
-				vm.$refs.DetailRekamMedisRawatJalan.show('obatdata', 'Resume Medis Rawat Jalan', data.pasien_uuid);
+				vm.$refs.DetailRekamMedisRawatJalan.show('modalrawatjalan', 'Resume Medis Rawat Jalan', data.pasien_uuid);
 				setTimeout(() => { vm.loadingModal('rawatjalan'); }, 250, this);
-				vm.attach.data = new FormData();
-				vm.attach.data.append('uuid', data.pasien_uuid);
-				vm.attach.url = vm.attach.link.obat;
-				vm.executions();
+				vm.$refs.DetailRekamMedisRawatJalan.setdataform(data);
+				//- vm.attach.data = new FormData();
+				//- vm.attach.data.append('uuid', data.pasien_uuid);
+				//- vm.attach.url = vm.attach.link.list;
+				//- vm.executions();
 			}
 			else if (posisi == 'tindakan') {
 				vm.position = "tindakandata";

@@ -61,7 +61,7 @@ class PrintRekamMedisCtrl extends Controller
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     // $pdf->loadView('print.printrekammedis', compact('registrasi', 'pemeriksaanro', 'pemeriksaandokter', 'pasien'))->setPaper('a4', 'potrait');
-    $pdf->loadView('print-rekam-medis.rawat-jalan.rm1dot2',compact('pasien'))->setPaper('a4', 'potrait');
+    $pdf->loadView('print-rekam-medis.rawat-jalan.rm1dot2', compact('pasien'))->setPaper('a4', 'potrait');
 
 
     return $pdf->stream();
@@ -116,10 +116,56 @@ class PrintRekamMedisCtrl extends Controller
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     // $pdf->loadView('print.printrekammedis', compact('registrasi', 'pemeriksaanro', 'pemeriksaandokter', 'pasien'))->setPaper('a4', 'potrait');
-    $pdf->loadView('print-rekam-medis.rawat-jalan.rm1dot6',compact('pasien'))->setPaper('a4', 'potrait');
+    $pdf->loadView('print-rekam-medis.rawat-jalan.rm1dot6', compact('pasien'))->setPaper('a4', 'potrait');
 
 
     return $pdf->stream();
     // return view('print-rekam-medis.rawat-jalan.rm1dot3');
+  }
+
+  function all($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $ro = DB::table('pemeriksaan_ro')
+      ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
+      ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
+      ->get();
+
+    // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
+
+    $pdf->loadView(
+      'print-rekam-medis.rawat-jalan.all',
+      compact(
+        'pasien',
+        'ro'
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+
+  function printRm1dot7($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $ro = DB::table('pemeriksaan_ro')
+      ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
+      ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
+      ->get();
+
+    // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
+
+    $pdf->loadView(
+      'print-rekam-medis.rawat-jalan.rm1dot7',
+      compact(
+        'pasien',
+        'ro'
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
   }
 }

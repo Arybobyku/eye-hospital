@@ -26,6 +26,7 @@
     <div style="position:fixed; right: 13px; bottom: 10px;">
     </div>
     <?php $fullpath = storage_path('app/public/images/header_rme.png'); ?>
+    <?php $patimg = storage_path('app/public/images/PAT.png'); ?>
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
             RM 1.3/PKMRJ/22
@@ -182,45 +183,192 @@
                 </table>
             </tr>
             {{-- PEMERIKSAAN FISIK --}}
-            <tr style="border: 1px solid black; width:100%;">
-                <b>PEMERIKSAAN FISIK</b>
-        </table>
-        </tr>
+            <tr>
+                <table style="border-left: 1px solid black;border-right: 1px solid black;border-bottom: 1px solid black; width:100%; padding:5px" >
+                    <tr>
+                        <b>PEMERIKSAAN FISIK</b>
+                    </tr>
+                    <tr>
+                        <td>TD</td>
+                        <td>....../.....mmHg</td>
+                        <td>Nadi</td>
+                        <td>...........x/menit</td>
+                        <td>RR</td>
+                        <td>...........x/menit</td>
+                    </tr>
+                    <tr>
+                        <td>BB</td>
+                        <td>...........kg</td>
+                        <td>TB</td>
+                        <td>...........cm</td>
+                        <td>Suhu</td>
+                        <td>.......... C</td>
+                    </tr>
+                </table>
+            </tr>
+            <tr>
+                <table style="border-left: 1px solid black;border-right: 1px solid black;border-bottom: 1px solid black; width:100%; padding:5px" >
+                    <tr>
+                        <b>RIWAYAT KESEHATAN</b>
+                    </tr>
+                    
+                    <tr>
+                        <td>1. Penyakit yang pernah diderita :</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Diabetes</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Hipertensi</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Jantung</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Hrpatitis</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Asma</td>
+                    </tr>
+                    <tr>
+                        <table>
+                            <tr><td>Lainnya :</td>
+                            <td>...........................</td></tr>
+                        </table>
+                    </tr>
+                    <tr>
+                        <td>2. Pernah Dioperasi :</td>
+                        <td><input type="checkbox" checked></td>
+                                    <td>Tidak</td>
+                                    <td><input type="checkbox" checked></td>
+                                    <td>Ya</td>
+                    </tr>
+                    <tr>
+                        <table>
+                            <tr>
+                                <td>Jenis Operasi :</td>
+                                <td>................................</td>
+                            </tr>
+                        </table>
+                    </tr>
+                    <tr>
+                        <td>3. Riwayat Alergi :</td>
+                        <td><input type="checkbox" checked></td>
+                                    <td>Tidak</td>
+                                    <td><input type="checkbox" checked></td>
+                                    <td>Ya</td>
+                    </tr>
+                    <tr>
+                        <td>Alergi Terhadap :</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Makanan :......</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Obat :......</td>
+                    </tr>
+                    <tr>
+                        <td>4. Obat yang digunakan saat ini :</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Obat Pencair Darah</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Obat Prostat</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Obat Asma</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>Obat Alergi</td>
+                    </tr>
+                    <tr>
+                        <td>Lainnya :..........</td>
+                    </tr>
+                </table>
+            </tr>
+            <tr>
+                <table style="border-left: 1px solid black;border-right: 1px solid black;border-bottom: 1px solid black; width:100%; padding:5px" >
+                    <tr>
+                        <b>PENILAIAN RESIKO JATUH</b>
+                    </tr> 
+                    <tr>
+                        <td>Resiko Jatuh</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>YA</td>
+                        <td><input type="checkbox" checked></td>
+                        <td>TIDAK</td>
+                    </tr>
+                </table>
+            </tr>
+            <tr>
+                <table style="border-left: 1px solid black;border-right: 1px solid black;border-bottom: 1px solid black; width:100%; padding:5px" >
+                <tr>
+                    <td>
+                        <table>
+                            <tr><b>SKRINING NYERI</b></tr>
+                            <tr>
+                                <td>
+                    <img style="width: 100%;"
+                                    src="data:image/png;base64,
+                            <?php echo base64_encode(file_get_contents($patimg)); ?>" /></td></tr>
+                        </table>
+                    </td>
+                            <td>
+                                <table>
+                                    <tr>
+                                        <table>
+                                            <tr>
+                                        <td>Nyeri :</td>
+
+                                        <td>
+                                            <table><tr><td><input type="checkbox" checked></td>
+                                         <td>Tidak Ada Nyeri</td></tr></table></td>
+
+                                        <td>
+                                            <table><tr><td><input type="checkbox" checked></td>
+                                         <td>Nyeri Akut</td></tr></table></td>
+                                         <td>
+                                            <table><tr><td><input type="checkbox" checked></td>
+                                         <td>Nyeri </td></tr></table></td>
+                                            </tr>
+                                        </table>
+                                        </tr>
+                                    <tr>
+                                        <td>
+                                        <table>
+                                            <tr><td>
+                                                <table>
+                                                    <tr><td>Skala Nyeri : ..........</td>
+                                                        <td>Lokasi : ..........</td></tr>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <table>
+                                                    <tr> <td>Karakteristik : ..........</td>
+                                                        <td>Durasi : ..........</td></tr></tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    <tr>
+                                        <table>
+                                            <tr>
+                                        <td>Nyeri hilang bila :</td>
+                                        <td>
+                                            <table><tr><td><input type="checkbox" checked></td>
+                                         <td>Minum Obat</td></tr></table></td>
+
+                                         <td>
+                                            <table><tr><td><input type="checkbox" checked></td>
+                                         <td>Istirahat</td></tr></table></td>
+
+                                         <td>
+                                            <table><tr><td><input type="checkbox" checked></td>
+                                         <td>Berubah Posisi</td></tr></table></td>
+                                            </tr>
+                                        </table>
+
+                                    </tr>
+                                    <tr>
+                                        <table>
+                                            <tr>
+                                        <td>Lainnya : ...........</td></tr></table>
+                                    </tr>
+                                </table>
+                            </td>
+                </table>
+            </tr>
         </table>
     </div>
 </body>
-<?php
-
-function bulans($bln)
-{
-    if ($bln == '01') {
-        $bln = 'Januari';
-    } elseif ($bln == '02') {
-        $bln = 'Februari';
-    } elseif ($bln == '03') {
-        $bln = 'Maret';
-    } elseif ($bln == '04') {
-        $bln = 'April';
-    } elseif ($bln == '05') {
-        $bln = 'Mei';
-    } elseif ($bln == '06') {
-        $bln = 'Juni';
-    } elseif ($bln == '07') {
-        $bln = 'Juli';
-    } elseif ($bln == '08') {
-        $bln = 'Agustus';
-    } elseif ($bln == '09') {
-        $bln = 'September';
-    } elseif ($bln == '10') {
-        $bln = 'Oktober';
-    } elseif ($bln == '11') {
-        $bln = 'November';
-    } elseif ($bln == '12') {
-        $bln = 'Desember';
-    }
-    return $bln;
-}
-
-?>
 
 </html>
