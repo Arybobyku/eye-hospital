@@ -15,16 +15,7 @@
 </head>
 <body>
 <div style="position:fixed; right: 13px; bottom: 10px;">
-	<?php
-		// RMP = Rekam Medis Pasien
-		$msg = 'RSKM-PV/RMP-'.date('y').'/'.date('m').'/S-';
-		$nomor = $surat->surat_ke;
-		if ($nomor > 0 && $nomor < 10) { $msg .= '000'.$nomor; }
-		else if ($nomor > 9 && $nomor < 100) { $msg .= '00'.$nomor; }
-		else if ($nomor > 99 && $nomor < 1000) { $msg .= '0'.$nomor; }
-		else if ($nomor > 999 && $nomor < 10000) { $msg .= ''.$nomor; }
-		echo $msg;
-	?>	
+
 </div>
 <?php $fullpath = storage_path('app/public/header.png');  ?>
 <div class="wrap">
