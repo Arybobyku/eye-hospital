@@ -23,43 +23,7 @@
 	<div style="width:100%; text-align:right; margin-bottom:5px">
 		RM 1.1/PU(GJ)/22
 	</div>
-    <div style="width: 100%;">
-        <table style="width: 100%; border-collapse: collapse;" border="1">
-            <tr style="border: 1px solid black;">
-                <td style="width: 60%">
-                    <img 
-                    style="width: 100%;"
-                    src="data:image/png;base64,
-                    <?php echo base64_encode(file_get_contents($fullpath)); ?>"
-                    />
-                </td>
-				<td style="width: 30%">
-					<table style="width: 100%" border="0">
-						<tr>
-							<td width="20%">Nama</td>
-							<td width="1%">:</td>
-							<td width=50%>..........</td>
-						</tr>
-						<tr>
-							<td width="20%">Tgl. Lahir</td>
-							<td width="1%">:</td>
-							<td width=50%>..........</td>
-						</tr>
-						<tr>
-							<td width="20%">No.RM</td>
-							<td width="1%">:</td>
-							<td width=50%>..........</td>
-						</tr>
-						<tr>
-							<td width="10%">NIK</td>
-							<td width="1%">:</td>
-							<td width=50%>..........</td>
-						</tr>
-					</table>
-                </td>
-            </tr>
-        </table>
-    </div>
+	@include('print-rekam-medis.partials.header')
 	<br />
 
 	<div style="width: 100%; text-align: center; margin-top: 14px; margin-bottom: 3px; font-weight: bold">
@@ -218,23 +182,4 @@
 
 </div>
 </body>
-<?php
-
-function bulans($bln) {
-	if ($bln == '01') { $bln = 'Januari'; }
-	else if ($bln == '02') { $bln = 'Februari'; }
-	else if ($bln == '03') { $bln = 'Maret'; }
-	else if ($bln == '04') { $bln = 'April'; }
-	else if ($bln == '05') { $bln = 'Mei'; }
-	else if ($bln == '06') { $bln = 'Juni'; }
-	else if ($bln == '07') { $bln = 'Juli'; }
-	else if ($bln == '08') { $bln = 'Agustus'; }
-	else if ($bln == '09') { $bln = 'September'; }
-	else if ($bln == '10') { $bln = 'Oktober'; }
-	else if ($bln == '11') { $bln = 'November'; }
-	else if ($bln == '12') { $bln = 'Desember'; }
-	return $bln;
-}
-
-?>
 </html>
