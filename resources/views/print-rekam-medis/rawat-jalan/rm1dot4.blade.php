@@ -411,7 +411,9 @@
                 <br>
             </table>
         </div>
+        @if ($loop->index < count($ro)-1)
         <div class="page_break"></div>
+        @endif
     @endforeach
 </body>
 

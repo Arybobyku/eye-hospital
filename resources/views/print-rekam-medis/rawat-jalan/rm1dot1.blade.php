@@ -154,7 +154,7 @@
 
 	<table style="width: 100%; margin-top: 50px" cellpadding="0" cellspacing="0">
 		<tr>
-			<td style="width: 35%"><b>Medan, {{ date('d')}} {{ bulans(date('m')) }} {{ date('Y') }} {{ date('H') }}:{{ date('i') }} WIB</b></td>
+			<td style="width: 35%"><b>Medan, {{ date('d')}} {{ formatBulan(date('m')) }} {{ date('Y') }} {{ date('H') }}:{{ date('i') }} WIB</b></td>
 			<td rowspan="6" style="width: 35%"></td>
 			<td style="width: 30%"></td>
 		</tr>

@@ -17,7 +17,7 @@ function keratometriFormat($input)
     }
 }
 
-function bulans($bln)
+function formatBulan($bln)
 {
     if ($bln == '01') {
         $bln = 'Januari';
@@ -47,5 +47,4 @@ function bulans($bln)
     return $bln;
 }
 
-?>
 ?>
