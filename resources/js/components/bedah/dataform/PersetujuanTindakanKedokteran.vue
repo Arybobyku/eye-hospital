@@ -18,7 +18,8 @@
 		</div>
 
 		<div class="col-12">
-			<h3 style="margin-bottom: 16px; margin-top: 5px; padding-bottom: 12px; border-bottom: 1px solid #d6d6d6">Jenis Informasi</h3>
+			<h3 style="margin-bottom: 16px; margin-top: 5px; padding-bottom: 12px; border-bottom: 1px solid #d6d6d6">
+				Jenis Informasi</h3>
 		</div>
 
 		<div class="col-3">
@@ -66,7 +67,8 @@
 		</div>
 
 		<div class="col-12">
-			<h3 style="margin-bottom: 16px; margin-top: 5px; padding-bottom: 12px; border-bottom: 1px solid #d6d6d6">Yang bertanda tangan dibawah ini</h3>
+			<h3 style="margin-bottom: 16px; margin-top: 5px; padding-bottom: 12px; border-bottom: 1px solid #d6d6d6">
+				Yang bertanda tangan dibawah ini</h3>
 		</div>
 
 		<div class="col-6">
@@ -78,7 +80,8 @@
 		</div>
 
 		<div class="col-3 form-ml">
-			<Selected v-on:click="selectbox($event, form.select.ptkjeniskelaminpenerima.name, form.select.ptkjeniskelaminpenerima.statics)" 
+			<Selected
+				v-on:click="selectbox($event, form.select.ptkjeniskelaminpenerima.name, form.select.ptkjeniskelaminpenerima.statics)"
 				:ref="form.select.ptkjeniskelaminpenerima.name" @selecteditem="selecteditem" @selectclear="selectclear"
 				:selection="form.select.ptkjeniskelaminpenerima"></Selected>
 		</div>
@@ -92,7 +95,8 @@
 		</div>
 
 		<div class="col-12">
-			<h3 style="margin-bottom: 16px; margin-top: 5px; padding-bottom: 12px; border-bottom: 1px solid #d6d6d6">Yang menyatakan persetujuan</h3>
+			<h3 style="margin-bottom: 16px; margin-top: 5px; padding-bottom: 12px; border-bottom: 1px solid #d6d6d6">
+				Yang menyatakan persetujuan</h3>
 		</div>
 
 		<div class="col-6">
@@ -112,7 +116,8 @@
 		</div>
 
 		<div class="col-3 form-ml">
-			<Selected v-on:click="selectbox($event, form.select.ptkjeniskelamintarget.name, form.select.ptkjeniskelamintarget.statics)" 
+			<Selected
+				v-on:click="selectbox($event, form.select.ptkjeniskelamintarget.name, form.select.ptkjeniskelamintarget.statics)"
 				:ref="form.select.ptkjeniskelamintarget.name" @selecteditem="selecteditem" @selectclear="selectclear"
 				:selection="form.select.ptkjeniskelamintarget"></Selected>
 		</div>
@@ -122,7 +127,8 @@
 		</div>
 
 		<div class="col-12">
-			<h3 style="margin-bottom: 16px; margin-top: 5px; padding-bottom: 12px; border-bottom: 1px solid #d6d6d6">Nama yang menandatangani</h3>
+			<h3 style="margin-bottom: 16px; margin-top: 5px; padding-bottom: 12px; border-bottom: 1px solid #d6d6d6">
+				Nama yang menandatangani</h3>
 		</div>
 
 		<div class="col-4">
@@ -142,7 +148,7 @@
 	<div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form && activetab">
 		<div class="col-8"></div>
 		<div class="col-4" style="text-align: right">
-			<button class="button-modal-page button-modal-blue" v-on:click="cancel()">Print Data</button>
+			<button class="button-modal-page button-modal-blue" v-on:click="printsa()">Print ss</button>
 			<button class="button-modal-page button-modal-green" v-on:click="action()">Add or Update</button>
 		</div>
 	</div>
@@ -288,6 +294,12 @@ export default {
 		parsingForm:function() { 
 			vm.$emit('parsingForm', vm.parsepersetujuantindakankedokteran(vm.form), vm.keyform); 
 		},
+		printsa: function () {
+			console.log(vm.form.bedah_uuid);
+
+			window.open('/print/parsepersetujuantindakankedokteran/' + vm.form.bedah_uuid, '_blank');
+		},
+
 	}
 }
 </script>

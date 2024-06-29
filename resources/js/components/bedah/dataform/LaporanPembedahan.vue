@@ -135,7 +135,7 @@
 	<div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form && activetab">
 		<div class="col-8"></div>
 		<div class="col-4" style="text-align: right">
-			<button class="button-modal-page button-modal-blue" v-on:click="cancel()">Print Data</button>
+			<button class="button-modal-page button-modal-blue" v-on:click="printsa()">Print Data</button>
 			<button class="button-modal-page button-modal-green" v-on:click="action()">Add or Update</button>
 		</div>
 	</div>
@@ -231,6 +231,11 @@ export default {
 
 		parsingForm:function() { 
 			vm.$emit('parsingForm', vm.parselaporanpembedahan(vm.form), vm.keyform); 
+		},
+		printsa: function () {
+			console.log(vm.form.bedah_uuid);
+
+			window.open('/print/laporanpembedahan/' + vm.form.bedah_uuid, '_blank');
 		},
 	}
 }

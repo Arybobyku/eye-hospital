@@ -20,7 +20,7 @@
 					
 					<div class="col-12">
 
-						<table class="table">
+						<table class="table">pengantar
 							<thead>
 								<tr>
 									<th>Tanggal</th>
