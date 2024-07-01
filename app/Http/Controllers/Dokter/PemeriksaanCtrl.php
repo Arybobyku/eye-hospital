@@ -3,12 +3,6 @@
 namespace App\Http\Controllers\Dokter;
 
 use App\Http\Controllers\Controller;
-use App\Jobs\SendAllJob;
-use App\Jobs\SendPoliJob;
-use App\Models\AntrianPoli;
-use App\Models\CaraBayarKamar;
-use App\Models\LayananPasien;
-use App\Models\Pasien;
 use App\Models\PemeriksaanDokter;
 use App\Models\PemeriksaanRo;
 use App\Models\Registrasi;
@@ -27,7 +21,7 @@ class PemeriksaanCtrl extends Controller
     public function __construct()
     {
         date_default_timezone_set('Asia/Jakarta');
-        $this->error = \PenggunaHelp::acl();
+        $this->error = PenggunaHelp::acl();
     }
 
     public function list(Request $request)
@@ -344,7 +338,6 @@ class PemeriksaanCtrl extends Controller
                     'ocular_sinistra_vitreous' => $request->ocular_sinistra_vitreous,
                     'ocular_sinistra_funduscopy' => $request->ocular_sinistra_funduscopy,
                     'pemeriksaan_penunjang' => $request->pemeriksaan_penunjang,
-                    'anamnese' => $request->anamnese,
                     'pemeriksaan_diagnosa' => $request->pemeriksaan_diagnosa,
                     'pemeriksaan_diagnosa_kode' => $request->pemeriksaan_diagnosa_kode,
                     'pemeriksaan_tindakan' => $request->pemeriksaan_tindakan,
@@ -912,7 +905,6 @@ class PemeriksaanCtrl extends Controller
                 $item->ocular_sinistra_vitreous = $request->ocular_sinistra_vitreous;
                 $item->ocular_sinistra_funduscopy = $request->ocular_sinistra_funduscopy;
                 $item->pemeriksaan_penunjang = $request->pemeriksaan_penunjang;
-                $item->anamnese = $request->anamnese;
                 $item->pemeriksaan_diagnosa = $request->pemeriksaan_diagnosa;
                 $item->pemeriksaan_diagnosa_kode = $request->pemeriksaan_diagnosa_kode;
                 $item->pemeriksaan_tindakan = $request->pemeriksaan_tindakan;
