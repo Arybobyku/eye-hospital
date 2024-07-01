@@ -8,6 +8,7 @@ use App\Jobs\SendPoliJob;
 use App\Models\AntrianPoli;
 use App\Models\CaraBayarKamar;
 use App\Models\LayananPasien;
+use App\Models\ListPaketBedahBaru;
 use App\Models\Pasien;
 use App\Models\PemeriksaanDokter;
 use App\Models\PemeriksaanRo;
@@ -344,7 +345,6 @@ class PemeriksaanCtrl extends Controller
                     'ocular_sinistra_vitreous' => $request->ocular_sinistra_vitreous,
                     'ocular_sinistra_funduscopy' => $request->ocular_sinistra_funduscopy,
                     'pemeriksaan_penunjang' => $request->pemeriksaan_penunjang,
-                    'anamnese' => $request->anamnese,
                     'pemeriksaan_diagnosa' => $request->pemeriksaan_diagnosa,
                     'pemeriksaan_diagnosa_kode' => $request->pemeriksaan_diagnosa_kode,
                     'pemeriksaan_tindakan' => $request->pemeriksaan_tindakan,
@@ -365,6 +365,7 @@ class PemeriksaanCtrl extends Controller
                 foreach ($tindakan as $row) {
                     $item = new LayananPasien();
                     $item->uuid = Uuid::uuid4();
+                    $item->is_paket_bedah = $row->is_paket_bedah;
                     $item->registrasi_uuid = $request->registrasi_uuid;
                     $item->no_pendaftaran = $request->no_pendaftaran;
                     $item->registrasi_kode = $request->kode;
@@ -423,6 +424,8 @@ class PemeriksaanCtrl extends Controller
                             $item->nama_dokter = $request->nama_dokter;
                         }
                     }
+                    // 	var_dump($item);
+                    // die();
                     $item->default = $row->default;
                     $item->save();
                 }
@@ -432,6 +435,7 @@ class PemeriksaanCtrl extends Controller
                 foreach ($tindakanjalan as $row) {
                     $item = new LayananPasien();
                     $item->uuid = Uuid::uuid4();
+                    $item->is_paket_bedah = $row->is_paket_bedah;
                     $item->registrasi_uuid = $request->registrasi_uuid;
                     $item->no_pendaftaran = $request->no_pendaftaran;
                     $item->registrasi_kode = $request->kode;
@@ -535,6 +539,8 @@ class PemeriksaanCtrl extends Controller
                     $item->total = $harga_kamar;
                     $item->jenis = 'Kamar Rawat Inap';
                     $item->default = 'Tidak';
+                    // var_dump($item);
+                    // die();
                     $item->save();
 
                     $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
@@ -570,10 +576,14 @@ class PemeriksaanCtrl extends Controller
                 ];
 
                 $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
-
+                LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_paket_bedah', 1)->delete(); // UNTUK WSIT
                 $remove = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
 
                 if ($request->paket_uuid != '' && $request->paket_uuid != ' ' && $request->paket_uuid) {
+                    $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update([
+                        'apakah_paket' => 'Ya',
+                    ]);
+
                     // Periksa asuransinya : jika asuransi maka masuk ke akun asuransi
                     //											 jika umum maka masuk ke dalam bagian umum
                     $jenis_pembayaran = '-';
@@ -627,6 +637,45 @@ class PemeriksaanCtrl extends Controller
                     $item->tanggal_masuk_permintaan = date('Y-m-d');
                     $item->jam_masuk_permintaan = date('H:i');
                     $item->save();
+
+                    $remove = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_paket_bedah', 1)->delete();
+
+                    $listpaket = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $request->paket_uuid)->get();
+
+                    foreach ($listpaket as $row) {
+                        $item = new LayananPasien();
+                        $item->uuid = Uuid::uuid4();
+                        $item->registrasi_uuid = $request->registrasi_uuid;
+                        $item->no_pendaftaran = $request->no_pendaftaran;
+                        $item->registrasi_kode = $request->kode;
+                        $item->registrasi_nomor = $request->nomor;
+                        $item->is_paket_bedah = 1;
+                        $item->registrasi_jenis = $request->jenis;
+                        $item->pasien_uuid = $request->pasien_uuid;
+                        $item->rekam_medis = $request->rekam_medis;
+                        $item->nama_pasien = $request->nama_pasien;
+                        $item->pengguna_uuid = $request->pengguna_uuid;
+                        $item->nama_dokter = $request->nama_dokter;
+
+                        $item->tanggal = date('Y-m-d');
+                        $item->waktu = date('H:i');
+
+                        $item->carabayar_uuid = $request->carabayar_uuid;
+                        $item->carabayar_nama = $request->carabayar_nama_odc;
+                        $item->layanan_uuid = $row->uuid;
+
+                        if ($row->nama == 'Honor Operator Bedah') {
+                            $item->nama_layanan = $row->sub_label;
+                        } else {
+                            $item->nama_layanan = $row->nama;
+                        }
+                        $item->tarif = $row->harga;
+                        $item->total = $row->harga;
+                        $item->jenis = $row->label;
+                        $item->default = '-';
+                        $item->others = 1;
+                        $item->save();
+                    }
                 }
 
                 if ($request->paket_uuid_bedah != '' && $request->paket_uuid_bedah != ' ' && $request->paket_uuid_bedah) {
@@ -912,7 +961,6 @@ class PemeriksaanCtrl extends Controller
                 $item->ocular_sinistra_vitreous = $request->ocular_sinistra_vitreous;
                 $item->ocular_sinistra_funduscopy = $request->ocular_sinistra_funduscopy;
                 $item->pemeriksaan_penunjang = $request->pemeriksaan_penunjang;
-                $item->anamnese = $request->anamnese;
                 $item->pemeriksaan_diagnosa = $request->pemeriksaan_diagnosa;
                 $item->pemeriksaan_diagnosa_kode = $request->pemeriksaan_diagnosa_kode;
                 $item->pemeriksaan_tindakan = $request->pemeriksaan_tindakan;
@@ -1185,9 +1233,21 @@ class PemeriksaanCtrl extends Controller
                     $item->save();
                 }
 
+                $paketbedah = json_decode($request->paket_uuid);
+
+                // if (count($paketbedah) > 0) {
+
+                // }
+                LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+                // UNTUK EDIT
+
                 $remove = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
 
                 if ($request->paket_uuid != '' && $request->paket_uuid != ' ' && $request->paket_uuid) {
+                    $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update([
+                        'apakah_paket' => 'Ya',
+                    ]);
+
                     // Periksa asuransinya : jika asuransi maka masuk ke akun asuransi
                     //											 jika umum maka masuk ke dalam bagian umum
                     $jenis_pembayaran = '-';
@@ -1240,6 +1300,43 @@ class PemeriksaanCtrl extends Controller
                     $item->jam_masuk_permintaan = date('H:i');
 
                     $item->save();
+
+                    $listpaket = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $request->paket_uuid)->get();
+                    // UNTUK MASUKAN DETAIL PAKET KE TAGIHAN
+                    foreach ($listpaket as $row) {
+                        $item = new LayananPasien();
+                        $item->uuid = Uuid::uuid4();
+                        $item->is_paket_bedah = 1;
+                        $item->registrasi_uuid = $request->registrasi_uuid;
+                        $item->no_pendaftaran = $request->no_pendaftaran;
+                        $item->registrasi_kode = $request->kode;
+                        $item->registrasi_nomor = $request->nomor;
+                        $item->registrasi_jenis = $request->jenis;
+                        $item->pasien_uuid = $request->pasien_uuid;
+                        $item->rekam_medis = $request->rekam_medis;
+                        $item->nama_pasien = $request->nama_pasien;
+                        $item->pengguna_uuid = $request->pengguna_uuid;
+                        $item->nama_dokter = $request->nama_dokter;
+
+                        $item->tanggal = date('Y-m-d');
+                        $item->waktu = date('H:i');
+
+                        $item->carabayar_uuid = $request->carabayar_uuid;
+                        $item->carabayar_nama = $request->carabayar_nama_odc;
+                        $item->layanan_uuid = $row->uuid;
+
+                        if ($row->nama == 'Honor Operator Bedah') {
+                            $item->nama_layanan = $row->sub_label;
+                        } else {
+                            $item->nama_layanan = $row->nama;
+                        }
+                        $item->tarif = $row->harga;
+                        $item->total = $row->harga;
+                        $item->jenis = $row->label;
+                        $item->default = '-';
+                        $item->others = 1;
+                        $item->save();
+                    }
                 }
 
                 if ($request->paket_uuid_bedah != '' && $request->paket_uuid_bedah != ' ' && $request->paket_uuid_bedah) {
