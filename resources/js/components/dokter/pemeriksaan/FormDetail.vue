@@ -358,7 +358,7 @@
 											<tbody>
 												<tr v-for="(item, index) in listdata" v-if="listdata.length > 0">
 													<td>{{ item.nama_tindakan_rawat_jalan }}</td>
-													<td style="display:none;">{{ item.is_paket_bedah }}</td>
+													<td style="display:none">{{ item.is_paket_bedah }}</td>
 													<td>{{ formatrupiah(item.harga.toString()) }}</td>
 													<td>
 														<button v-if="item.default != 'Ya'" class="tooltip btn-danger"
@@ -423,9 +423,9 @@
 											</thead>
 											<tbody>
 												<tr v-for="(item, index) in listdatajalan"
-													v-if="listdatajalan.length > 0">
+													v-if="listdatajalan.length > 0">asas
 													<td>{{ item.nama_tindakan_rawat_jalan }}</td>
-													<td style="display:none;">{{ item.is_paket_bedah }}</td>
+													<td style="display:none">{{ item.is_paket_bedah }}</td>
 													<td>{{ item.harga }}</td>
 													<td>
 														<button v-if="item.default != 'Ya'" class="tooltip btn-danger"
@@ -1177,7 +1177,7 @@ export default {
 			if (key == 'carabayartindakanrawatjalan') {
 				let _item = {
 					nama_tindakan_rawat_jalan: item.nama_tindakan_rawat_jalan,
-					is_paket_bedah: item.is_paket_bedah,
+					is_paket_bedah: 0,
 					tindakan_rawat_jalan_uuid: item.tindakan_rawat_jalan_uuid,
 					default: item.default,
 					harga: parseInt(item.harga),
@@ -1191,7 +1191,7 @@ export default {
 			else if (key == 'carabayartindakanrawatjalanjalan') {
 				let _item = {
 					nama_tindakan_rawat_jalan: item.nama_tindakan_rawat_jalan,
-					is_paket_bedah: item.is_paket_bedah,
+					is_paket_bedah: 0,
 					tindakan_rawat_jalan_uuid: item.tindakan_rawat_jalan_uuid,
 					default: item.default,
 					harga: parseInt(item.harga),
@@ -1453,7 +1453,7 @@ export default {
 				let _item = {
 					nama_tindakan_rawat_jalan: response.data.layanan[i].nama_layanan,
 					tindakan_rawat_jalan_uuid: response.data.layanan[i].layanan_uuid,
-					is_paket_bedah: response.data.layanan[i].nama_layanan,
+					is_paket_bedah: response.data.layanan[i].is_paket_bedah,
 					default: response.data.layanan[i].default,
 					harga: parseInt(response.data.layanan[i].tarif),
 				}
