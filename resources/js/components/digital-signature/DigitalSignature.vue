@@ -9,7 +9,7 @@
     <div v-if="disabled == false">
         <button  class="tooltip btn-success" @click="save">Simpan</button>
         <button  class="tooltip btn-danger" @click="clear">Hapus</button>
-    </div>
+    </div> 
     <div v-if="disabled">
      <button  class="tooltip btn-success"  @click="handleDisabled">Ubah</button>
     </div>

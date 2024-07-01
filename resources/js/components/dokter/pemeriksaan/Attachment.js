@@ -85,6 +85,7 @@ export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obat
 	data.append('ocular_sinistra_funduscopy', form.ocularsinistrafunduscopy.value);
 
 	data.append('pemeriksaan_penunjang', form.pemeriksaanpenunjang.value);
+	data.append('anamnese', form.anamnese.value);
 	data.append('pemeriksaan_diagnosa', form.select.icd10.label);
 	data.append('pemeriksaan_diagnosa_kode', form.select.icd10.value);
 	data.append('pemeriksaan_tindakan',form.select.icd9.label);

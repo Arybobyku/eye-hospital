@@ -173,6 +173,11 @@ export const formkelurahan = () => {
 			name: 'pemeriksaanpenunjang', value: '', disabled: false, show: true, kinds: ''
 		},
 
+		anamnese:{
+			title: 'Anamnese', for_id: 'form_'+'anamnese', type: 'text', required: '', 
+			name: 'anamnese', value: '', disabled: false, show: true, kinds: ''
+		},
+
 		pemeriksaantatalaksana:{
 			title: 'Tata Laksana', for_id: 'form_'+'pemeriksaantatalaksana', type: 'text', required: '', 
 			name: 'pemeriksaantatalaksana', value: '', disabled: false, show: true, kinds: ''

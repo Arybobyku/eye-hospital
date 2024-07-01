@@ -17,7 +17,7 @@
 							</ul>
 
 							<label style="font-weight=bold;">Tanda tangan dokter</label>
-							<DigitalSignature style = "height:250px"/>
+							<DigitalSignature style = "height:250px"/> 
 						</div>
 						
 					
@@ -231,6 +231,7 @@
 										<Inputed :ref="form.pergerakanbolamata.name" :form="form.pergerakanbolamata"></Inputed>
 										<Inputed :ref="form.pemeriksaanprognosa.name" :form="form.pemeriksaanprognosa"></Inputed>
 										<Inputed :ref="form.pemeriksaanpenunjang.name" :form="form.pemeriksaanpenunjang"></Inputed>
+										<Textarea :ref="form.anamnese.name" :form="form.anamnese"></Textarea>
 
 									</div>
 									<div class="col-6 form-ml">
@@ -476,6 +477,7 @@
 														<span class="tooltiptext">Add Obat/Alkes</span>
 													</button>
 												</div>
+
 												<!-- <template v-if="tempobatracikan && tempobatracikan.jenis == 'Obat'">
 													<div class="col-3"><Inputed :ref="form.komposisi.name" :form="form.komposisi"></Inputed></div>
 													<div class="col-3 form-ml">
@@ -708,7 +710,6 @@ import Swal from 'sweetalert2';
 import { arrpemeriksaan } from '../../../module/DataArray.js';
 import { datename, formatrupiah } from '../../../module/Manipulation.js';
 import { updatedbdokter } from '../../../module/Indexdb.js';
-
 var vm, body;
 export default {
 	emits: ["dialog", "parsingForm"],
@@ -717,6 +718,7 @@ export default {
 		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
 		Textarea: defineAsyncComponent(() => import('../../../section/Textarea.vue')),
 		DigitalSignature: defineAsyncComponent(() => import('../../digital-signature/DigitalSignature.vue')),
+		
 	},
 	computed: {
 		htgquantity:function() {
@@ -1459,6 +1461,7 @@ export default {
 				vm.form.pergerakanbolamata.value = vm.nullcheck(temps.pergerakan_bola_mata)
 				vm.form.pemeriksaanprognosa.value = vm.nullcheck(temps.pemeriksaan_prognosa)
 				vm.form.pemeriksaanpenunjang.value = vm.nullcheck(temps.pemeriksaan_penunjang)
+				vm.form.anamnese.value = vm.nullcheck(temps.anamnese)
 				vm.form.pemeriksaantatalaksana.value = vm.nullcheck(temps.pemeriksaan_tata_laksana)
 				vm.form.oculardextrapalpebra.value = vm.nullcheck(temps.ocular_dextra_palpebra)
 				vm.form.oculardextraconjunctiva.value = vm.nullcheck(temps.ocular_dextra_conjunctiva)
