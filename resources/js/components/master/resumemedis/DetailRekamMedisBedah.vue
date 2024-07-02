@@ -7,7 +7,7 @@
         >
             <div class="modal-header">
                 <span class="close" v-on:click="hide()">&times;</span>
-                <h2>Rekam Medis Rawat Jalan</h2>
+                <h2>Rekam Medis Bedah</h2>
             </div>
             <div class="modal-body" style="height: 100%">
                 <div class="grid">
