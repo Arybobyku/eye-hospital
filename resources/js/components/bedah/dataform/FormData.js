@@ -368,12 +368,12 @@ export const formperawatanperioperative = () => {
 		},
 
 		perawatruangan: { 
-			title: 'Keterangan', for_id: 'form_'+'perawatruangan', type: 'text', required: '', 
+			title: 'Nama Perawat Ruangan', for_id: 'form_'+'perawatruangan', type: 'text', required: '', 
 			name: 'Nama Perawat Ruangan', value: '', disabled: false, show: true, kinds: ''
 		},
 
 		perawatkamarbedah: { 
-			title: 'Nama Perawa Kamar Bedah', for_id: 'form_'+'perawatkamarbedah', type: 'text', required: '', 
+			title: 'Nama Perawat Kamar Bedah', for_id: 'form_'+'perawatkamarbedah', type: 'text', required: '', 
 			name: 'perawatkamarbedah', value: '', disabled: false, show: true, kinds: ''
 		},
 

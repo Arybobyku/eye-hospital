@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\RawatJalan;
 
+use App\Models\PerawatanPeriOperative;
+use App\Models\RegistrasiOperasi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\PemeriksaanDokter;
@@ -162,6 +164,31 @@ class PrintRekamMedisCtrl extends Controller
       compact(
         'pasien',
         'ro'
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+
+  function printRm1dot10($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->first();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    // $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->get();
+
+    // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
+
+    $pdf->loadView(
+      'print-rekam-medis.bedah.rm1dot10',
+      compact(
+        'pasien',
+        'ppo',
+        'roperasi',
+        'ro',
       ),
     )->setPaper('a4', 'potrait');
 
