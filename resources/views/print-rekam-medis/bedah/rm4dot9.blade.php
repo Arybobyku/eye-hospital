@@ -89,9 +89,9 @@
         <table class="tablee" style="width: 100%;">
             <tr>
                 <td class="td1"><b>Sebelum Induksi anestesi/ Sign In <br>Waktu :............. </b></td>
-                <td class="td2"><b>-></b></td>
+                <td class="td2"><b>--></b></td>
                 <td class="td3"><b>Sebelum Insisi/Time Out <br> Waktu :.............</b></td>
-                <td class="td4"><b>-></b></td>
+                <td class="td4"><b>--></b></td>
                 <td class="td5"><b>Sebelum Pasien Meninggalkan Kamar Operasi/ Sign Out <br> Waktu :.............</td>
             </tr>
             <tr style="vertical-align: top;">
@@ -242,7 +242,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <table>
+                                <table style="margin-top: -10px">
                                     <tr>
                                         <td><input type="checkbox" checked></td>
                                         <td>Tidak</td>
@@ -250,38 +250,30 @@
                                 </table>
                             </td>
                         </tr>
-                        <table style="margin-top:100px;">
+                        <br><br><br><br><br><br><br><br><br>
                         <tr>
-                            <td colspan="2">
-                                <b>Tanda tangan dan nama</b>
+                            <td colspan="2"><b>Tanda tangan dan nama</b></td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">dr. Anestesi</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">...................................................................
                             </td>
                         </tr>
-                        </table>
                         <tr>
-                            <td>
-                                <table>
-                                    <tr>
-                                        <td colspan="2">dr. Anestesi</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">Perawat Anestesi</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">Perawat </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                </table>
+                            <td colspan="2">Perawat Anestesi</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">...................................................................
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Perawat </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">...................................................................
                             </td>
                         </tr>
                     </table>
@@ -368,7 +360,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td colspan="2">..................................................</td>
+                                        <td colspan="2">...................................................................</td>
                                     </tr>
                                 </table>
                             </td>
@@ -380,7 +372,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td colspan="2">..................................................</td>
+                                        <td colspan="2">...................................................................</td>
                                     </tr>
                                 </table>
                             </td>
@@ -518,34 +510,29 @@
                                 </table>
                             </td>
                         </tr>
+                        <br>
                         <tr>
                             <td colspan="2"><b>Tanda tangan dan nama</b></td>
                         </tr>
                         <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td colspan="2">dr. Anestesi</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">Perawat Anestesi</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">Perawat Sirkuler</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                </table>
+                            <td colspan="2">dr. Anestesi</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">........................................................................
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Perawat Anestesi</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">........................................................................
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Perawat Sirkuler</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">........................................................................
                             </td>
                         </tr>
                     </table>
@@ -563,7 +550,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <table>
+                                <table style="margin-top: -10px">
                                     <tr>
                                         <td><input type="checkbox" checked></td>
                                         <td>Ya</td>
@@ -571,7 +558,7 @@
                                 </table>
                             </td>
                             <td>
-                                <table>
+                                <table style="margin-top: -10px">
                                     <tr>
                                         <td><input type="checkbox" checked></td>
                                         <td>Tidak</td>
@@ -583,7 +570,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <table>
+                                <table style="margin-top: -10px">
                                     <tr>
                                         <td><input type="checkbox" checked></td>
                                         <td>Lengkap</td>
@@ -591,7 +578,7 @@
                                 </table>
                             </td>
                             <td>
-                                <table>
+                                <table style="margin-top: -10px">
                                     <tr>
                                         <td><input type="checkbox" checked></td>
                                         <td>Tidak</td>
@@ -604,7 +591,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <table>
+                                <table style="margin-top: -10px">
                                     <tr>
                                         <td><input type="checkbox" checked></td>
                                         <td>Ya</td>
@@ -612,7 +599,7 @@
                                 </table>
                             </td>
                             <td>
-                                <table>
+                                <table style="margin-top: -10px">
                                     <tr>
                                         <td><input type="checkbox" checked></td>
                                         <td>Tidak </td>
@@ -628,7 +615,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <table>
+                                <table style="margin-top: -10px">
                                     <tr>
                                         <td><input type="checkbox" checked></td>
                                         <td>Ya</td>
@@ -636,7 +623,7 @@
                                 </table>
                             </td>
                             <td>
-                                <table>
+                                <table style="margin-top: -10px">
                                     <tr>
                                         <td><input type="checkbox" checked></td>
                                         <td>Tidak</td>
@@ -644,51 +631,46 @@
                                 </table>
                             </td>
                         </tr>
+                        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>  
                         <tr>
-                            <td colspan="2">Medan,.....................................</td>
+                            <td colspan="2" align="right">Medan,.....................................</td>
                         </tr>
                         <tr>
                             <td colspan="2"><b>Tanda tangan dan nama</b></td>
                         </tr>
                         <tr>
-                            <td>
-                                <table>
-                                    <tr>
-                                        <td colspan="2">dr. Bedah</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">dr. Anestesi</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">Perawat Anestesi</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">Perawat Instrumen</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">Perawat Sirkuler</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2">.............................................................
-                                        </td>
-                                    </tr>
-                                </table>
+                            <td colspan="2">dr. Bedah</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">...................................................................
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">dr. Anestesi</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">...................................................................
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Perawat Anestesi</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">...................................................................
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Perawat Instrumen</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">...................................................................
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Perawat Sirkuler</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">...................................................................
                             </td>
                         </tr>
                     </table>
