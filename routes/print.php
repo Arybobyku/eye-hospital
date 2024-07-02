@@ -41,6 +41,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::get('rekammedis/rawat-jalan/rm1dot6/{uuid}', [PrintRekamMedisCtrl::class, 'printRm1dot6']);
 	Route::get('rekammedis/rawat-jalan/rm1dot7/{uuid}', [PrintRekamMedisCtrl::class, 'printRm1dot7']);
 	Route::get('rekammedis/bedah/rm1dot8/{uuid}', [PrintRekamMedisCtrl::class, 'printRm1dot8']);
+	Route::get('rekammedis/bedah/rm2dot0/{uuid}', [PrintRekamMedisCtrl::class, 'printRm2dot0']);
+	Route::get('rekammedis/bedah/rm4dot9/{uuid}', [PrintRekamMedisCtrl::class, 'printRm4dot9']);
 	Route::get('rekammedis/rawat-jalan/all/{uuid}', [PrintRekamMedisCtrl::class, 'all']);
 
 });
