@@ -225,7 +225,7 @@ export const parsepersetujuantindakankedokteran = (form) => {
 	data.append('ji_dasar_diagnosis', form.jidasardiagnosis.value);
 	data.append('ji_tindakan_kedokteran', form.jitindakankedokteran.value);
 	data.append('ji_indikasi_tindakan', form.jiindikasitindakan.value);
-	data.append('ji_tatacara', form.jitatacara.value);
+	data.append('ji_tata_cara', form.jitatacara.value);
 	data.append('ji_tujuan', form.jitujuan.value);
 	data.append('ji_resiko', form.jiresiko.value);
 	data.append('ji_komplikasi', form.jikomplikasi.value);

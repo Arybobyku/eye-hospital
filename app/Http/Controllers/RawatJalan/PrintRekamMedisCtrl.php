@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\PemeriksaanDokter;
 use App\Models\PemeriksaanRo;
 use App\Models\Pasien;
+use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\Registrasi;
 use App\Models\Resep;
 use Ramsey\Uuid\Uuid;
@@ -175,8 +176,8 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->first();
+    $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->latest();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
     $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
     // $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->get();
 
@@ -198,19 +199,20 @@ class PrintRekamMedisCtrl extends Controller
   function printRm1dot8($uuid)
   {
     $pdf = \App::make('dompdf.wrapper');
-    // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
-    // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
-    // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+    ->orderBy('created_at', 'asc')
+    ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm1dot8',
-      compact('pasien')
+      compact('pasien','ro','roperasi','ptk',)
     )->setPaper('a4', 'potrait');
 
 
     return $pdf->stream();
-    // return view('print-rekam-medis.rawat-jalan.rm1dot1',compact('pasien'));
   }
 
 }
