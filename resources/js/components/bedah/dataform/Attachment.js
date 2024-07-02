@@ -74,7 +74,7 @@ export const parseperawatanperioperative = (form) => {
 	data.append('ruangan', form.ruangan.value);
 	data.append('dokter_operator', form.dokteroperator.value);
 	data.append('dokter_anastesi', form.dokteranastesi.value);
-	data.append('data', form.diagnosis.value);
+	data.append('diagnosis', form.diagnosis.value);
 	data.append('tindakan_operasi', form.tindakanoperasi.value);
 	data.append('hasil_kgd', form.hasilkgd.value);
 	data.append('waktu_pengambilan_kgd', form.waktupengambilankgd.value);
