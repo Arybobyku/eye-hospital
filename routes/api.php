@@ -27,5 +27,6 @@ Route::get('', function (Request $request) {
 Route::prefix('satusehat')->group(function () {
     Route::post('pasien/{uuid}', [SatuSehatPatientController::class, 'registerPatient']);
     Route::get('pasien/{uuid}', [SatuSehatPatientController::class, 'getPatient']);
+    Route::get('praktisi', [SatuSehatPatientController::class, 'getPraktisi']);
 });
 

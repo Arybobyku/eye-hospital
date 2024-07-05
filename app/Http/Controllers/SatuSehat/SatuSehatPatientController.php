@@ -7,6 +7,7 @@ use App\Models\Pasien;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Services\Satusehat\FHIR\Patient;
+use App\Services\Satusehat\FHIR\Practitioner;
 use App\Services\Satusehat\OAuth2Client;
 
 class SatuSehatPatientController extends Controller
@@ -65,6 +66,25 @@ class SatuSehatPatientController extends Controller
         try {
             $result = $this->client->get_by_id('Patient', $id);
             return $result;
+        } catch (\Exception $err) {
+            Log::error('Error registering patient: ' . $err->getMessage());
+
+            return response()->json([
+                'error' => $err->getMessage(), // Include the error message
+                'trace' => $err->getTraceAsString() // Optionally include the stack trace
+            ], 500);
+        }
+    }
+
+    public function getPraktisi(Request $request)
+    {
+        try {
+            $praktisi = new Practitioner();
+            $nik = $request->query('nik');
+            if ($nik) {
+                return $praktisi->getSSNik($nik);
+            }
+            return $request;
         } catch (\Exception $err) {
             Log::error('Error registering patient: ' . $err->getMessage());
 
