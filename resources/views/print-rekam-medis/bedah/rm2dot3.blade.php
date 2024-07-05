@@ -60,26 +60,14 @@
             border-collapse: collapse;
             width: 25%;
         }
-
-        .tda {
-            border-collapse: collapse;
-            width: 5%;
-        }
-
         .tdb {
             border-right: 1px solid black;
             border-collapse: collapse;
-            width: 45%;
+            width: 50%;
         }
-
-        .tdc {
-            border-collapse: collapse;
-            width: 5%;
-        }
-
         .tdd {
             border-collapse: collapse;
-            width: 45%;
+            width: 50%;
         }
 
         .td1x {
@@ -352,21 +340,21 @@
                 </td>
             </tr>
             <tr>
-                <td class="tda"><input type="checkbox" checked></td>
+                <td ><input type="checkbox" checked></td>
                 <td class="tdb">
                     Perban dibuka 2 jam paska operasi
                 </td>
-                <td class="tdc"><input type="checkbox" checked></td>
+                <td ><input type="checkbox" checked></td>
                 <td class="tdd">
                     Perban dibuka dan ditutup kembali setelah ditetes obat
                 </td>
             </tr>
             <tr>
-                <td class="tda"><input type="checkbox" checked></td>
+                <td ><input type="checkbox" checked></td>
                 <td class="tdb">
                     Obat mulai di pakai setelah perban di buka
                 </td>
-                <td class="tdc"><input type="checkbox" checked></td>
+                <td ><input type="checkbox" checked></td>
                 <td class="tdd">
                     pantangan sesuai dengan insturksi post operasi
                 </td>
@@ -416,21 +404,3 @@
         </table>
     </div>
 </body>
-{{-- <tr>
-    <td class="td1"> Anesthesi</td>
-    <td><input type="checkbox" checked></td>
-    <td class="td2">Topikal</td>
-    <td> <input type="checkbox" checked></td>
-    <td class="td3">Retrobulbar/Peribulbar</td>
-    <td> <input type="checkbox" checked></td>
-    <td class="td4">Subconjunctival</td>
-</tr>
-<tr>
-    <td class="td1"> Anesthesi</td>
-    <td><input type="checkbox" checked></td>
-    <td>Topikal</td>
-    <td> <input type="checkbox" checked></td>
-    <td>Retrobulbar/Peribulbar</td>
-    <td> <input type="checkbox" checked></td>
-    <td>Subconjunctival</td>
-</tr> --}}
