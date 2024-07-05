@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SatuSehat\SatuSehatPatientController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,3 +18,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('', function (Request $request) {
+    return "ok";
+});
+
+
+Route::prefix('satusehat')->group(function () {
+    Route::post('pasien/{uuid}', [SatuSehatPatientController::class, 'registerPatient']);
+    Route::get('pasien/{uuid}', [SatuSehatPatientController::class, 'getPatient']);
+});
+

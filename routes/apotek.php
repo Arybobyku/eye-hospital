@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Apotek\AccOpnameCtrl;
 use Illuminate\Support\Facades\Route;
 
 /*

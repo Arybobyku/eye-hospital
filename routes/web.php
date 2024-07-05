@@ -21,6 +21,7 @@ use App\Http\Controllers\DashboardCtrl;
 use App\Http\Controllers\AntrianCtrl;
 use App\Http\Controllers\RoomCtrl;
 use App\Http\Controllers\MigrasiCtrl;
+use App\Http\Controllers\SatuSehat\SatuSehatPatientController;
 use App\Http\Controllers\SearchingCtrl;
 
 Route::group(['middleware' => 'throttle: 250, 1', 'middleware' => 'acl'], function(){
@@ -90,4 +91,9 @@ Route::prefix('migration')->group(function () {
 
 Route::prefix('searchion')->group(function () {
 	Route::post('searching', [SearchingCtrl::class, 'search'])->name('searchion-search');
+});
+
+Route::prefix('satusehat')->group(function () {
+	// Route::post('patient/{id}', [SatuSehatPatientController::class, 'registerPatient']);
+	// Route::get('patient/{id}', [SatuSehatPatientController::class, 'getPatient']);
 });
