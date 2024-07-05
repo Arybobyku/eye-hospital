@@ -520,8 +520,6 @@ class PrintKasirCtrl extends Controller
 		$item->surat_ke = $surat_ke;
 		$item->save();
 
-		dump($rawatjalan);die();
-
 		$surat = RincianTagihan::select('surat_ke')->where('registrasi_uuid', '=', $registrasi->uuid)->orderBy('id','desc')->first();
     
     $pdf->loadView('print.printcashierrincian', 
