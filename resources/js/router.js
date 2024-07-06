@@ -643,6 +643,13 @@ const routes = [
 		meta: { title: 'Histori Data Rekam Medis' },
 		props: true 
 	},
+		{ 
+		path: _base + 'master-resume-medis', 
+		name: 'Master Resume Medis BOBy', 
+		component: () => import('./components/master/resumemedis/index.vue'),
+		meta: { title: 'Master Resume Medis' },
+		props: true 
+	},
 
 	/**********************************************************************************
 	 * Bagian Customer Services

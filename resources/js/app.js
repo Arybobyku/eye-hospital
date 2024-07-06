@@ -6,7 +6,11 @@ import VueFeather from 'vue-feather';
 import Loader from './section/Loader.vue';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import VueDatePicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css'
+import { createVuetify } from 'vuetify';
+import 'vuetify/styles';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import { aliases, mdi } from 'vuetify/iconsets/mdi';
 
 const app = createApp({});
 app.config.globalProperties.$dbNameIndexDb = 'indexDbHospital';
@@ -31,6 +35,20 @@ window.Echo = new Echo({
     disableStats: true,
 });
 
+const vuetify = createVuetify({
+  components,
+  directives,
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi,
+    },
+  },
+});
+
+
+app.use(vuetify);
 app.component('data-component', Main);
 app.component(VueFeather.name, VueFeather);
 app.component('VueDatePicker', VueDatePicker);
