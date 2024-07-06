@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SatuSehat;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pasien;
+use App\Services\Satusehat\FHIR\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Services\Satusehat\FHIR\Patient;
@@ -93,5 +94,10 @@ class SatuSehatPatientController extends Controller
                 'trace' => $err->getTraceAsString() // Optionally include the stack trace
             ], 500);
         }
+    }
+
+    public function getOrganisasi(){
+        $organisasi = new Organization();
+        $organisasi->addIdentifier('');
     }
 }
