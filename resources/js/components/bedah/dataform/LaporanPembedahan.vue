@@ -201,7 +201,7 @@ export default {
 				vm.form.jamoperasiselesai.value = data.jam_operasi_selesai ? data.jam_operasi_selesai : '';
 				vm.form.lamaoperasiberlansung.value = data.lama_operasi_berlansung ? data.lama_operasi_berlansung : '';
 				vm.form.jenisbahanyangdikirimkelaboratorium.value = data.jenis_bahan_yang_dikirim_ke_laboratorium ? data.jenis_bahan_yang_dikirim_ke_laboratorium : '';
-				vm.form.macamsayatan.value = data.macam_sayatan ? data.macams_ayatan : '';
+				vm.form.macamsayatan.value = data.macam_sayatan ? data.macam_sayatan : '';
 				vm.form.posisisayatan.value = data.posisi_sayatan ? data.posisi_sayatan : '';
 				vm.form.teknikoperasidantemuanintra.value = data.teknik_operasi_dan_temuan_intra ? data.teknik_operasi_dan_temuan_intra : '';
 				vm.form.penggunaanamhpkhusus.value = data.penggunaan_amhp_khusus ? data.penggunaan_amhp_khusus : '';
@@ -211,9 +211,9 @@ export default {
 				vm.form.perdarahan.value = data.perdarahan ? data.perdarahan : '';
 				vm.form.instruksianastesi.value = data.instruksi_anastesi ? data.instruksi_anastesi : '';
 				vm.form.ipbkontrol.value = data.ipb_kontrol ? data.ipb_kontrol : '';
-				vm.form.ipbpuasa.value = data.ipbpuasa ? data.ipbpuasa : '';
-				vm.form.ipbdrain.value = data.ipbdrain ? data.ipbdrain : '';
-				vm.form.ipbinpus.value = data.ipbinpus ? data.ipbinpus : '';
+				vm.form.ipbpuasa.value = data.ipb_puasa ? data.ipb_puasa : '';
+				vm.form.ipbdrain.value = data.ipb_drain ? data.ipb_drain : '';
+				vm.form.ipbinpus.value = data.ipb_inpus ? data.ipb_inpus : '';
 				vm.form.ipbobatobatan.value = data.ipb_obat_obatan ? data.ipb_obat_obatan : '';
 				vm.form.ipbgantibalut.value = data.ipb_ganti_balut ? data.ipb_ganti_balut : '';
 				vm.form.ipblainnya.value = data.ipb_lainnya ? data.ipb_lainnya : '';

@@ -157,7 +157,7 @@ export const parsecatatanoperasikatarak = (form) => {
 	data.append('diagnosis_pra_bedah', form.diagnosisprabedah.value);
 	data.append('diagnosis_pasca_bedah', form.diagnosispascabedah.value);
 	data.append('catatan_tambahan', form.catatantambahan.value);
-	data.append('nama_operator', form.namaoperator.value);
+	data.append('operator', form.namaoperator.value);
 
 	data.append('an_topical', form.an_topical);
 	data.append('an_retrobulbar_peribulbar', form.an_retrobulbar_peribulbar);

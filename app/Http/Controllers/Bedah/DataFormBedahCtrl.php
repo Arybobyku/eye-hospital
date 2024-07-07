@@ -489,6 +489,7 @@ class DataFormBedahCtrl extends Controller
 				'an_lidocain' => $request->an_lidocain,
 				'in_kornea' => $request->in_kornea,
 				'in_limbus' => $request->in_limbus,
+				'catatan_tambahan' => $request->catatan_tambahan,
 				'in_sclera' => $request->in_sclera,
 				'wt_main_port' => $request->wt_main_port,
 				'wt_keratome_2_koma_75_mm' => $request->wt_keratome_2_koma_75_mm,
