@@ -165,7 +165,7 @@
         <tr class="tablee">
             <td colspan="3" style="text-align: justify; padding:5px">Dengan ini menyatakan bahwa saya/ keluarga pasien
                <b>{{ $ptk->penerima_penolak_informasi }}</b> telah menerima informasi
-                sebagimana diatas serta telah diberi kesempatan untuk berdiskusi/bertanya dan telah memahaminya</td>
+                sebagaimana diatas serta telah diberi kesempatan untuk berdiskusi/bertanya dan telah memahaminya</td>
             <td class="td4" align="center">Penerima informasi,<br><br>(.................)</td>
         </tr>
         <tr>
@@ -181,7 +181,7 @@
                 lahir
                 <b>{{ $ptk->ptk_tanggal_lahir_penerima }}</b>, jenis kelamin <b>{{ $ptk->ptk_jenis_kelamin_penerima }}</b>, alamat <b> {{ $ptk->ptk_alamat_penerima }}</b>, hubungan dengan pasien
                 <b> {{ $ptk->ptk_hubungan_penerima }}</b>, Dengan ini menyatakan <b>PERSETUJUAN</b> untuk dilakukannya tindakan
-                <b> {{ $ptk->ptk_tindakan}}</b> terhadap<b> {{ $ptk->ptk_terhadap }} saya</b>, bernama <b> {{ $ptk->ptk_nama_target }}</b>, tanggal lahir
+                <b> {{ $ptk->ptk_tindakan}}</b> terhadap saya/<b> {{ $ptk->ptk_terhadap }} </b>, bernama <b> {{ $ptk->ptk_nama_target }}</b>, tanggal lahir
                 <b> {{ $ptk->ptk_tanggal_lahir_target}}</b>, jenis kelamin  <b>{{ $ptk->ptk_jenis_kelamin_target }}</b>, alamat <b> {{ $ptk->ptk_alamat_target }}</b>, Saya memahami
                 perlunya manfaat dan manfaat tindakan tersebut sebagaimana telah dijelaskan seperti diatas kepada saya,
                 termasuk resiko dan komplikasi yang mungkin timbul. <br> Saya juga menyadari bahwa oleh karena itu ilmu
@@ -211,7 +211,7 @@
                             <br>
                             ({{ $ptk->ptk_nama_penerima }})
                             <br>
-                            <i>Tanda Tandan dan Nama Jelas</i>
+                            <i>Tanda Tangan dan Nama Jelas</i>
                         </td>
                         <td align="center" style="width:200px">
                             Saksi (Perawat)
