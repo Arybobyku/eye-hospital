@@ -25,8 +25,17 @@ Route::get('', function (Request $request) {
 
 
 Route::prefix('satusehat')->group(function () {
-    Route::post('pasien/{uuid}', [SatuSehatPatientController::class, 'registerPatient']);
+    // PASIEN
+    Route::post('pasien/{uuid}', [SatuSehatPatientController::class, 'setPatient']);
     Route::get('pasien/{uuid}', [SatuSehatPatientController::class, 'getPatient']);
+    // PRAKTISI
+    Route::post('praktisi', [SatuSehatPatientController::class, 'setPraktisi']);
     Route::get('praktisi', [SatuSehatPatientController::class, 'getPraktisi']);
+    // ORGANISASI
+    Route::post('organisasi', [SatuSehatPatientController::class, 'setOrganisasi']);
+    Route::get('organisasi', [SatuSehatPatientController::class, 'getOrganisasi']);
+    // LOCATION
+    Route::post('lokasi', [SatuSehatPatientController::class, 'setLocation']);
+    // Route::get('lokasi', [SatuSehatPatientController::class, 'getOrganisasi']);
 });
 
