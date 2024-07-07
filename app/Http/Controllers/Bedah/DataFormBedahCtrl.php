@@ -489,6 +489,7 @@ class DataFormBedahCtrl extends Controller
 				'an_lidocain' => $request->an_lidocain,
 				'in_kornea' => $request->in_kornea,
 				'in_limbus' => $request->in_limbus,
+				'catatan_tambahan' => $request->catatan_tambahan,
 				'in_sclera' => $request->in_sclera,
 				'wt_main_port' => $request->wt_main_port,
 				'wt_keratome_2_koma_75_mm' => $request->wt_keratome_2_koma_75_mm,
@@ -762,6 +763,7 @@ class DataFormBedahCtrl extends Controller
 				'si_bagian_7' => $request->si_bagian_7,
 				'si_nama' => $request->si_nama,
 				'si_jam' => $request->si_jam,
+				'so_jam' => $request->so_jam,
 				'to_bagian_1' => $request->to_bagian_1,
 				'to_bagian_2_1' => $request->to_bagian_2_1,
 				'to_bagian_2_2' => $request->to_bagian_2_2,
@@ -838,6 +840,7 @@ class DataFormBedahCtrl extends Controller
 			$item->to_bagian_6 = $request->to_bagian_6;
 			$item->to_nama = $request->to_nama;
 			$item->to_jam = $request->to_jam;
+			$item->so_jam = $request->so_jam;
 			$item->so_bagian_1 = $request->so_bagian_1;
 			$item->so_bagian_2 = $request->so_bagian_2;
 			$item->so_bagian_3 = $request->so_bagian_3;
