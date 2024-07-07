@@ -762,6 +762,7 @@ class DataFormBedahCtrl extends Controller
 				'si_bagian_7' => $request->si_bagian_7,
 				'si_nama' => $request->si_nama,
 				'si_jam' => $request->si_jam,
+				'so_jam' => $request->so_jam,
 				'to_bagian_1' => $request->to_bagian_1,
 				'to_bagian_2_1' => $request->to_bagian_2_1,
 				'to_bagian_2_2' => $request->to_bagian_2_2,
@@ -838,6 +839,7 @@ class DataFormBedahCtrl extends Controller
 			$item->to_bagian_6 = $request->to_bagian_6;
 			$item->to_nama = $request->to_nama;
 			$item->to_jam = $request->to_jam;
+			$item->so_jam = $request->so_jam;
 			$item->so_bagian_1 = $request->so_bagian_1;
 			$item->so_bagian_2 = $request->so_bagian_2;
 			$item->so_bagian_3 = $request->so_bagian_3;

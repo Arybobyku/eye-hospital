@@ -47,7 +47,7 @@ export const parsechecklistkesiapanbedah = (form, listrik, alat, linensteril, ak
 	data.append('uuid', form.uuid);
 	data.append('bedah_uuid', form.bedah_uuid);
 
-	data.append('ruang', form.ruang.value);
+	data.append('ruangan', form.ruangan.value);
 	data.append('kamar', form.kamar.value);
 	data.append('diagnosa', form.diagnosa.value);
 	data.append('tindakan', form.tindakan.value);
@@ -261,31 +261,36 @@ export const parsekeselamatanbedah = (form) => {
 	data.append('tindakan_operasi', form.tindakanoperasi.value);
 	data.append('asisten_operasi', form.asistenoperasi.value);
 	data.append('scrub_nurses', form.scrubnurses.value);
-	data.append('si_bagian_1', form.sibagian1.value);
-	data.append('si_bagian_2', form.sibagian2.value);
-	data.append('si_bagian_3', form.sibagian3.value);
-	data.append('si_bagian_4', form.sibagian4.value);
-	data.append('si_bagian_5', form.sibagian5.value);
-	data.append('si_bagian_6', form.sibagian6.value);
-	data.append('si_bagian_7', form.sibagian7.value);
+	data.append('si_bagian_1', form.sibagian1);
+	data.append('si_bagian_2', form.sibagian2);
+	data.append('si_bagian_3', form.sibagian3);
+	data.append('si_bagian_4', form.sibagian4);
+	data.append('si_bagian_5', form.sibagian5);
+	data.append('si_bagian_6', form.sibagian6);
+	data.append('si_bagian_7', form.sibagian7);
 	data.append('si_nama', form.sinama.value);
-	data.append('to_bagian_1', form.tobagian1.value);
-	data.append('to_bagian_2_1', form.tobagian21.value);
-	data.append('to_bagian_2_2', form.tobagian22.value);
+	data.append('si_jam', form.sijam.value);
+	data.append('so_jam', form.sojam.value);
+	data.append('to_bagian_1', form.tobagian1);
+	data.append('to_bagian_2_1', form.tobagian21);
+	data.append('to_bagian_2_2', form.tobagian22);
 	data.append('to_bagian_2_3', form.tobagian23.value);
 	data.append('to_bagian_3', form.tobagian3.value);
-	data.append('to_bagian_4_1', form.tobagian41.value);
-	data.append('to_bagian_4_2', form.tobagian42.value);
-	data.append('to_bagian_5', form.tobagian5.value);
-	data.append('to_bagian_6', form.tobagian6.value);
+	data.append('to_bagian_4_1', form.tobagian41);
+	data.append('to_bagian_4_2', form.tobagian42);
+	data.append('to_bagian_5', form.tobagian5);
+	data.append('to_bagian_6', form.tobagian6);
 	data.append('to_nama', form.tonama.value);
-	data.append('so_bagian_1', form.sobagian1.value);
-	data.append('so_bagian_2', form.sobagian2.value);
-	data.append('so_bagian_3', form.sobagian3.value);
-	data.append('so_bagian_4', form.sobagian4.value);
-	data.append('so_bagian_4_1', form.sobagian41.value);
-	data.append('so_bagian_5', form.sobagian5.value);
-	data.append('so_bagian_5_1', form.sobagian51.value);
+	data.append('to_jam', form.tojam.value);
+	data.append('so_bagian_1', form.sobagian1);
+	data.append('so_bagian_2', form.sobagian2);
+	data.append('so_bagian_3', form.sobagian3);
+	data.append('so_bagian_4', form.sobagian4);
+	
+	data.append('so_bagian_5', form.sobagian5);
+	
+	data.append('so_asisten_1', form.tobagian7);
+	data.append('so_penata', form.tobagian8);
 	return data;
 }
 
