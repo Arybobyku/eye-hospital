@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>RM9.0</title>
+    <title>RM8.8</title>
     <style>
         @page {
             margin: 18px;
@@ -45,7 +45,7 @@
         }
 
         .steps {
-            margin-left: -30px;
+            margin-left: -50px;
         }
     </style>
 
@@ -54,15 +54,14 @@
     <?php $fullpath = storage_path('app/public/images/header_rme.png'); ?>
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            RM 9.0/LOP/22
+            RM 8.8/LIAV/22
         </div>
         @include('print-rekam-medis.partials.header')
     </div>
     <div>
-        <H4 style="text-align: center;">LAPORAN OPERASI PTERYGIUM</H4>
-        <table class="tablee" style="width: 100%;">
-            <p style="text-align: right; margin: 10px"> Tgl. Operasi :.................................</p>
-            <table class="tablee" style="width: 100%; padding-left: 10px; padding-right: 10px;">
+        <H4 style="text-align: center;"> <u>LAPORAN INJEKSI ANTI VEGA </u></H4>
+            <p style="text-align: right;  margin-bottom: 5%;"> Tgl. Operasi :.................................</p>
+            <table class="tablee" style="width: 100%">
                 <tr>
                     <td class="td2">
                         Mata :
@@ -104,29 +103,23 @@
             <table>
                 <ol>
                     <ol class="steps" style="padding-top: 3%;">
-                        <li style="Margin-bottom: 10px">Pasien dalam posisi SUPINE di tempat tidur dan Anastesi Parabulper.</li>
-                        <li style="Margin-bottom: 10px">Teknik A & Antiseptic.</li>
-                        <li style="Margin-bottom: 10px">Tutup duklubang steril.</li>
-                        <li style="Margin-bottom: 10px">Pasang Blefarostat.</li>
-                        <li style="Margin-bottom: 10px">Injeksi Lidocain pada caput dan corpus pterygium.</li>
-                        <li style="Margin-bottom: 10px">Pisahkan dari epitrkornea hingga bersih.</li>
-                        <li style="Margin-bottom: 10px">Atasi pendarahan.</li>
-                        <li style="Margin-bottom: 10px">Gunting corpus pterygium.</li>
-                        <li style="Margin-bottom: 10px">Buat graft dari Konjungtiva bagian sup or</li>
-                        <li style="Margin-bottom: 10px">Geser ke medial, jahit tepinya</li>
-                        <li style="Margin-bottom: 10px">Salp</li>
-                        <li style="Margin-bottom: 10px">Operasi selesai</li>
+                        <li style="Margin-bottom: 10px">Pasien berbaring dalam anestesi topical/ local/ umum.</li>
+                        <li style="Margin-bottom: 10px">Dilakukan tindakan a & antiseptis menggunakan providone iodin.</li>
+                        <li style="Margin-bottom: 10px">Dipasangkan eye drape.</li>
+                        <li style="Margin-bottom: 10px">Dipasangkan blefarostat.</li>
+                        <li style="Margin-bottom: 10px">Dilakukan pengukuran menggunakan caliper/trocar dengan jarak 3,5/4mm dari limbus di kuadran superior/temporal.</li>
+                        <li style="Margin-bottom: 10px">Dilakukan injeksi avasin / intravitreal sebanyak ........... ml.</li>
+                        <li style="Margin-bottom: 10px">Diteteskan antibiotik.</li>
+                        <li style="Margin-bottom: 10px">Mata ditutup kasa & dop.</li>
+                        <li style="Margin-bottom: 10px">Tindakan selesai</li>
                     </ol>
             </table>
-            <table style="width: 100%; text-align:center;  padding-top: 1%; padding-bottom: 3%; padding-right: 10%">
+            <table style="width: 100%; text-align:right;  padding-top: 1%; padding-bottom: 3%; padding-right: 10%">
                 <tr>
-                    <td>Perawat</td>
-                    <td> Operator</td>
+                    <td> Tanda Tangan DPJP/Dokter</td>
                 </tr> <br><br><br>
                 <tr>
-                    <td>(..........................................................)</td>
-                    <td> (..........................................................)</td>
+                    <td> (.........................................)</td>
                 </tr>
             </table>
-        </table>
     </div>
