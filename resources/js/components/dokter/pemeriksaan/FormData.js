@@ -72,6 +72,11 @@ export const formtransfer = () => {
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'dokter', isrequired: false, html: 'Dokter yang menangani', issearch: false, disabled: false,
 			},
+		pilihanplan: { 
+				key : 'pilihanplan', for_id: 'form_'+'pilihanplan', name: 'pilihanplan', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'pilihanplan', isrequired: false, html: 'Pilih Planning', issearch: false, disabled: false,
+			},
 		}
 	}
 }
@@ -124,7 +129,7 @@ export const formkelurahan = () => {
 		},
 
 		waktuodc:{
-			title: 'Pada Pukul', for_id: 'form_'+'waktuodc', type: 'text', required: '', 
+			title: 'Pada Pukul', for_id: 'form_'+'waktuodc', type: 'time', required: '', 
 			name: 'waktuodc', value: '', disabled: false, show: true, kinds: ''
 		},
 
@@ -397,6 +402,14 @@ export const formkelurahan = () => {
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'carabayar', isrequired: false, html: 'Metode Pembayaran', issearch: false, disabled: false,
 			},
+			pilihanplan: { 
+				key : 'pilihanplan', for_id: 'form_'+'pilihanplan', name: 'pilihanplan', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'pilihanplan', isrequired: false, html: 'Pilih Planning', issearch: false, disabled: false,
+			},
+
+			
+			
 
 			asuransi: { 
 				key : 'asuransi', for_id: 'form_'+'asuransi', name: 'asuransi', uuid:'', value: '', label: 'Silahkan Pilih', 
