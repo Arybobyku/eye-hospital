@@ -104,7 +104,14 @@ class DataFormBedahCtrl extends Controller
 				'asisten_1' => $request->asisten_1,
 				'asisten_2' => $request->asisten_2,
 				'perawat_instrument' => $request->perawat_instrument,
-				'jenis_anastesi' => $request->jenis_anastesi,
+				
+				'ja_umum' => $request->ja_umum,
+				'ja_bsp' => $request->ja_bsp,
+				'ja_csp' => $request->ja_csp,
+				'ja_epidural' => $request->ja_epidural,
+				'ja_spiral' => $request->ja_spiral,
+				'ja_lokal' => $request->ja_lokal,
+
 				'diagnosa_pra_bedah' => $request->diagnosa_pra_bedah,
 				'diagnosa_pasca_bedah' => $request->diagnosa_pasca_bedah,
 				'indikasi_operasi' => $request->indikasi_operasi,
@@ -162,7 +169,15 @@ class DataFormBedahCtrl extends Controller
 			$item->asisten_1 = $request->asisten_1;
 			$item->asisten_2 = $request->asisten_2;
 			$item->perawat_instrument = $request->perawat_instrument;
-			$item->jenis_anastesi = $request->jenis_anastesi;
+			
+			$item->ja_umum = $request->ja_umum;
+			$item->ja_bsp = $request->ja_bsp;
+			$item->ja_csp = $request->ja_csp;
+			$item->ja_epidural = $request->ja_epidural;
+			$item->ja_spiral = $request->ja_spiral;
+			$item->ja_lokal = $request->ja_lokal;
+
+
 			$item->diagnosa_pra_bedah = $request->diagnosa_pra_bedah;
 			$item->diagnosa_pasca_bedah = $request->diagnosa_pasca_bedah;
 			$item->indikasi_operasi = $request->indikasi_operasi;
@@ -614,6 +629,8 @@ class DataFormBedahCtrl extends Controller
 			$item->ipo_pdbddtksdto = $request->ipo_pdbddtksdto;
 			$item->ipo_psdipo = $request->ipo_psdipo;
 			$item->operator = $request->operator;
+			$item->catatan_tambahan = $request->catatan_tambahan;
+
 
 			$item->save();
 		}
