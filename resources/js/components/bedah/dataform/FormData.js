@@ -1,7 +1,7 @@
 export const formlaporanpembedahan = () => {
 	return {
 		uuid: '',
-		bedah_uuid: '',
+		bedah_uuid: '', ja_umum: '', ja_bsp: '', ja_csp: '', ja_epidural: '', ja_lokal: '', ja_spiral: '', penggunaanamhpkhusus: '', komplikasiintraoperasi:'',
 		ruangoperasi: { 
 			title: 'Ruang Operasi', for_id: 'form_'+'ruangoperasi', type: 'text', required: '', 
 			name: 'ruangoperasi', value: '', disabled: false, show: true, kinds: ''
@@ -37,10 +37,6 @@ export const formlaporanpembedahan = () => {
 		perawatinstrument: { 
 			title: 'Perawat Instrument', for_id: 'form_'+'perawatinstrument', type: 'text', required: '', 
 			name: 'perawatinstrument', value: '', disabled: false, show: true, kinds: ''
-		},
-		jenisanastesi: { 
-			title: 'Jenis Anastesi', for_id: 'form_'+'jenisanastesi', type: 'text', required: '', 
-			name: 'jenisanastesi', value: '', disabled: false, show: true, kinds: ''
 		},
 		diagnosaprabedah: { 
 			title: 'Diagnosa Pra-Bedah', for_id: 'form_'+'diagnosaprabedah', type: 'text', required: '', 
@@ -94,17 +90,9 @@ export const formlaporanpembedahan = () => {
 			title: 'Teknik Operasi dan Temuan Intra/Operasi', for_id: 'form_'+'teknikoperasidantemuanintra', type: 'text', required: '', 
 			name: 'teknikoperasidantemuanintra', value: '', disabled: false, show: true, kinds: ''
 		},
-		penggunaanamhpkhusus: { 
-			title: 'Penggunaan AMHP Khusus', for_id: 'form_'+'penggunaanamhpkhusus', type: 'text', required: '', 
-			name: 'penggunaanamhpkhusus', value: '', disabled: false, show: true, kinds: ''
-		},
 		jenisdanjumlahamhpkhusus: { 
 			title: 'Jenis dan Jumlah AMHP Khusus', for_id: 'form_'+'jenisdanjumlahamhpkhusus', type: 'text', required: '', 
 			name: 'jenisdanjumlahamhpkhusus', value: '', disabled: false, show: true, kinds: ''
-		},
-		komplikasiintraoperasi: { 
-			title: 'Komplikasi Intra Operasi', for_id: 'form_'+'komplikasiintraoperasi', type: 'text', required: '', 
-			name: 'komplikasiintraoperasi', value: '', disabled: false, show: true, kinds: ''
 		},
 		penjabarankomplikasiintraoperasi: { 
 			title: 'Penjabaran Komplikasi Intra-Operasi', for_id: 'form_'+'penjabarankomplikasiintraoperasi', type: 'text', required: '', 

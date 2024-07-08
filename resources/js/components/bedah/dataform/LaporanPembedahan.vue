@@ -23,14 +23,70 @@
 			<Inputed :ref="form.perawatinstrument.name" :form="form.perawatinstrument"></Inputed>
 		</div>
 
-		<div class="col-4">
+		<div class="col-8">
 			<Inputed :ref="form.ahlianastesi.name" :form="form.ahlianastesi"></Inputed>
 		</div>
 		<div class="col-4 form-ml">
 			<Inputed :ref="form.asisten2.name" :form="form.asisten2"></Inputed>
 		</div>
-		<div class="col-4 form-ml">
-			<Inputed :ref="form.jenisanastesi.name" :form="form.jenisanastesi"></Inputed>
+		<div class="col-12">
+			<table class="table">
+				<tbody>
+					<tr>
+						<td colspan="4" style="text-align: center;">Jenis Anastesi</td>
+					</tr>
+					<tr>
+						<td>
+							Umum
+						</td>
+						<td>
+							<input class="checkbox" type="checkbox" :checked="ja_umum" value="ja_umum"
+								style="cursor: pointer;">
+						
+						</td>
+						<td>
+							BSP*
+						</td>
+						<td>
+							<input class="checkbox" type="checkbox" :checked="ja_bsp" value="ja_bsp"
+								style="cursor: pointer;">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Spiral
+						</td>
+						<td>
+							<input class="checkbox" type="checkbox" :checked="ja_spiral" value="ja_spiral"
+								style="cursor: pointer;">
+						</td>
+						<td>
+							CSP*
+						</td>
+						<td>
+							<input class="checkbox" type="checkbox" :checked="ja_csp" value="ja_csp"
+								style="cursor: pointer;">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Epidural
+						</td>
+						<td>
+							<input class="checkbox" type="checkbox" :checked="ja_epidural" value="ja_epidural"
+								style="cursor: pointer;">
+						</td>
+						<td>
+							Lokal
+						</td>
+						<td>
+							<input class="checkbox" type="checkbox" :checked="ja_lokal" value="ja_lokal"
+								style="cursor: pointer;">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
 		</div>
 
 		<div class="col-6">
@@ -78,19 +134,32 @@
 		</div>
 
 		<div class="col-6">
-			<Inputed :ref="form.penggunaanamhpkhusus.name" :form="form.penggunaanamhpkhusus"></Inputed>
+			<table style="width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #d6d6d6; border-radius: 8px;">
+				<tr>
+					<td>Penggunaan AMHP Khusus</td>
+					<td><input class="checkbox" type="checkbox" :checked="penggunaanamhpkhusus" value="penggunaan_amhp_khusus"
+						style="cursor: pointer;"></td>
+				</tr>
+			</table>
+			<!-- <Inputed :ref="form.penggunaanamhpkhusus.name" :form="form.penggunaanamhpkhusus"></Inputed> -->
 		</div>
 		<div class="col-6 form-ml">
 			<Inputed :ref="form.jenisdanjumlahamhpkhusus.name" :form="form.jenisdanjumlahamhpkhusus"></Inputed>
 		</div>
 
-		<div class="col-3">
-			<Inputed :ref="form.komplikasiintraoperasi.name" :form="form.komplikasiintraoperasi"></Inputed>
+		<div class="col-4">
+			<table style="width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #d6d6d6; border-radius: 8px;">
+				<tr>
+					<td>Komplikasi Intra Operasi</td>
+					<td><input class="checkbox" type="checkbox" :checked="komplikasi_intra_operasi" value="komplikasi_intra_operasi"
+						style="cursor: pointer;"></td>
+				</tr>
+			</table>
 		</div>
 		<div class="col-6 form-ml">
 			<Inputed :ref="form.penjabarankomplikasiintraoperasi.name" :form="form.penjabarankomplikasiintraoperasi"></Inputed>
 		</div>
-		<div class="col-3 form-ml">
+		<div class="col-2 form-ml">
 			<Inputed :ref="form.perdarahan.name" :form="form.perdarahan"></Inputed>
 		</div>
 
@@ -145,6 +214,7 @@
 import { defineAsyncComponent } from 'vue';
 import { formlaporanpembedahan } from './FormData.js';
 import { parselaporanpembedahan } from './Attachment.js';
+import { el } from 'date-fns/locale';
 var vm;
 export default {
 	emits: ["dialog", "parsingForm"],
@@ -158,7 +228,16 @@ export default {
 	},
 	created:function() {},
 	data:function() { return { 
-		form: null, keyform: 'laporanpembedahan'
+		form: null, keyform: 'laporanpembedahan',
+		ja_umum:false,
+		ja_bsp:false,
+		ja_csp:false,
+		ja_epidural:false,
+		ja_lokal:false,
+		ja_spiral:false,
+		penggunaanamhpkhusus:false,
+		komplikasiintraoperasi:false,
+
 	}},
 	methods: {
 		parselaporanpembedahan, formlaporanpembedahan,
@@ -174,6 +253,14 @@ export default {
 
 		aturulang: function () { 
 			vm.form = vm.formlaporanpembedahan(); 
+			vm.ja_umum = false;
+			vm.ja_bsp = false;
+			vm.ja_csp = false;
+			vm.ja_epidural = false;
+			vm.ja_lokal = false;
+			vm.ja_spiral = false;
+			vm.penggunaanamhpkhusus = false;
+			vm.komplikasiintraoperasi = false;
 		},
 
 		setdataform: function (data, row) {
@@ -190,7 +277,7 @@ export default {
 				vm.form.asisten1.value = data.asisten_1 ? data.asisten_1 : '';
 				vm.form.asisten2.value = data.asisten_2 ? data.asisten_2 : '';
 				vm.form.perawatinstrument.value = data.perawat_instrument ? data.perawat_instrument : '';
-				vm.form.jenisanastesi.value = data.jenis_anastesi ? data.jenis_anastesi : '';
+	
 				vm.form.diagnosaprabedah.value = data.diagnosa_pra_bedah ? data.diagnosa_pra_bedah : '';
 				vm.form.diagnosapascabedah.value = data.diagnosa_pasca_bedah ? data.diagnosa_pasca_bedah : '';
 				vm.form.indikasioperasi.value = data.indikasi_operasi ? data.indikasi_operasi : '';
@@ -204,9 +291,9 @@ export default {
 				vm.form.macamsayatan.value = data.macam_sayatan ? data.macam_sayatan : '';
 				vm.form.posisisayatan.value = data.posisi_sayatan ? data.posisi_sayatan : '';
 				vm.form.teknikoperasidantemuanintra.value = data.teknik_operasi_dan_temuan_intra ? data.teknik_operasi_dan_temuan_intra : '';
-				vm.form.penggunaanamhpkhusus.value = data.penggunaan_amhp_khusus ? data.penggunaan_amhp_khusus : '';
+				//vm.form.penggunaanamhpkhusus.value = data.penggunaan_amhp_khusus ? data.penggunaan_amhp_khusus : '';
 				vm.form.jenisdanjumlahamhpkhusus.value = data.jenis_dan_jumlah_amhp_khusus ? data.jenis_dan_jumlah_amhp_khusus : '';
-				vm.form.komplikasiintraoperasi.value = data.komplikasi_intra_operasi ? data.komplikasi_intra_operasi : '';
+				//vm.form.komplikasiintraoperasi.value = data.komplikasi_intra_operasi ? data.komplikasi_intra_operasi : '';
 				vm.form.penjabarankomplikasiintraoperasi.value = data.penjabaran_komplikasi_intra_operasi ? data.penjabaran_komplikasi_intra_operasi : '';
 				vm.form.perdarahan.value = data.perdarahan ? data.perdarahan : '';
 				vm.form.instruksianastesi.value = data.instruksi_anastesi ? data.instruksi_anastesi : '';
@@ -218,6 +305,15 @@ export default {
 				vm.form.ipbgantibalut.value = data.ipb_ganti_balut ? data.ipb_ganti_balut : '';
 				vm.form.ipblainnya.value = data.ipb_lainnya ? data.ipb_lainnya : '';
 				vm.form.operatorbedah.value = data.operator_bedah ? data.operator_bedah : '';
+
+				if (data.ja_umum == 'Ya') { vm.ja_umum = true; }
+				if (data.ja_bsp == 'Ya') { vm.ja_bsp = true; }
+				if (data.ja_csp == 'Ya') { vm.ja_csp = true; }
+				if (data.ja_spiral == 'Ya') { vm.ja_spiral = true; }
+				if (data.ja_lokal == 'Ya') { vm.ja_lokal = true; }
+				if (data.ja_epidural == 'Ya') { vm.ja_epidural = true; }
+				if (data.penggunaanamhpkhusus == 'Ya') { vm.penggunaanamhpkhusus = true; }
+				if (data.komplikasiintraoperasi == 'Ya') { vm.komplikasiintraoperasi = true; }
 			}
 			console.log(data);
 		},
@@ -230,6 +326,30 @@ export default {
     },
 
 		parsingForm:function() { 
+			var input = document.querySelectorAll('.checkbox');
+			for (var i = 0; i < input.length; i++) {
+				if (input[i].checked) {
+					if (input[i].value == 'ja_umum') { vm.form.ja_umum = 'Ya'; }
+					else if (input[i].value == 'ja_bsp') { vm.form.ja_bsp = 'Ya'; }
+					else if (input[i].value == 'ja_csp') { vm.form.ja_csp = 'Ya'; }
+					else if (input[i].value == 'ja_spiral') { vm.form.ja_spiral = 'Ya'; }
+					else if (input[i].value == 'ja_epidural') { vm.form.ja_epidural = 'Ya'; }
+					else if (input[i].value == 'ja_lokal') { vm.form.ja_lokal = 'Ya'; }
+					else if (input[i].value == 'penggunaan_amhp_khusus') { vm.form.penggunaanamhpkhusus = 'Ya'; }
+					else if (input[i].value == 'komplikasi_intra_operasi') { vm.form.komplikasiintraoperasi = 'Ya'; }
+				}
+			else {
+				if (input[i].value == 'ja_umum') { vm.form.ja_umum = 'Tidak'; }
+				else if (input[i].value == 'ja_bsp') { vm.form.ja_bsp = 'Tidak'; }
+				else if (input[i].value == 'ja_csp') { vm.form.ja_csp = 'Tidak'; }
+				else if (input[i].value == 'ja_spiral') { vm.form.ja_spiral = 'Tidak'; }
+				else if (input[i].value == 'ja_epidural') { vm.form.ja_epidural = 'Tidak'; }
+				else if (input[i].value == 'ja_lokal') { vm.form.ja_lokal = 'Tidak'; }
+				else if (input[i].value == 'penggunaan_amhp_khusus') { vm.form.penggunaanamhpkhusus = 'Tidak'; }
+				else if (input[i].value == 'komplikasi_intra_operasi') { vm.form.komplikasiintraoperasi = 'Tidak'; }
+				
+			}
+		}
 			vm.$emit('parsingForm', vm.parselaporanpembedahan(vm.form), vm.keyform); 
 		},
 	}

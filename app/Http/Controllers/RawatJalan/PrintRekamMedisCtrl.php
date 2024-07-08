@@ -4,6 +4,7 @@ namespace App\Http\Controllers\RawatJalan;
 
 use App\Models\CatatanOperasiKatarak;
 use App\Models\KeselamatanBedah;
+use App\Models\LaporanPembedahan;
 use App\Models\PerawatanPeriOperative;
 use App\Models\RegistrasiOperasi;
 use Illuminate\Http\Request;
@@ -342,14 +343,11 @@ class PrintRekamMedisCtrl extends Controller
   function printRm2dot2($uuid)
   {
     $pdf = \App::make('dompdf.wrapper');
-    // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
-    // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
-    // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $lp = LaporanPembedahan::where('pasien_uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm2dot2',
-      compact('pasien')
+      compact('pasien','lp',)
     )->setPaper('a4', 'potrait');
 
 

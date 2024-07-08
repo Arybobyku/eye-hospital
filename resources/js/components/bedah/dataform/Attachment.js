@@ -11,7 +11,14 @@ export const parselaporanpembedahan = (form) => {
 	data.append('asisten_1', form.asisten1.value);
 	data.append('asisten_2', form.asisten2.value);
 	data.append('perawat_instrument', form.perawatinstrument.value);
-	data.append('jenis_anastesi', form.jenisanastesi.value);
+	
+	data.append('ja_umum', form.ja_umum);
+	data.append('ja_bsp', form.ja_bsp);
+	data.append('ja_csp', form.ja_csp);
+	data.append('ja_spiral', form.ja_spiral);
+	data.append('ja_epidural', form.ja_epidural);
+	data.append('ja_lokal', form.ja_lokal);
+
 	data.append('diagnosa_pra_bedah', form.diagnosaprabedah.value);
 	data.append('diagnosa_pasca_bedah', form.diagnosapascabedah.value);
 	data.append('indikasi_operasi', form.indikasioperasi.value);
@@ -25,9 +32,9 @@ export const parselaporanpembedahan = (form) => {
 	data.append('macam_sayatan', form.macamsayatan.value);
 	data.append('posisi_sayatan', form.posisisayatan.value);
 	data.append('teknik_operasi_dan_temuan_intra', form.teknikoperasidantemuanintra.value);
-	data.append('penggunaan_amhp_khusus', form.penggunaanamhpkhusus.value);
+	data.append('penggunaan_amhp_khusus', form.penggunaanamhpkhusus);
 	data.append('jenis_dan_jumlah_amhp_khusus', form.jenisdanjumlahamhpkhusus.value);
-	data.append('komplikasi_intra_operasi', form.komplikasiintraoperasi.value);
+	data.append('komplikasi_intra_operasi', form.komplikasiintraoperasi);
 	data.append('penjabaran_komplikasi_intra_operasi', form.penjabarankomplikasiintraoperasi.value);
 	data.append('perdarahan', form.perdarahan.value);
 	data.append('instruksi_anastesi', form.instruksianastesi.value);
