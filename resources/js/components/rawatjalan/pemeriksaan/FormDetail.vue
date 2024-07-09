@@ -27,6 +27,7 @@
 							:selection="form.select.klinik"></Selected>
 							</li>
 							<li><Inputed :ref="form.ocularsinistraro.name" :form="form.ocularsinistraro"></Inputed></li>
+							<li><Inputed :ref="form.nama_pemeriksa.name" :form="form.nama_pemeriksa"></Inputed></li>
 						</ul>
 					</div>
 					<div class="col-8">
@@ -408,6 +409,7 @@ export default {
 			if (temps) {
 				vm.form.uuid = temps.uuid;
 				vm.form.penetesanobat.value = vm.nullcheck(temps.penetesan_obat);
+				vm.form.nama_pemeriksa.value = vm.nullcheck(temps.nama_pemeriksa);
 				vm.form.keluhanutama.value = vm.nullcheck(temps.keluhan_utama);
 				vm.form.riwayatpenyakit.value = vm.nullcheck(temps.riwayat_penyakit);
 				vm.form.kasusurgentlainnya.value = vm.nullcheck(temps.kasus_urgent_lainnya);

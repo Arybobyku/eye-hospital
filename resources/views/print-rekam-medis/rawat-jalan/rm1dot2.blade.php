@@ -52,18 +52,18 @@
                     FORMULIR EDUKASI PASIEN DAN KELUARGA RAWAT JALAN
                 </div>
                 <div style="width: 100%; text-align: center; margin-top: 0px; line-height: 21px; margin-bottom: 3px; ">
-                    <i>(BERI TANDA CHEKLIST (<input type="checkbox" checked>) PADA KOTAK YANG SESUAI DENGAN KEBUTUHAN
+                    <i>(BERI TANDA CHEKLIST  PADA KOTAK YANG SESUAI DENGAN KEBUTUHAN
                         PASIEN DAN KELUARGA)</i>
                 </div>
             </tr>
             {{-- Tanggal --}}
             <tr style="border: 1px solid black; width:100%">
                 <div class="sizesmall ">
-                    <table style="border-collapse: collapse; width:100%">
+                    <table style="border-collapse: collapse; width:100%;">
                         <tr>
-                            <td style="border-right: 1px solid black; width:100%">
+                            <td style="border-right: 1px solid black; width:100%;">
                                 <b>Pengkajian Hambatan</b>
-                                <table style="border-collapse: collapse; width:100%">
+                                <table style="border-collapse: collapse; width:100%;">
                                     <tr>
                                         <td><input type="checkbox" checked></td>
                                         <td>
@@ -205,6 +205,7 @@
                                     </tr>
 
                                 </table>
+                                <br><br><br><br><br><br><br><br><br><br><br><br>
                             </td>
                             <td style="border-right: 1px solid black; width:100%">
                                 <b>Pengkajian Bicara :</b>

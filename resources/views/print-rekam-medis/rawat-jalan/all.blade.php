@@ -31,8 +31,8 @@
 
 <body>
 	@include('print-rekam-medis.rawat-jalan.rm1dot1')
-    {{-- <div class="page_break"></div>
-	@include('print-rekam-medis.rawat-jalan.rm1dot2') --}}
+    <div class="page_break"></div>
+	@include('print-rekam-medis.rawat-jalan.rm1dot2') 
     <div class="page_break"></div>
 	@include('print-rekam-medis.rawat-jalan.rm1dot3')
     <div class="page_break"></div>
