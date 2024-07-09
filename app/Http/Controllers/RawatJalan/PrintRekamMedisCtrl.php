@@ -447,6 +447,23 @@ class PrintRekamMedisCtrl extends Controller
     return $pdf->stream();
     // return view('print-rekam-medis.rawat-jalan.rm1dot1',compact('pasien'));
   }
+  function printRm1dot9($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
+    // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
+    // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
+
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.bedah.rm1dot9',
+      compact('pasien')
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+    // return view('print-rekam-medis.rawat-jalan.rm1dot1',compact('pasien'));
+  }
   function printRm9dot0($uuid)
   {
     $pdf = \App::make('dompdf.wrapper');
@@ -457,6 +474,57 @@ class PrintRekamMedisCtrl extends Controller
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm9dot0',
+      compact('pasien')
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+    // return view('print-rekam-medis.rawat-jalan.rm1dot1',compact('pasien'));
+  }
+  function printRm8dot8($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
+    // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
+    // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
+
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.bedah.rm8dot8',
+      compact('pasien')
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+    // return view('print-rekam-medis.rawat-jalan.rm1dot1',compact('pasien'));
+  }
+  function printRm9dot1($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
+    // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
+    // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
+
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.bedah.rm9dot1',
+      compact('pasien')
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+    // return view('print-rekam-medis.rawat-jalan.rm1dot1',compact('pasien'));
+  }
+  function printRm2dot9($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
+    // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
+    // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
+
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.bedah.rm2dot9',
       compact('pasien')
     )->setPaper('a4', 'potrait');
 
