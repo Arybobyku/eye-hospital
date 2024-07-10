@@ -104,7 +104,14 @@ class DataFormBedahCtrl extends Controller
 				'asisten_1' => $request->asisten_1,
 				'asisten_2' => $request->asisten_2,
 				'perawat_instrument' => $request->perawat_instrument,
-				'jenis_anastesi' => $request->jenis_anastesi,
+				
+				'ja_umum' => $request->ja_umum,
+				'ja_bsp' => $request->ja_bsp,
+				'ja_csp' => $request->ja_csp,
+				'ja_epidural' => $request->ja_epidural,
+				'ja_spiral' => $request->ja_spiral,
+				'ja_lokal' => $request->ja_lokal,
+
 				'diagnosa_pra_bedah' => $request->diagnosa_pra_bedah,
 				'diagnosa_pasca_bedah' => $request->diagnosa_pasca_bedah,
 				'indikasi_operasi' => $request->indikasi_operasi,
@@ -162,7 +169,15 @@ class DataFormBedahCtrl extends Controller
 			$item->asisten_1 = $request->asisten_1;
 			$item->asisten_2 = $request->asisten_2;
 			$item->perawat_instrument = $request->perawat_instrument;
-			$item->jenis_anastesi = $request->jenis_anastesi;
+			
+			$item->ja_umum = $request->ja_umum;
+			$item->ja_bsp = $request->ja_bsp;
+			$item->ja_csp = $request->ja_csp;
+			$item->ja_epidural = $request->ja_epidural;
+			$item->ja_spiral = $request->ja_spiral;
+			$item->ja_lokal = $request->ja_lokal;
+
+
 			$item->diagnosa_pra_bedah = $request->diagnosa_pra_bedah;
 			$item->diagnosa_pasca_bedah = $request->diagnosa_pasca_bedah;
 			$item->indikasi_operasi = $request->indikasi_operasi;
@@ -489,6 +504,7 @@ class DataFormBedahCtrl extends Controller
 				'an_lidocain' => $request->an_lidocain,
 				'in_kornea' => $request->in_kornea,
 				'in_limbus' => $request->in_limbus,
+				'catatan_tambahan' => $request->catatan_tambahan,
 				'in_sclera' => $request->in_sclera,
 				'wt_main_port' => $request->wt_main_port,
 				'wt_keratome_2_koma_75_mm' => $request->wt_keratome_2_koma_75_mm,
@@ -613,6 +629,8 @@ class DataFormBedahCtrl extends Controller
 			$item->ipo_pdbddtksdto = $request->ipo_pdbddtksdto;
 			$item->ipo_psdipo = $request->ipo_psdipo;
 			$item->operator = $request->operator;
+			$item->catatan_tambahan = $request->catatan_tambahan;
+
 
 			$item->save();
 		}
@@ -762,6 +780,7 @@ class DataFormBedahCtrl extends Controller
 				'si_bagian_7' => $request->si_bagian_7,
 				'si_nama' => $request->si_nama,
 				'si_jam' => $request->si_jam,
+				'so_jam' => $request->so_jam,
 				'to_bagian_1' => $request->to_bagian_1,
 				'to_bagian_2_1' => $request->to_bagian_2_1,
 				'to_bagian_2_2' => $request->to_bagian_2_2,
@@ -838,6 +857,7 @@ class DataFormBedahCtrl extends Controller
 			$item->to_bagian_6 = $request->to_bagian_6;
 			$item->to_nama = $request->to_nama;
 			$item->to_jam = $request->to_jam;
+			$item->so_jam = $request->so_jam;
 			$item->so_bagian_1 = $request->so_bagian_1;
 			$item->so_bagian_2 = $request->so_bagian_2;
 			$item->so_bagian_3 = $request->so_bagian_3;

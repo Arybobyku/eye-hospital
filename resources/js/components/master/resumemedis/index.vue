@@ -1,7 +1,7 @@
 <template>
 <div class="inner" ref="roottable">
 	<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
-		
+
 	<div class="tab-content">
 		<div class="content-tab-in" v-if="tab.content.pasien">
 			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
@@ -17,10 +17,9 @@
 	<Loader ref="Loader"></Loader>
 </div>
 
-<FormObat ref="FormObat" @dialog="dialog" @parsingForm="parsingForm"></FormObat>
-<FormTindakan ref="FormTindakan" @dialog="dialog" @parsingForm="parsingForm"></FormTindakan>
-<FormKunjungan ref="FormKunjungan" @dialog="dialog" @parsingForm="parsingForm"></FormKunjungan>
 <DetailRekamMedisRawatJalan ref="DetailRekamMedisRawatJalan" @dialog="dialog" @parsingForm="parsingForm"></DetailRekamMedisRawatJalan>
+<DetailRekamMedisRawatInap ref="DetailRekamMedisRawatInap" @dialog="dialog" @parsingForm="parsingForm"></DetailRekamMedisRawatInap>
+<DetailRekamMedisBedah ref="DetailRekamMedisBedah" @dialog="dialog" @parsingForm="parsingForm"></DetailRekamMedisBedah>
 
 </template>
 
@@ -34,13 +33,12 @@ import Swal from 'sweetalert2';
 export default {
 	emits: ["titletrigger", "repatch"],
 	components: { toast, Swal, 
-		FormObat: defineAsyncComponent(() => import('./FormObat.vue')),
-		FormTindakan: defineAsyncComponent(() => import('./FormTindakan.vue')),
-		FormKunjungan: defineAsyncComponent(() => import('./FormKunjungan.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
 		DetailRekamMedisRawatJalan: defineAsyncComponent(() => import('./DetailRekamMedisRawatJalan.vue')),
+		DetailRekamMedisBedah: defineAsyncComponent(() => import('./DetailRekamMedisBedah.vue')),
+		DetailRekamMedisRawatInap: defineAsyncComponent(() => import('./DetailRekamMedisRawatInap.vue')),
 	},
-	
+
 	created: function () {},
 	mounted: function () {
 		vm = this;
@@ -140,40 +138,28 @@ export default {
 		tablebutton:function(posisi, data, index) {
 			if (posisi == 'rawatjalan') {
 				vm.position = "modalrawatjalan";
-				vm.$refs.DetailRekamMedisRawatJalan.show('obatdata', 'Resume Medis Rawat Jalan', data.pasien_uuid);
+				vm.$refs.DetailRekamMedisRawatJalan.show('modalrawatjalan', 'Resume Medis Rawat Jalan', data.pasien_uuid);
 				setTimeout(() => { vm.loadingModal('rawatjalan'); }, 250, this);
-				vm.attach.data = new FormData();
-				vm.attach.data.append('uuid', data.pasien_uuid);
-				vm.attach.url = vm.attach.link.obat;
-				vm.executions();
+				vm.$refs.DetailRekamMedisRawatJalan.setdataform(data);
 			}
-			else if (posisi == 'tindakan') {
-				vm.position = "tindakandata";
-				vm.$refs.FormTindakan.show('tindakandata', 'Detail Data Tindakan', data.pasien_uuid);
-				setTimeout(() => { vm.loadingModal('formtindakan'); }, 250, this);
-				vm.attach.data = new FormData();
-				vm.attach.data.append('uuid', data.pasien_uuid);
-				vm.attach.url = vm.attach.link.tindakan;
-				vm.executions();
+			else if (posisi == 'operasi') {
+				vm.position = "modalBedah";
+				vm.$refs.DetailRekamMedisBedah.show('modalBedah', 'Resume Medis Bedah', data.pasien_uuid);
+				setTimeout(() => { vm.loadingModal('operasi'); }, 250, this);
+				vm.$refs.DetailRekamMedisBedah.setdataform(data);
 			}
-			else if (posisi == 'kunjungan') {
-				vm.position = "kunjungandata";
-				vm.$refs.FormKunjungan.show('kunjungandata', 'Detail Data Kunjungan', data.pasien_uuid);
-				setTimeout(() => { vm.loadingModal('formkunjungan'); }, 250, this);
-				vm.attach.data = new FormData();
-				vm.attach.data.append('uuid', data.pasien_uuid);
-				vm.attach.url = vm.attach.link.kunjungan;
-				vm.executions();
-			}
-			else if (posisi == 'cetakkartu') {
-				window.open(vm.attach.link.printcetakkartu + data.uuid, '_blank');
+			else if (posisi == 'rawatinap') {
+				vm.position = "modalrawatinap";
+				vm.$refs.DetailRekamMedisRawatInap.show('modalrawatinap', 'Resume Medis Rawat Inap', data.pasien_uuid);
+				setTimeout(() => { vm.loadingModal('rawatinap'); }, 250, this);
+				vm.$refs.DetailRekamMedisRawatInap.setdataform(data);
 			}
 		},
 
 		loadingModal: function (position) { 
 			if (position == 'rawatjalan') { vm.$refs.DetailRekamMedisRawatJalan.loaderprocess();  }
-			else if (position == 'formtindakan') { vm.$refs.FormTindakan.loaderprocess();  }
-			else if (position == 'formkunjungan') { vm.$refs.FormKunjungan.loaderprocess();  }
+			else if (position == 'operasi') { vm.$refs.DetailRekamMedisBedah.loaderprocess();  }
+			else if (position == 'rawatinap') { vm.$refs.DetailRekamMedisRawatInap.loaderprocess();  }
 		},
 
 		parsingForm:function(data, key) {
@@ -195,17 +181,17 @@ export default {
 				vm.attach.data.append('column', ''); 
 				vm.attach.data.append('page', 1); 
 			}
-			
+
 			vm.executions(); 
 		},
 		tablereload:function(data = new FormData(), pos = 'main') { 
-				if (pos == 'outer') {
-					vm.$refs.Datatable.skeleton(); 
-				}
-				vm.attach.url = vm.attach.link.list; 
-				vm.attach.data = data; 
-		
-			
+			if (pos == 'outer') {
+				vm.$refs.Datatable.skeleton(); 
+			}
+			vm.attach.url = vm.attach.link.list; 
+			vm.attach.data = data; 
+
+
 			vm.position = 'externaltable'; 
 			vm.executions(); 
 		},
@@ -218,8 +204,6 @@ export default {
 			console.log(vm.position);
 			vm.position = 'loadmain'; vm.firstloader(); vm.tableload(); 
 		},
-	
-
 		gagal: function (error) {
 			if (vm.$debugs) { console.log(error.response); } let active = 0;
 			vm.message('error', 1);
@@ -239,12 +223,12 @@ export default {
 					vm.$refs.Datatable.skeleton(); 
 					vm.$refs.Datatable.backpage(); 
 				}
-				
+
 			}
 			else if (vm.position == 'obatdata') { vm.loadingModal('formobat'); vm.$refs.FormObat.hide();  }
 			else if (vm.position == 'tindakandata') { vm.loadingModal('formtindakan'); vm.$refs.FormObat.hide();  }
 			else if (vm.position == 'kunjungandata') { vm.loadingModal('formkunjungan'); vm.$refs.FormObat.hide();  }
-			
+
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
 		},
@@ -252,7 +236,7 @@ export default {
 		berhasil: function (response) {
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
-	
+
 			if (response.data.data == 'cannot') {
 				setTimeout(() => { vm.posisieksternal='antrian'; vm.tablereload(); }, 500, this);
 				vm.notification('Nomor yang anda panggil sudah berada di customer service.', 3000, 'warning'); 
@@ -284,30 +268,6 @@ export default {
 					vm.$refs.Datatable.skeleton(); 
 					vm.$refs.Datatable.paging(); 
 					active = 0;
-				}
-				else if (vm.position == 'obatdata') {
-					vm.posisieksternal='pasien';
-					vm.$refs.FormObat.setdataform(response); 
-					vm.position = "-"; 
-					active = 0; 
-				}
-				else if (vm.position == 'tindakandata') {
-					vm.posisieksternal='pasien';
-					vm.$refs.FormTindakan.setdataform(response); 
-					vm.position = "-"; 
-					active = 0; 
-				}
-				else if (vm.position == 'kunjungandata') {
-					vm.posisieksternal='pasien';
-					vm.$refs.FormKunjungan.setdataform(response); 
-					vm.position = "-"; 
-					active = 0; 
-				}
-				else if (vm.position == 'modalrawatjalan') {
-					vm.posisieksternal='pasien';
-					vm.$refs.DetailRekamMedisRawatJalan.setdataform(response); 
-					vm.position = "-"; 
-					active = 0; 
 				}
 				vm.message('success', active);
 			}

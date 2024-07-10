@@ -178,6 +178,7 @@ class PemeriksaanCtrl extends Controller
 			if ($request->uuid != '') {
 				$arr = array(
 					'penetesan_obat' => $request->penetesan_obat,
+					'nama_pemeriksa' => $request->nama_pemeriksa,
 
 					'status_fungsional' => $request->status_fungsional,
 					'keluhan_utama' => $request->keluhan_utama,
@@ -292,6 +293,7 @@ class PemeriksaanCtrl extends Controller
 				$item->waktu = date('H:i');
 
 				$item->penetesan_obat = $request->penetesan_obat;
+				$item->nama_pemeriksa = $request->nama_pemeriksa;
 				$item->status_fungsional = $request->status_fungsional;
 				$item->keluhan_utama = $request->keluhan_utama;
 

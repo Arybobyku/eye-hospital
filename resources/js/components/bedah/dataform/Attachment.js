@@ -11,7 +11,14 @@ export const parselaporanpembedahan = (form) => {
 	data.append('asisten_1', form.asisten1.value);
 	data.append('asisten_2', form.asisten2.value);
 	data.append('perawat_instrument', form.perawatinstrument.value);
-	data.append('jenis_anastesi', form.jenisanastesi.value);
+	
+	data.append('ja_umum', form.ja_umum);
+	data.append('ja_bsp', form.ja_bsp);
+	data.append('ja_csp', form.ja_csp);
+	data.append('ja_spiral', form.ja_spiral);
+	data.append('ja_epidural', form.ja_epidural);
+	data.append('ja_lokal', form.ja_lokal);
+
 	data.append('diagnosa_pra_bedah', form.diagnosaprabedah.value);
 	data.append('diagnosa_pasca_bedah', form.diagnosapascabedah.value);
 	data.append('indikasi_operasi', form.indikasioperasi.value);
@@ -25,9 +32,9 @@ export const parselaporanpembedahan = (form) => {
 	data.append('macam_sayatan', form.macamsayatan.value);
 	data.append('posisi_sayatan', form.posisisayatan.value);
 	data.append('teknik_operasi_dan_temuan_intra', form.teknikoperasidantemuanintra.value);
-	data.append('penggunaan_amhp_khusus', form.penggunaanamhpkhusus.value);
+	data.append('penggunaan_amhp_khusus', form.penggunaanamhpkhusus);
 	data.append('jenis_dan_jumlah_amhp_khusus', form.jenisdanjumlahamhpkhusus.value);
-	data.append('komplikasi_intra_operasi', form.komplikasiintraoperasi.value);
+	data.append('komplikasi_intra_operasi', form.komplikasiintraoperasi);
 	data.append('penjabaran_komplikasi_intra_operasi', form.penjabarankomplikasiintraoperasi.value);
 	data.append('perdarahan', form.perdarahan.value);
 	data.append('instruksi_anastesi', form.instruksianastesi.value);
@@ -47,7 +54,7 @@ export const parsechecklistkesiapanbedah = (form, listrik, alat, linensteril, ak
 	data.append('uuid', form.uuid);
 	data.append('bedah_uuid', form.bedah_uuid);
 
-	data.append('ruang', form.ruang.value);
+	data.append('ruangan', form.ruangan.value);
 	data.append('kamar', form.kamar.value);
 	data.append('diagnosa', form.diagnosa.value);
 	data.append('tindakan', form.tindakan.value);
@@ -74,7 +81,7 @@ export const parseperawatanperioperative = (form) => {
 	data.append('ruangan', form.ruangan.value);
 	data.append('dokter_operator', form.dokteroperator.value);
 	data.append('dokter_anastesi', form.dokteranastesi.value);
-	data.append('data', form.diagnosis.value);
+	data.append('diagnosis', form.diagnosis.value);
 	data.append('tindakan_operasi', form.tindakanoperasi.value);
 	data.append('hasil_kgd', form.hasilkgd.value);
 	data.append('waktu_pengambilan_kgd', form.waktupengambilankgd.value);
@@ -157,7 +164,7 @@ export const parsecatatanoperasikatarak = (form) => {
 	data.append('diagnosis_pra_bedah', form.diagnosisprabedah.value);
 	data.append('diagnosis_pasca_bedah', form.diagnosispascabedah.value);
 	data.append('catatan_tambahan', form.catatantambahan.value);
-	data.append('nama_operator', form.namaoperator.value);
+	data.append('operator', form.namaoperator.value);
 
 	data.append('an_topical', form.an_topical);
 	data.append('an_retrobulbar_peribulbar', form.an_retrobulbar_peribulbar);
@@ -225,7 +232,7 @@ export const parsepersetujuantindakankedokteran = (form) => {
 	data.append('ji_dasar_diagnosis', form.jidasardiagnosis.value);
 	data.append('ji_tindakan_kedokteran', form.jitindakankedokteran.value);
 	data.append('ji_indikasi_tindakan', form.jiindikasitindakan.value);
-	data.append('ji_tatacara', form.jitatacara.value);
+	data.append('ji_tata_cara', form.jitatacara.value);
 	data.append('ji_tujuan', form.jitujuan.value);
 	data.append('ji_resiko', form.jiresiko.value);
 	data.append('ji_komplikasi', form.jikomplikasi.value);
@@ -261,31 +268,36 @@ export const parsekeselamatanbedah = (form) => {
 	data.append('tindakan_operasi', form.tindakanoperasi.value);
 	data.append('asisten_operasi', form.asistenoperasi.value);
 	data.append('scrub_nurses', form.scrubnurses.value);
-	data.append('si_bagian_1', form.sibagian1.value);
-	data.append('si_bagian_2', form.sibagian2.value);
-	data.append('si_bagian_3', form.sibagian3.value);
-	data.append('si_bagian_4', form.sibagian4.value);
-	data.append('si_bagian_5', form.sibagian5.value);
-	data.append('si_bagian_6', form.sibagian6.value);
-	data.append('si_bagian_7', form.sibagian7.value);
+	data.append('si_bagian_1', form.sibagian1);
+	data.append('si_bagian_2', form.sibagian2);
+	data.append('si_bagian_3', form.sibagian3);
+	data.append('si_bagian_4', form.sibagian4);
+	data.append('si_bagian_5', form.sibagian5);
+	data.append('si_bagian_6', form.sibagian6);
+	data.append('si_bagian_7', form.sibagian7);
 	data.append('si_nama', form.sinama.value);
-	data.append('to_bagian_1', form.tobagian1.value);
-	data.append('to_bagian_2_1', form.tobagian21.value);
-	data.append('to_bagian_2_2', form.tobagian22.value);
+	data.append('si_jam', form.sijam.value);
+	data.append('so_jam', form.sojam.value);
+	data.append('to_bagian_1', form.tobagian1);
+	data.append('to_bagian_2_1', form.tobagian21);
+	data.append('to_bagian_2_2', form.tobagian22);
 	data.append('to_bagian_2_3', form.tobagian23.value);
 	data.append('to_bagian_3', form.tobagian3.value);
-	data.append('to_bagian_4_1', form.tobagian41.value);
-	data.append('to_bagian_4_2', form.tobagian42.value);
-	data.append('to_bagian_5', form.tobagian5.value);
-	data.append('to_bagian_6', form.tobagian6.value);
+	data.append('to_bagian_4_1', form.tobagian41);
+	data.append('to_bagian_4_2', form.tobagian42);
+	data.append('to_bagian_5', form.tobagian5);
+	data.append('to_bagian_6', form.tobagian6);
 	data.append('to_nama', form.tonama.value);
-	data.append('so_bagian_1', form.sobagian1.value);
-	data.append('so_bagian_2', form.sobagian2.value);
-	data.append('so_bagian_3', form.sobagian3.value);
-	data.append('so_bagian_4', form.sobagian4.value);
-	data.append('so_bagian_4_1', form.sobagian41.value);
-	data.append('so_bagian_5', form.sobagian5.value);
-	data.append('so_bagian_5_1', form.sobagian51.value);
+	data.append('to_jam', form.tojam.value);
+	data.append('so_bagian_1', form.sobagian1);
+	data.append('so_bagian_2', form.sobagian2);
+	data.append('so_bagian_3', form.sobagian3);
+	data.append('so_bagian_4', form.sobagian4);
+	
+	data.append('so_bagian_5', form.sobagian5);
+	
+	data.append('so_asisten_1', form.tobagian7);
+	data.append('so_penata', form.tobagian8);
 	return data;
 }
 

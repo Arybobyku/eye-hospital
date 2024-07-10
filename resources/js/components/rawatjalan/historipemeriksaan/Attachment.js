@@ -15,8 +15,9 @@ export const parsekelurahan = (form, detail) => {
 	
 	data.append('ruang_poliklinik', form.select.klinik.value);
 
-	data.append('penetesan_obat', form.keluhanutama.value);
-	data.append('keluhan_utama', form.penetesanobat.value);
+	data.append('penetesan_obat', form.penetesanobat.value);
+	data.append('keluhan_utama', form.keluhanutama.value);
+	data.append('nama_pemeriksa', form.nama_pemeriksa.value);
 	data.append('riwayat_penyakit', form.riwayatpenyakit.value);
 	data.append('kasus_urgent', form.select.kasusurgent.value);
 	data.append('kasus_urgent_lainnya', form.kasusurgentlainnya.value);

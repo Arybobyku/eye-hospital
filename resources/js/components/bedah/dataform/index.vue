@@ -110,7 +110,7 @@ export default {
 			else if (key == 'perawatanperioperative') { vm.attach.url = vm.attach.link.perawatanperioperative; }
 			else if (key == 'catatanoperasikatarak') { vm.attach.url = vm.attach.link.catatanoperasikatarak; }
 			else if (key == 'persetujuantindakankedokteran') { vm.attach.url = vm.attach.link.persetujuantindakankedokteran; }
-			else if (key == 'checklistkeselamatanbedah') { vm.attach.url = vm.attach.link.checklistkeselamatanbedah; }
+			else if (key == 'keselamatanbedah') { vm.attach.url = vm.attach.link.checklistkeselamatanbedah; }
 		},
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
