@@ -18,7 +18,12 @@
                         </ul>
 
                         <label style="font-weight=bold;">Tanda tangan dokter</label>
-                        <DigitalSignature style="height:250px" />
+                        <img v-if="form.ttd_dokter" :src="form.ttd_dokter" alt="ttd dokter" height="100" width="400">
+                        <div v-if="!form.ttd_dokter">
+                            <DigitalSignature style="height:250px" 
+                            @onSaveDigitalSignature="saveDigitalSignature"
+                            />
+                        </div>
                     </div>
 
 
@@ -1118,12 +1123,16 @@
                     }
                 },
                 typingTimer: null,
-                doneTypingInterval: 5000
+                doneTypingInterval: 5000,
+                digitalSignature:"",
             }
         },
         methods: {
             updatedbdokter,
             formatrupiah,
+            saveDigitalSignature: function(svg){
+                vm.digitalSignature = svg;
+            },
             removetindakan: function(index) {
                 vm.listdata.splice(index, 1);
             },
@@ -1704,8 +1713,9 @@
                     vm.form.jenis_kamar_jalan_uuid = '';
                     vm.form.nama_jenis_jalan_kamar = '';
                 }
-
-                //alert('sdf');
+                if (vm.digitalSignature!='') {
+                     vm.form.ttd_dokter = vm.digitalSignature;
+                 }
                 vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail, vm.listdata, vm.listdatajalan, vm
                     .listobat, testing), 'add');
             },
@@ -1900,6 +1910,7 @@
                     vm.form.ocularsinistraconjunctiva.value = vm.nullcheck(temps.ocular_sinistra_conjunctiva)
                     vm.form.ocularsinistracornea.value = vm.nullcheck(temps.ocular_sinistra_cornea)
                     vm.form.ocularsinistralensa.value = vm.nullcheck(temps.ocular_sinistra_lensa)
+                    vm.form.ttd_dokter = vm.nullcheck(temps.ttd_dokter)
                     vm.form.ocularsinistravitreous.value = vm.nullcheck(temps.ocular_sinistra_vitreous)
                     vm.form.ocularsinistrafunduscopy.value = vm.nullcheck(temps.ocular_sinistra_funduscopy)
                     vm.form.ocularsinistrabilikmatadepan.value = vm.nullcheck(temps
