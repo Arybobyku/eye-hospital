@@ -38,46 +38,7 @@
         <div style="width:100%; text-align:right; margin-bottom:5px">
             RM 1.5/CPPT/22
         </div>
-        <table style="border-collapse: collapse;">
-            {{-- HEADER --}}
-            <tr style="border: 1px solid black;">
-                <div style="width: 100%;">
-                    <table style="width: 100%;">
-                        <tr style="border: 1px solid black;">
-                            <td style="border-right: 1px solid black; width:100%">
-                                <img style="width: 100%;"
-                                    src="data:image/png;base64,
-                            <?php echo base64_encode(file_get_contents($fullpath)); ?>" />
-                            </td>
-                            <td style="width: 50%">
-                                <table style="width: 100%" border="0">
-                                    <tr>
-                                        <td width="20%">Nama</td>
-                                        <td width="1%">:</td>
-                                        <td width=50%>..........</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="20%">Tgl. Lahir</td>
-                                        <td width="1%">:</td>
-                                        <td width=50%>..........</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="20%">No.RM</td>
-                                        <td width="1%">:</td>
-                                        <td width=50%>..........</td>
-                                    </tr>
-                                    <tr>
-                                        <td width="10%">NIK</td>
-                                        <td width="1%">:</td>
-                                        <td width=50%>..........</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </tr>
-        </table>
+        @include('print-rekam-medis.partials.header')
         {{-- table content --}}
         <h3 style="text-align: center">CATATAN PERKEMBANGAN PASIEN TERINTEGERASI RAWAT JALAN</h3>
         <table class="tablee" style="width:100%; position:relative">
@@ -88,13 +49,19 @@
                 <th class="tablee">Instruksi PPA Termasuk Pasca Bedah</th>
                 <th class="tablee">Review & Verifikasi DPJP (Paraf)</th>
             </tr>
+            @foreach ($ro as $dataRo)
+                
+            
             <tr class="tablee" style="padding: 5px"> 
-                <td class="tablee"> <br> </td>
-                <td class="tablee"> <br> </td>
+                <td class="tablee" style="padding: 5px"><b> @php
+                    list($date, $time) = explode(' ', $dataRo->created_at);
+                    $timeWithoutMilliseconds = explode('.', $time)[0];
+                @endphp {{ $date }}/<br>{{ $timeWithoutMilliseconds }}</b> </td>
+                <td class="tablee" style="padding: 5px"> <b>{{ $dataRo->nama_dokter }}</b> </td>
                 <td class="tablee"> 
                     <table style="padding: 5px">
                         <tr>
-                            <td> Subject :</td>
+                            <td> Subject : <br></td>
                         </tr> 
                         <br><br>
                         <tr>
@@ -114,32 +81,8 @@
                  <td class="tablee"> <br> </td>
                  <td class="tablee"> <br> </td>
             </tr>
-            <tr class="tablee" style="padding: 5px"> 
-                <td class="tablee"> <br> </td>
-                <td class="tablee"> <br> </td>
-                <td class="tablee"> 
-                    <table style="padding: 5px">
-                        <tr>
-                            <td> Subject :</td>
-                        </tr> 
-                        <br><br>
-                        <tr>
-                            <td> Object :</td>
-                        </tr> 
-                        <br><br>
-                        <tr>
-                            <td> Assassment :</td>
-                        </tr> 
-                        <br><br>
-                        <tr>
-                            <td> Plan :</td>
-                        </tr>
-                        <br><br> 
-                    </table>
-                 </td>
-                 <td class="tablee"> <br> </td>
-                 <td class="tablee"> <br> </td>
-            </tr>
+            @endforeach
+           
 
         </table>
     </div>
