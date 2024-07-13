@@ -567,6 +567,88 @@ class PemeriksaanCtrl extends Controller
                     $update = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
                 }
 
+                if ($request->kamar_inap_uuid != '') {
+                    echo 'UUID Rwat Inap:';
+                    echo $request->kamar_inap_uuid;
+                    $kamar = CaraBayarKamar::where('jenis_kamar_uuid', '=', $request->jenis_kamar_uuid)
+                                                        ->where('carabayar_uuid', '=', $request->carabayar_uuid_bedah)
+                                                        ->select('harga')
+                                                        ->first();
+                    $harga_kamar = 0;
+                    if ($kamar) {
+                        $harga_kamar = $kamar->harga;
+                    }
+
+                    $arr = [
+                        'kode' => 'RI',
+                        'jenis' => 'Rawat Inap',
+                        'inap_jalan' => 'Rawat Inap Jalan Asuransi', // CHECK - YUDHA
+                        'status_dokter' => 'Sudah Diperiksa',
+                        'kamar_inap_uuid' => $request->kamar_inap_uuid,
+                        'kamar_inap_nama' => $request->kamar_inap_nama,
+                        'kamar_inap_lantai' => $request->kamar_inap_lantai,
+                        'kamar_inap_jumlah_bed' => $request->kamar_inap_jumlah_bed,
+                        'jenis_kamar_uuid' => $request->jenis_kamar_uuid,
+                        'nama_jenis_kamar' => $request->nama_jenis_kamar,
+                        'harga_kamar' => $harga_kamar,
+                        'status' => 'Rawat Inap',
+                    ];
+
+                    $reg = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+                    echo 'UUID Rwat Inap:';
+                    echo $request->kamar_inap_uuid;
+                    $item = new LayananPasien();
+                    $item->uuid = Uuid::uuid4();
+                    $item->registrasi_uuid = $reg->uuid;
+                    $item->no_pendaftaran = $reg->no_pendaftaran;
+                    $item->registrasi_kode = $reg->kode;
+                    $item->registrasi_nomor = $reg->nomor;
+                    $item->registrasi_jenis = $reg->jenis;
+                    $item->pasien_uuid = $reg->pasien_uuid;
+                    $item->rekam_medis = $reg->rekam_medis;
+                    $item->nama_pasien = $reg->nama_pasien;
+                    $item->pengguna_uuid = $reg->pengguna_uuid;
+                    $item->nama_dokter = $reg->nama_dokter;
+
+                    $item->tanggal = date('Y-m-d');
+                    $item->waktu = date('H:i');
+
+                    $item->carabayar_uuid = $request->carabayar_uuid_bedah;
+                    $item->carabayar_nama = $request->carabayar_nama_bedah;
+
+                    $item->layanan_uuid = 'biayakamar';
+                    $item->nama_layanan = 'Tarif Kamar Rawat Inap';
+                    $item->tarif = $harga_kamar;
+                    $item->total = $harga_kamar;
+                    $item->jenis = 'Kamar Rawat Inap';
+                    $item->default = 'Tidak';
+                    $item->save();
+
+                    $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+
+                    $arr = ['status' => 'Rawat Inap'];
+                    $update = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
+                } else {
+                    $arr = [
+                        'kode' => 'RJ',
+                        'jenis' => 'Rawat Jalan',
+                        'inap_jalan' => '',
+                        'kamar_inap_uuid' => '-',
+                        'kamar_inap_nama' => '-',
+                        'kamar_inap_lantai' => 0,
+                        'kamar_inap_jumlah_bed' => 0,
+                        'jenis_kamar_uuid' => '-',
+                        'nama_jenis_kamar' => '-',
+                        'harga_kamar' => 0,
+                        'status' => 'Kunjungan',
+                    ];
+
+                    $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+
+                    $arr = ['status' => 'Kunjungan'];
+                    $update = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
+                }
+
                 $arr = [
                     'ruang_poliklinik' => $request->ruang_poliklinik,
                     'status_dokter' => 'Sudah Diperiksa',
@@ -640,7 +722,6 @@ class PemeriksaanCtrl extends Controller
                         $item->jam_masuk_permintaan = date('H:i');
                         $item->save();
 
-
                         foreach ($listpaket as $row) {
                             $item = new LayananPasien();
                             $item->uuid = Uuid::uuid4();
@@ -677,7 +758,7 @@ class PemeriksaanCtrl extends Controller
                         }
                     }
                 }
-
+                $listpaketbedah = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $request->paket_uuid_bedah)->get();
                 if ($request->paket_uuid_bedah != '' && $request->paket_uuid_bedah != ' ' && $request->paket_uuid_bedah) {
                     // Periksa asuransinya : jika asuransi maka masuk ke akun asuransi
                     //											 jika umum maka masuk ke dalam bagian umum
@@ -751,6 +832,41 @@ class PemeriksaanCtrl extends Controller
                     $item->harga_kamar = $harga_kamar;
 
                     $item->save();
+
+                    foreach ($listpaketbedah as $row) {
+                        $item = new LayananPasien();
+                        $item->uuid = Uuid::uuid4();
+                        $item->registrasi_uuid = $request->registrasi_uuid;
+                        $item->no_pendaftaran = $request->no_pendaftaran;
+                        $item->registrasi_kode = $request->kode;
+                        $item->registrasi_nomor = $request->nomor;
+                        $item->is_paket_bedah = 1;
+                        $item->registrasi_jenis = $request->jenis;
+                        $item->pasien_uuid = $request->pasien_uuid;
+                        $item->rekam_medis = $request->rekam_medis;
+                        $item->nama_pasien = $request->nama_pasien;
+                        $item->pengguna_uuid = $request->pengguna_uuid;
+                        $item->nama_dokter = $request->nama_dokter;
+
+                        $item->tanggal = date('Y-m-d');
+                        $item->waktu = date('H:i');
+
+                        $item->carabayar_uuid = $request->carabayar_uuid_bedah;
+                        $item->carabayar_nama = $request->carabayar_nama_bedah;
+                        $item->layanan_uuid = $row->uuid;
+
+                        if ($row->nama == 'Honor Operator Bedah') {
+                            $item->nama_layanan = $row->sub_label;
+                        } else {
+                            $item->nama_layanan = $row->nama;
+                        }
+                        $item->tarif = $row->harga;
+                        $item->total = $row->harga;
+                        $item->jenis = $row->label;
+                        $item->default = '-';
+                        $item->others = 1;
+                        $item->save();
+                    }
                 }
 
                 $remove = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
@@ -1334,6 +1450,9 @@ class PemeriksaanCtrl extends Controller
                 }
 
                 if ($request->paket_uuid_bedah != '' && $request->paket_uuid_bedah != ' ' && $request->paket_uuid_bedah) {
+                    $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update([
+                      'apakah_paket' => 'Ya',
+                    ]);
                     // Periksa asuransinya : jika asuransi maka masuk ke akun asuransi
                     //											 jika umum maka masuk ke dalam bagian umum
 
@@ -1343,7 +1462,9 @@ class PemeriksaanCtrl extends Controller
                     } else {
                         $jenis_pembayaran = $request->carabayar_nama_bedah;
                     }
-
+                    $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update([
+                        'apakah_paket' => 'Ya',
+                    ]);
                     $item = new RegistrasiOperasi();
                     $item->uuid = Uuid::uuid4();
                     $item->carabayar_uuid = $request->carabayar_uuid_bedah;

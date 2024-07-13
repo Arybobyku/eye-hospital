@@ -646,16 +646,16 @@
                                             Planning Tindakan (bisa lebih dari satu)</h3>
                                     </div>
                                 </div>
-                                    <div class="grid">
-                                        <div class="col-3">
+                                <div class="grid">
+                                    <div class="col-3">
 
-                                            <Selected
-                                                v-on:click="selectbox($event, form.select.pilihanplan.name, form.select.pilihanplan.statics)"
-                                                :ref="form.select.pilihanplan.name" @selecteditem="selecteditem"
-                                                @selectclear="selectclear" :selection="form.select.pilihanplan">
-                                            </Selected>
-                                        </div>
-                                        <!-- <div class="col-4">
+                                        <Selected
+                                            v-on:click="selectbox($event, form.select.pilihanplan.name, form.select.pilihanplan.statics)"
+                                            :ref="form.select.pilihanplan.name" @selecteditem="selecteditem"
+                                            @selectclear="selectclear" :selection="form.select.pilihanplan">
+                                        </Selected>
+                                    </div>
+                                    <!-- <div class="col-4">
 										<input class="checkbox" type="checkbox" :checked="sibagian1" value="si_bagian_1"
 											style="cursor: pointer;"> <b>Bedah 1 Hari</b>
 									</div>
@@ -667,203 +667,203 @@
 										<input class="checkbox" type="checkbox" :checked="sibagian1" value="si_bagian_1"
 											style="cursor: pointer;"> <b>Rawat Inap + Bedah</b>
 									</div> -->
-                                    </div>
-                                    <!-- <div class="grid"> -->
+                                </div>
+                                <!-- <div class="grid"> -->
                                 <div class="Operasi grid" v-if="showOperasi">
 
-                                        <div class="col-8">
-                                            <Inputed :ref="form.penjadwalanodc.name" :form="form.penjadwalanodc">
-                                            </Inputed>
-                                        </div>
-                                        <div class="col-4 form-ml">
-                                            <!-- <Inputed :ref="form.waktuodc.name" :form="form.waktuodc"></Inputed> -->
-                                            <Timepicker :ref="form.waktuodc.name" :form="form.waktuodc"> >
-                                            </Timepicker>
-                                        </div>
-
-                                        <div class="col-3">
-                                            <Selected
-                                                v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)"
-                                                :ref="form.select.carabayar.name" @selecteditem="selecteditem"
-                                                @selectclear="selectclear" :selection="form.select.carabayar"
-                                                v-on:keyup="selectfilter($event, form.select.carabayar.name)">
-                                            </Selected>
-                                        </div>
-
-                                        <div class="col-3 form-ml">
-                                            <Selected
-                                                v-on:click="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)"
-                                                :ref="form.select.asuransi.name" @selecteditem="selecteditem"
-                                                @selectclear="selectclear" :selection="form.select.asuransi"
-                                                v-on:keyup="selectfilter($event, form.select.asuransi.name)"></Selected>
-                                        </div>
-
-                                        <div class="col-6 form-ml">
-                                            <Selected
-                                                v-on:click="selectbox($event, form.select.paketbedah.name, form.select.paketbedah.statics)"
-                                                :ref="form.select.paketbedah.name" @selecteditem="selecteditem"
-                                                @selectclear="selectclear" :selection="form.select.paketbedah"
-                                                v-on:keyup="selectfilter($event, form.select.paketbedah.name)">
-                                            </Selected>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <Inputed :ref="form.keteranganbedah.name" :form="form.keteranganbedah">
-                                            </Inputed>
-                                        </div>
+                                    <div class="col-8">
+                                        <Inputed :ref="form.penjadwalanodc.name" :form="form.penjadwalanodc">
+                                        </Inputed>
                                     </div>
-                                    <div class="RawatInap grid" v-if="showRawatInap">
-                                        <div class="col-9">
-                                            <!-- <Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)"
+                                    <div class="col-4 form-ml">
+                                        <!-- <Inputed :ref="form.waktuodc.name" :form="form.waktuodc"></Inputed> -->
+                                        <Timepicker :ref="form.waktuodc.name" :form="form.waktuodc">
+                                        </Timepicker>
+                                    </div>
+
+                                    <div class="col-3">
+                                        <Selected
+                                            v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)"
+                                            :ref="form.select.carabayar.name" @selecteditem="selecteditem"
+                                            @selectclear="selectclear" :selection="form.select.carabayar"
+                                            v-on:keyup="selectfilter($event, form.select.carabayar.name)">
+                                        </Selected>
+                                    </div>
+
+                                    <div class="col-3 form-ml">
+                                        <Selected
+                                            v-on:click="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)"
+                                            :ref="form.select.asuransi.name" @selecteditem="selecteditem"
+                                            @selectclear="selectclear" :selection="form.select.asuransi"
+                                            v-on:keyup="selectfilter($event, form.select.asuransi.name)"></Selected>
+                                    </div>
+
+                                    <div class="col-6 form-ml">
+                                        <Selected
+                                            v-on:click="selectbox($event, form.select.paketbedah.name, form.select.paketbedah.statics)"
+                                            :ref="form.select.paketbedah.name" @selecteditem="selecteditem"
+                                            @selectclear="selectclear" :selection="form.select.paketbedah"
+                                            v-on:keyup="selectfilter($event, form.select.paketbedah.name)">
+                                        </Selected>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <Inputed :ref="form.keteranganbedah.name" :form="form.keteranganbedah">
+                                        </Inputed>
+                                    </div>
+                                </div>
+                                <div class="RawatInap grid" v-if="showRawatInap">
+                                    <div class="col-9">
+                                        <!-- <Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)"
           :ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
           :selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.db_table)"
           ></Selected> -->
 
-                                            <Selected
-                                                v-on:click="selectbox($event, form.select.carabayartindakanrawatjalanjalan.name, form.select.carabayartindakanrawatjalanjalan.statics)"
-                                                :ref="form.select.carabayartindakanrawatjalanjalan.name"
-                                                @selecteditem="selecteditem" @selectclear="selectclear"
-                                                :selection="form.select.carabayartindakanrawatjalanjalan"
-                                                v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalanjalan.name)">
-                                            </Selected>
+                                        <Selected
+                                            v-on:click="selectbox($event, form.select.carabayartindakanrawatjalanjalan.name, form.select.carabayartindakanrawatjalanjalan.statics)"
+                                            :ref="form.select.carabayartindakanrawatjalanjalan.name"
+                                            @selecteditem="selecteditem" @selectclear="selectclear"
+                                            :selection="form.select.carabayartindakanrawatjalanjalan"
+                                            v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalanjalan.name)">
+                                        </Selected>
 
-                                        </div>
-                                        <div class="col-3 form-ml">
-                                            <Selected
-                                                v-on:click="selectbox($event, form.select.kamarinapjalan.name, form.select.kamarinapjalan.statics)"
-                                                :ref="form.select.kamarinapjalan.name" @selecteditem="selecteditem"
-                                                @selectclear="selectclear" :selection="form.select.kamarinapjalan"
-                                                v-on:keyup="selectfilter($event, form.select.kamarinapjalan.name)">
-                                            </Selected>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Nama Tindakan</th>
-                                                        <th>Biaya</th>
-                                                        <th>#</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr v-for="(item, index) in listdatajalan"
-                                                        v-if="listdatajalan.length > 0">asas
-                                                        <td>{{ item . nama_tindakan_rawat_jalan }}</td>
-                                                        <td style="display:none">{{ item . is_paket_bedah }}</td>
-                                                        <td>{{ item . harga }}</td>
-                                                        <td>
-                                                            <button v-if="item.default != 'Ya'"
-                                                                class="tooltip btn-danger"
-                                                                v-on:click="removetindakanjalan(index)">
-                                                                <vue-feather type="trash"></vue-feather>
-                                                                <span class="tooltiptext">Hapus Tindakan</span>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                    <tr v-else>
-                                                        <td colspan="3">No Data for Result</td>
-                                                    </tr>
-                                                    <tr v-if="listdatajalan.length > 0">
-                                                        <td>Total</td>
-                                                        <td colspan="2">
-                                                            {{ formatrupiah(totalbiayajalan . toString()) }}
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-
-                                            </table>
-                                        </div>
                                     </div>
-                                    <!-- <div class="grid"> -->
-                                    <div class="RawatInapOperasi grid" v-if="showRawatInapOperasi">
+                                    <div class="col-3 form-ml">
+                                        <Selected
+                                            v-on:click="selectbox($event, form.select.kamarinapjalan.name, form.select.kamarinapjalan.statics)"
+                                            :ref="form.select.kamarinapjalan.name" @selecteditem="selecteditem"
+                                            @selectclear="selectclear" :selection="form.select.kamarinapjalan"
+                                            v-on:keyup="selectfilter($event, form.select.kamarinapjalan.name)">
+                                        </Selected>
+                                    </div>
 
-                                        <div class="col-12">
-                                            <Textarea :ref="form.keteranganinap.name"
-                                                :form="form.keteranganinap"></Textarea>
-                                        </div>
-                                        <div class="col-12">
-                                            <h3 style="font-size: 15px; margin-top: -5px; font-weight: bold;">Masukkan
-                                                jadwal pembedahan jika ada tindakan bedah</h3>
-                                        </div>
-                                        <div class="col-6">
-                                            <Inputed :ref="form.penjadwalanbedah.name" :form="form.penjadwalanbedah">
-                                            </Inputed>
-                                        </div>
-                                        <div class="col-3 form-ml">
-                                            <Inputed :ref="form.waktubedah.name" :form="form.waktubedah"></Inputed>
-                                        </div>
-                                        <div class="col-3 form-ml">
-                                            <Selected
-                                                v-on:click="selectbox($event, form.select.kamarinap.name, form.select.kamarinap.statics)"
-                                                :ref="form.select.kamarinap.name" @selecteditem="selecteditem"
-                                                @selectclear="selectclear" :selection="form.select.kamarinap"
-                                                v-on:keyup="selectfilter($event, form.select.kamarinap.name)">
-                                            </Selected>
-                                        </div>
+                                    <div class="col-12">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nama Tindakan</th>
+                                                    <th>Biaya</th>
+                                                    <th>#</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(item, index) in listdatajalan"
+                                                    v-if="listdatajalan.length > 0">
+                                                    <td>{{ item . nama_tindakan_rawat_jalan }}</td>
+                                                    <td style="display:none">{{ item . is_paket_bedah }}</td>
+                                                    <td>{{ item . harga }}</td>
+                                                    <td>
+                                                        <button v-if="item.default != 'Ya'" class="tooltip btn-danger"
+                                                            v-on:click="removetindakanjalan(index)">
+                                                            <vue-feather type="trash"></vue-feather>
+                                                            <span class="tooltiptext">Hapus Tindakan</span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr v-else>
+                                                    <td colspan="3">No Data for Result</td>
+                                                </tr>
+                                                <tr v-if="listdatajalan.length > 0">
+                                                    <td>Total</td>
+                                                    <td colspan="2">
+                                                        {{ formatrupiah(totalbiayajalan . toString()) }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
 
-                                        <div class="col-4">
-                                            <Selected
-                                                v-on:click="selectbox($event, form.select.carabayarbedah.name, form.select.carabayarbedah.statics)"
-                                                :ref="form.select.carabayarbedah.name" @selecteditem="selecteditem"
-                                                @selectclear="selectclear" :selection="form.select.carabayarbedah"
-                                                v-on:keyup="selectfilter($event, form.select.carabayarbedah.name)">
-                                            </Selected>
-                                        </div>
-
-                                        <div class="col-4 form-ml">
-                                            <Selected
-                                                v-on:click="selectbox($event, form.select.asuransibedah.name, form.select.asuransibedah.statics)"
-                                                :ref="form.select.asuransibedah.name" @selecteditem="selecteditem"
-                                                @selectclear="selectclear" :selection="form.select.asuransibedah"
-                                                v-on:keyup="selectfilter($event, form.select.asuransibedah.name)">
-                                            </Selected>
-                                        </div>
-
-                                        <div class="col-4 form-ml">
-                                            <Selected
-                                                v-on:click="selectbox($event, form.select.paketbedahbedah.name, form.select.paketbedahbedah.statics)"
-                                                :ref="form.select.paketbedahbedah.name" @selecteditem="selecteditem"
-                                                @selectclear="selectclear" :selection="form.select.paketbedahbedah"
-                                                v-on:keyup="selectfilter($event, form.select.paketbedahbedah.name)">
-                                            </Selected>
-                                        </div>
-
-                                        <div class="col-12">
-                                            <Inputed :ref="form.keteranganbedahbedah.name"
-                                                :form="form.keteranganbedahbedah"></Inputed>
-                                        </div>
+                                        </table>
                                     </div>
                                 </div>
+                                <!-- <div class="grid"> -->
+                                <div class="RawatInapOperasi grid" v-if="showRawatInapOperasi">
 
+                                    <div class="col-12">
+                                        <Textarea :ref="form.keteranganinap.name"
+                                            :form="form.keteranganinap"></Textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <h3 style="font-size: 15px; margin-top: -5px; font-weight: bold;">Masukkan
+                                            jadwal pembedahan jika ada tindakan bedah</h3>
+                                    </div>
+                                    <div class="col-6">
+                                        <Inputed :ref="form.penjadwalanbedah.name" :form="form.penjadwalanbedah">
+                                        </Inputed>
+                                    </div>
+                                    <div class="col-2 form-ml">
+                                        <Timepicker :ref="form.waktubedah.name" :form="form.waktubedah"> </Timepicker>
+
+                                    </div>
+                                    <div class="col-3 form-ml">
+                                        <Selected
+                                            v-on:click="selectbox($event, form.select.kamarinap.name, form.select.kamarinap.statics)"
+                                            :ref="form.select.kamarinap.name" @selecteditem="selecteditem"
+                                            @selectclear="selectclear" :selection="form.select.kamarinap"
+                                            v-on:keyup="selectfilter($event, form.select.kamarinap.name)">
+                                        </Selected>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <Selected
+                                            v-on:click="selectbox($event, form.select.carabayarbedah.name, form.select.carabayarbedah.statics)"
+                                            :ref="form.select.carabayarbedah.name" @selecteditem="selecteditem"
+                                            @selectclear="selectclear" :selection="form.select.carabayarbedah"
+                                            v-on:keyup="selectfilter($event, form.select.carabayarbedah.name)">
+                                        </Selected>
+                                    </div>
+
+                                    <div class="col-4 form-ml">
+                                        <Selected
+                                            v-on:click="selectbox($event, form.select.asuransibedah.name, form.select.asuransibedah.statics)"
+                                            :ref="form.select.asuransibedah.name" @selecteditem="selecteditem"
+                                            @selectclear="selectclear" :selection="form.select.asuransibedah"
+                                            v-on:keyup="selectfilter($event, form.select.asuransibedah.name)">
+                                        </Selected>
+                                    </div>
+
+                                    <div class="col-4 form-ml">
+                                        <Selected
+                                            v-on:click="selectbox($event, form.select.paketbedahbedah.name, form.select.paketbedahbedah.statics)"
+                                            :ref="form.select.paketbedahbedah.name" @selecteditem="selecteditem"
+                                            @selectclear="selectclear" :selection="form.select.paketbedahbedah"
+                                            v-on:keyup="selectfilter($event, form.select.paketbedahbedah.name)">
+                                        </Selected>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <Inputed :ref="form.keteranganbedahbedah.name"
+                                            :form="form.keteranganbedahbedah"></Inputed>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
+
                     </div>
-
-
-                    <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
-                        <div class="col-8"></div>
-                        <div class="col-4" style="text-align: right" v-if="ishide">
-                            <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red
-                                }}</button>
-                            <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
-                                }}</button>
-                            <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
-                        </div>
-                        <div class="col-4" style="text-align: right" v-else>
-                            <button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan
-                                Kunjungan</button>
-                            <button class="button-modal-page button-modal-green" v-on:click="edit()">Edit Data</button>
-                        </div>
-                    </div>
-
                 </div>
-                <Loader ref="Loader"></Loader>
-            </div>
-        </div>
 
-        <div style=""></div>
+
+                <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
+                    <div class="col-8"></div>
+                    <div class="col-4" style="text-align: right" v-if="ishide">
+                        <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red
+                            }}</button>
+                        <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
+                            }}</button>
+                        <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
+                    </div>
+                    <div class="col-4" style="text-align: right" v-else>
+                        <button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan
+                            Kunjungan</button>
+                        <button class="button-modal-page button-modal-green" v-on:click="edit()">Edit Data</button>
+                    </div>
+                </div>
+
+            </div>
+            <Loader ref="Loader"></Loader>
+        </div>
+    </div>
+
+    <div style=""></div>
 </template>
 
 <script>
@@ -1396,6 +1396,12 @@
                         this.showRawatInapOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         vm.form.select.paketbedah.value = '';
                         vm.form.select.paketbedah.label = 'Silahkan Pilih';
+                        vm.form.select.asuransi.value = '';
+                        vm.form.select.asuransi.Label = 'Silahkan Pilih';
+                        vm.form.select.asuransibedah.value = '';
+                        vm.form.select.asuransibedah.Label = 'Silahkan Pilih';
+                        vm.form.select.paketbedahbedah.value = '';
+                        vm.form.select.paketbedahbedah.label = 'Silahkan Pilih';
 
                     } else if (planning === 'Rawat Inap Operasi') {
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
@@ -1527,7 +1533,7 @@
                                 vm.form.select.asuransi.isrequired = false;
                             } else if (vm.form.select.asuransi.data.length > 0) {
                                 vm.form.select.asuransi.disabled = false;
-                                vm.form.select.asuransi.isrequired = true;
+                                vm.form.select.asuransi.isrequired = false;
                             }
 
                             if (vm.form.select.asuransibedah.data.length < 1) {
@@ -1537,7 +1543,7 @@
                                 vm.form.select.asuransibedah.isrequired = false;
                             } else if (vm.form.select.asuransibedah.data.length > 0) {
                                 vm.form.select.asuransibedah.disabled = false;
-                                vm.form.select.asuransibedah.isrequired = true;
+                                vm.form.select.asuransibedah.isrequired = false;
                             }
                         })
                         .catch(function(error) {
@@ -1550,12 +1556,12 @@
                 let next = true;
                 for (const key in vm.form) {
                     if (key != 'select') {
-                        if (vm.form[key].required != '') {
-                            if (vm.form[key].value == '') {
-                                next = false;
-                            }
-                        }
-                    } else {
+                        // if (vm.form[key].required != '') {
+                        //     if (vm.form[key].value == '') {
+                        //         next = false;
+                        //     }
+                        // }
+                    // } else {
                         for (const keyselect in vm.form.select) {
                             if (vm.form.select[keyselect].isrequired) {
                                 if (vm.form.select[keyselect].value == '') {
@@ -1783,8 +1789,11 @@
                     vm.form.nama_jenis_jalan_kamar = vm.detail.nama_jenis_kamar;
 
                     vm.form.select.kamarinapjalan.value = vm.detail.kamar_inap_uuid;
-                    vm.form.select.kamarinapjalan.label = vm.detail.nama_jenis_kamar + ' - ' + vm.detail
-                        .kamar_inap_nama;
+                    vm.form.select.kamarinapjalan.label = vm.detail.nama_jenis_kamar + ' - ' + vm.detail.kamar_inap_nama;
+
+
+      
+
 
                     vm.datakamarjalan = {
                         uuid: vm.detail.kamar_inap_uuid,
@@ -1796,6 +1805,8 @@
                     }
 
                 }
+
+                
 
 
                 let obats = response.data.obat;
@@ -1847,6 +1858,8 @@
                 }
 
                 let onedaycare = response.data.onedaycare;
+                console.log("response");
+                console.log(response.data);
 
                 if (onedaycare) {
                     vm.form.select.paketbedah.value = onedaycare.layanan_uuid;
@@ -1873,6 +1886,36 @@
                     vm.form.select.asuransi.label = 'Silahkan Pilih';
                 
  
+                }
+                let bedah = response.data.bedah;
+
+                if (bedah) {
+                    vm.form.select.paketbedahbedah.value = bedah.layanan_uuid;
+                    vm.form.select.paketbedahbedah.label = bedah.nama_layanan;
+                    vm.form.hargapaketbedah = bedah.tarif;
+                    vm.form.keteranganbedahbedah.value = bedah.keterangan;
+                    vm.form.penjadwalanbedah.value = bedah.tanggal;
+                    vm.form.waktubedah.value = bedah.waktu;
+                    vm.form.select.carabayarbedah.value = bedah.carabayar_uuid;
+                    vm.form.select.carabayarbedah.label = bedah.carabayar_nama;
+                    vm.form.select.asuransibedah.value = bedah.asuransi_uuid;
+                    vm.form.select.asuransibedah.label = bedah.nama_asuransi;
+                    vm.form.select.kamarinap.label = bedah.nama_jenis_kamar + ' - ' + bedah.kamar_inap_nama; 
+                   ;
+
+                } else {
+                    vm.form.select.paketbedahbedah.value = '';
+                    vm.form.select.paketbedahbedah.label = 'Silahkan Pilih';
+                    vm.form.hargapaketbedah = '';
+                    vm.form.keteranganbedah.value = '';
+                    vm.form.penjadwalanbedah.value = '';
+                    vm.form.waktubedah.value = '';
+                    vm.form.select.carabayarbedah.value = '';
+                    vm.form.select.carabayarbedah.label = 'Silahkan Pilih';
+                    vm.form.select.asuransibedah.value = '';
+                    vm.form.select.asuransibedah.label = 'Silahkan Pilih';
+
+
                 }
 
 
