@@ -202,8 +202,8 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->latest();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->first();
     $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
     // $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->get();
 
@@ -542,5 +542,153 @@ class PrintRekamMedisCtrl extends Controller
 
     return $pdf->stream();
     // return view('print-rekam-medis.rawat-jalan.rm1dot1',compact('pasien'));
+  }
+  function all_bedah($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    // $ro = DB::table('pemeriksaan_ro')
+    //   ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
+    //   ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
+    //   ->get();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+      $kb = KeselamatanBedah::where('pasien_uuid', '=', $uuid)->first();
+      $cok = CatatanOperasiKatarak::where('pasien_uuid', '=', $uuid)->first();
+      $lp = LaporanPembedahan::where('pasien_uuid', '=', $uuid)->first();
+      $ckb = ChecklistKesiapanBedah::where('pasien_uuid', '=', $uuid)->first();
+      $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+      $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->first();
+      $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->first();
+      $linen_steril = [
+        false,
+        false,
+        false,
+        false,
+      ];
+  
+      $jsonDatalinen_steril = $ckb->linen_steril;
+      if ($jsonDatalinen_steril != '' || $jsonDatalinen_steril != null) {
+        $dataArraylinen_steril = json_decode($jsonDatalinen_steril, true);
+  
+        foreach ($dataArraylinen_steril as $datalinen_steril) {
+          if ("Jas steril" == $datalinen_steril['nama']) {
+            $linen_steril[0] = true;
+          }
+          if ("Duk steril" == $datalinen_steril['nama']) {
+            $linen_steril[1] = true;
+          }
+          if ("Linen meja instrumen" == $datalinen_steril['nama']) {
+            $linen_steril[2] = true;
+          }
+          if ("Kasa" == $datalinen_steril['nama']) {
+            $linen_steril[3] = true;
+          }
+        }
+      }
+  
+      $alat = [
+        false,
+        false,
+        false,
+        false,
+        false,
+  
+      ];
+  
+      $jsonDataalat = $ckb->alat;
+      if ($jsonDataalat != '' || $jsonDataalat != null) {
+        $dataArrayalat = json_decode($jsonDataalat, true);
+  
+        foreach ($dataArrayalat as $dataalat) {
+          if ("Casette, selang, Diatermi, dan kenoktor Mesin Phaco sudah tersedia" == $dataalat['nama']) {
+            $alat[0] = true;
+          }
+          if ("Patient plate sudah tersedia" == $dataalat['nama']) {
+            $alat[1] = true;
+          }
+          if ("Instrument steril sesuai dengan kebutuhan sudah tersedia" == $dataalat['nama']) {
+            $alat[2] = true;
+          }
+          if ("Handle Microskop streril" == $dataalat['nama']) {
+            $alat[3] = true;
+          }
+          if ("Kom kidney steril sudah tersedia" == $dataalat['nama']) {
+            $alat[4] = true;
+          }
+        }
+      }
+  
+      $listrik = [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+      ];
+      $jsonDatalistrik = $ckb->listrik;
+  
+      // Menguraikan JSON menjadi array PHP
+      if ($jsonDatalistrik != '' || $jsonDatalistrik != null) {
+        $dataArraylistrik = json_decode($jsonDatalistrik, true);
+  
+        foreach ($dataArraylistrik as $datalistrik) {
+          if ("Mesin anastesi terhubung dengan sumber listrik, indikator (+)" == $datalistrik['nama']) {
+            $listrik[0] = true;
+          }
+          if ("Mesin Phaco terhubung dengan sumber listrik, indikator (+)" == $datalistrik['nama']) {
+            $listrik[1] = true;
+          }
+          if ("Light source, monitor Mata terhubung dengan sumber listrik, indikator (+)" == $datalistrik['nama']) {
+            $listrik[2] = true;
+          }
+          if ("Extention kabel terhubung degan sumber listrik, indikator (+)" == $datalistrik['nama']) {
+            $listrik[3] = true;
+          }
+          if ("Meja operasi terhubung degan sumber listrik, indikator (+)" == $datalistrik['nama']) {
+            $listrik[4] = true;
+          }
+          if ("Microskop terhubung dengan sumber listrik, indikator (+)" == $datalistrik['nama']) {
+            $listrik[5] = true;
+          }
+          if ("Lampu kamar operasi menyala" == $datalistrik['nama']) {
+            $listrik[6] = true;
+          }
+          if ("AC berfungsi dengan baik" == $datalistrik['nama']) {
+            $listrik[7] = true;
+          }
+          if ("Gas medis terhubung dengan mesin, indikator (+)" == $datalistrik['nama']) {
+            $listrik[8] = true;
+          }
+        }
+      }
+
+    // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
+
+    $pdf->loadView(
+      'print-rekam-medis.bedah.all_bedah',
+      compact(
+        'pasien',
+        'ro',
+        'kb',
+        'cok',
+        'lp',
+        'ckb',
+        'ptk',
+        'ppo',
+        'roperasi',
+        'listrik',
+        'alat',
+        'linen_steril',
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
   }
 }

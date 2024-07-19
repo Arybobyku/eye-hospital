@@ -63,6 +63,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('catatanoperasikatarak', [DataFormBedahCtrl::class, 'catatanoperasikatarak'])->name('bedah-form-catatanoperasikatarak');
 		Route::post('persetujuantindakankedokteran', [DataFormBedahCtrl::class, 'persetujuantindakankedokteran'])->name('bedah-form-persetujuantindakankedokteran');
 		Route::post('checklistkeselamatanbedah', [DataFormBedahCtrl::class, 'checklistkeselamatanbedah'])->name('bedah-form-checklistkeselamatanbedah');
+		Route::post('laporaninjeksiantivega', [DataFormBedahCtrl::class, 'laporaninjeksiantivega'])->name('bedah-form-laporaninjeksiantivega');
 
 	});
 
