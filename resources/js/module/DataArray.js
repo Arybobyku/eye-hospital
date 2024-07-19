@@ -315,7 +315,7 @@ export const arrpemeriksaan = () => {
 			{ value: 'Tidak', label: 'Tidak Terjatuh' },
 		],
 		pilihanplan: [
-			{ value: 'Rawat Inap Operasi', label: 'Rawat Inap Operasi' },
+			{ value: 'Pulang Berobat Jalan', label: 'Pulang Berobat Jalan' },
 			{ value: 'Rawat Inap', label: 'Rawat Inap' },
 			{ value: 'Operasi', label: 'Operasi' },
 		],

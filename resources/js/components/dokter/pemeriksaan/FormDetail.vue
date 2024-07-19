@@ -643,7 +643,7 @@
                                 <div class="grid">
                                     <div class="col-12">
                                         <h3 style="font-size: 15px; margin-top: 20px; font-weight: bold;">Pilih
-                                            Planning Tindakan (bisa lebih dari satu)</h3>
+                                            Planning Tindakan </h3>
                                     </div>
                                 </div>
                                 <div class="grid">
@@ -775,64 +775,11 @@
                                     </div>
                                 </div>
                                 <!-- <div class="grid"> -->
-                                <div class="RawatInapOperasi grid" v-if="showRawatInapOperasi">
-
+                                <div class="RawatInapOperasi grid" v-if="showJalan">
                                     <div class="col-12">
-                                        <Textarea :ref="form.keteranganinap.name"
-                                            :form="form.keteranganinap"></Textarea>
+                                        <h3 style="font-size: 15px; margin-top: -5px; font-weight: bold;">Silahkan isi Tindakan/Layanan dan Obat</h3>
                                     </div>
-                                    <div class="col-12">
-                                        <h3 style="font-size: 15px; margin-top: -5px; font-weight: bold;">Masukkan
-                                            jadwal pembedahan jika ada tindakan bedah</h3>
-                                    </div>
-                                    <div class="col-6">
-                                        <Inputed :ref="form.penjadwalanbedah.name" :form="form.penjadwalanbedah">
-                                        </Inputed>
-                                    </div>
-                                    <div class="col-2 form-ml">
-                                        <Timepicker :ref="form.waktubedah.name" :form="form.waktubedah"> </Timepicker>
-
-                                    </div>
-                                    <div class="col-3 form-ml">
-                                        <Selected
-                                            v-on:click="selectbox($event, form.select.kamarinap.name, form.select.kamarinap.statics)"
-                                            :ref="form.select.kamarinap.name" @selecteditem="selecteditem"
-                                            @selectclear="selectclear" :selection="form.select.kamarinap"
-                                            v-on:keyup="selectfilter($event, form.select.kamarinap.name)">
-                                        </Selected>
-                                    </div>
-
-                                    <div class="col-4">
-                                        <Selected
-                                            v-on:click="selectbox($event, form.select.carabayarbedah.name, form.select.carabayarbedah.statics)"
-                                            :ref="form.select.carabayarbedah.name" @selecteditem="selecteditem"
-                                            @selectclear="selectclear" :selection="form.select.carabayarbedah"
-                                            v-on:keyup="selectfilter($event, form.select.carabayarbedah.name)">
-                                        </Selected>
-                                    </div>
-
-                                    <div class="col-4 form-ml">
-                                        <Selected
-                                            v-on:click="selectbox($event, form.select.asuransibedah.name, form.select.asuransibedah.statics)"
-                                            :ref="form.select.asuransibedah.name" @selecteditem="selecteditem"
-                                            @selectclear="selectclear" :selection="form.select.asuransibedah"
-                                            v-on:keyup="selectfilter($event, form.select.asuransibedah.name)">
-                                        </Selected>
-                                    </div>
-
-                                    <div class="col-4 form-ml">
-                                        <Selected
-                                            v-on:click="selectbox($event, form.select.paketbedahbedah.name, form.select.paketbedahbedah.statics)"
-                                            :ref="form.select.paketbedahbedah.name" @selecteditem="selecteditem"
-                                            @selectclear="selectclear" :selection="form.select.paketbedahbedah"
-                                            v-on:keyup="selectfilter($event, form.select.paketbedahbedah.name)">
-                                        </Selected>
-                                    </div>
-
-                                    <div class="col-12">
-                                        <Inputed :ref="form.keteranganbedahbedah.name"
-                                            :form="form.keteranganbedahbedah"></Inputed>
-                                    </div>
+                                  
                                 </div>
                             </div>
 
@@ -1008,7 +955,7 @@
                 btnlbl: '',
                 showOperasi: false,
                 showRawatInap: false,
-                showRawatInapOperasi: false,
+                showJalan: false,
                 arr: {
                     // pilihanplan: [
                     //     { value: 'Rawat Inap Operasi', label: 'Rawat Inap + Operasi' },
@@ -1388,12 +1335,12 @@
                     if (planning === 'Operasi') {
                         this.showOperasi = true; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                        this.showRawatInapOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
+                        this.showJalan = false; // Menyembunyikan div dengan kelas 'Operasi'
                     
                     } else if (planning === 'Rawat Inap'){
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = true; // Menyembunyikan div dengan kelas 'Operasi'
-                        this.showRawatInapOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
+                        this.showJalan = false; // Menyembunyikan div dengan kelas 'Operasi'
                         vm.form.select.paketbedah.value = '';
                         vm.form.select.paketbedah.label = 'Silahkan Pilih';
                         vm.form.select.asuransi.value = '';
@@ -1403,17 +1350,15 @@
                         vm.form.select.paketbedahbedah.value = '';
                         vm.form.select.paketbedahbedah.label = 'Silahkan Pilih';
 
-                    } else if (planning === 'Rawat Inap Operasi') {
+                    } else if (planning === 'Pulang Berobat Jalan') {
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                        this.showRawatInapOperasi = true; // Menyembunyikan div dengan kelas 'Operasi'
-                        vm.form.select.paketbedah.value = '';
-                        vm.form.select.paketbedah.label = 'Silahkan Pilih';
+                        this.showJalan = true; // Menyembunyikan div dengan kelas 'Operasi'
 
                     } else {
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                        this.showRawatInapOperasi = false; 
+                        this.showJalan = false; 
                         vm.form.select.paketbedah.value = '';
                         vm.form.select.paketbedah.label = 'Silahkan Pilih';
                     }
@@ -1962,7 +1907,7 @@
                         vm.form.select.pilihanplan.label = 'Silahkan Pilih';
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                        this.showRawatInapOperasi = false;
+                        this.showJalan = false;
                     }
                     else {
                         vm.form.select.pilihanplan.value = vm.nullcheck(temps.pilihan_plan);
@@ -1972,21 +1917,21 @@
                         if (planning === 'Operasi') {
                             this.showOperasi = true; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                            this.showRawatInapOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
+                            this.showJalan = false; // Menyembunyikan div dengan kelas 'Operasi'
                         } else if (planning === 'Rawat Inap') {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = true; // Menyembunyikan div dengan kelas 'Operasi'
-                            this.showRawatInapOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
+                            this.showJalan = false; // Menyembunyikan div dengan kelas 'Operasi'
 
                         } else if (planning === 'Rawat Inap Operasi') {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                            this.showRawatInapOperasi = true; // Menyembunyikan div dengan kelas 'Operasi'
+                            this.showJalan = true; // Menyembunyikan div dengan kelas 'Operasi'
 
                         } else {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                            this.showRawatInapOperasi = false;
+                            this.showJalan = false;
 
                         }
                     }
