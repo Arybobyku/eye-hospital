@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Finance\PrintKasirCtrl;
 use App\Http\Controllers\Finance\PrintKasirInapCtrl;
+use App\Http\Controllers\RawatInap\PrintRekamMedisInapCtrl;
 use App\Http\Controllers\RawatJalan\PrintRekamMedisCtrl;
 
 Route::group(['middleware' => 'throttle: 250, 1'], function(){
@@ -57,5 +58,9 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::get('rekammedis/bedah/rm9dot0/{uuid}', [PrintRekamMedisCtrl::class, 'printRm9dot0']);
 	Route::get('rekammedis/bedah/rm9dot1/{uuid}', [PrintRekamMedisCtrl::class, 'printRm9dot1']);
 	Route::get('rekammedis/rawat-jalan/all/{uuid}', [PrintRekamMedisCtrl::class, 'all']);
+
+	Route::get('rekammedis/rawat-inap/rm1dot1/{uuid}', [PrintRekamMedisInapCtrl::class, 'printRm1dot1']);
+	Route::get('rekammedis/rawat-inap/rm2dot5/{uuid}', [PrintRekamMedisInapCtrl::class, 'printRm2dot5']);
+	Route::get('rekammedis/rawat-inap/rm2dot6/{uuid}', [PrintRekamMedisInapCtrl::class, 'printRm2dot6']);
 
 });
