@@ -19,12 +19,12 @@
             display: inline-block;
         }
 
-        .tablee {
+        .tablee9dot0 {
             border: 1px solid black;
             border-collapse: collapse;
         }
 
-        .td1 {
+        .td19dot0 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 25%;
@@ -32,19 +32,19 @@
             padding-right: 5px;
         }
 
-        .td2 {
+        .td29dot0 {
             width: 7%;
             padding-left: 5px;
             padding-right: 5px;
         }
 
-        .td3 {
+        .td39dot0 {
             width: 3%;
             padding-left: -10px;
             padding-right: -10px;
         }
 
-        .steps {
+        .steps9dot0 {
             margin-left: -30px;
         }
     </style>
@@ -60,50 +60,50 @@
     </div>
     <div>
         <H4 style="text-align: center;">LAPORAN OPERASI PTERYGIUM</H4>
-        <table class="tablee" style="width: 100%;">
+        <table class="tablee9dot0" style="width: 100%;">
             <p style="text-align: right; margin: 10px"> Tgl. Operasi :.................................</p>
-            <table class="tablee" style="width: 100%; padding-left: 10px; padding-right: 10px;">
+            <table class="tablee9dot0" style="width: 100%; padding-left: 10px; padding-right: 10px;">
                 <tr>
-                    <td class="td2">
+                    <td class="td29dot0">
                         Mata :
                     </td>
-                    <td class="td3">OD</td>
-                    <td class="td3"><input type="checkbox"></td>
-                    <td class="td3">OS</td>
-                    <td class="td3"><input type="checkbox"></td>
-                    <td class="td1">
+                    <td class="td39dot0">OD</td>
+                    <td class="td39dot0"><input type="checkbox"></td>
+                    <td class="td39dot0">OS</td>
+                    <td class="td39dot0"><input type="checkbox"></td>
+                    <td class="td19dot0">
                         Operator :
                     </td>
-                    <td class="td1">
+                    <td class="td19dot0">
                         Jam operasi :
                     </td>
-                    <td class="td1">
+                    <td class="td19dot0">
                         Lama Operasi :
                     </td>
                 </tr>
                 <tr>
-                    <td class="td1" colspan="6">
+                    <td class="td19dot0" colspan="6">
                         Diagnosis :
                     </td>
-                    <td class="td1" colspan="2">
+                    <td class="td19dot0" colspan="2">
                         Asisten:
                     </td>
                 </tr>
                 <tr>
-                    <td class="td1" colspan="5">
+                    <td class="td19dot0" colspan="5">
                         Jenis Operasi :
                     </td>
-                    <td class="td1" colspan="2">
+                    <td class="td19dot0" colspan="2">
                         Anesteshia :
                     </td>
-                    <td class="td1">
+                    <td class="td19dot0">
                         Anesthesiologist :
                     </td>
                 </tr>
             </table>
             <table>
                 <ol>
-                    <ol class="steps" style="padding-top: 3%;">
+                    <ol class="steps9dot0" style="padding-top: 3%;">
                         <li style="Margin-bottom: 10px">Pasien dalam posisi SUPINE di tempat tidur dan Anastesi Parabulper.</li>
                         <li style="Margin-bottom: 10px">Teknik A & Antiseptic.</li>
                         <li style="Margin-bottom: 10px">Tutup duklubang steril.</li>
