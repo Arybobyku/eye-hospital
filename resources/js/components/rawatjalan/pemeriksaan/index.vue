@@ -7,6 +7,7 @@
 	</div>
 	<Loader ref="Loader"></Loader>
 </div>
+<FormPerawat ref="FormPerawat" @dialog="dialog" @parsingForm="parsingForm"></FormPerawat>
 <FormDetail ref="FormDetail" @dialog="dialog" @parsingForm="parsingForm"></FormDetail>
 <FormHistori ref="FormHistori"></FormHistori>
 
@@ -23,6 +24,7 @@ export default {
 	emits: ["titletrigger", "repatch"],
 	beforeUnmount:function() {},
 	components: { toast, Swal, 
+		FormPerawat: defineAsyncComponent(() => import('./FormPerawat.vue')),
 		FormDetail: defineAsyncComponent(() => import('./FormDetail.vue')),
 		FormHistori: defineAsyncComponent(() => import('./FormHistori.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
@@ -46,6 +48,7 @@ export default {
 			link : {
 				list: '/rawatjalan/pemeriksaan/list',
 				add: '/rawatjalan/pemeriksaan/add',
+				addperawat: '/rawatjalan/pemeriksaan/addperawat',
 				detail: '/rawatjalan/pemeriksaan/detail',
 				histori: '/rawatjalan/pemeriksaan/histori',
 				call: '/rawatjalan/pemeriksaan/call',
@@ -84,7 +87,8 @@ export default {
 
 		btnhtml:function(_item, _index) {
 			let str = [
-				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detailperawat', tooltip: 'Pemeriksaan Perawat', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Pemeriksaan RO', item: _item, index: _index, show: true },
 				{ icon: 'bell', color: 'btn-info', posisi: 'panggil', tooltip: 'Panggil Pasien', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Log Pemeriksaan RO', item: _item, index: _index, show: true },
 			]
@@ -119,7 +123,17 @@ export default {
 		},
 
 		tablebutton:function(posisi, data, index) {
-			if (posisi == 'detail') {
+			if (posisi == 'detailperawat') {
+				vm.$refs.FormPerawat.aturulang();
+				vm.position = "detaildataperawat";
+				vm.$refs.FormPerawat.show('detaildataperawat', 'Detail Data Perawat', data.uuid);
+				setTimeout(() => { vm.loadingModal('formdetailperawat'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.detail;
+				vm.executions();
+			}
+			else if (posisi == 'detail') {
 				vm.$refs.FormDetail.aturulang();
 				vm.position = "detaildata";
 				vm.$refs.FormDetail.show('detaildata', 'Detail Data', data.uuid);
@@ -156,12 +170,14 @@ export default {
 
 		loadingModal: function (position) { 
 			if (position == 'formdetail') { vm.$refs.FormDetail.loaderprocess();  }
+			else if (position == 'formdetailperawat') { vm.$refs.FormPerawat.loaderprocess();  }
 			else if (position == 'formhistori') { vm.$refs.FormHistori.loaderprocess();  }
 		},
 
 		parsingForm:function(data, key) {
 			vm.attach.data = data;
 			if (key == 'add') { vm.attach.url = vm.attach.link.add; }
+			else if (key == 'addperawat') { vm.attach.url = vm.attach.link.addperawat; }
 		},
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
@@ -181,6 +197,8 @@ export default {
 			else if (vm.position == 'externaltable') { vm.$refs.Datatable.skeleton(); vm.$refs.Datatable.backpage(); }
 			else if (vm.position == 'adddata') { vm.loadingModal('formdetail'); }
 			else if (vm.position == 'detaildata') { vm.loadingModal('formdetail'); vm.$refs.FormDetail.hide();  }
+			else if (vm.position == 'adddataperawat') { vm.loadingModal('formdetailperawat'); }
+			else if (vm.position == 'detaildataperawat') { vm.loadingModal('formdetailperawat'); vm.$refs.FormPerawat.hide();  }
 			else if (vm.position == 'historidata') { vm.loadingModal('formhistori'); vm.$refs.FormHistori.hide();  }
 			else if (vm.position == 'call') { vm.$refs.Datatable.skeleton(); }
 			/* Bagian ini tidak perlu diubah */
@@ -208,10 +226,20 @@ export default {
 				vm.position = "updatedata"; 
 				active = 0; 
 			}
+			else if (vm.position == 'detaildataperawat') {
+				vm.$refs.FormPerawat.setdataform(response); 
+				vm.position = "updatedataperawat"; 
+				active = 0; 
+			}
 			else if (vm.position == 'historidata') {
 				vm.$refs.FormHistori.setdataform(response); 
 				//vm.position = "updatedata"; 
 				active = 0; 
+			}
+			else if (vm.position == 'updatedataperawat') {
+				vm.loadingModal('formdetailperawat');
+				vm.$refs.FormPerawat.hide(); 
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'updatedata') {
 				vm.loadingModal('formdetail');
@@ -229,20 +257,25 @@ export default {
 				if (vm.position == 'loadmain') { vm.notification('Data gagal dimuat.', 3000, position); }
 				else if (vm.position == 'externaltable') { vm.notification('Datalist tabel gagal dimuat.', 3000, position); }
 				else if (vm.position == 'adddata') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'adddataperawat') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'call') { vm.notification('Gagal memanggil antrian pasien.', 3000, position); }
 				else if (vm.position == 'detaildata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
+				else if (vm.position == 'detaildataperawat') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 				else if (vm.position == 'historidata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 			}
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'adddata') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
+				if (vm.position == 'adddataperawat') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'call') { vm.notification('Antrian pasien berhasil dipanggil.', 3000, position); }
 				else if (vm.position == 'updatedata') { vm.notification('Pembaharuan data berhasil diproses.', 3000, position); }
+				else if (vm.position == 'updatedataperawat') { vm.notification('Pembaharuan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'removedata') { vm.notification('Penghapusan data berhasil diproses.', 3000, position); }
 			}
 		},
 
 		runconfirm: function (posisi) {
 			if (posisi == 'formdetail') { vm.loadingModal('formdetail'); }
+			else if (posisi == 'formdetailperawat') { vm.loadingModal('formdetailperawat'); }
 			else if (posisi == 'removedata') { vm.$refs.Datatable.skeleton(); }
 			else if (posisi == 'call') { vm.$refs.Datatable.skeleton(); }
 			vm.executions();

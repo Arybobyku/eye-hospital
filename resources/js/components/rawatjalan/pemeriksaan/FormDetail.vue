@@ -35,122 +35,9 @@
 						<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
 		
 						<div class="tab-content">
-							<div style="position: relative;" class="content-tab-in" v-if="tab.content.pemeriksaan_fisik">
-								<div class="grid">
-									<div class="col-6 form-mr">
-
-										<Inputed :ref="form.penetesanobat.name" :form="form.penetesanobat"></Inputed>
-
-										<Inputed :ref="form.keluhanutama.name" :form="form.keluhanutama"></Inputed>
-
-										<Inputed :ref="form.riwayatpenyakit.name" :form="form.riwayatpenyakit"></Inputed>
-
-										<Selected v-on:click="selectbox($event, form.select.kasusurgent.name, form.select.kasusurgent.statics)" 
-											:ref="form.select.kasusurgent.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.kasusurgent" v-on:keyup="selectfilter($event, form.select.kasusurgent.name)"></Selected>
-
-										<Inputed :ref="form.kasusurgentlainnya.name" :form="form.kasusurgentlainnya"></Inputed>
-
-										<Selected v-on:click="selectbox($event, form.select.statuspsikologis.name, form.select.statuspsikologis.statics)" 
-											:ref="form.select.statuspsikologis.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.statuspsikologis" v-on:keyup="selectfilter($event, form.select.statuspsikologis.name)"></Selected>
-
-										<Selected v-on:click="selectbox($event, form.select.statusfungsional.name, form.select.statusfungsional.statics)" 
-											:ref="form.select.statusfungsional.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.statusfungsional" v-on:keyup="selectfilter($event, form.select.statusfungsional.name)"></Selected>
-											
-
-									</div>
-									<div class="col-6 form-ml">
-
-										<Inputed :ref="form.nadi.name" :form="form.nadi"></Inputed>
-										<Inputed :ref="form.respiratoryrate.name" :form="form.respiratoryrate"></Inputed>
-										<Inputed :ref="form.suhu.name" :form="form.suhu"></Inputed>
-										<Inputed :ref="form.beratbadan.name" :form="form.beratbadan"></Inputed>
-										<Inputed :ref="form.tinggibadan.name" :form="form.tinggibadan"></Inputed>
-										<Inputed :ref="form.tekanandarah.name" :form="form.tekanandarah"></Inputed>
-									
-									</div>
-								</div>
-							</div>
-							
-							<div class="content-tab-in" v-if="tab.content.skrinning">
-								<div class="grid">
-									<div class="col-6 form-mr">
-
-										
-										<Selected v-on:click="selectbox($event, form.select.nyeri.name, form.select.nyeri.statics)" 
-											:ref="form.select.nyeri.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.nyeri" v-on:keyup="selectfilter($event, form.select.nyeri.name)"></Selected>
-
-										<Selected v-on:click="selectbox($event, form.select.nyerihilangbila.name, form.select.nyerihilangbila.statics)" 
-											:ref="form.select.nyerihilangbila.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.nyerihilangbila" v-on:keyup="selectfilter($event, form.select.nyerihilangbila.name)"></Selected>
-
-										<Inputed :ref="form.nyerihilangbilalainnya.name" :form="form.nyerihilangbilalainnya"></Inputed>
-
-										<Inputed :ref="form.skalanyeri.name" :form="form.skalanyeri"></Inputed>
-											
-									</div>
-									<div class="col-6 form-ml">
-
-										<Inputed :ref="form.lokasinyeri.name" :form="form.lokasinyeri"></Inputed>
-										<Inputed :ref="form.durasinyeri.name" :form="form.durasinyeri"></Inputed>
-										<Inputed :ref="form.karakteristiknyeri.name" :form="form.karakteristiknyeri"></Inputed>
-										<Inputed :ref="form.keterangannyeri.name" :form="form.keterangannyeri"></Inputed>
-
-									</div>
-								</div>
-							</div>
-
-							<div class="content-tab-in" v-if="tab.content.riwayat_kesehatan">
-								<div class="grid">
-									<div class="col-6 form-mr">
-										
-
-										<Selected v-on:click="selectbox($event, form.select.penyakitpernahdiderita.name, form.select.penyakitpernahdiderita.statics)" 
-											:ref="form.select.penyakitpernahdiderita.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.penyakitpernahdiderita" v-on:keyup="selectfilter($event, form.select.penyakitpernahdiderita.name)"></Selected>
-
-										<Inputed :ref="form.penyakitpernahdideritalainnya.name" :form="form.penyakitpernahdideritalainnya"></Inputed>
-
-										<Selected v-on:click="selectbox($event, form.select.pernahdioperasi.name, form.select.pernahdioperasi.statics)" 
-											:ref="form.select.pernahdioperasi.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.pernahdioperasi" v-on:keyup="selectfilter($event, form.select.pernahdioperasi.name)"></Selected>
-
-										<Inputed :ref="form.pernahdioperasilainnya.name" :form="form.pernahdioperasilainnya"></Inputed>
 
 
-										<Selected v-on:click="selectbox($event, form.select.riwayatalergimakanan.name, form.select.riwayatalergimakanan.statics)" 
-											:ref="form.select.riwayatalergimakanan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.riwayatalergimakanan" v-on:keyup="selectfilter($event, form.select.riwayatalergimakanan.name)"></Selected>
-
-										<Inputed :ref="form.riwayatalergimakananlainnya.name" :form="form.riwayatalergimakananlainnya"></Inputed>
-										
-									</div>
-									<div class="col-6 form-ml">
-
-										<Selected v-on:click="selectbox($event, form.select.riwayatalergiobatan.name, form.select.riwayatalergimakanan.statics)" 
-											:ref="form.select.riwayatalergiobatan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.riwayatalergiobatan" v-on:keyup="selectfilter($event, form.select.riwayatalergiobatan.name)"></Selected>
-
-										<Inputed :ref="form.riwayatalergiobatanlainnya.name" :form="form.riwayatalergiobatanlainnya"></Inputed>
-
-										<Selected v-on:click="selectbox($event, form.select.obatdigunakansaatini.name, form.select.riwayatalergimakanan.statics)" 
-											:ref="form.select.obatdigunakansaatini.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.obatdigunakansaatini" v-on:keyup="selectfilter($event, form.select.obatdigunakansaatini.name)"></Selected>
-
-										<Inputed :ref="form.obatdigunakansaatinilainnya.name" :form="form.obatdigunakansaatinilainnya"></Inputed>
-										
-										<Selected v-on:click="selectbox($event, form.select.penilaianresikojatuh.name, form.select.riwayatalergimakanan.statics)" 
-											:ref="form.select.penilaianresikojatuh.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.penilaianresikojatuh" v-on:keyup="selectfilter($event, form.select.penilaianresikojatuh.name)"></Selected>
-											
-									</div>
-								</div>
-							</div>
-
-							<div class="content-tab-in" v-if="tab.content.ocular_dextra">
+							<div style="position: relative;" class="content-tab-in" v-if="tab.content.ocular_dextra">
 								<div class="grid">
 									<div class="col-6 form-mr">
 										<Inputed :ref="form.oculardextraautoref.name" :form="form.oculardextraautoref"></Inputed>
@@ -305,13 +192,10 @@ export default {
 		},
 		tab: {
 			button: [
-					{ value: 'pemeriksaan_fisik', label: 'Pemeriksaan Fisik', class: 'tab-active' },
-					{ value: 'skrinning', label: 'Skrinning', class: 'tab-no-active' },
-					{ value: 'riwayat_kesehatan', label: 'Riwayat Kesehatan', class: 'tab-no-active' },
-					{ value: 'ocular_dextra', label: 'Ocular Dextra', class: 'tab-no-active' },
+					{ value: 'ocular_dextra', label: 'Ocular Dextra', class: 'tab-active' },
 					{ value: 'ocular_sinistra', label: 'Ocular Sinistra', class: 'tab-no-active' },
 			],
-			content: { pemeriksaan_fisik: true, skrinning: false, riwayat_kesehatan: false, ocular_dextra: false, ocular_sinistra: false }
+			content: { ocular_dextra: true, ocular_sinistra: false }
 		},
 	}},
 	methods: {
@@ -408,29 +292,29 @@ export default {
 
 			if (temps) {
 				vm.form.uuid = temps.uuid;
-				vm.form.penetesanobat.value = vm.nullcheck(temps.penetesan_obat);
+				// vm.form.penetesanobat.value = vm.nullcheck(temps.penetesan_obat);
 				vm.form.nama_pemeriksa.value = vm.nullcheck(temps.nama_pemeriksa);
-				vm.form.keluhanutama.value = vm.nullcheck(temps.keluhan_utama);
-				vm.form.riwayatpenyakit.value = vm.nullcheck(temps.riwayat_penyakit);
-				vm.form.kasusurgentlainnya.value = vm.nullcheck(temps.kasus_urgent_lainnya);
-				vm.form.tekanandarah.value = vm.nullcheck(temps.tekanan_darah);
-				vm.form.nadi.value = vm.nullcheck(temps.nadi);
-				vm.form.respiratoryrate.value = vm.nullcheck(temps.respiratory_rate);
-				vm.form.beratbadan.value = vm.nullcheck(temps.berat_badan);
-				vm.form.tinggibadan.value = vm.nullcheck(temps.tinggi_badan);
-				vm.form.suhu.value = vm.nullcheck(temps.suhu);
-				vm.form.nyerihilangbilalainnya.value = vm.nullcheck(temps.nyeri_hilang_bila_lainnya);
-				vm.form.skalanyeri.value = vm.nullcheck(temps.skala_nyeri);
-				vm.form.lokasinyeri.value = vm.nullcheck(temps.lokasi_nyeri);
-				vm.form.durasinyeri.value = vm.nullcheck(temps.durasi_nyeri);
-				vm.form.karakteristiknyeri.value = vm.nullcheck(temps.karakteristik_nyeri);
-				vm.form.keterangannyeri.value = vm.nullcheck(temps.keterangan_nyeri);
-				vm.form.penyakitpernahdideritalainnya.value = vm.nullcheck(temps.penyakit_pernah_diderita_lainnya);
-				vm.form.pernahdioperasilainnya.value = vm.nullcheck(temps.pernah_dioperasi_lainnya);
+				// vm.form.keluhanutama.value = vm.nullcheck(temps.keluhan_utama);
+				// vm.form.riwayatpenyakit.value = vm.nullcheck(temps.riwayat_penyakit);
+				// vm.form.kasusurgentlainnya.value = vm.nullcheck(temps.kasus_urgent_lainnya);
+				// vm.form.tekanandarah.value = vm.nullcheck(temps.tekanan_darah);
+				// vm.form.nadi.value = vm.nullcheck(temps.nadi);
+				// vm.form.respiratoryrate.value = vm.nullcheck(temps.respiratory_rate);
+				// vm.form.beratbadan.value = vm.nullcheck(temps.berat_badan);
+				// vm.form.tinggibadan.value = vm.nullcheck(temps.tinggi_badan);
+				// vm.form.suhu.value = vm.nullcheck(temps.suhu);
+				// vm.form.nyerihilangbilalainnya.value = vm.nullcheck(temps.nyeri_hilang_bila_lainnya);
+				// vm.form.skalanyeri.value = vm.nullcheck(temps.skala_nyeri);
+				// vm.form.lokasinyeri.value = vm.nullcheck(temps.lokasi_nyeri);
+				// vm.form.durasinyeri.value = vm.nullcheck(temps.durasi_nyeri);
+				// vm.form.karakteristiknyeri.value = vm.nullcheck(temps.karakteristik_nyeri);
+				// vm.form.keterangannyeri.value = vm.nullcheck(temps.keterangan_nyeri);
+				// vm.form.penyakitpernahdideritalainnya.value = vm.nullcheck(temps.penyakit_pernah_diderita_lainnya);
+				// vm.form.pernahdioperasilainnya.value = vm.nullcheck(temps.pernah_dioperasi_lainnya);
 				vm.form.ocularsinistrakacamatalamasph.value = vm.nullcheck(temps.ocular_sinistra_kacamata_lama_sph);
-				vm.form.riwayatalergimakananlainnya.value = vm.nullcheck(temps.riwayat_alergi_makanan_lainnya);
-				vm.form.riwayatalergiobatanlainnya.value = vm.nullcheck(temps.riwayat_alergi_obatan_lainnya);
-				vm.form.obatdigunakansaatinilainnya.value = vm.nullcheck(temps.obat_digunakan_saat_ini_lainnya);
+				// vm.form.riwayatalergimakananlainnya.value = vm.nullcheck(temps.riwayat_alergi_makanan_lainnya);
+				// vm.form.riwayatalergiobatanlainnya.value = vm.nullcheck(temps.riwayat_alergi_obatan_lainnya);
+				// vm.form.obatdigunakansaatinilainnya.value = vm.nullcheck(temps.obat_digunakan_saat_ini_lainnya);
 				vm.form.oculardextraautoref.value = vm.nullcheck(temps.ocular_dextra_autoref);
 				vm.form.oculardextrapd.value = vm.nullcheck(temps.ocular_dextra_pd);
 				vm.form.oculardextrakeratometrik1.value = vm.nullcheck(temps.ocular_dextra_keratometri_k1);
@@ -458,108 +342,108 @@ export default {
 
 				// vm.form.select.klinik.value = vm.nullcheck(temps.klinik)
 				
-				if (vm.nullcheck(temps.kasus_urgent) == '') {
-					vm.form.select.kasusurgent.value = '';
-					vm.form.select.kasusurgent.label = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.kasusurgent.value = vm.nullcheck(temps.kasus_urgent);
-					vm.form.select.kasusurgent.label = vm.nullcheck(temps.kasus_urgent);
-				}
+				// if (vm.nullcheck(temps.kasus_urgent) == '') {
+				// 	vm.form.select.kasusurgent.value = '';
+				// 	vm.form.select.kasusurgent.label = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.kasusurgent.value = vm.nullcheck(temps.kasus_urgent);
+				// 	vm.form.select.kasusurgent.label = vm.nullcheck(temps.kasus_urgent);
+				// }
 
 			
 
-				if (vm.nullcheck(temps.status_psikologi) == '') {
-					vm.form.select.statuspsikologis.value = '';
-					vm.form.select.statuspsikologis.value = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.statuspsikologis.value = vm.nullcheck(temps.status_psikologi);
-					vm.form.select.statuspsikologis.label = vm.nullcheck(temps.status_psikologi);
-				}
+				// if (vm.nullcheck(temps.status_psikologi) == '') {
+				// 	vm.form.select.statuspsikologis.value = '';
+				// 	vm.form.select.statuspsikologis.value = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.statuspsikologis.value = vm.nullcheck(temps.status_psikologi);
+				// 	vm.form.select.statuspsikologis.label = vm.nullcheck(temps.status_psikologi);
+				// }
 
 				
-				if (vm.nullcheck(temps.status_fungsional) == '') {
-					vm.form.select.statusfungsional.value = '';
-					vm.form.select.statusfungsional.label = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.statusfungsional.value = vm.nullcheck(temps.status_fungsional);
-					vm.form.select.statusfungsional.label = vm.nullcheck(temps.status_fungsional);
-				}
+				// if (vm.nullcheck(temps.status_fungsional) == '') {
+				// 	vm.form.select.statusfungsional.value = '';
+				// 	vm.form.select.statusfungsional.label = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.statusfungsional.value = vm.nullcheck(temps.status_fungsional);
+				// 	vm.form.select.statusfungsional.label = vm.nullcheck(temps.status_fungsional);
+				// }
 
 
-				if (vm.nullcheck(temps.nyeri) == '') {
-					vm.form.select.nyeri.value = '';
-					vm.form.select.nyeri.value = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.nyeri.value = vm.nullcheck(temps.nyeri);
-					vm.form.select.nyeri.label = vm.nullcheck(temps.nyeri);
-				}
+				// if (vm.nullcheck(temps.nyeri) == '') {
+				// 	vm.form.select.nyeri.value = '';
+				// 	vm.form.select.nyeri.value = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.nyeri.value = vm.nullcheck(temps.nyeri);
+				// 	vm.form.select.nyeri.label = vm.nullcheck(temps.nyeri);
+				// }
 
-				if (vm.nullcheck(temps.nyeri_hilang_bila) == '') {
-					vm.form.select.nyerihilangbila.value = '';
-					vm.form.select.nyerihilangbila.label = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.nyerihilangbila.value = vm.nullcheck(temps.nyeri_hilang_bila);
-					vm.form.select.nyerihilangbila.label = vm.nullcheck(temps.nyeri_hilang_bila);
-				}
+				// if (vm.nullcheck(temps.nyeri_hilang_bila) == '') {
+				// 	vm.form.select.nyerihilangbila.value = '';
+				// 	vm.form.select.nyerihilangbila.label = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.nyerihilangbila.value = vm.nullcheck(temps.nyeri_hilang_bila);
+				// 	vm.form.select.nyerihilangbila.label = vm.nullcheck(temps.nyeri_hilang_bila);
+				// }
 
-				if (vm.nullcheck(temps.penyakit_pernah_diderita) == '') {
-					vm.form.select.penyakitpernahdiderita.value = '';
-					vm.form.select.penyakitpernahdiderita.label = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.penyakitpernahdiderita.value = vm.nullcheck(temps.penyakit_pernah_diderita);
-					vm.form.select.penyakitpernahdiderita.label = vm.nullcheck(temps.penyakit_pernah_diderita);
-				}
+				// if (vm.nullcheck(temps.penyakit_pernah_diderita) == '') {
+				// 	vm.form.select.penyakitpernahdiderita.value = '';
+				// 	vm.form.select.penyakitpernahdiderita.label = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.penyakitpernahdiderita.value = vm.nullcheck(temps.penyakit_pernah_diderita);
+				// 	vm.form.select.penyakitpernahdiderita.label = vm.nullcheck(temps.penyakit_pernah_diderita);
+				// }
 
-				if (vm.nullcheck(temps.pernah_dioperasi) == '') {
-					vm.form.select.pernahdioperasi.value = '';
-					vm.form.select.pernahdioperasi.label = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.pernahdioperasi.value = vm.nullcheck(temps.pernah_dioperasi);
-					vm.form.select.pernahdioperasi.label = vm.nullcheck(temps.pernah_dioperasi);
-				}
+				// if (vm.nullcheck(temps.pernah_dioperasi) == '') {
+				// 	vm.form.select.pernahdioperasi.value = '';
+				// 	vm.form.select.pernahdioperasi.label = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.pernahdioperasi.value = vm.nullcheck(temps.pernah_dioperasi);
+				// 	vm.form.select.pernahdioperasi.label = vm.nullcheck(temps.pernah_dioperasi);
+				// }
 
-				if (vm.nullcheck(temps.riwayat_alergi_makanan) == '') {
-					vm.form.select.riwayatalergimakanan.value = '';
-					vm.form.select.riwayatalergimakanan.label = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.riwayatalergimakanan.value = vm.nullcheck(temps.riwayat_alergi_makanan);
-					vm.form.select.riwayatalergimakanan.label = vm.nullcheck(temps.riwayat_alergi_makanan);
-				}
+				// if (vm.nullcheck(temps.riwayat_alergi_makanan) == '') {
+				// 	vm.form.select.riwayatalergimakanan.value = '';
+				// 	vm.form.select.riwayatalergimakanan.label = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.riwayatalergimakanan.value = vm.nullcheck(temps.riwayat_alergi_makanan);
+				// 	vm.form.select.riwayatalergimakanan.label = vm.nullcheck(temps.riwayat_alergi_makanan);
+				// }
 
-				if (vm.nullcheck(temps.riwayat_alergi_obatan) == '') {
-					vm.form.select.riwayatalergiobatan.value = '';
-					vm.form.select.riwayatalergiobatan.label = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.riwayatalergiobatan.value = vm.nullcheck(temps.riwayat_alergi_obatan);
-					vm.form.select.riwayatalergiobatan.label = vm.nullcheck(temps.riwayat_alergi_obatan);
-				}
+				// if (vm.nullcheck(temps.riwayat_alergi_obatan) == '') {
+				// 	vm.form.select.riwayatalergiobatan.value = '';
+				// 	vm.form.select.riwayatalergiobatan.label = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.riwayatalergiobatan.value = vm.nullcheck(temps.riwayat_alergi_obatan);
+				// 	vm.form.select.riwayatalergiobatan.label = vm.nullcheck(temps.riwayat_alergi_obatan);
+				// }
 
-				if (vm.nullcheck(temps.obat_digunakan_saat_ini) == '') {
-					vm.form.select.obatdigunakansaatini.value = '';
-					vm.form.select.obatdigunakansaatini.label = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.obatdigunakansaatini.value = vm.nullcheck(temps.obat_digunakan_saat_ini);
-					vm.form.select.obatdigunakansaatini.label = vm.nullcheck(temps.obat_digunakan_saat_ini);
-				}
+				// if (vm.nullcheck(temps.obat_digunakan_saat_ini) == '') {
+				// 	vm.form.select.obatdigunakansaatini.value = '';
+				// 	vm.form.select.obatdigunakansaatini.label = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.obatdigunakansaatini.value = vm.nullcheck(temps.obat_digunakan_saat_ini);
+				// 	vm.form.select.obatdigunakansaatini.label = vm.nullcheck(temps.obat_digunakan_saat_ini);
+				// }
 
-				if (vm.nullcheck(temps.penilaian_resiko_jatuh) == '') {
-					vm.form.select.penilaianresikojatuh.value = '';
-					vm.form.select.penilaianresikojatuh.label = 'Silahkan Pilih';
-				}
-				else {
-					vm.form.select.penilaianresikojatuh.value = vm.nullcheck(temps.penilaian_resiko_jatuh);
-					vm.form.select.penilaianresikojatuh.label = vm.nullcheck(temps.penilaian_resiko_jatuh);
-				}
+				// if (vm.nullcheck(temps.penilaian_resiko_jatuh) == '') {
+				// 	vm.form.select.penilaianresikojatuh.value = '';
+				// 	vm.form.select.penilaianresikojatuh.label = 'Silahkan Pilih';
+				// }
+				// else {
+				// 	vm.form.select.penilaianresikojatuh.value = vm.nullcheck(temps.penilaian_resiko_jatuh);
+				// 	vm.form.select.penilaianresikojatuh.label = vm.nullcheck(temps.penilaian_resiko_jatuh);
+				// }
 			
 			}
 			else {
