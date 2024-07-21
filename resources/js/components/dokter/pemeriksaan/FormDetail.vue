@@ -17,7 +17,7 @@
                             <li>Jenis Kelamin<span><strong>{{ detail . jenis_kelamin }}</strong></span></li>
                         </ul>
 
-                        <label style="font-weight=bold;">Tanda tangan dokter</label>
+                        <label style="font-weight:bold;">Tanda tangan dokter</label>
                         <img v-if="form.ttd_dokter" :src="form.ttd_dokter" alt="ttd dokter" height="100" width="400">
                         <div v-if="!form.ttd_dokter">
                             <DigitalSignature style="height:250px" 

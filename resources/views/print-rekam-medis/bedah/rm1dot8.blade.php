@@ -19,37 +19,37 @@
             display: inline-block;
         }
 
-        .tablee {
+        .tablee1dot8 {
             border: 1px solid black;
             border-collapse: collapse;
         }
 
-        .td1 {
+        .td11dot8 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 5%;
         }
 
-        .td2 {
+        .td21dot8 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 25%;
         }
 
-        .td3 {
+        .td31dot8 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 40%;
             text-align: center;
         }
 
-        .td4 {
+        .td41dot8 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 30%;
             text-align: center;
         }
-        .smallfont {
+        .smallfont1dot8 {
             font-size: 10;
         }
     </style>
@@ -66,115 +66,115 @@
         @include('print-rekam-medis.partials.header')
     </div>
     <div style="text-align: center; padding:5px;"><b>PERSETUJUAN TINDAKAN KEDOKTERAN</b></div>
-    <div class="smallfont">
-    <table class="tablee" style="width: 100%;">
+    <div class="smallfont1dot8">
+    <table class="tablee1dot8" style="width: 100%;">
         <tr>
-            <td class="tablee" style="text-align: center" colspan="4"><b>PEMBERIAN INFORMASI</b></td>
+            <td class="tablee1dot8" style="text-align: center" colspan="4"><b>PEMBERIAN INFORMASI</b></td>
         </tr>
         <tr>
             <td colspan="3">Dokter Pelaksana Tindakan</td>
             <td>: {{ $ptk->dokter_pelaksana_tindakan }}</td>
 
         </tr>
-        <tr class="tablee">
+        <tr class="tablee1dot8">
             <td colspan="3">Pemberi Informasi</td>
             <td>: {{ $ptk->pemberi_informasi }}</td>
         </tr>
-        <tr class="tablee">
+        <tr class="tablee1dot8">
             <td colspan="3">Penerima informasi/pemberi penolakan*</td>
             <td>: {{ $ptk->penerima_penolak_informasi}}</td>
         </tr>
         <tr style="text-align: center">
-            <th class="td1">No.</th>
-            <th class="td2">Jenis Informasi</th>
-            <th class="td3">Isi Informasi</th>
-            <th class="td4">Tandai</th>
+            <th class="td11dot8">No.</th>
+            <th class="td21dot8">Jenis Informasi</th>
+            <th class="td31dot8">Isi Informasi</th>
+            <th class="td41dot8">Tandai</th>
 
         </tr>
         <tr>
-            <td class="td1" align="center">1</td>
-            <td class="td2">Diagnosis (WD&DD)</td>
-            <td class="td3"> {{ $ptk->ji_diagnosis_wd_dd }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_diagnosis_wd_dd != '' ? 'Checked' : '' }}></td>
+            <td class="td11dot8" align="center">1</td>
+            <td class="td21dot8">Diagnosis (WD&DD)</td>
+            <td class="td31dot8"> {{ $ptk->ji_diagnosis_wd_dd }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_diagnosis_wd_dd != '' ? 'Checked' : '' }}></td>
         </tr>
         <tr>
-            <td class="td1" align="center">2</td>
-            <td class="td2">Dasar Diagnosis</td>
-            <td class="td3"> {{ $ptk->ji_dasar_diagnosis }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_dasar_diagnosis != '' ? 'Checked' : '' }}></td>
+            <td class="td11dot8" align="center">2</td>
+            <td class="td21dot8">Dasar Diagnosis</td>
+            <td class="td31dot8"> {{ $ptk->ji_dasar_diagnosis }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_dasar_diagnosis != '' ? 'Checked' : '' }}></td>
         </tr>
         <tr>
-            <td class="td1" align="center">3</td>
-            <td class="td2">Tindakan Kedokteran</td>
-            <td class="td3">{{ $ptk->ji_tindakan_kedokteran }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_tindakan_kedokteran != '' ? 'Checked' : '' }}></td>
+            <td class="td11dot8" align="center">3</td>
+            <td class="td21dot8">Tindakan Kedokteran</td>
+            <td class="td31dot8">{{ $ptk->ji_tindakan_kedokteran }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_tindakan_kedokteran != '' ? 'Checked' : '' }}></td>
         </tr>
         <tr>
-            <td class="td1" align="center">4</td>
-            <td class="td2">Indikasi Tindakan</td>
-            <td class="td3">{{ $ptk->ji_indikasi_tindakan }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_indikasi_tindakan != '' ? 'Checked' : '' }}></td>
+            <td class="td11dot8" align="center">4</td>
+            <td class="td21dot8">Indikasi Tindakan</td>
+            <td class="td31dot8">{{ $ptk->ji_indikasi_tindakan }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_indikasi_tindakan != '' ? 'Checked' : '' }}></td>
         </tr>
         <tr>
-            <td class="td1" align="center">5</td>
-            <td class="td2">Tata Cara</td>
-            <td class="td3">{{ $ptk->ji_tata_cara }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_tata_cara != '' ? 'Checked' : '' }}></td>
+            <td class="td11dot8" align="center">5</td>
+            <td class="td21dot8">Tata Cara</td>
+            <td class="td31dot8">{{ $ptk->ji_tata_cara }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_tata_cara != '' ? 'Checked' : '' }}></td>
         </tr>
         <tr>
-            <td class="td1" align="center">6</td>
-            <td class="td2">Tujuan</td>
-            <td class="td3">{{ $ptk->ji_tujuan }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_tujuan != '' ? 'Checked' : '' }}></td>
+            <td class="td11dot8" align="center">6</td>
+            <td class="td21dot8">Tujuan</td>
+            <td class="td31dot8">{{ $ptk->ji_tujuan }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_tujuan != '' ? 'Checked' : '' }}></td>
         </tr>
         <tr>
-            <td class="td1" align="center">7</td>
-            <td class="td2">Resiko</td>
-            <td class="td3">{{ $ptk->ji_resiko }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_resiko != '' ? 'Checked' : '' }}></td>
+            <td class="td11dot8" align="center">7</td>
+            <td class="td21dot8">Resiko</td>
+            <td class="td31dot8">{{ $ptk->ji_resiko }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_resiko != '' ? 'Checked' : '' }}></td>
         </tr>
         <tr>
-            <td class="td1" align="center">8</td>
-            <td class="td2">Komplikasi</td>
-            <td class="td3">{{ $ptk->ji_komplikasi }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_komplikasi != '' ? 'Checked' : '' }}></td>
+            <td class="td11dot8" align="center">8</td>
+            <td class="td21dot8">Komplikasi</td>
+            <td class="td31dot8">{{ $ptk->ji_komplikasi }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_komplikasi != '' ? 'Checked' : '' }}></td>
         </tr>
         <tr>
-            <td class="td1" align="center">9</td>
-            <td class="td2">Prognosis</td>
-            <td class="td3">{{ $ptk->ji_prognosis }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_prognosis != '' ? 'Checked' : '' }}></td>
+            <td class="td11dot8" align="center">9</td>
+            <td class="td21dot8">Prognosis</td>
+            <td class="td31dot8">{{ $ptk->ji_prognosis }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_prognosis != '' ? 'Checked' : '' }}></td>
         </tr>
         <tr>
-            <td class="td1" align="center" rowspan="2">10</td>
-            <td class="td2">Alternatif & Resiko</td>
-            <td class="td3">{{ $ptk->ji_alternatif_dan_resiko }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_alternatif_dan_resiko != '' ? 'Checked' : '' }}></td>
+            <td class="td11dot8" align="center" rowspan="2">10</td>
+            <td class="td21dot8">Alternatif & Resiko</td>
+            <td class="td31dot8">{{ $ptk->ji_alternatif_dan_resiko }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_alternatif_dan_resiko != '' ? 'Checked' : '' }}></td>
         </tr>
         <tr>
-            <td class="td2">Lain-lain</td>
-            <td class="td3">{{ $ptk->ji_lain_lain }}</td>
-            <td class="td4"><input type="checkbox" {{ $ptk->ji_lain_lain  != '' ? 'Checked' : '' }}></td>
+            <td class="td21dot8">Lain-lain</td>
+            <td class="td31dot8">{{ $ptk->ji_lain_lain }}</td>
+            <td class="td41dot8"><input type="checkbox" {{ $ptk->ji_lain_lain  != '' ? 'Checked' : '' }}></td>
         </tr>
-        <tr class="tablee">
+        <tr class="tablee1dot8">
             <td colspan="3" style="text-align: justify; padding:5px">Dengan ini menyatakan bahwa saya Dokter <b>{{ $ptk->dokter_pelaksana_tindakan }}</b> telah
                 menerangkan hal-hal diatas
                 secara benar dan jelas dan memberikan kesempatan untuk bertanya dan/atau berdiskusi</td>
-            <td class="td4" align="center">Dokter,<br><br>(.................)</td>
+            <td class="td41dot8" align="center">Dokter,<br><br>(.................)</td>
         </tr>
-        <tr class="tablee">
+        <tr class="tablee1dot8">
             <td colspan="3" style="text-align: justify; padding:5px">Dengan ini menyatakan bahwa saya/ keluarga pasien
                <b>{{ $ptk->penerima_penolak_informasi }}</b> telah menerima informasi
                 sebagaimana diatas serta telah diberi kesempatan untuk berdiskusi/bertanya dan telah memahaminya</td>
-            <td class="td4" align="center">Penerima informasi,<br><br>(.................)</td>
+            <td class="td41dot8" align="center">Penerima informasi,<br><br>(.................)</td>
         </tr>
         <tr>
-            <td class="tablee" style="text-align: justify; padding:5px" colspan="4"><i>*Bila pasien tidak kompeten atau tidak mau
+            <td class="tablee1dot8" style="text-align: justify; padding:5px" colspan="4"><i>*Bila pasien tidak kompeten atau tidak mau
                     nerima infromasi, maka penerima
                     informasi, maka penerima informasi adalah wali atau keluarga terdekat</i></td>
         </tr>
         <tr>
-            <td class="tablee" style="text-align: center; padding:5px" colspan="4"><b>PERSETUJUAN TINDAKAN KEDOKTERAN</b></td>
+            <td class="tablee1dot8" style="text-align: center; padding:5px" colspan="4"><b>PERSETUJUAN TINDAKAN KEDOKTERAN</b></td>
         </tr>
         <tr>
             <td colspan="4" align="justify; padding:5px">Yang bertanda tangan di bawah ini, saya nama <b>{{ $ptk->ptk_nama_penerima }}</b>, tanggal

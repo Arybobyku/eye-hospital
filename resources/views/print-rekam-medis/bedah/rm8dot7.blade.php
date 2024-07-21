@@ -18,20 +18,20 @@
             height: auto;
             display: inline-block;
         }
-        .steps {
+        .steps8dot7 {
             margin-left: -50px;
         }
 
-        .step2 {
+        .step28dot7 {
             margin-left: -5px;
         }
-        .step3 {
+        .step38dot7 {
             margin-left: 10px;
         }
-        .section-10-11 {
+        .section-10-11-8dot7 {
             margin-top: 8px;
         }
-        .logo {
+        .logo8dot7 {
             display: block;
             margin-left: auto;
             margin-right: auto;
@@ -51,10 +51,10 @@
     <div>
         <H4 style="text-align: center;">FORM TINDAKAN LASER PRP</H4>
         <p style="text-align: right;"> Tanggal : _________________________</p>
-        <p class="step3">Diagnosa :_________________________________________________</p>
-        <p class="step3">Langkah-langkah Tindakan Laser PRP : </p>
+        <p class="step38dot7">Diagnosa :_________________________________________________</p>
+        <p class="step38dot7">Langkah-langkah Tindakan Laser PRP : </p>
         <ol>
-            <ol class="steps">
+            <ol class="steps8dot7">
                 <li>Pasien diberi obat tetes pelebar pupil mata (Mydriatyl 1%).</li>
                 <li>Perawat mempersiapkan berkas kelengkapan tindakan laser.</li>
                 <li>Perawat mengecek pupil mata pasien, jika pupil mata sudah lebar pasien masuk ke ruangan laser.</li>
@@ -66,13 +66,13 @@
                 <li>Dilakukan tindakan laser dengan parameter (power) laser: 200 ms x 200 ms x 240 mW = 352</li>
             </ol>
     </div>
-    <div class="section-10-11">
-        <ol start="10" class="step2">
+    <div class="section-10-11-8dot7">
+        <ol start="10" class="step28dot7">
             <p>..........................................................................................................................................................................</p>
         </ol>
     </div>
-    <div class="section-10-11">
-        <ol start="10" class="step2">
+    <div class="section-10-11-8dot7">
+        <ol start="10" class="step28dot7">
             <li>Setelah selesai tindakan laser, pasien diberi obat tetes antibiotik.</li>
             <li>Pasien diberikan resep obat dan surat kontrol.</li>
         </ol>
@@ -85,13 +85,13 @@
             <td rowspan="3"> Tanda Tangan DPJP/Dokter <br><br><br><br>(_____________________________)</td>
         </Tr>
         <TR>
-            <TD><img src="images/header.png" alt="Logo" class="logo"></TD>
-            <TD><img src="images/header.png" alt="Logo" class="logo"></TD>
+            <TD><img src="images/header.png" alt="Logo" class="logo8dot7"></TD>
+            <TD><img src="images/header.png" alt="Logo" class="logo8dot7"></TD>
             <TD rowspan="3"></TD>
         </TR>
         <TR>
-            <TD><img src="images/header.png" alt="Logo" class="logo"></TD>
-            <TD><img src="images/header.png" alt="Logo" class="logo"></TD>
+            <TD><img src="images/header.png" alt="Logo" class="logo8dot7"></TD>
+            <TD><img src="images/header.png" alt="Logo" class="logo8dot7"></TD>
             <TD rowspan="3"></TD>
         </TR>
     </table>

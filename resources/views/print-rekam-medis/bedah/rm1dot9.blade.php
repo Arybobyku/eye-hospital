@@ -19,40 +19,34 @@
             display: inline-block;
         }
 
-        .tablee {
+        .tablee1dot9 {
             border-left: 1px solid black;
             border-right: 1px solid black;
             border-bottom: 1px solid black;
             border-collapse: collapse;
         }
 
-        .tablee2 {
+        .tablee21dot9 {
             border-top: 1px solid black;
             border-collapse: collapse;
 
         }
 
-        .td1 {
+        .td11dot9 {
             border-right: 1px solid black;
             border-collapse: collapse;
         }
 
-        .td2 {
+        .td21dot9 {
             border: 1px solid black;
             border-collapse: collapse;
         }
 
-        .td3 {
-            width: 30%;
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-
-        .smallfont {
+        .smallfont1dot9 {
             font-size: 11;
         }
 
-        .logo {
+        .logo1dot9 {
             display: block;
             margin-left: auto;
             margin-right: auto;
@@ -71,13 +65,13 @@
         </div>
         @include('print-rekam-medis.partials.header')
     </div>
-    <div class="smallfont">
-        <table class="tablee" style="width: 100%; text-align: center;">
+    <div class="smallfont1dot9">
+        <table class="tablee1dot9" style="width: 100%; text-align: center;">
             <tr>
                 <td style="text-align: center" colspan="4"><b>SITE MARKING (PENANDAAN OPERASI)</b></td>
             </tr>
         </table>
-        <table class="tablee" style="width: 100%">
+        <table class="tablee1dot9" style="width: 100%">
             <div style="text-align: center"> Beri tanda <b>Ya</b>(&#10004;) pada lokasi yang akan dioperasi menggunakan
                 alat
                 penanda atau <i>marker</i></td>
@@ -85,19 +79,19 @@
             <br>
             <table  style="width: 50%; text-align:center; margin-left:25%">
                 <tr>
-                    <td class="td2" style="text-align: right"> <input type="checkbox" checked></td>
-                    <td class="td2" style="text-align: left">MATA KANAN (OD)</td>
+                    <td class="td21dot9" style="text-align: right"> <input type="checkbox" checked></td>
+                    <td class="td21dot9" style="text-align: left">MATA KANAN (OD)</td>
 
-                    <td class="td2" style="text-align: right"> <input type="checkbox" checked></td>
-                    <td class="td2" style="text-align: left">MATA KIRIa (OS)</td>
+                    <td class="td21dot9" style="text-align: right"> <input type="checkbox" checked></td>
+                    <td class="td21dot9" style="text-align: left">MATA KIRIa (OS)</td>
                 </tr>
             </table>
 
             <table style="width: 50%; text-align:center; margin-left:25%">
                 <tr style="text-align: center">
 
-                    <td class="td2"><img src="images/header.png" alt="Logo" class="logo"></td>
-                    <td class="td2"><img src="images/header.png" alt="Logo" class="logo"></td>
+                    <td class="td21dot9"><img src="images/header.png" alt="Logo" class="logo1dot9"></td>
+                    <td class="td21dot9"><img src="images/header.png" alt="Logo" class="logo1dot9"></td>
 
                 </tr> <br>
                 <tr>
@@ -106,25 +100,25 @@
                     </td>
                 </tr>
             </table>
-            <table class="tablee2" style="width: 100%;">
+            <table class="tablee21dot9" style="width: 100%;">
                 <tr>
-                    <td class="td1">Tanda tangan Pasien/</td>
-                    <td class="td1">Tanda tangan Dokter</td>
+                    <td class="td11dot9">Tanda tangan Pasien/</td>
+                    <td class="td11dot9">Tanda tangan Dokter</td>
                     <td>Tanda tangan perawat</td>
                 </tr>
                 <tr>
-                    <td class="td1">Keluarga</td>
-                    <td class="td1">Yang merawat</td>
+                    <td class="td11dot9">Keluarga</td>
+                    <td class="td11dot9">Yang merawat</td>
                     <td>Penanggung Jawab</td>
                 </tr>
                 <tr>
-                    <td class="td1">(...................................)</td>
-                    <td class="td1">(...................................)</td>
+                    <td class="td11dot9">(...................................)</td>
+                    <td class="td11dot9">(...................................)</td>
                     <td>(...................................)</td>
                 </tr>
                 <tr>
-                    <td class="td1">Nama dan Tanda tangan</td>
-                    <td class="td1">Nama dan Tanda tangan</td>
+                    <td class="td11dot9">Nama dan Tanda tangan</td>
+                    <td class="td11dot9">Nama dan Tanda tangan</td>
                     <td>Nama dan Tanda tangan</td>
                 </tr>
             </table>

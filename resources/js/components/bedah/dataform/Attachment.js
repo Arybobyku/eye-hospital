@@ -301,3 +301,22 @@ export const parsekeselamatanbedah = (form) => {
 	return data;
 }
 
+export const parselaporaninjeksiantivega = (form) => {
+	let data = new FormData();
+	data.append('uuid', form.uuid);
+	data.append('bedah_uuid', form.bedah_uuid);
+	data.append('nama_operator', form.namaoperator.value);
+	data.append('od', form.od);
+	data.append('os', form.os);
+	data.append('jam_operasi', form.jamoperasi.value);
+	data.append('lama_operasi', form.lamaoperasi.value);
+	data.append('diagnosis', form.diagnosis.value);
+	data.append('asisten', form.asisten.value);
+	data.append('jenis_operasi', form.jenisoperasi.value);
+	data.append('anesthesia', form.anesthesia.value);
+	data.append('anesthesiologist', form.anesthesiologist.value);
+	data.append('intravitreal', form.intravitreal.value);
+	
+	return data;
+}
+

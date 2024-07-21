@@ -647,5 +647,52 @@ export const formkeselamatanbedah = () => {
 		},
 	}
 }
+export const formlaporaninjeksiantivega = () => {
+	return {
+		uuid: '',
+		bedah_uuid: '', os:'', od:'',
+	
+		namaoperator: { 
+			title: 'Nama Operator', for_id: 'form_'+'namaoperator', type: 'text', required: '', 
+			name: 'namaoperator', value: '', disabled: false, show: true, kinds: ''
+		},
+		jamoperasi: { 
+			title: 'Jam Operasi', for_id: 'form_'+'jamoperasi', type: 'text', required: '', 
+			name: 'jamoperasi', value: '', disabled: false, show: true, kinds: ''
+		},
+		lamaoperasi: { 
+			title: 'Lama Operasi', for_id: 'form_'+'lamaoperasi', type: 'text', required: '', 
+			name: 'lamaoperasi', value: '', disabled: false, show: true, kinds: ''
+		},
+		diagnosis: { 
+			title: 'Diagnosis', for_id: 'form_'+'diagnosis', type: 'text', required: '', 
+			name: 'diagnosis', value: '', disabled: false, show: true, kinds: ''
+		},
+		asisten: { 
+			title: 'Asisten', for_id: 'form_'+'asisten', type: 'text', required: '', 
+			name: 'asisten', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		jenisoperasi: { 
+			title: 'Jenis Operasi', for_id: 'form_'+'jenisoperasi', type: 'text', required: '', 
+			name: 'jenisoperasi', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		anesthesia: { 
+			title: 'Anesthesia', for_id: 'form_'+'anesthesia', type: 'text', required: '', 
+			name: 'anesthesia', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		anesthesiologist: { 
+			title: 'Anesthesiologist', for_id: 'form_'+'anesthesiologist', type: 'text', required: '', 
+			name: 'anesthesiologist', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		intravitreal: { 
+			title: '6. Dilakukan injeksi avastin / intravitreal sebanyak', for_id: 'form_'+'intravitreal', type: 'text', required: '', 
+			name: 'intravitreal', value: '', disabled: false, show: true, kinds: ''
+		},
+	}
+}
 
 

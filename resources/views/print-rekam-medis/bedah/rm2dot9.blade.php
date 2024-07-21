@@ -19,27 +19,27 @@
             display: inline-block;
         }
 
-        .tablee {
+        .tablee2dot9 {
             border: 1px solid black;
             border-collapse: collapse;
         }
 
-        .tablee2 {
+        .tablee2dot92 {
             border-left: 1px solid black;
             border-right: 1px solid black;
             border-collapse: collapse;
 
         }
 
-        .td1 {
+        .td12dot9 {
             width: 2%;
         }
 
-        .td2 {
+        .td22dot9 {
             width: 98%;
         }
 
-        .smallfont {
+        .smallfont2dot9 {
             font-size: 11;
         }
     </style>
@@ -53,13 +53,13 @@
         </div>
         @include('print-rekam-medis.partials.header')
     </div>
-    <div class="smallfont">
-        <table class="tablee2" style="width: 100%; text-align: center;">
+    <div class="smallfont2dot9">
+        <table class="tablee2dot92" style="width: 100%; text-align: center;">
             <tr>
                 <td style="text-align: center" colspan="4"><b>PELAKSANAAN PENCEGAHAN PASIEN JATUH</b></td>
             </tr>
         </table>
-        <table class="tablee" style="width :100%">
+        <table class="tablee2dot9" style="width :100%">
             <table style="width: 100%; margin:3px;">
                 <tr>
                     <td>Tanggal Pelaksanaan</td>
@@ -84,8 +84,8 @@
                     <td colspan="2">Lakukan Intervensi jatuh standart:</td>
                 </tr>
                 <tr>
-                    <td class="td1"><input type="checkbox"></td>
-                    <td class="td2">Benda-benda pribadi dalam jangkauan (telepon genggam, bel pasien, air
+                    <td class="td12dot9"><input type="checkbox"></td>
+                    <td class="td22dot9">Benda-benda pribadi dalam jangkauan (telepon genggam, bel pasien, air
                         minum,kacamata, dll)</td>
                 </tr>
                 <tr>

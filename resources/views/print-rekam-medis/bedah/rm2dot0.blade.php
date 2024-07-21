@@ -19,30 +19,30 @@
             display: inline-block;
         }
 
-        .tablee {
+        .tablee2dot0 {
             border: 1px solid black;
             border-collapse: collapse;
             border-top:0.5px solid;
             border-bottom:0.5px solid;
         }
 
-        .td1 {
+        .td12dot0 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 50%;
         }
-        .td1x {
+        .td12dot0x {
             border-top: 1px solid black;
             border-collapse: collapse;
             width: 50%;
         }
 
-        .td2 {
+        .td22dot0 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 50%;
         }
-        .td1y {
+        .td12dot0y {
             border-left: 1px solid black;
             border-top: 1px solid black;
             border-collapse: collapse;
@@ -59,28 +59,28 @@
         </div>
         @include('print-rekam-medis.partials.header')
     </div>
-    <table class="tablee" style="width: 100%;">
+    <table class="tablee2dot0" style="width: 100%;">
         <tr>
             <td style="text-align: center" colspan="4"><b>CHECKLIST KESIAPAN BEDAH</b></td>
         </tr>
         <tr>
-            <td class="td1x">Ruang</td>
-            <td class="td1x">: {{ $ckb->ruangan }}</td>
-            <td class="td1y">Kamar</td>
-            <td class="td1x">: {{ $ckb->kamar }}</td>
+            <td class="td12dot0x">Ruang</td>
+            <td class="td12dot0x">: {{ $ckb->ruangan }}</td>
+            <td class="td12dot0y">Kamar</td>
+            <td class="td12dot0x">: {{ $ckb->kamar }}</td>
 
         </tr>
-        <tr class="tablee">
-            <td class="td1x">Diagnosis</td>
-            <td class="td1x">: {{ $ckb->diagnosa }}</td>
-            <td class="td1y">Tindakan</td>
-            <td class="td1x">: {{ $ckb->tindakan }}</td>
+        <tr class="tablee2dot0">
+            <td class="td12dot0x">Diagnosis</td>
+            <td class="td12dot0x">: {{ $ckb->diagnosa }}</td>
+            <td class="td12dot0y">Tindakan</td>
+            <td class="td12dot0x">: {{ $ckb->tindakan }}</td>
         </tr>
-        <tr class="tablee">
-            <td class="td1x">Tehknik anastesi</td>
-            <td class="td1x">: {{ $ckb->teknik_anastesi }}</td>
-            <td class="td1y">Tgl. Tindakan</td>
-            <td class="td1x">: {{ $ckb->tanggal_tindakan }}</td>
+        <tr class="tablee2dot0">
+            <td class="td12dot0x">Tehknik anastesi</td>
+            <td class="td12dot0x">: {{ $ckb->teknik_anastesi }}</td>
+            <td class="td12dot0y">Tgl. Tindakan</td>
+            <td class="td12dot0x">: {{ $ckb->tanggal_tindakan }}</td>
         </tr>
     </table>
         <table  style="width: 100%; border:1px solid; border-top:0.5px">

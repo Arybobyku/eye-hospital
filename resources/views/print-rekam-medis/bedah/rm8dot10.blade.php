@@ -19,12 +19,12 @@
             display: inline-block;
         }
 
-        .tablee {
+        .tablee8dot10 {
             border: 1px solid black;
             border-collapse: collapse;
         }
 
-        .td1 {
+        .td18dot10 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 25%;
@@ -32,19 +32,19 @@
             padding-right: 5px;
         }
 
-        .td2 {
+        .td28dot10 {
             width: 7%;
             padding-left: 5px;
             padding-right: 5px;
         }
 
-        .td3 {
+        .td38dot10 {
             width: 3%;
             padding-left: -10px;
             padding-right: -10px;
         }
 
-        .steps {
+        .steps8dot10 {
             margin-left: -30px;
         }
     </style>
@@ -60,51 +60,51 @@
     </div>
     <div>
         <H4 style="text-align: center; padding-top: 1%; padding-bottom: 1%;">LAPORAN OPERASI TRABEKULEKTOMI</H4>
-        <table class="tablee" style="width: 100%;">
+        <table class="tablee8dot10" style="width: 100%;">
             <p style="text-align: right; padding-bottom: 4%;"> Tgl. Operasi
                 :.................................</p>
-            <table class="tablee" style="width: 100%; padding-left: 10px; padding-right: 10px;">
+            <table class="tablee8dot10" style="width: 100%; padding-left: 10px; padding-right: 10px;">
                 <tr>
-                    <td class="td2">
+                    <td class="td28dot10">
                         Mata :
                     </td>
-                    <td class="td3">OD</td>
-                    <td class="td3"><input type="checkbox"></td>
-                    <td class="td3">OS</td>
-                    <td class="td3"><input type="checkbox"></td>
-                    <td class="td1">
+                    <td class="td38dot10">OD</td>
+                    <td class="td38dot10"><input type="checkbox"></td>
+                    <td class="td38dot10">OS</td>
+                    <td class="td38dot10"><input type="checkbox"></td>
+                    <td class="td18dot10">
                         Operator :
                     </td>
-                    <td class="td1">
+                    <td class="td18dot10">
                         Jam operasi :
                     </td>
-                    <td class="td1">
+                    <td class="td18dot10">
                         Lama Operasi :
                     </td>
                 </tr>
                 <tr>
-                    <td class="td1" colspan="6">
+                    <td class="td18dot10" colspan="6">
                         Diagnosis :
                     </td>
-                    <td class="td1" colspan="2">
+                    <td class="td18dot10" colspan="2">
                         Asisten:
                     </td>
                 </tr>
                 <tr>
-                    <td class="td1" colspan="5">
+                    <td class="td18dot10" colspan="5">
                         Jenis Operasi :
                     </td>
-                    <td class="td1" colspan="2">
+                    <td class="td18dot10" colspan="2">
                         Anesteshia :
                     </td>
-                    <td class="td1">
+                    <td class="td18dot10">
                         Anesthesiologist :
                     </td>
                 </tr>
             </table>
             <table>
                 <ol>
-                    <ol class="steps" style="padding-top: 1%;">
+                    <ol class="steps8dot10" style="padding-top: 1%;">
                         <li style="Margin-bottom: 10px">Pasien dalam posisi SUPINE di tempat tidur.</li>
                         <li style="Margin-bottom: 10px">Teknik A & Antiseptic.</li>
                         <li style="Margin-bottom: 10px">Pasang drape dan spekulum.</li>

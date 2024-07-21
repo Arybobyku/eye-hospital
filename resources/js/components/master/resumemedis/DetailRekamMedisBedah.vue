@@ -116,40 +116,64 @@ export default {
             listdata: [],
             linkResume: "",
             base_url: "http://127.0.0.1:8000",
-            linkResumeAll: "/print/rekammedis/rawat-jalan/all/",
+            linkResumeAll: "/print/rekammedis/bedah/all_bedah/",
             selectedIndex: -1,
             listResume: [
                 {
-                    name: "RM.1.1",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot1/",
-                },
-                {
-                    name: "RM.1.2",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot2/",
-                },
-                {
-                    name: "RM.1.3",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot3/",
-                },
-                {
-                    name: "RM.1.4",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot4/",
-                },
-                {
-                    name: "RM.1.5",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot5/",
-                },
-                {
-                    name: "RM.1.6",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot6/",
-                },
-                {
-                    name: "RM.1.7",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot7/",
-                },
-                {
                     name: "RM.1.8",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot8/",
+                    link: "/print/rekammedis/bedah/rm1dot8/",
+                },
+                {
+                    name: "RM.1.9",
+                    link: "/print/rekammedis/bedah/rm1dot9/",
+                },
+                {
+                    name: "RM.1.10",
+                    link: "/print/rekammedis/bedah/rm1dot10/",
+                },
+                {
+                    name: "RM.2.0",
+                    link: "/print/rekammedis/bedah/rm2dot0/",
+                },
+                {
+                    name: "RM.2.2",
+                    link: "/print/rekammedis/bedah/rm2dot2/",
+                },
+                {
+                    name: "RM.2.3",
+                    link: "/print/rekammedis/bedah/rm2dot3/",
+                },
+                {
+                    name: "RM.2.9",
+                    link: "/print/rekammedis/bedah/rm2dot9/",
+                },
+                {
+                    name: "RM.4.9",
+                    link: "/print/rekammedis/bedah/rm4dot9/",
+                },
+                {
+                    name: "RM.8.7",
+                    link: "/print/rekammedis/bedah/rm8dot7/",
+                },
+                {
+                    name: "RM.8.8",
+                    link: "/print/rekammedis/bedah/rm8dot8/",
+                },
+                {
+                    name: "RM.8.9",
+                    link: "/print/rekammedis/bedah/rm8dot9/",
+                },
+                {
+                    name: "RM.8.10",
+                    link: "/print/rekammedis/bedah/rm8dot10/",
+                },
+                {
+                    name: "RM.9.0",
+                    link: "/print/rekammedis/bedah/rm9dot0/",
+                },
+                {
+                    name: "RM.9.1",
+                    link: "/print/rekammedis/bedah/rm9dot1/",
                 },
             ],
             pasien: null,

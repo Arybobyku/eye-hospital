@@ -19,12 +19,12 @@
             display: inline-block;
         }
 
-        .tablee {
+        .tablee8dot8 {
             border: 1px solid black;
             border-collapse: collapse;
         }
 
-        .td1 {
+        .td18dot8 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 25%;
@@ -32,19 +32,19 @@
             padding-right: 5px;
         }
 
-        .td2 {
+        .td28dot8 {
             width: 7%;
             padding-left: 5px;
             padding-right: 5px;
         }
 
-        .td3 {
+        .td38dot8 {
             width: 3%;
             padding-left: -10px;
             padding-right: -10px;
         }
 
-        .steps {
+        .steps8dot8 {
             margin-left: -50px;
         }
     </style>
@@ -61,48 +61,48 @@
     <div>
         <H4 style="text-align: center;"> <u>LAPORAN INJEKSI ANTI VEGA </u></H4>
             <p style="text-align: right;  margin-bottom: 5%;"> Tgl. Operasi :.................................</p>
-            <table class="tablee" style="width: 100%">
+            <table class="tablee8dot8" style="width: 100%">
                 <tr>
-                    <td class="td2">
+                    <td class="td28dot8">
                         Mata :
                     </td>
-                    <td class="td3">OD</td>
-                    <td class="td3"><input type="checkbox"></td>
-                    <td class="td3">OS</td>
-                    <td class="td3"><input type="checkbox"></td>
-                    <td class="td1">
+                    <td class="td38dot8">OD</td>
+                    <td class="td38dot8"><input type="checkbox"></td>
+                    <td class="td38dot8">OS</td>
+                    <td class="td38dot8"><input type="checkbox"></td>
+                    <td class="td18dot8">
                         Operator :
                     </td>
-                    <td class="td1">
+                    <td class="td18dot8">
                         Jam operasi :
                     </td>
-                    <td class="td1">
+                    <td class="td18dot8">
                         Lama Operasi :
                     </td>
                 </tr>
                 <tr>
-                    <td class="td1" colspan="6">
+                    <td class="td18dot8" colspan="6">
                         Diagnosis :
                     </td>
-                    <td class="td1" colspan="2">
+                    <td class="td18dot8" colspan="2">
                         Asisten:
                     </td>
                 </tr>
                 <tr>
-                    <td class="td1" colspan="5">
+                    <td class="td18dot8" colspan="5">
                         Jenis Operasi :
                     </td>
-                    <td class="td1" colspan="2">
+                    <td class="td18dot8" colspan="2">
                         Anesteshia :
                     </td>
-                    <td class="td1">
+                    <td class="td18dot8">
                         Anesthesiologist :
                     </td>
                 </tr>
             </table>
             <table>
                 <ol>
-                    <ol class="steps" style="padding-top: 3%;">
+                    <ol class="steps8dot8" style="padding-top: 3%;">
                         <li style="Margin-bottom: 10px">Pasien berbaring dalam anestesi topical/ local/ umum.</li>
                         <li style="Margin-bottom: 10px">Dilakukan tindakan a & antiseptis menggunakan providone iodin.</li>
                         <li style="Margin-bottom: 10px">Dipasangkan eye drape.</li>
