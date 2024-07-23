@@ -667,6 +667,9 @@ class PemeriksaanCtrl extends Controller
                 echo $request->pilihan_plan;
                 if ($request->pilihan_plan === 'Operasi') {
                     if ($request->paket_uuid != '' && $request->paket_uuid != ' ' && $request->paket_uuid) {
+                        $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update([
+                            'apakah_paket' => 'Ya',
+                        ]);
                         // Periksa asuransinya : jika asuransi maka masuk ke akun asuransi
                         //											 jika umum maka masuk ke dalam bagian umum
                         $jenis_pembayaran = '-';

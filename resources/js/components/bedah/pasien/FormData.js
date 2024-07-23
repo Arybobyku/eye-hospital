@@ -35,6 +35,22 @@ export const formkontrol = () => {
 	}
 }
 
+export const formrawatinap = () => {
+	return {
+		title: '', posisi: '', uuid: '',
+		registrasi_uuid: '',
+		select: {
+		kamarinap: { 
+				key : 'kamarinap', for_id: 'form_'+'kamarinap', name: 'kamarinap', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'kamarinap', isrequired: false, html: 'Nama Kamar', issearch: true, disabled: false,
+			},
+
+			}
+	}
+}
+
+
 export const formobat = () => {
 	return {
 		title: '', posisi: '', uuid: '',

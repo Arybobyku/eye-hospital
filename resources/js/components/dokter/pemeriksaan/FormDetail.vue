@@ -17,8 +17,11 @@
                             <li>Jenis Kelamin<span><strong>{{ detail . jenis_kelamin }}</strong></span></li>
                         </ul>
 
-                        <label style="font-weight=bold;">Tanda tangan dokter</label>
-                        <DigitalSignature style="height:250px" />
+                        <label style="font-weight:bold;">Tanda tangan dokter</label>
+                        <img v-if="form.ttd_dokter" :src="form.ttd_dokter" alt="ttd dokter" height="100" width="400">
+                        <div v-if="!form.ttd_dokter">
+                            <DigitalSignature style="height:250px" @onSaveDigitalSignature="saveDigitalSignature" />
+                        </div>
                     </div>
 
 
@@ -643,7 +646,7 @@
                                 <div class="grid">
                                     <div class="col-12">
                                         <h3 style="font-size: 15px; margin-top: 20px; font-weight: bold;">Pilih
-                                            Planning Tindakan </h3>
+                                            Planning Tindakan</h3>
                                     </div>
                                 </div>
                                 <div class="grid">
@@ -677,7 +680,7 @@
                                     </div>
                                     <div class="col-4 form-ml">
                                         <!-- <Inputed :ref="form.waktuodc.name" :form="form.waktuodc"></Inputed> -->
-                                        <Timepicker :ref="form.waktuodc.name" :form="form.waktuodc">
+                                        <Timepicker :ref="form.waktuodc.name" :form="form.waktuodc"> >
                                         </Timepicker>
                                     </div>
 
@@ -714,11 +717,6 @@
                                 </div>
                                 <div class="RawatInap grid" v-if="showRawatInap">
                                     <div class="col-9">
-                                        <!-- <Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)"
-          :ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-          :selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.db_table)"
-          ></Selected> -->
-
                                         <Selected
                                             v-on:click="selectbox($event, form.select.carabayartindakanrawatjalanjalan.name, form.select.carabayartindakanrawatjalanjalan.statics)"
                                             :ref="form.select.carabayartindakanrawatjalanjalan.name"
@@ -748,7 +746,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr v-for="(item, index) in listdatajalan"
-                                                    v-if="listdatajalan.length > 0">
+                                                    v-if="listdatajalan.length > 0">asas
                                                     <td>{{ item . nama_tindakan_rawat_jalan }}</td>
                                                     <td style="display:none">{{ item . is_paket_bedah }}</td>
                                                     <td>{{ item . harga }}</td>
@@ -774,12 +772,11 @@
                                         </table>
                                     </div>
                                 </div>
-                                <!-- <div class="grid"> -->
-                                <div class="RawatInapOperasi grid" v-if="showJalan">
-                                    <div class="col-12">
-                                        <h3 style="font-size: 15px; margin-top: -5px; font-weight: bold;">Silahkan isi Tindakan/Layanan dan Obat</h3>
+                                <div class="Pulang grid" v-if="showPulang">
+                                    <div class="col-8">
+                                        <h3 style="font-size: 15px; margin-top: 20px; font-weight: bold;">Silahkan Isi
+                                            Tindakan/Layanan dan Obat</h3>
                                     </div>
-                                  
                                 </div>
                             </div>
 
@@ -955,7 +952,7 @@
                 btnlbl: '',
                 showOperasi: false,
                 showRawatInap: false,
-                showJalan: false,
+                showPulang: false,
                 arr: {
                     // pilihanplan: [
                     //     { value: 'Rawat Inap Operasi', label: 'Rawat Inap + Operasi' },
@@ -1065,12 +1062,16 @@
                     }
                 },
                 typingTimer: null,
-                doneTypingInterval: 5000
+                doneTypingInterval: 5000,
+                digitalSignature:"",
             }
         },
         methods: {
             updatedbdokter,
             formatrupiah,
+            saveDigitalSignature: function(svg){
+                vm.digitalSignature = svg;
+            },
             removetindakan: function(index) {
                 vm.listdata.splice(index, 1);
             },
@@ -1335,30 +1336,24 @@
                     if (planning === 'Operasi') {
                         this.showOperasi = true; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                        this.showJalan = false; // Menyembunyikan div dengan kelas 'Operasi'
+                        this.showPulang = false; // Menyembunyikan div dengan kelas 'Operasi'
                     
                     } else if (planning === 'Rawat Inap'){
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = true; // Menyembunyikan div dengan kelas 'Operasi'
-                        this.showJalan = false; // Menyembunyikan div dengan kelas 'Operasi'
+                        this.showPulang = false; // Menyembunyikan div dengan kelas 'Operasi'
                         vm.form.select.paketbedah.value = '';
                         vm.form.select.paketbedah.label = 'Silahkan Pilih';
-                        vm.form.select.asuransi.value = '';
-                        vm.form.select.asuransi.Label = 'Silahkan Pilih';
-                        vm.form.select.asuransibedah.value = '';
-                        vm.form.select.asuransibedah.Label = 'Silahkan Pilih';
-                        vm.form.select.paketbedahbedah.value = '';
-                        vm.form.select.paketbedahbedah.label = 'Silahkan Pilih';
 
                     } else if (planning === 'Pulang Berobat Jalan') {
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                        this.showJalan = true; // Menyembunyikan div dengan kelas 'Operasi'
+                        this.showPulang = true; // Menyembunyikan div dengan kelas 'Operasi'
 
                     } else {
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                        this.showJalan = false; 
+                        this.showPulang = false; 
                         vm.form.select.paketbedah.value = '';
                         vm.form.select.paketbedah.label = 'Silahkan Pilih';
                     }
@@ -1478,7 +1473,7 @@
                                 vm.form.select.asuransi.isrequired = false;
                             } else if (vm.form.select.asuransi.data.length > 0) {
                                 vm.form.select.asuransi.disabled = false;
-                                vm.form.select.asuransi.isrequired = false;
+                                vm.form.select.asuransi.isrequired = true;
                             }
 
                             if (vm.form.select.asuransibedah.data.length < 1) {
@@ -1488,7 +1483,7 @@
                                 vm.form.select.asuransibedah.isrequired = false;
                             } else if (vm.form.select.asuransibedah.data.length > 0) {
                                 vm.form.select.asuransibedah.disabled = false;
-                                vm.form.select.asuransibedah.isrequired = false;
+                                vm.form.select.asuransibedah.isrequired = true;
                             }
                         })
                         .catch(function(error) {
@@ -1500,12 +1495,12 @@
             action: function() {
                 let next = true;
                 for (const key in vm.form) {
-                    if (key != 'select') {
-                        // if (vm.form[key].required != '') {
-                        //     if (vm.form[key].value == '') {
-                        //         next = false;
-                        //     }
-                        // }
+                    // if (key != 'select') {
+                    //     if (vm.form[key].required != '') {
+                    //         if (vm.form[key].value == '') {
+                    //             next = false;
+                    //         }
+                    //     }
                     // } else {
                         for (const keyselect in vm.form.select) {
                             if (vm.form.select[keyselect].isrequired) {
@@ -1515,7 +1510,7 @@
                             }
                         }
                     }
-                }
+                // }
 
                 //if (vm.listdata.length < 1 || vm.listobat.length < 1) { next = false; }
                 //if (vm.listdata.length < 1) { next = false; }
@@ -1655,8 +1650,9 @@
                     vm.form.jenis_kamar_jalan_uuid = '';
                     vm.form.nama_jenis_jalan_kamar = '';
                 }
-
-                //alert('sdf');
+                if (vm.digitalSignature!='') {
+                     vm.form.ttd_dokter = vm.digitalSignature;
+                 }
                 vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail, vm.listdata, vm.listdatajalan, vm
                     .listobat, testing), 'add');
             },
@@ -1674,7 +1670,8 @@
                 let keys = ['carabayartindakanrawatjalan', 'tindakanrawatjalan', 'apotek', 'apotekracikan',
                     'paketbedah', 'carabayar', 'asuransi', 'pilihanplan'
                 ]
-
+                console.log("keys");
+                console.log(keys);
                 /* Setting index DB */
                 vm.updatedblocal(keys, response);
 
@@ -1734,11 +1731,8 @@
                     vm.form.nama_jenis_jalan_kamar = vm.detail.nama_jenis_kamar;
 
                     vm.form.select.kamarinapjalan.value = vm.detail.kamar_inap_uuid;
-                    vm.form.select.kamarinapjalan.label = vm.detail.nama_jenis_kamar + ' - ' + vm.detail.kamar_inap_nama;
-
-
-      
-
+                    vm.form.select.kamarinapjalan.label = vm.detail.nama_jenis_kamar + ' - ' + vm.detail
+                        .kamar_inap_nama;
 
                     vm.datakamarjalan = {
                         uuid: vm.detail.kamar_inap_uuid,
@@ -1750,8 +1744,6 @@
                     }
 
                 }
-
-                
 
 
                 let obats = response.data.obat;
@@ -1803,8 +1795,6 @@
                 }
 
                 let onedaycare = response.data.onedaycare;
-                console.log("response");
-                console.log(response.data);
 
                 if (onedaycare) {
                     vm.form.select.paketbedah.value = onedaycare.layanan_uuid;
@@ -1832,36 +1822,6 @@
                 
  
                 }
-                let bedah = response.data.bedah;
-
-                if (bedah) {
-                    vm.form.select.paketbedahbedah.value = bedah.layanan_uuid;
-                    vm.form.select.paketbedahbedah.label = bedah.nama_layanan;
-                    vm.form.hargapaketbedah = bedah.tarif;
-                    vm.form.keteranganbedahbedah.value = bedah.keterangan;
-                    vm.form.penjadwalanbedah.value = bedah.tanggal;
-                    vm.form.waktubedah.value = bedah.waktu;
-                    vm.form.select.carabayarbedah.value = bedah.carabayar_uuid;
-                    vm.form.select.carabayarbedah.label = bedah.carabayar_nama;
-                    vm.form.select.asuransibedah.value = bedah.asuransi_uuid;
-                    vm.form.select.asuransibedah.label = bedah.nama_asuransi;
-                    vm.form.select.kamarinap.label = bedah.nama_jenis_kamar + ' - ' + bedah.kamar_inap_nama; 
-                   ;
-
-                } else {
-                    vm.form.select.paketbedahbedah.value = '';
-                    vm.form.select.paketbedahbedah.label = 'Silahkan Pilih';
-                    vm.form.hargapaketbedah = '';
-                    vm.form.keteranganbedah.value = '';
-                    vm.form.penjadwalanbedah.value = '';
-                    vm.form.waktubedah.value = '';
-                    vm.form.select.carabayarbedah.value = '';
-                    vm.form.select.carabayarbedah.label = 'Silahkan Pilih';
-                    vm.form.select.asuransibedah.value = '';
-                    vm.form.select.asuransibedah.label = 'Silahkan Pilih';
-
-
-                }
 
 
                 let temps = response.data.kunjungan;
@@ -1888,6 +1848,7 @@
                     vm.form.ocularsinistraconjunctiva.value = vm.nullcheck(temps.ocular_sinistra_conjunctiva)
                     vm.form.ocularsinistracornea.value = vm.nullcheck(temps.ocular_sinistra_cornea)
                     vm.form.ocularsinistralensa.value = vm.nullcheck(temps.ocular_sinistra_lensa)
+                    vm.form.ttd_dokter = vm.nullcheck(temps.ttd_dokter)
                     vm.form.ocularsinistravitreous.value = vm.nullcheck(temps.ocular_sinistra_vitreous)
                     vm.form.ocularsinistrafunduscopy.value = vm.nullcheck(temps.ocular_sinistra_funduscopy)
                     vm.form.ocularsinistrabilikmatadepan.value = vm.nullcheck(temps
@@ -1907,7 +1868,7 @@
                         vm.form.select.pilihanplan.label = 'Silahkan Pilih';
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                        this.showJalan = false;
+                        this.showPulang = false;
                     }
                     else {
                         vm.form.select.pilihanplan.value = vm.nullcheck(temps.pilihan_plan);
@@ -1917,21 +1878,21 @@
                         if (planning === 'Operasi') {
                             this.showOperasi = true; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                            this.showJalan = false; // Menyembunyikan div dengan kelas 'Operasi'
+                            this.showPulang = false; // Menyembunyikan div dengan kelas 'Operasi'
                         } else if (planning === 'Rawat Inap') {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = true; // Menyembunyikan div dengan kelas 'Operasi'
-                            this.showJalan = false; // Menyembunyikan div dengan kelas 'Operasi'
+                            this.showPulang = false; // Menyembunyikan div dengan kelas 'Operasi'
 
                         } else if (planning === 'Rawat Inap Operasi') {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                            this.showJalan = true; // Menyembunyikan div dengan kelas 'Operasi'
+                            this.showPulang = true; // Menyembunyikan div dengan kelas 'Operasi'
 
                         } else {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
-                            this.showJalan = false;
+                            this.showPulang = false;
 
                         }
                     }
@@ -1952,6 +1913,7 @@
             },
 
             dialog: function() {
+                console.log("KONTOL")
                 let text = '',
                     button = '';
                 if (vm.form.posisi == 'adddata') {
