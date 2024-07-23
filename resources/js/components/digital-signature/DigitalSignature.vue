@@ -1,22 +1,26 @@
 <template>
   <div>
-    <vueSignature
-      ref="signature"
-      :sigOption="option"  
-      :disabled="disabled"
-    ></vueSignature>
-    <br>
     <div v-if="disabled == false">
-        <button  class="tooltip btn-success" @click="save">Simpan</button>
-        <button  class="tooltip btn-danger" @click="clear">Hapus</button>
-    </div> 
+      <vueSignature
+        ref="signature"
+        :sigOption="option"
+        :disabled="disabled"
+      ></vueSignature>
+    </div>
+    <div v-if="disabled == true && digitalSignatureResult != '' ">
+      <img :src="digitalSignatureResult" alt="Digital Signature Result">
+    </div>
+    <br />
+    <div v-if="disabled == false">
+      <button class="tooltip btn-success" @click="save">Simpan</button>
+      <button class="tooltip btn-danger" @click="clear">Hapus</button>
+    </div>
     <div v-if="disabled">
-     <button  class="tooltip btn-success"  @click="handleDisabled">Ubah</button>
+      <button class="tooltip btn-success" @click="handleDisabled">Ubah</button>
     </div>
   </div>
 </template>
 <script>
-
 import vueSignature from "vue-signature";
 export default {
   name: "DigitalSignature",
@@ -31,17 +35,16 @@ export default {
       },
       disabled: true,
       dataUrl: "https://avatars2.githubusercontent.com/u/17644818?s=460&v=4",
+      digitalSignatureResult: "",
     };
   },
   methods: {
     save() {
       var _this = this;
-      var png = _this.$refs.signature.save();
-      var jpeg = _this.$refs.signature.save("image/jpeg");
       var svg = _this.$refs.signature.save("image/svg+xml");
-      console.log(png);
+      _this.digitalSignatureResult = svg;
+      _this.$emit("onSaveDigitalSignature", svg);
       _this.handleDisabled();
-
     },
     clear() {
       var _this = this;

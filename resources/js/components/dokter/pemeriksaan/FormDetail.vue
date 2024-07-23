@@ -20,7 +20,9 @@
                         <label style="font-weight:bold;">Tanda tangan dokter</label>
                         <img v-if="form.ttd_dokter" :src="form.ttd_dokter" alt="ttd dokter" height="100" width="400">
                         <div v-if="!form.ttd_dokter">
-                            <DigitalSignature style="height:250px" @onSaveDigitalSignature="saveDigitalSignature" />
+                            <DigitalSignature style="height:250px" 
+                            @onSaveDigitalSignature="saveDigitalSignature"
+                            />
                         </div>
                     </div>
 
@@ -642,6 +644,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="" v-if="tab.content.planning">
                                 <div class="grid">
                                     <div class="col-12">
@@ -776,6 +779,36 @@
                                     <div class="col-8">
                                         <h3 style="font-size: 15px; margin-top: 20px; font-weight: bold;">Silahkan Isi
                                             Tindakan/Layanan dan Obat</h3>
+                            </div>
+
+                            <div class="content-tab-in" v-if="tab.content.cppt">
+                                <div class="grid">
+                                    <div class="col-6 form-mr">
+                                        <label for=""> SUBJECT </label>
+                                            <ckeditor
+                                            v-model="form.subject"
+                                            :editor="editor">
+                                            </ckeditor>
+                                        <br/>
+                                        <label for=""> ASSESSMENT </label>
+                                            <ckeditor
+                                            v-model="form.subject"
+                                            :editor="editor">
+                                            </ckeditor>
+                                    </div>
+                                    <div class="col-6">
+
+                                        <label for=""> OBJECT </label>
+                                            <ckeditor
+                                            v-model="form.subject"
+                                            :editor="editor">
+                                            </ckeditor>
+                                        <br/>
+                                        <label for=""> PLANNING </label>
+                                            <ckeditor
+                                            v-model="form.subject"
+                                            :editor="editor">
+                                            </ckeditor>
                                     </div>
                                 </div>
                             </div>
@@ -783,6 +816,30 @@
                         </div>
 
                     </div>
+                </div>
+
+
+                    <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
+                        <div class="col-8"></div>
+                        <div class="col-4" style="text-align: right" v-if="ishide">
+                            <button class="button-modal-page button-modal-red" v-if="tabIndex > 0" v-on:click="previouseButton()">{{ previous
+                                }}</button>
+                            <button class="button-modal-page button-modal-green" v-if="tabIndex < tab.button.length - 1"  v-on:click="nextButton()">{{ next
+                                }}</button>
+
+                            <button  v-if="tabIndex == tab.button.length-1" class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red
+                                }}</button>
+                            <button  v-if="tabIndex == tab.button.length-1" class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
+                                }}</button>
+                            <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
+                        </div>
+                        <div class="col-4" style="text-align: right" v-else>
+                            <button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan
+                                Kunjungan</button>
+                            <button class="button-modal-page button-modal-green" v-on:click="edit()">Edit Data</button>
+                        </div>
+                    </div>
+
                 </div>
 
 
@@ -848,6 +905,8 @@
         updatedbdokter
     } from '../../../module/Indexdb.js';
 
+    import CKEditor from '@ckeditor/ckeditor5-vue';
+    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
     var vm, body;
     export default {
@@ -860,6 +919,7 @@
             Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
             Textarea: defineAsyncComponent(() => import('../../../section/Textarea.vue')),
             DigitalSignature: defineAsyncComponent(() => import('../../digital-signature/DigitalSignature.vue')),
+            ckeditor: CKEditor.component,
 
         },
         computed: {
@@ -960,6 +1020,10 @@
                     //     { value: 'Operasi', label: 'Operasi' }
                     // ]
                 },
+                editor: ClassicEditor,
+                tabIndex:0,
+                previous: 'Sebelumnya',
+                next: 'Selanjutnya',
                 green: 'Save Data',
                 red: 'Clear Form',
                 pendings: 'Ubah Menjadi Pending',
@@ -1044,6 +1108,11 @@
                             label: 'Planning',
                             class: 'tab-no-active'
                         },
+                        {
+                            value: 'cppt',
+                            label: 'CPPT',
+                            class: 'tab-no-active'
+                        },
 
                     ],
                     // racikan: false,
@@ -1058,7 +1127,8 @@
                         racikan: false,
                         onedaycare: false,
                         rawatinap: false,
-                        planning: false
+                        planning: false,
+                        cppt: false
                     }
                 },
                 typingTimer: null,
@@ -1241,6 +1311,17 @@
                     vm.title_racikan = '';
                     vm.index_racikan = 0;
                 }
+            },
+
+            previouseButton: function(){
+                vm.tabIndex = --vm.tabIndex;
+                var tab = vm.tab.button[vm.tabIndex];
+                this.changesTab(tab.value, vm.tabIndex, tab.class)
+            },
+            nextButton: function(){
+                vm.tabIndex = ++vm.tabIndex;
+                var tab = vm.tab.button[vm.tabIndex];
+                this.changesTab(tab.value, vm.tabIndex, tab.class)
             },
 
             greenbutton: function() {
@@ -1653,6 +1734,8 @@
                 if (vm.digitalSignature!='') {
                      vm.form.ttd_dokter = vm.digitalSignature;
                  }
+
+                console.log("PARSE FORM: ", vm.form);
                 vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail, vm.listdata, vm.listdatajalan, vm
                     .listobat, testing), 'add');
             },

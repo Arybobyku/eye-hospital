@@ -353,6 +353,7 @@ class PemeriksaanCtrl extends Controller
                     'pemeriksaan_prognosa' => $request->pemeriksaan_prognosa,
                     'anamnese' => $request->anamnese,
                     'pilihan_plan' => $request->pilihan_plan,
+                    'ttd_dokter' => $request->ttd_dokter,
                 ];
 
                 $update = PemeriksaanDokter::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
@@ -1057,6 +1058,7 @@ class PemeriksaanCtrl extends Controller
                 $item->nama_pasien = $request->nama_pasien;
                 $item->pengguna_uuid = $request->pengguna_uuid;
                 $item->nama_dokter = $request->nama_dokter;
+                $item->ttd_dokter = $request->ttd_dokter;
 
                 $item->tanggal = date('Y-m-d');
                 $item->waktu = date('H:i');

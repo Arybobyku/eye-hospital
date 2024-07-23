@@ -1,7 +1,7 @@
 export const formlaporanpembedahan = () => {
 	return {
 		uuid: '',
-		bedah_uuid: '',
+		bedah_uuid: '', ja_umum: '', ja_bsp: '', ja_csp: '', ja_epidural: '', ja_lokal: '', ja_spiral: '', penggunaanamhpkhusus: '', komplikasiintraoperasi:'',
 		ruangoperasi: { 
 			title: 'Ruang Operasi', for_id: 'form_'+'ruangoperasi', type: 'text', required: '', 
 			name: 'ruangoperasi', value: '', disabled: false, show: true, kinds: ''
@@ -37,10 +37,6 @@ export const formlaporanpembedahan = () => {
 		perawatinstrument: { 
 			title: 'Perawat Instrument', for_id: 'form_'+'perawatinstrument', type: 'text', required: '', 
 			name: 'perawatinstrument', value: '', disabled: false, show: true, kinds: ''
-		},
-		jenisanastesi: { 
-			title: 'Jenis Anastesi', for_id: 'form_'+'jenisanastesi', type: 'text', required: '', 
-			name: 'jenisanastesi', value: '', disabled: false, show: true, kinds: ''
 		},
 		diagnosaprabedah: { 
 			title: 'Diagnosa Pra-Bedah', for_id: 'form_'+'diagnosaprabedah', type: 'text', required: '', 
@@ -94,17 +90,9 @@ export const formlaporanpembedahan = () => {
 			title: 'Teknik Operasi dan Temuan Intra/Operasi', for_id: 'form_'+'teknikoperasidantemuanintra', type: 'text', required: '', 
 			name: 'teknikoperasidantemuanintra', value: '', disabled: false, show: true, kinds: ''
 		},
-		penggunaanamhpkhusus: { 
-			title: 'Penggunaan AMHP Khusus', for_id: 'form_'+'penggunaanamhpkhusus', type: 'text', required: '', 
-			name: 'penggunaanamhpkhusus', value: '', disabled: false, show: true, kinds: ''
-		},
 		jenisdanjumlahamhpkhusus: { 
 			title: 'Jenis dan Jumlah AMHP Khusus', for_id: 'form_'+'jenisdanjumlahamhpkhusus', type: 'text', required: '', 
 			name: 'jenisdanjumlahamhpkhusus', value: '', disabled: false, show: true, kinds: ''
-		},
-		komplikasiintraoperasi: { 
-			title: 'Komplikasi Intra Operasi', for_id: 'form_'+'komplikasiintraoperasi', type: 'text', required: '', 
-			name: 'komplikasiintraoperasi', value: '', disabled: false, show: true, kinds: ''
 		},
 		penjabarankomplikasiintraoperasi: { 
 			title: 'Penjabaran Komplikasi Intra-Operasi', for_id: 'form_'+'penjabarankomplikasiintraoperasi', type: 'text', required: '', 
@@ -157,9 +145,9 @@ export const formchecklistkesiapanbedah = () => {
 	return {
 		uuid: '',
 		bedah_uuid: '',
-		ruang: { 
-			title: 'Ruang', for_id: 'form_'+'ruang', type: 'text', required: '', 
-			name: 'ruang', value: '', disabled: false, show: true, kinds: ''
+		ruangan: { 
+			title: 'Ruang', for_id: 'form_'+'ruangan', type: 'text', required: '', 
+			name: 'ruangan', value: '', disabled: false, show: true, kinds: ''
 		},
 		kamar: { 
 			title: 'Kamar', for_id: 'form_'+'kamar', type: 'text', required: '', 
@@ -368,12 +356,12 @@ export const formperawatanperioperative = () => {
 		},
 
 		perawatruangan: { 
-			title: 'Keterangan', for_id: 'form_'+'perawatruangan', type: 'text', required: '', 
+			title: 'Nama Perawat Ruangan', for_id: 'form_'+'perawatruangan', type: 'text', required: '', 
 			name: 'Nama Perawat Ruangan', value: '', disabled: false, show: true, kinds: ''
 		},
 
 		perawatkamarbedah: { 
-			title: 'Nama Perawa Kamar Bedah', for_id: 'form_'+'perawatkamarbedah', type: 'text', required: '', 
+			title: 'Nama Perawat Kamar Bedah', for_id: 'form_'+'perawatkamarbedah', type: 'text', required: '', 
 			name: 'perawatkamarbedah', value: '', disabled: false, show: true, kinds: ''
 		},
 
@@ -599,12 +587,14 @@ export const formkeselamatanbedah = () => {
 	return {
 		uuid: '',
 		bedah_uuid: '',
+		sibagian1:'', sibagian2:'', sibagian3:'', sibagian4:'', sibagian5:'', sibagian6:'', sibagian7:'', tobagian7:'', tobagian8:'', tobagian1:'', tobagian21:'', tobagian22:'', tobagian41:'', tobagian42:'', tobagian5:'', tobagian6:'',
+		sobagian1:'', sobagian2:'', sobagian3:'', sobagian4:'', sobagian5:'',
 		namaoperator: { 
-			title: 'Nama Operator', for_id: 'form_'+'namaoperator', type: 'text', required: '', 
+			title: 'Nama Dokter Bedah', for_id: 'form_'+'namaoperator', type: 'text', required: '', 
 			name: 'namaoperator', value: '', disabled: false, show: true, kinds: ''
 		},
 		namaahlianastesi: { 
-			title: 'Nama Ahli Anastesi', for_id: 'form_'+'namaahlianastesi', type: 'text', required: '', 
+			title: 'Nama Dokter Anastesi', for_id: 'form_'+'namaahlianastesi', type: 'text', required: '', 
 			name: 'namaahlianastesi', value: '', disabled: false, show: true, kinds: ''
 		},
 		diagnosismedis: { 
@@ -616,137 +606,91 @@ export const formkeselamatanbedah = () => {
 			name: 'tindakanoperasi', value: '', disabled: false, show: true, kinds: ''
 		},
 		asistenoperasi: { 
-			title: 'Asisten Operasi', for_id: 'form_'+'asistenoperasi', type: 'text', required: '', 
+			title: 'Perawat Anastesi', for_id: 'form_'+'asistenoperasi', type: 'text', required: '', 
 			name: 'asistenoperasi', value: '', disabled: false, show: true, kinds: ''
 		},
 		scrubnurses: { 
-			title: 'Scrub Nurses', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
+			title: 'Perawat Instrument', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
 			name: 'scrubnurses', value: '', disabled: false, show: true, kinds: ''
 		},
-
-		sibagian1: { 
-			title: 'Apakah pasien sudah dikonfirmasi identitas, lokasi, prosedur operasi dan informed consent?', for_id: 'form_'+'sibagian1', type: 'text', required: '', 
-			name: 'sibagian1', value: 'Ya', disabled: false, show: true, kinds: ''
-		},
-
-		sibagian2: { 
-			title: 'Apakah area yang akan dioperasi sudah ditandai?', for_id: 'form_'+'sibagian2', type: 'text', required: '', 
-			name: 'sibagian2', value: 'Ya', disabled: false, show: true, kinds: ''
-		},
-
-		sibagian3: { 
-			title: 'Apakah mesin anastesi dan obat-obat emergensi sudah diperiksa dan lengkap>', for_id: 'form_'+'sibagian3', type: 'text', required: '', 
-			name: 'sibagian3', value: 'Ya', disabled: false, show: true, kinds: ''
-		},
-
-		sibagian4: { 
-			title: 'Apakah pasien sudah memakai "pulse oksimetri" dan berfungsi dengan baik?', for_id: 'form_'+'sibagian4', type: 'text', required: '', 
-			name: 'sibagian4', value: 'Ya', disabled: false, show: true, kinds: ''
-		},
-
-		sibagian5: { 
-			title: 'Riwayat Alergi?', for_id: 'form_'+'sibagian5', type: 'text', required: '', 
-			name: 'sibagian5', value: 'Ya', disabled: false, show: true, kinds: ''
-		},
-
-		sibagian6: { 
-			title: 'Kesulitan bernafas atau resiko aspirasi?', for_id: 'form_'+'sibagian6', type: 'text', required: '', 
-			name: 'sibagian6', value: 'Ya, dan tersedia peralatan/bantuan', disabled: false, show: true, kinds: ''
-		},
-
-		sibagian7: { 
-			title: 'Resiko kehilangan darah > 500 ml (7ml/kg pada anak-anak)', for_id: 'form_'+'sibagian7', type: 'text', required: '', 
-			name: 'sibagian7', value: 'Ya, dan sudah tersedia akses intravena/CVC serta tersedia persedian darah/cairan', disabled: false, show: true, kinds: ''
+		sijam: { 
+			title: 'Waktu', for_id: 'form_'+'sijam', type: 'text', required: '', 
+			name: 'sijam', value: '', disabled: false, show: true, kinds: ''
 		},
 
 		sinama: { 
-			title: 'Nama yang melakukan SIGN-IN', for_id: 'form_'+'sinama', type: 'text', required: '', 
+			title: 'Nama Perawat', for_id: 'form_'+'sinama', type: 'text', required: '', 
 			name: 'sinama', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		tobagian1: { 
-			title: 'Apakah antibiotik profilaksis sudah diberikan dalam 60 menit terakhir?', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
-			name: 'tobagian1', value: 'Ya', disabled: false, show: true, kinds: ''
-		},
-
-		tobagian21: { 
-			title: 'Berapa lama tindakan ini akan dikerjakan?', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
-			name: 'tobagian21', value: '', disabled: false, show: true, kinds: ''
-		},
-
-		tobagian22: { 
-			title: 'Berapa perkiraan darah yang hilang?', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
-			name: 'tobagian22', value: '', disabled: false, show: true, kinds: ''
-		},
-
 		tobagian23: { 
-			title: 'Apakah ada keadaan kritis atau langkah-langkah tidak terduga yang perlu diketahui oleh tim?', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
+			title: 'Apakah tindakan beresiko atau tindakan tidak rutin yang akan dilakukan?', for_id: 'form_'+'tobagian23', type: 'text', required: '', 
 			name: 'tobagian23', value: '', disabled: false, show: true, kinds: ''
 		},
 
 		tobagian3: { 
-			title: 'Apakah ada sesuatu hal khususyang perlu diwaspadai/diperhatikan pada pasien ini?', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
+			title: 'Berapa lama tindakan ini akan dikerjakan?', for_id: 'form_'+'tobagian3', type: 'text', required: '', 
 			name: 'tobagian3', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		tobagian41: { 
-			title: 'Apakah sterilisasi instrument telah dikonfirmasi (Berdasarkan indicator sterilisasi)', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
-			name: 'tobagian41', value: '', disabled: false, show: true, kinds: ''
-		},
-
-		tobagian42: { 
-			title: 'Apakah ada masalah peralatan atau hal yang perlu diperhatikan?', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
-			name: 'tobagian42', value: '', disabled: false, show: true, kinds: ''
-		},
-
-		tobagian5: { 
-			title: 'Apakah hasil radiologin yang diperlukan sudah ada?', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
-			name: 'tobagian5', value: 'Ya', disabled: false, show: true, kinds: ''
-		},
-
-		tobagian6: { 
-			title: 'Apakah implant yang diperlukan sudah ada?', for_id: 'form_'+'scrubnurses', type: 'text', required: '', 
-			name: 'tobagian6', value: 'Ya', disabled: false, show: true, kinds: ''
-		},
-
 		tonama: { 
-			title: 'Nama yang melakukan TIME-OUT', for_id: 'form_'+'tonama', type: 'text', required: '', 
+			title: 'Perawat Sirkuler', for_id: 'form_'+'tonama', type: 'text', required: '', 
 			name: 'tonama', value: '', disabled: false, show: true, kinds: ''
 		},
-
-		sobagian1: { 
-			title: 'Apakah nama tindakan yang dilakukan?', for_id: 'form_'+'sobagian1', type: 'text', required: '', 
-			name: 'sobagian1', value: 'Ya', disabled: false, show: true, kinds: ''
+		tojam: { 
+			title: 'Waktu', for_id: 'form_'+'tojam', type: 'text', required: '', 
+			name: 'tojam', value: '', disabled: false, show: true, kinds: ''
+		},
+		sojam: { 
+			title: 'Waktu', for_id: 'form_'+'sojam', type: 'text', required: '', 
+			name: 'sojam', value: '', disabled: false, show: true, kinds: ''
+		},
+	}
+}
+export const formlaporaninjeksiantivega = () => {
+	return {
+		uuid: '',
+		bedah_uuid: '', os:'', od:'',
+	
+		namaoperator: { 
+			title: 'Nama Operator', for_id: 'form_'+'namaoperator', type: 'text', required: '', 
+			name: 'namaoperator', value: '', disabled: false, show: true, kinds: ''
+		},
+		jamoperasi: { 
+			title: 'Jam Operasi', for_id: 'form_'+'jamoperasi', type: 'text', required: '', 
+			name: 'jamoperasi', value: '', disabled: false, show: true, kinds: ''
+		},
+		lamaoperasi: { 
+			title: 'Lama Operasi', for_id: 'form_'+'lamaoperasi', type: 'text', required: '', 
+			name: 'lamaoperasi', value: '', disabled: false, show: true, kinds: ''
+		},
+		diagnosis: { 
+			title: 'Diagnosis', for_id: 'form_'+'diagnosis', type: 'text', required: '', 
+			name: 'diagnosis', value: '', disabled: false, show: true, kinds: ''
+		},
+		asisten: { 
+			title: 'Asisten', for_id: 'form_'+'asisten', type: 'text', required: '', 
+			name: 'asisten', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		sobagian2: { 
-			title: 'Apakah telah dikonfirmasi bahwa perhitungan instrumen, kasa, dan benda tajam sudah lengkap?', for_id: 'form_'+'sobagian2', type: 'text', required: '', 
-			name: 'sobagian2', value: 'Ya', disabled: false, show: true, kinds: ''
+		jenisoperasi: { 
+			title: 'Jenis Operasi', for_id: 'form_'+'jenisoperasi', type: 'text', required: '', 
+			name: 'jenisoperasi', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		sobagian3: { 
-			title: 'Apakah specimen telah diberi pasien? (Baca label specimen dan nama pasien dengan keras)', for_id: 'form_'+'sobagian3', type: 'text', required: '', 
-			name: 'sobagian3', value: 'Ya', disabled: false, show: true, kinds: ''
+		anesthesia: { 
+			title: 'Anesthesia', for_id: 'form_'+'anesthesia', type: 'text', required: '', 
+			name: 'anesthesia', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		sobagian4: { 
-			title: 'Apakah ada permasalahan dengan peralatan yang perlu diperhatikan?', for_id: 'form_'+'sobagian4', type: 'text', required: '', 
-			name: 'sobagian4', value: 'Ya', disabled: false, show: true, kinds: ''
+		anesthesiologist: { 
+			title: 'Anesthesiologist', for_id: 'form_'+'anesthesiologist', type: 'text', required: '', 
+			name: 'anesthesiologist', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		sobagian41: { 
-			title: 'Masukkan keterangan lain jika ada (Terkait permasalahan dengan peralatan)', for_id: 'form_'+'sobagian41', type: 'text', required: '', 
-			name: 'sobagian41', value: '', disabled: false, show: true, kinds: ''
-		},
-
-		sobagian5: { 
-			title: 'Aapakah hal  yang penting untuk pemulihan dan penanganan perawatan pasien ini?', for_id: 'form_'+'sobagian5', type: 'text', required: '', 
-			name: 'sobagian5', value: 'Ya', disabled: false, show: true, kinds: ''
-		},
-
-		sobagian51: { 
-			title: 'Masukkan keterangan lain jika ada', for_id: 'form_'+'sobagian51', type: 'text', required: '', 
-			name: 'sobagian51', value: '', disabled: false, show: true, kinds: ''
+		intravitreal: { 
+			title: '6. Dilakukan injeksi avastin / intravitreal sebanyak', for_id: 'form_'+'intravitreal', type: 'text', required: '', 
+			name: 'intravitreal', value: '', disabled: false, show: true, kinds: ''
 		},
 	}
 }
