@@ -20,21 +20,9 @@
                         <label style="font-weight:bold;">Tanda tangan dokter</label>
                         <img v-if="form.ttd_dokter" :src="form.ttd_dokter" alt="ttd dokter" height="100" width="400">
                         <div v-if="!form.ttd_dokter">
-                            <DigitalSignature style="height:250px" 
-                            @onSaveDigitalSignature="saveDigitalSignature"
-                            />
+                            <DigitalSignature style="height:250px" @onSaveDigitalSignature="saveDigitalSignature" />
                         </div>
                     </div>
-
-
-                    <!-- <div class="col-6 form-mr" style="margin-top: 10px;">
-      <Inputed :ref="form.panjar.name" :form="form.panjar"></Inputed>
-     </div>
-
-     <div class="col-6" style="margin-top: 10px;">
-      <Inputed :ref="form.keteranganpanjar.name" :form="form.keteranganpanjar"></Inputed>
-     </div> -->
-
 
                     <div class="col-8">
 
@@ -349,10 +337,7 @@
                             <div class="content-tab-in" v-if="tab.content.tindakan">
                                 <div class="grid">
                                     <div class="col-12">
-                                        <!-- <Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)"
-           :ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-           :selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.db_table)"
-           ></Selected> -->
+
 
                                         <Selected
                                             v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)"
@@ -516,26 +501,6 @@
                                                     </button>
                                                 </div>
 
-                                                <!-- <template v-if="tempobatracikan && tempobatracikan.jenis == 'Obat'">
-             <div class="col-3"><Inputed :ref="form.komposisi.name" :form="form.komposisi"></Inputed></div>
-             <div class="col-3 form-ml">
-              <Selected v-on:click="selectbox($event, form.select.satuankomposisi.name, form.select.satuankomposisi.statics)"
-               :ref="form.select.satuankomposisi.name" @selecteditem="selecteditem" @selectclear="selectclear"
-               :selection="form.select.satuankomposisi" v-on:keyup="selectfilter($event, form.select.satuankomposisi.name)"></Selected>
-             </div>
-             <div class="col-3 form-ml"><Inputed :ref="form.dosisdiperlukan.name" :form="form.dosisdiperlukan"></Inputed></div>
-             <div class="col-3 form-ml">
-              <Selected v-on:click="selectbox($event, form.select.satuandiperlukan.name, form.select.satuandiperlukan.statics)"
-               :ref="form.select.satuandiperlukan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-               :selection="form.select.satuandiperlukan" v-on:keyup="selectfilter($event, form.select.satuandiperlukan.name)"></Selected>
-             </div>
-             
-             <div class="col-12">
-              <div style="background: rgba(107, 114, 21, 0.8); border-radius: 10px; width: 100%; height: auto; padding: 10px; color: #FFF;">
-               {{ htgquantity }}
-              </div>
-             </div>
-            </template> -->
 
                                             </div>
                                         </div>
@@ -594,9 +559,6 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th>Nama Obat</th>
-                                                                    <!-- <th>Komposisi dikemasan</th>
-                 <th>Dosis yang diperlukan</th>
-                 -->
                                                                     <th>Qty</th>
                                                                     <th>Harga</th>
                                                                     <th>Total</th>
@@ -606,8 +568,7 @@
                                                             <tbody v-if="item.informasi.length > 0">
                                                                 <tr v-for="(itemin, indexin) in item.informasi">
                                                                     <td>{{ itemin . nama }}</td>
-                                                                    <!-- <td>{{ itemin . komposisi }} {{ itemin . nama_satuan_komposisi }}</td>
-                 <td>{{ itemin . dosis_diperlukan }} {{ itemin . nama_satuan_diperlukan }}</td> -->
+
                                                                     <td>{{ itemin . jumlah_kecil }}
                                                                         {{ itemin . nama_satuan_kecil }}</td>
                                                                     <td>{{ formatrupiah(parseInt(itemin . hja_resep) .
@@ -779,87 +740,71 @@
                                     <div class="col-8">
                                         <h3 style="font-size: 15px; margin-top: 20px; font-weight: bold;">Silahkan Isi
                                             Tindakan/Layanan dan Obat</h3>
+                                    </div>
+
+
+                                </div>
+
+
                             </div>
 
                             <div class="content-tab-in" v-if="tab.content.cppt">
                                 <div class="grid">
                                     <div class="col-6 form-mr">
                                         <label for=""> SUBJECT </label>
-                                            <ckeditor
-                                            v-model="form.subject"
-                                            :editor="editor">
-                                            </ckeditor>
-                                        <br/>
+                                        <ckeditor v-model="form.subject" :editor="editor">
+                                        </ckeditor>
+                                        <br />
                                         <label for=""> ASSESSMENT </label>
-                                            <ckeditor
-                                            v-model="form.subject"
-                                            :editor="editor">
-                                            </ckeditor>
+                                        <ckeditor v-model="form.subject" :editor="editor">
+                                        </ckeditor>
                                     </div>
                                     <div class="col-6">
 
                                         <label for=""> OBJECT </label>
-                                            <ckeditor
-                                            v-model="form.subject"
-                                            :editor="editor">
-                                            </ckeditor>
-                                        <br/>
+                                        <ckeditor v-model="form.subject" :editor="editor">
+                                        </ckeditor>
+                                        <br />
                                         <label for=""> PLANNING </label>
-                                            <ckeditor
-                                            v-model="form.subject"
-                                            :editor="editor">
-                                            </ckeditor>
+                                        <ckeditor v-model="form.subject" :editor="editor">
+                                        </ckeditor>
                                     </div>
                                 </div>
                             </div>
-
-                        </div>
-
-                    </div>
-                </div>
-
-
-                    <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
-                        <div class="col-8"></div>
-                        <div class="col-4" style="text-align: right" v-if="ishide">
-                            <button class="button-modal-page button-modal-red" v-if="tabIndex > 0" v-on:click="previouseButton()">{{ previous
-                                }}</button>
-                            <button class="button-modal-page button-modal-green" v-if="tabIndex < tab.button.length - 1"  v-on:click="nextButton()">{{ next
-                                }}</button>
-
-                            <button  v-if="tabIndex == tab.button.length-1" class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red
-                                }}</button>
-                            <button  v-if="tabIndex == tab.button.length-1" class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
-                                }}</button>
-                            <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
-                        </div>
-                        <div class="col-4" style="text-align: right" v-else>
-                            <button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan
-                                Kunjungan</button>
-                            <button class="button-modal-page button-modal-green" v-on:click="edit()">Edit Data</button>
                         </div>
                     </div>
-
                 </div>
-
 
                 <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
                     <div class="col-8"></div>
                     <div class="col-4" style="text-align: right" v-if="ishide">
-                        <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red
+                        <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
+                            v-on:click="previouseButton()">{{ previous
                             }}</button>
-                        <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
+                        <button class="button-modal-page button-modal-green" v-if="tabIndex < tab.button.length - 1"
+                            v-on:click="nextButton()">{{ next
+                            }}</button>
+
+                        <button v-if="tabIndex == tab.button.length-1" class="button-modal-page button-modal-red"
+                            v-on:click="redbutton()">{{ red
+                            }}</button>
+                        <button v-if="tabIndex == tab.button.length-1" class="button-modal-page button-modal-green"
+                            v-on:click="greenbutton()">{{ green
                             }}</button>
                         <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
                     </div>
                     <div class="col-4" style="text-align: right" v-else>
                         <button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan
                             Kunjungan</button>
-                        <button class="button-modal-page button-modal-green" v-on:click="edit()">Edit Data</button>
+                        <button class="button-modal-page button-modal-green" v-on:click="edit()">Edit
+                            Data</button>
                     </div>
                 </div>
-
             </div>
+
+
+
+
             <Loader ref="Loader"></Loader>
         </div>
     </div>
