@@ -50,6 +50,7 @@ export default {
 				add: '/rawatjalan/pemeriksaan/add',
 				addperawat: '/rawatjalan/pemeriksaan/addperawat',
 				detail: '/rawatjalan/pemeriksaan/detail',
+				detailperawat: '/rawatjalan/pemeriksaan/detailperawat',
 				histori: '/rawatjalan/pemeriksaan/histori',
 				call: '/rawatjalan/pemeriksaan/call',
 			}, url: '', data: null
@@ -130,7 +131,7 @@ export default {
 				setTimeout(() => { vm.loadingModal('formdetailperawat'); }, 250, this);
 				vm.attach.data = new FormData();
 				vm.attach.data.append('uuid', data.uuid);
-				vm.attach.url = vm.attach.link.detail;
+				vm.attach.url = vm.attach.link.detailperawat;
 				vm.executions();
 			}
 			else if (posisi == 'detail') {
@@ -238,6 +239,7 @@ export default {
 			}
 			else if (vm.position == 'updatedataperawat') {
 				vm.loadingModal('formdetailperawat');
+				vm.$refs.FormPerawat.aturulang();
 				vm.$refs.FormPerawat.hide(); 
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}

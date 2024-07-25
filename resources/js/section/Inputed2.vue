@@ -1,14 +1,14 @@
 <template>
 	
-	<div class="form-self-group">
+	
 		<input 
 			:id="form.for_id" 
-			:type="form.type" 
+			:type="form.text" 
 			placeholder="Ketik disini" 
 			v-model="form.value" 
 			:disabled="form.disabled ? 'disabled' : false" />
 		<label style="margin: -15px;" :for="form.for_id" :class="form.required">{{ form.title }}</label>
-	</div>
+
 </template>
 
 <script>
