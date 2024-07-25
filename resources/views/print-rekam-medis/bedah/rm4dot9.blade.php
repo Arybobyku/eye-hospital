@@ -19,14 +19,14 @@
             display: inline-block;
         }
 
-        .tablee {
+        .tablee4dot9 {
             border: 1px solid black;
             border-collapse: collapse;
             border-top: 0.5px solid;
             border-bottom: 0.5px solid;
         }
 
-        .td1 {
+        .td14dot9 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 30%;
@@ -34,7 +34,7 @@
             padding-right: 5px;
         }
 
-        .td2 {
+        .td24dot9 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 4%;
@@ -42,7 +42,7 @@
             padding-right: 5px;
         }
 
-        .td3 {
+        .td34dot9 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 32%;
@@ -50,7 +50,7 @@
             padding-right: 5px;
         }
 
-        .td4 {
+        .td44dot9 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 4%;
@@ -58,7 +58,7 @@
             padding-right: 5px;
         }
 
-        .td5 {
+        .td54dot9 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 30%;
@@ -66,7 +66,7 @@
             padding-right: 5px;
         }
 
-        .smallfont {
+        .smallfont4dot9 {
             font-size: 9;
         }
     </style>
@@ -91,7 +91,7 @@
             <?php echo base64_encode(file_get_contents($fullpath)); ?>" />
                     </td>
                     <td style="width: 50%">
-                        <div class="smallfont">
+                        <div class="smallfont4dot9">
                         <table style="width: 100%" border="0">
                             <tr>
                                 <td width="20%">Nama</td>
@@ -122,22 +122,22 @@
     </tr>
 </table>
     </div>
-    <table class="tablee" style="width: 100%;">
+    <table class="tablee4dot9" style="width: 100%;">
         <tr>
             <td style="text-align: center; padding:5px;"><b>CHECKLIST KESELAMATAN PASIEN OPERASI</b></td>
         </tr>
     </table>
-    <div class="smallfont">
-        <table class="tablee" style="width: 100%;">
+    <div class="smallfont4dot9">
+        <table class="tablee4dot9" style="width: 100%;">
             <tr>
-                <td class="td1"><b>Sebelum Induksi anestesi/ Sign In <br>Waktu :{{ $kb->si_jam }} </b></td>
-                <td class="td2"><b>--></b></td>
-                <td class="td3"><b>Sebelum Insisi/Time Out <br> Waktu :{{ $kb->to_jam }}</b></td>
-                <td class="td4"><b>--></b></td>
-                <td class="td5"><b>Sebelum Pasien Meninggalkan Kamar Operasi/ Sign Out <br> Waktu :{{ $kb->so_jam }}</td>
+                <td class="td14dot9"><b>Sebelum Induksi anestesi/ Sign In <br>Waktu :{{ $kb->si_jam }} </b></td>
+                <td class="td24dot9"><b>--></b></td>
+                <td class="td34dot9"><b>Sebelum Insisi/Time Out <br> Waktu :{{ $kb->to_jam }}</b></td>
+                <td class="td44dot9"><b>--></b></td>
+                <td class="td54dot9"><b>Sebelum Pasien Meninggalkan Kamar Operasi/ Sign Out <br> Waktu :{{ $kb->so_jam }}</td>
             </tr>
             <tr style="vertical-align: top;">
-                <td class="td1">
+                <td class="td14dot9">
                     <table>
                         <tr>
                             <td colspan="2"><b>Minimal ada perawat, perawat Anestesi dan Dokter Anestesi </b></td>
@@ -320,10 +320,10 @@
                         </tr> 
                     </table>
                 </td>
-                <td class="td2">
+                <td class="td24dot9">
                     <table></table>
                 </td>
-                <td class="td3">
+                <td class="td34dot9">
                     <table>
                         <tr>
                             <td colspan="2"><b>Dengan perawat, perawat Anestesi dan Dokter Anestesi </b></td>
@@ -579,10 +579,10 @@
                         </tr> 
                     </table>
                 </td>
-                <td class="td4">
+                <td class="td44dot9">
                     <table></table>
                 </td>
-                <td class="td5">
+                <td class="td54dot9">
                     <table>
                         <tr>
                             <td colspan="2"><b>Dengan perawat, perawat Anestesi dan Dokter Anestesi </b></td>
@@ -747,9 +747,9 @@
             </tr>
         </table>
     </div>
-    {{-- <td class="td1"><b>Minimal ada perawat, perawat Anestesi dan Dokter Anestesi </b></td>
-    <td class="td2"></td>
-    <td class="td3"><b>Dengan perawat, perawat Anestesi, Dokter Anestesi dan Dokter Bedah</b></td>
-    <td class="td4"></td>
-    <td class="td5"><b>Dengan Perawat, Perawat Anestesi, Dokter Anestesi dan Dokter Bedah</b></td> --}}
+    {{-- <td class="td14dot9"><b>Minimal ada perawat, perawat Anestesi dan Dokter Anestesi </b></td>
+    <td class="td24dot9"></td>
+    <td class="td34dot9"><b>Dengan perawat, perawat Anestesi, Dokter Anestesi dan Dokter Bedah</b></td>
+    <td class="td44dot9"></td>
+    <td class="td54dot9"><b>Dengan Perawat, Perawat Anestesi, Dokter Anestesi dan Dokter Bedah</b></td> --}}
 </body>

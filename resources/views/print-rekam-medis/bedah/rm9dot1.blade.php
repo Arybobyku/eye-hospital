@@ -19,12 +19,12 @@
             display: inline-block;
         }
 
-        .tablee {
+        .tablee9dot1 {
             border: 1px solid black;
             border-collapse: collapse;
         }
 
-        .td1 {
+        .td19dot1 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 25%;
@@ -32,19 +32,19 @@
             padding-right: 5px;
         }
 
-        .td2 {
+        .td29dot1 {
             width: 7%;
             padding-left: 5px;
             padding-right: 5px;
         }
 
-        .td3 {
+        .td39dot1 {
             width: 3%;
             padding-left: -10px;
             padding-right: -10px;
         }
 
-        .steps {
+        .steps9dot1 {
             margin-left: -20px;
             margin-top: -10px;
         }
@@ -61,7 +61,7 @@
     </div>
     <div>
         <H4 style="text-align: center; padding-top: 1%; padding-bottom: 1%;">LAPORAN INSISI CHALAZION</H4>
-        <table class="tablee" style="width: 100%;">
+        <table class="tablee9dot1" style="width: 100%;">
             <table style="padding-left :2%;">
                 <tr>
                     <td>Diagnosis Pra Bedah</td>
@@ -82,7 +82,7 @@
             </table>
             <table>
                 <ol>
-                    <ol class="steps">
+                    <ol class="steps9dot1">
                         <li style="Margin-bottom: 10px">Pasien dibaringkan di meja operasi.</li>
                         <li style="Margin-bottom: 10px">Disinfektan lapangan operasi dengan betadine.</li>
                         <li style="Margin-bottom: 10px">Tutup dengan doek steril.</li>

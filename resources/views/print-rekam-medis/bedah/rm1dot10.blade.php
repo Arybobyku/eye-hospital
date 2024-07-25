@@ -19,23 +19,23 @@
             display: inline-block;
         }
 
-        .tablee {
+        .tablee1dot10 {
             border: 1px solid black;
             border-collapse: collapse;
         }
-        .table2{
+        .table1dot102{
             border-bottom: 1px solid black;
             border-left: 1px solid black;
             border-right: 1px solid black;
         }
-        .smallfont{
+        .smallfont1dot10{
             font-size: 9;
         }
-        .smallfont2{
+        .smallfont1dot102{
             font-size: 10;
         }
 
-        .page_break {
+        .page_break1dot10 {
             page-break-before: always;
         }
     </style>
@@ -66,16 +66,16 @@
                 <td style="text-align: center">Jam : {{ $ppo->jam }} WIB</td>
             </tr>
         </table>
-        <table class="table2" style="width: 100%;">
+        <table class="table1dot102" style="width: 100%;">
             <tr>
-                <td class="smallfont2" style="padding: 5px;"><b>A. CATATAN PERAWATAN SEBELUM OPERASI :</b>Bagian ini diisi oleh Perawat Ruangan</td>
+                <td class="smallfont1dot102" style="padding: 5px;"><b>A. CATATAN PERAWATAN SEBELUM OPERASI :</b>Bagian ini diisi oleh Perawat Ruangan</td>
             </tr>
             <tr>
                 <td>
-                    <table class="tablee" style="width:100%; padding:8px">
-                        <tr class="tablee">
-                            <td class="tablee" style="padding: 5px">Ruangan : {{ $ppo->ruangan }}</td>
-                            <td class="tablee" style="padding: 5px"><table>
+                    <table class="tablee1dot10" style="width:100%; padding:8px">
+                        <tr class="tablee1dot10">
+                            <td class="tablee1dot10" style="padding: 5px">Ruangan : {{ $ppo->ruangan }}</td>
+                            <td class="tablee1dot10" style="padding: 5px"><table>
                                 <tr>
                                     <td>Jenis Pasien : </td>
                                     <td><input type="checkbox" {{ $roperasi->jenis_pembayaran == 'Umum' ? 'Checked' : '' }}></td>
@@ -89,19 +89,19 @@
                         </td>
                         </tr>
                         <tr>
-                            <td class="tablee" style="padding: 5px">Diagnosis : {{ $ppo->diagnosis }}</td>
-                            <td class="tablee" style="padding: 5px">Tindakan Operasi : {{ $ppo->tindakan_operasi }}</td>
+                            <td class="tablee1dot10" style="padding: 5px">Diagnosis : {{ $ppo->diagnosis }}</td>
+                            <td class="tablee1dot10" style="padding: 5px">Tindakan Operasi : {{ $ppo->tindakan_operasi }}</td>
                         </tr>
                         <tr>
-                            <td class="tablee" style="padding: 5px">Dokter Operator : {{ $ppo->dokter_operator }}</td>
-                            <td class="tablee" style="padding: 5px">Dokter Anastesi : {{ $ppo->dokter_anastesi }}</td>
+                            <td class="tablee1dot10" style="padding: 5px">Dokter Operator : {{ $ppo->dokter_operator }}</td>
+                            <td class="tablee1dot10" style="padding: 5px">Dokter Anastesi : {{ $ppo->dokter_anastesi }}</td>
                         </tr>
                     </table>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <div class="smallfont">
+                    <div class="smallfont1dot10">
                     <table style="padding: 5px">
                         <tr>
                             <td>1. Vital Sign :</td>
@@ -140,11 +140,11 @@
                 </td>
             </tr>
             <tr>
-                    <td class="smallfont2" style="padding: 5px;"><b>B. CATATAN PERAWATAN SEBELUM OPERASI :</b>Bagian ini dlengkapi oleh Perawat Ruangan dan Perawat Kamar Operasi</td>
+                    <td class="smallfont1dot102" style="padding: 5px;"><b>B. CATATAN PERAWATAN SEBELUM OPERASI :</b>Bagian ini dlengkapi oleh Perawat Ruangan dan Perawat Kamar Operasi</td>
             </tr>
             <tr>
                 <td>
-                    <div class="smallfont">
+                    <div class="smallfont1dot10">
                         <table style="margin-left: 50px;">
                             <tr>
                                 <td><input type="checkbox" checked></td>
@@ -164,10 +164,10 @@
                     <table style="width: 100%; border-collapse:collapse;">
                         <tr>
                             <th style="width:50%;"></th>
-                            <th class="tablee" style="width:10%">Ruang</th>
-                            <th class="tablee" style="width:5%">OK</th>
-                            <th class="tablee" style="width: 5%">OK</th>
-                            <th class="tablee" style="width: 30%">Keterangan</th>
+                            <th class="tablee1dot10" style="width:10%">Ruang</th>
+                            <th class="tablee1dot10" style="width:5%">OK</th>
+                            <th class="tablee1dot10" style="width: 5%">OK</th>
+                            <th class="tablee1dot10" style="width: 30%">Keterangan</th>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">1. Pemeriksaan Identitas Pasien</div></td>

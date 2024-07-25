@@ -22,13 +22,13 @@
             border: 1px solid black;
             border-collapse: collapse;
         }
-        .tablee {
+        .tablee2dot2 {
             border: 1px solid black;
             border-collapse: collapse;
             border-bottom: 0.5px solid;
         }
 
-        .tablee2 {
+        .tablee2dot22 {
             border-bottom: 1px solid black;
             border-left: 1px solid black;
             border-right: 1px solid black;
@@ -36,13 +36,13 @@
 
         }
 
-        .td1 {
+        .td12dot2 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 50%;
         }
 
-        .td1x {
+        .td12dot2x {
             border-bottom: 1px solid black;
             border-left: 1px solid black;
             border-right: 1px solid black;
@@ -50,31 +50,31 @@
             width: 50%;
         }
 
-        .td2x {
+        .td22dot2x {
             border-left: 1px solid black;
             border-right: 1px solid black;
             border-collapse: collapse;
             width: 50%;
         }
 
-        .td2 {
+        .td22dot2 {
             border: 1px solid black;
             border-collapse: collapse;
             width: 50%;
         }
 
-        .td-left-rigt {
+        .td-left-rigt-2dot2 {
             border-left: 1px solid black;
             border-right: 1px solid black;
             border-collapse: collapse;
             width: 33%;
         }
 
-        .page_break {
+        .page_break_2dot2 {
             page-break-before: always;
         }
 
-        .td-top-bottom {
+        .td-top-bottom-2dot2 {
 
             border-bottom: 1px solid black;
             border-collapse: collapse;
@@ -91,33 +91,33 @@
         </div>
         @include('print-rekam-medis.partials.header')
     </div>
-    <table class="tablee2" style="width: 100%;">
+    <table class="tablee2dot22" style="width: 100%;">
         <tr>
             <td style="text-align: center" colspan="4"><b>LAPORAN PEMBEDAHAN</b></td>
         </tr>
-        <tr class="tablee">
+        <tr class="tablee2dot2">
             <td style="padding:5px">Ruang Operasi </td>
             <td>: <b>{{ $lp->ruang_operasi }}</b></td>
             <td style="padding:5px">Kamar </td>
             <td>: <b>{{ $lp->kamar }}</b></td>
 
         </tr>
-        <tr class="tablee2">
+        <tr class="tablee2dot22">
             <td style="padding:5px">Akut/Terencana </td>
             <td>: <b>{{ $lp->akut_terencana }}</b></td>
             <td style="padding:5px">Tanggal </td>
             <td>: <b>{{ $lp->tanggal }}</b></td>
         </tr>
     </table>
-    <table class="tablee2" style="width: 100%;">
+    <table class="tablee2dot22" style="width: 100%;">
         <tr>
             <td style="padding:5px">Pembedahan : <b>{{ $lp->pembedahan }}</td>
-            <td class="td-left-rigt" style="padding:5px;">Asisten I : <b>{{ $lp->asisten_1 }}</b></td>
+            <td class="td-left-rigt-2dot2" style="padding:5px;">Asisten I : <b>{{ $lp->asisten_1 }}</b></td>
             <td style="padding:5px">Perawat Instrumen : <b>{{ $lp->perawat_instrument }}</b></td>
         </tr>
         <tr style="vertical-align: top;">
             <td style="padding:5px">Ahli Anastesi : <b>{{ $lp->ahli_anastesi }}</b></td>
-            <td class="td-left-rigt" style="padding:5px">Asisten II : <b>{{ $lp->asisten_2 }}</b></td>
+            <td class="td-left-rigt-2dot2" style="padding:5px">Asisten II : <b>{{ $lp->asisten_2 }}</b></td>
             <td style="padding:5px">Jenis Anastesi :
                 <table style="border-collapse: collapse; width:100%">
                     <tr>
@@ -166,9 +166,9 @@
             </td>
         </tr>
     </table>
-    <table class="tablee2" style="width: 100%;">
+    <table class="tablee2dot22" style="width: 100%;">
         <tr>
-            <td class="td1x">
+            <td class="td12dot2x">
                 <table style="height: 100px">
                     <tr>
                         <td> Diagnosis Pra-Bedah :</td>
@@ -178,7 +178,7 @@
                     </tr>
                 </table>
             </td>
-            <td class="td1x">
+            <td class="td12dot2x">
                 <table style="height: 100px">
                     <tr>
                         <td> Indikasi Operasi :</td>
@@ -190,7 +190,7 @@
             </td>
         </tr>
         <tr>
-            <td class="td1x">
+            <td class="td12dot2x">
                 <table style="height: 100px">
                     <tr>
                         <td> Diagnosis Pasca-Bedah :</td>
@@ -200,7 +200,7 @@
                     </tr>
                 </table>
             </td>
-            <td class="td2">
+            <td class="td22dot2">
                 <table style="height: 100px">
                     <tr>
                         <td> Jenis Operasi :</td>
@@ -212,7 +212,7 @@
             </td>
         </tr>
         <tr>
-            <td class="td1">
+            <td class="td12dot2">
                 <table style="height: 100px">
                     <tr>
                         <td> Desinfeksi kulit dengan : </td>
@@ -222,7 +222,7 @@
                     </tr>
                 </table>
             </td>
-            <td class="td2">
+            <td class="td22dot2">
                 <table style="height: 100px">
                     <tr>
                         <td> Posisi Penderita Desinfeksi : (Bila Perlu Dengan Gambar)</td>
@@ -234,26 +234,26 @@
             </td>
         </tr>
     </table>
-    <table class="tablee2" style="width: 100%;">
+    <table class="tablee2dot22" style="width: 100%;">
         <tr style="vertical-align: top;">
-            <td class="td-top-bottom" style="padding:5px">
+            <td class="td-top-bottom-2dot2" style="padding:5px">
                 Jam Operasi Dimulai : <br> <b>{{ $lp->jam_operasi_dimulai }}</b>
             </td>
-            <td class="td-top-bottom" style="padding:5px">
+            <td class="td-top-bottom-2dot2" style="padding:5px">
                 Jam Operasi Selesai: <br><b>{{ $lp->jam_operasi_selesai }}</b>
             </td>
-            <td class="td1x" style="padding:5px">
+            <td class="td12dot2x" style="padding:5px">
                 Lama Operasi Berlangsung : <br><b>{{ $lp->lama_operasi_berlansung }}</b>
             </td>
-            <td class="td1x" style="padding:5px">
+            <td class="td12dot2x" style="padding:5px">
                 Jenis Bahan Yang Dikirim kelabolatorium Untuk Pemeriksaan: <br><b>{{ $lp->jenis_bahan_yang_dikirim_ke_laboratorium }}</b>
                 <br><br><br>
             </td>
         </tr>
     </table>
-    <table class="tablee2" style="width: 100%;">
+    <table class="tablee2dot22" style="width: 100%;">
         <tr>
-            <td class="td1x">
+            <td class="td12dot2x">
                 <table style="height: 100px">
                     <tr>
                         <td> Macam Syatan (Bila Perlu Dengan Gambar) : <br><b>{{ $lp->macam_sayatan }}</b></td>
@@ -263,7 +263,7 @@
                     </tr>
                 </table>
             </td>
-            <td class="td1x">
+            <td class="td12dot2x">
                 <table style="height: 100px">
                     <tr>
                         <td> Posisi Sayatan (Bila Perlu Dengan Gambar) : <br><b>{{ $lp->posisi_sayatan }}</b></td>
@@ -275,9 +275,9 @@
             </td>
         </tr>
     </table>
-    <table class="tablee2" style="width: 100%;">
+    <table class="tablee2dot22" style="width: 100%;">
         <tr>
-            <td class="td1x">
+            <td class="td12dot2x">
                 <table style="height: 100px">
                     <tr>
                         <td> Teknik Operasi dan Temuan Intra/Operasi : <br><b>{{ $lp->teknik_operasi_dan_temuan_intra }}</b></td>
@@ -289,8 +289,8 @@
             </td>
         </tr>
     </table>
-    <div class="page_break"></div>
-    <table class="tablee" style="width: 100%" ;>
+    <div class="page_break_2dot2"></div>
+    <table class="tablee2dot2" style="width: 100%" ;>
         <tr>
             <td style="padding:5px">
                 Penggunaan AMHP Khusus:
@@ -314,9 +314,9 @@
             </td>
         </tr>
     </table>
-    <table class="tablee2" style="width: 100%" ;>
+    <table class="tablee2dot22" style="width: 100%" ;>
         <tr>
-            <td class="td2x" style="width: 30%;">
+            <td class="td22dot2x" style="width: 30%;">
                 <table style="width: 100%; border-collapse:collapse;">
                     <tr>
                         <td colspan="4">Komplikasi Intra Operasi:</td>
@@ -332,7 +332,7 @@
                     </tr>
                 </table>
             </td>
-            <td class="td1x" style="width: 70%; padding:5px; vertical-align: top">
+            <td class="td12dot2x" style="width: 70%; padding:5px; vertical-align: top">
                 Penjabaran komlikasi Intra-Operasi : <br><b>{{ $lp->penjabaran_komplikasi_intra_operasi }}</b>
             </td>
         </tr>
@@ -357,18 +357,18 @@
             </td>
         </tr>
         <tr>
-            <td class="td1" style="padding:5px">
+            <td class="td12dot2" style="padding:5px">
                 Perdarahan :.................cc
             </td>
         </tr> --}}
     </table>
-    <table class="tablee2" style="width: 100%">
+    <table class="tablee2dot22" style="width: 100%">
         <tr>
             <td style="height:200px; vertical-align:top">Intruksi Anastesi : <br><b>{{ $lp->instruksi_anastesi }}</b></td>
             {{-- Inputan nanti masukkan height yang atas kurangi di sesuaikan --}}
         </tr>
     </table>
-    <table class="tablee2" style="width: 100%; border-top:none">
+    <table class="tablee2dot22" style="width: 100%; border-top:none">
         <tr>
             <td colspan="4" style=" vertical-align:top">Instruksi Pasca-Bedah: </td>
             
