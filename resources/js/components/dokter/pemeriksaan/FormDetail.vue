@@ -844,20 +844,26 @@
 
                             <div class="content-tab-in" v-if="tab.content.cppt">
                                 <div class="grid">
-                                    <div class="col-6 form-mr">
+                                    <div class="col-6 form-ml">
+                                        
+
+
+
+                                    </div>
+                                    
+                                    <div class="col-6 form-ml">
                                         <label for=""> SUBJECT </label>
                                             <ckeditor
                                             v-model="form.subject"
                                             :editor="editor">
                                             </ckeditor>
-                                        <br/>
+                                        <br>
                                         <label for=""> ASSESSMENT </label>
                                             <ckeditor
                                             v-model="form.subject"
                                             :editor="editor">
                                             </ckeditor>
-                                    </div>
-                                    <div class="col-6">
+                                  <br>
 
                                         <label for=""> OBJECT </label>
                                             <ckeditor

@@ -724,6 +724,59 @@
 
 							</div>
 						</div>
+						<div class="tab-content">
+						<div class="content-tab-in" v-if="tab.content.cppt">
+                                <div class="grid">
+                                    <div class="col-6 form-ml">
+										<table class="table">
+							<thead>
+								<tr>
+									<th>Tanggal</th>
+									<th>Nama Pemeriksa</th>
+									<th>#</th>
+								</tr>
+							</thead>
+							<tbody><tr>
+								
+									<td>{{  }}</td>
+									<td>{{ }}</td>
+									<td>
+										<button class="button-modal-page button-modal-green" v-on:click="look(index)">Detail</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+									</div>
+                                    
+                                    <div class="col-6 form-ml">
+                                        <label for=""> SUBJECT </label>
+                                            <ckeditor
+                                            v-model="form.subject"
+                                            :editor="editor">
+                                            </ckeditor>
+                                        <br>
+                                        <label for=""> ASSESSMENT </label>
+                                            <ckeditor
+                                            v-model="form.assessment"
+                                            :editor="editor">
+                                            </ckeditor>
+                                  <br>
+
+                                        <label for=""> OBJECT </label>
+                                            <ckeditor
+                                            v-model="form.object"
+                                            :editor="editor">
+                                            </ckeditor>
+                                        <br/>
+                                        <label for=""> PLANNING </label>
+                                            <ckeditor
+                                            v-model="form.planning"
+                                            :editor="editor">
+                                            </ckeditor>
+                                    </div>
+                                </div>
+                            </div>
+							</div>
 					</div>
 				</div>
 
@@ -759,6 +812,8 @@ import { toast } from 'vue3-toastify';
 import Swal from 'sweetalert2';
 import { arrpemeriksaan } from '../../../module/DataArray.js';
 import { datename } from '../../../module/Manipulation.js';
+import CKEditor from '@ckeditor/ckeditor5-vue';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 var vm, body;
 export default {
@@ -768,6 +823,7 @@ export default {
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 		Inputed2: defineAsyncComponent(() => import('../../../section/Inputed2.vue')),
 		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
+		ckeditor: CKEditor.component,
 	},
 	computed: {
 		ishide: function () {
@@ -784,6 +840,8 @@ export default {
 	created: function () { },
 	data: function () {
 		return {
+			data_cppt: [], detail: null,
+			editor: ClassicEditor,
 			terminate: { show: false, display: 'display: none' },
 			form: null, btnlbl: '', arr: null, keyform: 'addperawat',
 			green: 'Save Data', red: 'Clear Form', test: null, cover: '', temporer: null,
@@ -860,8 +918,9 @@ export default {
 					{ value: 'skrinning', label: 'Skrinning', class: 'tab-no-active' },
 					{ value: 'riwayat_kesehatan', label: 'Riwayat Kesehatan', class: 'tab-no-active' },
 					{ value: 'edukasi_pasien', label: 'Edukasi Pasien', class: 'tab-no-active' },
+					{ value: 'cppt', label: 'CPPT', class: 'tab-no-active' },
 				],
-				content: { pemeriksaan_fisik: true, skrinning: false, riwayat_kesehatan: false, edukasi_pasien: false, }
+				content: { pemeriksaan_fisik: true, skrinning: false, riwayat_kesehatan: false, edukasi_pasien: false, cppt: false,}
 			},
 		}
 	},
@@ -1001,7 +1060,12 @@ export default {
 			vm.rpk_lain_lain = false;
 			vm.kp_ya = false;
 			vm.kp_tidak = false;
+			vm.data = [];
 
+		},
+
+		look: function(index) {
+			vm.detail = vm.data[index];
 		},
 
 		
@@ -1026,7 +1090,7 @@ export default {
 			// 	vm.form.select.klinik.value = vm.detailperawat.ruang_poliklinik;
 			// 	vm.form.select.klinik.label = 'Poli ' + vm.detailperawat.ruang_poliklinik;
 			// }
-
+			vm.data = response.data.detailperawat;
 
 			vm.detailperawat = response.data.data;
 			vm.histori = response.data.histori;
