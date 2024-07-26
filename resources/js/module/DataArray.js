@@ -319,5 +319,15 @@ export const arrpemeriksaan = () => {
 			{ value: 'Rawat Inap', label: 'Rawat Inap' },
 			{ value: 'Operasi', label: 'Operasi' },
 		],
+	
 	}
+	}
+	export const arrlaporantindakanbedah = () => {
+	return {
+		pilihantindakan: [
+			{ value: 'Injeksi Antivega', label: 'Injeksi Antivega' },
+			{ value: 'Laser', label: 'Laser' },
+		],
+	}
+
 };

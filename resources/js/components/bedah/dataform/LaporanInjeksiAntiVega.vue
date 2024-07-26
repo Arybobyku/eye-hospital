@@ -1,34 +1,33 @@
 <template>
 	<div class="grid" v-if="form && activetab">
-        <div class="col-4">
-            <table class="table" style="margin-top: 10px;">
-                <tbody>
-                <tr>
-                    <td colspan="2" style="text-align: center;">Mata</td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">OS</td>
-                    <td style="text-align: center;"><input class="checkbox" type="checkbox" :checked="os" value="os"
-                        style="cursor: pointer;"> </td>
-                </tr>
-                <tr>
-                    <td style="text-align: center;">OD</td>
-                    <td style="text-align: center;"> 
-                        <input class="checkbox" type="checkbox" :checked="od" value="od"
-                        style="cursor: pointer;">
-                    </td>
-                </tr>
-                </tbody>
-                
-            </table>
-        </div>
+		<div class="col-4">
+			<table class="table" style="margin-top: 10px;">
+				<tbody>
+					<tr>
+						<td colspan="2" style="text-align: center;">Mata</td>
+					</tr>
+					<tr>
+						<td style="text-align: center;">OS</td>
+						<td style="text-align: center;"><input class="checkbox" type="checkbox" :checked="os" value="os"
+								style="cursor: pointer;"> </td>
+					</tr>
+					<tr>
+						<td style="text-align: center;">OD</td>
+						<td style="text-align: center;">
+							<input class="checkbox" type="checkbox" :checked="od" value="od" style="cursor: pointer;">
+						</td>
+					</tr>
+				</tbody>
+
+			</table>
+		</div>
 		<div class="col-4 form-ml">
 			<Inputed :ref="form.namaoperator.name" :form="form.namaoperator"></Inputed>
 		</div>
-        <div class="col-4 form-ml">
+		<div class="col-4 form-ml">
 			<Inputed :ref="form.asisten.name" :form="form.asisten"></Inputed>
 		</div>
-        <div class="col-4">
+		<div class="col-4">
 			<Inputed :ref="form.jenisoperasi.name" :form="form.jenisoperasi"></Inputed>
 		</div>
 		<div class="col-4 form-ml">
@@ -43,19 +42,19 @@
 			<Inputed :ref="form.diagnosis.name" :form="form.diagnosis"></Inputed>
 		</div>
 
-		
 
-		
+
+
 
 		<div class="col-4 form-ml">
 			<Inputed :ref="form.anesthesia.name" :form="form.anesthesia"></Inputed>
 		</div>
 
-		 <div class="col-4 form-ml">
+		<div class="col-4 form-ml">
 			<Inputed :ref="form.anesthesiologist.name" :form="form.anesthesiologist"></Inputed>
-		</div> 
+		</div>
 
-        <!-- <div class="col-12">
+		<!-- <div class="col-12">
             1. Pasien berbaring dalam anesresi tropical / local / Umum <br>
             2. Dilakukan tindakan a & antiseptis menggunakan providone iodinen <br>
             3. Dipasangkan eye drape <br>
@@ -66,9 +65,44 @@
             8. Mata ditutup kassa & dop <br>
             9. Tindakan selesai
         </div> -->
-		
-
+		<div class="col-3 form-ml">
+			<Selected
+				v-on:click="selectbox($event, form.select.pilihantindakan.name, form.select.pilihantindakan.statics)"
+				:ref="form.select.pilihantindakan.name" @selecteditem="selecteditem" @selectclear="selectclear"
+				:selection="form.select.pilihantindakan"
+				v-on:keyup="selectfilter($event, form.select.pilihantindakan.name)">
+			</Selected>
 		</div>
+
+		<div class="col-12">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Nama Tindakan</th>
+						<th>#</th>
+					</tr>
+				</thead>
+				<!-- <tbody>
+					<tr v-for="(item, index) in listtindakan" v-if="listtindakan.length > 0">asas
+						<td>{{ item.nama_tindakan_bedah }}</td>
+						<td>
+							<button v-if="item.default != 'Ya'" class="tooltip btn-danger"
+								v-on:click="removetindakanjalan(index)">
+								<vue-feather type="trash"></vue-feather>
+								<span class="tooltiptext">Hapus Tindakan</span>
+							</button>
+						</td>
+					</tr>
+					<tr v-else>
+						<td colspan="3">No Data for Result</td>
+					</tr>
+
+				</tbody> -->
+
+			</table>
+		</div>
+
+	</div>
 
 
 	<div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form && activetab">
@@ -85,6 +119,7 @@ import { defineAsyncComponent } from 'vue';
 import { formlaporaninjeksiantivega } from './FormData.js';
 import { parselaporaninjeksiantivega } from './Attachment.js';
 import { filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected } from '../../../module/SelectedFilter.js';
+import { arrlaporantindakanbedah } from '../../../module/DataArray.js';
 var vm;
 export default {
 	emits: ["dialog", "parsingForm"],
@@ -97,6 +132,7 @@ export default {
 	mounted:function() { 
 		vm = this; 
 		vm.form = vm.formlaporaninjeksiantivega();
+		vm.arr = vm.arrlaporantindakanbedah();
 		window.addEventListener("click", function(event) { let a = event.target.className; try { if (a.split(" ")) { a = a.split(" "); if (a[0] != 'hospitals') { vm.selecthide(); } } if (event.target.className == '') { vm.selecthide(); } } catch { console.log('mistmatch'); } });
 	},
 	created:function() {},
@@ -104,6 +140,9 @@ export default {
 		form: null, keyform: 'laporaninjeksiantivega',
         os:false,
         od:false,
+		arr: {
+
+                },
 		// arr: {
 		// 	ptkjeniskelamintarget: [
 		// 		{ value: 'Laki-laki', label: 'Laki-laki' },
@@ -116,7 +155,7 @@ export default {
 		// }
 	}},
 	methods: {
-		parselaporaninjeksiantivega, formlaporaninjeksiantivega,
+		parselaporaninjeksiantivega, formlaporaninjeksiantivega, arrlaporantindakanbedah,
 
 		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected,
 
