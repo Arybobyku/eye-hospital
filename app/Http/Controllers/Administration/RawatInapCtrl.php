@@ -594,7 +594,12 @@ class RawatInapCtrl extends Controller
 	}
 
 	public function pulang(Request $request) {
+
 		try{
+			$cekkamar = KamarInap::where('uuid', '=', $request->kamar_inap_uuid)->first();
+			echo  "Kamar uuid";
+			echo  $request->kamar_inap_uuid;
+
 			$reg = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
 			
 			$arr = array('sisa' => ((int)$cekkamar->sisa + 1));

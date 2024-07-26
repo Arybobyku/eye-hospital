@@ -1,4 +1,4 @@
-export const parsekelurahan = (form, detail, obat) => {
+export const parsekelurahan = (form, detail, obat, obattambahan) => {
 	console.log(detail)
 	let data = new FormData();
 	data.append('uuid', form.uuid);
@@ -15,6 +15,7 @@ export const parsekelurahan = (form, detail, obat) => {
 	data.append('kode', detail.kode);
 	data.append('nomor', detail.nomor);
 	data.append('obat', JSON.stringify(obat));
+	data.append('obattambahan', JSON.stringify(obattambahan));
 
 	for(var pair of data.entries()) {
 		console.log(pair[0]+ ', '+ pair[1]); 
@@ -22,13 +23,14 @@ export const parsekelurahan = (form, detail, obat) => {
 	return data;
 }
 
-export const parseunit = (form, obat, obatracikan, tindakan) => {
+export const parseunit = (form, obat, obatracikan, obattambahan, tindakan) => {
 	let data = new FormData();
 	data.append('pasienbebas_uuid', form.uuid);
 	data.append('carabayar_nama', form.carabayar_nama);
 	data.append('carabayar_uuid', form.carabayar_uuid);
 	data.append('obat', JSON.stringify(obat));
 	data.append('obatracikan', JSON.stringify(obatracikan));
+	data.append('obattambahan', JSON.stringify(obattambahan));
 	data.append('tindakan', JSON.stringify(tindakan));
 	for(var pair of data.entries()) {
 		console.log(pair[0]+ ', '+ pair[1]); 
