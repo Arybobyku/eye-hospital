@@ -125,6 +125,37 @@
 
 								</div>
 							</div>
+							
+							<div style="position: relative" class="content-tab-in" v-if="tab.content.cppt">
+
+
+								<div class="grid">
+									<div class="col-6 form-ml">
+										<iframe title="CPPT" width="100%" height="100%" style="border: 0" :src="linkR">
+										</iframe>
+									</div>
+									<div class="col-6 form-ml">
+										<label for=""> Subject</label>
+										<ckeditor v-model="form.subject" :editor="editor">
+										</ckeditor>
+										<br>
+										<label for=""> Object</label>
+										<ckeditor v-model="form.object" :editor="editor">
+										</ckeditor>
+										<br>
+
+										<label for=""> Assessment </label>
+										<ckeditor v-model="form.assessment" :editor="editor">
+										</ckeditor>
+										<br />
+										<label for=""> Planning </label>
+										<ckeditor v-model="form.plan" :editor="editor">
+										</ckeditor>
+									</div>
+
+								
+								</div>
+							</div>
 						</div>
 
 					</div>
@@ -159,6 +190,9 @@ import { toast } from 'vue3-toastify';
 import Swal from 'sweetalert2';
 import { arrpemeriksaan } from '../../../module/DataArray.js';
 import { datename } from '../../../module/Manipulation.js';
+import CKEditor from '@ckeditor/ckeditor5-vue';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 
 var vm, body;
 export default {
@@ -166,6 +200,7 @@ export default {
 	components: {toast, Swal,
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
+		ckeditor: CKEditor.component,
 	},
 	computed: {
 		ishide:function() {
@@ -181,6 +216,8 @@ export default {
 	},
 	created:function() {},
 	data:function() { return { 
+		linkR: "/print/rekammedis/rawat-jalan/cppt/",
+		editor: ClassicEditor,
 		terminate: { show: false, display: 'display: none' },
 		form: null, btnlbl: '', arr: null,
 		green: 'Save Data', red: 'Clear Form', test: null, cover: '', temporer: null,
@@ -194,8 +231,9 @@ export default {
 			button: [
 					{ value: 'ocular_dextra', label: 'Ocular Dextra', class: 'tab-active' },
 					{ value: 'ocular_sinistra', label: 'Ocular Sinistra', class: 'tab-no-active' },
+					{ value: 'cppt', label: 'CPPT', class: 'tab-no-active' },
 			],
-			content: { ocular_dextra: true, ocular_sinistra: false }
+			content: { ocular_dextra: true, ocular_sinistra: false, cppt: false, }
 		},
 	}},
 	methods: {
@@ -217,8 +255,7 @@ export default {
 		changesTab: function (values, index, classes) {
 			if (classes != 'tab-active') {
 				for (let i = 0; i < vm.tab.button.length; i++) { 
-					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; 
-				}
+					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; }
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
 			}
@@ -272,7 +309,7 @@ export default {
 			vm.form.title = title; vm.form.posisi = posisi; 
 			vm.form.posisi = posisi; body.style.overflowY = 'hidden'; vm.terminate.display = 'display: block'; vm.terminate.show = true;
     },
-		aturulang: function () { vm.form = vm.formkelurahan(); },
+		aturulang: function () { vm.form = vm.formkelurahan(); vm.linkR = '/print/rekammedis/rawat-jalan/cppt/'},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
 		parsingForm:function() { vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail), 'add'); },
 
@@ -281,6 +318,7 @@ export default {
 		setdataform: function (response) {
 			vm.detail = response.data.data;
 			vm.histori = response.data.histori;
+			vm.linkR = vm.linkR + vm.detail.pasien_uuid;
 
 			if (vm.detail.ruang_poliklinik != '0') {
 				vm.form.select.klinik.value = vm.detail.ruang_poliklinik;

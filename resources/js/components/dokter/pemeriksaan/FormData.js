@@ -119,6 +119,9 @@ export const formkelurahan = () => {
 		nama_jenis_jalan_kamar: '',
 		ttd_dokter: '',
 		subject: '',
+		object: '',
+		assessment: '',
+		plan: '',
 
 		catatan:{
 			title: 'Catatan', for_id: 'form_'+'catatan', type: 'text', required: '', 

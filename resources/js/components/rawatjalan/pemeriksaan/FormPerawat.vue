@@ -219,80 +219,76 @@
 												<tr>
 													<td style="text-align: left;">Bahasa</td>
 													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_bahasa" value="ph_bahasa"
+															type="checkbox" v-model="ph_bahasa"
 															style=" cursor: pointer;"></td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Pendengaran</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_pendengaran"
-															value="ph_pendengaran" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_pendengaran" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Masalah Penglihatan</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_masalah_penglihatan"
-															value="ph_masalah_penglihatan" style=" cursor: pointer;">
-													</td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_masalah_penglihatan" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Bicara Buruk</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_bicara_buruk"
-															value="ph_bicara_buruk" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_bicara_buruk" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Hilang Memori</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_hilang_memori"
-															value="ph_hilang_memori" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_hilang_memori" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Tidak Ada Partisipasi</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_tidak_ada_partisipasi"
-															value="ph_tidak_ada_partisipasi" style=" cursor: pointer;">
-													</td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_tidak_ada_partisipasi" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Secara Fisiologi Tidak Mampu Belajar
 													</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_tidak_mampu_belajar"
-															value="ph_tidak_mampu_belajar" style=" cursor: pointer;">
-													</td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_tidak_mampu_belajar" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Tidak Ditemukan Hambatan Belajar</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_tidak_ada_hambatan_belajar"
-															value="ph_tidak_ada_hambatan_belajar"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_tidak_ada_hambatan_belajar" style="cursor: pointer;">
+</td>
 												</tr>
 
 												<tr>
 													<td style="text-align: left;">Cemas</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_cemas" value="ph_cemas"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_cemas" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Emoosi</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_emosi" value="ph_emosi"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_emosi" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Kognitif</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_kognitif" value="ph_kognitif"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_kognitif" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Motivasi</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ph_motivasi" value="ph_motivasi"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ph_motivasi" style="cursor: pointer;">
+</td>
 												</tr>
 											</tbody>
 										</table>
@@ -304,16 +300,15 @@
 												</tr>
 												<tr>
 													<td>Tata Tertib RS</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="edukasi_tata_tertib"
-															value="edukasi_tata_tertib" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="edukasi_tata_tertib" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Hak dan Kewajiban Pasien</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="edukasi_hak_dan_kewajiban"
-															value="edukasi_hak_dan_kewajiban" style=" cursor: pointer;">
-													</td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="edukasi_hak_dan_kewajiban" style="cursor: pointer;">
+</td>
 												</tr>
 											</tbody>
 										</table>
@@ -326,33 +321,33 @@
 												</tr>
 												<tr>
 													<td>Audio</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="metode_audio" value="metode_audio"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="metode_audio" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Demonstrasi</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="metode_demonstrasi"
-															value="metode_demonstrasi" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="metode_demonstrasi" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Lisan</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="metode_lisan" value="metode_lisan"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="metode_lisan" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Tulisan</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="metode_tulisan"
-															value="metode_tulisan" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="metode_tulisan" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Visual</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="metode_visual"
-															value="metode_visual" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="metode_visual" style="cursor: pointer;">
+</td>
 												</tr>
 											</tbody>
 										</table>
@@ -364,39 +359,39 @@
 												</tr>
 												<tr>
 													<td>Islam</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ag_islam" value="ag_islam"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ag_islam" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Protestan</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ag_protestan" value="ag_protestan"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ag_protestan" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Katolik</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ag_katolik" value="ag_katolik"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ag_katolik" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Hindu</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ag_hindu" value="ag_hindu"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ag_hindu" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Budha</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ag_budha" value="ag_budha"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ag_budha" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Lain-lain</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="ag_lainnya" value="ag_lainnya"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="ag_lainnya" style="cursor: pointer;">
+</td>
 												</tr>
 
 
@@ -411,37 +406,40 @@
 												</tr>
 												<tr>
 													<td>Proses Penyakit</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="rpk_proses_penyakit"
-															value="rpk_proses_penyakit" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="rpk_proses_penyakit" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Pengobatan / Tindakan</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="rpk_pengobatan"
-															value="rpk_pengobatan" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="rpk_pengobatan" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Nutrisi</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="rpk_nutrisi" value="rpk_nutrisi"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="rpk_nutrisi" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Edukasi Kolaboratif</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="rpk_edukasi" value="rpk_edukasi"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="rpk_edukasi" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Lainnya</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="rpk_lain_lain"
-															value="rpk_lain_lain" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="rpk_lain_lain" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="width: 60%;">Jelaskan</td>
-													<td><Inputed2 :ref="form.rpk_jelaskan.name" :form="form.rpk_jelaskan"></Inputed2></td>
+													<td>
+														<Inputed2 :ref="form.rpk_jelaskan.name"
+															:form="form.rpk_jelaskan"></Inputed2>
+													</td>
 												</tr>
 
 
@@ -455,15 +453,15 @@
 												</tr>
 												<tr>
 													<td>Ya</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="kp_ya" value="kp_ya"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="kp_ya" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Tidak</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="kp_tidak" value="kp_tidak"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="kp_tidak" style="cursor: pointer;">
+</td>
 												</tr>
 
 											</tbody>
@@ -481,15 +479,15 @@
 												</tr>
 												<tr>
 													<td>Normal</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="pb_normal" value="pb_normal"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="pb_normal" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Gangguan Bicara</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="pb_gangguan" value="pb_gangguan"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="pb_gangguan" style="cursor: pointer;">
+</td>
 												</tr>
 
 											</tbody>
@@ -502,25 +500,28 @@
 												</tr>
 												<tr>
 													<td>Bahasa Indonesia</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="bs_indonesia" value="bs_indonesia"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="bs_indonesia" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Bahasa Inggris</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="bs_inggris" value="bs_inggris"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="bs_inggris" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Bahasa Daerah</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="bs_daerah" value="bs_daerah"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="bs_daerah" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="width: 60%;">Bahasa Lainnya</td>
-													<td><Inputed2 :ref="form.bs_lainnya.name" :form="form.bs_lainnya"></Inputed2></td>
+													<td>
+														<Inputed2 :ref="form.bs_lainnya.name" :form="form.bs_lainnya">
+														</Inputed2>
+													</td>
 
 												</tr>
 											</tbody>
@@ -533,15 +534,15 @@
 												</tr>
 												<tr>
 													<td>Tidak</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="bi_tidak" value="bi_tidak"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="bi_tidak" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Iya</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="bi_iya" value="bi_iya"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="bi_iya" style="cursor: pointer;">
+</td>
 												</tr>
 											</tbody>
 										</table>
@@ -553,45 +554,45 @@
 												</tr>
 												<tr>
 													<td>TK</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="tp_tk" value="tp_tk"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="tp_tk" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>SD</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="tp_sd" value="tp_sd"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="tp_sd" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>SMP</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="tp_smp" value="tp_smp"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="tp_smp" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>SMA</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="tp_sma" value="tp_sma"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="tp_sma" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Diploma</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="tp_diploma" value="tp_diploma"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="tp_diploma" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Sarjana</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="tp_sarjana" value="tp_sarjana"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="tp_sarjana" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Lainnya</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="tp_lainnya" value="tp_lainnya"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="tp_lainnya" style="cursor: pointer;">
+</td>
 												</tr>
 											</tbody>
 										</table>
@@ -604,21 +605,21 @@
 												</tr>
 												<tr>
 													<td>Paham</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="tp_paham" value="tp_paham"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="tp_paham" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Kurang Paham</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="tp_kurang_paham"
-															value="tp_kurang_paham" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="tp_kurang_paham" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Tidak Paham</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="tp_tidak" value="tp_tidak"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="tp_tidak" style="cursor: pointer;">
+</td>
 												</tr>
 
 											</tbody>
@@ -632,21 +633,22 @@
 												</tr>
 												<tr>
 													<td>Modern</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="np_modern" value="np_modern"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="np_modern" style="cursor: pointer;">
+</td>
+
 												</tr>
 												<tr>
 													<td>Moderat</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="np_moderat" value="np_moderat"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="np_moderat" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Konvensional</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="np_konvensional"
-															value="np_konvensional" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="np_konvensional" style="cursor: pointer;">
+</td>
 												</tr>
 											</tbody>
 										</table>
@@ -658,15 +660,15 @@
 												</tr>
 												<tr>
 													<td>Ya</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="rokok_ya" value="rokok_ya"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="rokok_ya" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Tidak</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="rokok_tidak" value="rokok_tidak"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="rokok_tidak" style="cursor: pointer;">
+</td>
 												</tr>
 
 											</tbody>
@@ -679,15 +681,15 @@
 												</tr>
 												<tr>
 													<td>Ya</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="alkohol_ya" value="alkohol_ya"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="alkohol_ya" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Tidak</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="alkohol_tidak"
-															value="alkohol_tidak" style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="alkohol_tidak" style="cursor: pointer;">
+</td>
 												</tr>
 
 											</tbody>
@@ -701,19 +703,22 @@
 												</tr>
 												<tr>
 													<td>Ya</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="kmi_ya" value="kmi_ya"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="kmi_ya" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td>Tidak</td>
-													<td style="text-align: right;"><input class="checkbox"
-															type="checkbox" :checked="kmi_tidak" value="kmi_tidak"
-															style=" cursor: pointer;"></td>
+													<td style="text-align: right;">
+    <input class="checkbox" type="checkbox" v-model="kmi_tidak" style="cursor: pointer;">
+</td>
 												</tr>
 												<tr>
 													<td style="width: 60%;">Alasan</td>
-													<td><Inputed2 :ref="form.kmi_alasan.name" :form="form.kmi_alasan"></Inputed2></td>
+													<td>
+														<Inputed2 :ref="form.kmi_alasan.name" :form="form.kmi_alasan">
+														</Inputed2>
+													</td>
 												</tr>
 
 
@@ -725,58 +730,34 @@
 							</div>
 						</div>
 						<div class="tab-content">
-						<div class="content-tab-in" v-if="tab.content.cppt">
-                                <div class="grid">
-                                    <div class="col-6 form-ml">
-										<table class="table">
-							<thead>
-								<tr>
-									<th>Tanggal</th>
-									<th>Nama Pemeriksa</th>
-									<th>#</th>
-								</tr>
-							</thead>
-							<tbody><tr>
-								
-									<td>{{  }}</td>
-									<td>{{ }}</td>
-									<td>
-										<button class="button-modal-page button-modal-green" v-on:click="look(index)">Detail</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+							<div class="content-tab-in" v-if="tab.content.cppt">
+								<div class="grid">
+									<div class="col-6 form-ml">
+										<iframe title="CPPT" width="100%" height="100%" style="border: 0" :src="linkR">
+										</iframe>
 									</div>
-                                    
-                                    <div class="col-6 form-ml">
-                                        <label for=""> SUBJECT </label>
-                                            <ckeditor
-                                            v-model="form.subject"
-                                            :editor="editor">
-                                            </ckeditor>
-                                        <br>
-                                        <label for=""> ASSESSMENT </label>
-                                            <ckeditor
-                                            v-model="form.assessment"
-                                            :editor="editor">
-                                            </ckeditor>
-                                  <br>
 
-                                        <label for=""> OBJECT </label>
-                                            <ckeditor
-                                            v-model="form.object"
-                                            :editor="editor">
-                                            </ckeditor>
-                                        <br/>
-                                        <label for=""> PLANNING </label>
-                                            <ckeditor
-                                            v-model="form.planning"
-                                            :editor="editor">
-                                            </ckeditor>
-                                    </div>
-                                </div>
-                            </div>
+									<div class="col-6 form-ml">
+										<label for=""> Subject</label>
+										<ckeditor v-model="form.subject" :editor="editor">
+										</ckeditor>
+										<br>
+										<label for=""> Object</label>
+										<ckeditor v-model="form.object" :editor="editor">
+										</ckeditor>
+										<br>
+
+										<label for=""> Assessment </label>
+										<ckeditor v-model="form.assessment" :editor="editor">
+										</ckeditor>
+										<br />
+										<label for=""> Planning </label>
+										<ckeditor v-model="form.plan" :editor="editor">
+										</ckeditor>
+									</div>
+								</div>
 							</div>
+						</div>
 					</div>
 				</div>
 
@@ -835,12 +816,14 @@ export default {
 		vm = this; body = document.body;
 		vm.form = vm.formkelurahan();
 		vm.arr = vm.arrpemeriksaan();
-		window.onclick = function (event) { let a = event.target.className; try { if (a.split(" ")) { a = a.split(" "); if (a[0] != 'hospitals')  { vm.selecthide(); } } if (event.target.className == '')  { vm.selecthide(); } } catch { console.log('mistmatch'); } }
+		window.onclick = function (event) { let a = event.target.className; try { if (a.split(" ")) { a = a.split(" "); if (a[0] != 'hospitals') { vm.selecthide(); } } if (event.target.className == '') { vm.selecthide(); } } catch { console.log('mistmatch'); } }
 	},
 	created: function () { },
 	data: function () {
 		return {
-			data_cppt: [], detail: null,
+
+			linkR: "/print/rekammedis/rawat-jalan/cppt/",
+			detail: null,
 			editor: ClassicEditor,
 			terminate: { show: false, display: 'display: none' },
 			form: null, btnlbl: '', arr: null, keyform: 'addperawat',
@@ -920,11 +903,12 @@ export default {
 					{ value: 'edukasi_pasien', label: 'Edukasi Pasien', class: 'tab-no-active' },
 					{ value: 'cppt', label: 'CPPT', class: 'tab-no-active' },
 				],
-				content: { pemeriksaan_fisik: true, skrinning: false, riwayat_kesehatan: false, edukasi_pasien: false, cppt: false,}
+				content: { pemeriksaan_fisik: true, skrinning: false, riwayat_kesehatan: false, edukasi_pasien: false, cppt: false, }
 			},
 		}
 	},
 	methods: {
+
 
 		datename,
 
@@ -936,17 +920,17 @@ export default {
 		},
 
 		redbutton: function () {
-			if (vm.red == 'Clear Form')  { vm.form = vm.formkelurahan(); }
-			else if (vm.red == 'Back')  { vm.test = vm.temporer; }
+			if (vm.red == 'Clear Form') { vm.form = vm.formkelurahan(); }
+			else if (vm.red == 'Back') { vm.test = vm.temporer; }
 		},
 
 		changesTab: function (values, index, classes) {
 			if (classes != 'tab-active') {
 				for (let i = 0; i < vm.tab.button.length; i++) {
-					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';
-				}
+					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';	}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
+				vm.setCkEditor(vm.form.penetesanobat.value, 'TITLE');
 			}
 		},
 
@@ -961,7 +945,7 @@ export default {
 			let result = vm.boxselected(event, vm.form, key);
 			console.log('aaa', result);
 			if (result._position == 'stop') { return; }
-			else if (result._position == 'nextstop')  { vm.form = result._form; }
+			else if (result._position == 'nextstop') { vm.form = result._form; }
 
 			else { vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block'; }
 		},
@@ -976,7 +960,7 @@ export default {
 			}
 		},
 
-		action:function() {
+		action: function () {
 			// let next = true;
 			// for (const key in vm.form) {
 			// 	if (key != 'select') { if (vm.form[key].required != '') { if (vm.form[key].value == '') { next = false; } } }
@@ -986,8 +970,8 @@ export default {
 			// 		}
 			// 	}
 			// }
-			
-			 vm.parsingForm(); vm.dialog();  
+
+			vm.parsingForm(); vm.dialog();
 		},
 
 		nullcheck: function (data) {
@@ -1061,52 +1045,57 @@ export default {
 			vm.kp_ya = false;
 			vm.kp_tidak = false;
 			vm.data = [];
+			vm.linkR = '/print/rekammedis/rawat-jalan/cppt/'
 
 		},
 
-		look: function(index) {
+		look: function (index) {
 			vm.detail = vm.data[index];
 		},
 
-		
 
-		
+
+
 		hide: function () { vm.terminate.show = false; setTimeout(function () { vm.terminate.display = 'display= none'; body.style.overflowY = 'auto'; }, 250, this); },
 		// parsingForm: function () { 
 		// 	vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detailperawat), 'addperawat'); 
 		// },
+		setCkEditor: function(val, title){
+			vm.form.subject = `<h1>${title}</h1></br><p>${val}</p>`;
+		},
 
-	
 
 		loaderprocess: function () { const left = this.$refs.rootmodal.getBoundingClientRect(); vm.$refs.Loader.running(left, 'modal', 250); },
 
-		setdataform: function ( response) {
-			
-		
+		setdataform: function (response) {
 
-		
+
+
+
 
 			// if (vm.detailperawat.ruang_poliklinik != '0') {
 			// 	vm.form.select.klinik.value = vm.detailperawat.ruang_poliklinik;
 			// 	vm.form.select.klinik.label = 'Poli ' + vm.detailperawat.ruang_poliklinik;
 			// }
-			vm.data = response.data.detailperawat;
+			// vm.data = response.data.detailperawat;
 
 			vm.detailperawat = response.data.data;
 			vm.histori = response.data.histori;
 			let temps = response.data.kunjungan;
+			vm.linkR = vm.linkR + vm.detailperawat.pasien_uuid;
+			console.log(vm.linkR);
 
 			if (temps) {
-				vm.detailperawat.uuid = temps.uuid;
-				vm.detailperawat.registrasi_uuid = temps.registrasi_uuid;
-			
-				vm.form.bs_lainnya.value = temps?.edukasi_pasien?.bs_lainnya ? temps.edukasi_pasien.bs_lainnya:'';
-				vm.form.rpk_jelaskan.value = temps?.edukasi_pasien?.rpk_jelaskan ? temps.edukasi_pasien.rpk_jelaskan:'';
-				vm.form.kmi_alasan.value = temps?.edukasi_pasien?.kmi_alasan ? temps.edukasi_pasien.kmi_alasan:'';
-				
-		
+				vm.form.uuid = temps.uuid;
+				// vm.detailperawat.registrasi_uuid = temps.registrasi_uuid;
+
+				vm.form.bs_lainnya.value = temps?.edukasi_pasien?.bs_lainnya ? temps.edukasi_pasien.bs_lainnya : '';
+				vm.form.rpk_jelaskan.value = temps?.edukasi_pasien?.rpk_jelaskan ? temps.edukasi_pasien.rpk_jelaskan : '';
+				vm.form.kmi_alasan.value = temps?.edukasi_pasien?.kmi_alasan ? temps.edukasi_pasien.kmi_alasan : '';
+
+
 				vm.form.penetesanobat.value = vm.nullcheck(temps.penetesan_obat);
-			
+
 				vm.form.keluhanutama.value = vm.nullcheck(temps.keluhan_utama);
 				vm.form.riwayatpenyakit.value = vm.nullcheck(temps.riwayat_penyakit);
 				vm.form.kasusurgentlainnya.value = vm.nullcheck(temps.kasus_urgent_lainnya);
@@ -1128,66 +1117,68 @@ export default {
 				vm.form.riwayatalergimakananlainnya.value = vm.nullcheck(temps.riwayat_alergi_makanan_lainnya);
 				vm.form.riwayatalergiobatanlainnya.value = vm.nullcheck(temps.riwayat_alergi_obatan_lainnya);
 				vm.form.obatdigunakansaatinilainnya.value = vm.nullcheck(temps.obat_digunakan_saat_ini_lainnya);
-				if (temps.edukasi_pasien){ 
-				if (temps.edukasi_pasien.ph_bahasa == 'ada')  { vm.ph_bahasa = true; }
-				if (temps.edukasi_pasien.ph_pendengaran == 'ada')  { vm.ph_pendengaran = true; }
-				if (temps.edukasi_pasien.ph_masalah_penglihatan == 'ada')  { vm.ph_masalah_penglihatan = true; }
-				if (temps.edukasi_pasien.ph_bicara_buruk == 'ada')  { vm.ph_bicara_buruk = true; }
-				if (temps.edukasi_pasien.ph_hilang_memori == 'ada')  { vm.ph_hilang_memori = true; }
-				if (temps.edukasi_pasien.ph_tidak_ada_partisipasi == 'ada')  { vm.ph_tidak_ada_partisipasi = true; }
-				if (temps.edukasi_pasien.ph_tidak_mampu_belajar == 'ada')  { vm.ph_tidak_mampu_belajar = true; }
-				if (temps.edukasi_pasien.ph_tidak_ada_hambatan_belajar == 'ada')  { vm.ph_tidak_ada_hambatan_belajar = true; }
-				if (temps.edukasi_pasien.ph_cemas == 'ada')  { vm.ph_cemas = true; }
-				if (temps.edukasi_pasien.ph_emosi == 'ada')  { vm.ph_emosi = true; }
-				if (temps.edukasi_pasien.ph_kognitif == 'ada')  { vm.ph_kognitif = true; }
-				if (temps.edukasi_pasien.ph_motivasi == 'ada')  { vm.ph_motivasi = true; }
-				if (temps.edukasi_pasien.edukasi_tata_tertib == 'ada')  { vm.edukasi_tata_tertib = true; }
-				if (temps.edukasi_pasien.edukasi_hak_dan_kewajiban == 'ada')  { vm.edukasi_hak_dan_kewajiban = true; }
-				if (temps.edukasi_pasien.metode_audio == 'ada')  { vm.metode_audio = true; }
-				if (temps.edukasi_pasien.metode_demonstrasi == 'ada')  { vm.metode_demonstrasi = true; }
-				if (temps.edukasi_pasien.metode_lisan == 'ada')  { vm.metode_lisan = true; }
-				if (temps.edukasi_pasien.metode_tulisan == 'ada')  { vm.metode_tulisan = true; }
-				if (temps.edukasi_pasien.metode_visual == 'ada')  { vm.metode_visual = true; }
-				if (temps.edukasi_pasien.pb_normal == 'ada')  { vm.pb_normal = true; }
-				if (temps.edukasi_pasien.pb_gangguan == 'ada')  { vm.pb_gangguan = true; }
-				if (temps.edukasi_pasien.bs_indonesia == 'ada')  { vm.bs_indonesia = true; }
-				if (temps.edukasi_pasien.bs_daerah == 'ada')  { vm.bs_daerah = true; }
-				if (temps.edukasi_pasien.bs_inggris == 'ada')  { vm.bs_inggris = true; }
-				if (temps.edukasi_pasien.bi_tidak == 'ada')  { vm.bi_tidak = true; }
-				if (temps.edukasi_pasien.bi_iya == 'ada')  { vm.bi_iya = true; }
-				if (temps.edukasi_pasien.tp_tk == 'ada')  { vm.tp_tk = true; }
-				if (temps.edukasi_pasien.tp_sd == 'ada')  { vm.tp_sd = true; }
-				if (temps.edukasi_pasien.tp_smp == 'ada')  { vm.tp_smp = true; }
-				if (temps.edukasi_pasien.tp_sma == 'ada')  { vm.tp_sma = true; }
-				if (temps.edukasi_pasien.tp_diploma == 'ada')  { vm.tp_diploma = true; }
-				if (temps.edukasi_pasien.tp_sarjana == 'ada')  { vm.tp_sarjana = true; }
-				if (temps.edukasi_pasien.tp_lainnya == 'ada')  { vm.tp_lainnya = true; }
-				if (temps.edukasi_pasien.ag_islam == 'ada')  { vm.ag_islam = true; }
-				if (temps.edukasi_pasien.ag_protestan == 'ada')  { vm.ag_protestan = true; }
-				if (temps.edukasi_pasien.ag_katolik == 'ada')  { vm.ag_katolik = true; }
-				if (temps.edukasi_pasien.ag_hindu == 'ada')  { vm.ag_hindu = true; }
-				if (temps.edukasi_pasien.ag_budha == 'ada')  { vm.ag_budha = true; }
-				if (temps.edukasi_pasien.ag_lainnya == 'ada')  { vm.ag_lainnya = true; }
-				if (temps.edukasi_pasien.tp_paham == 'ada')  { vm.tp_paham = true; }
-				if (temps.edukasi_pasien.tp_kurang_paham == 'ada')  { vm.tp_kurang_paham = true; }
-				if (temps.edukasi_pasien.tp_tidak == 'ada')  { vm.tp_tidak = true; }
-				if (temps.edukasi_pasien.np_modern == 'ada')  { vm.np_modern = true; }
-				if (temps.edukasi_pasien.np_moderat == 'ada')  { vm.np_moderat = true; }
-				if (temps.edukasi_pasien.np_konvensional == 'ada')  { vm.np_konvensional = true; }
-				if (temps.edukasi_pasien.rokok_ya == 'ada')  { vm.rokok_ya = true; }
-				if (temps.edukasi_pasien.rokok_tidak == 'ada')  { vm.rokok_tidak = true; }
-				if (temps.edukasi_pasien.alkohol_ya == 'ada')  { vm.alkohol_ya = true; }
-				if (temps.edukasi_pasien.alkohol_tidak == 'ada')  { vm.alkohol_tidak = true; }
-				if (temps.edukasi_pasien.kmi_ya == 'ada')  { vm.kmi_ya = true; }
-				if (temps.edukasi_pasien.kmi_tidak == 'ada')  { vm.kmi_tidak = true; }
-				if (temps.edukasi_pasien.rpk_proses_penyakit == 'ada')  { vm.rpk_proses_penyakit = true; }
-				if (temps.edukasi_pasien.rpk_pengobatan == 'ada')  { vm.rpk_pengobatan = true; }
-				if (temps.edukasi_pasien.rpk_nutrisi == 'ada')  { vm.rpk_nutrisi = true; }
-				if (temps.edukasi_pasien.rpk_edukasi == 'ada')  { vm.rpk_edukasi = true; }
-				if (temps.edukasi_pasien.rpk_lain_lain == 'ada')  { vm.rpk_lain_lain = true; }
-				if (temps.edukasi_pasien.kp_ya == 'ada')  { vm.kp_ya = true; }
-				if (temps.edukasi_pasien.kp_tidak == 'ada')  { vm.kp_tidak = true; }
+				if (temps.edukasi_pasien) {
+					if (temps.edukasi_pasien.ph_bahasa == 'ada') { vm.ph_bahasa = true; }
+					if (temps.edukasi_pasien.ph_pendengaran == 'ada') { vm.ph_pendengaran = true; }
+					if (temps.edukasi_pasien.ph_masalah_penglihatan == 'ada') { vm.ph_masalah_penglihatan = true; }
+					if (temps.edukasi_pasien.ph_bicara_buruk == 'ada') { vm.ph_bicara_buruk = true; }
+					if (temps.edukasi_pasien.ph_hilang_memori == 'ada') { vm.ph_hilang_memori = true; }
+					if (temps.edukasi_pasien.ph_tidak_ada_partisipasi == 'ada') { vm.ph_tidak_ada_partisipasi = true; }
+					if (temps.edukasi_pasien.ph_tidak_mampu_belajar == 'ada') { vm.ph_tidak_mampu_belajar = true; }
+					if (temps.edukasi_pasien.ph_tidak_ada_hambatan_belajar == 'ada') { vm.ph_tidak_ada_hambatan_belajar = true; }
+					if (temps.edukasi_pasien.ph_cemas == 'ada') { vm.ph_cemas = true; }
+					if (temps.edukasi_pasien.ph_emosi == 'ada') { vm.ph_emosi = true; }
+					if (temps.edukasi_pasien.ph_kognitif == 'ada') { vm.ph_kognitif = true; }
+					if (temps.edukasi_pasien.ph_motivasi == 'ada') { vm.ph_motivasi = true; }
+					if (temps.edukasi_pasien.edukasi_tata_tertib == 'ada') { vm.edukasi_tata_tertib = true; }
+					if (temps.edukasi_pasien.edukasi_hak_dan_kewajiban == 'ada') { vm.edukasi_hak_dan_kewajiban = true; }
+					if (temps.edukasi_pasien.metode_audio == 'ada') { vm.metode_audio = true; }
+					if (temps.edukasi_pasien.metode_demonstrasi == 'ada') { vm.metode_demonstrasi = true; }
+					if (temps.edukasi_pasien.metode_lisan == 'ada') { vm.metode_lisan = true; }
+					if (temps.edukasi_pasien.metode_tulisan == 'ada') { vm.metode_tulisan = true; }
+					if (temps.edukasi_pasien.metode_visual == 'ada') { vm.metode_visual = true; }
+					if (temps.edukasi_pasien.pb_normal == 'ada') { vm.pb_normal = true; }
+					if (temps.edukasi_pasien.pb_gangguan == 'ada') { vm.pb_gangguan = true; }
+					if (temps.edukasi_pasien.bs_indonesia == 'ada') { vm.bs_indonesia = true; }
+					if (temps.edukasi_pasien.bs_daerah == 'ada') { vm.bs_daerah = true; }
+					if (temps.edukasi_pasien.bs_inggris == 'ada') { vm.bs_inggris = true; }
+					if (temps.edukasi_pasien.bi_tidak == 'ada') { vm.bi_tidak = true; }
+					if (temps.edukasi_pasien.bi_iya == 'ada') { vm.bi_iya = true; }
+					if (temps.edukasi_pasien.tp_tk == 'ada') { vm.tp_tk = true; }
+					if (temps.edukasi_pasien.tp_sd == 'ada') { vm.tp_sd = true; }
+					if (temps.edukasi_pasien.tp_smp == 'ada') { vm.tp_smp = true; }
+					if (temps.edukasi_pasien.tp_sma == 'ada') { vm.tp_sma = true; }
+					if (temps.edukasi_pasien.tp_diploma == 'ada') { vm.tp_diploma = true; }
+					if (temps.edukasi_pasien.tp_sarjana == 'ada') { vm.tp_sarjana = true; }
+					if (temps.edukasi_pasien.tp_lainnya == 'ada') { vm.tp_lainnya = true; }
+					if (temps.edukasi_pasien.ag_islam == 'ada') { vm.ag_islam = true; }
+					if (temps.edukasi_pasien.ag_protestan == 'ada') { vm.ag_protestan = true; }
+					if (temps.edukasi_pasien.ag_katolik == 'ada') { vm.ag_katolik = true; }
+					if (temps.edukasi_pasien.ag_hindu == 'ada') { vm.ag_hindu = true; }
+					if (temps.edukasi_pasien.ag_budha == 'ada') { vm.ag_budha = true; }
+					if (temps.edukasi_pasien.ag_lainnya == 'ada') { vm.ag_lainnya = true; }
+					if (temps.edukasi_pasien.tp_paham == 'ada') { vm.tp_paham = true; }
+					if (temps.edukasi_pasien.tp_kurang_paham == 'ada') { vm.tp_kurang_paham = true; }
+					if (temps.edukasi_pasien.tp_tidak == 'ada') { vm.tp_tidak = true; }
+					if (temps.edukasi_pasien.np_modern == 'ada') { vm.np_modern = true; }
+					if (temps.edukasi_pasien.np_moderat == 'ada') { vm.np_moderat = true; }
+					if (temps.edukasi_pasien.np_konvensional == 'ada') { vm.np_konvensional = true; }
+					if (temps.edukasi_pasien.rokok_ya == 'ada') { vm.rokok_ya = true; }
+					if (temps.edukasi_pasien.rokok_tidak == 'ada') { vm.rokok_tidak = true; }
+					if (temps.edukasi_pasien.alkohol_ya == 'ada') { vm.alkohol_ya = true; }
+					if (temps.edukasi_pasien.alkohol_tidak == 'ada') { vm.alkohol_tidak = true; }
+					if (temps.edukasi_pasien.kmi_ya == 'ada') { vm.kmi_ya = true; }
+					if (temps.edukasi_pasien.kmi_tidak == 'ada') { vm.kmi_tidak = true; }
+					if (temps.edukasi_pasien.rpk_proses_penyakit == 'ada') { vm.rpk_proses_penyakit = true; }
+					if (temps.edukasi_pasien.rpk_pengobatan == 'ada') { vm.rpk_pengobatan = true; }
+					if (temps.edukasi_pasien.rpk_nutrisi == 'ada') { vm.rpk_nutrisi = true; }
+					if (temps.edukasi_pasien.rpk_edukasi == 'ada') { vm.rpk_edukasi = true; }
+					if (temps.edukasi_pasien.rpk_lain_lain == 'ada') { vm.rpk_lain_lain = true; }
+					if (temps.edukasi_pasien.kp_ya == 'ada') { vm.kp_ya = true; }
+					if (temps.edukasi_pasien.kp_tidak == 'ada') { vm.kp_tidak = true; }
 				}
+
+
 
 				if (vm.nullcheck(temps.kasus_urgent) == '') {
 					vm.form.select.kasusurgent.value = '';
@@ -1300,130 +1291,68 @@ export default {
 
 			vm.loaderprocess();
 		},
+
 		parsingForm: function () {
-			var input = document.querySelectorAll('.checkbox');
-			for (var i = 0; i < input.length; i++) {
-				if (input[i].checked) {					
-					if (input[i].value == 'ph_bahasa') { vm.form.ph_bahasa = 'ada'; }
-					else if (input[i].value == 'ph_pendengaran') { vm.form.ph_pendengaran = 'ada'; }
-					else if (input[i].value == 'ph_masalah_penglihatan') { vm.form.ph_masalah_penglihatan = 'ada'; }
-					else if (input[i].value == 'ph_bicara_buruk') { vm.form.ph_bicara_buruk = 'ada'; }
-					else if (input[i].value == 'ph_hilang_memori') { vm.form.ph_hilang_memori = 'ada'; }
-					else if (input[i].value == 'ph_tidak_ada_partisipasi') { vm.form.ph_tidak_ada_partisipasi = 'ada'; }
-					else if (input[i].value == 'ph_tidak_mampu_belajar') { vm.form.ph_tidak_mampu_belajar = 'ada'; }
-					else if (input[i].value == 'ph_tidak_ada_hambatan_belajar') { vm.form.ph_tidak_ada_hambatan_belajar = 'ada'; }
-					else if (input[i].value == 'ph_cemas') { vm.form.ph_cemas = 'ada'; }
-					else if (input[i].value == 'ph_emosi') { vm.form.ph_emosi = 'ada'; }
-					else if (input[i].value == 'ph_kognitif') { vm.form.ph_kognitif = 'ada'; }
-					else if (input[i].value == 'ph_motivasi') { vm.form.ph_motivasi = 'ada'; }
-					else if (input[i].value == 'edukasi_tata_tertib') { vm.form.edukasi_tata_tertib = 'ada'; }
-					else if (input[i].value == 'edukasi_hak_dan_kewajiban') { vm.form.edukasi_hak_dan_kewajiban = 'ada'; }
-					else if (input[i].value == 'metode_audio') { vm.form.metode_audio = 'ada'; }
-					else if (input[i].value == 'metode_demonstrasi') { vm.form.metode_demonstrasi = 'ada'; }
-					else if (input[i].value == 'metode_lisan') { vm.form.metode_lisan = 'ada'; }
-					else if (input[i].value == 'metode_tulisan') { vm.form.metode_tulisan = 'ada'; }
-					else if (input[i].value == 'metode_visual') { vm.form.metode_visual = 'ada'; }
-					else if (input[i].value == 'pb_normal') { vm.form.pb_normal = 'ada'; }
-					else if (input[i].value == 'pb_gangguan') { vm.form.pb_gangguan = 'ada'; }
-					else if (input[i].value == 'bs_indonesia') { vm.form.bs_indonesia = 'ada'; }
-					else if (input[i].value == 'bs_daerah') { vm.form.bs_daerah = 'ada'; }
-					else if (input[i].value == 'bs_inggris') { vm.form.bs_inggris = 'ada'; }
-					else if (input[i].value == 'bi_tidak') { vm.form.bi_tidak = 'ada'; }
-					else if (input[i].value == 'bi_iya') { vm.form.bi_iya = 'ada'; }
-					else if (input[i].value == 'tp_tk') { vm.form.tp_tk = 'ada'; }
-					else if (input[i].value == 'tp_sd') { vm.form.tp_sd = 'ada'; }
-					else if (input[i].value == 'tp_smp') { vm.form.tp_smp = 'ada'; }
-					else if (input[i].value == 'tp_sma') { vm.form.tp_sma = 'ada'; }
-					else if (input[i].value == 'tp_diploma') { vm.form.tp_diploma = 'ada'; }
-					else if (input[i].value == 'tp_sarjana') { vm.form.tp_sarjana = 'ada'; }
-					else if (input[i].value == 'tp_lainnya') { vm.form.tp_lainnya = 'ada'; }
-					else if (input[i].value == 'ag_islam') { vm.form.ag_islam = 'ada'; }
-					else if (input[i].value == 'ag_protestan') { vm.form.ag_protestan = 'ada'; }
-					else if (input[i].value == 'ag_katolik') { vm.form.ag_katolik = 'ada'; }
-					else if (input[i].value == 'ag_hindu') { vm.form.ag_hindu = 'ada'; }
-					else if (input[i].value == 'ag_budha') { vm.form.ag_budha = 'ada'; }
-					else if (input[i].value == 'ag_lainnya') { vm.form.ag_lainnya = 'ada'; }
-					else if (input[i].value == 'tp_paham') { vm.form.tp_paham = 'ada'; }
-					else if (input[i].value == 'tp_kurang_paham') { vm.form.tp_kurang_paham = 'ada'; }
-					else if (input[i].value == 'tp_tidak') { vm.form.tp_tidak = 'ada'; }
-					else if (input[i].value == 'np_modern') { vm.form.np_modern = 'ada'; }
-					else if (input[i].value == 'np_moderat') { vm.form.np_moderat = 'ada'; }
-					else if (input[i].value == 'np_konvensional') { vm.form.np_konvensional = 'ada'; }
-					else if (input[i].value == 'rokok_ya') { vm.form.rokok_ya = 'ada'; }
-					else if (input[i].value == 'rokok_tidak') { vm.form.rokok_tidak = 'ada'; }
-					else if (input[i].value == 'alkohol_ya') { vm.form.alkohol_ya = 'ada'; }
-					else if (input[i].value == 'alkohol_tidak') { vm.form.alkohol_tidak = 'ada'; }
-					else if (input[i].value == 'kmi_ya') { vm.form.kmi_ya = 'ada'; }
-					else if (input[i].value == 'kmi_tidak') { vm.form.kmi_tidak = 'ada'; }
-					else if (input[i].value == 'rpk_proses_penyakit') { vm.form.rpk_proses_penyakit = 'ada'; }
-					else if (input[i].value == 'rpk_pengobatan') { vm.form.rpk_pengobatan = 'ada'; }
-					else if (input[i].value == 'rpk_nutrisi') { vm.form.rpk_nutrisi = 'ada'; }
-					else if (input[i].value == 'rpk_edukasi') { vm.form.rpk_edukasi = 'ada'; }
-					else if (input[i].value == 'rpk_lain_lain') { vm.form.rpk_lain_lain = 'ada'; }
-					else if (input[i].value == 'kp_ya') { vm.form.kp_ya = 'ada'; }
-					else if (input[i].value == 'kp_tidak') { vm.form.kp_tidak = 'ada'; }
-				}		
-				else {
-					if (input[i].value == 'ph_bahasa') { vm.form.ph_bahasa = 'tidak'; }
-					else if (input[i].value == 'ph_pendengaran') { vm.form.ph_pendengaran = 'tidak'; }
-					else if (input[i].value == 'ph_masalah_penglihatan') { vm.form.ph_masalah_penglihatan = 'tidak'; }
-					else if (input[i].value == 'ph_bicara_buruk') { vm.form.ph_bicara_buruk = 'tidak'; }
-					else if (input[i].value == 'ph_hilang_memori') { vm.form.ph_hilang_memori = 'tidak'; }
-					else if (input[i].value == 'ph_tidak_ada_partisipasi') { vm.form.ph_tidak_ada_partisipasi = 'tidak'; }
-					else if (input[i].value == 'ph_tidak_mampu_belajar') { vm.form.ph_tidak_mampu_belajar = 'tidak'; }
-					else if (input[i].value == 'ph_tidak_ada_hambatan_belajar') { vm.form.ph_tidak_ada_hambatan_belajar = 'tidak'; }
-					else if (input[i].value == 'ph_cemas') { vm.form.ph_cemas = 'tidak'; }
-					else if (input[i].value == 'ph_emosi') { vm.form.ph_emosi = 'tidak'; }
-					else if (input[i].value == 'ph_kognitif') { vm.form.ph_kognitif = 'tidak'; }
-					else if (input[i].value == 'ph_motivasi') { vm.form.ph_motivasi = 'tidak'; }
-					else if (input[i].value == 'edukasi_tata_tertib') { vm.form.edukasi_tata_tertib = 'tidak'; }
-					else if (input[i].value == 'edukasi_hak_dan_kewajiban') { vm.form.edukasi_hak_dan_kewajiban = 'tidak'; }
-					else if (input[i].value == 'metode_audio') { vm.form.metode_audio = 'tidak'; }
-					else if (input[i].value == 'metode_demonstrasi') { vm.form.metode_demonstrasi = 'tidak'; }
-					else if (input[i].value == 'metode_lisan') { vm.form.metode_lisan = 'tidak'; }
-					else if (input[i].value == 'metode_tulisan') { vm.form.metode_tulisan = 'tidak'; }
-					else if (input[i].value == 'metode_visual') { vm.form.metode_visual = 'tidak'; }
-					else if (input[i].value == 'pb_normal') { vm.form.pb_normal = 'tidak'; }
-					else if (input[i].value == 'pb_gangguan') { vm.form.pb_gangguan = 'tidak'; }
-					else if (input[i].value == 'bs_indonesia') { vm.form.bs_indonesia = 'tidak'; }
-					else if (input[i].value == 'bs_daerah') { vm.form.bs_daerah = 'tidak'; }
-					else if (input[i].value == 'bs_inggris') { vm.form.bs_inggris = 'tidak'; }
-					else if (input[i].value == 'bi_tidak') { vm.form.bi_tidak = 'tidak'; }
-					else if (input[i].value == 'bi_iya') { vm.form.bi_iya = 'tidak'; }
-					else if (input[i].value == 'tp_tk') { vm.form.tp_tk = 'tidak'; }
-					else if (input[i].value == 'tp_sd') { vm.form.tp_sd = 'tidak'; }
-					else if (input[i].value == 'tp_smp') { vm.form.tp_smp = 'tidak'; }
-					else if (input[i].value == 'tp_sma') { vm.form.tp_sma = 'tidak'; }
-					else if (input[i].value == 'tp_diploma') { vm.form.tp_diploma = 'tidak'; }
-					else if (input[i].value == 'tp_sarjana') { vm.form.tp_sarjana = 'tidak'; }
-					else if (input[i].value == 'tp_lainnya') { vm.form.tp_lainnya = 'tidak'; }
-					else if (input[i].value == 'ag_islam') { vm.form.ag_islam = 'tidak'; }
-					else if (input[i].value == 'ag_protestan') { vm.form.ag_protestan = 'tidak'; }
-					else if (input[i].value == 'ag_katolik') { vm.form.ag_katolik = 'tidak'; }
-					else if (input[i].value == 'ag_hindu') { vm.form.ag_hindu = 'tidak'; }
-					else if (input[i].value == 'ag_budha') { vm.form.ag_budha = 'tidak'; }
-					else if (input[i].value == 'ag_lainnya') { vm.form.ag_lainnya = 'tidak'; }
-					else if (input[i].value == 'tp_paham') { vm.form.tp_paham = 'tidak'; }
-					else if (input[i].value == 'tp_kurang_paham') { vm.form.tp_kurang_paham = 'tidak'; }
-					else if (input[i].value == 'tp_tidak') { vm.form.tp_tidak = 'tidak'; }
-					else if (input[i].value == 'np_modern') { vm.form.np_modern = 'tidak'; }
-					else if (input[i].value == 'np_moderat') { vm.form.np_moderat = 'tidak'; }
-					else if (input[i].value == 'np_konvensional') { vm.form.np_konvensional = 'tidak'; }
-					else if (input[i].value == 'rokok_ya') { vm.form.rokok_ya = 'tidak'; }
-					else if (input[i].value == 'rokok_tidak') { vm.form.rokok_tidak = 'tidak'; }
-					else if (input[i].value == 'alkohol_ya') { vm.form.alkohol_ya = 'tidak'; }
-					else if (input[i].value == 'alkohol_tidak') { vm.form.alkohol_tidak = 'tidak'; }
-					else if (input[i].value == 'kmi_ya') { vm.form.kmi_ya = 'tidak'; }
-					else if (input[i].value == 'kmi_tidak') { vm.form.kmi_tidak = 'tidak'; }
-					else if (input[i].value == 'rpk_proses_penyakit') { vm.form.rpk_proses_penyakit = 'tidak'; }
-					else if (input[i].value == 'rpk_pengobatan') { vm.form.rpk_pengobatan = 'tidak'; }
-					else if (input[i].value == 'rpk_nutrisi') { vm.form.rpk_nutrisi = 'tidak'; }
-					else if (input[i].value == 'rpk_edukasi') { vm.form.rpk_edukasi = 'tidak'; }
-					else if (input[i].value == 'rpk_lain_lain') { vm.form.rpk_lain_lain = 'tidak'; }
-					else if (input[i].value == 'kp_ya') { vm.form.kp_ya = 'tidak'; }
-					else if (input[i].value == 'kp_tidak') { vm.form.kp_tidak = 'tidak'; }
-				}
-			}
+			vm.ph_bahasa ? vm.form.ph_bahasa = 'ada' : vm.form.ph_bahasa = 'tidak';
+			vm.ph_pendengaran ? vm.form.ph_pendengaran = 'ada' : vm.form.ph_pendengaran = 'tidak';
+			vm.ph_masalah_penglihatan ? vm.form.ph_masalah_penglihatan = 'ada' : vm.form.ph_masalah_penglihatan = 'tidak';
+			vm.ph_bicara_buruk ? vm.form.ph_bicara_buruk = 'ada' : vm.form.ph_bicara_buruk = 'tidak';
+			vm.ph_hilang_memori ? vm.form.ph_hilang_memori = 'ada' : vm.form.ph_hilang_memori = 'tidak';
+			vm.ph_tidak_ada_partisipasi ? vm.form.ph_tidak_ada_partisipasi = 'ada' : vm.form.ph_tidak_ada_partisipasi = 'tidak';
+			vm.ph_tidak_mampu_belajar ? vm.form.ph_tidak_mampu_belajar = 'ada' : vm.form.ph_tidak_mampu_belajar = 'tidak';
+			vm.ph_tidak_ada_hambatan_belajar ? vm.form.ph_tidak_ada_hambatan_belajar = 'ada' : vm.form.ph_tidak_ada_hambatan_belajar = 'tidak';
+			vm.ph_cemas ? vm.form.ph_cemas = 'ada' : vm.form.ph_cemas = 'tidak';
+			vm.ph_emosi ? vm.form.ph_emosi = 'ada' : vm.form.ph_emosi = 'tidak';
+			vm.ph_kognitif ? vm.form.ph_kognitif = 'ada' : vm.form.ph_kognitif = 'tidak';
+			vm.ph_motivasi ? vm.form.ph_motivasi = 'ada' : vm.form.ph_motivasi = 'tidak';
+			vm.edukasi_tata_tertib ? vm.form.edukasi_tata_tertib = 'ada' : vm.form.edukasi_tata_tertib = 'tidak';
+			vm.edukasi_hak_dan_kewajiban ? vm.form.edukasi_hak_dan_kewajiban = 'ada' : vm.form.edukasi_hak_dan_kewajiban = 'tidak';
+			vm.metode_audio ? vm.form.metode_audio = 'ada' : vm.form.metode_audio = 'tidak';
+			vm.metode_demonstrasi ? vm.form.metode_demonstrasi = 'ada' : vm.form.metode_demonstrasi = 'tidak';
+			vm.metode_lisan ? vm.form.metode_lisan = 'ada' : vm.form.metode_lisan = 'tidak';
+			vm.metode_tulisan ? vm.form.metode_tulisan = 'ada' : vm.form.metode_tulisan = 'tidak';
+			vm.metode_visual ? vm.form.metode_visual = 'ada' : vm.form.metode_visual = 'tidak';
+			vm.pb_normal ? vm.form.pb_normal = 'ada' : vm.form.pb_normal = 'tidak';
+			vm.pb_gangguan ? vm.form.pb_gangguan = 'ada' : vm.form.pb_gangguan = 'tidak';
+			vm.bs_indonesia ? vm.form.bs_indonesia = 'ada' : vm.form.bs_indonesia = 'tidak';
+			vm.bs_daerah ? vm.form.bs_daerah = 'ada' : vm.form.bs_daerah = 'tidak';
+			vm.bs_inggris ? vm.form.bs_inggris = 'ada' : vm.form.bs_inggris = 'tidak';
+			vm.bi_tidak ? vm.form.bi_tidak = 'ada' : vm.form.bi_tidak = 'tidak';
+			vm.bi_iya ? vm.form.bi_iya = 'ada' : vm.form.bi_iya = 'tidak';
+			vm.tp_tk ? vm.form.tp_tk = 'ada' : vm.form.tp_tk = 'tidak';
+			vm.tp_sd ? vm.form.tp_sd = 'ada' : vm.form.tp_sd = 'tidak';
+			vm.tp_smp ? vm.form.tp_smp = 'ada' : vm.form.tp_smp = 'tidak';
+			vm.tp_sma ? vm.form.tp_sma = 'ada' : vm.form.tp_sma = 'tidak';
+			vm.tp_diploma ? vm.form.tp_diploma = 'ada' : vm.form.tp_diploma = 'tidak';
+			vm.tp_sarjana ? vm.form.tp_sarjana = 'ada' : vm.form.tp_sarjana = 'tidak';
+			vm.tp_lainnya ? vm.form.tp_lainnya = 'ada' : vm.form.tp_lainnya = 'tidak';
+			vm.ag_islam ? vm.form.ag_islam = 'ada' : vm.form.ag_islam = 'tidak';
+			vm.ag_protestan ? vm.form.ag_protestan = 'ada' : vm.form.ag_protestan = 'tidak';
+			vm.ag_katolik ? vm.form.ag_katolik = 'ada' : vm.form.ag_katolik = 'tidak';
+			vm.ag_hindu ? vm.form.ag_hindu = 'ada' : vm.form.ag_hindu = 'tidak';
+			vm.ag_budha ? vm.form.ag_budha = 'ada' : vm.form.ag_budha = 'tidak';
+			vm.ag_lainnya ? vm.form.ag_lainnya = 'ada' : vm.form.ag_lainnya = 'tidak';
+			vm.tp_paham ? vm.form.tp_paham = 'ada' : vm.form.tp_paham = 'tidak';
+			vm.tp_kurang_paham ? vm.form.tp_kurang_paham = 'ada' : vm.form.tp_kurang_paham = 'tidak';
+			vm.tp_tidak ? vm.form.tp_tidak = 'ada' : vm.form.tp_tidak = 'tidak';
+			vm.np_modern ? vm.form.np_modern = 'ada' : vm.form.np_modern = 'tidak';
+			vm.np_moderat ? vm.form.np_moderat = 'ada' : vm.form.np_moderat = 'tidak';
+			vm.np_konvensional ? vm.form.np_konvensional = 'ada' : vm.form.np_konvensional = 'tidak';
+			vm.rokok_ya ? vm.form.rokok_ya = 'ada' : vm.form.rokok_ya = 'tidak';
+			vm.rokok_tidak ? vm.form.rokok_tidak = 'ada' : vm.form.rokok_tidak = 'tidak';
+			vm.alkohol_ya ? vm.form.alkohol_ya = 'ada' : vm.form.alkohol_ya = 'tidak';
+			vm.alkohol_tidak ? vm.form.alkohol_tidak = 'ada' : vm.form.alkohol_tidak = 'tidak';
+			vm.kmi_ya ? vm.form.kmi_ya = 'ada' : vm.form.kmi_ya = 'tidak';
+			vm.kmi_tidak ? vm.form.kmi_tidak = 'ada' : vm.form.kmi_tidak = 'tidak';
+			vm.rpk_proses_penyakit ? vm.form.rpk_proses_penyakit = 'ada' : vm.form.rpk_proses_penyakit = 'tidak';
+			vm.rpk_pengobatan ? vm.form.rpk_pengobatan = 'ada' : vm.form.rpk_pengobatan = 'tidak';
+			vm.rpk_nutrisi ? vm.form.rpk_nutrisi = 'ada' : vm.form.rpk_nutrisi = 'tidak';
+			vm.rpk_edukasi ? vm.form.rpk_edukasi = 'ada' : vm.form.rpk_edukasi = 'tidak';
+			vm.rpk_lain_lain ? vm.form.rpk_lain_lain = 'ada' : vm.form.rpk_lain_lain = 'tidak';
+			vm.kp_ya ? vm.form.kp_ya = 'ada' : vm.form.kp_ya = 'tidak';
+			vm.kp_tidak ? vm.form.kp_tidak = 'ada' : vm.form.kp_tidak = 'tidak';
+
+
 			console.log('awww', vm.form.kp_tidak);
 			vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detailperawat), vm.keyform);
 		},

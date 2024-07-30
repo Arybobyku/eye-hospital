@@ -15,6 +15,7 @@ use App\Models\Registrasi;
 use App\Models\AntrianRo;
 use App\Jobs\SendPoliJob;
 use App\Models\EdukasiPasien;
+use App\Models\Cppt;
 use Carbon\Carbon;
 
 class PemeriksaanCtrl extends Controller
@@ -312,6 +313,34 @@ class PemeriksaanCtrl extends Controller
 
 				
 			}
+			$cppt = Cppt::where('uuid', '=', $request->uuid)->first();
+
+			if ($cppt != null) {
+				$arr = array(
+					'subjek' => $request->subject,
+					'objek' => $request->object,
+					'asesmen' => $request->assessment,
+					'plan' => $request->plan,
+				);
+					$update = Cppt::where('uuid', '=', $request->uuid)->update($arr);
+			}
+			else{
+			$item = new Cppt();
+				$item->uuid = Uuid::uuid4();
+				$item->registrasi_uuid = $request->registrasi_uuid;
+				$item->pasien_uuid = $request->pasien_uuid;
+				$item->pengguna_uuid = $request->pengguna_uuid;
+				$item->nama_pengguna = $request->nama_penggunna;
+				$item->nama_pasien = $request->nama_pasien;
+				$item->nama_dokter = $request->nama_dokter;
+				$item->rekam_medis = $request->rekam_medis;
+				$item->subjek = $request->subject;
+				$item->objek = $request->object;
+				$item->asesmen = $request->assessment;
+				$item->plan = $request->plan;
+				$item->save();
+
+			}
 
 
 			DB::commit();
@@ -485,7 +514,7 @@ class PemeriksaanCtrl extends Controller
 			}
 
 
-			$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $request->uuid)->first();
+			$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 			
 			if ($edukasi_pasien != null) {
 				$arr = array(
@@ -553,7 +582,7 @@ class PemeriksaanCtrl extends Controller
 	
 				);
 	
-				$update = EdukasiPasien::where('registrasi_uuid', '=', $request->uuid)->update($arr);
+				$update = EdukasiPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
 			} else {
 				$item = new EdukasiPasien();
 				$item->uuid = Uuid::uuid4();
@@ -632,7 +661,37 @@ class PemeriksaanCtrl extends Controller
 	
 				$item->save();
 			}
+
+			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
+			if ($cppt != null) {
+				$arr = array(
+					'subjek' => $request->subject,
+					'objek' => $request->object,
+					'asesmen' => $request->assessment,
+					'plan' => $request->plan,
+				);
+					$update = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
+			}
+			else{
+			$item = new Cppt();
+				$item->uuid = Uuid::uuid4();
+				$item->registrasi_uuid = $request->registrasi_uuid;
+				$item->pasien_uuid = $request->pasien_uuid;
+				$item->pengguna_uuid = $request->pengguna_uuid;
+				$item->nama_pengguna = $request->nama_penggunna;
+				$item->nama_pasien = $request->nama_pasien;
+				$item->nama_dokter = $request->nama_dokter;
+				$item->rekam_medis = $request->rekam_medis;
+				$item->subjek = $request->subject;
+				$item->objek = $request->object;
+				$item->asesmen = $request->assessment;
+				$item->plan = $request->plan;
+				$item->save();
+
+			}
 	
+			
 		//	$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $registrasi->registrasi_uuid)->first();
 	
 	
@@ -721,6 +780,7 @@ class PemeriksaanCtrl extends Controller
 
 		$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $request->uuid)
 			->orderBy('id', 'desc')->first();
+		
 
 		if ($edukasi_pasien != null){
 		$kunjungan->edukasi_pasien=$edukasi_pasien;

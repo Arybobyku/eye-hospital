@@ -845,7 +845,8 @@
                             <div class="content-tab-in" v-if="tab.content.cppt">
                                 <div class="grid">
                                     <div class="col-6 form-ml">
-                                        
+                                        <iframe title="CPPT" width="100%" height="100%" style="border: 0" :src="linkR">
+										</iframe>
 
 
 
@@ -858,22 +859,22 @@
                                             :editor="editor">
                                             </ckeditor>
                                         <br>
-                                        <label for=""> ASSESSMENT </label>
+                                        <label for=""> OBJECT </label>
                                             <ckeditor
-                                            v-model="form.subject"
+                                            v-model="form.object"
                                             :editor="editor">
                                             </ckeditor>
                                   <br>
 
-                                        <label for=""> OBJECT </label>
+                                        <label for=""> ASSESSMENT </label>
                                             <ckeditor
-                                            v-model="form.subject"
+                                            v-model="form.assessment"
                                             :editor="editor">
                                             </ckeditor>
                                         <br/>
                                         <label for=""> PLANNING </label>
                                             <ckeditor
-                                            v-model="form.subject"
+                                            v-model="form.plan"
                                             :editor="editor">
                                             </ckeditor>
                                     </div>
@@ -1043,6 +1044,8 @@
         created: function() {},
         data: function() {
             return {
+                linkR: "/print/rekammedis/rawat-jalan/cppt/",
+                editor: ClassicEditor,
                 title_racikan: '',
                 index_racikan: 0,
                 quantity_racikan: 0,
@@ -1068,7 +1071,6 @@
                     //     { value: 'Operasi', label: 'Operasi' }
                     // ]
                 },
-                editor: ClassicEditor,
                 tabIndex:0,
                 previous: 'Sebelumnya',
                 next: 'Selanjutnya',
@@ -1714,6 +1716,7 @@
                 }
                 vm.tab.button[0].class = 'tab-active';
                 vm.tab.content.ro = true;
+                vm.linkR = '/print/rekammedis/rawat-jalan/cppt/'
             },
             hide: function() {
                 vm.terminate.show = false;
@@ -1806,9 +1809,13 @@
 
                 /* Setting index DB */
                 vm.updatedblocal(keys, response);
-
+                
+               
 
                 vm.detail = response.data.data;
+                vm.linkR = vm.linkR + vm.detail.pasien_uuid;
+                  
+                console.log(vm.linkR);
                 vm.form.carabayar_nama = vm.detail.carabayar_nama;
                 vm.histori = response.data.histori;
                 vm.pemeriksaanro = response.data.pemeriksaanro;

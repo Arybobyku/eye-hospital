@@ -16,6 +16,7 @@ use App\Models\Registrasi;
 use App\Models\RegistrasiOperasi;
 use App\Models\Resep;
 use App\Models\ResepRacikan;
+use App\Models\Cppt;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -1608,7 +1609,39 @@ class PemeriksaanCtrl extends Controller
                     $arr = ['status' => 'Rawat Inap'];
                     $update = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
                 }
+              
             }
+            $cppt = Cppt::where('uuid', '=', $request->uuid)->first();
+
+            if ($cppt != null) {
+                $arr = array(
+                    'subjek' => $request->subject,
+                    'objek' => $request->object,
+                    'asesmen' => $request->assessment,
+                    'plan' => $request->plan,
+                );
+                    $update = Cppt::where('uuid', '=', $request->uuid)->update($arr);
+            }
+            else{
+            $item = new Cppt();
+                $item->uuid = Uuid::uuid4();
+                $item->registrasi_uuid = $request->registrasi_uuid;
+                $item->pasien_uuid = $request->pasien_uuid;
+                $item->pengguna_uuid = $request->pengguna_uuid;
+                $item->nama_pengguna = $request->nama_penggunna;
+                $item->nama_pasien = $request->nama_pasien;
+                $item->nama_dokter = $request->nama_dokter;
+                $item->rekam_medis = $request->rekam_medis;
+                $item->subjek = $request->subject;
+                $item->objek = $request->object;
+                $item->asesmen = $request->assessment;
+                $item->plan = $request->plan;
+                $item->save();
+
+            }
+         
+
+            
 
             \DB::commit();
 

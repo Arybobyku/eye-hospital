@@ -139,6 +139,11 @@ export const parsekelurahan = (form, detail) => {
 	data.append('rpk_lain_lain', form.rpk_lain_lain);
 	data.append('kp_ya', form.kp_ya);
 	data.append('kp_tidak', form.kp_tidak);
+
+	data.append('subject', form.subject);
+	data.append('object', form.object);
+	data.append('assessment', form.assessment);
+	data.append('plan', form.plan);
 	
 
 	for(var pair of data.entries()) {
