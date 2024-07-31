@@ -59,6 +59,10 @@ export const formkelurahan = () => {
 		rpk_lain_lain: '',
 		kp_ya: '',
 		kp_tidak: '',
+		subject: '',
+		object: '',
+		assessment: '',
+		plan: '',
 		
 
  		rpk_jelaskan: {

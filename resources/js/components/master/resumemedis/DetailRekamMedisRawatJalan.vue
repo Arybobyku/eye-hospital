@@ -120,36 +120,32 @@ export default {
             selectedIndex: -1,
             listResume: [
                 {
-                    name: "RM.1.1",
+                    name: "RM.1.1 General Consent",
                     link: "/print/rekammedis/rawat-jalan/rm1dot1/",
                 },
                 {
-                    name: "RM.1.2",
+                    name: "RM.1.2 Lembar Edukasi",
                     link: "/print/rekammedis/rawat-jalan/rm1dot2/",
                 },
                 {
-                    name: "RM.1.3",
+                    name: "RM.1.3 Pengkajiann Keperawatan Mata Rawat Jalan",
                     link: "/print/rekammedis/rawat-jalan/rm1dot3/",
                 },
                 {
-                    name: "RM.1.4",
+                    name: "RM.1.4 Status Oftalmologis Rawat Jalan",
                     link: "/print/rekammedis/rawat-jalan/rm1dot4/",
                 },
                 {
-                    name: "RM.1.5",
+                    name: "RM.1.5 Catatan Perkembangan Pasien Terintegrasi (CPPT) Rawat Jalan",
                     link: "/print/rekammedis/rawat-jalan/rm1dot5/",
                 },
                 {
-                    name: "RM.1.6",
+                    name: "RM.1.6 Resume Perawatan Pasien Rawat Jalan",
                     link: "/print/rekammedis/rawat-jalan/rm1dot6/",
                 },
                 {
-                    name: "RM.1.7",
+                    name: "RM.1.7 Resume Medis Rawat Jalan",
                     link: "/print/rekammedis/rawat-jalan/rm1dot7/",
-                },
-                {
-                    name: "RM.1.8",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot8/",
                 },
             ],
             pasien: null,

@@ -49,36 +49,46 @@
                 <th class="tablee">Instruksi PPA Termasuk Pasca Bedah</th>
                 <th class="tablee">Review & Verifikasi DPJP (Paraf)</th>
             </tr>
-            @foreach ($ro as $dataRo)
+            @foreach ($cppt as $itemcppt)
                 
             
             <tr class="tablee" style="padding: 5px"> 
                 <td class="tablee" style="padding: 5px"><b> @php
-                    list($date, $time) = explode(' ', $dataRo->created_at);
+                    list($date, $time) = explode(' ', $itemcppt->created_at);
                     $timeWithoutMilliseconds = explode('.', $time)[0];
                 @endphp {{ $date }}/<br>{{ $timeWithoutMilliseconds }}</b> </td>
-                <td class="tablee" style="padding: 5px"> <b>{{ $dataRo->nama_dokter }}</b> </td>
+                <td class="tablee" style="padding: 5px"> <b></b> </td>
                 <td class="tablee"> 
                     <table style="padding: 5px">
                         <tr>
-                            <td> Subject : <br></td>
+                            <td><b> Subject : </b><br>
+                                {!! $itemcppt->subjek !!} </td>
                         </tr> 
-                        <br><br>
+                   
                         <tr>
-                            <td> Object :</td>
+                            <td> <b>Object : </b>
+                                <br>
+                              {!! $itemcppt->objek !!}
+                            </td>
                         </tr> 
-                        <br><br>
+                
                         <tr>
-                            <td> Assassment :</td>
+                            <td> <b>Assassment : </b>
+                                <br>
+                                {!! $itemcppt->asesmen !!}
+                            </td>
                         </tr> 
-                        <br><br>
+               
                         <tr>
-                            <td> Plan :</td>
+                            <td><b> Plan : </b>
+                                <br>
+                             {!! $itemcppt->plan !!}
+                            </td>
                         </tr>
-                        <br><br> 
+                       
                     </table>
                  </td>
-                 <td class="tablee"> <br> </td>
+                 <td class="tablee"> <br></td>
                  <td class="tablee"> <br> </td>
             </tr>
             @endforeach

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Cppt;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -78,5 +79,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('addtransfer', [TransferCtrl::class, 'addtransfer'])->name('pemeriksaan-addtransfer');
 		Route::post('removetransfer', [TransferCtrl::class, 'removetransfer'])->name('pemeriksaan-removetransfer');
 	});
+
+	
 
 });

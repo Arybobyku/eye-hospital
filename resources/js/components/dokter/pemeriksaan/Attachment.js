@@ -20,6 +20,10 @@ export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obat
 	data.append('keterangan_panjar', form.keteranganpanjar.value);
 	data.append('catatan', form.catatan.value);
 	data.append('ispending', form.ispending);
+	data.append('subject', form.subject);
+	data.append('object', form.object);
+	data.append('assessment', form.assessment);
+	data.append('plan', form.plan);
 	// data.append('pilihan_plan', form.select.pilihanplan.value);
 
 
