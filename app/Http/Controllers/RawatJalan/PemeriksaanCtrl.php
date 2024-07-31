@@ -485,7 +485,7 @@ class PemeriksaanCtrl extends Controller
 			}
 
 
-			$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $request->uuid)->first();
+			$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 			
 			if ($edukasi_pasien != null) {
 				$arr = array(
@@ -553,7 +553,7 @@ class PemeriksaanCtrl extends Controller
 	
 				);
 	
-				$update = EdukasiPasien::where('registrasi_uuid', '=', $request->uuid)->update($arr);
+				$update = EdukasiPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
 			} else {
 				$item = new EdukasiPasien();
 				$item->uuid = Uuid::uuid4();
@@ -561,7 +561,7 @@ class PemeriksaanCtrl extends Controller
 				$item->no_pendaftaran = $request->no_pendaftaran;
 				$item->registrasi_kode = $request->registrasi_kode;
 				$item->registrasi_nomor = $request->registrasi_nomor;
-				$item->registrasi_jenis = $request->registrasi_jenis;
+				// $item->registrasi_jenis = $request->registrasi_jenis;
 				$item->pasien_uuid = $request->pasien_uuid;
 				$item->nama_pasien = $request->nama_pasien;
 				$item->pengguna_uuid = $request->pengguna_uuid;
