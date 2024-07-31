@@ -7,7 +7,7 @@
         >
             <div class="modal-header">
                 <span class="close" v-on:click="hide()">&times;</span>
-                <h2>Rekam Medis Rawat Jalan</h2>
+                <h2>CPPT</h2>
             </div>
             <div class="modal-body" style="height: 100%">
                 <div class="grid">
@@ -36,40 +36,41 @@
                             </li>
                         </ul>
 
-                        <table class="table embed" style="border: 0">
-                            <tbody>
-                                <tr
-                                    v-if="listResume.length > 0"
-                                    v-for="(item, index) in listResume"
-                                >
-                                    <td style="font-weight: bold">
-                                        {{ item.name }}
-                                    </td>
-                                    <td style="text-align: right">
-                                        <button
-                                            :class="{
-                                                'button-modal-page': true,
-                                                'button-modal-green':
-                                                    selectedIndex == index,
-                                                'button-modal-red':
-                                                    selectedIndex != index,
-                                            }"
-                                            v-on:click="look(index)"
-                                        >
-                                            Print
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <br />
-                        <button
-                            class="button-modal-page button-modal-green"
-                            v-on:click="lookAll"
-                        >
-                            Print All
-                        </button>
+                        <div class="col-6 form-ml">
+                            <label for=""> SUBJECT </label>
+                            <ckeditor v-model="form.subject" :editor="editor">
+                            </ckeditor>
+                            <br />
+
+                            <label for=""> OBJECT </label>
+                            <ckeditor v-model="form.object" :editor="editor">
+                            </ckeditor>
+                            <br />
+
+                            <label for=""> ASSESSMENT </label>
+                            <ckeditor
+                                v-model="form.assessment"
+                                :editor="editor"
+                            >
+                            </ckeditor>
+                            <br />
+
+                            <label for=""> PLANNING </label>
+                            <ckeditor v-model="form.planning" :editor="editor">
+                            </ckeditor>
+
+                            <br />
+                            <button
+                                :class="{
+                                    'button-modal-page': true,
+                                    'button-modal-green': true
+                                }"
+                            >
+                                Tambah
+                            </button>
+                        </div>
                     </div>
+
                     <div
                         class="col-8 form-mr"
                         v-if="linkResume"
@@ -99,6 +100,8 @@
 <script>
 var vm, body;
 import { parsepasien } from "./Attachment.js";
+import CKEditor from "@ckeditor/ckeditor5-vue";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import {
     datename,
     nullAndZero,
@@ -106,6 +109,9 @@ import {
 } from "../../../module/Manipulation.js";
 
 export default {
+    components: {
+        ckeditor: CKEditor.component,
+    },
     mounted: function () {
         vm = this;
         body = document.body;
@@ -114,38 +120,48 @@ export default {
         return {
             terminate_detail: { show: false, display: "display: none" },
             listdata: [],
+            editor: ClassicEditor,
             linkResume: "",
+            form: {
+                subject: "",
+                object: "",
+                assessment: "",
+                planning: "",
+            },
             base_url: "http://127.0.0.1:8000",
             linkResumeAll: "/print/rekammedis/rawat-jalan/all/",
-            selectedIndex: -1,
             listResume: [
                 {
-                    name: "RM.1.1 General Consent",
+                    name: "RM.1.1",
                     link: "/print/rekammedis/rawat-jalan/rm1dot1/",
                 },
                 {
-                    name: "RM.1.2 Lembar Edukasi",
+                    name: "RM.1.2",
                     link: "/print/rekammedis/rawat-jalan/rm1dot2/",
                 },
                 {
-                    name: "RM.1.3 Pengkajiann Keperawatan Mata Rawat Jalan",
+                    name: "RM.1.3",
                     link: "/print/rekammedis/rawat-jalan/rm1dot3/",
                 },
                 {
-                    name: "RM.1.4 Status Oftalmologis Rawat Jalan",
+                    name: "RM.1.4",
                     link: "/print/rekammedis/rawat-jalan/rm1dot4/",
                 },
                 {
-                    name: "RM.1.5 Catatan Perkembangan Pasien Terintegrasi (CPPT) Rawat Jalan",
+                    name: "RM.1.5",
                     link: "/print/rekammedis/rawat-jalan/rm1dot5/",
                 },
                 {
-                    name: "RM.1.6 Resume Perawatan Pasien Rawat Jalan",
+                    name: "RM.1.6",
                     link: "/print/rekammedis/rawat-jalan/rm1dot6/",
                 },
                 {
-                    name: "RM.1.7 Resume Medis Rawat Jalan",
+                    name: "RM.1.7",
                     link: "/print/rekammedis/rawat-jalan/rm1dot7/",
+                },
+                {
+                    name: "RM.1.8",
+                    link: "/print/rekammedis/rawat-jalan/rm1dot8/",
                 },
             ],
             pasien: null,
@@ -163,18 +179,16 @@ export default {
                 return data;
             }
         },
-        look: function (index) {
-            vm.linkResume = `${vm.base_url}${vm.listResume[index].link}${vm.pasien.uuid}`;
-            vm.selectedIndex = index;
-        },
-        lookAll: function () {
-            vm.linkResume = `${vm.base_url}${vm.linkResumeAll}${vm.pasien.uuid}`;
+        look: function () {
+            vm.linkResume = `${vm.base_url}/print/rekammedis/rawat-jalan/rm1dot5/${vm.pasien.uuid}`;
         },
         parsingForm: function () {
             vm.$emit("parsingForm", vm.parsepasien(vm.form), "pasien");
         },
         setdataform: function (data) {
             vm.pasien = data;
+
+            vm.look();
             vm.loaderprocess();
         },
 
