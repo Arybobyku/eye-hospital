@@ -17,6 +17,7 @@ use App\Models\Pasien;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\Registrasi;
 use App\Models\Cppt;
+use App\Models\Pengguna;
 use App\Models\Resep;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -701,10 +702,9 @@ class PrintRekamMedisCtrl extends Controller
   function cppt($uuid)
   {
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $cppt = Cppt::where('pasien_uuid', '=', $uuid)->get();
-
-  
-
+    $cppt = Cppt::where('pasien_uuid', '=', $uuid)
+            ->leftJoin('pengguna', 'cppt.pengguna_uuid', '=', 'pengguna.uuid')
+            ->get();    
 
      return view('print-rekam-medis.rawat-jalan.cppt',compact('pasien','cppt',));
   }

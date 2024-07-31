@@ -590,7 +590,7 @@ class PemeriksaanCtrl extends Controller
 				$item->no_pendaftaran = $request->no_pendaftaran;
 				$item->registrasi_kode = $request->registrasi_kode;
 				$item->registrasi_nomor = $request->registrasi_nomor;
-				$item->registrasi_jenis = $request->registrasi_jenis;
+				// $item->registrasi_jenis = $request->registrasi_jenis;
 				$item->pasien_uuid = $request->pasien_uuid;
 				$item->nama_pasien = $request->nama_pasien;
 				$item->pengguna_uuid = $request->pengguna_uuid;
