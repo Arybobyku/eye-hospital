@@ -76,6 +76,7 @@ class PrintRekamMedisCtrl extends Controller
 
     return $pdf->stream();
     // return view('print-rekam-medis.rawat-jalan.rm1dot3');
+    
   }
   function printRm1dot3($uuid)
   {
@@ -160,7 +161,8 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $ep = EdukasiPasien::where('pasienn_uuid', '=', $uuid) ->first();
+    $ep = EdukasiPasien::where('pasien_uuid', '=', $uuid) ->first();
+    $cppt = Cppt::where('pasien_uuid', '=', $uuid)->get();
     $ro = DB::table('pemeriksaan_ro')
       ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
       ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
@@ -172,7 +174,7 @@ class PrintRekamMedisCtrl extends Controller
       'print-rekam-medis.rawat-jalan.all',
       compact(
         'pasien',
-        'ro'
+        'ro','ep','cppt',
       ),
     )->setPaper('a4', 'potrait');
 
