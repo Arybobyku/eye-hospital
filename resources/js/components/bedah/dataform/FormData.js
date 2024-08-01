@@ -692,6 +692,14 @@ export const formlaporaninjeksiantivega = () => {
 			title: '6. Dilakukan injeksi avastin / intravitreal sebanyak', for_id: 'form_'+'intravitreal', type: 'text', required: '', 
 			name: 'intravitreal', value: '', disabled: false, show: true, kinds: ''
 		},
+		select: {
+			pilihantindakan: { 
+				key : 'pilihantindakan', for_id: 'form_'+'pilihantindakan', name: 'pilihantindakan', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'pilihantindakan', isrequired: false, html: 'Form Untuk Tindakan', issearch: false, disabled: false,
+			},
+			
+		}
 	}
 }
 

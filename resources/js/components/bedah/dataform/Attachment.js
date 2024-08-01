@@ -301,7 +301,7 @@ export const parsekeselamatanbedah = (form) => {
 	return data;
 }
 
-export const parselaporaninjeksiantivega = (form) => {
+export const parselaporaninjeksiantivega = (form, listtindakan) => {
 	let data = new FormData();
 	data.append('uuid', form.uuid);
 	data.append('bedah_uuid', form.bedah_uuid);
@@ -316,6 +316,8 @@ export const parselaporaninjeksiantivega = (form) => {
 	data.append('anesthesia', form.anesthesia.value);
 	data.append('anesthesiologist', form.anesthesiologist.value);
 	data.append('intravitreal', form.intravitreal.value);
+	data.append('listtindakan', JSON.stringify(listtindakan));
+
 	
 	return data;
 }

@@ -135,7 +135,7 @@ export default {
 			vm.$refs.CatatanOperasiKatarak.setdataform(response.data.catatanOperasikatarak, vm.datarow);
 			vm.$refs.PersetujuanTindakanKedokteran.setdataform(response.data.persetujuantindakankedokteran, vm.datarow);
 			vm.$refs.KeselamatanBedah.setdataform(response.data.keselamatanbedah, vm.datarow);
-			vm.$refs.LaporanInjeksiAntiVega.setdataform(response.data.laporaninjeksiantivega, vm.datarow);
+			vm.$refs.LaporanInjeksiAntiVega.setdataform(response.data.laporaninjeksiantivega, response.data.listtindakan, vm.datarow);
 			vm.loaderprocess();
 		},
 
