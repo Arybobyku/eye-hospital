@@ -67,4 +67,5 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::get('rekammedis/rawat-inap/rm3dot0/{uuid}', [PrintRekamMedisInapCtrl::class, 'printRm3dot0']);
 	Route::get('rekammedis/rawat-inap/rm3dot2/{uuid}', [PrintRekamMedisInapCtrl::class, 'printRm3dot2']);
 	Route::get('rekammedis/rawat-inap/rm3dot3/{uuid}', [PrintRekamMedisInapCtrl::class, 'printRm3dot3']);
+	Route::get('rekammedis/rawat-inap/rm3dot5/{uuid}', [PrintRekamMedisInapCtrl::class, 'printRm3dot5']);
 });
