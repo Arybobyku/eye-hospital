@@ -13,6 +13,7 @@ use App\Models\ChecklistKesiapanBedah;
 use App\Models\PemeriksaanDokter;
 use App\Models\PemeriksaanRo;
 use App\Models\Pasien;
+use App\Models\PencegahanPasienJatuh;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\Registrasi;
 use App\Models\Resep;
@@ -534,9 +535,10 @@ class PrintRekamMedisCtrl extends Controller
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
 
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $ppj = PencegahanPasienJatuh::where('pasien_uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm2dot9',
-      compact('pasien')
+      compact('pasien', 'ppj',)
     )->setPaper('a4', 'potrait');
 
 

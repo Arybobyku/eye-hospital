@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Bedah;
-
+use PenggunaHelp;
 use App\Http\Controllers\Controller;
 use App\Models\Bedah;
 use App\Models\CatatanOperasiKatarak;
@@ -76,6 +76,7 @@ class DataFormBedahCtrl extends Controller
         $keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
         $laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
         $listtindakan = FormTindakanOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->get();
+        $pencegahanpasienjatuh = PencegahanPasienJatuh::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
         return response()->json([
             'laporanpembedahan' => $laporanpembedahan,
@@ -86,6 +87,7 @@ class DataFormBedahCtrl extends Controller
             'keselamatanbedah' => $keselamatanbedah,
             'laporaninjeksiantivega' => $laporaninjeksiantivega,
             'listtindakan' => $listtindakan,
+            'pencegahanpasienjatuh' => $pencegahanpasienjatuh,
         ]);
     }
 
@@ -216,6 +218,7 @@ class DataFormBedahCtrl extends Controller
         $keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
         $laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
         $listtindakan = FormTindakanOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->get();
+        $pencegahanpasienjatuh = PencegahanPasienJatuh::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
         return response()->json([
             'laporanpembedahan' => $laporanpembedahan,
@@ -226,6 +229,7 @@ class DataFormBedahCtrl extends Controller
             'keselamatanbedah' => $keselamatanbedah,
             'laporaninjeksiantivega' => $laporaninjeksiantivega,
             'listtindakan' => $listtindakan,
+            'pencegahanpasienjatuh' => $pencegahanpasienjatuh,
         ]);
     }
 
@@ -290,6 +294,7 @@ class DataFormBedahCtrl extends Controller
         $keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
         $laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
         $listtindakan = FormTindakanOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->get();
+        $pencegahanpasienjatuh = PencegahanPasienJatuh::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
         return response()->json([
             'laporanpembedahan' => $laporanpembedahan,
@@ -300,6 +305,7 @@ class DataFormBedahCtrl extends Controller
             'keselamatanbedah' => $keselamatanbedah,
             'laporaninjeksiantivega' => $laporaninjeksiantivega,
             'listtindakan' => $listtindakan,
+            'pencegahanpasienjatuh' => $pencegahanpasienjatuh,
         ]);
     }
 
@@ -477,6 +483,7 @@ class DataFormBedahCtrl extends Controller
         $keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
         $laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
         $listtindakan = FormTindakanOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->get();
+        $pencegahanpasienjatuh = PencegahanPasienJatuh::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
         return response()->json([
             'laporanpembedahan' => $laporanpembedahan,
@@ -487,6 +494,7 @@ class DataFormBedahCtrl extends Controller
             'keselamatanbedah' => $keselamatanbedah,
             'laporaninjeksiantivega' => $laporaninjeksiantivega,
             'listtindakan' => $listtindakan,
+            'pencegahanpasienjatuh' => $pencegahanpasienjatuh,
         ]);
     }
 
@@ -651,6 +659,7 @@ class DataFormBedahCtrl extends Controller
         $keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
         $laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
         $listtindakan = FormTindakanOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->get();
+        $pencegahanpasienjatuh = PencegahanPasienJatuh::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
         return response()->json([
             'laporanpembedahan' => $laporanpembedahan,
@@ -661,6 +670,7 @@ class DataFormBedahCtrl extends Controller
             'keselamatanbedah' => $keselamatanbedah,
             'laporaninjeksiantivega' => $laporaninjeksiantivega,
             'listtindakan' => $listtindakan,
+            'pencegahanpasienjatuh' => $pencegahanpasienjatuh,
         ]);
     }
 
@@ -761,6 +771,7 @@ class DataFormBedahCtrl extends Controller
         $keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
         $laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
         $listtindakan = FormTindakanOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->get();
+        $pencegahanpasienjatuh = PencegahanPasienJatuh::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
         return response()->json([
             'laporanpembedahan' => $laporanpembedahan,
@@ -771,6 +782,7 @@ class DataFormBedahCtrl extends Controller
             'keselamatanbedah' => $keselamatanbedah,
             'laporaninjeksiantivega' => $laporaninjeksiantivega,
             'listtindakan' => $listtindakan,
+            'pencegahanpasienjatuh' => $pencegahanpasienjatuh,
         ]);
     }
 
@@ -903,6 +915,7 @@ class DataFormBedahCtrl extends Controller
         $keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
         $laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
         $listtindakan = FormTindakanOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->get();
+        $pencegahanpasienjatuh = PencegahanPasienJatuh::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
         return response()->json([
             'laporanpembedahan' => $laporanpembedahan,
@@ -913,6 +926,7 @@ class DataFormBedahCtrl extends Controller
             'keselamatanbedah' => $keselamatanbedah,
             'laporaninjeksiantivega' => $laporaninjeksiantivega,
             'listtindakan' => $listtindakan,
+            'pencegahanpasienjatuh' => $pencegahanpasienjatuh,
         ]);
     }
 
@@ -987,6 +1001,7 @@ class DataFormBedahCtrl extends Controller
         $keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
         $laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
         $listtindakan = FormTindakanOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->get();
+        $pencegahanpasienjatuh = PencegahanPasienJatuh::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
         return response()->json([
             'laporanpembedahan' => $laporanpembedahan,
@@ -997,6 +1012,7 @@ class DataFormBedahCtrl extends Controller
             'keselamatanbedah' => $keselamatanbedah,
             'laporaninjeksiantivega' => $laporaninjeksiantivega,
             'listtindakan' => $listtindakan,
+            'pencegahanpasienjatuh' => $pencegahanpasienjatuh,
         ]);
     }
     public function pencegahanpasienjatuh(Request $request)
@@ -1078,6 +1094,8 @@ class DataFormBedahCtrl extends Controller
 		$keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 		$pencegahanpasienjatuh = PencegahanPasienJatuh::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+        $listtindakan = FormTindakanOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->get();
+
 
 		return response()->json([
 			'laporanpembedahan' => $laporanpembedahan,
@@ -1088,6 +1106,7 @@ class DataFormBedahCtrl extends Controller
 			'keselamatanbedah' => $keselamatanbedah,
 			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 			'pencegahanpasienjatuh' => $pencegahanpasienjatuh,
+            'listtindakan' => $listtindakan,
 		]);
 	}
 }

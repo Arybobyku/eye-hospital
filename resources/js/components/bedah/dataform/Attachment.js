@@ -11,7 +11,7 @@ export const parselaporanpembedahan = (form) => {
 	data.append('asisten_1', form.asisten1.value);
 	data.append('asisten_2', form.asisten2.value);
 	data.append('perawat_instrument', form.perawatinstrument.value);
-	
+
 	data.append('ja_umum', form.ja_umum);
 	data.append('ja_bsp', form.ja_bsp);
 	data.append('ja_csp', form.ja_csp);
@@ -34,7 +34,7 @@ export const parselaporanpembedahan = (form) => {
 	data.append('teknik_operasi_dan_temuan_intra', form.teknikoperasidantemuanintra.value);
 	data.append('penggunaan_amhp_khusus', form.penggunaanamhpkhusus);
 	data.append('jenis_dan_jumlah_amhp_khusus', form.jenisdanjumlahamhpkhusus.value);
-	data.append('komplikasi_intra_operasi', form.komplikasiintraoperasi);
+	data.append('komplikasi_intra_operasi', form.komplikasi_intra_operasi);
 	data.append('penjabaran_komplikasi_intra_operasi', form.penjabarankomplikasiintraoperasi.value);
 	data.append('perdarahan', form.perdarahan.value);
 	data.append('instruksi_anastesi', form.instruksianastesi.value);
@@ -293,9 +293,9 @@ export const parsekeselamatanbedah = (form) => {
 	data.append('so_bagian_2', form.sobagian2);
 	data.append('so_bagian_3', form.sobagian3);
 	data.append('so_bagian_4', form.sobagian4);
-	
+
 	data.append('so_bagian_5', form.sobagian5);
-	
+
 	data.append('so_asisten_1', form.tobagian7);
 	data.append('so_penata', form.tobagian8);
 	return data;
@@ -318,7 +318,34 @@ export const parselaporaninjeksiantivega = (form, listtindakan) => {
 	data.append('intravitreal', form.intravitreal.value);
 	data.append('listtindakan', JSON.stringify(listtindakan));
 
-	
+
 	return data;
 }
+export const parsepencegahanpasienjatuh = (form) => {
+	let data = new FormData();
+	data.append('uuid', form.uuid);
+	data.append('bedah_uuid', form.bedah_uuid);
+	data.append('tanggal_pelaksanaan', form.tanggal_pelaksanaan.value);
+	data.append('rjr1', form.rjr1);
+	data.append('rjr2', form.rjr2);
+	data.append('rjr3', form.rjr3);
+	data.append('rjr4', form.rjr4);
+	data.append('rjr5', form.rjr5);
+	data.append('rjr6', form.rjr6);
+	data.append('rjr7', form.rjr7);
+	data.append('rjr8', form.rjr8);
+	data.append('rjr9', form.rjr9);
+	data.append('rjt1', form.rjt1);
+	data.append('rjt2', form.rjt2);
+	data.append('rjt3', form.rjt3);
+	data.append('rjt4', form.rjt4);
+	data.append('rjt5', form.rjt5);
+	data.append('rjt6', form.rjt6);
+	data.append('rjt7', form.rjt7);
+	data.append('rjt8', form.rjt8);
+	data.append('rjt9', form.rjt9);
+	data.append('rjt10', form.rjt10);
 
+
+	return data;
+}
