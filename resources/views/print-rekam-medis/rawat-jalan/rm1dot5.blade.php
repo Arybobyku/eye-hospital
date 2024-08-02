@@ -25,6 +25,10 @@
         .page_break{
     page-break-before: always;
 }
+        .table, td{
+            border:1px solid #767676;
+            border-collapse: collapse;
+        }
     </style>
 
 </head>
