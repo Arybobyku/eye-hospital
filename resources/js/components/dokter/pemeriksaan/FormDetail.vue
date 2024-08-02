@@ -683,7 +683,7 @@
                                         </div>
                                         <div class="col-4 form-ml">
                                             <!-- <Inputed :ref="form.waktuodc.name" :form="form.waktuodc"></Inputed> -->
-                                            <Timepicker :ref="form.waktuodc.name" :form="form.waktuodc"> >
+                                            <Timepicker :ref="form.waktuodc.name" :form="form.waktuodc">
                                             </Timepicker>
                                         </div>
 
@@ -1791,7 +1791,7 @@
 
             setdataform: function(response) {
                 let data = response.data;
-                console.log("memek");
+                console.log("respone");
                 console.log(response.data)
 
                 let keys = ['carabayartindakanrawatjalan', 'tindakanrawatjalan', 'apotek', 'apotekracikan',
@@ -1929,6 +1929,7 @@
                     vm.form.keteranganbedah.value = onedaycare.keterangan;
                     vm.form.penjadwalanodc.value = onedaycare.tanggal;
                     vm.form.waktuodc.value = onedaycare.waktu;
+
                     vm.form.select.carabayar.value = onedaycare.carabayar_uuid;
                     vm.form.select.carabayar.label = onedaycare.carabayar_nama;
                     vm.form.select.asuransi.value = onedaycare.asuransi_uuid;
@@ -1948,6 +1949,8 @@
                 
  
                 }
+                console.log("fom waktuodc");
+                console.log(vm.form.waktuodc.value);
 
 
                 let temps = response.data.kunjungan;

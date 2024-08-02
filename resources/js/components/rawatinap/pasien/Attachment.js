@@ -50,6 +50,15 @@ export const parsepaket = (form) => {
  	}
 	return data;
 }
+export const parsepulang = (form) => {
+
+	let data = new FormData();
+	data.append('uuid', form.uuid);
+	data.append('registrasi_uuid', form.registrasi_uuid);
+	data.append('tanggal_keluar_inap', form.tanggal_keluar_inap.value);
+	data.append('waktu_keluar_inap', form.waktu_keluar_inap.value);
+	return data;
+}
 
 export const parseaddobat = (form) => {
 

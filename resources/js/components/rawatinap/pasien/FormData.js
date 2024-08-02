@@ -33,6 +33,22 @@ export const formpaket = () => {
 	}
 }
 
+export const formpulang = () => {
+	return {
+		title: '', posisi: '', uuid: '',
+		registrasi_uuid: '',
+		tanggal_keluar_inap:{
+			title: 'Tanggal', for_id: 'form_'+'tanggal_keluar_inap', type: 'date', required: 'required', 
+			name: 'tanggal_keluar_inap', value: '', disabled: false, show: true, kinds: ''
+		},
+		waktu_keluar_inap:{
+			title: 'Waktu', for_id: 'form_'+'waktu_keluar_inap', type: 'text', required: 'required', 
+			name: 'waktu_keluar_inap', value: '', disabled: false, show: true, kinds: ''
+		},
+		
+	}
+}
+
 export const formkontrol = () => {
 	return {
 		title: '', posisi: '', uuid: '',

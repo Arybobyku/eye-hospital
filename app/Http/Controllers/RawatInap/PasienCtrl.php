@@ -621,6 +621,12 @@ class PasienCtrl extends Controller
             $arr = ['sisa' => ((int) $cekkamar->sisa + 1)];
             $update = KamarInap::where('uuid', '=', $data->kamar_inap_uuid)->update($arr);
 
+            $arr2 = [
+                        'tanggal_keluar_inap' => $request->tanggal_keluar_inap,
+                        'waktu_keluar_inap' => $request->waktu_keluar_inap,
+                    ];
+            $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr2);
+
             return response()->json(['hasil' => 'berhasil']);
         } catch (Exception $e) {
             \DB::rollback();
@@ -748,6 +754,17 @@ class PasienCtrl extends Controller
         }
 
         return response()->json(['uuid' => $uuid, 'tanggal' => $tanggal, 'waktu' => $waktu]);
+    }
+
+    public function pulangdata(Request $request)
+    {
+        $waktu = '';
+        $reg = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+        if ($reg) {
+            $waktu = $reg->waktu_keluar_inap;
+        }
+
+        return response()->json(['data' => $reg, 'waktu_keluar_inap' => $waktu]);
     }
 
     public function getpaket(Request $request)

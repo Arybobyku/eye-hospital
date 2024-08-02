@@ -45,7 +45,7 @@ export const formrawatinap = () => {
 		},
 
 		waktu_masuk_inap:{
-			title: 'Pada Pukul', for_id: 'form_'+'waktu_masuk_inap', type: 'text', required: '', 
+			title: 'Pada Pukul', for_id: 'form_'+'waktu_masuk_inap', type: 'time', required: '', 
 			name: 'waktu_masuk_inap', value: '', disabled: false, show: true, kinds: ''
 		},
 
