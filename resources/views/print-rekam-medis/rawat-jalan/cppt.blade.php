@@ -5,6 +5,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+         .table, td {
+            border: 1px solid #767171;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
 
 <body>
@@ -14,15 +20,14 @@
    
             <tr  style="border-collapse:collapse; border:1px solid #767171; width:100px;" >
                 <td style="width:150px;  padding:5px;">Nama Pemeriksa </td>
-                <td>: </td>
+                <td>: {{$item->nama ?? ""}}</td>
           
             </tr>
             <tr  style="border-collapse:collapse; border:1px solid #767171; width:100px;" >
                 <td style="width:150px;  padding:5px;">Tanggal Pemeriksaan </td>
-                <td>: @php
-                    list($date, $time) = explode(' ', $item->created_at);
-                    $timeWithoutMilliseconds = explode('.', $time)[0];
-                @endphp {{ $date }} / {{ $timeWithoutMilliseconds }}</td>
+                <td>: 
+                    {{$item->created_at}}
+                </td>
               
             </tr>
             <tr>

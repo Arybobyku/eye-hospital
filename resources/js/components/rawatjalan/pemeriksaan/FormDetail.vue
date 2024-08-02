@@ -36,7 +36,6 @@
 		
 						<div class="tab-content">
 
-
 							<div style="position: relative;" class="content-tab-in" v-if="tab.content.ocular_dextra">
 								<div class="grid">
 									<div class="col-6 form-mr">
@@ -258,8 +257,80 @@ export default {
 					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; }
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
+				console.log("===>")
+				vm.setCkEditor();
 			}
 		},
+
+		setCkEditor: function(){
+				vm.form.object = `
+				<figure class="table">
+				<table>
+					<tbody>
+					<tr>
+						<td>&nbsp;</td>
+						<td>OD</td>
+						<td>OS</td>
+					</tr>
+					<tr>
+						<td>Autoref</td>
+						<td>${vm.form.oculardextraautoref.value}</td>
+						<td>${vm.form.ocularsinistraautoref.value}</td>
+					</tr>
+					<tr>
+						<td>Add</td>
+						<td>${vm.form.oculardextraadd.value}</td>
+						<td>${vm.form.ocularsinistraadd.value}</td>
+					</tr>
+					<tr>
+						<td>BCVA</td>
+						<td>${vm.form.oculardextrabcva1.value} ${vm.form.oculardextrabcva2.value}</td>
+						<td>${vm.form.ocularsinistrabcva1.value} ${vm.form.ocularsinistrabcva2.value}</td>
+					</tr>
+					<tr>
+						<td>Keratometri K1</td>
+						<td>${vm.form.oculardextrakeratometrik1.value}</td>
+						<td>${vm.form.ocularsinistrakeratometrik1.value}</td>
+					</tr>
+					<tr>
+						<td>Keratometri K2</td>
+						<td>${vm.form.oculardextrakeratometrik2.value}</td>
+						<td>${vm.form.ocularsinistrakeratometrik2.value}</td>
+					</tr>
+					<tr>
+						<td>Tonometri</td>
+						<td>${vm.form.oculardextratonometri.value}</td>
+						<td>${vm.form.ocularsinistratonometri.value}</td>
+					</tr>
+					<tr>
+						<td>Visus</td>
+						<td>${vm.form.oculardextravisus.value}</td>
+						<td>${vm.form.ocularsinistravisus.value}</td>
+					</tr>
+					<tr>
+						<td>Kacamata Sph</td>
+						<td>${vm.form.oculardextrakacamatalamasph.value}</td>
+						<td>${vm.form.ocularsinistrakacamatalamasph.value}</td>
+					</tr>
+					<tr>
+						<td>Kacamata Cyl</td>
+						<td>${vm.form.oculardextrakacamatalamacyl.value}</td>
+						<td>${vm.form.ocularsinistrakacamatalamacyl.value}</td>
+					</tr>
+					<tr>
+						<td>Kacamata Add</td>
+						<td>${vm.form.oculardextrakacamatalamaaddisi.value}</td>
+						<td>${vm.form.ocularsinistrakacamatalamaaddisi.value}</td>
+					</tr>
+					</tbody>
+				</table>
+				</figure>
+				`;
+
+
+		console.log("====>", vm.form.object)
+		},
+
 
 		parsekelurahan, formkelurahan, initindexdb, indexdbprocessing, arrpemeriksaan, datename,
 		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected,
