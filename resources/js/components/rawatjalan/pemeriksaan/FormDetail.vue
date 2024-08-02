@@ -269,8 +269,8 @@ export default {
 					<tbody>
 					<tr>
 						<td>&nbsp;</td>
-						<td>OD</td>
-						<td>OS</td>
+						<td>Ocular Dextra</td>
+						<td>Ocular Sinistra</td>
 					</tr>
 					<tr>
 						<td>Autoref</td>
@@ -284,8 +284,8 @@ export default {
 					</tr>
 					<tr>
 						<td>BCVA</td>
-						<td>${vm.form.oculardextrabcva1.value} ${vm.form.oculardextrabcva2.value}</td>
-						<td>${vm.form.ocularsinistrabcva1.value} ${vm.form.ocularsinistrabcva2.value}</td>
+						<td>${vm.form.oculardextrabcva1.value} => ${vm.form.oculardextrabcva2.value}</td>
+						<td>${vm.form.ocularsinistrabcva1.value} => ${vm.form.ocularsinistrabcva2.value}</td>
 					</tr>
 					<tr>
 						<td>Keratometri K1</td>

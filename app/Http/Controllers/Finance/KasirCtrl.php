@@ -46,11 +46,13 @@ class KasirCtrl extends Controller
                                 ->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
                                 ->where(function ($q) {
                                     $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                     $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
                                 })
                                 ->orderBy('registrasi.no_kwitansi', 'desc')
                                 ->where(function ($q) {
                                     $q->where('registrasi.status', 'Kunjungan');
+                                    $q->orWhere('registrasi.status', '=', 'One Day Care');
                                     $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
                                 })
                                 ->where(function ($q) {
@@ -59,14 +61,17 @@ class KasirCtrl extends Controller
                                 ->skip($skip)->take($this->take)
                                 ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
                                 ->get();
+                                
             $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
                                 ->where('registrasi.delete_soft', '=', 1)
                                 ->where(function ($q) {
                                     $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                     $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                     $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
                                 })
                                 ->where(function ($q) {
                                     $q->where('registrasi.status', 'Kunjungan');
+                                   $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                     $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
                                 })
                                 ->where(function ($q) {
@@ -80,10 +85,13 @@ class KasirCtrl extends Controller
                                     ->orderBy('registrasi.no_kwitansi', 'desc')
                                     ->where(function ($q) {
                                         $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                        $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                         $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
                                     })
                                     ->where(function ($q) {
                                         $q->where('registrasi.status', 'Kunjungan');
+
+                                        $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                         $q->orWhere('registrasi.status', 'Rawat Inap');
                                     })
                                     ->where(function ($q) {
@@ -97,10 +105,14 @@ class KasirCtrl extends Controller
                                 ->where('registrasi.delete_soft', '=', 1)
                                 ->where(function ($q) {
                                     $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                     $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
                                 })
                                 ->where(function ($q) {
                                     $q->where('registrasi.status', 'Kunjungan');
+
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                     $q->orWhere('registrasi.status', 'Rawat Inap');
                                 })
                                 ->where(function ($q) {

@@ -2087,6 +2087,74 @@ export default {
                 vm.action();
             }
         },
+        setCkEditor: function(){
+            vm.form.object = `
+            <figure class="table">
+            <table>
+                <tbody>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>Ocular Dextra</td>
+                    <td>Ocular Sinistra</td>
+                </tr>
+                <tr>
+                    <td>Autoref</td>
+                    <td>${vm.pemeriksaanro.ocular_dextra_autoref}</td>
+                    <td>${vm.pemeriksaanro.ocular_sinistra_autoref}</td>
+                </tr>
+                <tr>
+                    <td>Add</td>
+                    <td>${vm.pemeriksaanro.ocular_dextra_add}</td>
+                    <td>${vm.pemeriksaanro.ocular_sinistra_add}</td>
+                </tr>
+                <tr>
+                    <td>BCVA</td>
+                    <td>${vm.pemeriksaanro.ocular_dextra_bcva1} => ${vm.pemeriksaanro.ocular_dextra_bcva2}</td>
+                    <td>${vm.pemeriksaanro.ocular_sinistra_bcva1} => ${vm.pemeriksaanro.ocular_sinistra_bcva2}</td>
+                </tr>
+                <tr>
+                    <td>Keratometri K1</td>
+                    <td>${vm.pemeriksaanro.ocular_dextra_keratometri_k1}</td>
+                    <td>${vm.pemeriksaanro.ocular_sinistra_keratometri_k1}</td>
+                </tr>
+                <tr>
+                    <td>Keratometri K2</td>
+                    <td>${vm.pemeriksaanro.ocular_dextra_keratometri_k2}</td>
+                    <td>${vm.pemeriksaanro.ocular_sinistra_keratometri_k2}</td>
+                </tr>
+                <tr>
+                    <td>Tonometri</td>
+                    <td>${vm.pemeriksaanro.ocular_dextra_tonometri}</td>
+                    <td>${vm.pemeriksaanro.ocular_sinistra_tonometri}</td>
+                </tr>
+                <tr>
+                    <td>Visus</td>
+                    <td>${vm.pemeriksaanro.ocular_dextra_visus}</td>
+                    <td>${vm.pemeriksaanro.ocular_sinistra_visus}</td>
+                </tr>
+                <tr>
+                    <td>Kacamata Sph</td>
+                    <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_sph}</td>
+                    <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_sph}</td>
+                </tr>
+                <tr>
+                    <td>Kacamata Cyl</td>
+                    <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_cyl}</td>
+                    <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_cyl}</td>
+                </tr>
+                <tr>
+                    <td>Kacamata Add</td>
+                    <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_addisi}</td>
+                    <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_addisi}</td>
+                </tr>
+                </tbody>
+            </table>
+            </figure>
+            `;
+
+
+		console.log("====>", vm.form.object)
+		},
 
         additemobat: function () {
             console.log(vm.tempobat);
@@ -2305,6 +2373,7 @@ export default {
                 vm.form.inapjalan = "aktif";
                 ("");
             }
+            vm.setCkEditor();
         },
 
         parsekelurahan,

@@ -930,7 +930,7 @@ export default {
 					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';	}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
-				vm.setCkEditor(vm.form.penetesanobat.value, 'TITLE');
+				//- vm.setCkEditor(vm.form.penetesanobat.value, 'TITLE');
 			}
 		},
 
