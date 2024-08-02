@@ -342,7 +342,11 @@ class PasienBedahCtrl extends Controller
             }
             echo 'jenis kamar uuid';
             echo $request->jenis_kamar_uuid;
+            echo 'tanggal masuk inap';
+
+            echo $request->tanggal_masuk_inap;
             echo 'kamar';
+
             echo $kamar;
             echo $harga_kamar;
             // $remove = RegistrasiOperasi::where('uuid', '=', $request->uuid)->update($arr);
@@ -375,6 +379,8 @@ class PasienBedahCtrl extends Controller
                         'no_gelang' => $nomor,
                         'inap_jalan' => 'Rawat Inap Jalan Asuransi',
                         'status_dokter' => 'Sudah Diperiksa',
+                        'tanggal_masuk_inap' => $request->tanggal_masuk_inap,
+                        'waktu_masuk_inap' => $request->waktu_masuk_inap,
                         'kamar_inap_uuid' => $request->kamar_inap_uuid,
                         'kamar_inap_nama' => $request->kamar_inap_nama,
                         'kamar_inap_lantai' => $request->kamar_inap_lantai,

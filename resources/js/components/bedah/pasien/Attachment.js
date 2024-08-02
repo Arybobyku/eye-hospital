@@ -110,6 +110,8 @@ export const parserawatinap = (form) => {
 	data.append('uuid', form.uuid);
 	
 	data.append('registrasi_uuid', form.registrasi_uuid);
+	data.append('waktu_masuk_inap', form.waktu_masuk_inap.value);
+	data.append('tanggal_masuk_inap', form.tanggal_masuk_inap.value);
 	data.append('kamar_inap_uuid', form.kamar_inap_uuid);
 	data.append('kamar_inap_nama', form.kamar_inap_nama);
 	data.append('kamar_inap_lantai', form.kamar_inap_lantai);

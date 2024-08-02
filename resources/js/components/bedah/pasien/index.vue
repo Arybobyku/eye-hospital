@@ -224,6 +224,8 @@ export default {
 		},
 
 		tablebutton:function(posisi, data, index) {
+			console.log("POSISI aturulang");
+			console.log(posisi);
 			if (posisi == 'proses') {
 				vm.position = "prosesdata";
 				vm.attach.data = new FormData();
@@ -259,7 +261,15 @@ export default {
 				setTimeout(() => { vm.loadingModal('inapdata'); }, 250, this);
 				vm.attach.data = new FormData();
 				vm.attach.data.append('uuid', data.uuid);
-				vm.attach.data.append('jenis', data.jenis);
+				vm.attach.url = vm.attach.link.inap;
+				vm.executions();
+			}
+			else if (posisi == 'inapdata') {
+				vm.position = "inapdata";
+				vm.$refs.FormInap.show('inapdata', 'Tambah Rawat Inap', data.uuid);
+				setTimeout(() => { vm.loadingModal('inapdata'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
 				vm.attach.url = vm.attach.link.inap;
 				vm.executions();
 			}
@@ -295,18 +305,18 @@ export default {
 				vm.attach.url = vm.attach.link.getlayanan;
 				vm.executions();
 			}
-			else if (posisi == 'inapadd') {
-				console.log("INAP ADD");
-				vm.$refs.FormInap.aturulang();
-				vm.position = "inapadd";
-				vm.$refs.FormInap.show('inapadd', 'Penambahan Kamar Inap', data.uuid, data);
-				setTimeout(() => { vm.loadingModal('inapdata'); }, 250, this);
-				vm.attach.data = new FormData();
-				vm.attach.data.append('registrasi_uuid', data.registrasi_uuid);
-				vm.attach.data.append('uuid', data.uuid);
-				vm.attach.url = vm.attach.link.inapadd;
-				vm.executions();
-			}
+			// else if (posisi == 'inapadd') {
+			// 	console.log("INAP ADD");
+			// 	vm.$refs.FormInap.aturulang();
+			// 	vm.position = "inapadd";
+			// 	vm.$refs.FormInap.show('inapadd', 'Penambahan Kamar Inap', data.uuid, data);
+			// 	setTimeout(() => { vm.loadingModal('inapdata'); }, 250, this);
+			// 	vm.attach.data = new FormData();
+			// 	vm.attach.data.append('registrasi_uuid', data.registrasi_uuid);
+			// 	vm.attach.data.append('uuid', data.uuid);
+			// 	vm.attach.url = vm.attach.link.inapadd;
+			// 	vm.executions();
+			// }
 			else if (posisi == 'obat') {
 				vm.$refs.FormObat.aturulang();
 				vm.position = "loaddataobat";
@@ -343,6 +353,7 @@ export default {
 		},
 
 		loadingModal: function (position) { 
+			console.log(position)
 			if (position == 'formunit') { vm.$refs.FormUnit.loaderprocess();  }
 			else if (position == 'formobat') { vm.$refs.FormObat.loaderprocess();  }
 			else if (position == 'formresep') { vm.$refs.FormResep.loaderprocess();  }
@@ -484,6 +495,8 @@ export default {
 		},
 
 		berhasil: function (response) {
+			console.log("posisiberhasil");
+			console.log(vm.position);
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
 	

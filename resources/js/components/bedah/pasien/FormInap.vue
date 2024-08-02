@@ -8,23 +8,36 @@
             </div>
             <div class="modal-body" v-if="form">
                 <div class="grid">
-
                     <div class="col-4 form-mr">
                         <ul class="list-detail">
-                            <li>Tanggal Pendaftaran<span><strong>{{ datename(detail.tanggal) }}</strong></span></li>
-                            <li>No Rekam Medis<span><strong>{{ detail.rekam_medis }}</strong></span></li>
-                            <li>Nama Lengkap<span><strong>{{ detail.nama_pasien }}</strong></span></li>
-                            <li>Tanggal Lahir<span><strong>{{ datename(detail.tanggal_lahir) }}</strong></span></li>
-                            <li>Jenis Kelamin<span><strong>{{ detail.jenis_kelamin }}</strong></span></li>
+                            <li>Tanggal Pendaftaran<span><strong>{{ datename(detail . tanggal) }}</strong></span></li>
+                            <li>No Rekam Medis<span><strong>{{ detail . rekam_medis }}</strong></span></li>
+                            <li>Nama Lengkap<span><strong>{{ detail . nama_pasien }}</strong></span></li>
+                            <li>Tanggal Lahir<span><strong>{{ datename(detail . tanggal_lahir) }}</strong></span></li>
+                            <li>Jenis Kelamin<span><strong>{{ detail . jenis_kelamin }}</strong></span></li>
                         </ul>
                     </div>
-                    <div class="col-4">
-                        <Selected
-                            v-on:click="selectbox($event, form.select.kamarinap.name, form.select.kamarinap.statics)"
-                            :ref="form.select.kamarinap.name" @selecteditem="selecteditem" @selectclear="selectclear"
-                            :selection="form.select.kamarinap"
-                            v-on:keyup="selectfilter($event, form.select.kamarinap.name)">
-                        </Selected>
+                    <div class="col-8">
+
+                        <div class="grid">
+                            <div class="col-8">
+                                <Selected
+                                    v-on:click="selectbox($event, form.select.kamarinap.name, form.select.kamarinap.statics)"
+                                    :ref="form.select.kamarinap.name" @selecteditem="selecteditem"
+                                    @selectclear="selectclear" :selection="form.select.kamarinap"
+                                    v-on:keyup="selectfilter($event, form.select.kamarinap.name)">
+                                </Selected>
+                            </div>
+                            <div class="col-8">
+                                <Inputed :ref="form.tanggal_masuk_inap.name" :form="form.tanggal_masuk_inap">
+                                </Inputed>
+                            </div>
+                            <div class="col-4 form-ml">
+                                <!-- <Inputed :ref="form.waktuodc.name" :form="form.waktuodc"></Inputed> -->
+                                <Inputed :ref="form.waktu_masuk_inap.name" :form="form.waktu_masuk_inap">
+                                </Inputed>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -34,7 +47,8 @@
                 <div class="col-8"></div>
                 <div class="col-4" style="text-align: right" v-if="ishide">
                     <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-                    <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+                    <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
+                        }}</button>
                 </div>
                 <div class="col-4" style="text-align: right" v-else>
                     <button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan
@@ -58,7 +72,7 @@
         formrawatinap
     } from './FormData.js';
     import {
-		parserawatinap
+        parserawatinap
     } from './Attachment.js';
     import {
         filterselected,
@@ -94,7 +108,7 @@
             toast,
             Swal,
             Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
-            Timepicker: defineAsyncComponent(() => import('../../../section/Timepicker.vue')),
+            Timepicker: defineAsyncComponent(() => import('../../../section/Timepicker.vue')),  
             Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
             Textarea: defineAsyncComponent(() => import('../../../section/Textarea.vue')),
             DigitalSignature: defineAsyncComponent(() => import('../../digital-signature/DigitalSignature.vue')),
@@ -344,7 +358,7 @@
 
             redbutton: function() {
                 if (vm.red == 'Clear Form') {
-					vm.form = vm.formrawatinap();
+                    vm.form = vm.formrawatinap();
                 } else if (vm.red == 'Back') {
                     vm.test = vm.temporer;
                 }
@@ -368,8 +382,8 @@
                 }
             },
 
-			parserawatinap,
-			formrawatinap,
+            parserawatinap,
+            formrawatinap,
             initindexdb,
             indexdbprocessing,
             arrpemeriksaan,
@@ -422,8 +436,8 @@
             selecteditem: function(item, key) {
                 vm.form = vm.conditionselected(vm.form, item, key, 'address');
                 vm.form = vm.itemselected(vm.form, item, key);
-          
-              if (key == 'kamarinap') {
+
+                if (key == 'kamarinap') {
                     vm.datakamar = item;
                 }
             },
@@ -431,7 +445,7 @@
             selectclear: function(key) {
 
                 vm.form = vm.clearselected(vm.form, key);
- 				if (key == 'kamarinap') {
+                if (key == 'kamarinap') {
                     vm.datakamar = null;
                 }
 
@@ -471,7 +485,7 @@
                     vm.initindexdb(vm.$dbNameIndexDb, key)
                         .then(function(response) {
                             vm.form = vm.indexdbprocessing(response, vm.form, key);
-                          
+
                         })
                         .catch(function(error) {
                             console.log(error);
@@ -489,22 +503,22 @@
                             }
                         }
                     } else {
-                    for (const keyselect in vm.form.select) {
-                        if (vm.form.select[keyselect].isrequired) {
-                            if (vm.form.select[keyselect].value == '') {
-                                next = false;
+                        for (const keyselect in vm.form.select) {
+                            if (vm.form.select[keyselect].isrequired) {
+                                if (vm.form.select[keyselect].value == '') {
+                                    next = false;
+                                }
                             }
                         }
                     }
                 }
-                }
 
                 //if (vm.listdata.length < 1 || vm.listobat.length < 1) { next = false; }
                 //if (vm.listdata.length < 1) { next = false; }
-                
+
                 // if (next) {
-                    vm.parsingForm();
-                    vm.dialog();
+                vm.parsingForm();
+                vm.dialog();
                 // }
             },
 
@@ -531,6 +545,8 @@
             aturulang: function() {
                 vm.form = vm.formrawatinap();
                 vm.datakamar = null;
+                // vm.form.tanggal_masuk_inap.value = null;
+                // vm.form.waktu_masuk_inap.value = null;
 
                 for (let i = 0; i < vm.tab.button.length; i++) {
                     vm.tab.content[vm.tab.button[i].value] = false;
@@ -570,6 +586,13 @@
                     vm.form.kamar_inap_jumlah_bed = vm.datakamar.jumlah_bed;
                     vm.form.jenis_kamar_uuid = vm.datakamar.jenis_kamar_uuid;
                     vm.form.nama_jenis_kamar = vm.datakamar.nama_jenis_kamar;
+                } else if (vm.detail.kamar_inap_uuid) {
+                    vm.form.kamar_inap_uuid = vm.detail.kamar_inap_uuid;
+                    vm.form.kamar_inap_nama = vm.detail.kamar_inap_nama;
+                    vm.form.kamar_inap_lantai = vm.detail.kamar_inap_lantai;
+                    vm.form.kamar_inap_jumlah_bed = vm.detail.kamar_inap_jumlah_bed;
+                    vm.form.jenis_kamar_uuid = vm.detail.jenis_kamar_uuid;
+                    vm.form.nama_jenis_kamar = vm.detail.nama_jenis_kamar;
                 } else {
                     vm.form.kamar_inap_uuid = '';
                     vm.form.kamar_inap_nama = '';
@@ -578,7 +601,9 @@
                     vm.form.jenis_kamar_uuid = '';
                     vm.form.nama_jenis_kamar = '';
                 }
-
+                
+  ;
+                console.log(vm.form.waktu_masuk_inap)
                 console.log('Form');
                 console.log(vm.form);
                 vm.$emit('parsingForm', vm.parserawatinap(vm.form, vm.datakamar), 'inapadd');
@@ -590,19 +615,20 @@
             },
 
             setdataform: function(response) {
-                let data = response.data;
+                let data = response.data.data;
                 console.log("memek");
-                
-                let keys = ['kamar_inap'
-                    ]
-                    console.log("keys");
-                    console.log(keys);
-                    /* Setting index DB */
-                    vm.updatedblocal(keys, response);
-                    
-                    
-                    vm.detail = response.data.data;
+                console.log(response.data);
+
+                let keys = ['kamar_inap']
+                console.log("keys");
+                console.log(keys);
+                /* Setting index DB */
+                vm.updatedblocal(keys, response);
+
+
+                vm.detail = response.data.data;
                 console.log(vm.detail)
+  
                 console.log(data)
                 vm.form.carabayar_nama = vm.detail.carabayar_nama;
 
@@ -615,21 +641,26 @@
 
 
 
-
+                // vm.form.tanggal_masuk_inap.value = '';
+                // vm.form.waktu_masuk_inap.value = '';
                 vm.form.uuid = vm.detail.uuid;
-                if (vm.detail.kamar_inap_uuid != '-' && vm.detail.kamar_inap_uuid != '' && vm.detail.kamar_inap_uuid != null) {
-                    vm.form.kamar_inap_uuid = vm.detail.kamar_inap_uuid;
-                    vm.form.kamar_inap_nama = vm.detail.kamar_inap_nama;
-                    vm.form.kamar_inap_lantai = vm.detail.kamar_inap_lantai;
-                    vm.form.kamar_inap_jumlah_bed = vm.detail.kamar_inap_jumlah_bed;
-                    vm.form.jenis_kamar_uuid = vm.detail.jenis_kamar_uuid;
-                    vm.form.nama_jenis_kamar = vm.detail.nama_jenis_kamar;
+                if (vm.detail.kamar_inap_uuid != '-' && vm.detail.kamar_inap_uuid != '' && vm.detail
+                    .kamar_inap_uuid != null) {
+                    vm.form.kamar_inap_uuid = data.kamar_inap_uuid;
+                    vm.form.kamar_inap_nama = data.kamar_inap_nama;
+                    vm.form.kamar_inap_lantai = data.kamar_inap_lantai;
+                    vm.form.kamar_inap_jumlah_bed = data.kamar_inap_jumlah_bed;
+                    vm.form.jenis_kamar_uuid = data.jenis_kamar_uuid;
+                    vm.form.nama_jenis_kamar = data.nama_jenis_kamar;
+                    vm.form.tanggal_masuk_inap.value = data.tanggal_masuk_inap;
+                    vm.form.waktu_masuk_inap.value = data.waktu_masuk_inap;
 
-                    vm.form.select.kamarinap.value = vm.detail.kamar_inap_uuid;
-                    vm.form.select.kamarinap.label = vm.detail.nama_jenis_kamar + ' - ' + vm.detail
+                    vm.form.select.kamarinap.value = data.kamar_inap_uuid;
+                    vm.form.select.kamarinap.label = data.nama_jenis_kamar + ' - ' + data
                         .kamar_inap_nama;
-                }
-                else{
+
+
+                } else {
                     vm.form.kamar_inap_jalan_uuid = '';
                     vm.form.kamar_inap_jalan_nama = '';
                     vm.form.kamar_inap_jalan_lantai = '';
@@ -643,7 +674,8 @@
                 }
 
                 console.log('UUID')
-                console.log(vm.form.uuid)
+                
+                console.log(vm.form.kamar_inap_uuid)
 
                 vm.loaderprocess();
             },
@@ -716,7 +748,7 @@
 
                 vm.setlocalstorage();
 
-              
+
             },
         }
     }

@@ -39,6 +39,16 @@ export const formrawatinap = () => {
 	return {
 		title: '', posisi: '', uuid: '',
 		registrasi_uuid: '',
+		tanggal_masuk_inap:{
+			title: 'Tanggal Masuk Kamar', for_id: 'form_'+'tanggal_masuk_inap', type: 'date', required: '', 
+			name: 'tanggal_masuk_inap', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		waktu_masuk_inap:{
+			title: 'Pada Pukul', for_id: 'form_'+'waktu_masuk_inap', type: 'text', required: '', 
+			name: 'waktu_masuk_inap', value: '', disabled: false, show: true, kinds: ''
+		},
+
 		select: {
 		kamarinap: { 
 				key : 'kamarinap', for_id: 'form_'+'kamarinap', name: 'kamarinap', uuid:'', value: '', label: 'Silahkan Pilih', 
