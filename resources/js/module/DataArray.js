@@ -325,8 +325,12 @@ export const arrpemeriksaan = () => {
 	export const arrlaporantindakanbedah = () => {
 	return {
 		pilihantindakan: [
-			{ value: 'Injeksi Antivega', label: 'Injeksi Antivega' },
-			{ value: 'Laser', label: 'Laser' },
+			{ value: 'Injeksi Antivega', label: 'Laporan Injeksi Antivega' },
+			{ value: 'Tindakan Laser PRP', label: 'Tindakan Laser PRP' },
+			{ value: 'Tindakan Laser PRP Capsulotomy', label: 'Tindakan Laser PRP Capsulotomy' },
+			{ value: 'Laporan Operasi Trabekulektomi', label: 'Laporan Operasi Trabekulektomi' },
+			{ value: 'Laporan Operasi Pterygium', label: 'Laporan Operasi Pterygium' },
+			{ value: 'Laporan Insisi Chalazion', label: 'Laporan Insisi Chalazion' },
 		],
 	}
 

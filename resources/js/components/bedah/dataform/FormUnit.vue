@@ -71,7 +71,7 @@ export default {
 				{ value: 'catatanoperasikatarak', label: 'Catatan Operasi Katarak', class: 'tab-no-active' },
 				{ value: 'persetujuantindakankedokteran', label: 'Persetujuan Tindakan Kedokteran', class: 'tab-no-active' },
 				{ value: 'checklistkeselamatanbedah', label: 'Checklist Keselamatan Bedah', class: 'tab-no-active' },
-				{ value: 'laporaninjeksiantivega', label: 'Laporan Injeksi Anti Vega', class: 'tab-no-active' },
+				{ value: 'laporaninjeksiantivega', label: 'Laporan Tindakan', class: 'tab-no-active' },
 			],
 			content: { 
 				laporanpembedahan: true, 
