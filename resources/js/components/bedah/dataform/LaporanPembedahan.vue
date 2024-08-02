@@ -236,7 +236,7 @@ export default {
 		ja_lokal:false,
 		ja_spiral:false,
 		penggunaanamhpkhusus:false,
-		komplikasiintraoperasi:false,
+		komplikasi_intra_operasi:false,
 
 	}},
 	methods: {
@@ -260,7 +260,7 @@ export default {
 			vm.ja_lokal = false;
 			vm.ja_spiral = false;
 			vm.penggunaanamhpkhusus = false;
-			vm.komplikasiintraoperasi = false;
+			vm.komplikasi_intra_operasi = false;
 		},
 
 		setdataform: function (data, row) {
@@ -313,7 +313,7 @@ export default {
 				if (data.ja_lokal == 'Ya') { vm.ja_lokal = true; }
 				if (data.ja_epidural == 'Ya') { vm.ja_epidural = true; }
 				if (data.penggunaanamhpkhusus == 'Ya') { vm.penggunaanamhpkhusus = true; }
-				if (data.komplikasiintraoperasi == 'Ya') { vm.komplikasiintraoperasi = true; }
+				if (data.komplikasi_intra_operasi == 'Ya') { vm.komplikasi_intra_operasi = true; }
 			}
 			console.log(data);
 		},
@@ -336,7 +336,7 @@ export default {
 					else if (input[i].value == 'ja_epidural') { vm.form.ja_epidural = 'Ya'; }
 					else if (input[i].value == 'ja_lokal') { vm.form.ja_lokal = 'Ya'; }
 					else if (input[i].value == 'penggunaan_amhp_khusus') { vm.form.penggunaanamhpkhusus = 'Ya'; }
-					else if (input[i].value == 'komplikasi_intra_operasi') { vm.form.komplikasiintraoperasi = 'Ya'; }
+					else if (input[i].value == 'komplikasi_intra_operasi') { vm.form.komplikasi_intra_operasi = 'Ya'; }
 				}
 			else {
 				if (input[i].value == 'ja_umum') { vm.form.ja_umum = 'Tidak'; }
@@ -346,7 +346,7 @@ export default {
 				else if (input[i].value == 'ja_epidural') { vm.form.ja_epidural = 'Tidak'; }
 				else if (input[i].value == 'ja_lokal') { vm.form.ja_lokal = 'Tidak'; }
 				else if (input[i].value == 'penggunaan_amhp_khusus') { vm.form.penggunaanamhpkhusus = 'Tidak'; }
-				else if (input[i].value == 'komplikasi_intra_operasi') { vm.form.komplikasiintraoperasi = 'Tidak'; }
+				else if (input[i].value == 'komplikasi_intra_operasi') { vm.form.komplikasi_intra_operasi = 'Tidak'; }
 				
 			}
 		}
