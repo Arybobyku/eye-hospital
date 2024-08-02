@@ -40,7 +40,7 @@
         }
 
         .smallfont2dot9 {
-            font-size: 11;
+            font-size: 10;
         }
     </style>
 

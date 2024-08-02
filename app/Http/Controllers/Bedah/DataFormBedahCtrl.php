@@ -19,6 +19,7 @@ use App\Models\LaporanPembedahan;
 use App\Models\ChecklistKesiapanBedah;
 use App\Models\PerawatanPeriOperative;
 use App\Models\CatatanOperasiKatarak;
+use App\Models\PencegahanPasienJatuh;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\KeselamatanBedah;
 use App\Models\LaporanInjeksiAntiVega;
@@ -28,52 +29,57 @@ class DataFormBedahCtrl extends Controller
 
 	private $take = 15, $error = 'next';
 
-	public function __construct() {
+	public function __construct()
+	{
 		date_default_timezone_set("Asia/Jakarta");
-		$this->error = PenggunaHelp::acl(); 
+		$this->error = PenggunaHelp::acl();
 	}
 
-	public function list(Request $request) {
+	public function list(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		PenggunaHelp::log('Melihat data list table pada halaman data unit');
 
-		$list = ''; $total = '';
-		$page = $request->page - 1; $skip = $page * $this->take;
-		$search = $request->search; $column = $request->column;
+		$list = '';
+		$total = '';
+		$page = $request->page - 1;
+		$skip = $page * $this->take;
+		$search = $request->search;
+		$column = $request->column;
 
 		if ($request->search != "") {
 			$data = Bedah::where('delete_soft', '=', 1)
-								->where($column, 'ilike', '%'.$search.'%')
-								// ->where('is_approve', '=', 'ya')
-								->orderBy('id', 'desc')
-								->skip($skip)->take($this->take)
-								->get();
+				->where($column, 'ilike', '%' . $search . '%')
+				// ->where('is_approve', '=', 'ya')
+				->orderBy('id', 'desc')
+				->skip($skip)->take($this->take)
+				->get();
 			$total = Bedah::where('delete_soft', '=', 1)
-								->where($column, 'ilike', '%'.$search.'%')
-								// ->where('is_approve', '=', 'ya')
-								->orderBy('id', 'desc')->count();
-		}
-		else {
+				->where($column, 'ilike', '%' . $search . '%')
+				// ->where('is_approve', '=', 'ya')
+				->orderBy('id', 'desc')->count();
+		} else {
 			$data = Bedah::where('delete_soft', '=', 1)
-									// ->where('is_approve', '=', 'ya')
-									->orderBy('id', 'desc')
-									->skip($skip)->take($this->take)
-									->get();
+				// ->where('is_approve', '=', 'ya')
+				->orderBy('id', 'desc')
+				->skip($skip)->take($this->take)
+				->get();
 
 			$total = Bedah::where('delete_soft', '=', 1)
-									// ->where('is_approve', '=', 'ya')
-									->orderBy('id', 'desc')
-									->count();
-
+				// ->where('is_approve', '=', 'ya')
+				->orderBy('id', 'desc')
+				->count();
 		}
-		
+
 		return response()->json(['data' => $data, 'total' => $total]);
-	
 	}
 
-	public function formall(Request $request) {
+	public function formall(Request $request)
+	{
 		$laporanpembedahan = LaporanPembedahan::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 		$checklistkesiapanbedah = ChecklistKesiapanBedah::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 		$perawatanperioperative = PerawatanPeriOperative::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
@@ -83,7 +89,7 @@ class DataFormBedahCtrl extends Controller
 		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
 		return response()->json([
-			'laporanpembedahan' => $laporanpembedahan, 
+			'laporanpembedahan' => $laporanpembedahan,
 			'checklistkesiapanbedah' => $checklistkesiapanbedah,
 			'perawatanperioperative' => $perawatanperioperative,
 			'catatanOperasikatarak' => $catatanOperasikatarak,
@@ -93,7 +99,8 @@ class DataFormBedahCtrl extends Controller
 		]);
 	}
 
-	public function laporanpembedahan(Request $request) {
+	public function laporanpembedahan(Request $request)
+	{
 
 		$bedah = Bedah::where('uuid', '=', $request->bedah_uuid)->first();
 		if ($request->uuid != '') {
@@ -107,7 +114,7 @@ class DataFormBedahCtrl extends Controller
 				'asisten_1' => $request->asisten_1,
 				'asisten_2' => $request->asisten_2,
 				'perawat_instrument' => $request->perawat_instrument,
-				
+
 				'ja_umum' => $request->ja_umum,
 				'ja_bsp' => $request->ja_bsp,
 				'ja_csp' => $request->ja_csp,
@@ -145,8 +152,7 @@ class DataFormBedahCtrl extends Controller
 			);
 
 			$update = LaporanPembedahan::where('uuid', '=', $request->uuid)->update($arr);
-		}
-		else {
+		} else {
 			$item = new LaporanPembedahan();
 			$item->uuid = Uuid::uuid4();
 			$item->registrasi_uuid = $bedah->registrasi_uuid;
@@ -172,7 +178,7 @@ class DataFormBedahCtrl extends Controller
 			$item->asisten_1 = $request->asisten_1;
 			$item->asisten_2 = $request->asisten_2;
 			$item->perawat_instrument = $request->perawat_instrument;
-			
+
 			$item->ja_umum = $request->ja_umum;
 			$item->ja_bsp = $request->ja_bsp;
 			$item->ja_csp = $request->ja_csp;
@@ -222,7 +228,7 @@ class DataFormBedahCtrl extends Controller
 
 
 		return response()->json([
-			'laporanpembedahan' => $laporanpembedahan, 
+			'laporanpembedahan' => $laporanpembedahan,
 			'checklistkesiapanbedah' => $checklistkesiapanbedah,
 			'perawatanperioperative' => $perawatanperioperative,
 			'catatanOperasikatarak' => $catatanOperasikatarak,
@@ -232,8 +238,9 @@ class DataFormBedahCtrl extends Controller
 		]);
 	}
 
-	public function checklistkesiapanbedah(Request $request) {
-		
+	public function checklistkesiapanbedah(Request $request)
+	{
+
 		$bedah = Bedah::where('uuid', '=', $request->bedah_uuid)->first();
 		if ($request->uuid != '') {
 			$arr = array(
@@ -251,8 +258,7 @@ class DataFormBedahCtrl extends Controller
 				'kepala_ruangan' => $request->kepala_ruangan,
 			);
 			$update = ChecklistKesiapanBedah::where('uuid', '=', $request->uuid)->update($arr);
-		}
-		else {
+		} else {
 			$item = new ChecklistKesiapanBedah();
 			$item->uuid = Uuid::uuid4();
 			$item->registrasi_uuid = $bedah->registrasi_uuid;
@@ -294,7 +300,7 @@ class DataFormBedahCtrl extends Controller
 		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
 		return response()->json([
-			'laporanpembedahan' => $laporanpembedahan, 
+			'laporanpembedahan' => $laporanpembedahan,
 			'checklistkesiapanbedah' => $checklistkesiapanbedah,
 			'perawatanperioperative' => $perawatanperioperative,
 			'catatanOperasikatarak' => $catatanOperasikatarak,
@@ -302,11 +308,11 @@ class DataFormBedahCtrl extends Controller
 			'keselamatanbedah' => $keselamatanbedah,
 			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
-
 	}
 
-	public function perawatanperioperative(Request $request) {
-		
+	public function perawatanperioperative(Request $request)
+	{
+
 		$bedah = Bedah::where('uuid', '=', $request->bedah_uuid)->first();
 		if ($request->uuid != '') {
 			$arr = array(
@@ -380,8 +386,7 @@ class DataFormBedahCtrl extends Controller
 				'perawat_kamar_bedah' => $request->perawat_kamar_bedah,
 			);
 			$update = PerawatanPeriOperative::where('uuid', '=', $request->uuid)->update($arr);
-		}
-		else {
+		} else {
 			$item = new PerawatanPeriOperative();
 			$item->uuid = Uuid::uuid4();
 			$item->registrasi_uuid = $bedah->registrasi_uuid;
@@ -481,7 +486,7 @@ class DataFormBedahCtrl extends Controller
 
 
 		return response()->json([
-			'laporanpembedahan' => $laporanpembedahan, 
+			'laporanpembedahan' => $laporanpembedahan,
 			'checklistkesiapanbedah' => $checklistkesiapanbedah,
 			'perawatanperioperative' => $perawatanperioperative,
 			'catatanOperasikatarak' => $catatanOperasikatarak,
@@ -489,11 +494,11 @@ class DataFormBedahCtrl extends Controller
 			'keselamatanbedah' => $keselamatanbedah,
 			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
-
 	}
 
-	public function catatanoperasikatarak(Request $request) {
-		
+	public function catatanoperasikatarak(Request $request)
+	{
+
 		$bedah = Bedah::where('uuid', '=', $request->bedah_uuid)->first();
 		if ($request->uuid != '') {
 			$arr = array(
@@ -561,8 +566,7 @@ class DataFormBedahCtrl extends Controller
 				'operator' => $request->operator,
 			);
 			$update = CatatanOperasiKatarak::where('uuid', '=', $request->uuid)->update($arr);
-		}
-		else {
+		} else {
 			$item = new CatatanOperasiKatarak();
 			$item->uuid = Uuid::uuid4();
 			$item->registrasi_uuid = $bedah->registrasi_uuid;
@@ -656,7 +660,7 @@ class DataFormBedahCtrl extends Controller
 
 
 		return response()->json([
-			'laporanpembedahan' => $laporanpembedahan, 
+			'laporanpembedahan' => $laporanpembedahan,
 			'checklistkesiapanbedah' => $checklistkesiapanbedah,
 			'perawatanperioperative' => $perawatanperioperative,
 			'catatanOperasikatarak' => $catatanOperasikatarak,
@@ -664,11 +668,11 @@ class DataFormBedahCtrl extends Controller
 			'keselamatanbedah' => $keselamatanbedah,
 			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
-
 	}
 
-	public function persetujuantindakankedokteran(Request $request) {
-		
+	public function persetujuantindakankedokteran(Request $request)
+	{
+
 		$bedah = Bedah::where('uuid', '=', $request->bedah_uuid)->first();
 		if ($request->uuid != '') {
 			$arr = array(
@@ -704,8 +708,7 @@ class DataFormBedahCtrl extends Controller
 				'perawat' => $request->perawat,
 			);
 			$update = PersetujuanTindakanKedokteran::where('uuid', '=', $request->uuid)->update($arr);
-		}
-		else {
+		} else {
 			$item = new PersetujuanTindakanKedokteran();
 			$item->uuid = Uuid::uuid4();
 			$item->registrasi_uuid = $bedah->registrasi_uuid;
@@ -766,7 +769,7 @@ class DataFormBedahCtrl extends Controller
 
 
 		return response()->json([
-			'laporanpembedahan' => $laporanpembedahan, 
+			'laporanpembedahan' => $laporanpembedahan,
 			'checklistkesiapanbedah' => $checklistkesiapanbedah,
 			'perawatanperioperative' => $perawatanperioperative,
 			'catatanOperasikatarak' => $catatanOperasikatarak,
@@ -774,11 +777,11 @@ class DataFormBedahCtrl extends Controller
 			'keselamatanbedah' => $keselamatanbedah,
 			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
-
 	}
 
-	public function checklistkeselamatanbedah(Request $request) {
-	
+	public function checklistkeselamatanbedah(Request $request)
+	{
+
 		$bedah = Bedah::where('uuid', '=', $request->bedah_uuid)->first();
 		if ($request->uuid != '') {
 			$arr = array(
@@ -830,8 +833,7 @@ class DataFormBedahCtrl extends Controller
 				'so_sirkuler_jam' => $request->so_sirkuler_jam,
 			);
 			$update = KeselamatanBedah::where('uuid', '=', $request->uuid)->update($arr);
-		}
-		else {
+		} else {
 			$item = new KeselamatanBedah();
 			$item->uuid = Uuid::uuid4();
 			$item->registrasi_uuid = $bedah->registrasi_uuid;
@@ -908,7 +910,7 @@ class DataFormBedahCtrl extends Controller
 
 
 		return response()->json([
-			'laporanpembedahan' => $laporanpembedahan, 
+			'laporanpembedahan' => $laporanpembedahan,
 			'checklistkesiapanbedah' => $checklistkesiapanbedah,
 			'perawatanperioperative' => $perawatanperioperative,
 			'catatanOperasikatarak' => $catatanOperasikatarak,
@@ -916,11 +918,11 @@ class DataFormBedahCtrl extends Controller
 			'keselamatanbedah' => $keselamatanbedah,
 			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
-		
 	}
 
-	public function laporaninjeksiantivega(Request $request) {
-	
+	public function laporaninjeksiantivega(Request $request)
+	{
+
 		$bedah = Bedah::where('uuid', '=', $request->bedah_uuid)->first();
 		if ($request->uuid != '') {
 			$arr = array(
@@ -937,8 +939,7 @@ class DataFormBedahCtrl extends Controller
 				'intravitreal' => $request->intravitreal,
 			);
 			$update = LaporanInjeksiAntiVega::where('uuid', '=', $request->uuid)->update($arr);
-		}
-		else {
+		} else {
 			$item = new LaporanInjeksiAntiVega();
 			$item->uuid = Uuid::uuid4();
 			$item->registrasi_uuid = $bedah->registrasi_uuid;
@@ -966,7 +967,7 @@ class DataFormBedahCtrl extends Controller
 			$item->anesthesia = $request->anesthesia;
 			$item->anesthesiologist = $request->anesthesiologist;
 			$item->intravitreal = $request->intravitreal;
-			
+
 
 			$item->save();
 		}
@@ -981,7 +982,7 @@ class DataFormBedahCtrl extends Controller
 
 
 		return response()->json([
-			'laporanpembedahan' => $laporanpembedahan, 
+			'laporanpembedahan' => $laporanpembedahan,
 			'checklistkesiapanbedah' => $checklistkesiapanbedah,
 			'perawatanperioperative' => $perawatanperioperative,
 			'catatanOperasikatarak' => $catatanOperasikatarak,
@@ -989,7 +990,97 @@ class DataFormBedahCtrl extends Controller
 			'keselamatanbedah' => $keselamatanbedah,
 			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
-		
 	}
-	
+
+	public function pencegahanpasienjatuh(Request $request)
+	{
+
+		$bedah = Bedah::where('uuid', '=', $request->bedah_uuid)->first();
+		if ($request->uuid != '') {
+			$arr = array(
+				'rjr1' => $request->rjr1,
+				'rjr2' => $request->rjr2,
+				'rjr3' => $request->rjr3,
+				'rjr4' => $request->rjr4,
+				'rjr5' => $request->rjr5,
+				'rjr6' => $request->rjr6,
+				'rjr7' => $request->rjr7,
+				'rjr8' => $request->rjr8,
+				'rjr9' => $request->rjr9,
+				'rjt1' => $request->rjt1,
+				'rjt2' => $request->rjt2,
+				'rjt3' => $request->rjt3,
+				'rjt4' => $request->rjt4,
+				'rjt5' => $request->rjt5,
+				'rjt6' => $request->rjt6,
+				'rjt7' => $request->rjt7,
+				'rjt8' => $request->rjt8,
+				'rjt9' => $request->rjt9,
+				'rjt10' => $request->rjt10,
+				'tanggal_pelaksanaan' => $request->tanggal_pelaksanaan,
+
+
+
+			);
+			$update = PencegahanPasienJatuh::where('uuid', '=', $request->uuid)->update($arr);
+		} else {
+			$item = new PencegahanPasienJatuh();
+			$item->uuid = Uuid::uuid4();
+			$item->registrasi_uuid = $bedah->registrasi_uuid;
+			$item->no_pendaftaran = $bedah->no_pendaftaran;
+			$item->registrasi_kode = $bedah->registrasi_kode;
+			$item->registrasi_nomor = $bedah->registrasi_nomor;
+			$item->bedah_uuid = $bedah->uuid;
+			$item->pasien_uuid = $bedah->pasien_uuid;
+			$item->rekam_medis = $bedah->rekam_medis;
+			$item->nama_pasien = $bedah->nama_pasien;
+			$item->pengguna_uuid = $bedah->pengguna_uuid;
+			$item->nama_dokter = $bedah->nama_dokter;
+
+			$item->rjr1 = $request->rjr1;
+			$item->rjr2 = $request->rjr2;
+			$item->rjr3 = $request->rjr3;
+			$item->rjr4 = $request->rjr4;
+			$item->rjr5 = $request->rjr5;
+			$item->rjr6 = $request->rjr6;
+			$item->rjr7 = $request->rjr7;
+			$item->rjr8 = $request->rjr8;
+			$item->rjr9 = $request->rjr9;
+			$item->rjt1 = $request->rjt1;
+			$item->rjt2 = $request->rjt2;
+			$item->rjt3 = $request->rjt3;
+			$item->rjt4 = $request->rjt4;
+			$item->rjt5 = $request->rjt5;
+			$item->rjt6 = $request->rjt6;
+			$item->rjt7 = $request->rjt7;
+			$item->rjt8 = $request->rjt8;
+			$item->rjt9 = $request->rjt9;
+			$item->rjt10 = $request->rjt10;
+			$item->tanggal_pelaksanaan = $request->tanggal_pelaksanaan;
+
+
+
+			$item->save();
+		}
+
+		$laporanpembedahan = LaporanPembedahan::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$checklistkesiapanbedah = ChecklistKesiapanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$perawatanperioperative = PerawatanPeriOperative::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$catatanOperasikatarak = CatatanOperasiKatarak::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$persetujuantindakankedokteran = PersetujuanTindakanKedokteran::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+		$pencegahanpasienjatuh = PencegahanPasienJatuh::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
+		return response()->json([
+			'laporanpembedahan' => $laporanpembedahan,
+			'checklistkesiapanbedah' => $checklistkesiapanbedah,
+			'perawatanperioperative' => $perawatanperioperative,
+			'catatanOperasikatarak' => $catatanOperasikatarak,
+			'persetujuantindakankedokteran' => $persetujuantindakankedokteran,
+			'keselamatanbedah' => $keselamatanbedah,
+			'laporaninjeksiantivega' => $laporaninjeksiantivega,
+			'pencegahanpasienjatuh' => $pencegahanpasienjatuh,
+		]);
+	}
 }

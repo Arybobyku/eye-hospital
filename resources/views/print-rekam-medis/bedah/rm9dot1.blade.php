@@ -48,6 +48,30 @@
             margin-left: -20px;
             margin-top: -10px;
         }
+        .tablee8dot8 {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .td18dot8 {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 25%;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .td28dot8 {
+            width: 7%;
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
+        .td38dot8 {
+            width: 3%;
+            padding-left: -10px;
+            padding-right: -10px;
+        }
     </style>
 
 <body>
@@ -61,23 +85,44 @@
     </div>
     <div>
         <H4 style="text-align: center; padding-top: 1%; padding-bottom: 1%;">LAPORAN INSISI CHALAZION</H4>
-        <table class="tablee9dot1" style="width: 100%;">
-            <table style="padding-left :2%;">
+        <p style="text-align: right;  margin-bottom: 5%;"> Tgl. Operasi :.................................</p>
+            <table class="tablee8dot8" style="width: 100%">
                 <tr>
-                    <td>Diagnosis Pra Bedah</td>
-                    <td> :</td>
+                    <td class="td28dot8">
+                        Mata :
+                    </td>
+                    <td class="td38dot8">OD</td>
+                    <td class="td38dot8"><input type="checkbox"></td>
+                    <td class="td38dot8">OS</td>
+                    <td class="td38dot8"><input type="checkbox"></td>
+                    <td class="td18dot8">
+                        Operator :
+                    </td>
+                    <td class="td18dot8">
+                        Jam operasi :
+                    </td>
+                    <td class="td18dot8">
+                        Lama Operasi :
+                    </td>
                 </tr>
                 <tr>
-                    <td>Tindakan</td>
-                    <td> :</td>
+                    <td class="td18dot8" colspan="6">
+                        Diagnosis :
+                    </td>
+                    <td class="td18dot8" colspan="2">
+                        Asisten:
+                    </td>
                 </tr>
                 <tr>
-                    <td>Diagnosis Post Bedah</td>
-                    <td> :</td>
-                </tr><br><br>
-                <tr>
-                    <td>Unit Pembedahan</td>
-                    <td> :</td>
+                    <td class="td18dot8" colspan="5">
+                        Jenis Operasi :
+                    </td>
+                    <td class="td18dot8" colspan="2">
+                        Anesteshia :
+                    </td>
+                    <td class="td18dot8">
+                        Anesthesiologist :
+                    </td>
                 </tr>
             </table>
             <table>
