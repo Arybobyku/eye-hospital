@@ -103,7 +103,8 @@ class ProfileCtrl extends Controller
 			'darurat_hubungan' => $request->darurat_hubungan ? $request->darurat_hubungan : '',
 			'bank_nama' => $request->bank_nama ? $request->bank_nama : '',
 			'bank_an' => $request->bank_an ? $request->bank_an : '',
-			'bank_norek' => $request->bank_norek ? $request->bank_norek : ''
+			'bank_norek' => $request->bank_norek ? $request->bank_norek : '',
+			'ttd' => $request->ttd ? $request->ttd : '',
 		);
 
 		try{

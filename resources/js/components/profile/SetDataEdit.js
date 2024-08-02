@@ -1,6 +1,7 @@
 export const setdataeditpengguna = (form, response) => {
 	const data = response.data.biodata;
 	form.penggunauuid = data.pengguna_uuid;
+	form.ttd = data.ttd;
 	form.sebagai.value = data.sebagai_pengguna;
 	form.namapengguna.value = data.nama_pengguna;
 	form.tempatlahir.value = data.tempat_lahir;
