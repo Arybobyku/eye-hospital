@@ -52,13 +52,18 @@
                 <th class="tablee">Terapi/Tindakan</th>
                 <th class="tablee">Dokter</th>
             </tr>
+            @foreach ($ro as $dataRo)
             <tr class="tablee" style="padding: 5px">
+                <td class="tablee"> <br> <b> @php
+                    list($date, $time) = explode(' ', $dataRo->created_at);
+                    $timeWithoutMilliseconds = explode('.', $time)[0];
+                @endphp {{ $date }}/<br>{{ $timeWithoutMilliseconds }}</b> </td>
+                <td class="tablee"> <br> <b></b> </td>
+                <td class="tablee"> <br> {{ $dataRo->keluhan_utama }}</td>
                 <td class="tablee"> <br> </td>
-                <td class="tablee"> <br> </td>
-                <td class="tablee"> <br> </td>
-                <td class="tablee"> <br> </td>
-                <td class="tablee"> <br> </td>
+                <td class="tablee"> <br> {{ $dataRo->nama_dokter }}</td>
             </tr>
+            @endforeach
             {{-- <tr class="tablee" style="padding: 5px">
                 <td class="tablee"> <br> </td>
                 <td class="tablee"> <br> </td>

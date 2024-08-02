@@ -34,7 +34,7 @@
     </style>
 
 </head>
-
+    
 <body>
     <div style="position:fixed; right: 13px; bottom: 10px;">
     </div>
@@ -65,41 +65,41 @@
                                 <b>Pengkajian Hambatan</b>
                                 <table style="border-collapse: collapse; width:100%;">
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_bahasa == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Bahasa
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_cemas == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Cemas
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_pendengaran == 'ada' ? 'Checked' : ''}}d></td>
                                         <td>
                                             Pendegaran
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_emosi == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Emosi
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_masalah_penglihatan == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Masalah penglihatan
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_kognitif == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Kongnitif
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_bicara_buruk == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Bicara buruk
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_hilang_mmemori == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Hilang memori
                                         </td>
@@ -107,19 +107,19 @@
                                 </table>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_tidak_ada_partisipasi == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Tidak ada partisipasi
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_tidak_mampu_belajar == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Secara fisiologi tidak mampu belajar
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ph_tidak_ada_hambatan_belajar == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Tidak ditemukan hambatan belajar
                                         </td>
@@ -137,13 +137,13 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->edukasi_tata_tertib == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Tata Tertib RS
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->edukasi_hak_dan_kewajiban == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Hak Dan Kewajiban Pasien
                                         </td>
@@ -156,33 +156,38 @@
                                 </table>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
-                                        <td>
+                                        <td colspan="6">
                                             <b>Metode Cara Belajar Yang Disukai</b>
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->meotde_audio == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
-                                            1 = Audio
+                                             Audio
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->meotde_demonstrasi == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
-                                            2 = Demonstrasi
+                                            Demonstrasi
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->meotde_lisan == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
-                                            3 = Lisan
+                                            Lisan
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->meotde_tulisan == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
-                                            4 = Tulisan
+                                            Tulisan
                                         </td>
                                     </tr>
                                     <tr>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->meotde_visual == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
-                                            5 = Visual
+                                            Visual
                                         </td>
                                     </tr>
                                     <tr>
@@ -191,31 +196,18 @@
                                         </td>
                                     </tr>
                                 </table>
-                                <table style="border-collapse: collapse; width:100%">
-                                    <tr>>
-                                        <td colspan="2">
-                                            <b>Keterangan</b>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><input type="checkbox" checked></td>
-                                        <td>
-                                            : Beri tanda "&#10004;" atau "0"
-                                        </td>
-                                    </tr>
-
-                                </table>
+                                
                                 <br><br><br><br><br><br><br><br><br><br><br><br>
                             </td>
                             <td style="border-right: 1px solid black; width:100%">
                                 <b>Pengkajian Bicara :</b>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->pb_normal == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Normal
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->pb_gangguan_bicara == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Gangguan Bicara
                                         </td>
@@ -224,41 +216,37 @@
                                 <b>Bahasa Sehari-hari :</b>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->bs_indonesia == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Indonesia
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->bs_daerah == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Daerah
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2">
-                                            Jelaskan.....
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->bs_inggris == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Inggris
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->bs_lainnya !=  null ? 'Checked' : ''}}></td>
+                                        <td>Lainnya</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            Lainya.....
+                                            Bahasa : {{ $ep != null && $ep->bs_lainnya }}
                                         </td>
                                     </tr>
                                 </table>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
                                         <td><b>Bahasa Isyarat :</b> </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->bi_ya ==  'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Ya
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->bi_tidak ==  'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Tidak
                                         </td>
@@ -267,66 +255,66 @@
                                 <b>Tingkat Pendidikan :</b>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->tp_tk ==  'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             TK
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->tp_sd ==  'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             SD
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->tp_smp ==  'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             SMP
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->tp_sma ==  'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             SMA
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->tp_diploma ==  'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Diploma
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->tp_sarjana ==  'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Sarjana
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->tp_lainnya == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
-                                            Lain-lain
+                                            Lain-lain 
                                         </td>
                                     </tr>
                                 </table>
                                 <b> Agama :</b>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ag_islam == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Islam
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ag_protestan == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Protestan
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ag_katolik == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             katolik
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ag_hindu == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Hindu
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ag_budha == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Budha
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->ag_lainnya == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Lain-lain
                                         </td>
@@ -335,15 +323,15 @@
                                 <b>Tingkat Pengetahuan Kesehatan Pasien :</b>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->tp_paham == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Paham
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->tp_kurang_paham == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Kurang paham
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->tp_tidak == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Tidak paham
                                         </td>
@@ -352,15 +340,15 @@
                                 <b>Nilai-nilai Pasien Dan Budaya :</b>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->np_modern == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Modern
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->np_moderat == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Moderat
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->np_konvensional == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Konvesional
                                         </td>
@@ -370,11 +358,11 @@
                                     <tr>
                                         <td>Merokok</td>
                                         <td>:</td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->rokok_ya == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Ya
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->rokok_tidak == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Tidak
                                         </td>
@@ -382,11 +370,11 @@
                                     <tr>
                                         <td>Konsumsi Alkohol </td>
                                         <td>:</td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->alkohol_ya == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Ya
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->alkohol_ya == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Tidak
                                         </td>
@@ -395,46 +383,46 @@
                                 <b>Kesedian Menerima Informasi :</b>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->kmi_ya == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Ya
                                         </td>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->kmi_tidak == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
-                                            Tidak,alasan......
+                                            Tidak,alasan : {{ $ep != null && $ep->kmi_alasan }}
                                         </td>
                                     </tr>
                                 </table>
                                 <b>Rencana Pendidikan Kesehatan :</b>
                                 <table style="border-collapse: collapse; width:100%">
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->rpk_proses_penyakit == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Proses Penyakit
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->rpk_pengobatan == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Pengobatan/Tindakan
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->rpk_nutrisi == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Nutrisi
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->rpk_edukasi == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
                                             Edukasi Kolaboratif
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td><input type="checkbox" checked></td>
+                                        <td><input type="checkbox" {{ $ep != null && $ep->rpk_lain_lain == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
-                                            Lain-lain................
+                                            Lain-lain : {{ $ep != null && $ep->rpk_jelaskan }}
                                         </td>
                                     </tr>
                                 </table>
@@ -522,7 +510,7 @@
                         <td>
                             <table>
                                 <tr>
-                                    <td><input type="checkbox" checked></td>
+                                    <td><input type="checkbox" {{ $ep != null && $ep->kp_ya == 'ada' ? 'Checked' : ''}}></td>
                                     <td>Ya</td>
                                 </tr>
                             </table>
@@ -530,7 +518,7 @@
                         <td>
                             <table>
                                 <tr>
-                                    <td><input type="checkbox" checked></td>
+                                    <td><input type="checkbox" {{ $ep != null && $ep->kp_tidak == 'ada' ? 'Checked' : ''}}></td>
                                     <td>Tidak</td>
                                 </tr>
                             </table>
@@ -615,6 +603,7 @@
         </table>
     </div>
 </body>
+
 <?php
 
 // function bulans($bln)

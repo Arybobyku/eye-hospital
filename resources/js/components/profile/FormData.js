@@ -1,6 +1,6 @@
 export const formpengguna = () => {
 	return {
-		title: '', posisi: '', penggunauuid: '',
+		title: '', posisi: '', penggunauuid: '', ttd: '',
 		sebagai: { 
 			title: 'Posisi Sebagai', for_id: 'form_'+'sebagai', type: 'text', required: 'required', 
 			name: 'sebagai', value: '', disabled: false, show: true, kinds: ''

@@ -344,9 +344,10 @@ export default {
 		selectclear:function(key) { vm.form = vm.clearselected(vm.form, key); },
 		selectbox:function(event, key, statics) {
 			let result = vm.boxselected(event, vm.form, key);
-			console.log(key);
+			console.log('aaa', result);
 			if (result._position == 'stop') { return ; }
 			else if (result._position == 'nextstop') { vm.form = result._form; }
+			
 			else { vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block'; }
 		},
 
