@@ -144,6 +144,7 @@ export const parsekelurahan = (form, detail) => {
 	data.append('object', form.object);
 	data.append('assessment', form.assessment);
 	data.append('plan', form.plan);
+	data.append('ttd', form.ttd);
 	
 
 	for(var pair of data.entries()) {

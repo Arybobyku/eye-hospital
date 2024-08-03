@@ -5,6 +5,12 @@
 			<div class="foto-profile">
 				<img src="/images/no-image.png" />
 			</div>
+			<table class="table-info">
+				<tr>
+					<td>Tanda Tangan Digital</td>
+					<td><strong>{{ nullAndZero(datacomponent.pengguna.ttd) ? "Ada" : "Tidak Ada" }}</strong></td>
+				</tr>
+			</table>
 		</div>
 		<div class="col-5 margin-custom" v-if="datacomponent">
 			<table class="table-info">
@@ -51,6 +57,10 @@
 				<tr>
 					<td>Nomor Handphone</td>
 					<td><strong>{{ nullAndZero(datacomponent.pengguna.no_handphone) }}</strong></td>
+				</tr>
+				<tr>
+					<td>Tanda Tangan Digital</td>
+					<td><strong>{{ nullAndZero(datacomponent.pengguna.ttd) ? "Ada" : "Tidak Ada" }}</strong></td>
 				</tr>
 			</table>
 		</div>
@@ -316,10 +326,12 @@ export default {
 		},
 		setdata: function (response, position) {
 			if (position == 'pengguna') {
+				window.localStorage.setItem("ttd", response.data.biodata.ttd);
 				vm.datacomponent[position] = {
 					pengguna_uuid: response.data.biodata.pengguna_uuid,
 					nama_pengguna: response.data.biodata.nama_pengguna,
 					username_pengguna: response.data.biodata.username_pengguna,
+					ttd: response.data.biodata.ttd,
 					tempat_lahir: response.data.biodata.tempat_lahir,
 					tanggal_lahir: response.data.biodata.tanggal_lahir,
 					jenis_kelamin: response.data.biodata.jenis_kelamin,

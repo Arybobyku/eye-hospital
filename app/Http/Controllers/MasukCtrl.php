@@ -37,6 +37,7 @@ class MasukCtrl extends Controller
         $minutes = time() + 60 * 60 * 10; // 10 jam
         Cookie::queue(Cookie::make(env('APP_IDENTIFIER').'Uuid', Crypt::encrypt($periksa->uuid), $minutes));
         Cookie::queue(Cookie::make(env('APP_IDENTIFIER').'BioUuid', Crypt::encrypt($biodata->uuid), $minutes));
+        Cookie::queue(Cookie::make(env('APP_IDENTIFIER').'ttd', Crypt::encrypt($biodata->ttd), $minutes));
         Cookie::queue(Cookie::make(env('APP_IDENTIFIER').'Id', Crypt::encrypt($periksa->id), $minutes));
         Cookie::queue(Cookie::make(env('APP_IDENTIFIER').'Nama', Crypt::encrypt($periksa->nama), $minutes));
         Cookie::queue(Cookie::make(env('APP_IDENTIFIER').'Username', Crypt::encrypt($periksa->username), $minutes));

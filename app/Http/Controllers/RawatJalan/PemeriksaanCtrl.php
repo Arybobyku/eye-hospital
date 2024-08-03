@@ -315,12 +315,15 @@ class PemeriksaanCtrl extends Controller
 			}
 			$cppt = Cppt::where('uuid', '=', $request->uuid)->first();
 
+			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
 			if ($cppt != null) {
 				$arr = array(
 					'subjek' => $request->subject,
 					'objek' => $request->object,
 					'asesmen' => $request->assessment,
 					'plan' => $request->plan,
+					'ttd' => $request->ttd,
+					'pengguna_uuid' => $pengguna_uuid,
 				);
 					$update = Cppt::where('uuid', '=', $request->uuid)->update($arr);
 			}
@@ -329,7 +332,7 @@ class PemeriksaanCtrl extends Controller
 				$item->uuid = Uuid::uuid4();
 				$item->registrasi_uuid = $request->registrasi_uuid;
 				$item->pasien_uuid = $request->pasien_uuid;
-				$item->pengguna_uuid = $request->pengguna_uuid;
+				$item->pengguna_uuid = $pengguna_uuid;
 				$item->nama_pengguna = $request->nama_penggunna;
 				$item->nama_pasien = $request->nama_pasien;
 				$item->nama_dokter = $request->nama_dokter;
@@ -338,6 +341,7 @@ class PemeriksaanCtrl extends Controller
 				$item->objek = $request->object;
 				$item->asesmen = $request->assessment;
 				$item->plan = $request->plan;
+				$item->ttd = $request->ttd;
 				$item->save();
 
 			}
@@ -662,6 +666,8 @@ class PemeriksaanCtrl extends Controller
 				$item->save();
 			}
 
+
+			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
 			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
 			if ($cppt != null) {
@@ -670,6 +676,8 @@ class PemeriksaanCtrl extends Controller
 					'objek' => $request->object,
 					'asesmen' => $request->assessment,
 					'plan' => $request->plan,
+					'ttd' => $request->ttd,
+					'pengguna_uuid' => $pengguna_uuid,
 				);
 					$update = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
 			}
@@ -687,6 +695,8 @@ class PemeriksaanCtrl extends Controller
 				$item->objek = $request->object;
 				$item->asesmen = $request->assessment;
 				$item->plan = $request->plan;
+				$item->ttd = $request->ttd;
+				$item->pengguna_uuid = $pengguna_uuid;
 				$item->save();
 
 			}
