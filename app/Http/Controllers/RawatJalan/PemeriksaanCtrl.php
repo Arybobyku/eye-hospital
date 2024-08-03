@@ -321,6 +321,7 @@ class PemeriksaanCtrl extends Controller
 					'objek' => $request->object,
 					'asesmen' => $request->assessment,
 					'plan' => $request->plan,
+					'ttd' => $request->ttd,
 				);
 					$update = Cppt::where('uuid', '=', $request->uuid)->update($arr);
 			}
@@ -338,6 +339,7 @@ class PemeriksaanCtrl extends Controller
 				$item->objek = $request->object;
 				$item->asesmen = $request->assessment;
 				$item->plan = $request->plan;
+				$item->ttd = $request->ttd;
 				$item->save();
 
 			}
@@ -670,6 +672,7 @@ class PemeriksaanCtrl extends Controller
 					'objek' => $request->object,
 					'asesmen' => $request->assessment,
 					'plan' => $request->plan,
+					'ttd' => $request->ttd,
 				);
 					$update = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
 			}
@@ -687,6 +690,7 @@ class PemeriksaanCtrl extends Controller
 				$item->objek = $request->object;
 				$item->asesmen = $request->assessment;
 				$item->plan = $request->plan;
+				$item->ttd = $request->ttd;
 				$item->save();
 
 			}

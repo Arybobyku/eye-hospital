@@ -7,38 +7,32 @@
 				<h2 v-if="form">{{ form.title }}</h2>
 			</div>
 			<div class="modal-body" v-if="form">
-				<div class="grid">
+				<div class="grid">		
 					<div class="col-4 form-mr">
 						<ul class="list-detail">
 							<li>No Rekam Medis<span><strong>{{ detailperawat.rekam_medis }}</strong></span></li>
 							<li>Nama Lengkap<span><strong>{{ detailperawat.nama_pasien }}</strong></span></li>
 							<li>Tanggal Lahir<span><strong>{{ datename(detailperawat.tanggal_lahir) }}</strong></span>
 							</li>
-							<li>Jenis Kelamin<span><strong>{{ detailperawat.jenis_kelamin }}</strong></span></li>
-							<li>Nomor Handphone<span><strong>{{ detailperawat.no_handphone }}</strong></span></li>
-							<li>Cara Bayar<span><strong>{{ detailperawat.carabayar_nama }}</strong></span></li>
-							<li>Dokter yang menangani<span><strong>{{ detailperawat.nama_dokter }}</strong></span></li>
-							<li>Provinsi<span><strong>{{ detailperawat.nama_provinsi }}</strong></span></li>
-							<li>Kecamatan<span><strong>{{ detailperawat.nama_kecamatan }}</strong></span></li>
-							<li>Alamat<span><strong>{{ detailperawat.alamat }}</strong></span></li>
-							<li>Triase<span><strong>{{ detailperawat.berkebutuhan_khusus }}</strong></span></li>
-							<!-- <li v-if="detailperawat.berkebutuhan_khusus != 'Tidak'">Keterangan<span><strong>{{
-                                        detailperawat.keterangan_berkebutuhan }}</strong></span></li>
-                            <li>
-                                <Selected
-                                    v-on:click="selectbox($event, form.select.klinik.name, form.select.klinik.statics)"
-                                    :ref="form.select.klinik.name" @selecteditem="selecteditem"
-                                    @selectclear="selectclear" :selection="form.select.klinik"></Selected>
-                            </li>
-                            <li>
-                                <Inputed :ref="form.ocularsinistraro.name" :form="form.ocularsinistraro"></Inputed>
-                            </li>
-                            <li>
-                                <Inputed :ref="form.nama_pemeriksa.name" :form="form.nama_pemeriksa"></Inputed>
-                            </li> -->
 						</ul>
 					</div>
-					<div class="col-8">
+					<div class="col-4 form-mr">
+						<ul class="list-detail">
+							<li>Jenis Kelamin<span><strong>{{ detailperawat.jenis_kelamin }}</strong></span></li>
+							<li>Dokter yang menangani<span><strong>{{ detailperawat.nama_dokter }}</strong></span></li>
+						</ul>
+					</div>
+					<div class="col-4 form-mr">
+						<ul class="list-detail">
+							<li>Cara Bayar<span><strong>{{ detailperawat.carabayar_nama }}</strong></span></li>
+							<li>Nomor Handphone<span><strong>{{ detailperawat.no_handphone }}</strong></span></li>
+							<li>Triase<span><strong>{{ detailperawat.berkebutuhan_khusus }}</strong></span></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="grid">
+					<div class="col-12">
 
 						<div class="tab-lines">
 							<div class="tab"><button v-for="(item, index) in tab.button" :class="item.class"
@@ -732,12 +726,12 @@
 						<div class="tab-content">
 							<div class="content-tab-in" v-if="tab.content.cppt">
 								<div class="grid">
-									<div class="col-6 form-ml">
+									<div class="col-5 form-ml">
 										<iframe title="CPPT" width="100%" height="100%" style="border: 0" :src="linkR">
 										</iframe>
 									</div>
 
-									<div class="col-6 form-ml">
+									<div class="col-7 form-ml">
 										<label for=""> Subject</label>
 										<ckeditor v-model="form.subject" :editor="editor">
 										</ckeditor>
@@ -755,12 +749,24 @@
 										<ckeditor v-model="form.plan" :editor="editor">
 										</ckeditor>
 									</div>
+									<div class="col-9"></div>
+									<div class="col-3 form-ml form-mt">
+										<label for="">Tanda Tangan Digital</label>
+											<img
+												v-if="form.ttd"
+												:src="form.ttd"
+												alt="ttd dokter"
+												height="100"
+												width="400"
+											/>
+											<br>
+										<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-
 
 				<div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
 					<div class="col-8"></div>
@@ -887,7 +893,6 @@ export default {
 			kp_ya: false,
 			kp_tidak: false,
 
-
 			detailperawat: {
 				uuid: '', registrasi_uuid: '',
 				agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '',
@@ -917,6 +922,10 @@ export default {
 				console.log(vm.form, 'dfdf')
 				vm.action();
 			}
+		},
+
+		doDigitalSignature: function () { 
+			vm.form.ttd = window.localStorage.getItem("ttd") ?? "";
 		},
 
 		redbutton: function () {
@@ -1052,7 +1061,6 @@ export default {
 		look: function (index) {
 			vm.detail = vm.data[index];
 		},
-
 
 
 

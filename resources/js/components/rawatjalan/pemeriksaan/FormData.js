@@ -63,6 +63,7 @@ export const formkelurahan = () => {
 		object: '',
 		assessment: '',
 		plan: '',
+		ttd: '',
 		
 
  		rpk_jelaskan: {
