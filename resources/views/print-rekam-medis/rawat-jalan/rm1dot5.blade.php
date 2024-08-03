@@ -58,12 +58,20 @@
             </tr>
             @foreach ($cppt as $itemcppt)
                 <tr class="tablee" style="padding: 5px">
-                    <td class="tablee" style="padding: 5px"><b> @php
+                    <td class="tablee" style="padding: 5px"><b>
+                    {{-- @php
                         [$date, $time] = explode(' ', $itemcppt->created_at);
                         $timeWithoutMilliseconds = explode('.', $time)[0];
-                    @endphp
-                            {{ $date }}/<br>{{ $timeWithoutMilliseconds }}</b> </td>
-                    <td class="tablee" style="padding: 5px"> <b></b> </td>
+                    @endphp --}}
+                            {{-- {{ $date }}/<br>{{ $timeWithoutMilliseconds }}</b> </td> --}}
+                        <b>
+                             {{ $itemcppt->created_at }}  
+                            </b> 
+                    </td>
+                    <td class="tablee" style="padding: 5px"> <b>
+                        
+                        {{$itemcppt->pengguna_nama_pengguna }}
+                    </b> </td>
                     <td class="tablee">
                         <table style="padding: 5px">
                             <tr>
@@ -96,8 +104,11 @@
                     </td>
                     <td class="tablee"> <br>
                     </td>
-                    <td class="tablee"> <br>
+                    <td class="tablee">
+                         <br>
                         <img src="{{ $itemcppt->ttd }}" alt="Base64 Image" width="100%">
+                        <br>
+                        {{$itemcppt->pengguna_nama_pengguna }}
                     </td>
                 </tr>
             @endforeach

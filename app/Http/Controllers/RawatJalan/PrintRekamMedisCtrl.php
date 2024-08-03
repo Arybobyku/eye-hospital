@@ -128,9 +128,15 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $cppt = Cppt::where('pasien_uuid', '=', $uuid)->get();
-
-    // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
+    // $cppt = Cppt::where('pasien_uuid', '=', $uuid)->get();
+    $cppt = DB::table('cppt')
+          ->leftJoin('pengguna', 'cppt.pengguna_uuid', '=', 'pengguna.uuid')
+          ->where('cppt.pasien_uuid', '=', $uuid)
+          ->select(
+            'cppt.*',
+            DB::raw('pengguna.nama as pengguna_nama_pengguna'), // Add all other biodata fields similarly
+          )
+          ->get();
 
     $pdf->loadView(
       'print-rekam-medis.rawat-jalan.rm1dot5',
