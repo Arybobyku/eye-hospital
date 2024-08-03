@@ -100,6 +100,9 @@ export default {
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_paket_bedah', label: 'Paket Bedah', type: 'text', search: true, close: false, button: false },
+			{ value: 'kamar_inap_nama', label: 'Kamar Inap', type: 'text', search: true, close: false, button: false },
+			{ value: 'tanggal_masuk_inap', label: 'Tanggal Masuk Inap', type: 'date', search: false, close: false, button: false },
+			{ value: 'waktu_masuk_inap', label: 'Pukul', type: 'time', search: false, close: false, button: false },
 			{ value: 'jenis', label: 'Jenis Kunjungan', type: 'text', search: false, close: false, button: false },
 			{ value: 'bedah_status', label: 'Status', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
@@ -200,6 +203,70 @@ export default {
 			if (data.bedah_status == '-') { return '<div class="badge badge-danger">Menunggu</div>'; }
 			return '<div class="badge badge-success">'+data.bedah_status+'</div>'
 		},
+		waktuMasuk: function (data) {
+			if (data.waktu_masuk_inap == '') 
+			{
+				return "-";
+
+			 } else {
+			return data.waktu_masuk_inap
+			} 
+			// return '<div class="badge badge-success">' + waktuMasukInap + '</div>'
+		},
+		tanggalMasuk: function (data) {
+ 			if (data.tanggal_masuk_inap <= '2000-01-01') {
+				return "";
+			 } else {
+				return data.tanggal_masuk_inap
+			}
+
+			// return '<div class="badge badge-success">' + waktuMasukInap + '</div>'
+		},
+		datename2: function (data, istimes = false) {
+			if (data <= '2000-01-01') {
+				return '-'; 
+			} else {
+			let tmp = data.split(" "),
+				dates = tmp[0].split('-');
+			if (tmp.length > 1) {
+				let times = tmp[1].split(':');
+				if (istimes) {
+					return dates[2] + ' ' + this.monthname(dates[1]) + ' ' + dates[0] + ' <strong>' + times[0] + ':' + times[1] + '</strong>';
+				}
+				return dates[2] + ' ' + this.monthname(dates[1]) + ' ' + dates[0];
+			}
+			return dates[2] + ' ' + this.monthname(dates[1]) + ' ' + dates[0];
+		}},
+
+		monthname: function (month) {
+			if (month == '01') { month = 'Januari'; }
+			else if (month == '02') { month = 'Februari'; }
+			else if (month == '03') { month = 'Maret'; }
+			else if (month == '04') { month = 'April'; }
+			else if (month == '05') { month = 'Mei'; }
+			else if (month == '06') { month = 'Juni'; }
+			else if (month == '07') { month = 'Juli'; }
+			else if (month == '08') { month = 'Agustus'; }
+			else if (month == '09') { month = 'September'; }
+			else if (month == '10') { month = 'Oktober'; }
+			else if (month == '11') { month = 'November'; }
+			else { month = 'Desember'; }
+			return month;
+		},
+
+		datenumber: function (data, istimes = false) {
+			let tmp = data.split(" "),
+				dates = tmp[0].split('-');
+			if (tmp.length > 1) {
+				let times = tmp[1].split(':');
+				if (istimes) {
+					return dates[2] + '/' + dates[1] + '/' + dates[0] + ' ' + times[0] + ':' + times[1];
+				}
+				return dates[2] + '/' + dates[1] + '/' + dates[0];
+			}
+			return dates[2] + '/' + dates[1] + '/' + dates[0];
+		},
+
 
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
@@ -219,6 +286,9 @@ export default {
 			else if (identity == 'tanggal') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'jenis') { _tmp = { value: vm.jenisos(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'bedah_status') { _tmp = { value: vm.bedahstatus(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'waktu_masuk_inap') { _tmp = { value: vm.waktuMasuk(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'tanggal_masuk_inap') { _tmp = { value: vm.datename2(column, true), ishtml: 'html', style: '' }; }
+
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';
 		},
