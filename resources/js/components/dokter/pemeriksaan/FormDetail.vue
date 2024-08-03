@@ -34,6 +34,10 @@
                                     }}</strong></span
                                 >
                             </li>
+                        </ul>
+                    </div>
+                    <div class="col-4 form-mr">
+                        <ul class="list-detail">
                             <li>
                                 Tanggal Lahir<span
                                     ><strong>{{
@@ -49,26 +53,11 @@
                                 >
                             </li>
                         </ul>
-
-                        <label style="font-weight: bold"
-                            >Tanda tangan dokter</label
-                        >
-                        <img
-                            v-if="form.ttd_dokter"
-                            :src="form.ttd_dokter"
-                            alt="ttd dokter"
-                            height="100"
-                            width="400"
-                        />
-                        <div v-if="!form.ttd_dokter">
-                            <DigitalSignature
-                                style="height: 250px"
-                                @onSaveDigitalSignature="saveDigitalSignature"
-                            />
-                        </div>
                     </div>
 
-                    <div class="col-8">
+                </div>
+                <div class="grid">
+                    <div class="col-12">
                         <div class="tab-lines">
                             <div class="tab" style="width: 100%">
                                 <button
