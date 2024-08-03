@@ -178,6 +178,7 @@ class HistoriPemeriksaanCtrl extends Controller
 			if ($request->uuid != '') {
 				$arr = array(
 					'penetesan_obat' => $request->penetesan_obat,
+					'nama_pemeriksa' => $request->nama_pemeriksa,
 
 					'status_fungsional' => $request->status_fungsional,
 					'keluhan_utama' => $request->keluhan_utama,

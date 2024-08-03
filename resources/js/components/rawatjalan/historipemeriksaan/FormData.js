@@ -5,6 +5,10 @@ export const formkelurahan = () => {
 			title: 'Penetesan Obat', for_id: 'form_'+'penetesanobat', type: 'text', required: '', 
 			name: 'penetesanobat', value: '', disabled: false, show: true, kinds: ''
 		},
+		nama_pemeriksa: { 
+			title: 'Perawat Pengkaji', for_id: 'form_'+'nama_pemeriksa', type: 'text', required: '', 
+			name: 'nama_pemeriksa', value: '', disabled: false, show: true, kinds: ''
+		},
 		keluhanutama: { 
 			title: 'Keluhan Utama', for_id: 'form_'+'keluhanutama', type: 'text', required: '', 
 			name: 'keluhanutama', value: '', disabled: false, show: true, kinds: ''

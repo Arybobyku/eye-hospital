@@ -14,18 +14,7 @@
     </style>
 </head>
 <body>
-<div style="position:fixed; right: 13px; bottom: 10px;">
-	<?php
-		// SPP = Surat Persetujuan Pasien
-		$msg = 'RSKM-PV/SPP-'.date('y').'/'.date('m').'/S-';
-		$nomor = $surat->surat_ke;
-		if ($nomor > 0 && $nomor < 10) { $msg .= '000'.$nomor; }
-		else if ($nomor > 9 && $nomor < 100) { $msg .= '00'.$nomor; }
-		else if ($nomor > 99 && $nomor < 1000) { $msg .= '0'.$nomor; }
-		else if ($nomor > 999 && $nomor < 10000) { $msg .= ''.$nomor; }
-		echo $msg;
-	?>	
-</div>
+<div style="position :relative; right :-600px; top :-10px"> RM1.1 /PU/{{ tglse($firstRegistrasi->tanggal) }} </div>
 <?php $fullpath = storage_path('app/public/header.png');  ?>
 <div class="wrap">
 	<table style="width: 100%; text-align: left" border="0">
@@ -121,7 +110,7 @@
 		<tr>
 			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify">
 			Saya memberi wewenang kepada Rumah Sakit Khusus Mata Prima Vision Medan untuk memberikan informasi tentang diagnosis, hasil pelayanan dan pengobatan saya kepada anggota keluarga saya 
-			dan kepada : {{ $surat->pelepasan_informasi }}
+			
 			</td>
 		</tr>
 		<tr>
@@ -212,7 +201,7 @@
 		</tr>
 		<tr>
 			<td style="width: 35%"><span style="text-decoration: underline"><b>{{ \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'Nama')) }}</b></span></td>
-			<td style="width: 30%"><span style="text-decoration: underline"><b>{{ $surat->penerima }}</b></span></td>
+		
 		</tr>
 		<tr>
 			<td style="width: 35%">Nama dan Tanda Tangan</td>
@@ -239,7 +228,26 @@ function bulans($bln) {
 	else if ($bln == '12') { $bln = 'Desember'; }
 	return $bln;
 }
+function tglse($created) {
 
+$tgl_ = explode('-',$created);
+$thn = $tgl_[0]; $bln = $tgl_[1]; $tgl = $tgl_[2];
+
+if ($bln == '01') { $bln = 'Januari'; }
+else if ($bln == '02') { $bln = 'Februari'; }
+else if ($bln == '03') { $bln = 'Maret'; }
+else if ($bln == '04') { $bln = 'April'; }
+else if ($bln == '05') { $bln = 'Mei'; }
+else if ($bln == '06') { $bln = 'Juni'; }
+else if ($bln == '07') { $bln = 'Juli'; }
+else if ($bln == '08') { $bln = 'Agustus'; }
+else if ($bln == '09') { $bln = 'September'; }
+else if ($bln == '10') { $bln = 'Oktober'; }
+else if ($bln == '11') { $bln = 'November'; }
+else { $bln = 'Desember'; }
+
+return $thn . ' ';
+}
 ?>
 
 </body>

@@ -1,23 +1,29 @@
 <template>
-<div class="inner" ref="roottable">
-	<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
-	<div class="tab-content">
-		<div class="content-tab-in" v-if="tab.content.now">
-			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+	<div class="inner" ref="roottable">
+		<div class="tab-lines">
+			<div class="tab"><button v-for="(item, index) in tab.button" :class="item.class"
+					v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div>
 		</div>
-		<div class="content-tab-in" v-else-if="tab.content.done">
-			<Datatable ref="DatatableDone" :module="moduledone" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+		<div class="tab-content">
+			<div class="content-tab-in" v-if="tab.content.now">
+				<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton">
+				</Datatable>
+			</div>
+			<div class="content-tab-in" v-else-if="tab.content.done">
+				<Datatable ref="DatatableDone" :module="moduledone" @tablereload="tablereload"
+					@tablebutton="tablebutton"></Datatable>
+			</div>
 		</div>
+		<Loader ref="Loader"></Loader>
 	</div>
-	<Loader ref="Loader"></Loader>
-</div>
-<FormUnit ref="FormUnit" @dialog="dialog" @parsingForm="parsingForm"></FormUnit>
-<FormObat ref="FormObat" @dialog="dialog" @parsingForm="parsingForm"></FormObat>
-<FormResep ref="FormResep" @dialog="dialog" @parsingForm="parsingForm"></FormResep>
-<FormJadwalKontrol ref="FormJadwalKontrol" @dialog="dialog" @parsingForm="parsingForm"></FormJadwalKontrol>
-<FormHistori ref="FormHistori"></FormHistori>
-<FormDetail ref="FormDetail"></FormDetail>
-<FormHistoriDokter ref="FormHistoriDokter"></FormHistoriDokter>
+	<FormUnit ref="FormUnit" @dialog="dialog" @parsingForm="parsingForm"></FormUnit>
+	<FormObat ref="FormObat" @dialog="dialog" @parsingForm="parsingForm"></FormObat>
+	<FormResep ref="FormResep" @dialog="dialog" @parsingForm="parsingForm"></FormResep>
+	<FormJadwalKontrol ref="FormJadwalKontrol" @dialog="dialog" @parsingForm="parsingForm"></FormJadwalKontrol>
+	<FormHistori ref="FormHistori"></FormHistori>
+	<FormDetail ref="FormDetail"></FormDetail>
+	<FormInap ref="FormInap" @dialog="dialog" @parsingForm="parsingForm"></FormInap>
+		<FormHistoriDokter ref="FormHistoriDokter"></FormHistoriDokter>
 </template>
 
 <script>
@@ -36,6 +42,7 @@ export default {
 		FormResep: defineAsyncComponent(() => import('./FormResep.vue')),
 		FormJadwalKontrol: defineAsyncComponent(() => import('./FormJadwalKontrol.vue')),
 		FormDetail: defineAsyncComponent(() => import('./FormDetail.vue')),
+		FormInap: defineAsyncComponent(() => import('./FormInap.vue')),
 		FormHistori: defineAsyncComponent(() => import('./FormHistori.vue')),
 		FormHistoriDokter: defineAsyncComponent(() => import('./FormHistoriDokter.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
@@ -56,6 +63,8 @@ export default {
 				proses: '/bedah/pasien/proses',
 				selesai: '/bedah/pasien/selesai',
 				detail: '/bedah/pasien/detail',
+				inap: '/bedah/pasien/inap',
+				inapadd: '/bedah/pasien/inapadd',
 
 				histori: '/rawatjalan/pemeriksaan/histori',
 				historidokter: '/dokter/pemeriksaan/histori',
@@ -91,6 +100,9 @@ export default {
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_paket_bedah', label: 'Paket Bedah', type: 'text', search: true, close: false, button: false },
+			{ value: 'kamar_inap_nama', label: 'Kamar Inap', type: 'text', search: true, close: false, button: false },
+			{ value: 'tanggal_masuk_inap', label: 'Tanggal Masuk Inap', type: 'date', search: false, close: false, button: false },
+			{ value: 'waktu_masuk_inap', label: 'Pukul', type: 'time', search: false, close: false, button: false },
 			{ value: 'jenis', label: 'Jenis Kunjungan', type: 'text', search: false, close: false, button: false },
 			{ value: 'bedah_status', label: 'Status', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
@@ -147,6 +159,9 @@ export default {
 					show: _item.bedah_status == 'Sedang Dioperasi' ? true : false },
 				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'detail', tooltip: 'Detail Paket Bedah', item: _item, index: _index, 
 					show: true },
+				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'inap', tooltip: 'Tambah Kamar Inap', item: _item, index: _index,
+					show: _item.bedah_status == 'Selesai Dioperasi' ? true : false
+				},
 				//{ icon: 'plus-circle', color: 'btn-info', posisi: 'add', tooltip: 'Tambah Tindakan', item: _item, index: _index, show: true },
 				//{ icon: 'aperture', color: 'btn-warning', posisi: 'obat', tooltip: 'Pemberian Obat', item: _item, index: _index, show: true },
 				//{ icon: 'aperture', color: 'btn-success', posisi: 'resep', tooltip: 'Resep Obat', item: _item, index: _index, show: true },
@@ -165,6 +180,10 @@ export default {
 					show: _item.bedah_status == 'Sedang Dioperasi' ? true : false },
 				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'detail', tooltip: 'Detail Paket Bedah', item: _item, index: _index, 
 					show: true },
+				{
+					icon: 'arrow-up', color: 'btn-warning', posisi: 'inap', tooltip: 'Tambah Kamar Inap', item: _item, index: _index,
+					show: _item.bedah_status == 'Selesai Dioperasi' ? true : false
+				},
 				//{ icon: 'plus-circle', color: 'btn-info', posisi: 'add', tooltip: 'Tambah Tindakan', item: _item, index: _index, show: true },
 				//{ icon: 'aperture', color: 'btn-warning', posisi: 'obat', tooltip: 'Pemberian Obat', item: _item, index: _index, show: true },
 				//{ icon: 'aperture', color: 'btn-success', posisi: 'resep', tooltip: 'Resep Obat', item: _item, index: _index, show: true },
@@ -176,7 +195,7 @@ export default {
 		},
 
 		jenisos:function(data) {
-			if (data.jenis == 'Rawat Jalan') { return 'One Day Care'; }
+			if (data.jenis == 'One Day Care') { return 'One Day Care'; }
 			return 'Rawat Inap';
 		},
 
@@ -184,6 +203,70 @@ export default {
 			if (data.bedah_status == '-') { return '<div class="badge badge-danger">Menunggu</div>'; }
 			return '<div class="badge badge-success">'+data.bedah_status+'</div>'
 		},
+		waktuMasuk: function (data) {
+			if (data.waktu_masuk_inap == '') 
+			{
+				return "-";
+
+			 } else {
+			return data.waktu_masuk_inap
+			} 
+			// return '<div class="badge badge-success">' + waktuMasukInap + '</div>'
+		},
+		tanggalMasuk: function (data) {
+ 			if (data.tanggal_masuk_inap <= '2000-01-01') {
+				return "";
+			 } else {
+				return data.tanggal_masuk_inap
+			}
+
+			// return '<div class="badge badge-success">' + waktuMasukInap + '</div>'
+		},
+		datename2: function (data, istimes = false) {
+			if (data <= '2000-01-01') {
+				return '-'; 
+			} else {
+			let tmp = data.split(" "),
+				dates = tmp[0].split('-');
+			if (tmp.length > 1) {
+				let times = tmp[1].split(':');
+				if (istimes) {
+					return dates[2] + ' ' + this.monthname(dates[1]) + ' ' + dates[0] + ' <strong>' + times[0] + ':' + times[1] + '</strong>';
+				}
+				return dates[2] + ' ' + this.monthname(dates[1]) + ' ' + dates[0];
+			}
+			return dates[2] + ' ' + this.monthname(dates[1]) + ' ' + dates[0];
+		}},
+
+		monthname: function (month) {
+			if (month == '01') { month = 'Januari'; }
+			else if (month == '02') { month = 'Februari'; }
+			else if (month == '03') { month = 'Maret'; }
+			else if (month == '04') { month = 'April'; }
+			else if (month == '05') { month = 'Mei'; }
+			else if (month == '06') { month = 'Juni'; }
+			else if (month == '07') { month = 'Juli'; }
+			else if (month == '08') { month = 'Agustus'; }
+			else if (month == '09') { month = 'September'; }
+			else if (month == '10') { month = 'Oktober'; }
+			else if (month == '11') { month = 'November'; }
+			else { month = 'Desember'; }
+			return month;
+		},
+
+		datenumber: function (data, istimes = false) {
+			let tmp = data.split(" "),
+				dates = tmp[0].split('-');
+			if (tmp.length > 1) {
+				let times = tmp[1].split(':');
+				if (istimes) {
+					return dates[2] + '/' + dates[1] + '/' + dates[0] + ' ' + times[0] + ':' + times[1];
+				}
+				return dates[2] + '/' + dates[1] + '/' + dates[0];
+			}
+			return dates[2] + '/' + dates[1] + '/' + dates[0];
+		},
+
 
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
@@ -203,11 +286,16 @@ export default {
 			else if (identity == 'tanggal') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'jenis') { _tmp = { value: vm.jenisos(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'bedah_status') { _tmp = { value: vm.bedahstatus(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'waktu_masuk_inap') { _tmp = { value: vm.waktuMasuk(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'tanggal_masuk_inap') { _tmp = { value: vm.datename2(column, true), ishtml: 'html', style: '' }; }
+
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';
 		},
 
 		tablebutton:function(posisi, data, index) {
+			console.log("POSISI aturulang");
+			console.log(posisi);
 			if (posisi == 'proses') {
 				vm.position = "prosesdata";
 				vm.attach.data = new FormData();
@@ -235,6 +323,24 @@ export default {
 				vm.attach.data.append('uuid', data.uuid);
 				vm.attach.data.append('jenis', data.jenis);
 				vm.attach.url = vm.attach.link.detail;
+				vm.executions();
+			}
+			else if (posisi == 'inap') {
+				vm.position = "inapdata";
+				vm.$refs.FormInap.show('inapdata', 'Tambah Rawat Inap', data.uuid);
+				setTimeout(() => { vm.loadingModal('inapdata'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.inap;
+				vm.executions();
+			}
+			else if (posisi == 'inapdata') {
+				vm.position = "inapdata";
+				vm.$refs.FormInap.show('inapdata', 'Tambah Rawat Inap', data.uuid);
+				setTimeout(() => { vm.loadingModal('inapdata'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.inap;
 				vm.executions();
 			}
 			else if (posisi == 'histori') {
@@ -269,6 +375,18 @@ export default {
 				vm.attach.url = vm.attach.link.getlayanan;
 				vm.executions();
 			}
+			// else if (posisi == 'inapadd') {
+			// 	console.log("INAP ADD");
+			// 	vm.$refs.FormInap.aturulang();
+			// 	vm.position = "inapadd";
+			// 	vm.$refs.FormInap.show('inapadd', 'Penambahan Kamar Inap', data.uuid, data);
+			// 	setTimeout(() => { vm.loadingModal('inapdata'); }, 250, this);
+			// 	vm.attach.data = new FormData();
+			// 	vm.attach.data.append('registrasi_uuid', data.registrasi_uuid);
+			// 	vm.attach.data.append('uuid', data.uuid);
+			// 	vm.attach.url = vm.attach.link.inapadd;
+			// 	vm.executions();
+			// }
 			else if (posisi == 'obat') {
 				vm.$refs.FormObat.aturulang();
 				vm.position = "loaddataobat";
@@ -305,17 +423,21 @@ export default {
 		},
 
 		loadingModal: function (position) { 
+			console.log(position)
 			if (position == 'formunit') { vm.$refs.FormUnit.loaderprocess();  }
 			else if (position == 'formobat') { vm.$refs.FormObat.loaderprocess();  }
 			else if (position == 'formresep') { vm.$refs.FormResep.loaderprocess();  }
 			else if (position == 'formjadwalkontrol') { vm.$refs.FormJadwalKontrol.loaderprocess();  }
-			else if (position == 'detaildata') { vm.$refs.FormDetail.loaderprocess();  }
+			else if (position == 'detaildata') { vm.$refs.FormDetail.loaderprocess(); }
+			else if (position == 'inapdata') { vm.$refs.FormInap.loaderprocess(); }
 			else if (position == 'formhistori') { vm.$refs.FormHistori.loaderprocess();  }
 			else if (position == 'formhistoridokter') { vm.$refs.FormHistoriDokter.loaderprocess();  }
 		},
 
 		parsingForm:function(data, key) {
 			vm.attach.data = data;
+			console.log('key');
+			console.log(key);
 			if (key == 'add') {
 				vm.position = 'adddata';
 				vm.attach.url = vm.attach.link.add;
@@ -344,6 +466,10 @@ export default {
 				vm.position = 'removeresep';
 				vm.attach.url = vm.attach.link.removeresep;
 			}
+			else if (key == 'inapadd') {
+				vm.position = 'inapadd';
+				vm.attach.url = vm.attach.link.inapadd;
+			}
 		},
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
@@ -363,6 +489,12 @@ export default {
 				vm.attach.data.append('search', ''); 
 				vm.attach.data.append('column', ''); 
 				vm.attach.data.append('page', 1);
+			} else {
+				vm.attach.url = vm.attach.link.list;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
+				vm.attach.data.append('page', 1); 
 			}
 
 			vm.executions(); 
@@ -433,6 +565,8 @@ export default {
 		},
 
 		berhasil: function (response) {
+			console.log("posisiberhasil");
+			console.log(vm.position);
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
 	
@@ -509,9 +643,19 @@ export default {
 				vm.position = "detaildata"; 
 				active = 0; 
 			}
+			else if (vm.position == 'inapdata') {
+				vm.$refs.FormInap.setdataform(response);
+				vm.position = "inapdata";
+				active = 0;
+			}
 			else if (vm.position == 'updatedata') {
 				vm.loadingModal('formunit');
 				vm.$refs.FormUnit.hide(); 
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
+			}
+			else if (vm.position == 'inapadd') {
+				vm.loadingModal('inapdata');
+				vm.$refs.FormInap.hide();
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'prosesdata') { 
@@ -540,6 +684,7 @@ export default {
 				else if (vm.position == 'loaddone') { vm.notification('Data gagal dimuat.', 3000, position); }
 				else if (vm.position == 'externaltable') { vm.notification('Datalist tabel gagal dimuat.', 3000, position); }
 				else if (vm.position == 'adddata') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'inapadd') { vm.notification('Penambahan Kamar Inap gagal diproses.', 3000, position); }
 				else if (vm.position == 'adddataobat') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'adddataresep') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'addjadwalkontrol') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
@@ -557,6 +702,7 @@ export default {
 			}
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'adddata') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
+				else if (vm.position == 'inapadd') { vm.notification('Penambahan Kamar Inap berhasil diproses.', 3000, position); }
 				else if (vm.position == 'adddataobat') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'adddataresep') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'addjadwalkontrol') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }

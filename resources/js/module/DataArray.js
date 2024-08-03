@@ -70,6 +70,7 @@ export const arrbiodata = () => {
 			{ value: 'KTA', label: 'KTA' },
 			{ value: 'KITAS', label: 'KITAS' },
 			{ value: 'Paspor', label: 'Paspor' },
+			
 		],
 		posisiakun: [
 			{ value: '8807', label: 'Karyawan' },
@@ -122,6 +123,7 @@ export const arrbiodata = () => {
 			{ value: 'Sr.', label: 'Sr.' },
 			{ value: 'Jr.', label: 'Jr.' },
 		],
+	
 	}
 }
 
@@ -311,6 +313,11 @@ export const arrpemeriksaan = () => {
 		penilaianresikojatuh: [
 			{ value: 'Ya', label: 'Ya, Terjatuh' },
 			{ value: 'Tidak', label: 'Tidak Terjatuh' },
+		],
+		pilihanplan: [
+			{ value: 'Pulang Berobat Jalan', label: 'Pulang Berobat Jalan' },
+			{ value: 'Rawat Inap', label: 'Rawat Inap' },
+			{ value: 'Operasi', label: 'Operasi' },
 		],
 	}
 };

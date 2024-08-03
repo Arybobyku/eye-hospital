@@ -1446,6 +1446,18 @@ table.table thead tr th button.table-add:hover {
 	font-size: 15px;
 }
 
+.form-self-group > timepicker {
+	width: 100%;
+	height: auto;
+	padding: 18px 12px 15px 19px;
+	background: #ffffff;
+	border: 1px solid #c5c5c5;
+	border-radius: 8px;
+	outline: none;
+	box-sizing: border-box;
+	font-size: 15px;
+}
+
 .form-self-group > textarea {
 	width: 100%;
 	height: auto;
@@ -2221,6 +2233,9 @@ button.intip:hover {
 }
 
 input.disabled {
+	cursor:no-drop;
+}
+timepicker.disabled {
 	cursor:no-drop;
 }
 

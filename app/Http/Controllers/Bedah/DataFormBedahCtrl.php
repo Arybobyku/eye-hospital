@@ -21,6 +21,7 @@ use App\Models\PerawatanPeriOperative;
 use App\Models\CatatanOperasiKatarak;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\KeselamatanBedah;
+use App\Models\LaporanInjeksiAntiVega;
 
 class DataFormBedahCtrl extends Controller
 {
@@ -79,6 +80,7 @@ class DataFormBedahCtrl extends Controller
 		$catatanOperasikatarak = CatatanOperasiKatarak::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 		$persetujuantindakankedokteran = PersetujuanTindakanKedokteran::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 		$keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
 		return response()->json([
 			'laporanpembedahan' => $laporanpembedahan, 
@@ -87,6 +89,7 @@ class DataFormBedahCtrl extends Controller
 			'catatanOperasikatarak' => $catatanOperasikatarak,
 			'persetujuantindakankedokteran' => $persetujuantindakankedokteran,
 			'keselamatanbedah' => $keselamatanbedah,
+			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
 	}
 
@@ -104,7 +107,14 @@ class DataFormBedahCtrl extends Controller
 				'asisten_1' => $request->asisten_1,
 				'asisten_2' => $request->asisten_2,
 				'perawat_instrument' => $request->perawat_instrument,
-				'jenis_anastesi' => $request->jenis_anastesi,
+				
+				'ja_umum' => $request->ja_umum,
+				'ja_bsp' => $request->ja_bsp,
+				'ja_csp' => $request->ja_csp,
+				'ja_epidural' => $request->ja_epidural,
+				'ja_spiral' => $request->ja_spiral,
+				'ja_lokal' => $request->ja_lokal,
+
 				'diagnosa_pra_bedah' => $request->diagnosa_pra_bedah,
 				'diagnosa_pasca_bedah' => $request->diagnosa_pasca_bedah,
 				'indikasi_operasi' => $request->indikasi_operasi,
@@ -162,7 +172,15 @@ class DataFormBedahCtrl extends Controller
 			$item->asisten_1 = $request->asisten_1;
 			$item->asisten_2 = $request->asisten_2;
 			$item->perawat_instrument = $request->perawat_instrument;
-			$item->jenis_anastesi = $request->jenis_anastesi;
+			
+			$item->ja_umum = $request->ja_umum;
+			$item->ja_bsp = $request->ja_bsp;
+			$item->ja_csp = $request->ja_csp;
+			$item->ja_epidural = $request->ja_epidural;
+			$item->ja_spiral = $request->ja_spiral;
+			$item->ja_lokal = $request->ja_lokal;
+
+
 			$item->diagnosa_pra_bedah = $request->diagnosa_pra_bedah;
 			$item->diagnosa_pasca_bedah = $request->diagnosa_pasca_bedah;
 			$item->indikasi_operasi = $request->indikasi_operasi;
@@ -200,6 +218,8 @@ class DataFormBedahCtrl extends Controller
 		$catatanOperasikatarak = CatatanOperasiKatarak::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$persetujuantindakankedokteran = PersetujuanTindakanKedokteran::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+
 
 		return response()->json([
 			'laporanpembedahan' => $laporanpembedahan, 
@@ -208,6 +228,7 @@ class DataFormBedahCtrl extends Controller
 			'catatanOperasikatarak' => $catatanOperasikatarak,
 			'persetujuantindakankedokteran' => $persetujuantindakankedokteran,
 			'keselamatanbedah' => $keselamatanbedah,
+			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
 	}
 
@@ -270,6 +291,7 @@ class DataFormBedahCtrl extends Controller
 		$catatanOperasikatarak = CatatanOperasiKatarak::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$persetujuantindakankedokteran = PersetujuanTindakanKedokteran::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
 		return response()->json([
 			'laporanpembedahan' => $laporanpembedahan, 
@@ -278,6 +300,7 @@ class DataFormBedahCtrl extends Controller
 			'catatanOperasikatarak' => $catatanOperasikatarak,
 			'persetujuantindakankedokteran' => $persetujuantindakankedokteran,
 			'keselamatanbedah' => $keselamatanbedah,
+			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
 
 	}
@@ -454,6 +477,8 @@ class DataFormBedahCtrl extends Controller
 		$catatanOperasikatarak = CatatanOperasiKatarak::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$persetujuantindakankedokteran = PersetujuanTindakanKedokteran::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
 
 		return response()->json([
 			'laporanpembedahan' => $laporanpembedahan, 
@@ -462,6 +487,7 @@ class DataFormBedahCtrl extends Controller
 			'catatanOperasikatarak' => $catatanOperasikatarak,
 			'persetujuantindakankedokteran' => $persetujuantindakankedokteran,
 			'keselamatanbedah' => $keselamatanbedah,
+			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
 
 	}
@@ -489,6 +515,7 @@ class DataFormBedahCtrl extends Controller
 				'an_lidocain' => $request->an_lidocain,
 				'in_kornea' => $request->in_kornea,
 				'in_limbus' => $request->in_limbus,
+				'catatan_tambahan' => $request->catatan_tambahan,
 				'in_sclera' => $request->in_sclera,
 				'wt_main_port' => $request->wt_main_port,
 				'wt_keratome_2_koma_75_mm' => $request->wt_keratome_2_koma_75_mm,
@@ -613,6 +640,8 @@ class DataFormBedahCtrl extends Controller
 			$item->ipo_pdbddtksdto = $request->ipo_pdbddtksdto;
 			$item->ipo_psdipo = $request->ipo_psdipo;
 			$item->operator = $request->operator;
+			$item->catatan_tambahan = $request->catatan_tambahan;
+
 
 			$item->save();
 		}
@@ -623,6 +652,8 @@ class DataFormBedahCtrl extends Controller
 		$catatanOperasikatarak = CatatanOperasiKatarak::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$persetujuantindakankedokteran = PersetujuanTindakanKedokteran::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
 
 		return response()->json([
 			'laporanpembedahan' => $laporanpembedahan, 
@@ -631,6 +662,7 @@ class DataFormBedahCtrl extends Controller
 			'catatanOperasikatarak' => $catatanOperasikatarak,
 			'persetujuantindakankedokteran' => $persetujuantindakankedokteran,
 			'keselamatanbedah' => $keselamatanbedah,
+			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
 
 	}
@@ -730,6 +762,8 @@ class DataFormBedahCtrl extends Controller
 		$catatanOperasikatarak = CatatanOperasiKatarak::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$persetujuantindakankedokteran = PersetujuanTindakanKedokteran::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
 
 		return response()->json([
 			'laporanpembedahan' => $laporanpembedahan, 
@@ -738,6 +772,7 @@ class DataFormBedahCtrl extends Controller
 			'catatanOperasikatarak' => $catatanOperasikatarak,
 			'persetujuantindakankedokteran' => $persetujuantindakankedokteran,
 			'keselamatanbedah' => $keselamatanbedah,
+			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
 
 	}
@@ -762,6 +797,7 @@ class DataFormBedahCtrl extends Controller
 				'si_bagian_7' => $request->si_bagian_7,
 				'si_nama' => $request->si_nama,
 				'si_jam' => $request->si_jam,
+				'so_jam' => $request->so_jam,
 				'to_bagian_1' => $request->to_bagian_1,
 				'to_bagian_2_1' => $request->to_bagian_2_1,
 				'to_bagian_2_2' => $request->to_bagian_2_2,
@@ -838,6 +874,7 @@ class DataFormBedahCtrl extends Controller
 			$item->to_bagian_6 = $request->to_bagian_6;
 			$item->to_nama = $request->to_nama;
 			$item->to_jam = $request->to_jam;
+			$item->so_jam = $request->so_jam;
 			$item->so_bagian_1 = $request->so_bagian_1;
 			$item->so_bagian_2 = $request->so_bagian_2;
 			$item->so_bagian_3 = $request->so_bagian_3;
@@ -867,6 +904,8 @@ class DataFormBedahCtrl extends Controller
 		$catatanOperasikatarak = CatatanOperasiKatarak::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$persetujuantindakankedokteran = PersetujuanTindakanKedokteran::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
 		$keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
 
 		return response()->json([
 			'laporanpembedahan' => $laporanpembedahan, 
@@ -875,6 +914,80 @@ class DataFormBedahCtrl extends Controller
 			'catatanOperasikatarak' => $catatanOperasikatarak,
 			'persetujuantindakankedokteran' => $persetujuantindakankedokteran,
 			'keselamatanbedah' => $keselamatanbedah,
+			'laporaninjeksiantivega' => $laporaninjeksiantivega,
+		]);
+		
+	}
+
+	public function laporaninjeksiantivega(Request $request) {
+	
+		$bedah = Bedah::where('uuid', '=', $request->bedah_uuid)->first();
+		if ($request->uuid != '') {
+			$arr = array(
+				'nama_operator' => $request->nama_operator,
+				'od' => $request->od,
+				'os' => $request->os,
+				'jam_operasi' => $request->jam_operasi,
+				'lama_operasi' => $request->lama_operasi,
+				'diagnosis' => $request->diagnosis,
+				'asisten' => $request->asisten,
+				'jenis_operasi' => $request->jenis_operasi,
+				'anesthesia' => $request->anesthesia,
+				'anesthesiologist' => $request->anesthesiologist,
+				'intravitreal' => $request->intravitreal,
+			);
+			$update = LaporanInjeksiAntiVega::where('uuid', '=', $request->uuid)->update($arr);
+		}
+		else {
+			$item = new LaporanInjeksiAntiVega();
+			$item->uuid = Uuid::uuid4();
+			$item->registrasi_uuid = $bedah->registrasi_uuid;
+			$item->no_pendaftaran = $bedah->no_pendaftaran;
+			$item->registrasi_kode = $bedah->registrasi_kode;
+			$item->registrasi_nomor = $bedah->registrasi_nomor;
+			$item->registrasi_jenis = $bedah->registrasi_jenis;
+
+			$item->bedah_uuid = $bedah->uuid;
+			$item->pasien_uuid = $bedah->pasien_uuid;
+			$item->rekam_medis = $bedah->rekam_medis;
+			$item->nama_pasien = $bedah->nama_pasien;
+			$item->tanggal_lahir = '1000-01-10';
+			$item->pengguna_uuid = $bedah->pengguna_uuid;
+			$item->nama_dokter = $bedah->nama_dokter;
+
+			$item->nama_operator = $request->nama_operator;
+			$item->od = $request->od;
+			$item->os = $request->os;
+			$item->jam_operasi = $request->jam_operasi;
+			$item->lama_operasi = $request->lama_operasi;
+			$item->diagnosis = $request->diagnosis;
+			$item->asisten = $request->asisten;
+			$item->jenis_operasi = $request->jenis_operasi;
+			$item->anesthesia = $request->anesthesia;
+			$item->anesthesiologist = $request->anesthesiologist;
+			$item->intravitreal = $request->intravitreal;
+			
+
+			$item->save();
+		}
+
+		$laporanpembedahan = LaporanPembedahan::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$checklistkesiapanbedah = ChecklistKesiapanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$perawatanperioperative = PerawatanPeriOperative::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$catatanOperasikatarak = CatatanOperasiKatarak::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$persetujuantindakankedokteran = PersetujuanTindakanKedokteran::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$keselamatanbedah = KeselamatanBedah::where('registrasi_uuid', '=', $bedah->registrasi_uuid)->first();
+		$laporaninjeksiantivega = LaporanInjeksiAntiVega::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
+
+		return response()->json([
+			'laporanpembedahan' => $laporanpembedahan, 
+			'checklistkesiapanbedah' => $checklistkesiapanbedah,
+			'perawatanperioperative' => $perawatanperioperative,
+			'catatanOperasikatarak' => $catatanOperasikatarak,
+			'persetujuantindakankedokteran' => $persetujuantindakankedokteran,
+			'keselamatanbedah' => $keselamatanbedah,
+			'laporaninjeksiantivega' => $laporaninjeksiantivega,
 		]);
 		
 	}
