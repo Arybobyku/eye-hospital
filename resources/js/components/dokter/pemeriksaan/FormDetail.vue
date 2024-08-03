@@ -2375,6 +2375,7 @@ export default {
                 vm.form.inapjalan = "aktif";
                 ("");
             }
+            vm.tabIndex = index;
             vm.setCkEditor();
         },
 
