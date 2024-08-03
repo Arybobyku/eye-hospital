@@ -522,6 +522,10 @@
                             >
                                 <div class="grid">
                                     <div class="col-6 form-mr">
+                                        <Textarea
+                                            :ref="form.anamnese.name"
+                                            :form="form.anamnese"
+                                        ></Textarea>
                                         <Inputed
                                             :ref="form.posisibolamata.name"
                                             :form="form.posisibolamata"
@@ -542,10 +546,6 @@
                                             "
                                             :form="form.pemeriksaanpenunjang"
                                         ></Inputed>
-                                        <Textarea
-                                            :ref="form.anamnese.name"
-                                            :form="form.anamnese"
-                                        ></Textarea>
                                     </div>
                                     <div class="col-6 form-ml">
                                         <Selected
@@ -2088,6 +2088,8 @@ export default {
             }
         },
         setCkEditor: function(){
+            vm.form.subject = vm.form.anamnese.value;
+            vm.form.assessment = vm.form.select.icd10.label;
             vm.form.object = `
             <figure class="table">
             <table>

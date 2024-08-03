@@ -18,15 +18,18 @@
             height: auto;
             display: inline-block;
         }
+
         .tablee {
-            border:1px solid black;
+            border: 1px solid black;
             border-collapse: collapse;
         }
-        .page_break{
-    page-break-before: always;
-}
-        .table, td{
-            border:1px solid #767676;
+
+        .page_break {
+            page-break-before: always;
+        }
+
+        .table tr td{
+            border: 1px solid #767676;
             border-collapse: collapse;
         }
     </style>
@@ -54,49 +57,51 @@
                 <th class="tablee">Review & Verifikasi DPJP (Paraf)</th>
             </tr>
             @foreach ($cppt as $itemcppt)
-                
-            
-            <tr class="tablee" style="padding: 5px"> 
-                <td class="tablee" style="padding: 5px"><b> @php
-                    list($date, $time) = explode(' ', $itemcppt->created_at);
-                    $timeWithoutMilliseconds = explode('.', $time)[0];
-                @endphp {{ $date }}/<br>{{ $timeWithoutMilliseconds }}</b> </td>
-                <td class="tablee" style="padding: 5px"> <b></b> </td>
-                <td class="tablee"> 
-                    <table style="padding: 5px">
-                        <tr>
-                            <td><b> Subject : </b><br>
-                                {!! $itemcppt->subjek !!} </td>
-                        </tr> 
-                   
-                        <tr>
-                            <td> <b>Object : </b>
-                                <br>
-                              {!! $itemcppt->objek !!}
-                            </td>
-                        </tr> 
-                
-                        <tr>
-                            <td> <b>Assassment : </b>
-                                <br>
-                                {!! $itemcppt->asesmen !!}
-                            </td>
-                        </tr> 
-               
-                        <tr>
-                            <td><b> Plan : </b>
-                                <br>
-                             {!! $itemcppt->plan !!}
-                            </td>
-                        </tr>
-                       
-                    </table>
-                 </td>
-                 <td class="tablee"> <br></td>
-                 <td class="tablee"> <br> </td>
-            </tr>
+                <tr class="tablee" style="padding: 5px">
+                    <td class="tablee" style="padding: 5px"><b> @php
+                        [$date, $time] = explode(' ', $itemcppt->created_at);
+                        $timeWithoutMilliseconds = explode('.', $time)[0];
+                    @endphp
+                            {{ $date }}/<br>{{ $timeWithoutMilliseconds }}</b> </td>
+                    <td class="tablee" style="padding: 5px"> <b></b> </td>
+                    <td class="tablee">
+                        <table style="padding: 5px">
+                            <tr>
+                                <td><b> Subject : </b><br>
+                                    {!! $itemcppt->subjek !!} </td>
+                            </tr>
+
+                            <tr>
+                                <td> <b>Object : </b>
+                                    <br>
+                                    {!! $itemcppt->objek !!}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td> <b>Assassment : </b>
+                                    <br>
+                                    {!! $itemcppt->asesmen !!}
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><b> Plan : </b>
+                                    <br>
+                                    {!! $itemcppt->plan !!}
+                                </td>
+                            </tr>
+
+                        </table>
+                    </td>
+                    <td class="tablee"> <br>
+                    </td>
+                    <td class="tablee"> <br>
+                        <img src="{{ $itemcppt->ttd }}" alt="Base64 Image" width="100%">
+                    </td>
+                </tr>
             @endforeach
-           
+
 
         </table>
     </div>
