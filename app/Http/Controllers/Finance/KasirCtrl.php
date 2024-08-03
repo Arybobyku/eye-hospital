@@ -146,6 +146,7 @@ class KasirCtrl extends Controller
                                 ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
                                 ->where(function ($q) {
                                     $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                 })
                                 ->orderBy('registrasi.no_kwitansi', 'desc')
                                 ->where(function ($q) {
@@ -162,6 +163,7 @@ class KasirCtrl extends Controller
                                 ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
                                 ->where(function ($q) {
                                     $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                 })
                                 ->where(function ($q) {
                                     $q->where('registrasi.status', 'Selesai');
@@ -178,6 +180,7 @@ class KasirCtrl extends Controller
                                     ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
                                     ->where(function ($q) {
                                         $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                        $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                     })
                                     ->where(function ($q) {
                                         $q->where('registrasi.status', 'Selesai');
@@ -194,6 +197,7 @@ class KasirCtrl extends Controller
                                 ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
                                 ->where(function ($q) {
                                     $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
                                 })
                                 ->where(function ($q) {
                                     $q->where('registrasi.status', 'Selesai');

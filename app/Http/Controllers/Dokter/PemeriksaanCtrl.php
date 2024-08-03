@@ -1746,6 +1746,7 @@ class PemeriksaanCtrl extends Controller
                     'asesmen' => $request->assessment,
                     'plan' => $request->plan,
                     'pengguna_uuid' => $pengguna_uuid,
+                    'ttd' => $request->ttd_dokter,
                 );
                     $update = Cppt::where('uuid', '=', $request->uuid)->update($arr);
             }
@@ -1763,6 +1764,9 @@ class PemeriksaanCtrl extends Controller
                 $item->objek = $request->object;
                 $item->asesmen = $request->assessment;
                 $item->plan = $request->plan;
+                if($request->ttd_dokter != null && $request->ttd_dokter != ''){
+                    $item->ttd = $request->ttd_dokter;
+                }
                 $item->save();
 
             }

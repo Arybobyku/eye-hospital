@@ -52,9 +52,9 @@
 								<div class="grid">
 									<div class="col-6 form-mr">
 
-										<Inputed :ref="form.penetesanobat.name" :form="form.penetesanobat"></Inputed>
-
 										<Inputed :ref="form.keluhanutama.name" :form="form.keluhanutama"></Inputed>
+
+										<Inputed :ref="form.penetesanobat.name" :form="form.penetesanobat"></Inputed>
 
 										<Inputed :ref="form.riwayatpenyakit.name" :form="form.riwayatpenyakit">
 										</Inputed>
@@ -930,7 +930,7 @@ export default {
 					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';	}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
-				//- vm.setCkEditor(vm.form.penetesanobat.value, 'TITLE');
+				vm.setCkEditor();
 			}
 		},
 
@@ -1061,7 +1061,7 @@ export default {
 		// 	vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detailperawat), 'addperawat'); 
 		// },
 		setCkEditor: function(val, title){
-			vm.form.subject = `<h1>${title}</h1></br><p>${val}</p>`;
+			vm.form.subject = `${vm.form.keluhanutama.value}`;
 		},
 
 
