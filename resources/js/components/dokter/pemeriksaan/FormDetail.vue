@@ -1,6 +1,7 @@
 <template>
 	<div :style="terminate.display" class="modal">
-		<div ref="rootmodal" class="modal-content modal-besar" :class="terminate.show ? 'modal-opened' : 'modal-closed'">
+		<div ref="rootmodal" class="modal-content modal-besar"
+			:class="terminate.show ? 'modal-opened' : 'modal-closed'">
 			<div class="modal-header">
 				<span class="close" v-on:click="hide()">&times;</span>
 				<h2>Detail Data Pemeriksaan Dokter</h2>
@@ -95,10 +96,14 @@
 
 
 					<div class="col-12">
-						
-						<div class="tab-lines"><div class="tab" style="width: 100%;"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
-		
-						
+
+						<div class="tab-lines">
+							<div class="tab" style="width: 100%;"><button v-for="(item, index) in tab.button"
+									:class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{
+									item.label }}</button></div>
+						</div>
+
+
 						<div class="tab-content">
 							<div style="position: relative;" class="content-tab-in" v-if="tab.content.ro">
 								<div class="grid">
@@ -117,7 +122,8 @@
 														<tbody>
 															<tr>
 																<td>PD</td>
-																<td colspan="2">{{ pemeriksaanro.ocular_dextra_pd }}</td>
+																<td colspan="2">{{ pemeriksaanro.ocular_dextra_pd }}
+																</td>
 															</tr>
 															<tr>
 																<td>Autoref</td>
@@ -131,18 +137,24 @@
 															</tr>
 															<tr>
 																<td>BCVA</td>
-																<td>{{ pemeriksaanro.ocular_dextra_bcva1 }} -> {{ pemeriksaanro.ocular_dextra_bcva2 }}</td>
-																<td>{{ pemeriksaanro.ocular_sinistra_bcva1 }} -> {{ pemeriksaanro.ocular_dextra_bcva2 }}</td>
+																<td>{{ pemeriksaanro.ocular_dextra_bcva1 }} -> {{
+																	pemeriksaanro.ocular_dextra_bcva2 }}</td>
+																<td>{{ pemeriksaanro.ocular_sinistra_bcva1 }} -> {{
+																	pemeriksaanro.ocular_dextra_bcva2 }}</td>
 															</tr>
 															<tr>
 																<td>Keratometri K1</td>
-																<td>{{ pemeriksaanro.ocular_dextra_keratometri_k1 }}</td>
-																<td>{{ pemeriksaanro.ocular_sinistra_keratometri_k1 }}</td>
+																<td>{{ pemeriksaanro.ocular_dextra_keratometri_k1 }}
+																</td>
+																<td>{{ pemeriksaanro.ocular_sinistra_keratometri_k1 }}
+																</td>
 															</tr>
 															<tr>
 																<td>Keratometri K2</td>
-																<td>{{ pemeriksaanro.ocular_dextra_keratometri_k2 }}</td>
-																<td>{{ pemeriksaanro.ocular_sinistra_keratometri_k2 }}</td>
+																<td>{{ pemeriksaanro.ocular_dextra_keratometri_k2 }}
+																</td>
+																<td>{{ pemeriksaanro.ocular_sinistra_keratometri_k2 }}
+																</td>
 															</tr>
 															<tr>
 																<td>Tonometri</td>
@@ -159,18 +171,25 @@
 															</tr>
 															<tr>
 																<td>Sph</td>
-																<td>{{ pemeriksaanro.ocular_dextra_kacamata_lama_sph }}</td>
-																<td>{{ pemeriksaanro.ocular_sinistra_kacamata_lama_sph }}</td>
+																<td>{{ pemeriksaanro.ocular_dextra_kacamata_lama_sph }}
+																</td>
+																<td>{{ pemeriksaanro.ocular_sinistra_kacamata_lama_sph
+																	}}</td>
 															</tr>
 															<tr>
 																<td>Cyl</td>
-																<td>{{ pemeriksaanro.ocular_dextra_kacamata_lama_cyl }}</td>
-																<td>{{ pemeriksaanro.ocular_sinistra_kacamata_lama_cyl }}</td>
+																<td>{{ pemeriksaanro.ocular_dextra_kacamata_lama_cyl }}
+																</td>
+																<td>{{ pemeriksaanro.ocular_sinistra_kacamata_lama_cyl
+																	}}</td>
 															</tr>
 															<tr>
 																<td>Addisi</td>
-																<td>{{ pemeriksaanro.ocular_dextra_kacamata_lama_addisi }}</td>
-																<td>{{ pemeriksaanro.ocular_sinistra_kacamata_lama_addisi }}</td>
+																<td>{{ pemeriksaanro.ocular_dextra_kacamata_lama_addisi
+																	}}</td>
+																<td>{{
+																	pemeriksaanro.ocular_sinistra_kacamata_lama_addisi
+																	}}</td>
 															</tr>
 														</tbody>
 													</table>
@@ -195,7 +214,8 @@
 											</tr>
 											<tr>
 												<th style="text-align:left">Status Fungsional</th>
-												<td style="text-align: right;">{{ pemeriksaanro.status_fungsional }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.status_fungsional }}
+												</td>
 											</tr>
 											<tr>
 												<th style="text-align:left">Nadi</th>
@@ -220,7 +240,8 @@
 											</tr>
 											<tr>
 												<th style="text-align:left">Nyeri hilang bila</th>
-												<td style="text-align: right;">{{ pemeriksaanro.nyeri_hilang_bila }}</td>
+												<td style="text-align: right;">{{ pemeriksaanro.nyeri_hilang_bila }}
+												</td>
 											</tr>
 											<tr>
 												<th style="text-align:left">Skala Nyeri</th>
@@ -250,7 +271,8 @@
 
 											<tr>
 												<th style="text-align:left">Penyakit yang pernah diderita</th>
-												<td style="text-align: right;">{{ detail.penyakit_pernah_diderita_lainnya }}</td>
+												<td style="text-align: right;">{{
+													detail.penyakit_pernah_diderita_lainnya }}</td>
 											</tr>
 
 											<tr>
@@ -287,40 +309,56 @@
 									<div class="col-6 form-mr">
 
 										<Inputed :ref="form.posisibolamata.name" :form="form.posisibolamata"></Inputed>
-										<Inputed :ref="form.pergerakanbolamata.name" :form="form.pergerakanbolamata"></Inputed>
-										<Inputed :ref="form.pemeriksaanprognosa.name" :form="form.pemeriksaanprognosa"></Inputed>
-										<Inputed :ref="form.pemeriksaanpenunjang.name" :form="form.pemeriksaanpenunjang"></Inputed>
+										<Inputed :ref="form.pergerakanbolamata.name" :form="form.pergerakanbolamata">
+										</Inputed>
+										<Inputed :ref="form.pemeriksaanprognosa.name" :form="form.pemeriksaanprognosa">
+										</Inputed>
+										<Inputed :ref="form.pemeriksaanpenunjang.name"
+											:form="form.pemeriksaanpenunjang"></Inputed>
 
 									</div>
 									<div class="col-6 form-ml">
 
-										<Selected v-on:click="selectbox($event, form.select.icd9.name, form.select.icd9.statics)" 
-											:ref="form.select.icd9.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.icd9" v-on:keyup="selectfilter($event, form.select.icd9.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.icd9.name, form.select.icd9.statics)"
+											:ref="form.select.icd9.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.icd9"
+											v-on:keyup="selectfilter($event, form.select.icd9.name)"></Selected>
 
-										<Selected v-on:click="selectbox($event, form.select.icd10.name, form.select.icd10.statics)" 
-											:ref="form.select.icd10.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.icd10" v-on:keyup="selectfilter($event, form.select.icd10.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.icd10.name, form.select.icd10.statics)"
+											:ref="form.select.icd10.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.icd10"
+											v-on:keyup="selectfilter($event, form.select.icd10.name)"></Selected>
 
-										<Inputed :ref="form.pemeriksaantatalaksana.name" :form="form.pemeriksaantatalaksana"></Inputed>
-									
+										<Inputed :ref="form.pemeriksaantatalaksana.name"
+											:form="form.pemeriksaantatalaksana"></Inputed>
+
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="content-tab-in" v-if="tab.content.oculardextra">
 								<div class="grid">
 									<div class="col-6 form-mr">
-										<Inputed :ref="form.oculardextrapalpebra.name" :form="form.oculardextrapalpebra"></Inputed>
-										<Inputed :ref="form.oculardextraconjunctiva.name" :form="form.oculardextraconjunctiva"></Inputed>
-										<Inputed :ref="form.oculardextracornea.name" :form="form.oculardextracornea"></Inputed>
-										<Inputed :ref="form.oculardextralensa.name" :form="form.oculardextralensa"></Inputed>
+										<Inputed :ref="form.oculardextrapalpebra.name"
+											:form="form.oculardextrapalpebra"></Inputed>
+										<Inputed :ref="form.oculardextraconjunctiva.name"
+											:form="form.oculardextraconjunctiva"></Inputed>
+										<Inputed :ref="form.oculardextracornea.name" :form="form.oculardextracornea">
+										</Inputed>
+										<Inputed :ref="form.oculardextralensa.name" :form="form.oculardextralensa">
+										</Inputed>
 									</div>
 									<div class="col-6 form-ml">
-										<Inputed :ref="form.oculardextravitreous.name" :form="form.oculardextravitreous"></Inputed>
-										<Inputed :ref="form.oculardextrafunduscopy.name" :form="form.oculardextrafunduscopy"></Inputed>
-										<Inputed :ref="form.oculardextrabilikmatadepan.name" :form="form.oculardextrabilikmatadepan"></Inputed>
-										<Inputed :ref="form.oculardextrapupildaniris.name" :form="form.oculardextrapupildaniris"></Inputed>
+										<Inputed :ref="form.oculardextravitreous.name"
+											:form="form.oculardextravitreous"></Inputed>
+										<Inputed :ref="form.oculardextrafunduscopy.name"
+											:form="form.oculardextrafunduscopy"></Inputed>
+										<Inputed :ref="form.oculardextrabilikmatadepan.name"
+											:form="form.oculardextrabilikmatadepan"></Inputed>
+										<Inputed :ref="form.oculardextrapupildaniris.name"
+											:form="form.oculardextrapupildaniris"></Inputed>
 									</div>
 								</div>
 							</div>
@@ -328,16 +366,24 @@
 							<div class="content-tab-in" v-if="tab.content.ocularsinistra">
 								<div class="grid">
 									<div class="col-6 form-mr">
-										<Inputed :ref="form.ocularsinistrapalpebra.name" :form="form.ocularsinistrapalpebra"></Inputed>
-										<Inputed :ref="form.ocularsinistraconjunctiva.name" :form="form.ocularsinistraconjunctiva"></Inputed>
-										<Inputed :ref="form.ocularsinistracornea.name" :form="form.ocularsinistracornea"></Inputed>
-										<Inputed :ref="form.ocularsinistralensa.name" :form="form.ocularsinistralensa"></Inputed>
+										<Inputed :ref="form.ocularsinistrapalpebra.name"
+											:form="form.ocularsinistrapalpebra"></Inputed>
+										<Inputed :ref="form.ocularsinistraconjunctiva.name"
+											:form="form.ocularsinistraconjunctiva"></Inputed>
+										<Inputed :ref="form.ocularsinistracornea.name"
+											:form="form.ocularsinistracornea"></Inputed>
+										<Inputed :ref="form.ocularsinistralensa.name" :form="form.ocularsinistralensa">
+										</Inputed>
 									</div>
 									<div class="col-6 form-ml">
-										<Inputed :ref="form.ocularsinistravitreous.name" :form="form.ocularsinistravitreous"></Inputed>
-										<Inputed :ref="form.ocularsinistrafunduscopy.name" :form="form.ocularsinistrafunduscopy"></Inputed>
-										<Inputed :ref="form.ocularsinistrabilikmatadepan.name" :form="form.ocularsinistrabilikmatadepan"></Inputed>
-										<Inputed :ref="form.ocularsinistrapupildaniris.name" :form="form.ocularsinistrapupildaniris"></Inputed>
+										<Inputed :ref="form.ocularsinistravitreous.name"
+											:form="form.ocularsinistravitreous"></Inputed>
+										<Inputed :ref="form.ocularsinistrafunduscopy.name"
+											:form="form.ocularsinistrafunduscopy"></Inputed>
+										<Inputed :ref="form.ocularsinistrabilikmatadepan.name"
+											:form="form.ocularsinistrabilikmatadepan"></Inputed>
+										<Inputed :ref="form.ocularsinistrapupildaniris.name"
+											:form="form.ocularsinistrapupildaniris"></Inputed>
 									</div>
 								</div>
 							</div>
@@ -350,15 +396,19 @@
 											:selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.db_table)"
 											></Selected> -->
 
-										<Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)" 
-											:ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name)"
-											></Selected>
-									
+										<Selected
+											v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)"
+											:ref="form.select.carabayartindakanrawatjalan.name"
+											@selecteditem="selecteditem" @selectclear="selectclear"
+											:selection="form.select.carabayartindakanrawatjalan"
+											v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name)">
+										</Selected>
+
 										<table class="table">
 											<thead>
 												<tr>
 													<th>Nama Tindakan</th>
+													<th style="display:none">Jenis</th>
 													<th>Biaya</th>
 													<th>#</th>
 												</tr>
@@ -366,10 +416,12 @@
 											<tbody>
 												<tr v-for="(item, index) in listdata" v-if="listdata.length > 0">
 													<td>{{ item.nama_tindakan_rawat_jalan }}</td>
+													<td style="display:none">{{ item.jenis }}</td>
 													<td>{{ formatrupiah(item.harga.toString()) }}</td>
 													<td>
-														<button v-if="item.default != 'Ya'" class="tooltip btn-danger" v-on:click="removetindakan(index)">
-															<vue-feather type="trash"></vue-feather> 
+														<button v-if="item.default != 'Ya'" class="tooltip btn-danger"
+															v-on:click="removetindakan(index)">
+															<vue-feather type="trash"></vue-feather>
 															<span class="tooltiptext">Hapus Tindakan</span>
 														</button>
 													</td>
@@ -382,11 +434,12 @@
 													<td colspan="2">{{ formatrupiah(totalbiaya.toString()) }}</td>
 												</tr>
 											</tbody>
-											
+
 										</table>
 
-										<Inputed :ref="form.catatan.name" :form="form.catatan" style="margin-top: 36px"></Inputed>
-										
+										<Inputed :ref="form.catatan.name" :form="form.catatan" style="margin-top: 36px">
+										</Inputed>
+
 									</div>
 								</div>
 							</div>
@@ -399,16 +452,22 @@
 											:selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.db_table)"
 											></Selected> -->
 
-										<Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalanjalan.name, form.select.carabayartindakanrawatjalanjalan.statics)" 
-											:ref="form.select.carabayartindakanrawatjalanjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.carabayartindakanrawatjalanjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalanjalan.name)"
-											></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.carabayartindakanrawatjalanjalan.name, form.select.carabayartindakanrawatjalanjalan.statics)"
+											:ref="form.select.carabayartindakanrawatjalanjalan.name"
+											@selecteditem="selecteditem" @selectclear="selectclear"
+											:selection="form.select.carabayartindakanrawatjalanjalan"
+											v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalanjalan.name)">
+										</Selected>
 
 									</div>
 									<div class="col-3 form-ml">
-										<Selected v-on:click="selectbox($event, form.select.kamarinapjalan.name, form.select.kamarinapjalan.statics)" 
-											:ref="form.select.kamarinapjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.kamarinapjalan" v-on:keyup="selectfilter($event, form.select.kamarinapjalan.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.kamarinapjalan.name, form.select.kamarinapjalan.statics)"
+											:ref="form.select.kamarinapjalan.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.kamarinapjalan"
+											v-on:keyup="selectfilter($event, form.select.kamarinapjalan.name)">
+										</Selected>
 									</div>
 
 									<div class="col-12">
@@ -421,12 +480,14 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr v-for="(item, index) in listdatajalan" v-if="listdatajalan.length > 0">
+												<tr v-for="(item, index) in listdatajalan"
+													v-if="listdatajalan.length > 0">
 													<td>{{ item.nama_tindakan_rawat_jalan }}</td>
 													<td>{{ item.harga }}</td>
 													<td>
-														<button v-if="item.default != 'Ya'" class="tooltip btn-danger" v-on:click="removetindakanjalan(index)">
-															<vue-feather type="trash"></vue-feather> 
+														<button v-if="item.default != 'Ya'" class="tooltip btn-danger"
+															v-on:click="removetindakanjalan(index)">
+															<vue-feather type="trash"></vue-feather>
 															<span class="tooltiptext">Hapus Tindakan</span>
 														</button>
 													</td>
@@ -439,7 +500,7 @@
 													<td colspan="2">{{ formatrupiah(totalbiayajalan.toString()) }}</td>
 												</tr>
 											</tbody>
-											
+
 										</table>
 									</div>
 								</div>
@@ -447,11 +508,13 @@
 
 							<div class="content-tab-in" v-if="tab.content.resep">
 								<div class="grid">
-									
+
 									<div class="col-5 form-mr">
-										<Selected v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)" 
-											:ref="form.select.apotek.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.apotek" v-on:keyup="selectfilter($event, form.select.apotek.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)"
+											:ref="form.select.apotek.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.apotek"
+											v-on:keyup="selectfilter($event, form.select.apotek.name)"></Selected>
 									</div>
 									<div class="col-3 form-mr form-ml">
 										<Inputed :ref="form.quantity.name" :form="form.quantity"></Inputed>
@@ -460,8 +523,9 @@
 										<Inputed :ref="form.signa.name" :form="form.signa"></Inputed>
 									</div>
 									<div class="col-1">
-										<button class="tooltip btn-danger" v-on:click="additemobat()" style="margin-top: 20px">
-											<vue-feather type="plus"></vue-feather> 
+										<button class="tooltip btn-danger" v-on:click="additemobat()"
+											style="margin-top: 20px">
+											<vue-feather type="plus"></vue-feather>
 											<span class="tooltiptext">Add Item Obat</span>
 										</button>
 									</div>
@@ -486,8 +550,9 @@
 													<td>{{ formatrupiah(item.hja_resep.toString()) }}</td>
 													<td>{{ formatrupiah(item.total.toString()) }}</td>
 													<td>
-														<button class="tooltip btn-danger" v-on:click="removeobat(index)">
-															<vue-feather type="trash"></vue-feather> 
+														<button class="tooltip btn-danger"
+															v-on:click="removeobat(index)">
+															<vue-feather type="trash"></vue-feather>
 															<span class="tooltiptext">Hapus Obat</span>
 														</button>
 													</td>
@@ -500,7 +565,7 @@
 													<td colspan="2">{{ formatrupiah(totalobat.toString()) }}</td>
 												</tr>
 											</tbody>
-											
+
 										</table>
 									</div>
 								</div>
@@ -508,30 +573,48 @@
 
 							<div class="content-tab-in" v-if="tab.content.racikan">
 								<div class="grid">
-									<div class="col-3 form-mr"><Inputed :ref="form.labelracikan.name" :form="form.labelracikan"></Inputed></div>
-									<div class="col-3"><Inputed :ref="form.jeniskemasan.name" :form="form.jeniskemasan"></Inputed></div>
-									<div class="col-3 form-ml"><Inputed :ref="form.jumlahkemasan.name" :form="form.jumlahkemasan"></Inputed></div>
-									<div class="col-2 form-ml"><Inputed :ref="form.signaracikan.name" :form="form.signaracikan"></Inputed></div>
+									<div class="col-3 form-mr">
+										<Inputed :ref="form.labelracikan.name" :form="form.labelracikan"></Inputed>
+									</div>
+									<div class="col-3">
+										<Inputed :ref="form.jeniskemasan.name" :form="form.jeniskemasan"></Inputed>
+									</div>
+									<div class="col-3 form-ml">
+										<Inputed :ref="form.jumlahkemasan.name" :form="form.jumlahkemasan"></Inputed>
+									</div>
+									<div class="col-2 form-ml">
+										<Inputed :ref="form.signaracikan.name" :form="form.signaracikan"></Inputed>
+									</div>
 									<div class="col-1 form-ml">
-										<button class="tooltip btn-success" v-on:click="additemobatracikan()" style="margin-top: 20px">
-											<vue-feather type="plus"></vue-feather> 
+										<button class="tooltip btn-success" v-on:click="additemobatracikan()"
+											style="margin-top: 20px">
+											<vue-feather type="plus"></vue-feather>
 											<span class="tooltiptext">Add Item Racikan</span>
 										</button>
 									</div>
 
 									<div class="col-12" v-if="title_racikan != ''">
-										<div style="position: relative; width: 100%; height: auto; border: 1px solid #811927; border-radius: 8px; padding: 16px; margin-top: 5px; margin-bottom: 16px">
-											<span style="position: absolute; top: -11px; padding: 0 10px; background: #fff; color: #000; font-weight: bold;" >{{ title_racikan }}</span>
+										<div
+											style="position: relative; width: 100%; height: auto; border: 1px solid #811927; border-radius: 8px; padding: 16px; margin-top: 5px; margin-bottom: 16px">
+											<span
+												style="position: absolute; top: -11px; padding: 0 10px; background: #fff; color: #000; font-weight: bold;">{{
+												title_racikan }}</span>
 											<span class="obatracikanclose" v-on:click="closeform()">Close form</span>
 											<div class="grid">
 												<div class="col-11">
-													<Selected v-on:click="selectbox($event, form.select.apotekracikan.name, form.select.apotekracikan.statics)" 
-														:ref="form.select.apotekracikan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-														:selection="form.select.apotekracikan" v-on:keyup="selectfilter($event, form.select.apotekracikan.name)"></Selected>
+													<Selected
+														v-on:click="selectbox($event, form.select.apotekracikan.name, form.select.apotekracikan.statics)"
+														:ref="form.select.apotekracikan.name"
+														@selecteditem="selecteditem" @selectclear="selectclear"
+														:selection="form.select.apotekracikan"
+														v-on:keyup="selectfilter($event, form.select.apotekracikan.name)">
+													</Selected>
 												</div>
 												<div class="col-1 form-ml">
-													<button class="tooltip btn-success" v-on:click="additemobatracikandetail()" style="margin-top: 20px">
-														<vue-feather type="plus"></vue-feather> 
+													<button class="tooltip btn-success"
+														v-on:click="additemobatracikandetail()"
+														style="margin-top: 20px">
+														<vue-feather type="plus"></vue-feather>
 														<span class="tooltiptext">Add Obat/Alkes</span>
 													</button>
 												</div>
@@ -555,7 +638,7 @@
 														</div>
 													</div>
 												</template> -->
-												
+
 											</div>
 										</div>
 									</div>
@@ -570,14 +653,17 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr v-for="(item, index) in listobatracikan" v-if="listobatracikan.length > 0">
+												<tr v-for="(item, index) in listobatracikan"
+													v-if="listobatracikan.length > 0">
 													<td>
-														<button class="tooltip btn-danger" v-on:click="removeobatracikan(index)">
-															<vue-feather type="trash"></vue-feather> 
+														<button class="tooltip btn-danger"
+															v-on:click="removeobatracikan(index)">
+															<vue-feather type="trash"></vue-feather>
 															<span class="tooltiptext">Hapus Racikan</span>
 														</button>
-														<button class="tooltip btn-success" v-on:click="showobatracikan(item, index)">
-															<vue-feather type="plus"></vue-feather> 
+														<button class="tooltip btn-success"
+															v-on:click="showobatracikan(item, index)">
+															<vue-feather type="plus"></vue-feather>
 															<span class="tooltiptext">Tambah Data Obat</span>
 														</button>
 													</td>
@@ -598,7 +684,8 @@
 																</tr>
 																<tr>
 																	<td>Total Biaya</td>
-																	<td>{{ formatrupiah(parseInt(item.total).toString()) }}</td>
+																	<td>{{ formatrupiah(parseInt(item.total).toString())
+																		}}</td>
 																</tr>
 															</tbody>
 														</table>
@@ -622,20 +709,28 @@
 																	<td>{{ itemin.nama }}</td>
 																	<!-- <td>{{ itemin.komposisi }} {{ itemin.nama_satuan_komposisi }}</td>
 																	<td>{{ itemin.dosis_diperlukan }} {{ itemin.nama_satuan_diperlukan }}</td> -->
-																	<td>{{ itemin.jumlah_kecil }} {{ itemin.nama_satuan_kecil }}</td>
-																	<td>{{ formatrupiah(parseInt(itemin.hja_resep).toString()) }}</td>
-																	<td>{{ formatrupiah(parseInt(itemin.total).toString()) }}</td>
+																	<td>{{ itemin.jumlah_kecil }} {{
+																		itemin.nama_satuan_kecil }}</td>
+																	<td>{{
+																		formatrupiah(parseInt(itemin.hja_resep).toString())
+																		}}</td>
+																	<td>{{
+																		formatrupiah(parseInt(itemin.total).toString())
+																		}}</td>
 																	<td>
-																		<button class="tooltip btn-danger" v-on:click="removeobatracikandetail(index, indexin)">
-																			<vue-feather type="trash"></vue-feather> 
-																			<span class="tooltiptext">Hapus Data Obat</span>
+																		<button class="tooltip btn-danger"
+																			v-on:click="removeobatracikandetail(index, indexin)">
+																			<vue-feather type="trash"></vue-feather>
+																			<span class="tooltiptext">Hapus Data
+																				Obat</span>
 																		</button>
 																	</td>
 																</tr>
 															</tbody>
 															<tbody v-else>
 																<tr>
-																	<td colspan="3">List data obat racikan belum ditambahkan</td>
+																	<td colspan="3">List data obat racikan belum
+																		ditambahkan</td>
 																</tr>
 															</tbody>
 														</table>
@@ -645,7 +740,7 @@
 													<td colspan="3">No Data for Result</td>
 												</tr>
 											</tbody>
-											
+
 										</table>
 									</div>
 								</div>
@@ -661,69 +756,91 @@
 									</div>
 
 									<div class="col-3">
-										<Selected v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)" 
-											:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)"
+											:ref="form.select.carabayar.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.carabayar"
+											v-on:keyup="selectfilter($event, form.select.carabayar.name)"></Selected>
 									</div>
 
 									<div class="col-3 form-ml">
-										<Selected v-on:click="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)" 
-											:ref="form.select.asuransi.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.asuransi" v-on:keyup="selectfilter($event, form.select.asuransi.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)"
+											:ref="form.select.asuransi.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.asuransi"
+											v-on:keyup="selectfilter($event, form.select.asuransi.name)"></Selected>
 									</div>
 
 									<div class="col-6 form-ml">
-										<Selected v-on:click="selectbox($event, form.select.paketbedah.name, form.select.paketbedah.statics)" 
-											:ref="form.select.paketbedah.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.paketbedah" v-on:keyup="selectfilter($event, form.select.paketbedah.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.paketbedah.name, form.select.paketbedah.statics)"
+											:ref="form.select.paketbedah.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.paketbedah"
+											v-on:keyup="selectfilter($event, form.select.paketbedah.name)"></Selected>
 									</div>
 
 									<div class="col-12">
-										<Inputed :ref="form.keteranganbedah.name" :form="form.keteranganbedah"></Inputed>
+										<Inputed :ref="form.keteranganbedah.name" :form="form.keteranganbedah">
+										</Inputed>
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="content-tab-in" v-if="tab.content.rawatinap">
 								<div class="grid">
 									<div class="col-12">
-										<Textarea :ref="form.keteranganinap.name" :form="form.keteranganinap"></Textarea>
+										<Textarea :ref="form.keteranganinap.name"
+											:form="form.keteranganinap"></Textarea>
 									</div>
 									<div class="col-12">
-										<h3 style="font-size: 15px; margin-top: -5px; font-weight: bold;">Masukkan jadwal pembedahan jika ada tindakan bedah</h3>
+										<h3 style="font-size: 15px; margin-top: -5px; font-weight: bold;">Masukkan
+											jadwal pembedahan jika ada tindakan bedah</h3>
 									</div>
 									<div class="col-6">
-										<Inputed :ref="form.penjadwalanbedah.name" :form="form.penjadwalanbedah"></Inputed>
+										<Inputed :ref="form.penjadwalanbedah.name" :form="form.penjadwalanbedah">
+										</Inputed>
 									</div>
 									<div class="col-3 form-ml">
 										<Inputed :ref="form.waktubedah.name" :form="form.waktubedah"></Inputed>
 									</div>
 									<div class="col-3 form-ml">
-										<Selected v-on:click="selectbox($event, form.select.kamarinap.name, form.select.kamarinap.statics)" 
-											:ref="form.select.kamarinap.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.kamarinap" v-on:keyup="selectfilter($event, form.select.kamarinap.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.kamarinap.name, form.select.kamarinap.statics)"
+											:ref="form.select.kamarinap.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.kamarinap"
+											v-on:keyup="selectfilter($event, form.select.kamarinap.name)"></Selected>
 									</div>
 
 									<div class="col-4">
-										<Selected v-on:click="selectbox($event, form.select.carabayarbedah.name, form.select.carabayarbedah.statics)" 
-											:ref="form.select.carabayarbedah.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.carabayarbedah" v-on:keyup="selectfilter($event, form.select.carabayarbedah.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.carabayarbedah.name, form.select.carabayarbedah.statics)"
+											:ref="form.select.carabayarbedah.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.carabayarbedah"
+											v-on:keyup="selectfilter($event, form.select.carabayarbedah.name)">
+										</Selected>
 									</div>
 
 									<div class="col-4 form-ml">
-										<Selected v-on:click="selectbox($event, form.select.asuransibedah.name, form.select.asuransibedah.statics)" 
-											:ref="form.select.asuransibedah.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.asuransibedah" v-on:keyup="selectfilter($event, form.select.asuransibedah.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.asuransibedah.name, form.select.asuransibedah.statics)"
+											:ref="form.select.asuransibedah.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.asuransibedah"
+											v-on:keyup="selectfilter($event, form.select.asuransibedah.name)">
+										</Selected>
 									</div>
 
 									<div class="col-4 form-ml">
-										<Selected v-on:click="selectbox($event, form.select.paketbedahbedah.name, form.select.paketbedahbedah.statics)" 
-											:ref="form.select.paketbedahbedah.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.paketbedahbedah" v-on:keyup="selectfilter($event, form.select.paketbedahbedah.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.paketbedahbedah.name, form.select.paketbedahbedah.statics)"
+											:ref="form.select.paketbedahbedah.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.paketbedahbedah"
+											v-on:keyup="selectfilter($event, form.select.paketbedahbedah.name)">
+										</Selected>
 									</div>
 
 									<div class="col-12">
-										<Inputed :ref="form.keteranganbedahbedah.name" :form="form.keteranganbedahbedah"></Inputed>
+										<Inputed :ref="form.keteranganbedahbedah.name"
+											:form="form.keteranganbedahbedah"></Inputed>
 									</div>
 								</div>
 							</div>
@@ -736,13 +853,15 @@
 
 				<div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
 					<div class="col-8"></div>
-					<div class="col-4" style="text-align: right"  v-if="ishide">
+					<div class="col-4" style="text-align: right" v-if="ishide">
 						<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
+							}}</button>
 						<!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
 					</div>
-					<div class="col-4" style="text-align: right"  v-else>
-						<button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan Kunjungan</button>
+					<div class="col-4" style="text-align: right" v-else>
+						<button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan
+							Kunjungan</button>
 						<button class="button-modal-page button-modal-green" v-on:click="edit()">Edit Data</button>
 					</div>
 				</div>
@@ -1113,6 +1232,7 @@ export default {
 				let _item = {
 					nama_tindakan_rawat_jalan: item.nama_tindakan_rawat_jalan,
 					tindakan_rawat_jalan_uuid: item.tindakan_rawat_jalan_uuid,
+					jenis: '',
 					default: item.default,
 					harga: parseInt(item.harga),
 				}
@@ -1383,9 +1503,16 @@ export default {
 			//vm.listdata = response.data.layanan;
 
 			for (let i = 0; i < response.data.layanan.length; i++){
+				if (response.data.layanan[i].jenis != '') {
+					var jenis = response.data.layanan[i].jenis
+					} else {
+					var jenis = ''
+					}
 				let _item = {
 					nama_tindakan_rawat_jalan: response.data.layanan[i].nama_layanan,
 					tindakan_rawat_jalan_uuid: response.data.layanan[i].layanan_uuid,
+					tindakan_rawat_jalan_uuid: response.data.layanan[i].layanan_uuid,
+					jenis: jenis,
 					default: response.data.layanan[i].default,
 					harga: parseInt(response.data.layanan[i].tarif),
 				}
