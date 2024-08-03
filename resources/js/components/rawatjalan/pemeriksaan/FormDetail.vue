@@ -152,7 +152,20 @@
 										</ckeditor>
 									</div>
 
-								
+									<div class="col-9"></div>
+									<div class="col-3 form-ml form-mt">
+											<label for="">Tanda Tangan Digital</label>
+												<img
+													v-if="form.ttd"
+													:src="form.ttd"
+													alt="ttd dokter"
+													height="100"
+													width="400"
+												/>
+												<br>
+											<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
+										</div>
+						
 								</div>
 							</div>
 						</div>
@@ -238,7 +251,9 @@ export default {
 	methods: {
 
 		datename,
-
+		doDigitalSignature: function () { 
+			vm.form.ttd = window.localStorage.getItem("ttd") ?? "";
+		},
 		greenbutton:function() {
 			if (vm.green == 'Save Data') { 
 				console.log(vm.form, 'dfdf')
@@ -380,7 +395,19 @@ export default {
 			vm.form.title = title; vm.form.posisi = posisi; 
 			vm.form.posisi = posisi; body.style.overflowY = 'hidden'; vm.terminate.display = 'display: block'; vm.terminate.show = true;
     },
-		aturulang: function () { vm.form = vm.formkelurahan(); vm.linkR = '/print/rekammedis/rawat-jalan/cppt/'},
+		aturulang: function () {
+			vm.form = vm.formkelurahan();
+			vm.linkR = '/print/rekammedis/rawat-jalan/cppt/';
+			vm.tab= {
+			button: [
+					{ value: 'ocular_dextra', label: 'Ocular Dextra', class: 'tab-active' },
+					{ value: 'ocular_sinistra', label: 'Ocular Sinistra', class: 'tab-no-active' },
+					{ value: 'cppt', label: 'CPPT', class: 'tab-no-active' },
+			],
+			content: { ocular_dextra: true, ocular_sinistra: false, cppt: false, }
+			};
+			
+		},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
 		parsingForm:function() { vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail), 'add'); },
 

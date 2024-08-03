@@ -1055,6 +1055,16 @@ export default {
 			vm.kp_tidak = false;
 			vm.data = [];
 			vm.linkR = '/print/rekammedis/rawat-jalan/cppt/'
+			vm.tab = {
+				button: [
+					{ value: 'pemeriksaan_fisik', label: 'Pemeriksaan Fisik', class: 'tab-active' },
+					{ value: 'skrinning', label: 'Skrinning', class: 'tab-no-active' },
+					{ value: 'riwayat_kesehatan', label: 'Riwayat Kesehatan', class: 'tab-no-active' },
+					{ value: 'edukasi_pasien', label: 'Edukasi Pasien', class: 'tab-no-active' },
+					{ value: 'cppt', label: 'CPPT', class: 'tab-no-active' },
+				],
+				content: { pemeriksaan_fisik: true, skrinning: false, riwayat_kesehatan: false, edukasi_pasien: false, cppt: false, }
+			};
 
 		},
 
