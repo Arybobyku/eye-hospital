@@ -566,6 +566,7 @@ class PrintRekamMedisCtrl extends Controller
       $cok = CatatanOperasiKatarak::where('pasien_uuid', '=', $uuid)->first();
       $lp = LaporanPembedahan::where('pasien_uuid', '=', $uuid)->first();
       $ckb = ChecklistKesiapanBedah::where('pasien_uuid', '=', $uuid)->first();
+      $ppj = PencegahanPasienJatuh::where('pasien_uuid', '=', $uuid)->first();
       $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
       ->orderBy('created_at', 'asc')
       ->first();
@@ -694,7 +695,7 @@ class PrintRekamMedisCtrl extends Controller
         'roperasi',
         'listrik',
         'alat',
-        'linen_steril',
+        'linen_steril','ppj',
       ),
     )->setPaper('a4', 'potrait');
 

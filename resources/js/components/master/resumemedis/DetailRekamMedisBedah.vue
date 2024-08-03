@@ -120,59 +120,59 @@ export default {
             selectedIndex: -1,
             listResume: [
                 {
-                    name: "RM.1.8",
+                    name: "RM.1.8 Persetujuan Tindakan Kedokteran",
                     link: "/print/rekammedis/bedah/rm1dot8/",
                 },
                 {
-                    name: "RM.1.9",
+                    name: "RM.1.9 Site Marking",
                     link: "/print/rekammedis/bedah/rm1dot9/",
                 },
                 {
-                    name: "RM.1.10",
+                    name: "RM.1.10 Proses Perawatan Peri Operative",
                     link: "/print/rekammedis/bedah/rm1dot10/",
                 },
                 {
-                    name: "RM.2.0",
+                    name: "RM.2.0 Checklist Kesiapan Bedah",
                     link: "/print/rekammedis/bedah/rm2dot0/",
                 },
                 {
-                    name: "RM.2.2",
+                    name: "RM.2.2 Laporan Pembedahan",
                     link: "/print/rekammedis/bedah/rm2dot2/",
                 },
                 {
-                    name: "RM.2.3",
+                    name: "RM.2.3 Catatan Operasi",
                     link: "/print/rekammedis/bedah/rm2dot3/",
                 },
                 {
-                    name: "RM.2.9",
+                    name: "RM.2.9 Pelaksanaan Pencegahan Pasien Jatuh",
                     link: "/print/rekammedis/bedah/rm2dot9/",
                 },
                 {
-                    name: "RM.4.9",
+                    name: "RM.4.9 Checklist Keselamatan Pasien Operasi",
                     link: "/print/rekammedis/bedah/rm4dot9/",
                 },
                 {
-                    name: "RM.8.7",
+                    name: "RM.8.7 Form Tindakan Laser PRP",
                     link: "/print/rekammedis/bedah/rm8dot7/",
                 },
                 {
-                    name: "RM.8.8",
+                    name: "RM.8.8 Laporan Injeksi Anti Vega",
                     link: "/print/rekammedis/bedah/rm8dot8/",
                 },
                 {
-                    name: "RM.8.9",
+                    name: "RM.8.9 Form Tindakan Laser PRP Capsulotomy",
                     link: "/print/rekammedis/bedah/rm8dot9/",
                 },
                 {
-                    name: "RM.8.10",
+                    name: "RM.8.10 Laporan Operasi Trabekulektomi",
                     link: "/print/rekammedis/bedah/rm8dot10/",
                 },
                 {
-                    name: "RM.9.0",
+                    name: "RM.9.0 Laporan Operasi Pterygium",
                     link: "/print/rekammedis/bedah/rm9dot0/",
                 },
                 {
-                    name: "RM.9.1",
+                    name: "RM.9.1 Laporan Insisi Chalazion",
                     link: "/print/rekammedis/bedah/rm9dot1/",
                 },
             ],
