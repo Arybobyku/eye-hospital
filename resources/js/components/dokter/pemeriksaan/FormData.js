@@ -117,7 +117,7 @@ export const formkelurahan = () => {
 		kamar_inap_jalan_jumlah_bed: '',
 		jenis_kamar_jalan_uuid: '',
 		nama_jenis_jalan_kamar: '',
-		ttd_dokter: '',
+		ttd: '',
 		subject: '',
 		object: '',
 		assessment: '',

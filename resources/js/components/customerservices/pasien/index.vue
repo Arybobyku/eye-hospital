@@ -111,7 +111,7 @@ export default {
 			{ value: 'usia', label: 'Usia', type: 'number', search: false, close: false, button: false },
 			{ value: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'text', search: true, close: false, button: false },
 			{ value: 'no_handphone', label: 'No Handphone', type: 'text', search: true, close: false, button: false },
-			{ value: 'status', label: 'status', type: 'text', search: false, close: false, button: false },
+			//{ value: 'status', label: 'status', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
 		],
 		columnkunjungan: [
@@ -182,7 +182,7 @@ export default {
 			let str = [
 				{ icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
-				{ icon: 'book-open', color: 'btn-info', posisi: 'registrasi', tooltip: 'Data Registrasi (Rawat Jalan)', item: _item, index: _index, 
+				{ icon: 'book-open', color: 'btn-info', posisi: 'registrasi', tooltip: 'Registrasi Pasien', item: _item, index: _index, 
 						show: _item.status == 'Kunjungan' || _item.status == 'Aktif' ? true : false },
 				// { icon: 'book-open', color: 'btn-info', posisi: 'rawatinap', tooltip: 'Data Registrasi (Rawat Inap)', item: _item, index: _index, 
 				// 		show: _item.status == 'Rawat Inap' || _item.status == 'Aktif' ? true : false },
@@ -204,7 +204,7 @@ export default {
 			let str = [
 				{ icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
-				{ icon: 'book-open', color: 'btn-info', posisi: 'registrasi', tooltip: 'Data Registrasi (Rawat Jalan)', item: _item, index: _index, 
+				{ icon: 'book-open', color: 'btn-info', posisi: 'registrasi', tooltip: 'Data Registrasi', item: _item, index: _index, 
 						show: _item.status == 'Kunjungan' || _item.status == 'Aktif' ? true : false },
 				// { icon: 'book-open', color: 'btn-info', posisi: 'rawatinap', tooltip: 'Data Registrasi (Rawat Inap)', item: _item, index: _index, 
 				// 		show: _item.status == 'Rawat Inap' || _item.status == 'Aktif' ? true : false },

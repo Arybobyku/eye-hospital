@@ -99,7 +99,7 @@ export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obat
 	data.append('pemeriksaan_tindakan_kode', form.select.icd9.value);
 	data.append('pemeriksaan_tata_laksana', form.pemeriksaantatalaksana.value);
 	data.append('pemeriksaan_prognosa', form.pemeriksaanprognosa.value);
-	data.append('ttd_dokter', form.ttd_dokter);
+	data.append('ttd', form.ttd);
 
 	for(var pair of data.entries()) {
 		console.log(pair[0]+ ', '+ pair[1]); 

@@ -164,7 +164,7 @@
 												/>
 												<br>
 											<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
-										</div>
+									</div>
 						
 								</div>
 							</div>
