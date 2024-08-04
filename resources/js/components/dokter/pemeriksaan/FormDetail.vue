@@ -62,8 +62,8 @@
                         <div class="tab-content">
                             <div class="content-tab-in" v-if="tab.content.ro">
                                 <div class="grid">
-                                    <div class="col-12">
-                                        <table class="table embed" style="border: 0" v-if="pemeriksaanro">
+                                    <div class="col-10" style="margin-left: 25%;">
+                                        <table class="table embed" style="border: 0;" v-if="pemeriksaanro">
                                             <tr>
                                                 <td colspan="2">
                                                     <table class="table">
@@ -253,9 +253,9 @@
                             </div>
                             <div class="content-tab-in" v-if="tab.content.vital">
                                 <div class="grid">
-                                    <div class="col-6 form-ml">
+                                    <div class="col-4 form-ml">
                                         <h4>Pemeriksaan Fisik</h4>
-                                        
+
                                         <table class="table embed" v-if="pemeriksaanro">
                                             <tbody>
                                                 <tr>
@@ -344,9 +344,9 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col-6 form-ml">
+                                    <div class="col-4 form-ml">
                                         <h4>Skrinning</h4>
-                                        
+
                                         <table class="table embed" v-if="pemeriksaanro">
                                             <tbody>
 
@@ -417,7 +417,9 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        
+                                        </div>
+                                        <div class="col-4 form-ml">
+
                                         <h4>Riwayat Kesehatan</h4>
                                         <table class="table embed" v-if="pemeriksaanro">
                                             <tbody>
@@ -623,13 +625,13 @@
                                                 " @selecteditem="selecteditem" @selectclear="selectclear" :selection="form.select
                                                     .carabayartindakanrawatjalan
                                                     " v-on:keyup="
-                                                    selectfilter(
-                                                        $event,
-                                                        form.select
-                                                            .carabayartindakanrawatjalan
-                                                            .name
-                                                    )
-                                                    ">
+                                                        selectfilter(
+                                                            $event,
+                                                            form.select
+                                                                .carabayartindakanrawatjalan
+                                                                .name
+                                                        )
+                                                        ">
                                         </Selected>
 
                                         <table class="table">
@@ -717,11 +719,25 @@
                                                 )
                                                 "></Selected>
                                     </div>
-                                    <div class="col-3 form-mr form-ml">
+                                    <div class="col-2 form-mr form-ml">
                                         <Inputed :ref="form.quantity.name" :form="form.quantity"></Inputed>
                                     </div>
-                                    <div class="col-3 form-mr form-ml">
+                                    <div class="col-2 form-mr form-ml">
                                         <Inputed :ref="form.signa.name" :form="form.signa"></Inputed>
+                                    </div>
+                                    <div class="col-2 form-mr">
+                                        <Selected v-on:click="
+                                            selectbox(
+                                                $event,
+                                                form.select.posisimata
+                                                    .name,
+                                                form.select.posisimata
+                                                    .statics
+                                            )
+                                            " :ref="form.select.posisimata.name" @selecteditem="selecteditem"
+                                            @selectclear="selectclear" :selection="form.select.posisimata">
+                                        </Selected>
+
                                     </div>
                                     <div class="col-1">
                                         <button class="tooltip btn-danger" v-on:click="additemobat()"
@@ -737,9 +753,11 @@
                                                 <tr>
                                                     <th>Nama Obat</th>
                                                     <th>Signa</th>
+                                                    <th>Posisi</th>
                                                     <th>Qty</th>
                                                     <th>Harga</th>
                                                     <th>Total</th>
+
                                                     <th>#</th>
                                                 </tr>
                                             </thead>
@@ -749,6 +767,7 @@
                                                     ) in listobat" v-if="listobat.length > 0">
                                                     <td>{{ item.nama }}</td>
                                                     <td>{{ item.signa }}</td>
+                                                    <td>{{ item.posisimata }}</td>
                                                     <td>
                                                         {{ item.jumlah_kecil }}
                                                         {{
@@ -863,16 +882,16 @@
                                                             .name
                                                             " @selecteditem="selecteditem
                                                                 " @selectclear="selectclear
-                                                                " :selection="form.select
-                                                                .apotekracikan
-                                                                " v-on:keyup="
-                                                                selectfilter(
-                                                                    $event,
-                                                                    form.select
+                                                                    " :selection="form.select
                                                                         .apotekracikan
-                                                                        .name
-                                                                )
-                                                                ">
+                                                                        " v-on:keyup="
+                                                                        selectfilter(
+                                                                            $event,
+                                                                            form.select
+                                                                                .apotekracikan
+                                                                                .name
+                                                                        )
+                                                                        ">
                                                     </Selected>
                                                 </div>
                                                 <div class="col-1 form-ml">
@@ -1209,13 +1228,13 @@
                                                 " @selecteditem="selecteditem" @selectclear="selectclear" :selection="form.select
                                                     .carabayartindakanrawatjalanjalan
                                                     " v-on:keyup="
-                                                    selectfilter(
-                                                        $event,
-                                                        form.select
-                                                            .carabayartindakanrawatjalanjalan
-                                                            .name
-                                                    )
-                                                    ">
+                                                        selectfilter(
+                                                            $event,
+                                                            form.select
+                                                                .carabayartindakanrawatjalanjalan
+                                                                .name
+                                                        )
+                                                        ">
                                         </Selected>
                                     </div>
                                     <div class="col-3 form-ml">
@@ -1230,12 +1249,12 @@
                                             " :ref="form.select.kamarinapjalan.name
                                                 " @selecteditem="selecteditem" @selectclear="selectclear" :selection="form.select.kamarinapjalan
                                                     " v-on:keyup="
-                                                    selectfilter(
-                                                        $event,
-                                                        form.select.kamarinapjalan
-                                                            .name
-                                                    )
-                                                    ">
+                                                        selectfilter(
+                                                            $event,
+                                                            form.select.kamarinapjalan
+                                                                .name
+                                                        )
+                                                        ">
                                         </Selected>
                                     </div>
 
@@ -1342,19 +1361,15 @@
                                         </ckeditor>
                                     </div>
                                     <div class="col-9"></div>
-									<div class="col-3 form-ml form-mt">
-											<label for="">Tanda Tangan Digital</label>
-												<img
-													v-if="form.ttd"
-													:src="form.ttd"
-													alt="ttd dokter"
-													height="100"
-													width="400"
-												/>
-												<br>
-											<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
-									</div>
-						
+                                    <div class="col-3 form-ml form-mt">
+                                        <label for="">Tanda Tangan Digital</label>
+                                        <img v-if="form.ttd" :src="form.ttd" alt="ttd dokter" height="100"
+                                            width="400" />
+                                        <br>
+                                        <button v-if="!form.ttd" class="button-modal-page button-modal-green"
+                                            v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -1711,9 +1726,9 @@ export default {
                 vm.action();
             }
         },
-        doDigitalSignature: function () { 
-			vm.form.ttd = window.localStorage.getItem("ttd") ?? "";
-		},
+        doDigitalSignature: function () {
+            vm.form.ttd = window.localStorage.getItem("ttd") ?? "";
+        },
         setCkEditor: function () {
             vm.form.subject = vm.form.anamnese.value;
             vm.form.assessment = vm.form.select.icd10.label;
@@ -1821,13 +1836,18 @@ export default {
                     ),
                     signa: vm.form.signa.value,
                     total: parseInt(_total),
+                    posisimata: vm.tempobat.posisimata.value,
                 };
                 vm.listobat.push(tmp);
                 vm.tempobat = null;
+
+
                 vm.form.signa.value = "";
                 vm.form.quantity.value = "";
                 vm.form.select.apotek.value = "";
                 vm.form.select.apotek.label = "Silahkan Pilih";
+                vm.form.select.posisimata.value = "";
+                vm.form.select.posisimata.label = "Silahkan Pilih";
             }
         },
 
@@ -2059,6 +2079,7 @@ export default {
         selecteditem: function (item, key) {
             vm.form = vm.conditionselected(vm.form, item, key, "address");
             vm.form = vm.itemselected(vm.form, item, key);
+
             if (key == "pilihanplan") {
                 var planning = vm.form.select.pilihanplan.value;
                 // console.log(vm.form.select.pilihanplan.value );
@@ -2084,6 +2105,7 @@ export default {
                     vm.form.select.paketbedah.label = "Silahkan Pilih";
                 }
             }
+
             if (key == "carabayartindakanrawatjalan") {
                 let _item = {
                     nama_tindakan_rawat_jalan: item.nama_tindakan_rawat_jalan,
@@ -2129,6 +2151,9 @@ export default {
             } else if (key == "kamarinapjalan") {
                 vm.datakamarjalan = item;
             }
+            else if (key == "posisimata") {
+                vm.tempobat.posisimata = item;
+            }
         },
 
         selectclear: function (key) {
@@ -2158,6 +2183,10 @@ export default {
             } else if (key == "pilihanplan") {
                 vm.pilhanplan = null;
             }
+            else if (key == "posisimata") {
+                vm.tempobat.posisimata = null;
+            }
+
         },
         selectbox: function (event, key, statics) {
             let msg = "select-close select-close-" + key;
@@ -2393,7 +2422,6 @@ export default {
                 vm.form.jenis_kamar_jalan_uuid = "";
                 vm.form.nama_jenis_jalan_kamar = "";
             }
-
             console.log("PARSE FORM: ", vm.form);
             vm.$emit(
                 "parsingForm",
@@ -2428,6 +2456,7 @@ export default {
                 "carabayar",
                 "asuransi",
                 "pilihanplan",
+                "posisimata",
             ];
             console.log("keys");
             console.log(keys);
@@ -2443,6 +2472,7 @@ export default {
             vm.pemeriksaanro = response.data.pemeriksaanro;
             vm.form.select.pilihanplan.value = "";
             vm.form.select.pilihanplan.label = "Silahkan Pilih";
+
 
             if (vm.detail.panjar != "0") {
                 vm.form.panjar.value = vm.detail.panjar;
@@ -2544,6 +2574,8 @@ export default {
                     jumlah_kecil: obats[i].jumlah_kecil,
                     jumlah_besar: obats[i].jumlah_besar,
                     signa: obats[i].signa,
+                    posisimata: obats[i].posisimata,
+
                     total: parseInt(obats[i].total),
                 };
                 vm.listobat.push(tmp);

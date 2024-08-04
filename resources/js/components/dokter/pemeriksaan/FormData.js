@@ -412,6 +412,11 @@ export const formkelurahan = () => {
 				filter: [], data: [], search: '', option: 'display: none', statics: true,
 				class: 'pilihanplan', isrequired: false, html: 'Pilih Planning', issearch: false, disabled: false,
 			},
+			posisimata: { 
+				key : 'posisimata', for_id: 'form_'+'posisimata', name: 'posisimata', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'posisimata', isrequired: false, html: 'Posisi Mata', issearch: false, disabled: false,
+			},
 
 			
 			

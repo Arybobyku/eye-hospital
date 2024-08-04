@@ -923,6 +923,7 @@ class PemeriksaanCtrl extends Controller
                         $item->jumlah_kecil = $row->jumlah_kecil;
                         $item->jumlah_besar = $row->jumlah_besar;
                         $item->signa = $row->signa;
+                        $item->posisimata = $row->posisimata;
                         $item->total = $row->total;
                         $item->save();
 
@@ -1143,6 +1144,7 @@ class PemeriksaanCtrl extends Controller
                     $item->jumlah_kecil = $row->jumlah_kecil;
                     $item->jumlah_besar = $row->jumlah_besar;
                     $item->signa = $row->signa;
+                   $item->posisimata = $row->posisimata;
                     $item->total = $row->total;
                     $item->save();
 
@@ -1180,6 +1182,7 @@ class PemeriksaanCtrl extends Controller
                     $item->kemasan = $row->kemasan;
                     $item->jumlah = $row->jumlah;
                     $item->signa = $row->signa;
+                 
                     $item->total = $row->total;
                     $item->informasi = $row->informasi;
                     $item->save();
