@@ -6,7 +6,7 @@
                 <span class="close" v-on:click="hide()">&times;</span>
                 <h2>Detail Data Pemeriksaan Dokter</h2>
             </div>
-            <div class="modal-body" v-if="form">
+            <div class="modal-body">
                 <div class="grid">
                     <div class="col-4 form-mr">
                         <ul class="list-detail">
@@ -37,6 +37,20 @@
                             <li>
                                 Jenis Kelamin<span><strong>{{
                                     detail.jenis_kelamin
+                                        }}</strong></span>
+                            </li>
+                            <li>
+                                Billing<span><strong>{{
+                                    detail.status_kasir
+                                        }}</strong></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-4 form-mr">
+                        <ul class="list-detail">
+                            <li>
+                                 Dokter yang menangani<span><strong>{{
+                                    detail.nama_dokter
                                         }}</strong></span>
                             </li>
                         </ul>
@@ -2444,9 +2458,6 @@ export default {
 
         setdataform: function (response) {
             let data = response.data;
-            console.log("memek");
-            console.log(response.data);
-
             let keys = [
                 "carabayartindakanrawatjalan",
                 "tindakanrawatjalan",
