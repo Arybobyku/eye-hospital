@@ -53,6 +53,11 @@
                                     detail.nama_dokter
                                         }}</strong></span>
                             </li>
+                            <li>
+                                 Billing<span><strong>{{
+                                    detail.status_kasir
+                                        }}</strong></span>
+                            </li>
                         </ul>
                     </div>
 
@@ -1371,39 +1376,43 @@
 						
                                 </div>
                             </div>
+
+                             <div v-if="disableButtonSave" style="width:100%;height:80%;border-radius:4px;position:absolute;left:-1px;background:rgba(0,0,0,0.4)"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
-                    <div class="col-8"></div>
-                    <div class="col-4" style="text-align: right" v-if="ishide">
-                        <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
-                            v-on:click="previouseButton()">
-                            {{ previous }}
-                        </button>
-                        <button class="button-modal-page button-modal-green" v-if="tabIndex < tab.button.length - 1"
-                            v-on:click="nextButton()">
-                            {{ next }}
-                        </button>
+                <div v-if="!disableButtonSave"> 
+                        <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
+                        <div class="col-8"></div>
+                        <div class="col-4" style="text-align: right" v-if="ishide">
+                            <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
+                                v-on:click="previouseButton()">
+                                {{ previous }}
+                            </button>
+                            <button class="button-modal-page button-modal-green" v-if="tabIndex < tab.button.length - 1"
+                                v-on:click="nextButton()">
+                                {{ next }}
+                            </button>
 
-                        <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-red"
-                            v-on:click="redbutton()">
-                            {{ red }}
-                        </button>
-                        <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-green"
-                            v-on:click="greenbutton()">
-                            {{ green }}
-                        </button>
-                        <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
-                    </div>
-                    <div class="col-4" style="text-align: right" v-else>
-                        <button class="button-modal-page button-modal-red" v-on:click="cancel()">
-                            Batalkan Kunjungan
-                        </button>
-                        <button class="button-modal-page button-modal-green" v-on:click="edit()">
-                            Edit Data
-                        </button>
+                            <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-red"
+                                v-on:click="redbutton()">
+                                {{ red }}
+                            </button>
+                            <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-green"
+                                v-on:click="greenbutton()">
+                                {{ green }}
+                            </button>
+                            <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
+                        </div>
+                        <div class="col-4" style="text-align: right" v-else>
+                            <button class="button-modal-page button-modal-red" v-on:click="cancel()">
+                                Batalkan Kunjungan
+                            </button>
+                            <button class="button-modal-page button-modal-green" v-on:click="edit()">
+                                Edit Data
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1584,6 +1593,7 @@ export default {
             temporer: null,
             pemeriksaanro: null,
             datakamar: null,
+            disableButtonSave: false,
             detail: {
                 uuid: "",
                 agama: "",
@@ -2454,6 +2464,10 @@ export default {
             vm.pemeriksaanro = response.data.pemeriksaanro;
             vm.form.select.pilihanplan.value = "";
             vm.form.select.pilihanplan.label = "Silahkan Pilih";
+
+            if (vm.detail.status_kasir == 'Sudah Bayar') { 
+                vm.disableButtonSave = true;
+            }
 
             if (vm.detail.panjar != "0") {
                 vm.form.panjar.value = vm.detail.panjar;
