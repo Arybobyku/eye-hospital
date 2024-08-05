@@ -33,7 +33,7 @@ export const formpaket = () => {
 	}
 }
 
-export const formpulang = () => {
+export const formdetailpulang = () => {
 	return {
 		title: '', posisi: '', uuid: '',
 		registrasi_uuid: '',
@@ -42,7 +42,7 @@ export const formpulang = () => {
 			name: 'tanggal_keluar_inap', value: '', disabled: false, show: true, kinds: ''
 		},
 		waktu_keluar_inap:{
-			title: 'Waktu', for_id: 'form_'+'waktu_keluar_inap', type: 'text', required: 'required', 
+			title: 'Waktu Pulang', for_id: 'form_'+'waktu_keluar_inap', type: 'time', required: 'required', 
 			name: 'waktu_keluar_inap', value: '', disabled: false, show: true, kinds: ''
 		},
 		

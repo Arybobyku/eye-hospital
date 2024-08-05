@@ -12,7 +12,7 @@
 	<FormObat ref="FormObat" @dialog="dialog" @parsingForm="parsingForm"></FormObat>
 	<FormResep ref="FormResep" @dialog="dialog" @parsingForm="parsingForm"></FormResep>
 	<FormPaket ref="FormPaket" @dialog="dialog" @parsingForm="parsingForm"></FormPaket>
-	<FormPulang ref="FormPulang" @dialog="dialog" @parsingForm="parsingForm"></FormPulang>
+	<FormDetailPulang ref="FormDetailPulang" @dialog="dialog" @parsingForm="parsingForm"></FormDetailPulang>
 	<FormJadwalKontrol ref="FormJadwalKontrol" @dialog="dialog" @parsingForm="parsingForm"></FormJadwalKontrol>
 </template>
 
@@ -31,7 +31,7 @@ export default {
 		FormObat: defineAsyncComponent(() => import('./FormObat.vue')),
 		FormPaket: defineAsyncComponent(() => import('./FormPaket.vue')),
 		FormResep: defineAsyncComponent(() => import('./FormResep.vue')),
-		FormPulang: defineAsyncComponent(() => import('./FormPulang.vue')),
+		FormDetailPulang: defineAsyncComponent(() => import('./FormDetailPulang.vue')),
 		FormJadwalKontrol: defineAsyncComponent(() => import('./FormJadwalKontrol.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
 	},
@@ -49,7 +49,7 @@ export default {
 				list: '/rawatinap/pasien/list',
 				add: '/rawatinap/pasien/add',
 				remove: '/rawatinap/pasien/remove',
-				pulangdata: '/rawatinap/pasien/pulangdata',
+				detailpulang: '/rawatinap/pasien/detailpulang',
 				pulang: '/rawatinap/pasien/pulang',
 				getlayanan: '/rawatinap/pasien/getlayanan',
 				addobat: '/rawatinap/pasien/addobat',
@@ -94,8 +94,8 @@ export default {
 				{ icon: 'aperture', color: 'btn-warning', posisi: 'obat', tooltip: 'Tambah Obat/Alkes', item: _item, index: _index, show: true },
 				//{ icon: 'aperture', color: 'btn-success', posisi: 'resep', tooltip: 'Resep Obat', item: _item, index: _index, show: true },
 				{ icon: 'check-circle', color: 'btn-info', posisi: 'jadwalkontrol', tooltip: 'Jadwal Kontrol', item: _item, index: _index, show: true },
-				{ icon: 'check-circle', color: 'btn-info', posisi: 'pulangdata', tooltip: 'Pasien Pulang', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-success', posisi: 'print', tooltip: 'Cetak Gelang', item: _item, index: _index, show: true },
+				{ icon: 'check-circle', color: 'btn-info', posisi: 'detailpulang', tooltip: 'Pasien Pulang', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -137,14 +137,14 @@ export default {
 				vm.executions();
 			}
 
-			else if (posisi == 'pulangdata') {
-				vm.$refs.FormPulang.aturulang();
-				vm.position = "pulangdata";
-				vm.$refs.FormPulang.show('pulangdata', 'Data obat yang dibawa pulang', data.uuid, data);
-				setTimeout(() => { vm.loadingModal('formpulang'); }, 250, this);
+			else if (posisi == 'detailpulang') {
+				vm.$refs.FormDetailPulang.aturulang();
+				vm.position = "detailpulangdata";
+				vm.$refs.FormDetailPulang.show('detailpulangdata', 'Pasien Pulang', data.uuid, data);
+				setTimeout(() => { vm.loadingModal('formdetailpulang'); }, 250, this);
 				vm.attach.data = new FormData();
 				vm.attach.data.append('registrasi_uuid', data.uuid);
-				vm.attach.url = vm.attach.link.pulangdata;
+				vm.attach.url = vm.attach.link.detailpulang;
 				vm.executions();
 			}
 			else if (posisi == 'resep') {
@@ -194,7 +194,8 @@ export default {
 			else if (position == 'formresep') { vm.$refs.FormResep.loaderprocess();  }
 			else if (position == 'formjadwalkontrol') { vm.$refs.FormJadwalKontrol.loaderprocess();  }
 			else if (position == 'formpaket') { vm.$refs.FormPaket.loaderprocess(); }
-			else if (position == 'formpulang') { vm.$refs.FormPulang.loaderprocess(); }
+			else if (position == 'formdetailpulang') { vm.$refs.FormDetailPulang.loaderprocess(); }
+			else if (position == 'detailpulangdata') { vm.$refs.FormDetailPulang.loaderprocess(); }
 		},
 
 		parsingForm:function(data, key) {
@@ -233,10 +234,13 @@ export default {
 				vm.position = 'removeresep';
 				vm.attach.url = vm.attach.link.removeresep;
 			}
-			else if (key == 'pulang') {
-				vm.position = 'pulang';
-				vm.attach.url = vm.attach.link.pulang;
-			}
+			else if (key == 'pulang') 
+			{ vm.position = 'updatepulangdata'; vm.attach.url = vm.attach.link.pulang; }
+
+			// else if (key == 'pulang') {
+			// 	vm.position = 'pulang';
+			// 	vm.attach.url = vm.attach.link.pulang;
+			// }
 		},
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
@@ -266,7 +270,10 @@ export default {
 			else if (vm.position == 'removedata') { vm.loadingModal('formunit'); }
 			else if (vm.position == 'removedataobat') { vm.loadingModal('formobat'); }
 			else if (vm.position == 'removedataresep') { vm.loadingModal('formresep'); }
-			else if (vm.position == 'pulangdata') { vm.loadingModal('formpulang'); }
+			else if (vm.position == 'detailpulangdata') { vm.loadingModal('formdetailpulang'); vm.$refs.FormPulangDetail.hide(); }
+
+			else if (vm.position == 'updatepulangdata') { vm.loadingModal('formpulangdetail'); }
+
 			// else if (vm.position == 'pulangdata') { vm.$refs.Datatable.skeleton(); }
 			
 			/* Bagian ini tidak perlu diubah */
@@ -274,8 +281,9 @@ export default {
 		},
 
 		berhasil: function (response) {
-			console.log("vm position");
+			console.log("vm position berhasil");
 			console.log(vm.position);
+			console.log(response.data);
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
 
@@ -349,8 +357,20 @@ export default {
 				vm.$refs.FormPulang.hide();
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
-			else if (vm.position == 'pulangdata') {
-				vm.$refs.FormPulang.setdataform(response);
+			else if (vm.position == 'detailpulangdata') {
+				vm.$refs.FormDetailPulang.setdataform(response);
+				vm.position = "updatedpulangdata";
+				active = 0;
+			}
+			else if (vm.position == 'updatepulangdata') {
+				vm.loadingModal('formdetailpulang');
+				vm.$refs.FormDetailPulang.hide();
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
+			}
+			else if (vm.position == 'updatepulang') {
+				vm.loadingModal('formdetailpulang');
+				vm.$refs.FormDetailPulang.hide();
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			// else if (vm.position == 'pulangdata') { 
 			// 	setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this); 
@@ -376,6 +396,8 @@ export default {
 				else if (vm.position == 'removedataobat') { vm.notification('Penghapusan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'removedataresep') { vm.notification('Penghapusan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'pulang') { vm.notification('Pemulangan data pasien gagal diproses.', 3000, position); }
+				else if (vm.position == 'updatepulangdata') { vm.notification('Penambahan/Pembaharuan data gagal diproses.', 3000, position); }
+
 			}
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'adddata') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
@@ -389,6 +411,8 @@ export default {
 				else if (vm.position == 'removedataresep') { vm.notification('Penghapusan data berhasil diproses.', 3000, position); }
 				// else if (vm.position == 'pulangdata') { vm.notification('Pemulangan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'pulang') { vm.notification('Pemulangan data berhasil diproses.', 3000, position); }
+				else if (vm.position == 'updatepulangdata') { vm.notification('Penambahan/Pembaharuan berhasil diproses.', 3000, position); }
+
 
 			}
 		},
@@ -403,7 +427,7 @@ export default {
 			else if (posisi == 'removedataobat') { vm.loadingModal('formobat');  }
 			else if (posisi == 'removedataresep') { vm.loadingModal('formresep');  }
 			// else if (posisi == 'pulangdata') { vm.$refs.Datatable.skeleton(); }
-			else if (posisi == 'pulangdata') { vm.loadingModal('formpulang'); }
+			// else if (posisi == 'pulangdata') { vm.loadingModal('formpulang'); }
 
 			vm.executions();
 		},

@@ -44,13 +44,14 @@ export const parsepaket = (form) => {
 	data.append('registrasi_uuid', form.registrasi_uuid);
 	data.append('paket_uuid', form.select.paketbedah.value);
 	data.append('nama_paket', form.select.paketbedah.label);
+	data.append('harga_paket', form.harga_paket);
 
 	for(var pair of data.entries()) {
 		console.log(pair[0]+ ', '+ pair[1]); 
  	}
 	return data;
 }
-export const parsepulang = (form) => {
+export const parsedetailpulang = (form) => {
 
 	let data = new FormData();
 	data.append('uuid', form.uuid);

@@ -23,7 +23,8 @@
 	<FormHistori ref="FormHistori"></FormHistori>
 	<FormDetail ref="FormDetail"></FormDetail>
 	<FormInap ref="FormInap" @dialog="dialog" @parsingForm="parsingForm"></FormInap>
-		<FormHistoriDokter ref="FormHistoriDokter"></FormHistoriDokter>
+	<FormDetailDokter ref="FormDetailDokter" @dialog="dialog" @parsingForm="parsingForm"></FormDetailDokter>
+	<FormHistoriDokter ref="FormHistoriDokter"></FormHistoriDokter>
 </template>
 
 <script>
@@ -42,6 +43,7 @@ export default {
 		FormResep: defineAsyncComponent(() => import('./FormResep.vue')),
 		FormJadwalKontrol: defineAsyncComponent(() => import('./FormJadwalKontrol.vue')),
 		FormDetail: defineAsyncComponent(() => import('./FormDetail.vue')),
+		FormDetailDokter: defineAsyncComponent(() => import('./FormDetailDokter.vue')),
 		FormInap: defineAsyncComponent(() => import('./FormInap.vue')),
 		FormHistori: defineAsyncComponent(() => import('./FormHistori.vue')),
 		FormHistoriDokter: defineAsyncComponent(() => import('./FormHistoriDokter.vue')),
@@ -65,6 +67,8 @@ export default {
 				detail: '/bedah/pasien/detail',
 				inap: '/bedah/pasien/inap',
 				inapadd: '/bedah/pasien/inapadd',
+				detaildokter: '/bedah/pasien/detaildokter',
+				adddokter: '/bedah/pasien/adddokter',
 
 				histori: '/rawatjalan/pemeriksaan/histori',
 				historidokter: '/dokter/pemeriksaan/histori',
@@ -87,7 +91,8 @@ export default {
 			// { value: 'waktu', label: 'Waktu', type: 'text', search: true, close: false, button: false },
 			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
-			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_dokter', label: 'Dokter Poli', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_dokter_bedah', label: 'Dokter Bedah', type: 'text', search: false, close: false, button: false },
 			{ value: 'nama_paket_bedah', label: 'Paket Bedah', type: 'text', search: true, close: false, button: false },
 			{ value: 'jenis', label: 'Jenis Kunjungan', type: 'text', search: false, close: false, button: false },
 			{ value: 'bedah_status', label: 'Status', type: 'text', search: false, close: false, button: false },
@@ -98,7 +103,8 @@ export default {
 			// { value: 'waktu', label: 'Waktu', type: 'text', search: true, close: false, button: false },
 			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
-			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_dokter', label: 'Dokter Poli', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_dokter_bedah', label: 'Dokter Bedah', type: 'text', search: false, close: false, button: false },
 			{ value: 'nama_paket_bedah', label: 'Paket Bedah', type: 'text', search: true, close: false, button: false },
 			{ value: 'kamar_inap_nama', label: 'Kamar Inap', type: 'text', search: true, close: false, button: false },
 			{ value: 'tanggal_masuk_inap', label: 'Tanggal Masuk Inap', type: 'date', search: false, close: false, button: false },
@@ -153,6 +159,7 @@ export default {
 
 		btnhtml:function(_item, _index) {
 			let str = [
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detaildokter', tooltip: 'Dokter Bedah', item: _item, index: _index, show: true },
 				{ icon: 'refresh-cw', color: 'btn-info', posisi: 'proses', tooltip: 'Mulai Pembedahan', item: _item, index: _index, 
 					show: _item.bedah_status == '-' ? true : false },
 				{ icon: 'check-circle', color: 'btn-success', posisi: 'selesai', tooltip: 'Selesai Pembedahan', item: _item, index: _index, 
@@ -296,7 +303,17 @@ export default {
 		tablebutton:function(posisi, data, index) {
 			console.log("POSISI aturulang");
 			console.log(posisi);
-			if (posisi == 'proses') {
+			if (posisi == 'detaildokter') {
+				vm.$refs.FormDetailDokter.aturulang();
+				vm.position = "detaildokterdata";
+				vm.$refs.FormDetailDokter.show('detaildokterdata', 'Dokter Bedah', data.uuid);
+				setTimeout(() => { vm.loadingModal('formdetaildokter'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.detaildokter;
+				vm.executions();
+			}
+			else if (posisi == 'proses') {
 				vm.position = "prosesdata";
 				vm.attach.data = new FormData();
 				console.log(data);
@@ -423,12 +440,15 @@ export default {
 		},
 
 		loadingModal: function (position) { 
+			console.log("position loadingmodal")
 			console.log(position)
 			if (position == 'formunit') { vm.$refs.FormUnit.loaderprocess();  }
 			else if (position == 'formobat') { vm.$refs.FormObat.loaderprocess();  }
 			else if (position == 'formresep') { vm.$refs.FormResep.loaderprocess();  }
 			else if (position == 'formjadwalkontrol') { vm.$refs.FormJadwalKontrol.loaderprocess();  }
 			else if (position == 'detaildata') { vm.$refs.FormDetail.loaderprocess(); }
+			else if (position == 'formdetaildokter') { vm.$refs.FormDetailDokter.loaderprocess(); }
+			else if (position == 'detaildokterdata') { vm.$refs.FormDetailDokter.loaderprocess(); }
 			else if (position == 'inapdata') { vm.$refs.FormInap.loaderprocess(); }
 			else if (position == 'formhistori') { vm.$refs.FormHistori.loaderprocess();  }
 			else if (position == 'formhistoridokter') { vm.$refs.FormHistoriDokter.loaderprocess();  }
@@ -442,6 +462,9 @@ export default {
 				vm.position = 'adddata';
 				vm.attach.url = vm.attach.link.add;
 			}
+			else if(key == 'adddokter') {
+				 vm.position = 'updatedokterdata'; vm.attach.url = vm.attach.link.adddokter; }
+
 			else if (key == 'remove') {
 				vm.position = 'removedata';
 				vm.attach.url = vm.attach.link.remove;
@@ -554,6 +577,8 @@ export default {
 			else if (vm.position == 'loaddataresep') { vm.loadingModal('formresep'); vm.$refs.FormResep.hide();  }
 			else if (vm.position == 'editdata') { vm.loadingModal('formunit'); vm.$refs.FormUnit.hide();  }
 			else if (vm.position == 'updatedata') { vm.loadingModal('formunit'); }
+			else if (vm.position == 'updatedokterdata') { vm.loadingModal('formdetaildokter'); }
+
 			else if (vm.position == 'prosesdata') { vm.$refs.Datatable.skeleton(); }
 			else if (vm.position == 'selesaidata') { vm.$refs.Datatable.skeleton(); }
 			else if (vm.position == 'historidata') { vm.loadingModal('formhistori'); vm.$refs.FormHistori.hide();  }
@@ -599,6 +624,11 @@ export default {
 					active = 0;
 				}
 			}
+			else if (vm.position == 'updatedokterdata') {
+				vm.loadingModal('formdetaildokter');
+				vm.$refs.FormDetailDokter.hide();
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
+			}
 			else if (vm.position == 'adddata') {
 				vm.$refs.FormUnit.setdataform(response);
 			}
@@ -643,6 +673,11 @@ export default {
 				vm.position = "detaildata"; 
 				active = 0; 
 			}
+			else if (vm.position == 'detaildokterdata') {
+				vm.$refs.FormDetailDokter.setdataform(response);
+				vm.position = "updatedokterdata";
+				active = 0;
+			}
 			else if (vm.position == 'inapdata') {
 				vm.$refs.FormInap.setdataform(response);
 				vm.position = "inapdata";
@@ -679,6 +714,8 @@ export default {
 		},
 
 		message: function (position, active) {
+			console.log("position msg");
+			console.log(position);
 			if (position == 'error') {
 				if (vm.position == 'loadmain') { vm.notification('Data gagal dimuat.', 3000, position); }
 				else if (vm.position == 'loaddone') { vm.notification('Data gagal dimuat.', 3000, position); }
@@ -694,6 +731,8 @@ export default {
 				else if (vm.position == 'loaddatajadwalkontrol') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 				else if (vm.position == 'editdata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 				else if (vm.position == 'updatedata') { vm.notification('Pembaharuan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'updatedokterdata') { vm.notification('Penambahan/Pembaharuan data gagal diproses.', 3000, position); }
+
 				else if (vm.position == 'prosesdata') { vm.notification('Proses perubahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'selesaidata') { vm.notification('Proses perubahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'historidata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
@@ -702,6 +741,8 @@ export default {
 			}
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'adddata') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
+				if (vm.position == 'updatedokterdata') { vm.notification('Penambahan/Pembaharuan data berhasil diproses.', 3000, position); }
+
 				else if (vm.position == 'inapadd') { vm.notification('Penambahan Kamar Inap berhasil diproses.', 3000, position); }
 				else if (vm.position == 'adddataobat') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'adddataresep') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }

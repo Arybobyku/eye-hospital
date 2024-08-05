@@ -4,7 +4,7 @@
             :class="terminate.show ? 'modal-opened' : 'modal-closed'">
             <div class="modal-header">
                 <span class="close" v-on:click="hide()">&times;</span>
-                <h2>Form Pulang</h2>
+                <h2>Form Pasien Pulang</h2>
             </div>
             <div class="modal-body" v-if="form">
                 <div class="grid">
@@ -29,7 +29,7 @@
                                 <!-- <Inputed :ref="form.waktuodc.name" :form="form.waktuodc"></Inputed> -->
                                 <!-- <Timepicker :ref="form.waktu_keluar_inap.name" :form="form.waktu_keluar_inap">
                                 </Timepicker> -->
-                                <Timepicker v-model="form.waktu_keluar_inap.value" :ref="form.waktu_keluar_inap.name"
+                                <Timepicker  :ref="form.waktu_keluar_inap.name"
                                     :form="form.waktu_keluar_inap">
                                 </Timepicker>
                             </div>
@@ -65,10 +65,10 @@
         defineAsyncComponent
     } from 'vue';
     import {
-        formpulang
+        formdetailpulang
     } from './FormData.js';
     import {
-        parsepulang
+        parsedetailpulang
     } from './Attachment.js';
     import {
         filterselected,
@@ -161,7 +161,7 @@
         mounted: function() {
             vm = this;
             body = document.body;
-            vm.form = vm.formpulang();
+            vm.form = vm.formdetailpulang();
             vm.arr = vm.arrpemeriksaan();
             window.addEventListener("click", function(event) {
                 let a = event.target.className;
@@ -183,24 +183,13 @@
         created: function() {},
         data: function() {
             return {
-                title_racikan: '',
-                index_racikan: 0,
-                quantity_racikan: 0,
-                listdata: [],
-                listdatajalan: [],
-                listobat: [],
-                tempobat: null,
-                listobatracikan: [],
-                tempobatracikan: null,
+            
                 terminate: {
                     show: false,
                     display: 'display: none'
                 },
                 form: null,
                 btnlbl: '',
-                showOperasi: false,
-                showRawatInap: false,
-                showRawatInapOperasi: false,
                 arr: {
                     // pilihanplan: [
                     //     { value: 'Rawat Inap Operasi', label: 'Rawat Inap + Operasi' },
@@ -211,121 +200,13 @@
                 green: 'Save Data',
                 red: 'Clear Form',
                 pendings: 'Ubah Menjadi Pending',
-                test: null,
-                cover: '',
-                temporer: null,
-                pemeriksaanro: null,
-                datakamar: null,
-                detail: {
-                    uuid: '',
-                    agama: '',
-                    alamat: '',
-                    alias: '',
-                    email: '',
-                    golongan_darah: '',
-                    jenis_identitas: '',
-                    jenis_kelamin: '',
-                    kodepos: '',
-                    nama: '',
-                    nama_ayah: '',
-                    nama_ibu: '',
-                    nama_kab_kota: '',
-                    nama_kecamatan: '',
-                    nama_kelurahan: '',
-                    nama_provinsi: '',
-                    no_handphone: '',
-                    no_identitas: '',
-                    pekerjaan: '',
-                    pendidikan_terakhir: '',
-                    rekam_medis: '',
-                    rt_rw: '',
-                    status_pernikahan: '',
-                    tanggal_lahir: '',
-                    tempat_lahir: '',
-                    tanggal: ''
-                },
-                // { value: 'racikan', label: 'Racikan', class: 'tab-no-active' },
-                tab: {
-                    button: [{
-                            value: 'ro',
-                            label: 'Data RO',
-                            class: 'tab-active'
-                        },
-                        {
-                            value: 'vital',
-                            label: 'Vital Sign',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'pemeriksaan',
-                            label: 'Pemeriksaan',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'oculardextra',
-                            label: 'Ocular Dextra',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'ocularsinistra',
-                            label: 'Ocular Sinistra',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'tindakan',
-                            label: 'Tindakan/Layanan',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'resep',
-                            label: 'Resep',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'racikan',
-                            label: 'Resep (Racikan)',
-                            class: 'tab-no-active'
-                        },
-
-                        {
-                            value: 'planning',
-                            label: 'Planning',
-                            class: 'tab-no-active'
-                        },
-
-                    ],
-                    // racikan: false,
-                    content: {
-                        ro: true,
-                        pemeriksaan: false,
-                        oculardextra: false,
-                        ocularsinistra: false,
-                        tindakan: false,
-                        rawatinapjalan: false,
-                        resep: false,
-                        racikan: false,
-                        onedaycare: false,
-                        rawatinap: false,
-                        planning: false
-                    }
-                },
                 typingTimer: null,
                 doneTypingInterval: 5000,
-                digitalSignature: "",
             }
         },
         methods: {
             formatrupiah,
-            saveDigitalSignature: function(svg) {
-                vm.digitalSignature = svg;
-            },
-            removetindakan: function(index) {
-                vm.listdata.splice(index, 1);
-            },
 
-            removetindakanjalan: function(index) {
-                vm.listdatajalan.splice(index, 1);
-            },
 
 
             pendingbutton: function() {
@@ -354,40 +235,23 @@
 
             redbutton: function() {
                 if (vm.red == 'Clear Form') {
-                    vm.form = vm.formpulang();
+                    vm.form = vm.formdetailpulang();
                 } else if (vm.red == 'Back') {
                     vm.test = vm.temporer;
                 }
             },
 
-            changesTab: function(values, index, classes) {
-                if (classes != 'tab-active') {
-                    for (let i = 0; i < vm.tab.button.length; i++) {
-                        vm.tab.content[vm.tab.button[i].value] = false;
-                        vm.tab.button[i].class = 'tab-no-active';
-                    }
-                    vm.tab.button[index].class = 'tab-active';
-                    vm.tab.content[values] = true;
-                }
+           
 
-                if (values == 'rawatinapjalan') {
-                    vm.form.inapjalan = 'aktif';
-                } else {
-                    vm.form.inapjalan = 'aktif';
-                    ''
-                }
-            },
-
-            parsepulang,
-            formpulang,
+            parsedetailpulang,
+            formdetailpulang,
             initindexdb,
             indexdbprocessing,
             arrpemeriksaan,
             datename,
             filterselected,
             hideselected,
-            itemselected,
-            clearselected,
+
             boxselected,
             conditionselected,
 
@@ -434,32 +298,6 @@
                 vm.form = vm.itemselected(vm.form, item, key);
 
       
-            },
-
-            selectclear: function(key) {
-
-                vm.form = vm.clearselected(vm.form, key);
-      
-
-            },
-            selectbox: function(event, key, statics) {
-                let msg = 'select-close select-close-' + key;
-                if (event.target.className != msg) {
-                    if (!vm.form.select[key].disabled) {
-                        let result = vm.boxselected(event, vm.form, key);
-                        if (result._position == 'stop') {
-                            return;
-                        } else if (result._position == 'nextstop') {
-                            vm.form = result._form;
-                        } else {
-                            vm.selecthide();
-                            vm.getIndexDB(key, statics);
-                            vm.form.select[key].option = 'display: block';
-                        }
-                    }
-                }
-
-
             },
 
             getIndexDB: function(key, statics) {
@@ -535,16 +373,7 @@
                 vm.terminate.show = true;
             },
             aturulang: function() {
-                vm.form = vm.formpulang();
-                // vm.form.tanggal_keluar_inap.value = null;
-                // vm.form.waktu_keluar_inap.value = null;
-
-                for (let i = 0; i < vm.tab.button.length; i++) {
-                    vm.tab.content[vm.tab.button[i].value] = false;
-                    vm.tab.button[i].class = 'tab-no-active';
-                }
-                vm.tab.button[0].class = 'tab-active';
-                vm.tab.content.ro = true;
+                vm.form = vm.formdetailpulang();
             },
             hide: function() {
                 vm.terminate.show = false;
@@ -567,16 +396,12 @@
                 // 	vm.listobat[i].total = vm.listobat[i].total.replace(/\D/g, "");
                 // }
 
-
-                console.log('datakamar');
-                console.log(vm.datakamar);
-
                 
   ;
                 console.log(vm.form.waktu_keluar_inap)
                 console.log('Form');
                 console.log(vm.form);
-                vm.$emit('parsingForm', vm.parsepulang(vm.form), 'pulang');
+                vm.$emit('parsingForm', vm.parsedetailpulang(vm.form), 'pulang');
             },
 
             loaderprocess: function() {
@@ -585,45 +410,48 @@
             },
 
             setdataform: function(response) {
-                let data = response.data.data;
+                let waktu = response.data.data.waktu_keluar_inap;
+                let tgl = response.data.data.tanggal_keluar_inap;
                 console.log("memek");
                 console.log(response.data);
 
-                let keys = ['kamar_inap']
-                console.log("keys");
-                console.log(keys);
+                // let keys = ['kamar_inap']
+                // console.log("keys");
+                // console.log(keys);
                 /* Setting index DB */
                 // vm.updatedblocal(keys, response);
 
 
-                vm.detail = response.data.data;
-                console.log(vm.detail)
   
-                console.log(data)
                 // vm.form.carabayar_nama = vm.detail.carabayar_nama;
 
 
 
                 //vm.listdata = response.data.layanan;
                 console.log("tanggal_keluar_inap");
-                console.log(data.tanggal_keluar_inap);
-                console.log(data.waktu_keluar_inap);
+                console.log(tgl);
+                console.log(waktu);
                 
-                // if (data.tanggal_keluar_inap > '2000-01-01'){
-                        vm.form.tanggal_keluar_inap.value = data.tanggal_keluar_inap;
-                vm.form.waktu_keluar_inap.value = response.data.waktu_keluar_inap;
-                vm.form.waktu_keluar_inap.name = response.data.waktu_keluar_inap;
-                // } else {
-                //     vm.form.tanggal_keluar_inap.value = '';
-                //     // vm.form.waktu_keluar_inap.value = '';   
-                // }
+                if (tgl > '2000-01-01'){
+                    vm.form.tanggal_keluar_inap.value = tgl;
+                } else {
+                    vm.form.tanggal_keluar_inap.value = '';   
+                }
+
+                if (waktu != "" ) {
+                    vm.form.waktu_keluar_inap.value = waktu;
+                } else {
+                    vm.form.waktu_keluar_inap.value = '';
+                }
+
 
 
 
                 // vm.form.tanggal_keluar_inap.value = '';
                 // vm.form.waktu_keluar_inap.value = '';
-                console.log('UUID')
-                vm.form.uuid = vm.detail.uuid;
+                console.log('UUID');
+                console.log(response.data.data.uuid);
+                vm.form.uuid = response.data.data.uuid;
              
 
                 

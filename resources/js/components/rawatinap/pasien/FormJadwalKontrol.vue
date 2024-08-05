@@ -12,7 +12,7 @@
 						<Inputed :ref="form.tanggalkontrol.name" :form="form.tanggalkontrol"></Inputed>
 					</div>
 					<div class="col-12">
-						<Inputed :ref="form.waktukontrol.name" :form="form.waktukontrol"></Inputed>
+						<Timepicker :ref="form.waktukontrol.name" :form="form.waktukontrol"></Timepicker>
 					</div>
 				</div>
 			</div>
@@ -29,6 +29,8 @@ var vm, body;
 export default {
 	emits: ["dialog", "parsingForm"],
 	components: {
+		Timepicker: defineAsyncComponent(() => import('../../../section/Timepicker.vue')),  
+
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 	},
 	mounted:function() { 

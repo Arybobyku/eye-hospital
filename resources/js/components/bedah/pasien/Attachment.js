@@ -122,3 +122,14 @@ export const parserawatinap = (form) => {
 
 	return data;
 }
+	export const parsedetaildokter = (form) => {
+
+	let data = new FormData();
+	data.append('uuid', form.uuid);
+	data.append('registrasi_uuid', form.registrasi_uuid);
+	data.append('uuid_dokter', form.select.dokter.value);
+	data.append('nama_dokter', form.select.dokter.label);
+
+
+	return data;
+}

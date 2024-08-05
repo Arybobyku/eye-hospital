@@ -29,6 +29,6 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
         Route::post('addpaket', [PasienCtrl::class, 'addpaket'])->name('pemeriksaan-addpaket');
         Route::post('removeobat', [PasienCtrl::class, 'removeobat'])->name('pemeriksaan-removeobat');
         Route::post('pulang', [PasienCtrl::class, 'pulang'])->name('pemeriksaan-pulang');
-        Route::post('pulangdata', [PasienCtrl::class, 'pulangdata'])->name('pemeriksaan-pulangdata');
+        Route::post('detailpulang', [PasienCtrl::class, 'detailpulang'])->name('pemeriksaan-detailpulang');
     });
 });

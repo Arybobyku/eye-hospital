@@ -701,7 +701,7 @@ class PemeriksaanCtrl extends Controller
 
                         $item->tanggal = $request->tanggal;
                         $item->waktu = $request->waktu;
-                        echo 'MEMEK:';
+                        echo 'waktu:';
                         echo $request->waktu;
                         $item->layanan_uuid = $request->paket_uuid;
                         $item->nama_layanan = $request->nama_paket;
@@ -1456,7 +1456,7 @@ class PemeriksaanCtrl extends Controller
 
                 if ($request->paket_uuid_bedah != '' && $request->paket_uuid_bedah != ' ' && $request->paket_uuid_bedah) {
                     $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update([
-                      'apakah_paket' => 'Ya',
+                        'apakah_paket' => 'Ya',
                     ]);
                     // Periksa asuransinya : jika asuransi maka masuk ke akun asuransi
                     //											 jika umum maka masuk ke dalam bagian umum
@@ -1864,8 +1864,8 @@ class PemeriksaanCtrl extends Controller
         \PenggunaHelp::log('Mengupdate data icd 9 dengan nama "'.$request->nama.'".');
 
         $arr = [
-                'nama' => $request->nama,
-                'kode' => $request->kode,
+            'nama' => $request->nama,
+            'kode' => $request->kode,
         ];
 
         try {
