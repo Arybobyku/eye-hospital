@@ -133,6 +133,11 @@ export const formkelurahan = () => {
 			name: 'penjadwalanodc', value: '', disabled: false, show: true, kinds: ''
 		},
 
+		tanggal_kontrol_selanjutnya:{
+			title: 'Tanggal Kontrol Selanjutnya', for_id: 'form_'+'tanggal_kontrol_selanjutnya', type: 'date', required: '', 
+			name: 'tanggal_kontrol_selanjutnya', value: '', disabled: false, show: true, kinds: ''
+		},
+
 		waktuodc:{
 			title: 'Pada Pukul', for_id: 'form_'+'waktuodc', type: 'time', required: '', 
 			name: 'waktuodc', value: '', disabled: false, show: true, kinds: ''

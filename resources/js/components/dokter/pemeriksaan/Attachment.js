@@ -28,6 +28,7 @@ export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obat
 
 	data.append('listicd10', JSON.stringify(listicdten));
 	data.append('listicd9', JSON.stringify(listicdnine));
+	data.append('tanggal_kontrol_selanjutnya', form.tanggal_kontrol_selanjutnya.value);
 
 	data.append('tindakan', JSON.stringify(tindakan));
 

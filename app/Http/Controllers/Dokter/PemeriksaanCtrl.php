@@ -357,8 +357,10 @@ class PemeriksaanCtrl extends Controller
                     'anamnese' => $request->anamnese,
                     'pilihan_plan' => $request->pilihan_plan,
                     'ttd_dokter' => $request->ttd_dokter,
+                    'tanggal_kontrol_selanjutnya' => $request->tanggal_kontrol_selanjutnya,
                 ];
-
+                echo "tanggal_kontrol_selanjutnya";
+                echo $request->tanggal_kontrol_selanjutnya;
                 $update = PemeriksaanDokter::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
 
                 PemeriksaanDokterIcd9::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();

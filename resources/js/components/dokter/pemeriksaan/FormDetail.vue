@@ -1215,15 +1215,20 @@
                                     </div>
                                 </div>
                                 <div class="Pulang grid" v-if="showPulang">
-                                    <div class="col-8">
+                                    <div class="col-12">
                                         <h3 style="
                                                 font-size: 15px;
                                                 margin-top: 20px;
                                                 font-weight: bold;
                                             ">
-                                            Silahkan Isi Tindakan/Layanan dan
-                                            Obat
+                                            Silahkan Isi Tindakan/Layanan, Obat, dan Tanggal Kontrol Selanjutnya(apabila
+                                            ada)
                                         </h3>
+                                    </div>
+                                    <div class="col-3">
+                                        <Inputed :ref="form.tanggal_kontrol_selanjutnya.name"
+                                            :form="form.tanggal_kontrol_selanjutnya">
+                                        </Inputed>
                                     </div>
                                 </div>
                             </div>
@@ -2396,8 +2401,8 @@
                 vm.form.carabayar_nama = vm.detail.carabayar_nama;
                 vm.histori = response.data.histori;
                 vm.pemeriksaanro = response.data.pemeriksaanro;
-                vm.form.select.pilihanplan.value = "";
-                vm.form.select.pilihanplan.label = "Silahkan Pilih";
+                // vm.form.select.pilihanplan.value = "";
+                // vm.form.select.pilihanplan.label = "Silahkan Pilih";
 
 
                 if (vm.detail.panjar != "0") {
@@ -2668,21 +2673,22 @@
                             this.showOperasi = true; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showPulang = false; // Menyembunyikan div dengan kelas 'Operasi'
+                            
                         } else if (planning === "Rawat Inap") {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = true; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showPulang = false; // Menyembunyikan div dengan kelas 'Operasi'
-                        } else if (planning === "Rawat Inap Operasi") {
+                        } else if (planning === "Pulang Berobat Jalan") {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showPulang = true; // Menyembunyikan div dengan kelas 'Operasi'
+                            vm.form.tanggal_kontrol_selanjutnya.value = response.data.kunjungan.tanggal_kontrol_selanjutnya;
                         } else {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showPulang = false;
                         }
                     }
-
                     // if (vm.nullcheck(temps.pemeriksaan_tindakan) == "") {
                     //     vm.form.select.icd9.value = "";
                     //     vm.form.select.icd9.label = "Silahkan Pilih";
