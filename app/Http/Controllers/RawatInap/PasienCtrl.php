@@ -8,8 +8,10 @@ use App\Models\KamarInap;
 use App\Models\LayananPasien;
 use App\Models\ListPaketBedahBaru;
 use App\Models\Registrasi;
+use App\Models\RegistrasiOperasi;
 use App\Models\Resep;
 use App\Models\ResepRacikan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 
@@ -46,6 +48,7 @@ class PasienCtrl extends Controller
             $data = $data->orderBy('id', 'desc')
                                 ->where('status', 'Rawat Inap')
                                 ->where('jenis', '=', 'Rawat Inap')
+                                // ->where('tanggal_keluar_inap', '<', '2000-01-01')
                                 // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
                                 // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
                                 // ->where('carabayar_nama', '!=', 'bpjs kesehatan')
@@ -69,6 +72,7 @@ class PasienCtrl extends Controller
 
             $total = Registrasi::where('delete_soft', '=', 1)
                                 ->where('status', 'Rawat Inap')
+                                // ->where('tanggal_keluar_inap', '<', '2000-01-01')
                                 ->where('jenis', '=', 'Rawat Inap');
             // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
             // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
@@ -94,6 +98,7 @@ class PasienCtrl extends Controller
         } else {
             $data = Registrasi::where('delete_soft', '=', 1)
                                     ->orderBy('id', 'desc')
+                                    // ->where('tanggal_keluar_inap', '<', '2000-01-01')
                                 // 	->where('carabayar_nama', '!=', 'BPJS Kesehatan')
                                 // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
                                 // ->where('carabayar_nama', '!=', 'bpjs kesehatan')
@@ -113,6 +118,7 @@ class PasienCtrl extends Controller
                                 // ->where('carabayar_nama', '!=', 'bpjs-sehat')
                                 // ->where('carabayar_nama', '!=', 'bpjs_sehat')
                                     ->where('status', 'Rawat Inap')
+                                    // ->where('tanggal_keluar_inap', '<', '2000-01-01')
                                     ->where('jenis', '=', 'Rawat Inap');
 
             $data = $data->skip($skip)->take($this->take)
@@ -606,20 +612,70 @@ class PasienCtrl extends Controller
         return response()->json(['data' => $data, 'obat' => $obat, 'obatracikan' => $obatracikan]);
     }
 
+    public function calculateDaysInHospital($tglMasuk, $waktuMasuk, $tglKeluar, $waktuKeluar)
+    {
+        // Gabungkan tanggal dan waktu
+        $dateTimeMasuk = Carbon::parse("$tglMasuk $waktuMasuk");
+        $dateTimeKeluar = Carbon::parse("$tglKeluar $waktuKeluar");
+
+        // Set waktu pergantian hari
+        $shiftChangeTime = Carbon::parse("$tglMasuk 10:00");
+
+        // Hitung selisih waktu masuk dan keluar
+        $totalDays = $dateTimeMasuk->diffInDays($dateTimeKeluar);
+
+        // Jika tanggal masuk dan keluar sama, cek waktu masuk dan keluar
+        if ($totalDays == 0) {
+            if ($dateTimeMasuk->format('H:i') < '10:00' && $dateTimeKeluar->format('H:i') >= '10:00') {
+                return 2; // Menghitung dua hari jika waktu masuk sebelum 10:00 dan waktu keluar setelah 10:00
+            }
+
+            return 1; // Menghitung satu hari jika tidak
+        }
+
+        // Tambahkan 1 hari jika waktu masuk sebelum 10:00 dan 1 hari lagi jika waktu keluar setelah 10:00
+        if ($dateTimeMasuk->format('H:i') < '10:00') {
+            ++$totalDays;
+        }
+        if ($dateTimeKeluar->format('H:i') >= '10:00') {
+            ++$totalDays;
+        }
+
+        return $totalDays;
+    }
+
     public function pulang(Request $request)
     {
         try {
             // $reg = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
             $data = Registrasi::where('uuid', '=', $request->uuid)->first();
-
+            $billKamar = LayananPasien::where('registrasi_uuid', $request->uuid)->where('jenis', 'Kamar Inap')->first();
             $cekkamar = KamarInap::where('uuid', '=', $data->kamar_inap_uuid)->first();
             echo 'Reg UUID';
             echo $request->uuid;
             echo 'Kamar UUID';
             echo $data->kamar_inap_uuid;
+            $tglMasuk = $data->tanggal_masuk_inap;
+            $waktuMasuk = $data->waktu_masuk_inap;
+            $tglKeluar = $request->tanggal_keluar_inap;
+            $waktuKeluar = $request->waktu_keluar_inap;
+            $daysInHospital = $this->calculateDaysInHospital($tglMasuk, $waktuMasuk, $tglKeluar, $waktuKeluar);
 
+            $arrKamar = [
+                'qty' => $daysInHospital,
+                'total' => $billKamar->tarif * $daysInHospital,
+            ];
+            echo 'arrKamar';
+            echo $daysInHospital;
+            LayananPasien::where('registrasi_uuid', $request->uuid)->where('jenis', 'Kamar Inap')->update($arrKamar);
             $arr = ['sisa' => ((int) $cekkamar->sisa + 1)];
             $update = KamarInap::where('uuid', '=', $data->kamar_inap_uuid)->update($arr);
+
+            $arr2 = [
+                'tanggal_keluar_inap' => $request->tanggal_keluar_inap,
+                'waktu_keluar_inap' => $request->waktu_keluar_inap,
+            ];
+            $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr2);
 
             return response()->json(['hasil' => 'berhasil']);
         } catch (Exception $e) {
@@ -682,10 +738,57 @@ class PasienCtrl extends Controller
                 'apakah_paket' => $apakah_paket,
             ];
 
-            $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+            Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+            RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
 
-            $remove = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('others', '=', 1)->delete();
+            $item = new RegistrasiOperasi();
+            $item->uuid = Uuid::uuid4();
+            $item->carabayar_uuid = $reg->carabayar_uuid;
+            $item->carabayar_nama = $reg->carabayar_nama;
+            $item->asuransi_uuid = $reg->asuransi_uuid;
+            $item->nama_asuransi = $reg->nama_asuransi;
+            $item->jenis_pembayaran = $reg->carabayar_nama;
 
+            $item->registrasi_uuid = $request->registrasi_uuid;
+            $item->no_pendaftaran = $reg->no_pendaftaran;
+            $item->registrasi_kode = $reg->kode;
+            $item->registrasi_nomor = $reg->nomor;
+            $item->registrasi_jenis = $reg->jenis;
+            $item->pasien_uuid = $reg->pasien_uuid;
+            $item->rekam_medis = $reg->rekam_medis;
+            $item->nama_pasien = $reg->nama_pasien;
+            $item->pengguna_uuid = $reg->pengguna_uuid;
+            $item->nama_dokter = $reg->nama_dokter;
+
+            $item->tanggal = date('Y-m-d');
+            $item->waktu = date('H:i');
+            echo 'waktu:';
+            echo  $request->harga_paket;
+            $item->layanan_uuid = $request->paket_uuid;
+            $item->nama_layanan = $request->nama_paket;
+            $item->tarif = $request->harga_paket;
+            $item->defaults = 'Tidak';
+            $item->jenis = 'One Day Care';
+            // $item->keterangan = $request->keterangan;
+
+            if ($reg->carabayar_nama == 'Umum' || $reg->carabayar_nama == 'BPJS Kesehatan') {
+                $item->tanggal_disetujui_asuransi = date('Y-m-d');
+                $item->jam_disetujui_asuransi = date('H:i');
+                $item->posisi = 'Disetujui';
+                $item->tanggal_kirim_ke_asuransi = date('Y-m-d');
+                $item->jam_kirim_ke_asuransi = date('H:i');
+            } else {
+                $item->posisi = 'Permintaan';
+            }
+
+            $item->status_berkas = '-';
+
+            $item->tanggal_masuk_permintaan = date('Y-m-d');
+            $item->jam_masuk_permintaan = date('H:i');
+            $item->save();
+
+            $remove = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_paket_bedah', '=', 1)->delete();
+            // APAKAH PERLU INSERT KE REGISTRAS OPERASI ? -Yudha
             if ($request->nama_paket != '' && $request->nama_paket != 'Silahkan Pilih') {
                 $listpaket = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $request->paket_uuid)->get();
 
@@ -702,6 +805,7 @@ class PasienCtrl extends Controller
                     $item->nama_pasien = $reg->nama_pasien;
                     $item->pengguna_uuid = $reg->pengguna_uuid;
                     $item->nama_dokter = $reg->nama_dokter;
+                    $item->is_paket_bedah = '1';
 
                     $item->tanggal = date('Y-m-d');
                     $item->waktu = date('H:i');
@@ -748,6 +852,21 @@ class PasienCtrl extends Controller
         }
 
         return response()->json(['uuid' => $uuid, 'tanggal' => $tanggal, 'waktu' => $waktu]);
+    }
+
+    public function detailpulang(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        $waktu = '';
+        $reg = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+        if ($reg) {
+            $waktu = $reg->waktu_keluar_inap;
+            $tanggal = $reg->tanggal_keluar_inap;
+        }
+
+        return response()->json(['data' => $reg, 'waktu_keluar_inap' => $waktu,  'tanggal_keluar_inap' => $tanggal]);
     }
 
     public function getpaket(Request $request)

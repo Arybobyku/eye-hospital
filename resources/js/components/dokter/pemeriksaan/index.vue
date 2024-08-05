@@ -427,6 +427,8 @@ export default {
 		},
 
 		loadingModal: function (position) { 
+			console.log("position loadingmodal");
+			console.log(position);
 			if (position == 'formdetail') { vm.$refs.FormDetail.loaderprocess();  }
 			else if (position == 'formdetailtransfer') { vm.$refs.FormDetailTransfer.loaderprocess();  }
 			else if (position == 'formcetakan') { vm.$refs.FormCetakan.loaderprocess();  }
@@ -626,6 +628,9 @@ export default {
 		},
 
 		berhasil: function (response) {
+
+			console.log("vm.position berhasil");
+			console.log(vm.position);
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
 	

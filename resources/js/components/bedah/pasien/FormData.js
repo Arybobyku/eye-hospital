@@ -39,6 +39,16 @@ export const formrawatinap = () => {
 	return {
 		title: '', posisi: '', uuid: '',
 		registrasi_uuid: '',
+		tanggal_masuk_inap:{
+			title: 'Tanggal Masuk Kamar', for_id: 'form_'+'tanggal_masuk_inap', type: 'date', required: '', 
+			name: 'tanggal_masuk_inap', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		waktu_masuk_inap:{
+			title: 'Pada Pukul', for_id: 'form_'+'waktu_masuk_inap', type: 'time', required: '', 
+			name: 'waktu_masuk_inap', value: '', disabled: false, show: true, kinds: ''
+		},
+
 		select: {
 		kamarinap: { 
 				key : 'kamarinap', for_id: 'form_'+'kamarinap', name: 'kamarinap', uuid:'', value: '', label: 'Silahkan Pilih', 
@@ -47,6 +57,21 @@ export const formrawatinap = () => {
 			},
 
 			}
+	}
+}
+
+export const formdetaildokter = () => {
+	return {
+		title: '', posisi: '', uuid: '',
+		registrasi_uuid: '',
+		tarif: '',
+		select : {
+			dokter: { 
+				key : 'dokter', for_id: 'form_'+'dokter', name: 'dokter', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'dokter', isrequired: false, html: 'Dokter yang menangani', issearch: false, disabled: false,
+			},
+		}
 	}
 }
 

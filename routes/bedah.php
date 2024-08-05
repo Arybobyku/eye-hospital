@@ -52,6 +52,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
         Route::post('detail', [PasienBedahCtrl::class, 'detail'])->name('bedah-reqopname-detail');
         Route::post('inap', [PasienBedahCtrl::class, 'inap'])->name('bedah-reqopname-inap');
         Route::post('inapadd', [PasienBedahCtrl::class, 'inapadd'])->name('bedah-reqopname-inapadd');
+        Route::post('detaildokter', [PasienBedahCtrl::class, 'detaildokter'])->name('bedah-reqopname-detaildokter');
+        Route::post('adddokter', [PasienBedahCtrl::class, 'dokteradd'])->name('bedah-reqopname-adddokter');
     });
 
 	Route::prefix('dataform')->group(function () {
