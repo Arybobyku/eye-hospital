@@ -7,21 +7,22 @@ use App\Jobs\SendAllJob;
 use App\Jobs\SendPoliJob;
 use App\Models\AntrianPoli;
 use App\Models\CaraBayarKamar;
+use App\Models\Cppt;
 use App\Models\LayananPasien;
 use App\Models\ListPaketBedahBaru;
 use App\Models\Pasien;
 use App\Models\PemeriksaanDokter;
+use App\Models\PemeriksaanDokterIcd10;
+use App\Models\PemeriksaanDokterIcd9;
 use App\Models\PemeriksaanRo;
 use App\Models\Registrasi;
 use App\Models\RegistrasiOperasi;
 use App\Models\Resep;
 use App\Models\ResepRacikan;
-use App\Models\Cppt;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
-use Crypt;
-use Cookie;
+
 class PemeriksaanCtrl extends Controller
 {
     private $take = 15;
@@ -359,6 +360,47 @@ class PemeriksaanCtrl extends Controller
                 ];
 
                 $update = PemeriksaanDokter::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
+
+                PemeriksaanDokterIcd9::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+                $icd9 = json_decode($request->listicd9);
+                  echo "uuidicdnine";
+                    echo $request->listicd9;
+                foreach ($icd9 as $row) {
+                    $item = new PemeriksaanDokterIcd9();
+                    $item->uuid = Uuid::uuid4();
+                    $item->registrasi_uuid = $request->registrasi_uuid;
+                    $item->pemeriksaan_dokter_uuid = $request->uuid;
+                    $item->registrasi_kode = $request->kode;
+                    $item->registrasi_nomor = $request->nomor;
+                    $item->pasien_uuid = $request->pasien_uuid;
+                    $item->rekam_medis = $request->rekam_medis;
+                    $item->nama_pasien = $request->nama_pasien;
+                    $item->pengguna_uuid = $request->pengguna_uuid;
+                    $item->icdnine_uuid = $row->uuid_icdnine;
+                  
+                    $item->kode_icdnine = $row->kode_icdnine;
+                    $item->nama_icdnine = $row->nama_icdnine;
+                    $item->save();
+                }
+
+                PemeriksaanDokterIcd10::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+                $icd10 = json_decode($request->listicd10);
+                foreach ($icd10 as $row) {
+                    $item = new PemeriksaanDokterIcd10();
+                    $item->uuid = Uuid::uuid4();
+                    $item->registrasi_uuid = $request->registrasi_uuid;
+                    $item->pemeriksaan_dokter_uuid = $request->uuid;
+                    $item->registrasi_kode = $request->kode;
+                    $item->registrasi_nomor = $request->nomor;
+                    $item->pasien_uuid = $request->pasien_uuid;
+                    $item->rekam_medis = $request->rekam_medis;
+                    $item->nama_pasien = $request->nama_pasien;
+                    $item->pengguna_uuid = $request->pengguna_uuid;
+                    $item->icdten_uuid = $row->uuid_icdten;
+                    $item->kode_icdten = $row->kode_icdten;
+                    $item->nama_icdten = $row->nama_icdten;
+                    $item->save();
+                }
 
                 $remove = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid);
                 if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
@@ -1144,7 +1186,7 @@ class PemeriksaanCtrl extends Controller
                     $item->jumlah_kecil = $row->jumlah_kecil;
                     $item->jumlah_besar = $row->jumlah_besar;
                     $item->signa = $row->signa;
-                   $item->posisimata = $row->posisimata;
+                    $item->posisimata = $row->posisimata;
                     $item->total = $row->total;
                     $item->save();
 
@@ -1182,7 +1224,7 @@ class PemeriksaanCtrl extends Controller
                     $item->kemasan = $row->kemasan;
                     $item->jumlah = $row->jumlah;
                     $item->signa = $row->signa;
-                 
+
                     $item->total = $row->total;
                     $item->informasi = $row->informasi;
                     $item->save();
@@ -1737,24 +1779,22 @@ class PemeriksaanCtrl extends Controller
                     $arr = ['status' => 'Rawat Inap'];
                     $update = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
                 }
-              
             }
             $cppt = Cppt::where('uuid', '=', $request->uuid)->first();
 
-            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+            $pengguna_uuid = \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'Uuid'));
             if ($cppt != null) {
-                $arr = array(
+                $arr = [
                     'subjek' => $request->subject,
                     'objek' => $request->object,
                     'asesmen' => $request->assessment,
                     'plan' => $request->plan,
                     'pengguna_uuid' => $pengguna_uuid,
                     'ttd' => $request->ttd,
-                );
-                    $update = Cppt::where('uuid', '=', $request->uuid)->update($arr);
-            }
-            else{
-            $item = new Cppt();
+                ];
+                $update = Cppt::where('uuid', '=', $request->uuid)->update($arr);
+            } else {
+                $item = new Cppt();
                 $item->uuid = Uuid::uuid4();
                 $item->registrasi_uuid = $request->registrasi_uuid;
                 $item->pasien_uuid = $request->pasien_uuid;
@@ -1769,11 +1809,7 @@ class PemeriksaanCtrl extends Controller
                 $item->plan = $request->plan;
                 $item->ttd = $request->ttd;
                 $item->save();
-
             }
-         
-
-            
 
             \DB::commit();
 
@@ -1835,6 +1871,11 @@ class PemeriksaanCtrl extends Controller
                                         ->orWhere('jenis', '=', 'Rawat Inap Jalan');
                             })
                         ->orderBy('id', 'desc')->get();
+        $listicd9= PemeriksaanDokterIcd9::where('registrasi_uuid', '=', $request->uuid)
+                        ->orderBy('id', 'desc')->get();
+
+        $listicd10= PemeriksaanDokterIcd10::where('registrasi_uuid', '=', $request->uuid)
+                        ->orderBy('id', 'desc')->get();
 
         $onedaycare = RegistrasiOperasi::where('registrasi_uuid', '=', $request->uuid)
                         ->where('jenis', '=', 'One Day Care')
@@ -1853,6 +1894,8 @@ class PemeriksaanCtrl extends Controller
         $apotek = $this->apotek();
         $apotekracikan = $this->apotek();
         $paketbedah = $this->paketbedah();
+        $icd9 = $this->icd9();
+        $icd10 = $this->icd10();
         $carabayartindakanrawatjalan = $this->carabayartindakanrawatjalan();
         $tindakanrawatjalan = $this->tindakanrawatjalan();
         $carabayar = $this->carabayar();
@@ -1871,11 +1914,15 @@ class PemeriksaanCtrl extends Controller
             'apotek' => $apotek,
             'apotekracikan' => $apotekracikan,
             'paketbedah' => $paketbedah,
+            'icd9' => $icd9,
+            'icd10' => $icd10,
             'carabayartindakanrawatjalan' => $carabayartindakanrawatjalan,
             'tindakanrawatjalan' => $tindakanrawatjalan,
             'carabayar' => $carabayar,
             'asuransi' => $asuransi,
             'layananjalan' => $layananjalan,
+            'listicd9' => $listicd9,
+            'listicd10' => $listicd10,
         ]);
     }
 
@@ -2066,6 +2113,15 @@ class PemeriksaanCtrl extends Controller
     private function paketbedah()
     {
         return \DB::table('paket_bedah')->orderBy('id', 'asc')->where('delete_soft', '=', '1')->get();
+    }
+    private function icd9()
+    {
+        return \DB::table('icd_nine')->orderBy('id', 'asc')->where('delete_soft', '=', '1')->get();
+    }
+
+    private function icd10()
+    {
+        return \DB::table('icd_ten')->orderBy('id', 'asc')->where('delete_soft', '=', '1')->get();
     }
 
     private function carabayartindakanrawatjalan()
