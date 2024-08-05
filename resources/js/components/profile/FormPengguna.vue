@@ -87,6 +87,23 @@
 
 					</div>
 				</div>
+		
+				<div>
+						<h3 class="label-form-in form-mt">Tanda Tangan</h3>
+						<img
+                            v-if="form.ttd"
+                            :src="form.ttd"
+                            alt="ttd"
+                            height="100"
+                            width="500"
+                        />
+                        <div>
+                            <DigitalSignature
+                                style="height: 500px; width: 500px"
+                                @onSaveDigitalSignature="saveDigitalSignature"
+                            />
+                        </div>
+				</div>
 			</div>
 			<Loader ref="Loader"></Loader>
 		</div>
@@ -108,6 +125,9 @@ export default {
 	components: {
 		Inputed: defineAsyncComponent(() => import('../../section/Inputed.vue')),
 		Selected: defineAsyncComponent(() => import('../../section/Selected.vue')),
+		DigitalSignature: defineAsyncComponent(() =>
+            import("../digital-signature/DigitalSignature.vue")
+        ),
 	},
 	mounted:function() { 
 		vm = this; body = document.body; 
@@ -124,7 +144,9 @@ export default {
 
 		parsepengguna, initindexdb, indexdbprocessing, arrbiodata, formpengguna, setdataeditpengguna,
 		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected,
-
+        saveDigitalSignature: function (svg) {
+            vm.form.ttd = svg;
+        },
 		selectfilter: function (event, key) { vm.form = vm.filterselected(vm.form, key); },
 		selecthide:function() { vm.form = vm.hideselected(vm.form); },
 		selecteditem:function(item, key) { vm.form = vm.conditionselected(vm.form, item, key, 'address'); vm.form = vm.itemselected(vm.form, item, key); },

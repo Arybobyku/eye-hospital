@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Cppt;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,7 +27,9 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::prefix('pemeriksaan')->group(function () {
 		Route::post('list', [PemeriksaanCtrl::class, 'list'])->name('pemeriksaan-list');
 		Route::post('detail', [PemeriksaanCtrl::class, 'detail'])->name('pemeriksaan-detail');
+		Route::post('detailperawat', [PemeriksaanCtrl::class, 'detailperawat'])->name('pemeriksaan-detailperawat');
 		Route::post('add', [PemeriksaanCtrl::class, 'add'])->name('pemeriksaan-add');
+		Route::post('addperawat', [PemeriksaanCtrl::class, 'addperawat'])->name('pemeriksaan-addperawat');
 		Route::post('histori', [PemeriksaanCtrl::class, 'histori'])->name('pemeriksaan-histori');
 		Route::post('call', [PemeriksaanCtrl::class, 'call'])->name('pemeriksaan-call');
 	});
@@ -76,5 +79,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('addtransfer', [TransferCtrl::class, 'addtransfer'])->name('pemeriksaan-addtransfer');
 		Route::post('removetransfer', [TransferCtrl::class, 'removetransfer'])->name('pemeriksaan-removetransfer');
 	});
+
+	
 
 });

@@ -34,6 +34,7 @@ export const parsepengguna = (form) => {
 	data.append('kelurahan_id', form.select.kelurahan.value);
 	data.append('nama_kelurahan', form.select.kelurahan.label);
 	data.append('kodepos', form.kodepos.value);
+	data.append('ttd', form.ttd);
 
 	return data;
 }

@@ -43,6 +43,7 @@ export default {
 				catatanoperasikatarak: '/bedah/dataform/catatanoperasikatarak',
 				persetujuantindakankedokteran: '/bedah/dataform/persetujuantindakankedokteran',
 				checklistkeselamatanbedah: '/bedah/dataform/checklistkeselamatanbedah',
+				pencegahanpasienjatuh: '/bedah/dataform/pencegahanpasienjatuh',
 				laporaninjeksiantivega: '/bedah/dataform/laporaninjeksiantivega',
 			}, url: '', data: null
 		},
@@ -112,6 +113,7 @@ export default {
 			else if (key == 'catatanoperasikatarak') { vm.attach.url = vm.attach.link.catatanoperasikatarak; }
 			else if (key == 'persetujuantindakankedokteran') { vm.attach.url = vm.attach.link.persetujuantindakankedokteran; }
 			else if (key == 'keselamatanbedah') { vm.attach.url = vm.attach.link.checklistkeselamatanbedah; }
+			else if (key == 'pencegahanpasienjatuh') { vm.attach.url = vm.attach.link.pencegahanpasienjatuh; }
 			else if (key == 'laporaninjeksiantivega') { vm.attach.url = vm.attach.link.laporaninjeksiantivega; }
 		},
 

@@ -316,6 +316,7 @@ export default {
 		},
 		setdata: function (response, position) {
 			if (position == 'pengguna') {
+				console.log("TTD",response.data.biodata.ttd);
 				vm.datacomponent[position] = {
 					pengguna_uuid: response.data.biodata.pengguna_uuid,
 					nama_pengguna: response.data.biodata.nama_pengguna,

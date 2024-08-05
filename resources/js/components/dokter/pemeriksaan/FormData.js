@@ -117,8 +117,11 @@ export const formkelurahan = () => {
 		kamar_inap_jalan_jumlah_bed: '',
 		jenis_kamar_jalan_uuid: '',
 		nama_jenis_jalan_kamar: '',
-		ttd_dokter: '',
+		ttd: '',
 		subject: '',
+		object: '',
+		assessment: '',
+		plan: '',
 
 		catatan:{
 			title: 'Catatan', for_id: 'form_'+'catatan', type: 'text', required: '', 
@@ -408,6 +411,11 @@ export const formkelurahan = () => {
 				key : 'pilihanplan', for_id: 'form_'+'pilihanplan', name: 'pilihanplan', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: true,
 				class: 'pilihanplan', isrequired: false, html: 'Pilih Planning', issearch: false, disabled: false,
+			},
+			posisimata: { 
+				key : 'posisimata', for_id: 'form_'+'posisimata', name: 'posisimata', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'posisimata', isrequired: false, html: 'Posisi Mata', issearch: false, disabled: false,
 			},
 
 			

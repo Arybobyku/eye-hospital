@@ -74,22 +74,23 @@
                     </tr>
                     <tr>
                         <td align="left" valign="top"
-                            style="border: 1px solid; padding: 5px; width: 40%; height: 35px;">Diagnosa</td>
-                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 35px">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top"
-                            style="border: 1px solid; padding: 5px; width: 40%; height: 75px;">Terapi Tindakan
+                            style="border: 1px solid; padding: 5px; width: 40%; height: 75px;">Diagnosa
                         </td>
                         <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 75px">
                         </td>
                     </tr>
                     <tr>
                         <td align="left" valign="top"
-                            style="border: 1px solid; padding: 5px; width: 40%; height: 35px;">Riwayat/Rawat
-                            Inap/Operasi/Tindakan</td>
-                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 35px">
+                            style="border: 1px solid; padding: 5px; width: 40%; height: 75px;">Tindakan
+                        </td>
+                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 75px">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top"
+                            style="border: 1px solid; padding: 5px; width: 40%; height: 75px;">Terapi
+                        </td>
+                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 75px">
                         </td>
                     </tr>
                     <tr>
@@ -112,7 +113,7 @@
             <br />
             <table style="width: 100%; text-align: center">
                 <tr>
-                    <td>Tanggal, {{ $dataRo->tanggal }} Jam : {{ $dataRo->waktu }} WIB</td>
+                    <td>Tanggal, {{ $dataRo->tanggal }}</td>
                     <td></td>
                 </tr>
                 <tr>

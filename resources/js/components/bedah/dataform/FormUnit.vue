@@ -29,6 +29,9 @@
 							<div class="content-tab-in" :style="tab.content.checklistkeselamatanbedah ? 'padding: 20px 5px' : 'padding: 0 0'">
 								<KeselamatanBedah :activetab="tab.content.checklistkeselamatanbedah" ref="KeselamatanBedah" @dialog="dialog" @parsingForm="parsingForm"></KeselamatanBedah>
 							</div>
+							<div class="content-tab-in" :style="tab.content.pencegahanpasienjatuh ? 'padding: 20px 5px' : 'padding: 0 0'">
+								<PencegahanPasienJatuh :activetab="tab.content.pencegahanpasienjatuh" ref="PencegahanPasienJatuh" @dialog="dialog" @parsingForm="parsingForm"></PencegahanPasienJatuh>
+							</div>
 							<div class="content-tab-in" :style="tab.content.laporaninjeksiantivega ? 'padding: 20px 5px' : 'padding: 0 0'">
 								<LaporanInjeksiAntiVega :activetab="tab.content.laporaninjeksiantivega" ref="LaporanInjeksiAntiVega" @dialog="dialog" @parsingForm="parsingForm"></LaporanInjeksiAntiVega>
 							</div>
@@ -56,6 +59,7 @@ export default {
 		PersetujuanTindakanKedokteran: defineAsyncComponent(() => import('./PersetujuanTindakanKedokteran.vue')),
 		KeselamatanBedah: defineAsyncComponent(() => import('./KeselamatanBedah.vue')),
 		LaporanInjeksiAntiVega: defineAsyncComponent(() => import('./LaporanInjeksiAntiVega.vue')),
+		PencegahanPasienJatuh: defineAsyncComponent(() => import('./PencegahanPasienJatuh.vue')),
 	},
 	mounted:function() { 
 		vm = this; body = document.body;
@@ -71,7 +75,8 @@ export default {
 				{ value: 'catatanoperasikatarak', label: 'Catatan Operasi Katarak', class: 'tab-no-active' },
 				{ value: 'persetujuantindakankedokteran', label: 'Persetujuan Tindakan Kedokteran', class: 'tab-no-active' },
 				{ value: 'checklistkeselamatanbedah', label: 'Checklist Keselamatan Bedah', class: 'tab-no-active' },
-				{ value: 'laporaninjeksiantivega', label: 'Laporan Injeksi Anti Vega', class: 'tab-no-active' },
+				{ value: 'pencegahanpasienjatuh', label: 'Pencegahan Pasien Jatuh', class: 'tab-no-active' },
+				{ value: 'laporaninjeksiantivega', label: 'Laporan Tindakan', class: 'tab-no-active' },
 			],
 			content: { 
 				laporanpembedahan: true, 
@@ -80,6 +85,7 @@ export default {
 				catatanoperasikatarak: false, 
 				persetujuantindakankedokteran: false, 
 				checklistkeselamatanbedah: false, 
+				pencegahanpasienjatuh: false, 
 				laporaninjeksiantivega: false, 
 			}
 		},
@@ -118,6 +124,7 @@ export default {
 			vm.$refs.CatatanOperasiKatarak.aturulang();
 			vm.$refs.PersetujuanTindakanKedokteran.aturulang();
 			vm.$refs.KeselamatanBedah.aturulang();
+			vm.$refs.PencegahanPasienJatuh.aturulang();
 			vm.$refs.LaporanInjeksiAntiVega.aturulang();
 		},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
@@ -135,7 +142,8 @@ export default {
 			vm.$refs.CatatanOperasiKatarak.setdataform(response.data.catatanOperasikatarak, vm.datarow);
 			vm.$refs.PersetujuanTindakanKedokteran.setdataform(response.data.persetujuantindakankedokteran, vm.datarow);
 			vm.$refs.KeselamatanBedah.setdataform(response.data.keselamatanbedah, vm.datarow);
-			vm.$refs.LaporanInjeksiAntiVega.setdataform(response.data.laporaninjeksiantivega, vm.datarow);
+			vm.$refs.PencegahanPasienJatuh.setdataform(response.data.pencegahanpasienjatuh, vm.datarow);
+			vm.$refs.LaporanInjeksiAntiVega.setdataform(response.data.laporaninjeksiantivega, response.data.listtindakan, vm.datarow);
 			vm.loaderprocess();
 		},
 

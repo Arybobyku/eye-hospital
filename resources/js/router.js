@@ -649,9 +649,16 @@ const routes = [
 	 ***********************************************************************************/
 		{ 
 			path: _base + 'master-resume-medis', 
-			name: 'Resume Medis', 
+			name: 'Rekam Medis', 
 			component: () => import('./components/master/resumemedis/index.vue'),
-			meta: { title: 'Resume Medis' },
+			meta: { title: 'Rekam Medis' },
+			props: true 
+		},
+		{ 
+			path: _base + 'cppt', 
+			name: 'CPPT', 
+			component: () => import('./components/master/cppt/index.vue'),
+			meta: { title: 'CPPT' },
 			props: true 
 		},
 

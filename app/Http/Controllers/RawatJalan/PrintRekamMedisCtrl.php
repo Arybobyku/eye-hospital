@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\RawatJalan;
 
 use App\Models\CatatanOperasiKatarak;
+use App\Models\EdukasiPasien;
 use App\Models\KeselamatanBedah;
 use App\Models\LaporanPembedahan;
 use App\Models\PerawatanPeriOperative;
@@ -13,8 +14,11 @@ use App\Models\ChecklistKesiapanBedah;
 use App\Models\PemeriksaanDokter;
 use App\Models\PemeriksaanRo;
 use App\Models\Pasien;
+use App\Models\PencegahanPasienJatuh;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\Registrasi;
+use App\Models\Cppt;
+use App\Models\Pengguna;
 use App\Models\Resep;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -67,12 +71,14 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $ep = EdukasiPasien::where('pasien_uuid', '=', $uuid)->first();
     // $pdf->loadView('print.printrekammedis', compact('registrasi', 'pemeriksaanro', 'pemeriksaandokter', 'pasien'))->setPaper('a4', 'potrait');
-    $pdf->loadView('print-rekam-medis.rawat-jalan.rm1dot2', compact('pasien'))->setPaper('a4', 'potrait');
+    $pdf->loadView('print-rekam-medis.rawat-jalan.rm1dot2', compact('pasien', 'ep',))->setPaper('a4', 'potrait');
 
 
     return $pdf->stream();
     // return view('print-rekam-medis.rawat-jalan.rm1dot3');
+    
   }
   function printRm1dot3($uuid)
   {
@@ -122,20 +128,23 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $ro = DB::table('pemeriksaan_ro')
-      ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
-      ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
-      ->get();
-
-    // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
+    // $cppt = Cppt::where('pasien_uuid', '=', $uuid)->get();
+    $cppt = DB::table('cppt')
+          ->leftJoin('pengguna', 'cppt.pengguna_uuid', '=', 'pengguna.uuid')
+          ->where('cppt.pasien_uuid', '=', $uuid)
+          ->select(
+            'cppt.*',
+            DB::raw('pengguna.nama as pengguna_nama_pengguna'), // Add all other biodata fields similarly
+          )
+          ->get();
 
     $pdf->loadView(
       'print-rekam-medis.rawat-jalan.rm1dot5',
       compact(
         'pasien',
-        'ro'
+        'cppt',
       ),
-    )->setPaper('a4', 'potrait');
+    )->setPaper('a4', 'potrait', );
 
 
     return $pdf->stream();
@@ -144,18 +153,24 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $ro = DB::table('pemeriksaan_ro')
+      ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
+      ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
+      ->get();
     // $pdf->loadView('print.printrekammedis', compact('registrasi', 'pemeriksaanro', 'pemeriksaandokter', 'pasien'))->setPaper('a4', 'potrait');
-    $pdf->loadView('print-rekam-medis.rawat-jalan.rm1dot6', compact('pasien'))->setPaper('a4', 'potrait');
+
+    $pdf->loadView('print-rekam-medis.rawat-jalan.rm1dot6', compact('pasien', 'ro',))->setPaper('a4', 'potrait');
 
 
     return $pdf->stream();
     // return view('print-rekam-medis.rawat-jalan.rm1dot3');
   }
-
   function all($uuid)
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $ep = EdukasiPasien::where('pasien_uuid', '=', $uuid) ->first();
+    $cppt = Cppt::where('pasien_uuid', '=', $uuid)->get();
     $ro = DB::table('pemeriksaan_ro')
       ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
       ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
@@ -167,7 +182,7 @@ class PrintRekamMedisCtrl extends Controller
       'print-rekam-medis.rawat-jalan.all',
       compact(
         'pasien',
-        'ro'
+        'ro','ep','cppt',
       ),
     )->setPaper('a4', 'potrait');
 
@@ -534,9 +549,10 @@ class PrintRekamMedisCtrl extends Controller
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
 
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $ppj = PencegahanPasienJatuh::where('pasien_uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm2dot9',
-      compact('pasien')
+      compact('pasien', 'ppj',)
     )->setPaper('a4', 'potrait');
 
 
@@ -556,6 +572,7 @@ class PrintRekamMedisCtrl extends Controller
       $cok = CatatanOperasiKatarak::where('pasien_uuid', '=', $uuid)->first();
       $lp = LaporanPembedahan::where('pasien_uuid', '=', $uuid)->first();
       $ckb = ChecklistKesiapanBedah::where('pasien_uuid', '=', $uuid)->first();
+      $ppj = PencegahanPasienJatuh::where('pasien_uuid', '=', $uuid)->first();
       $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
       ->orderBy('created_at', 'asc')
       ->first();
@@ -684,11 +701,21 @@ class PrintRekamMedisCtrl extends Controller
         'roperasi',
         'listrik',
         'alat',
-        'linen_steril',
+        'linen_steril','ppj',
       ),
     )->setPaper('a4', 'potrait');
 
 
     return $pdf->stream();
   }
+  function cppt($uuid)
+  {
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $cppt = Cppt::where('pasien_uuid', '=', $uuid)
+            ->leftJoin('pengguna', 'cppt.pengguna_uuid', '=', 'pengguna.uuid')
+            ->get();    
+
+     return view('print-rekam-medis.rawat-jalan.cppt',compact('pasien','cppt',));
+  }
+
 }

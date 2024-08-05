@@ -319,5 +319,24 @@ export const arrpemeriksaan = () => {
 			{ value: 'Rawat Inap', label: 'Rawat Inap' },
 			{ value: 'Operasi', label: 'Operasi' },
 		],
+		posisimata: [
+			{value: 'OD', label: 'OD'},
+			{value: 'OS', label: 'OS'},
+			{value: 'OD dan OS', label: 'OD dan OS'},
+		]
+	
 	}
+	}
+	export const arrlaporantindakanbedah = () => {
+	return {
+		pilihantindakan: [
+			{ value: 'Injeksi Antivega', label: 'Laporan Injeksi Antivega' },
+			{ value: 'Tindakan Laser PRP', label: 'Tindakan Laser PRP' },
+			{ value: 'Tindakan Laser PRP Capsulotomy', label: 'Tindakan Laser PRP Capsulotomy' },
+			{ value: 'Laporan Operasi Trabekulektomi', label: 'Laporan Operasi Trabekulektomi' },
+			{ value: 'Laporan Operasi Pterygium', label: 'Laporan Operasi Pterygium' },
+			{ value: 'Laporan Insisi Chalazion', label: 'Laporan Insisi Chalazion' },
+		],
+	}
+
 };

@@ -56,15 +56,18 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
         Route::post('adddokter', [PasienBedahCtrl::class, 'dokteradd'])->name('bedah-reqopname-adddokter');
     });
 
-    Route::prefix('dataform')->group(function () {
-        Route::post('list', [DataFormBedahCtrl::class, 'list'])->name('bedah-form-list');
-        Route::post('formall', [DataFormBedahCtrl::class, 'formall'])->name('bedah-reqopname-formall');
-        Route::post('laporanpembedahan', [DataFormBedahCtrl::class, 'laporanpembedahan'])->name('bedah-form-laporanpembedahan');
-        Route::post('checklistkesiapanbedah', [DataFormBedahCtrl::class, 'checklistkesiapanbedah'])->name('bedah-form-checklistkesiapanbedah');
-        Route::post('perawatanperioperative', [DataFormBedahCtrl::class, 'perawatanperioperative'])->name('bedah-form-perawatanperioperative');
-        Route::post('catatanoperasikatarak', [DataFormBedahCtrl::class, 'catatanoperasikatarak'])->name('bedah-form-catatanoperasikatarak');
-        Route::post('persetujuantindakankedokteran', [DataFormBedahCtrl::class, 'persetujuantindakankedokteran'])->name('bedah-form-persetujuantindakankedokteran');
-        Route::post('checklistkeselamatanbedah', [DataFormBedahCtrl::class, 'checklistkeselamatanbedah'])->name('bedah-form-checklistkeselamatanbedah');
-        Route::post('laporaninjeksiantivega', [DataFormBedahCtrl::class, 'laporaninjeksiantivega'])->name('bedah-form-laporaninjeksiantivega');
-    });
+	Route::prefix('dataform')->group(function () {
+		Route::post('list', [DataFormBedahCtrl::class, 'list'])->name('bedah-form-list');
+		Route::post('formall', [DataFormBedahCtrl::class, 'formall'])->name('bedah-reqopname-formall');
+		Route::post('laporanpembedahan', [DataFormBedahCtrl::class, 'laporanpembedahan'])->name('bedah-form-laporanpembedahan');
+		Route::post('checklistkesiapanbedah', [DataFormBedahCtrl::class, 'checklistkesiapanbedah'])->name('bedah-form-checklistkesiapanbedah');
+		Route::post('perawatanperioperative', [DataFormBedahCtrl::class, 'perawatanperioperative'])->name('bedah-form-perawatanperioperative');
+		Route::post('catatanoperasikatarak', [DataFormBedahCtrl::class, 'catatanoperasikatarak'])->name('bedah-form-catatanoperasikatarak');
+		Route::post('persetujuantindakankedokteran', [DataFormBedahCtrl::class, 'persetujuantindakankedokteran'])->name('bedah-form-persetujuantindakankedokteran');
+		Route::post('checklistkeselamatanbedah', [DataFormBedahCtrl::class, 'checklistkeselamatanbedah'])->name('bedah-form-checklistkeselamatanbedah');
+		Route::post('pencegahanpasienjatuh', [DataFormBedahCtrl::class, 'pencegahanpasienjatuh'])->name('bedah-form-pencegahanpasienjatuh');
+		Route::post('laporaninjeksiantivega', [DataFormBedahCtrl::class, 'laporaninjeksiantivega'])->name('bedah-form-laporaninjeksiantivega');
+
+	});
+
 });
