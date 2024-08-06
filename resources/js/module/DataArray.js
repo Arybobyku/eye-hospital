@@ -319,6 +319,11 @@ export const arrpemeriksaan = () => {
 			{ value: 'Rawat Inap', label: 'Rawat Inap' },
 			{ value: 'Operasi', label: 'Operasi' },
 		],
+		posisimata: [
+			{value: 'OD', label: 'OD'},
+			{value: 'OS', label: 'OS'},
+			{value: 'OD dan OS', label: 'OD dan OS'},
+		]
 	
 	}
 	}

@@ -7,8 +7,8 @@
 			</div>
 			<table class="table-info">
 				<tr>
-					<td>Tanda Tangan Digital</td>
-					<td><strong>{{ nullAndZero(datacomponent.pengguna.ttd) ? "Ada" : "Tidak Ada" }}</strong></td>
+					<td>Tanda Tangan Digital</td> 
+					<td><strong>{{ datacomponent?.pengguna?.ttd  ? "Ada" : "Tidak Ada" }}</strong></td>
 				</tr>
 			</table>
 		</div>
