@@ -72,48 +72,52 @@
         @include('print-rekam-medis.partials.header')
     </div>
     <div>
-        <H4 style="text-align: center;">FORM TINDAKAN LASER PRP</H4>
-        <p style="text-align: right;  margin-bottom: 5%;"> Tgl. Operasi :.................................</p>
-        <table class="tablee8dot8" style="width: 100%">
-            <tr>
-                <td class="td28dot8">
-                    Mata :
-                </td>
-                <td class="td38dot8">OD</td>
-                <td class="td38dot8"><input type="checkbox"></td>
-                <td class="td38dot8">OS</td>
-                <td class="td38dot8"><input type="checkbox"></td>
-                <td class="td18dot8">
-                    Operator :
-                </td>
-                <td class="td18dot8">
-                    Jam operasi :
-                </td>
-                <td class="td18dot8">
-                    Lama Operasi :
-                </td>
-            </tr>
-            <tr>
-                <td class="td18dot8" colspan="6">
-                    Diagnosis :
-                </td>
-                <td class="td18dot8" colspan="2">
-                    Asisten:
-                </td>
-            </tr>
-            <tr>
-                <td class="td18dot8" colspan="5">
-                    Jenis Operasi :
-                </td>
-                <td class="td18dot8" colspan="2">
-                    Anesteshia :
-                </td>
-                <td class="td18dot8">
-                    Anesthesiologist :
-                </td>
-            </tr>
-        </table>
-        <p class="step38dot7">Langkah-langkah Tindakan Laser PRP : </p>
+        <H4 style="text-align: center;">FORM tindakan LASER PRP</H4>
+        @if ($tindakan1 != null && $tindakan1->namatindakan == 'tindakan Laser PRP')
+            
+        <table class="tablee8dot10" style="width: 100%;">
+            <p style="text-align: right; padding-bottom: 4%;"> Tgl. Operasi
+                :{{ $tindakan1->tanggal }}</p>
+            <table class="tablee8dot10" style="width: 100%; padding-left: 10px; padding-right: 10px;">
+                <tr>
+                    <td class="td28dot10">
+                        Mata :
+                    </td>
+                    <td class="td38dot10">OD</td>
+                    <td class="td38dot10"><input type="checkbox" {{ $tindakan1->od == 'Ya' ? 'Checked' : ''}}></td>
+                    <td class="td38dot10">OS</td>
+                    <td class="td38dot10"><input type="checkbox" {{ $tindakan1->os == 'Ya' ? 'Checked' : ''}}></td>
+                    <td class="td18dot10">
+                        Operator : {{ $tindakan1->nama_operator }}
+                    </td>
+                    <td class="td18dot10">
+                        Jam operasi : {{ $tindakan1->jam_operasi }}
+                    </td>
+                    <td class="td18dot10">
+                        Lama Operasi : {{ $tindakan1->lama_operasi }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td18dot10" colspan="6">
+                        Diagnosis : {{ $tindakan1->diagnosis}}
+                    </td>
+                    <td class="td18dot10" colspan="2">
+                        Asisten: {{ $tindakan1->asisten }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="td18dot10" colspan="5">
+                        Jenis Operasi : {{ $tindakan1->jenis_operasi }}
+                    </td>
+                    <td class="td18dot10" colspan="2">
+                        Anesteshia : {{ $tindakan1->anesthesia }}
+                    </td>
+                    <td class="td18dot10">
+                        Anesthesiologist : {{ $tindakan1->anesthesiologist }}
+                    </td>
+                </tr>
+            </table>
+        <p class="step38dot7">Langkah-langkah tindakan Laser PRP : </p>
         <ol>
             <ol class="steps8dot7">
                 <li>Pasien diberi obat tetes pelebar pupil mata (Mydriatyl 1%).</li>
@@ -156,6 +160,7 @@
             <TD rowspan="3"></TD>
         </TR>
     </table>
+    @endif
     </div>
 
 </html>

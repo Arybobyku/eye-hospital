@@ -167,7 +167,7 @@
 						</td>
 						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahDate($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}</td>
-						<td align="center" style="padding: 10px 2px" valign="top">1</td>
+						<td align="center" style="padding: 10px 2px" valign="top">{{ $item->qty}}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->diskon_rp) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ $item->diskon_persen }}</td>
 						<td align="right" style="padding: 10px 2px;" valign="top">{{ number_format($item->total) }}</td>
@@ -201,7 +201,7 @@
 						</td>
 						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahDate($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}</td>
-						<td align="center" style="padding: 10px 2px" valign="top">1</td>
+						<td align="center" style="padding: 10px 2px" valign="top">{{ $item->qty}}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->diskon_rp) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ $item->diskon_persen }}</td>
 						<td align="right" style="padding: 10px 2px;" valign="top">{{ number_format($item->total) }}</td>
@@ -271,7 +271,7 @@
 						<td align="left" style="padding: 10px 2px;">{{ $item->nama_layanan }}</td>
 						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahDate($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}</td>
-						<td align="center" style="padding: 10px 2px" valign="top">1</td>
+						<td align="center" style="padding: 10px 2px" valign="top">{{ $row->qty}}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->diskon_rp) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ $item->diskon_persen }}</td>
 						<td align="right" style="padding: 10px 2px;" valign="top">{{ number_format($item->total) }}</td>
@@ -306,7 +306,7 @@
 								<td align="left" style="padding: 10px 2px;">{{ $row->nama_layanan }}</td>
 								<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahDate($row->created_at) }}</td>
 								<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($row->tarif) }}</td>
-								<td align="center" style="padding: 10px 2px" valign="top">1</td>
+								<td align="center" style="padding: 10px 2px" valign="top">{{ $row->qty}}</td>
 								<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($row->diskon_rp) }}</td>
 								<td align="center" style="padding: 10px 2px" valign="top">{{ $row->diskon_persen }}</td>
 								<td align="right" style="padding: 10px 2px;" valign="top">{{ number_format($row->total) }}</td>
@@ -341,7 +341,7 @@
 						<td align="left" style="padding: 10px 3px;">{{ $item->nama_layanan }}</td>
 						<td align="center" style="padding: 10px 3px; width: 17%" valign="top">{{ ubahDate($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 3px" valign="top">{{ number_format($item->tarif) }}</td>
-						<td align="center" style="padding: 10px 3px" valign="top">1</td>
+						<td align="center" style="padding: 10px 3px" valign="top">{{ $row->qty}}</td>
 						<td align="center" style="padding: 10px 3px" valign="top">{{ number_format($item->diskon_rp) }}</td>
 						<td align="center" style="padding: 10px 3px" valign="top">{{ $item->diskon_persen }}</td>
 						<td align="right" style="padding: 10px 3px;" valign="top">{{ number_format($item->total) }}</td>

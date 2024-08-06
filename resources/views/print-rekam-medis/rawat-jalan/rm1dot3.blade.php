@@ -53,13 +53,13 @@
                     <table style="border-collapse: collapse; width:100%">
                         <tr>
                             <td style="border-right: 1px solid black; width:100%">
-                                Tanggal: <b>{{ $dataRo->tanggal }}</b>
+                                Tanggal: <b>{{ $dataRo != null && $dataRo->tanggal }}</b>
                             </td>
                             <td style="border-right: 1px solid black; width:100%">
-                                Waktu: <b>{{ $dataRo->waktu }}</b>
+                                Waktu: <b>{{ $dataRo != null && $dataRo->waktu }}</b>
                             </td>
                             <td style="width:100%">
-                                Perawat Pengkaji: <b>{{ $dataRo->nama_pemeriksa }}</b>
+                                Perawat Pengkaji: <b>{{ $dataRo != null && $dataRo->nama_pemeriksa }}</b>
                             </td>
                         </tr>
                     </table>
@@ -75,7 +75,7 @@
                                 <table>
                                     <tr>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->status_fungsional == 'Jalan tanpa bantuan' ? 'Checked' : '' }}>
+                                                {{ $dataRo != null && $dataRo->status_fungsional == 'Jalan tanpa bantuan' ? 'Checked' : '' }}>
                                         </td>
                                         <td>Jalan tanpa bantuan</td>
                                     </tr>
@@ -85,7 +85,7 @@
                                 <table>
                                     <tr>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->status_fungsional == 'Kursi Roda' ? 'Checked' : '' }}></td>
+                                                {{ $dataRo != null && $dataRo->status_fungsional == 'Kursi Roda' ? 'Checked' : '' }}></td>
                                         <td>Kursi Roda</td>
                                     </tr>
                                 </table>
@@ -94,7 +94,7 @@
                                 <table>
                                     <tr>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->status_fungsional == 'Tempat tidur dorong' ? 'Checked' : '' }}>
+                                                {{ $dataRo != null && $dataRo->status_fungsional == 'Tempat tidur dorong' ? 'Checked' : '' }}>
                                         </td>
                                         <td>Tempat Tidur Dorong</td>
                                     </tr>
@@ -104,7 +104,7 @@
                                 <table>
                                     <tr>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->status_fungsional == 'Jalan dengan bantuan' ? 'Checked' : '' }}>
+                                                {{ $dataRo != null && $dataRo->status_fungsional == 'Jalan dengan bantuan' ? 'Checked' : '' }}>
                                         </td>
                                         <td>Jalan dengan bantuan</td>
                                     </tr>
@@ -119,11 +119,11 @@
                         <tr>
                             <td style="border-right: 1px solid black; width:100%">
                                 <div style="width: 100%;height:50px">Keluhan Utama : <br>
-                                    <b>{{ $dataRo->keluhan_utama }}</b>
+                                    <b>{{ $dataRo != null && $dataRo->keluhan_utama }}</b>
                                 </div>
                                 <div style="border-top: 1px solid black; width:100%; height:1px;"></div>
                                 <div style="width: 100%;height:100px">Riwayat Penyakit : <br>
-                                    <b>{{ $dataRo->riwayat_penyakit }} </b>
+                                    <b>{{ $dataRo != null && $dataRo->riwayat_penyakit }} </b>
                                 </div>
                             </td>
                             <td style="width:100%;">
@@ -131,14 +131,14 @@
                                 <table>
                                     <tr>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->kasus_urgent == 'Mata Merah' ? 'Checked' : '' }}></td>
+                                                {{ $dataRo != null && $dataRo->kasus_urgent == 'Mata Merah' ? 'Checked' : '' }}></td>
                                         <td>MATA MERAH</td>
                                     </tr>
                                 </table>
                                 <table>
                                     <tr>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->kasus_urgent == 'Trauma/Kesakitan' ? 'Checked' : '' }}>
+                                                {{ $dataRo != null && $dataRo->kasus_urgent == 'Trauma/Kesakitan' ? 'Checked' : '' }}>
                                         </td>
                                         <td>TRAUMA/KESAKITAN/</td>
                                     </tr>
@@ -146,7 +146,7 @@
                                 <table>
                                     <tr>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->kasus_urgent == 'Mata Kabur Mendadak' ? 'Checked' : '' }}>
+                                                {{ $dataRo != null && $dataRo->kasus_urgent == 'Mata Kabur Mendadak' ? 'Checked' : '' }}>
                                         </td>
                                         <td>MATA KABUR MENDADAK</td>
                                     </tr>
@@ -154,14 +154,14 @@
                                 <table>
                                     <tr>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->kasus_urgent == 'Balita/Manula' ? 'Checked' : '' }}></td>
+                                                {{ $dataRo != null && $dataRo->kasus_urgent == 'Balita/Manula' ? 'Checked' : '' }}></td>
                                         <td>BALITA / MANULA</td>
                                     </tr>
                                 </table>
                                 <table>
                                     <tr>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->kasus_urgent == 'Lainnya' ? 'Checked' : '' }}></td>
+                                                {{ $dataRo != null && $dataRo->kasus_urgent == 'Lainnya' ? 'Checked' : '' }}></td>
                                         <td>LAINYA</td>
                                     </tr>
                                 </table>
@@ -178,19 +178,19 @@
                         </tr>
                         <tr>
                             <td>TD</td>
-                            <td><b>{{ $dataRo->tekanan_darah }} mmHg</b></td>
+                            <td><b>{{ $dataRo != null && $dataRo->tekanan_darah }} mmHg</b></td>
                             <td>Nadi</td>
-                            <td><b>{{ $dataRo->nadi }} /menit</b></td>
+                            <td><b>{{ $dataRo != null && $dataRo->nadi }} /menit</b></td>
                             <td>RR</td>
-                            <td><b>{{ $dataRo->respiratory_rate }} /menit</b></td>
+                            <td><b>{{ $dataRo != null && $dataRo->respiratory_rate }} /menit</b></td>
                         </tr>
                         <tr>
                             <td>BB</td>
-                            <td><b>{{ $dataRo->berat_badan }} kg</b></td>
+                            <td><b>{{ $dataRo != null && $dataRo->berat_badan }} kg</b></td>
                             <td>TB</td>
-                            <td><b>{{ $dataRo->tinggi_badan }} cm</b></td>
+                            <td><b>{{ $dataRo != null && $dataRo->tinggi_badan }} cm</b></td>
                             <td>Suhu</td>
-                            <td><b>{{ $dataRo->suhu }} C</b></td>
+                            <td><b>{{ $dataRo != null && $dataRo->suhu }} C</b></td>
                         </tr>
                     </table>
                 </tr>
@@ -204,89 +204,89 @@
                         <tr>
                             <td>1. Penyakit yang pernah diderita :</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->penyakit_pernah_diderita == 'Diabetes' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->penyakit_pernah_diderita == 'Diabetes' ? 'Checked' : '' }}></td>
                             <td>Diabetes</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->penyakit_pernah_diderita == 'Hipertensi' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->penyakit_pernah_diderita == 'Hipertensi' ? 'Checked' : '' }}></td>
                             <td>Hipertensi</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->penyakit_pernah_diderita == 'Jantung' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->penyakit_pernah_diderita == 'Jantung' ? 'Checked' : '' }}></td>
                             <td>Jantung</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->penyakit_pernah_diderita == 'Hepatitis' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->penyakit_pernah_diderita == 'Hepatitis' ? 'Checked' : '' }}></td>
                             <td>Hepatitis</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->penyakit_pernah_diderita == 'Asma' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->penyakit_pernah_diderita == 'Asma' ? 'Checked' : '' }}></td>
                             <td>Asma</td>
                         </tr>
                         <tr>
                             <table>
                                 <tr>
                                     <td>Lainnya :</td>
-                                    <td>{{ $dataRo->penyakit_pernah_diderita_lainnya }}</td>
+                                    <td>{{ $dataRo != null && $dataRo->penyakit_pernah_diderita_lainnya }}</td>
                                 </tr>
                             </table>
                         </tr>
                         <tr>
                             <td>2. Pernah Dioperasi :</td>
-                            <td><input type="checkbox" {{ $dataRo->pernah_dioperasi == 'Tidak' ? 'Checked' : '' }}>
+                            <td><input type="checkbox" {{ $dataRo != null && $dataRo->pernah_dioperasi == 'Tidak' ? 'Checked' : '' }}>
                             </td>
                             <td>Tidak</td>
-                            <td><input type="checkbox" {{ $dataRo->pernah_dioperasi == 'Ya' ? 'Checked' : '' }}></td>
+                            <td><input type="checkbox" {{ $dataRo != null && $dataRo->pernah_dioperasi == 'Ya' ? 'Checked' : '' }}></td>
                             <td>Ya</td>
                         </tr>
                         <tr>
                             <table>
                                 <tr>
                                     <td>Jenis Operasi :</td>
-                                    <td>{{ $dataRo->pernah_dioperasi_lainnya }}</td>
+                                    <td>{{ $dataRo != null && $dataRo->pernah_dioperasi_lainnya }}</td>
                                 </tr>
                             </table>
                         </tr>
                         <tr>
                             <td>3. Riwayat Alergi :</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->riwayat_alergi_makanan == 'Tidak' ? 'Checked' : '' }} ||
-                                    {{ $dataRo->riwayat_alergi_obatan == 'Tidak' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->riwayat_alergi_makanan == 'Tidak' ? 'Checked' : '' }} ||
+                                    {{ $dataRo != null && $dataRo->riwayat_alergi_obatan == 'Tidak' ? 'Checked' : '' }}></td>
                             <td>Tidak</td>
-                            <td><input type="checkbox" {{ $dataRo->riwayat_alergi_makanan == 'Ya' ? 'Checked' : '' }}
-                                    || {{ $dataRo->riwayat_alergi_obatan == 'Ya' ? 'Checked' : '' }}></td>
+                            <td><input type="checkbox" {{ $dataRo != null && $dataRo->riwayat_alergi_makanan == 'Ya' ? 'Checked' : '' }}
+                                    || {{ $dataRo != null && $dataRo->riwayat_alergi_obatan == 'Ya' ? 'Checked' : '' }}></td>
                             <td>Ya</td>
                         </tr>
                         <tr>
                             <td>Alergi Terhadap :</td>
-                            <td><input type="checkbox" {{ $dataRo->riwayat_alergi_makanan == 'Ya' ? 'Checked' : '' }}>
+                            <td><input type="checkbox" {{ $dataRo != null && $dataRo->riwayat_alergi_makanan == 'Ya' ? 'Checked' : '' }}>
                             </td>
-                            <td colspan="2">Makanan : <b>{{ $dataRo->riwayat_alergi_makanan_lainnya }}</b></td>
+                            <td colspan="2">Makanan : <b>{{ $dataRo != null && $dataRo->riwayat_alergi_makanan_lainnya }}</b></td>
                             <td colspan="2" style="text-align: right"><input type="checkbox"
-                                    {{ $dataRo->riwayat_alergi_obatan == 'Ya' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->riwayat_alergi_obatan == 'Ya' ? 'Checked' : '' }}></td>
                             <td colspan="1" style="text-align: left">Obat :
-                                <b>{{ $dataRo->riwayat_alergi_obatan_lainnya }}</b>
+                                <b>{{ $dataRo != null && $dataRo->riwayat_alergi_obatan_lainnya }}</b>
                             </td>
                         </tr>
                         <tr style="font-size: 10">
                             <td>4. Obat yang digunakan saat ini :</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->obat_digunakan_saat_ini == 'Obat Pencacar Darah' ? 'Checked' : '' }}>
+                                    {{ $dataRo != null && $dataRo->obat_digunakan_saat_ini == 'Obat Pencacar Darah' ? 'Checked' : '' }}>
                             </td>
                             <td>Obat Pencair Darah</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->obat_digunakan_saat_ini == 'Obat Prostat' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->obat_digunakan_saat_ini == 'Obat Prostat' ? 'Checked' : '' }}></td>
                             <td>Obat Prostat</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->obat_digunakan_saat_ini == 'Obat Asma' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->obat_digunakan_saat_ini == 'Obat Asma' ? 'Checked' : '' }}></td>
                             <td>Obat Asma</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->obat_digunakan_saat_ini == 'Obat Alergi/Stroid' ? 'Checked' : '' }}>
+                                    {{ $dataRo != null && $dataRo->obat_digunakan_saat_ini == 'Obat Alergi/Stroid' ? 'Checked' : '' }}>
                             </td>
                             <td>Obat Alergi</td>
 
                         </tr>
                         <tr>
                             <td colspan="2" style="text-align: right"><input type="checkbox"
-                                    {{ $dataRo->obat_digunakan_saat_ini == 'Lainnya' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->obat_digunakan_saat_ini == 'Lainnya' ? 'Checked' : '' }}></td>
                             <td colspan="5" style="text-align: left">Lainnya :
-                                <b>{{ $dataRo->obat_digunakan_saat_ini_lainnya }}</b>
+                                <b>{{ $dataRo != null && $dataRo->obat_digunakan_saat_ini_lainnya }}</b>
                             </td>
                         </tr>
                     </table>
@@ -299,11 +299,11 @@
                         </tr>
                         <tr>
                             <td>Resiko Jatuh</td>
-                            <td><input type="checkbox" {{ $dataRo->penilaian_resiko_jatuh == 'Ya' ? 'Checked' : '' }}>
+                            <td><input type="checkbox" {{ $dataRo != null && $dataRo->penilaian_resiko_jatuh == 'Ya' ? 'Checked' : '' }}>
                             </td>
                             <td>YA</td>
                             <td><input type="checkbox"
-                                    {{ $dataRo->penilaian_resiko_jatuh == 'Tidak' ? 'Checked' : '' }}></td>
+                                    {{ $dataRo != null && $dataRo->penilaian_resiko_jatuh == 'Tidak' ? 'Checked' : '' }}></td>
                             <td>TIDAK</td>
                         </tr>
                     </table>
@@ -333,7 +333,7 @@
                                             <table>
                                                 <tr>
                                                     <td><input type="checkbox"
-                                                            {{ $dataRo->nyeri == 'Tidak ada nyeri' ? 'Checked' : '' }}>
+                                                            {{ $dataRo != null && $dataRo->nyeri == 'Tidak ada nyeri' ? 'Checked' : '' }}>
                                                     </td>
                                                     <td>Tidak Ada Nyeri</td>
                                                 </tr>
@@ -344,7 +344,7 @@
                                             <table>
                                                 <tr>
                                                     <td><input type="checkbox"
-                                                            {{ $dataRo->nyeri == 'Nyeri akut' ? 'Checked' : '' }}>
+                                                            {{ $dataRo != null && $dataRo->nyeri == 'Nyeri akut' ? 'Checked' : '' }}>
                                                     </td>
                                                     <td>Nyeri Akut</td>
                                                 </tr>
@@ -354,7 +354,7 @@
                                             <table>
                                                 <tr>
                                                     <td><input type="checkbox"
-                                                            {{ $dataRo->nyeri == 'Nyeri kronis' ? 'Checked' : '' }}>
+                                                            {{ $dataRo != null && $dataRo->nyeri == 'Nyeri kronis' ? 'Checked' : '' }}>
                                                     </td>
                                                     <td>Nyeri Kronis </td>
                                                 </tr>
@@ -363,15 +363,15 @@
                                     </tr>
                                     <tr>
 
-                                        <td colspan="2">Skala Nyeri : <b>{{ $dataRo->skala_nyeri }}</b>
+                                        <td colspan="2">Skala Nyeri : <b>{{ $dataRo != null && $dataRo->skala_nyeri }}</b>
                                         </td>
-                                        <td colspan="2">Lokasi : <b>{{ $dataRo->lokasi_nyeri }}</b></td>
+                                        <td colspan="2">Lokasi : <b>{{ $dataRo != null && $dataRo->lokasi_nyeri }}</b></td>
                                     </tr>
                                     <tr>
 
                                         <td colspan="2">Karakteristik :
-                                            <b>{{ $dataRo->karakteristik_nyeri }}</b></td>
-                                        <td colspan="2">Durasi : <b>{{ $dataRo->durasi_nyeri }}</b></td>
+                                            <b>{{ $dataRo != null && $dataRo->karakteristik_nyeri }}</b></td>
+                                        <td colspan="2">Durasi : <b>{{ $dataRo != null && $dataRo->durasi_nyeri }}</b></td>
 
                                     </tr>
                                     <tr>
@@ -383,7 +383,7 @@
                                                         <table>
                                                             <tr>
                                                                 <td><input type="checkbox"
-                                                                        {{ $dataRo->nyeri_hilang_bila == 'Minum obat' ? 'Checked' : '' }}>
+                                                                        {{ $dataRo != null && $dataRo->nyeri_hilang_bila == 'Minum obat' ? 'Checked' : '' }}>
                                                                 </td>
                                                                 <td>Minum Obat</td>
                                                             </tr>
@@ -394,7 +394,7 @@
                                                         <table>
                                                             <tr>
                                                                 <td><input type="checkbox"
-                                                                        {{ $dataRo->nyeri_hilang_bila == 'Istirahat' ? 'Checked' : '' }}>
+                                                                        {{ $dataRo != null && $dataRo->nyeri_hilang_bila == 'Istirahat' ? 'Checked' : '' }}>
                                                                 </td>
                                                                 <td>Istirahat</td>
                                                             </tr>
@@ -405,7 +405,7 @@
                                                         <table>
                                                             <tr>
                                                                 <td><input type="checkbox"
-                                                                        {{ $dataRo->nyeri_hilang_bila == 'Berubah Posisi' ? 'Checked' : '' }}>
+                                                                        {{ $dataRo != null && $dataRo->nyeri_hilang_bila == 'Berubah Posisi' ? 'Checked' : '' }}>
                                                                 </td>
                                                                 <td>Berubah Posisi</td>
                                                             </tr>
@@ -421,10 +421,10 @@
                                             <table>
                                                 <tr>
                                                     <td colspan="2" style="text-align: right"><input type="checkbox"
-                                                            {{ $dataRo->nyeri_hilang_bila == 'Lainnya' ? 'Checked' : '' }}>
+                                                            {{ $dataRo != null && $dataRo->nyeri_hilang_bila == 'Lainnya' ? 'Checked' : '' }}>
                                                     </td>
                                                     <td colspan="2" style="text-align: left">Lainnya :
-                                                        <b>{{ $dataRo->nyeri_hilang_bila_lainnya }}</b>
+                                                        <b>{{ $dataRo != null && $dataRo->nyeri_hilang_bila_lainnya }}</b>
                                                     </td>
                                                 </tr>
                                             </table>

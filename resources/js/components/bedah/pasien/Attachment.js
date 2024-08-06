@@ -110,6 +110,8 @@ export const parserawatinap = (form) => {
 	data.append('uuid', form.uuid);
 	
 	data.append('registrasi_uuid', form.registrasi_uuid);
+	data.append('waktu_masuk_inap', form.waktu_masuk_inap.value);
+	data.append('tanggal_masuk_inap', form.tanggal_masuk_inap.value);
 	data.append('kamar_inap_uuid', form.kamar_inap_uuid);
 	data.append('kamar_inap_nama', form.kamar_inap_nama);
 	data.append('kamar_inap_lantai', form.kamar_inap_lantai);
@@ -117,6 +119,17 @@ export const parserawatinap = (form) => {
 	data.append('jenis_kamar_uuid', form.jenis_kamar_uuid);
 	data.append('nama_jenis_kamar', form.nama_jenis_kamar);
 	
+
+	return data;
+}
+	export const parsedetaildokter = (form) => {
+
+	let data = new FormData();
+	data.append('uuid', form.uuid);
+	data.append('registrasi_uuid', form.registrasi_uuid);
+	data.append('uuid_dokter', form.select.dokter.value);
+	data.append('nama_dokter', form.select.dokter.label);
+
 
 	return data;
 }

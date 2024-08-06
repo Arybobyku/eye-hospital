@@ -60,44 +60,47 @@
     </div>
     <div>
         <H4 style="text-align: center;">LAPORAN OPERASI PTERYGIUM</H4>
-        <table class="tablee9dot0" style="width: 100%;">
-            <p style="text-align: right; margin: 10px"> Tgl. Operasi :.................................</p>
-            <table class="tablee9dot0" style="width: 100%; padding-left: 10px; padding-right: 10px;">
+        @if ($tindakan5 != null && $tindakan5->namatindakan == 'Laporan Operasi Pterygium')
+            
+        <table class="tablee8dot10" style="width: 100%;">
+            <p style="text-align: right; padding-bottom: 4%;"> Tgl. Operasi
+                :{{ $tindakan5->tanggal }}</p>
+            <table class="tablee8dot10" style="width: 100%; padding-left: 10px; padding-right: 10px;">
                 <tr>
-                    <td class="td29dot0">
+                    <td class="td28dot10">
                         Mata :
                     </td>
-                    <td class="td39dot0">OD</td>
-                    <td class="td39dot0"><input type="checkbox"></td>
-                    <td class="td39dot0">OS</td>
-                    <td class="td39dot0"><input type="checkbox"></td>
-                    <td class="td19dot0">
-                        Operator :
+                    <td class="td38dot10">OD</td>
+                    <td class="td38dot10"><input type="checkbox" {{ $tindakan5->od == 'Ya' ? 'Checked' : ''}}></td>
+                    <td class="td38dot10">OS</td>
+                    <td class="td38dot10"><input type="checkbox" {{ $tindakan5->os == 'Ya' ? 'Checked' : ''}}></td>
+                    <td class="td18dot10">
+                        Operator : {{ $tindakan5->nama_operator }}
                     </td>
-                    <td class="td19dot0">
-                        Jam operasi :
+                    <td class="td18dot10">
+                        Jam operasi : {{ $tindakan5->jam_operasi }}
                     </td>
-                    <td class="td19dot0">
-                        Lama Operasi :
-                    </td>
-                </tr>
-                <tr>
-                    <td class="td19dot0" colspan="6">
-                        Diagnosis :
-                    </td>
-                    <td class="td19dot0" colspan="2">
-                        Asisten:
+                    <td class="td18dot10">
+                        Lama Operasi : {{ $tindakan5->lama_operasi }}
                     </td>
                 </tr>
                 <tr>
-                    <td class="td19dot0" colspan="5">
-                        Jenis Operasi :
+                    <td class="td18dot10" colspan="6">
+                        Diagnosis : {{ $tindakan5->diagnosis}}
                     </td>
-                    <td class="td19dot0" colspan="2">
-                        Anesteshia :
+                    <td class="td18dot10" colspan="2">
+                        Asisten: {{ $tindakan5->asisten }}
                     </td>
-                    <td class="td19dot0">
-                        Anesthesiologist :
+                </tr>
+                <tr>
+                    <td class="td18dot10" colspan="5">
+                        Jenis Operasi : {{ $tindakan5->jenis_operasi }}
+                    </td>
+                    <td class="td18dot10" colspan="2">
+                        Anesteshia : {{ $tindakan5->anesthesia }}
+                    </td>
+                    <td class="td18dot10">
+                        Anesthesiologist : {{ $tindakan5->anesthesiologist }}
                     </td>
                 </tr>
             </table>
@@ -124,9 +127,10 @@
                     <td> Operator</td>
                 </tr> <br><br><br>
                 <tr>
-                    <td>(..........................................................)</td>
-                    <td> (..........................................................)</td>
+                    <td>( {{ $tindakan5->asisten }} )</td>
+                    <td> ( {{ $tindakan5->nama_operator }} )</td>
                 </tr>
             </table>
         </table>
+        @endif
     </div>

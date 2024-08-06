@@ -60,43 +60,48 @@
     </div>
     <div>
         <H4 style="text-align: center;"> <u>LAPORAN INJEKSI ANTI VEGA </u></H4>
-            <p style="text-align: right;  margin-bottom: 5%;"> Tgl. Operasi :.................................</p>
-            <table class="tablee8dot8" style="width: 100%">
+        @if ($tindakan2 != null && $tindakan2->namatindakan == 'Injeksi Antivega')
+            
+        
+        <table class="tablee8dot10" style="width: 100%;">
+            <p style="text-align: right; padding-bottom: 4%;"> Tgl. Operasi
+                :{{ $tindakan2->tanggal }}</p>
+            <table class="tablee8dot10" style="width: 100%; padding-left: 10px; padding-right: 10px;">
                 <tr>
-                    <td class="td28dot8">
+                    <td class="td28dot10">
                         Mata :
                     </td>
-                    <td class="td38dot8">OD</td>
-                    <td class="td38dot8"><input type="checkbox"></td>
-                    <td class="td38dot8">OS</td>
-                    <td class="td38dot8"><input type="checkbox"></td>
-                    <td class="td18dot8">
-                        Operator :
+                    <td class="td38dot10">OD</td>
+                    <td class="td38dot10"><input type="checkbox" {{ $tindakan2->od == 'Ya' ? 'Checked' : ''}}></td>
+                    <td class="td38dot10">OS</td>
+                    <td class="td38dot10"><input type="checkbox" {{ $tindakan2->os == 'Ya' ? 'Checked' : ''}}></td>
+                    <td class="td18dot10">
+                        Operator : {{ $tindakan2->nama_operator }}
                     </td>
-                    <td class="td18dot8">
-                        Jam operasi :
+                    <td class="td18dot10">
+                        Jam operasi : {{ $tindakan2->jam_operasi }}
                     </td>
-                    <td class="td18dot8">
-                        Lama Operasi :
-                    </td>
-                </tr>
-                <tr>
-                    <td class="td18dot8" colspan="6">
-                        Diagnosis :
-                    </td>
-                    <td class="td18dot8" colspan="2">
-                        Asisten:
+                    <td class="td18dot10">
+                        Lama Operasi : {{ $tindakan2->lama_operasi }}
                     </td>
                 </tr>
                 <tr>
-                    <td class="td18dot8" colspan="5">
-                        Jenis Operasi :
+                    <td class="td18dot10" colspan="6">
+                        Diagnosis : {{ $tindakan2->diagnosis}}
                     </td>
-                    <td class="td18dot8" colspan="2">
-                        Anesteshia :
+                    <td class="td18dot10" colspan="2">
+                        Asisten: {{ $tindakan2->asisten }}
                     </td>
-                    <td class="td18dot8">
-                        Anesthesiologist :
+                </tr>
+                <tr>
+                    <td class="td18dot10" colspan="5">
+                        Jenis Operasi : {{ $tindakan2->jenis_operasi }}
+                    </td>
+                    <td class="td18dot10" colspan="2">
+                        Anesteshia : {{ $tindakan2->anesthesia }}
+                    </td>
+                    <td class="td18dot10">
+                        Anesthesiologist : {{ $tindakan2->anesthesiologist }}
                     </td>
                 </tr>
             </table>
@@ -111,7 +116,7 @@
                         <li style="Margin-bottom: 10px">Dilakukan injeksi avasin / intravitreal sebanyak ........... ml.</li>
                         <li style="Margin-bottom: 10px">Diteteskan antibiotik.</li>
                         <li style="Margin-bottom: 10px">Mata ditutup kasa & dop.</li>
-                        <li style="Margin-bottom: 10px">Tindakan selesai</li>
+                        <li style="Margin-bottom: 10px">tindakan selesai</li>
                     </ol>
             </table>
             <table style="width: 100%; text-align:right;  padding-top: 1%; padding-bottom: 3%; padding-right: 10%">
@@ -122,4 +127,5 @@
                     <td> (.........................................)</td>
                 </tr>
             </table>
+            @endif
     </div>

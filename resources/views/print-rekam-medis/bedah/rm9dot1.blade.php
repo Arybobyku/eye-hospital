@@ -85,43 +85,46 @@
     </div>
     <div>
         <H4 style="text-align: center; padding-top: 1%; padding-bottom: 1%;">LAPORAN INSISI CHALAZION</H4>
-        <p style="text-align: right;  margin-bottom: 5%;"> Tgl. Operasi :.................................</p>
-            <table class="tablee8dot8" style="width: 100%">
+        @if ($tindakan6 != null && $tindakan6->namatindakan == 'Laporan Insisi Chalazion')
+        <table class="tablee8dot10" style="width: 100%;">
+            <p style="text-align: right; padding-bottom: 4%;"> Tgl. Operasi
+                :{{ $tindakan6->tanggal }}</p>
+            <table class="tablee8dot10" style="width: 100%; padding-left: 10px; padding-right: 10px;">
                 <tr>
-                    <td class="td28dot8">
+                    <td class="td28dot10">
                         Mata :
                     </td>
-                    <td class="td38dot8">OD</td>
-                    <td class="td38dot8"><input type="checkbox"></td>
-                    <td class="td38dot8">OS</td>
-                    <td class="td38dot8"><input type="checkbox"></td>
-                    <td class="td18dot8">
-                        Operator :
+                    <td class="td38dot10">OD</td>
+                    <td class="td38dot10"><input type="checkbox" {{ $tindakan6->od == 'Ya' ? 'Checked' : ''}}></td>
+                    <td class="td38dot10">OS</td>
+                    <td class="td38dot10"><input type="checkbox" {{ $tindakan6->os == 'Ya' ? 'Checked' : ''}}></td>
+                    <td class="td18dot10">
+                        Operator : {{ $tindakan6->nama_operator }}
                     </td>
-                    <td class="td18dot8">
-                        Jam operasi :
+                    <td class="td18dot10">
+                        Jam operasi : {{ $tindakan6->jam_operasi }}
                     </td>
-                    <td class="td18dot8">
-                        Lama Operasi :
-                    </td>
-                </tr>
-                <tr>
-                    <td class="td18dot8" colspan="6">
-                        Diagnosis :
-                    </td>
-                    <td class="td18dot8" colspan="2">
-                        Asisten:
+                    <td class="td18dot10">
+                        Lama Operasi : {{ $tindakan6->lama_operasi }}
                     </td>
                 </tr>
                 <tr>
-                    <td class="td18dot8" colspan="5">
-                        Jenis Operasi :
+                    <td class="td18dot10" colspan="6">
+                        Diagnosis : {{ $tindakan6->diagnosis}}
                     </td>
-                    <td class="td18dot8" colspan="2">
-                        Anesteshia :
+                    <td class="td18dot10" colspan="2">
+                        Asisten: {{ $tindakan6->asisten }}
                     </td>
-                    <td class="td18dot8">
-                        Anesthesiologist :
+                </tr>
+                <tr>
+                    <td class="td18dot10" colspan="5">
+                        Jenis Operasi : {{ $tindakan6->jenis_operasi }}
+                    </td>
+                    <td class="td18dot10" colspan="2">
+                        Anesteshia : {{ $tindakan6->anesthesia }}
+                    </td>
+                    <td class="td18dot10">
+                        Anesthesiologist : {{ $tindakan6->anesthesiologist }}
                     </td>
                 </tr>
             </table>
@@ -147,9 +150,11 @@
                     <td> Operator</td>
                 </tr> <br><br><br>
                 <tr>
-                    <td>(..........................................................)</td>
-                    <td> (..........................................................)</td>
+                    <td>( {{ $tindakan6->asisten }} )</td>
+                    <td> ( {{ $tindakan6->nama_operator }} )</td>
+             
                 </tr>
             </table>
         </table>
+        @endif
     </div>

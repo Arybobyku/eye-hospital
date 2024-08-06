@@ -4,39 +4,34 @@
             :class="terminate.show ? 'modal-opened' : 'modal-closed'">
             <div class="modal-header">
                 <span class="close" v-on:click="hide()">&times;</span>
-                <h2>Detail Data Pemeriksaan Dokter</h2>
+                <h2>Form Pasien Pulang</h2>
             </div>
             <div class="modal-body" v-if="form">
                 <div class="grid">
                     <div class="col-4 form-mr">
                         <ul class="list-detail">
-                            <li>Tanggal Pendaftaran<span><strong>{{ datename(detail . tanggal) }}</strong></span></li>
+                            <!-- <li>Tanggal Pendaftaran<span><strong>{{ datename(detail . tanggal) }}</strong></span></li>
                             <li>No Rekam Medis<span><strong>{{ detail . rekam_medis }}</strong></span></li>
                             <li>Nama Lengkap<span><strong>{{ detail . nama_pasien }}</strong></span></li>
                             <li>Tanggal Lahir<span><strong>{{ datename(detail . tanggal_lahir) }}</strong></span></li>
-                            <li>Jenis Kelamin<span><strong>{{ detail . jenis_kelamin }}</strong></span></li>
+                            <li>Jenis Kelamin<span><strong>{{ detail . jenis_kelamin }}</strong></span></li> -->
                         </ul>
                     </div>
                     <div class="col-8">
 
                         <div class="grid">
+
                             <div class="col-8">
-                                <Selected
-                                    v-on:click="selectbox($event, form.select.kamarinap.name, form.select.kamarinap.statics)"
-                                    :ref="form.select.kamarinap.name" @selecteditem="selecteditem"
-                                    @selectclear="selectclear" :selection="form.select.kamarinap"
-                                    v-on:keyup="selectfilter($event, form.select.kamarinap.name)">
-                                </Selected>
-                            </div>
-                            <div class="col-8">
-                                <Inputed :ref="form.tanggal_masuk_inap.name" :form="form.tanggal_masuk_inap">
+                                <Inputed :ref="form.tanggal_keluar_inap.name" :form="form.tanggal_keluar_inap">
                                 </Inputed>
                             </div>
                             <div class="col-4 form-ml">
-                           
-                                <Timepicker :ref="form.waktu_masuk_inap.name" :form="form.waktu_masuk_inap">
+                                <!-- <Inputed :ref="form.waktuodc.name" :form="form.waktuodc"></Inputed> -->
+                                <!-- <Timepicker :ref="form.waktu_keluar_inap.name" :form="form.waktu_keluar_inap">
+                                </Timepicker> -->
+                                <Timepicker  :ref="form.waktu_keluar_inap.name"
+                                    :form="form.waktu_keluar_inap">
                                 </Timepicker>
-
                             </div>
                         </div>
                     </div>
@@ -70,10 +65,10 @@
         defineAsyncComponent
     } from 'vue';
     import {
-        formrawatinap
+        formdetailpulang
     } from './FormData.js';
     import {
-        parserawatinap
+        parsedetailpulang
     } from './Attachment.js';
     import {
         filterselected,
@@ -166,7 +161,7 @@
         mounted: function() {
             vm = this;
             body = document.body;
-            vm.form = vm.formrawatinap();
+            vm.form = vm.formdetailpulang();
             vm.arr = vm.arrpemeriksaan();
             window.addEventListener("click", function(event) {
                 let a = event.target.className;
@@ -188,24 +183,13 @@
         created: function() {},
         data: function() {
             return {
-                title_racikan: '',
-                index_racikan: 0,
-                quantity_racikan: 0,
-                listdata: [],
-                listdatajalan: [],
-                listobat: [],
-                tempobat: null,
-                listobatracikan: [],
-                tempobatracikan: null,
+            
                 terminate: {
                     show: false,
                     display: 'display: none'
                 },
                 form: null,
                 btnlbl: '',
-                showOperasi: false,
-                showRawatInap: false,
-                showRawatInapOperasi: false,
                 arr: {
                     // pilihanplan: [
                     //     { value: 'Rawat Inap Operasi', label: 'Rawat Inap + Operasi' },
@@ -216,121 +200,13 @@
                 green: 'Save Data',
                 red: 'Clear Form',
                 pendings: 'Ubah Menjadi Pending',
-                test: null,
-                cover: '',
-                temporer: null,
-                pemeriksaanro: null,
-                datakamar: null,
-                detail: {
-                    uuid: '',
-                    agama: '',
-                    alamat: '',
-                    alias: '',
-                    email: '',
-                    golongan_darah: '',
-                    jenis_identitas: '',
-                    jenis_kelamin: '',
-                    kodepos: '',
-                    nama: '',
-                    nama_ayah: '',
-                    nama_ibu: '',
-                    nama_kab_kota: '',
-                    nama_kecamatan: '',
-                    nama_kelurahan: '',
-                    nama_provinsi: '',
-                    no_handphone: '',
-                    no_identitas: '',
-                    pekerjaan: '',
-                    pendidikan_terakhir: '',
-                    rekam_medis: '',
-                    rt_rw: '',
-                    status_pernikahan: '',
-                    tanggal_lahir: '',
-                    tempat_lahir: '',
-                    tanggal: ''
-                },
-                // { value: 'racikan', label: 'Racikan', class: 'tab-no-active' },
-                tab: {
-                    button: [{
-                            value: 'ro',
-                            label: 'Data RO',
-                            class: 'tab-active'
-                        },
-                        {
-                            value: 'vital',
-                            label: 'Vital Sign',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'pemeriksaan',
-                            label: 'Pemeriksaan',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'oculardextra',
-                            label: 'Ocular Dextra',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'ocularsinistra',
-                            label: 'Ocular Sinistra',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'tindakan',
-                            label: 'Tindakan/Layanan',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'resep',
-                            label: 'Resep',
-                            class: 'tab-no-active'
-                        },
-                        {
-                            value: 'racikan',
-                            label: 'Resep (Racikan)',
-                            class: 'tab-no-active'
-                        },
-
-                        {
-                            value: 'planning',
-                            label: 'Planning',
-                            class: 'tab-no-active'
-                        },
-
-                    ],
-                    // racikan: false,
-                    content: {
-                        ro: true,
-                        pemeriksaan: false,
-                        oculardextra: false,
-                        ocularsinistra: false,
-                        tindakan: false,
-                        rawatinapjalan: false,
-                        resep: false,
-                        racikan: false,
-                        onedaycare: false,
-                        rawatinap: false,
-                        planning: false
-                    }
-                },
                 typingTimer: null,
                 doneTypingInterval: 5000,
-                digitalSignature: "",
             }
         },
         methods: {
             formatrupiah,
-            saveDigitalSignature: function(svg) {
-                vm.digitalSignature = svg;
-            },
-            removetindakan: function(index) {
-                vm.listdata.splice(index, 1);
-            },
 
-            removetindakanjalan: function(index) {
-                vm.listdatajalan.splice(index, 1);
-            },
 
 
             pendingbutton: function() {
@@ -359,40 +235,23 @@
 
             redbutton: function() {
                 if (vm.red == 'Clear Form') {
-                    vm.form = vm.formrawatinap();
+                    vm.form = vm.formdetailpulang();
                 } else if (vm.red == 'Back') {
                     vm.test = vm.temporer;
                 }
             },
 
-            changesTab: function(values, index, classes) {
-                if (classes != 'tab-active') {
-                    for (let i = 0; i < vm.tab.button.length; i++) {
-                        vm.tab.content[vm.tab.button[i].value] = false;
-                        vm.tab.button[i].class = 'tab-no-active';
-                    }
-                    vm.tab.button[index].class = 'tab-active';
-                    vm.tab.content[values] = true;
-                }
+           
 
-                if (values == 'rawatinapjalan') {
-                    vm.form.inapjalan = 'aktif';
-                } else {
-                    vm.form.inapjalan = 'aktif';
-                    ''
-                }
-            },
-
-            parserawatinap,
-            formrawatinap,
+            parsedetailpulang,
+            formdetailpulang,
             initindexdb,
             indexdbprocessing,
             arrpemeriksaan,
             datename,
             filterselected,
             hideselected,
-            itemselected,
-            clearselected,
+
             boxselected,
             conditionselected,
 
@@ -438,37 +297,7 @@
                 vm.form = vm.conditionselected(vm.form, item, key, 'address');
                 vm.form = vm.itemselected(vm.form, item, key);
 
-                if (key == 'kamarinap') {
-                    vm.datakamar = item;
-                }
-            },
-
-            selectclear: function(key) {
-
-                vm.form = vm.clearselected(vm.form, key);
-                if (key == 'kamarinap') {
-                    vm.datakamar = null;
-                }
-
-            },
-            selectbox: function(event, key, statics) {
-                let msg = 'select-close select-close-' + key;
-                if (event.target.className != msg) {
-                    if (!vm.form.select[key].disabled) {
-                        let result = vm.boxselected(event, vm.form, key);
-                        if (result._position == 'stop') {
-                            return;
-                        } else if (result._position == 'nextstop') {
-                            vm.form = result._form;
-                        } else {
-                            vm.selecthide();
-                            vm.getIndexDB(key, statics);
-                            vm.form.select[key].option = 'display: block';
-                        }
-                    }
-                }
-
-
+      
             },
 
             getIndexDB: function(key, statics) {
@@ -544,17 +373,7 @@
                 vm.terminate.show = true;
             },
             aturulang: function() {
-                vm.form = vm.formrawatinap();
-                vm.datakamar = null;
-                // vm.form.tanggal_masuk_inap.value = null;
-                // vm.form.waktu_masuk_inap.value = null;
-
-                for (let i = 0; i < vm.tab.button.length; i++) {
-                    vm.tab.content[vm.tab.button[i].value] = false;
-                    vm.tab.button[i].class = 'tab-no-active';
-                }
-                vm.tab.button[0].class = 'tab-active';
-                vm.tab.content.ro = true;
+                vm.form = vm.formdetailpulang();
             },
             hide: function() {
                 vm.terminate.show = false;
@@ -577,37 +396,12 @@
                 // 	vm.listobat[i].total = vm.listobat[i].total.replace(/\D/g, "");
                 // }
 
-
-                console.log('datakamar');
-                console.log(vm.datakamar);
-                if (vm.datakamar) {
-                    vm.form.kamar_inap_uuid = vm.datakamar.uuid;
-                    vm.form.kamar_inap_nama = vm.datakamar.nama;
-                    vm.form.kamar_inap_lantai = vm.datakamar.lantai;
-                    vm.form.kamar_inap_jumlah_bed = vm.datakamar.jumlah_bed;
-                    vm.form.jenis_kamar_uuid = vm.datakamar.jenis_kamar_uuid;
-                    vm.form.nama_jenis_kamar = vm.datakamar.nama_jenis_kamar;
-                } else if (vm.detail.kamar_inap_uuid) {
-                    vm.form.kamar_inap_uuid = vm.detail.kamar_inap_uuid;
-                    vm.form.kamar_inap_nama = vm.detail.kamar_inap_nama;
-                    vm.form.kamar_inap_lantai = vm.detail.kamar_inap_lantai;
-                    vm.form.kamar_inap_jumlah_bed = vm.detail.kamar_inap_jumlah_bed;
-                    vm.form.jenis_kamar_uuid = vm.detail.jenis_kamar_uuid;
-                    vm.form.nama_jenis_kamar = vm.detail.nama_jenis_kamar;
-                } else {
-                    vm.form.kamar_inap_uuid = '';
-                    vm.form.kamar_inap_nama = '';
-                    vm.form.kamar_inap_lantai = '';
-                    vm.form.kamar_inap_jumlah_bed = '';
-                    vm.form.jenis_kamar_uuid = '';
-                    vm.form.nama_jenis_kamar = '';
-                }
                 
   ;
-                console.log(vm.form.waktu_masuk_inap)
+                console.log(vm.form.waktu_keluar_inap)
                 console.log('Form');
                 console.log(vm.form);
-                vm.$emit('parsingForm', vm.parserawatinap(vm.form, vm.datakamar), 'inapadd');
+                vm.$emit('parsingForm', vm.parsedetailpulang(vm.form), 'pulang');
             },
 
             loaderprocess: function() {
@@ -616,72 +410,51 @@
             },
 
             setdataform: function(response) {
-                let data = response.data.data;
+                let waktu = response.data.data.waktu_keluar_inap;
+                let tgl = response.data.data.tanggal_keluar_inap;
                 console.log("memek");
                 console.log(response.data);
 
-                let keys = ['kamar_inap']
-                console.log("keys");
-                console.log(keys);
+                // let keys = ['kamar_inap']
+                // console.log("keys");
+                // console.log(keys);
                 /* Setting index DB */
-                vm.updatedblocal(keys, response);
+                // vm.updatedblocal(keys, response);
 
 
-                vm.detail = response.data.data;
-                console.log(vm.detail)
   
-                console.log(data)
-                vm.form.carabayar_nama = vm.detail.carabayar_nama;
+                // vm.form.carabayar_nama = vm.detail.carabayar_nama;
 
 
 
                 //vm.listdata = response.data.layanan;
-
-
-
-                console.log("response");
-                console.log(response.data);
-                vm.form.waktu_masuk_inap.value = response.data.data.waktu;
-                console.log(vm.form.waktu_masuk_inap.value);
-
-                // vm.form.waktu_masuk_inap.label = response.data.data.waktu;
-                // vm.form.waktu_masuk_inap.label = data.waktu_masuk_inap;
-
-                // vm.form.tanggal_masuk_inap.value = '';
-                // vm.form.waktu_masuk_inap.value = '';
-                vm.form.uuid = vm.detail.uuid;
-                if (vm.detail.kamar_inap_uuid != '-' && vm.detail.kamar_inap_uuid != '' && vm.detail
-                    .kamar_inap_uuid != null) {
-                    vm.form.kamar_inap_uuid = data.kamar_inap_uuid;
-                    vm.form.kamar_inap_nama = data.kamar_inap_nama;
-                    vm.form.kamar_inap_lantai = data.kamar_inap_lantai;
-                    vm.form.kamar_inap_jumlah_bed = data.kamar_inap_jumlah_bed;
-                    vm.form.jenis_kamar_uuid = data.jenis_kamar_uuid;
-                    vm.form.nama_jenis_kamar = data.nama_jenis_kamar;
-                    vm.form.tanggal_masuk_inap.value = data.tanggal_masuk_inap;
-                 
-
-                    vm.form.select.kamarinap.value = data.kamar_inap_uuid;
-                    vm.form.select.kamarinap.label = data.nama_jenis_kamar + ' - ' + data
-                        .kamar_inap_nama;
-
-
+                console.log("tanggal_keluar_inap");
+                console.log(tgl);
+                console.log(waktu);
+                
+                if (tgl > '2000-01-01'){
+                    vm.form.tanggal_keluar_inap.value = tgl;
                 } else {
-                    vm.form.kamar_inap_jalan_uuid = '';
-                    vm.form.kamar_inap_jalan_nama = '';
-                    vm.form.kamar_inap_jalan_lantai = '';
-                    vm.form.kamar_inap_jalan_jumlah_bed = '';
-                    vm.form.jenis_kamar_jalan_uuid = '';
-                    vm.form.nama_jenis_jalan_kamar = '';
-
-                    vm.form.select.kamarinap.value = 'Silahkan Pilih';
-                    vm.form.select.kamarinap.label = 'Silahkan Pilih';
-
+                    vm.form.tanggal_keluar_inap.value = '';   
                 }
 
-                console.log('UUID')
+                if (waktu != "" ) {
+                    vm.form.waktu_keluar_inap.value = waktu;
+                } else {
+                    vm.form.waktu_keluar_inap.value = '';
+                }
+
+
+
+
+                // vm.form.tanggal_keluar_inap.value = '';
+                // vm.form.waktu_keluar_inap.value = '';
+                console.log('UUID');
+                console.log(response.data.data.uuid);
+                vm.form.uuid = response.data.data.uuid;
+             
+
                 
-                console.log(vm.form.kamar_inap_uuid)
 
                 vm.loaderprocess();
             },

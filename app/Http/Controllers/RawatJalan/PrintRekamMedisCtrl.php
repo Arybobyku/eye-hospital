@@ -412,11 +412,14 @@ class PrintRekamMedisCtrl extends Controller
     // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
     // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
+    $tindakan1 = DB::table('laporan_injeksi_av')
+    ->leftJoin('list_form_tindakan_operasi', 'laporan_injeksi_av.uuid', '=', 'list_form_tindakan_operasi.form_laporan_uuid')
+    ->where('laporan_injeksi_av.pasien_uuid', '=', $uuid)
+    ->first();
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm8dot7',
-      compact('pasien')
+      compact('pasien', 'tindakan1')
     )->setPaper('a4', 'potrait');
 
 
@@ -429,11 +432,14 @@ class PrintRekamMedisCtrl extends Controller
     // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
     // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
+    $tindakan3 = DB::table('laporan_injeksi_av')
+    ->leftJoin('list_form_tindakan_operasi', 'laporan_injeksi_av.uuid', '=', 'list_form_tindakan_operasi.form_laporan_uuid')
+    ->where('laporan_injeksi_av.pasien_uuid', '=', $uuid)
+    ->first();
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm8dot9',
-      compact('pasien')
+      compact('pasien', 'tindakan3')
     )->setPaper('a4', 'potrait');
 
 
@@ -462,11 +468,14 @@ class PrintRekamMedisCtrl extends Controller
     // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
     // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
+    $tindakan4 = DB::table('laporan_injeksi_av')
+    ->leftJoin('list_form_tindakan_operasi', 'laporan_injeksi_av.uuid', '=', 'list_form_tindakan_operasi.form_laporan_uuid')
+    ->where('laporan_injeksi_av.pasien_uuid', '=', $uuid)
+    ->first();
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm8dot10',
-      compact('pasien')
+      compact('pasien', 'tindakan4')
     )->setPaper('a4', 'potrait');
 
 
@@ -479,7 +488,6 @@ class PrintRekamMedisCtrl extends Controller
     // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
     // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm1dot9',
@@ -496,11 +504,14 @@ class PrintRekamMedisCtrl extends Controller
     // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
     // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
+    $tindakan5 = DB::table('laporan_injeksi_av')
+    ->leftJoin('list_form_tindakan_operasi', 'laporan_injeksi_av.uuid', '=', 'list_form_tindakan_operasi.form_laporan_uuid')
+    ->where('laporan_injeksi_av.pasien_uuid', '=', $uuid)
+    ->first();
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm9dot0',
-      compact('pasien')
+      compact('pasien', 'tindakan5')
     )->setPaper('a4', 'potrait');
 
 
@@ -513,11 +524,14 @@ class PrintRekamMedisCtrl extends Controller
     // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
     // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
+    $tindakan2 = DB::table('laporan_injeksi_av')
+    ->leftJoin('list_form_tindakan_operasi', 'laporan_injeksi_av.uuid', '=', 'list_form_tindakan_operasi.form_laporan_uuid')
+    ->where('laporan_injeksi_av.pasien_uuid', '=', $uuid)
+    ->first();
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm8dot8',
-      compact('pasien')
+      compact('pasien', 'tindakan2')
     )->setPaper('a4', 'potrait');
 
 
@@ -530,11 +544,14 @@ class PrintRekamMedisCtrl extends Controller
     // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
     // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
+    $tindakan6 = DB::table('laporan_injeksi_av')
+    ->leftJoin('list_form_tindakan_operasi', 'laporan_injeksi_av.uuid', '=', 'list_form_tindakan_operasi.form_laporan_uuid')
+    ->where('laporan_injeksi_av.pasien_uuid', '=', $uuid)
+    ->first();
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.bedah.rm9dot1',
-      compact('pasien')
+      compact('pasien', 'tindakan6')
     )->setPaper('a4', 'potrait');
 
 
