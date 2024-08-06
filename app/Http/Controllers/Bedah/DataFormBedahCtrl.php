@@ -964,6 +964,7 @@ class DataFormBedahCtrl extends Controller
             $item->rekam_medis = $bedah->rekam_medis;
             $item->nama_pasien = $bedah->nama_pasien;
             $item->tanggal_lahir = '1000-01-10';
+            $item->tanggal = $bedah->tanggal;
             $item->pengguna_uuid = $bedah->pengguna_uuid;
             $item->nama_dokter = $bedah->nama_dokter;
 
