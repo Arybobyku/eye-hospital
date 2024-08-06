@@ -29,9 +29,6 @@
                             <li>
                                 Jenis Kelamin<span><strong>{{ detail . jenis_kelamin }}</strong></span>
                             </li>
-                            <li>
-                                Billing<span><strong>{{ detail . status_kasir }}</strong></span>
-                            </li>
                         </ul>
                     </div>
                     <div class="col-4 form-mr">
