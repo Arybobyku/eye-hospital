@@ -1470,6 +1470,7 @@
             return {
                 linkR: "/print/rekammedis/rawat-jalan/cppt/",
                 editor: ClassicEditor,
+                disableButtonSave: false,
                 title_racikan: "",
                 index_racikan: 0,
                 quantity_racikan: 0,
@@ -2246,6 +2247,7 @@
                 vm.listdatajalan = [];
                 vm.listobat = [];
                 vm.tempobat = null;
+                vm.disableButtonSave = false;
                 vm.listobatracikan = [];
                 vm.tempobatracikan = null;
                 vm.pemeriksaanro = null;
@@ -2410,6 +2412,11 @@
                 // vm.form.select.pilihanplan.value = "";
                 // vm.form.select.pilihanplan.label = "Silahkan Pilih";
 
+
+
+                if(vm.detail?.status_kasir == 'Sudah Bayar'){
+                    vm.disableButtonSave = true;
+                }
 
                 if (vm.detail.panjar != "0") {
                     vm.form.panjar.value = vm.detail.panjar;
