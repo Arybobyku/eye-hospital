@@ -169,16 +169,16 @@ class PasienOneDayCareCtrl extends Controller
             $uuid = Uuid::uuid4();
             $uuid_bedah = $uuid;
             $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $data->registrasi_uuid)->first();
+                    //  'inap_jalan' => 'Rawat Inap Jalan Asuransi',
+                    //  'status' => 'One Day Care',
+                    //  'jenis' => 'One Day Care',
+                    //  'kode' =    > 'ODC',
 
             $arr = [
-                     'kode' => 'ODC',
-                     'jenis' => 'One Day Care',
-                     'inap_jalan' => 'Rawat Inap Jalan Asuransi',
                      'status_dokter' => 'Sudah Diperiksa',
                      'nama_paket_bedah' => $regOp->nama_layanan,
                      'paket_bedah_uuid' => $regOp->layanan_uuid,
                      'last_position' => 'Pendaftaran',
-                     'status' => 'One Day Care',
                  ];
 
             Registrasi::where('uuid', '=', $regOp->registrasi_uuid)->update($arr);

@@ -1,4 +1,4 @@
-export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obatracikan) => {
+export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obatracikan, listicdnine, listicdten) => {
 
 	let data = new FormData();
 	data.append('uuid', form.uuid);
@@ -26,6 +26,9 @@ export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obat
 	data.append('plan', form.plan);
 	// data.append('pilihan_plan', form.select.pilihanplan.value);
 
+	data.append('listicd10', JSON.stringify(listicdten));
+	data.append('listicd9', JSON.stringify(listicdnine));
+	data.append('tanggal_kontrol_selanjutnya', form.tanggal_kontrol_selanjutnya.value);
 
 	data.append('tindakan', JSON.stringify(tindakan));
 
@@ -93,10 +96,10 @@ export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obat
 	data.append('pemeriksaan_penunjang', form.pemeriksaanpenunjang.value);
 	data.append('anamnese', form.anamnese.value);
 	data.append('pilihan_plan', form.select.pilihanplan.value);
-	data.append('pemeriksaan_diagnosa', form.select.icd10.label);
-	data.append('pemeriksaan_diagnosa_kode', form.select.icd10.value);
-	data.append('pemeriksaan_tindakan',form.select.icd9.label);
-	data.append('pemeriksaan_tindakan_kode', form.select.icd9.value);
+	// data.append('pemeriksaan_diagnosa', form.select.icd10.label);
+	// data.append('pemeriksaan_diagnosa_kode', form.select.icd10.value);
+	// data.append('pemeriksaan_tindakan',form.select.icd9.label);
+	// data.append('pemeriksaan_tindakan_kode', form.select.icd9.value);
 	data.append('pemeriksaan_tata_laksana', form.pemeriksaantatalaksana.value);
 	data.append('pemeriksaan_prognosa', form.pemeriksaanprognosa.value);
 	data.append('ttd', form.ttd);

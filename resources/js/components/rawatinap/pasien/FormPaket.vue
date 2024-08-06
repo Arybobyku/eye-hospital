@@ -72,6 +72,13 @@ filterselected, hideselected, itemselected, clearselected, boxselected, conditio
 		selecteditem:function(item, key) { 
 			vm.form = vm.conditionselected(vm.form, item, key, 'address'); 
 			vm.form = vm.itemselected(vm.form, item, key);
+			console.log("key");
+			console.log(key);
+			console.log(item.total);
+			 if(key == 'paketbedah') {
+			vm.form.harga_paket = item.total;
+		} 
+
 		},
 		selectclear:function(key) { 
 			vm.form = vm.clearselected(vm.form, key);
@@ -126,10 +133,16 @@ filterselected, hideselected, itemselected, clearselected, boxselected, conditio
 				if (response.data.data.nama_paket_bedah != '-') {
 					vm.form.select.paketbedah.value = response.data.data.paket_bedah_uuid;
 					vm.form.select.paketbedah.label = response.data.data.nama_paket_bedah;
+					vm.form.harga_paket = response.data.data.tarif;
+					console.log("tarif");
+					console.log(response.data.data.tarif);
 				}
+
 				else {
 					vm.form.select.paketbedah.value = '';
 					vm.form.select.paketbedah.label = 'Silahkan Pilih';
+					vm.form.harga_paket = 0;
+
 				}
 			}
 			vm.loaderprocess();

@@ -1,6 +1,6 @@
 <template>
 	<div class="form-self-group">
-		<timepicker :id="form.for_id" v-model="form.value" :format="'HH:mm'" :type=" form.type"
+		<timepicker :id="form.for_id" v-model="form.value" :format="'HH:mm'" :type="form.type"
 			:hour-range="[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22, 23]" :minute-interval="1"
 			:disabled="form.disabled ? 'disabled' : false" :manual-input=" true">
 		</timepicker>
