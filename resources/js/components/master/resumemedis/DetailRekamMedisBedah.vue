@@ -152,29 +152,30 @@ export default {
                     link: "/print/rekammedis/bedah/rm4dot9/",
                 },
                 {
-                    name: "RM.8.7 Form Tindakan Laser PRP",
+                    name: "Rekam Medis Tindakan",
                     link: "/print/rekammedis/bedah/rm8dot7/",
                 },
-                {
-                    name: "RM.8.8 Laporan Injeksi Anti Vega",
-                    link: "/print/rekammedis/bedah/rm8dot8/",
-                },
-                {
-                    name: "RM.8.9 Form Tindakan Laser PRP Capsulotomy",
-                    link: "/print/rekammedis/bedah/rm8dot9/",
-                },
-                {
-                    name: "RM.8.10 Laporan Operasi Trabekulektomi",
-                    link: "/print/rekammedis/bedah/rm8dot10/",
-                },
-                {
-                    name: "RM.9.0 Laporan Operasi Pterygium",
-                    link: "/print/rekammedis/bedah/rm9dot0/",
-                },
-                {
-                    name: "RM.9.1 Laporan Insisi Chalazion",
-                    link: "/print/rekammedis/bedah/rm9dot1/",
-                },
+                // {
+                //     name: "RM.8.8 Laporan Injeksi Anti Vega",
+                //     link: "/print/rekammedis/bedah/rm8dot8/",
+                // },
+                // {
+                //     name: "RM.8.9 Form Tindakan Laser PRP Capsulotomy",
+                //     link: "/print/rekammedis/bedah/rm8dot9/",
+                // },
+                // {
+
+                //     name: "RM.8.10 Laporan Operasi Trabekulektomi",
+                //     link: "/print/rekammedis/bedah/rm8dot10/",
+                // },
+                // {
+                //     name: "RM.9.0 Laporan Operasi Pterygium",
+                //     link: "/print/rekammedis/bedah/rm9dot0/",
+                // },
+                // {
+                //     name: "RM.9.1 Laporan Insisi Chalazion",
+                //     link: "/print/rekammedis/bedah/rm9dot1/",
+                // },
             ],
             pasien: null,
         };

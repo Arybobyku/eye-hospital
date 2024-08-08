@@ -48,16 +48,7 @@
     <div class="page_break"></div>
     @include('print-rekam-medis.bedah.rm8dot7')
     <div class="page_break"></div>
-    @include('print-rekam-medis.bedah.rm8dot8')
-    <div class="page_break"></div>
-    @include('print-rekam-medis.bedah.rm8dot9')
-    <div class="page_break"></div>
-    @include('print-rekam-medis.bedah.rm8dot10')
-    <div class="page_break"></div>
-    @include('print-rekam-medis.bedah.rm9dot0')
-    <div class="page_break"></div>
-    @include('print-rekam-medis.bedah.rm9dot1')
-    <div class="page_break"></div>
+    
 </body>
 
 </html>
