@@ -5,6 +5,7 @@
         ref="signature"
         :sigOption="option"
         :disabled="disabled"
+        style = "width:300px; height:300px"
       ></vueSignature>
     </div>
     <div v-if="disabled == true && digitalSignatureResult != '' ">
