@@ -34,7 +34,7 @@
 <body>
     <?php $fullpath = storage_path('app/public/images/header_rme.png'); ?>
     <?php $eyero = storage_path('app/public/images/EYE-RO.png'); ?>
-    @foreach ($ro as $dataRo)
+   
         <div class="wrap">
             <div style="width:100%; text-align:right; margin-bottom:5px">
                 RM 1.4/PKMRJ/22
@@ -233,7 +233,7 @@
                                     <tr>
                                         <td>POSISI BOLA MATA : </td>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->posisi_bola_mata == 'Normal' ? 'Checked' : '' }}
+                                                {{ $dataDokter->posisi_bola_mata == 'Normal' ? 'Checked' : '' }}
                                                 style="margin-left: -150px"></td>
                                         <td>
                                             <div style="margin-left:-130px">Normal</div>
@@ -242,7 +242,7 @@
                                     <tr>
                                         <td>PERGERAKAN</br>BOLA MATA : </td>
                                         <td><input type="checkbox"
-                                                {{ $dataRo->pergerakan_bola_mata == 'Normal' ? 'Checked' : '' }}
+                                                {{ $dataDokter->pergerakan_bola_mata == 'Normal' ? 'Checked' : '' }}
                                                 style="margin-left: -150px"></td>
                                         <td>
                                             <div style="margin-left:-130px">Normal</div>
@@ -272,7 +272,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_dextra_palpebra == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_dextra_palpebra == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -281,7 +281,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_sinistra_palpebra == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_sinistra_palpebra == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -293,7 +293,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_dextra_conjunctiva == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_dextra_conjunctiva == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -302,7 +302,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_sinistra_conjunctiva == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_sinistra_conjunctiva == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -314,7 +314,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_dextra_cornea == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_dextra_cornea == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -323,7 +323,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_sinistra_cornea == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_sinistra_cornea == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -335,7 +335,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_dextra_bilik_mata_depan == 'Normal' ? 'Checked' : '' }}>
+                                        {{ $dataDokter->ocular_dextra_bilik_mata_depan == 'Normal' ? 'Checked' : '' }}>
                                 </td>
                                 <td>Normal</td>
                             </tr>
@@ -345,7 +345,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_sinistra_bilik_mata_depan == 'Normal' ? 'Checked' : '' }}>
+                                        {{ $dataDokter->ocular_sinistra_bilik_mata_depan == 'Normal' ? 'Checked' : '' }}>
                                 </td>
                                 <td>Normal</td>
                             </tr>
@@ -358,7 +358,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_dextra_pupil_dan_iris == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_dextra_pupil_dan_iris == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -367,7 +367,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_sinistra_pupil_dan_iris == 'Normal' ? 'Checked' : '' }}>
+                                        {{ $dataDokter->ocular_sinistra_pupil_dan_iris == 'Normal' ? 'Checked' : '' }}>
                                 </td>
                                 <td>Normal</td>
                             </tr>
@@ -380,7 +380,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_dextra_lensa == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_dextra_lensa == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -389,7 +389,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_sinistra_lensa == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_sinistra_lensa == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -401,7 +401,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_dextra_vitreous == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_dextra_vitreous == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -410,7 +410,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_sinistra_vitreous == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_sinistra_vitreous == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -422,7 +422,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_dextra_funduscopy == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_dextra_funduscopy == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -431,7 +431,7 @@
                         <table>
                             <tr>
                                 <td><input type="checkbox"
-                                        {{ $dataRo->ocular_sinistra_funduscopy == 'Normal' ? 'Checked' : '' }}></td>
+                                        {{ $dataDokter->ocular_sinistra_funduscopy == 'Normal' ? 'Checked' : '' }}></td>
                                 <td>Normal</td>
                             </tr>
                         </table>
@@ -447,17 +447,19 @@
                     <td>PEMERIKSAAN PENUNJANG :</td>
                 </tr>
                 <tr>
-                    <td>{{ $dataRo->pemeriksaan_penunjang }}</td>
+                    <td>{{ $dataDokter->pemeriksaan_penunjang }}</td>
                 </tr>
                 <br>
                 <br>
                 <tr>
                     <td>DIAGNOSA KERJA :</td>
-                    <td>KODE ICD 10 :</td>
+                    <td>KODE ICD 10 : </td>
                 </tr>
                 <tr>
-                    <td>.................................</td>
-                    <td>.................................</td>
+                  <td></td>
+                    <td> 
+                     
+                    </td>
                 </tr>
                 <br>
                 <br>
@@ -474,21 +476,21 @@
                     <td>TATA LAKSANA :</td>
                 </tr>
                 <tr>
-                    <td>...................................</td>
+                    <td>{{ $dataDokter->pemeriksaan_tata_laksana }}</td>
                 </tr>
                 <br><br>
                 <tr>
                     <td>PERENCANAAN :</td>
                 </tr>
                 <tr>
-                    <td>...................................</td>
+                    <td>{{ $dataDokter->pilihan_plan }}</td>
                 </tr>
                 <br><br>
                 <tr>
                     <td>PROGNOSA :</td>
                 </tr>
                 <tr>
-                    <td>...................................</td>
+                    <td>{{ $dataDokter->pemeriksaan_prognosa }}</td>
                 </tr>
                 <br>
 
@@ -500,19 +502,16 @@
                     <td>TANDA TANGAN DAN NAMA DOKTER</td>
                 </tr>
                 <tr>
-                    <td>VERIFIKASI (stempel, nama/paraf)</td>
+                    <td></td>
                 </tr>
                 <br><br><br><br><br>
                 <tr>
-                    <td>................................</td>
+                    <td>{{ $dataDokter->nama_dokter }}</td>
                 </tr>
                 <br>
             </table>
         </div>
-        @if ($loop->index < count($ro) - 1)
-            <div class="page_break"></div>
-        @endif
-    @endforeach
+      
 </body>
 
 </html>

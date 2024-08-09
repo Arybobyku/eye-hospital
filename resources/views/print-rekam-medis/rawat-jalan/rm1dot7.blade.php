@@ -48,8 +48,9 @@
                 <tbody>
                     <tr>
                         <td align="left" valign="top"
-                            style="border: 1px solid black; padding: 5px; width: 40%; height: 75px;">Annamnese</td>
-                        <td align="left" style="border: 1px solid black; padding: 5px; width: 40%; height: 75px">
+                            style="border: 1px solid black; padding: 5px; width: 40%;">Annamnese </td>
+                        <td align="left" style="border: 1px solid black; padding: 5px; width: 40%;">
+                            {{ $dataRo->pemeriksaanDokter != null ? $dataRo->pemeriksaanDokter->anamnese  : '-'}}  
                         </td>
                     </tr>
                     <tr>
@@ -57,53 +58,97 @@
                             style="border: 1px solid black; padding: 5px; width: 40%; height: 50px;">Pemeriksaan Fisik
                         </td>
                         <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 50px">
+                            <table>
+                                <tr>
+                                    <td>Denyut Nadi </td>
+                                    <td>: {{ $dataRo->pemeriksaanadi }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Respiratory Rate </td>
+                                    <td>: {{ $dataRo->respiratory_rate }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Suhu Tubuh </td>
+                                    <td>: {{ $dataRo->suhu }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Tekanan Darah </td>
+                                    <td>: {{ $dataRo->tekanan_darah }}</td>
+                                </tr>
+                            </table>
+
                         </td>
                     </tr>
                     <tr>
                         <td align="left" valign="top"
-                            style="border: 1px solid ; padding: 5px; width: 40%; height: 35px;">Alergi Obat</td>
-                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 35px">
+                            style="border: 1px solid ; padding: 5px; width: 40%; ">Alergi Obat</td>
+                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; ">
+                            <table>
+                                <tr>
+                                    <td>{{ $dataRo->riwayat_alergi_obatan_lainnya }} -</td>
+                                </tr>
+                            </table>
+
                         </td>
                     </tr>
                     <tr>
+                   
+                            
+                    
                         <td align="left" valign="top"
-                            style="border: 1px solid; padding: 5px; width: 40%; height: 50px;">Hasil Penunjang
+                            style="border: 1px solid; padding: 5px; width: 40%;">Hasil Penunjang
                             Medis Laboratorium/Radiologi/Dll</td>
-                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 50px">
+                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%;">
+                         
+        
                         </td>
                     </tr>
                     <tr>
                         <td align="left" valign="top"
-                            style="border: 1px solid; padding: 5px; width: 40%; height: 75px;">Diagnosa
+                            style="border: 1px solid; padding: 5px; width: 40%;">Diagnosa
                         </td>
-                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 75px">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left" valign="top"
-                            style="border: 1px solid; padding: 5px; width: 40%; height: 75px;">Tindakan
-                        </td>
-                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 75px">
+                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%;">
+                          <table> @foreach ($dataRo->pemeriksaanDokterIcdten as $icd10)
+                          <tr><td> {{   $icd10->nama_icdten }} </td></tr>  @endforeach </table>
+                            
+
                         </td>
                     </tr>
                     <tr>
                         <td align="left" valign="top"
-                            style="border: 1px solid; padding: 5px; width: 40%; height: 75px;">Terapi
+                            style="border: 1px solid; padding: 5px; width: 40%; ">Tindakan
                         </td>
-                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 75px">
+                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; ">
+                            <table> @foreach  ($dataRo->pemeriksaanDokterIcdnine as $icd9)
+                               <tr><td> {{   $icd9->nama_icdnine }} </td></tr> @endforeach </table>
+                                  
                         </td>
                     </tr>
                     <tr>
                         <td align="left" valign="top"
-                            style="border: 1px solid; padding: 5px; width: 40%; height: 35px;">Instruksi/Anjuran
+                            style="border: 1px solid; padding: 5px; width: 40%; ">Terapi
+
+                        </td>
+
+
+                        <td align="left" style="border: 1px solid;  width: 40%; ">
+                            <table>  <tr> <td>Obat: </td></tr> @foreach ($dataRo->resep as $dataresep) 
+                                <tr><td> {{   $dataresep->nama_obat }} - {{ $dataresep->jumlah_kecil }}{{ $dataresep->nama_satuan_kecil }} - {{ $dataresep->signa }} {{ $dataresep->posisimata }} </td></tr> @endforeach </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="left" valign="top"
+                            style="border: 1px solid; padding: 5px; width: 40%; ">Instruksi/Anjuran
                             dan Edukasi</td>
-                        <td align="left" style="border: 1px solid ; padding: 5px; width: 40%; height: 35px">
+                        <td align="left" style="border: 1px solid ; padding:5px; width: 40%; ">
+                            {{ $dataRo->pemeriksaanDokter != null ? $dataRo->pemeriksaanDokter->pilihan_plan : '-'}}
                         </td>
                     </tr>
                     <tr>
-                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 25px;">
+                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; ">
                             Kontrol pada tanggal</td>
-                        <td align="left" style="border: 1px solid; padding: 5px; width: 40%; height: 25px">Di
+                        <td align="left" style="border: 1px solid; padding:5px; width: 40%; ">
+                            {{ $dataRo->pemeriksaanDokter != null ? $dataRo->pemeriksaanDokter->tanggal_kontrol_selanjutnya : '-'}}
                         </td>
                     </tr>
                 </tbody>
@@ -113,7 +158,7 @@
             <br />
             <table style="width: 100%; text-align: center">
                 <tr>
-                    <td>Tanggal, {{ $dataRo->tanggal }}</td>
+                    <td>Tanggal, {{ $dataRo->pemeriksaanDokter != null ? $dataRo->pemeriksaanDokter->tanggal : '-'}}</td>
                     <td></td>
                 </tr>
                 <tr>
@@ -123,7 +168,7 @@
                     <td style="width: 100%; height: 60px"></td>
                 </tr>
                 <tr>
-                    <td> {{ $dataRo->nama_dokter }}</td>
+                    <td> {{ $dataRo->pemeriksaanDokter != null ? $dataRo->pemeriksaanDokter->nama_dokter : '-'}}</td>
                 </tr>
             </table>
         </div>

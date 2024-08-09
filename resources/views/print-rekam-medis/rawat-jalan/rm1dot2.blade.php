@@ -235,7 +235,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2">
-                                            Bahasa : {{ $ep != null && $ep->bs_lainnya }}
+                                            Bahasa : {{ $ep != null ? $ep->bs_lainnya : '-'}}
                                         </td>
                                     </tr>
                                 </table>
@@ -389,7 +389,7 @@
                                         </td>
                                         <td><input type="checkbox" {{ $ep != null && $ep->kmi_tidak == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
-                                            Tidak,alasan : {{ $ep != null && $ep->kmi_alasan }}
+                                            Tidak,alasan : {{ $ep != null ? $ep->kmi_alasan : '-'}}
                                         </td>
                                     </tr>
                                 </table>
@@ -422,7 +422,7 @@
                                     <tr>
                                         <td><input type="checkbox" {{ $ep != null && $ep->rpk_lain_lain == 'ada' ? 'Checked' : ''}}></td>
                                         <td>
-                                            Lain-lain : {{ $ep != null && $ep->rpk_jelaskan }}
+                                            Lain-lain : {{ $ep != null ? $ep->rpk_jelaskan : '-'}}
                                         </td>
                                     </tr>
                                 </table>

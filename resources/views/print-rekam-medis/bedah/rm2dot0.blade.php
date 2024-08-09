@@ -50,7 +50,7 @@
         }
 
     </style>
-    @if ($ckb != null)
+   
         
 <body>
     <div style="position:fixed; right: 13px; bottom: 10px;"></div>
@@ -67,22 +67,22 @@
         </tr>
         <tr>
             <td class="td12dot0x">Ruang</td>
-            <td class="td12dot0x">: {{ $ckb->ruangan }}</td>
+            <td class="td12dot0x">: {{ $ckb != null && $ckb->ruangan }}</td>
             <td class="td12dot0y">Kamar</td>
-            <td class="td12dot0x">: {{ $ckb->kamar }}</td>
+            <td class="td12dot0x">: {{ $ckb != null && $ckb->kamar }}</td>
 
         </tr>
         <tr class="tablee2dot0">
             <td class="td12dot0x">Diagnosis</td>
-            <td class="td12dot0x">: {{ $ckb->diagnosa }}</td>
+            <td class="td12dot0x">: {{ $ckb != null && $ckb->diagnosa }}</td>
             <td class="td12dot0y">Tindakan</td>
-            <td class="td12dot0x">: {{ $ckb->tindakan }}</td>
+            <td class="td12dot0x">: {{ $ckb != null && $ckb->tindakan }}</td>
         </tr>
         <tr class="tablee2dot0">
             <td class="td12dot0x">Tehknik anastesi</td>
-            <td class="td12dot0x">: {{ $ckb->teknik_anastesi }}</td>
+            <td class="td12dot0x">: {{ $ckb != null && $ckb->teknik_anastesi }}</td>
             <td class="td12dot0y">Tgl. Tindakan</td>
-            <td class="td12dot0x">: {{ $ckb->tanggal_tindakan }}</td>
+            <td class="td12dot0x">: {{ $ckb != null && $ckb->tanggal_tindakan }}</td>
         </tr>
     </table>
         <table  style="width: 100%; border:1px solid; border-top:0.5px">
@@ -174,7 +174,7 @@
             <td colspan="2"><b>AKHP</b></td>
         </tr>        
         <tr>            
-            <td><input type="checkbox" {{ $ckb->akhp != '' ? 'Checked' : '' }}></td>
+            <td><input type="checkbox" {{ $ckb != null && $ckb->akhp != '' ? 'Checked' : '' }}></td>
             <td>Tersedia AKHP sesuai kebutuhan </td>   
         </tr>
         <br>
@@ -189,7 +189,7 @@
                             Perawat Kamar Bedah
                         </td>
                         <td style="width:100px">
-                            : {{ $ckb->perawat_kamar_bedah }}
+                            : {{ $ckb != null && $ckb->perawat_kamar_bedah }}
                         </td>
                         <td style="width:100px">
                             Tanda tangan 
@@ -203,7 +203,7 @@
                             Kepala Ruangan
                         </td>
                         <td style="width:100px">
-                            : {{ $ckb->kepala_ruangan }}
+                            : {{ $ckb != null && $ckb->kepala_ruangan }}
                         </td>
                         <td style="width:100px">
                             Tanda tangan 
@@ -218,5 +218,5 @@
     </table>
     </table>
 </body>
-@endif
+
 </head>
