@@ -730,7 +730,6 @@
 										<iframe title="CPPT" width="100%" height="100%" style="border: 0" :src="linkR">
 										</iframe>
 									</div>
-
 									<div class="col-7 form-ml">
 										<label for=""> Subject</label>
 										<ckeditor v-model="form.subject" :editor="editor">
@@ -892,7 +891,7 @@ export default {
 			rpk_lain_lain: false,
 			kp_ya: false,
 			kp_tidak: false,
-
+            cpptResponse: null,
 			detailperawat: {
 				uuid: '', registrasi_uuid: '',
 				agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '',
@@ -939,7 +938,9 @@ export default {
 					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';	}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
-				vm.setCkEditor();
+				if(vm.cpptResponse == null){
+					vm.setCkEditor();
+				}
 			}
 		},
 
@@ -1140,7 +1141,16 @@ export default {
 			vm.histori = response.data.histori;
 			let temps = response.data.kunjungan;
 			vm.linkR = vm.linkR + vm.detailperawat.pasien_uuid;
-			console.log(vm.linkR);
+			vm.form.cppt_sebagai = 'PERAWAT';
+
+			let cppt = response.data.cppt;
+			if(cppt != null){
+				vm.cpptResponse = cppt;
+				vm.form.subject = cppt.subjek;
+				vm.form.object = cppt.objek;
+				vm.form.assessment = cppt.asesmen;
+				vm.form.plan = cppt.plan;
+			}
 
 			if (temps) {
 				vm.form.uuid = temps.uuid;

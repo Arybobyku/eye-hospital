@@ -581,7 +581,7 @@
                             <div class="content-tab-in" v-if="tab.content.tindakan">
 
                                 <div :class="{ 'disable-click': disableButtonSave }" ></div>
-                                <div :class="{ 'pointer-events: none': disableButtonSave }" class="grid">
+                                <div :class="{ 'pointer-events: none': disableButtonSave, 'grid-disable': disableButtonSave }" class="grid">
                                     <div class="col-12">
                                         <Selected v-on:click="
                                             selectbox(
@@ -660,7 +660,8 @@
                             <div class="content-tab-in" v-if="tab.content.resep">
 
                                   <div :class="{ 'disable-click': disableButtonSave }" ></div>
-                               <div :class="{ 'pointer-events: none': disableButtonSave }" class="grid">
+                            
+                                <div :class="{ 'pointer-events: none': disableButtonSave, 'grid-disable': disableButtonSave }" class="grid">
                                     <div class="col-5 form-mr">
                                         <Selected v-on:click="
         selectbox(
@@ -769,7 +770,8 @@
 
                             <div class="content-tab-in" v-if="tab.content.racikan">
                                 <div :class="{ 'disable-click': disableButtonSave }" ></div>
-                                <div :class="{ 'pointer-events: none': disableButtonSave }" class="grid">
+                                
+                                <div :class="{ 'pointer-events: none': disableButtonSave, 'grid-disable': disableButtonSave }" class="grid">
                                     <div class="col-3 form-mr">
                                         <Inputed :ref="form.labelracikan.name" :form="form.labelracikan"></Inputed>
                                     </div>
@@ -1594,6 +1596,7 @@
                             class: "tab-no-active",
                         },
                     ],
+                    cpptResponse: null,
                     // racikan: false,
                     content: {
                         ro: true,
@@ -2029,7 +2032,9 @@
                     ("");
                 }
                 vm.tabIndex = index;
-                vm.setCkEditor();
+                if(vm.cpptResponse == null){
+					vm.setCkEditor();
+				}
             },
 
             parsekelurahan,
@@ -2504,6 +2509,15 @@
                 // vm.form.select.pilihanplan.label = "Silahkan Pilih";
 
 
+                vm.form.cppt_sebagai = 'DOKTER';
+                let cppt = response.data.cppt;
+                if(cppt != null){
+                    vm.cpptResponse = cppt;
+                    vm.form.subject = cppt.subjek;
+                    vm.form.object = cppt.objek;
+                    vm.form.assessment = cppt.asesmen;
+                    vm.form.plan = cppt.plan;
+                }
 
                 if(vm.detail?.status_kasir == 'Sudah Bayar'){
                     vm.disableButtonSave = true;
@@ -2786,7 +2800,11 @@
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showPulang = true; // Menyembunyikan div dengan kelas 'Operasi'
-                            vm.form.tanggal_kontrol_selanjutnya.value = response.data.kunjungan.tanggal_kontrol_selanjutnya;
+                            if(response.data.kunjungan.tanggal_kontrol_selanjutnya != '' && response.data.kunjungan.tanggal_kontrol_selanjutnya != null){
+                                vm.form.tanggal_kontrol_selanjutnya.value = response.data.kunjungan.tanggal_kontrol_selanjutnya;
+                            }else{
+                                 vm.form.tanggal_kontrol_selanjutnya.value = '' ;
+                            }
                         } else {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
@@ -2937,7 +2955,7 @@
         z-index: 2; 
     }
 
-    .grid {
+    .grid-disable {
         position: relative;
         z-index: 1; /* Content layer above the background */
     }

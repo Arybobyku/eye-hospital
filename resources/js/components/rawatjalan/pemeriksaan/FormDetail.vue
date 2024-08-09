@@ -232,6 +232,7 @@ export default {
 		editor: ClassicEditor,
 		terminate: { show: false, display: 'display: none' },
 		form: null, btnlbl: '', arr: null,
+		cpptResponse: null,
 		green: 'Save Data', red: 'Clear Form', test: null, cover: '', temporer: null,
 		detail : { uuid: '',
 			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
@@ -272,8 +273,9 @@ export default {
 					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; }
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
-				console.log("===>")
-				vm.setCkEditor();
+				if(vm.cpptResponse == null){
+					vm.setCkEditor();
+				}
 			}
 		},
 
@@ -423,6 +425,16 @@ export default {
 				vm.form.select.klinik.label = 'Poli ' + vm.detail.ruang_poliklinik;
 			}
 			
+			vm.form.cppt_sebagai = 'RO';
+
+			let cppt = response.data.cppt;
+			if(cppt != null){
+				vm.cpptResponse = cppt;
+				vm.form.subject = cppt.subjek;
+				vm.form.object = cppt.objek;
+				vm.form.assessment = cppt.asesmen;
+				vm.form.plan = cppt.plan;
+			}
 
 			let temps = response.data.kunjungan;
 
