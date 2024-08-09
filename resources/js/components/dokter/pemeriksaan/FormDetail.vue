@@ -579,6 +579,8 @@
                             </div>
 
                             <div class="content-tab-in" v-if="tab.content.tindakan">
+
+                                  <div :class="{ 'disable-click': disableButtonSave }" ></div>
                                 <div class="grid">
                                     <div class="col-12">
                                         <Selected v-on:click="
@@ -656,6 +658,8 @@
                             </div>
 
                             <div class="content-tab-in" v-if="tab.content.resep">
+
+                                  <div :class="{ 'disable-click': disableButtonSave }" ></div>
                                 <div class="grid">
                                     <div class="col-5 form-mr">
                                         <Selected v-on:click="
@@ -764,6 +768,7 @@
                             </div>
 
                             <div class="content-tab-in" v-if="tab.content.racikan">
+                                <div :class="{ 'disable-click': disableButtonSave }" ></div>
                                 <div class="grid">
                                     <div class="col-3 form-mr">
                                         <Inputed :ref="form.labelracikan.name" :form="form.labelracikan"></Inputed>
@@ -1273,44 +1278,41 @@
                                 </div>
                             </div>
 
-                             <div v-if="disableButtonSave" style="width:100%;height:80%;border-radius:4px;position:absolute;left:-1px;background:rgba(0,0,0,0.4)"></div>
-                        </div>
+                         </div>
                     </div>
                 </div>
 
-                <div v-if="!disableButtonSave"> 
-                        <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
-                        <div class="col-8"></div>
-                        <div class="col-4" style="text-align: right" v-if="ishide">
-                            <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
-                                v-on:click="previouseButton()">
-                                {{ previous }}
-                            </button>
-                            <button class="button-modal-page button-modal-green" v-if="tabIndex < tab.button.length - 1"
-                                v-on:click="nextButton()">
-                                {{ next }}
-                            </button>
+                    <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
+                    <div class="col-8"></div>
+                    <div class="col-4" style="text-align: right" v-if="ishide">
+                        <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
+                            v-on:click="previouseButton()">
+                            {{ previous }}
+                        </button>
+                        <button class="button-modal-page button-modal-green" v-if="tabIndex < tab.button.length - 1"
+                            v-on:click="nextButton()">
+                            {{ next }}
+                        </button>
 
-                            <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-red"
-                                v-on:click="redbutton()">
-                                {{ red }}
-                            </button>
-                            <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-green"
-                                v-on:click="greenbutton()">
-                                {{ green }}
-                            </button>
-                            <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
-                        </div>
-                        <div class="col-4" style="text-align: right" v-else>
-                            <button class="button-modal-page button-modal-red" v-on:click="cancel()">
-                                Batalkan Kunjungan
-                            </button>
-                            <button class="button-modal-page button-modal-green" v-on:click="edit()">
-                                Edit Data
-                            </button>
-                        </div>
+                        <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-red"
+                            v-on:click="redbutton()">
+                            {{ red }}
+                        </button>
+                        <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-green"
+                            v-on:click="greenbutton()">
+                            {{ green }}
+                        </button>
+                        <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
                     </div>
-                </div>
+                    <div class="col-4" style="text-align: right" v-else>
+                        <button class="button-modal-page button-modal-red" v-on:click="cancel()">
+                            Batalkan Kunjungan
+                        </button>
+                        <button class="button-modal-page button-modal-green" v-on:click="edit()">
+                            Edit Data
+                        </button>
+                    </div>
+                    </div>
             </div>
 
             <Loader ref="Loader"></Loader>
@@ -2917,4 +2919,28 @@
         color: #000;
         font-weight: bold;
     }
+
+    /* THIS IS FOR DISABLED VIEW */
+    .content-tab-in {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .disable-click {
+        pointer-events: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(128, 128, 128, 0.5); /* Grey with 50% opacity */
+        z-index: 2; 
+    }
+
+    .grid {
+        position: relative;
+        z-index: 1; /* Content layer above the background */
+    }
+
 </style>
