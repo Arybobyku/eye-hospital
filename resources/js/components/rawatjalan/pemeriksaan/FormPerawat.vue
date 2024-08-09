@@ -1080,6 +1080,45 @@ export default {
 		// },
 		setCkEditor: function(val, title){
 			vm.form.subject = `${vm.form.keluhanutama.value}`;
+			vm.form.object = `
+                    <figure class="table">
+                        <table>
+							<thead>
+                            <tr>
+                                <td>Nama Obat</td>
+                                <td>Nilai</td>
+                            </tr>
+							</thead>
+                            <tbody>
+    
+								<tr>
+                                    <td>Nadi</td>
+									<td>${vm.form.nadi.value}</td>
+                                </tr>
+								<tr>
+                                    <td>Respiratory Rate</td>
+									<td>${vm.form.respiratoryrate.value}</td>
+                                </tr>
+								<tr>
+                                    <td>Suhu Tubuh</td>
+									<td>${vm.form.suhu.value}</td>
+                                </tr>
+								<tr>
+                                    <td>Berat Badan</td>
+									<td>${vm.form.beratbadan.value}</td>
+                                </tr>
+								<tr>
+                                    <td>Tinggi Badan</td>
+									<td>${vm.form.tinggibadan.value}</td>
+                                </tr>
+								<tr>
+                                    <td>Tekanan Darah</td>
+									<td>${vm.form.tekanandarah.value}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </figure>   
+			`;
 		},
 
 

@@ -1688,14 +1688,15 @@
                     <div>Obat</div>
                     <figure class="table">
                         <table>
+                            <thead>
+                                <tr>
+                                    <td>Nama Obat</td>
+                                    <td>Signa</td>
+                                    <td>Posisi</td>
+                                    <td>Qty</td>
+                                </tr>
+                            </thead>
                             <tbody>
-                            <tr>
-                                <td>Nama Obat</td>
-                                <td>Signa</td>
-                                <td>Posisi</td>
-                                <td>Qty</td>
-                            </tr>
-    
                             ${vm.listobat.map((element) => `
                                 <tr>
                                     <td>${element.nama}</td>
@@ -1715,14 +1716,15 @@
                     <div>Obat Racikan</div>
                     <figure class="table">
                         <table>
+                            <thead>
+                                <tr>
+                                    <td>Nama Obat</td>
+                                    <td>Signa</td>
+                                    <td>Posisi</td>
+                                    <td>Qty</td>
+                                </tr>
+                            </thead>
                             <tbody>
-                            <tr>
-                                <td>Nama Obat</td>
-                                <td>Signa</td>
-                                <td>Posisi</td>
-                                <td>Qty</td>
-                            </tr>
-    
                             ${vm.listobatracikan.map((element) => `
                                 <tr>
                                     <td>${element.nama}</td>
@@ -1749,12 +1751,14 @@
                 vm.form.object = `
                     <figure class="table">
                     <table>
+                        <thead>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>Ocular Dextra</td>
+                                <td>Ocular Sinistra</td>
+                            </tr>
+                        </thead>
                         <tbody>
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td>Ocular Dextra</td>
-                            <td>Ocular Sinistra</td>
-                        </tr>
                         <tr>
                             <td>Autoref</td>
                             <td>${vm.pemeriksaanro.ocular_dextra_autoref}</td>
