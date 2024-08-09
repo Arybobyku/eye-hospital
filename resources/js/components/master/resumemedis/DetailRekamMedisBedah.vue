@@ -56,7 +56,7 @@
                                             }"
                                             v-on:click="look(index)"
                                         >
-                                            Print
+                                            Pilih
                                         </button>
                                     </td>
                                 </tr>

@@ -579,7 +579,9 @@
                             </div>
 
                             <div class="content-tab-in" v-if="tab.content.tindakan">
-                                <div class="grid">
+
+                                <div :class="{ 'disable-click': disableButtonSave }" ></div>
+                                <div :class="{ 'pointer-events: none': disableButtonSave, 'grid-disable': disableButtonSave }" class="grid">
                                     <div class="col-12">
                                         <Selected v-on:click="
                                             selectbox(
@@ -656,7 +658,10 @@
                             </div>
 
                             <div class="content-tab-in" v-if="tab.content.resep">
-                                <div class="grid">
+
+                                  <div :class="{ 'disable-click': disableButtonSave }" ></div>
+                            
+                                <div :class="{ 'pointer-events: none': disableButtonSave, 'grid-disable': disableButtonSave }" class="grid">
                                     <div class="col-5 form-mr">
                                         <Selected v-on:click="
         selectbox(
@@ -764,7 +769,9 @@
                             </div>
 
                             <div class="content-tab-in" v-if="tab.content.racikan">
-                                <div class="grid">
+                                <div :class="{ 'disable-click': disableButtonSave }" ></div>
+                                
+                                <div :class="{ 'pointer-events: none': disableButtonSave, 'grid-disable': disableButtonSave }" class="grid">
                                     <div class="col-3 form-mr">
                                         <Inputed :ref="form.labelracikan.name" :form="form.labelracikan"></Inputed>
                                     </div>
@@ -1262,55 +1269,52 @@
                                     </div>
                                     <div class="col-9"></div>
                                     <div class="col-3 form-ml form-mt">
-                                        <label for="">Tanda Tangan Digital</label>
+                                        <label for="">Tanda Tangan di Dokuem Ini</label>
                                         <img v-if="form.ttd" :src="form.ttd" alt="ttd dokter" height="100"
                                             width="400" />
                                         <br>
                                         <button v-if="!form.ttd" class="button-modal-page button-modal-green"
-                                            v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
+                                            v-on:click="doDigitalSignature()">Tanda Tangan</button>
                                     </div>
 
                                 </div>
                             </div>
 
-                             <div v-if="disableButtonSave" style="width:100%;height:80%;border-radius:4px;position:absolute;left:-1px;background:rgba(0,0,0,0.4)"></div>
-                        </div>
+                         </div>
                     </div>
                 </div>
 
-                <div v-if="!disableButtonSave"> 
-                        <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
-                        <div class="col-8"></div>
-                        <div class="col-4" style="text-align: right" v-if="ishide">
-                            <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
-                                v-on:click="previouseButton()">
-                                {{ previous }}
-                            </button>
-                            <button class="button-modal-page button-modal-green" v-if="tabIndex < tab.button.length - 1"
-                                v-on:click="nextButton()">
-                                {{ next }}
-                            </button>
+                    <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
+                    <div class="col-8"></div>
+                    <div class="col-4" style="text-align: right" v-if="ishide">
+                        <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
+                            v-on:click="previouseButton()">
+                            {{ previous }}
+                        </button>
+                        <button class="button-modal-page button-modal-green" v-if="tabIndex < tab.button.length - 1"
+                            v-on:click="nextButton()">
+                            {{ next }}
+                        </button>
 
-                            <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-red"
-                                v-on:click="redbutton()">
-                                {{ red }}
-                            </button>
-                            <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-green"
-                                v-on:click="greenbutton()">
-                                {{ green }}
-                            </button>
-                            <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
-                        </div>
-                        <div class="col-4" style="text-align: right" v-else>
-                            <button class="button-modal-page button-modal-red" v-on:click="cancel()">
-                                Batalkan Kunjungan
-                            </button>
-                            <button class="button-modal-page button-modal-green" v-on:click="edit()">
-                                Edit Data
-                            </button>
-                        </div>
+                        <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-red"
+                            v-on:click="redbutton()">
+                            {{ red }}
+                        </button>
+                        <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-green"
+                            v-on:click="greenbutton()">
+                            {{ green }}
+                        </button>
+                        <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
                     </div>
-                </div>
+                    <div class="col-4" style="text-align: right" v-else>
+                        <button class="button-modal-page button-modal-red" v-on:click="cancel()">
+                            Batalkan Kunjungan
+                        </button>
+                        <button class="button-modal-page button-modal-green" v-on:click="edit()">
+                            Edit Data
+                        </button>
+                    </div>
+                    </div>
             </div>
 
             <Loader ref="Loader"></Loader>
@@ -1592,6 +1596,7 @@
                             class: "tab-no-active",
                         },
                     ],
+                    cpptResponse: null,
                     // racikan: false,
                     content: {
                         ro: true,
@@ -2027,7 +2032,9 @@
                     ("");
                 }
                 vm.tabIndex = index;
-                vm.setCkEditor();
+                if(vm.cpptResponse == null){
+					vm.setCkEditor();
+				}
             },
 
             parsekelurahan,
@@ -2502,6 +2509,15 @@
                 // vm.form.select.pilihanplan.label = "Silahkan Pilih";
 
 
+                vm.form.cppt_sebagai = 'DOKTER';
+                let cppt = response.data.cppt;
+                if(cppt != null){
+                    vm.cpptResponse = cppt;
+                    vm.form.subject = cppt.subjek;
+                    vm.form.object = cppt.objek;
+                    vm.form.assessment = cppt.asesmen;
+                    vm.form.plan = cppt.plan;
+                }
 
                 if(vm.detail?.status_kasir == 'Sudah Bayar'){
                     vm.disableButtonSave = true;
@@ -2784,7 +2800,11 @@
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showPulang = true; // Menyembunyikan div dengan kelas 'Operasi'
-                            vm.form.tanggal_kontrol_selanjutnya.value = response.data.kunjungan.tanggal_kontrol_selanjutnya;
+                            if(response.data.kunjungan.tanggal_kontrol_selanjutnya != '' && response.data.kunjungan.tanggal_kontrol_selanjutnya != null){
+                                vm.form.tanggal_kontrol_selanjutnya.value = response.data.kunjungan.tanggal_kontrol_selanjutnya;
+                            }else{
+                                 vm.form.tanggal_kontrol_selanjutnya.value = '' ;
+                            }
                         } else {
                             this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                             this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
@@ -2917,4 +2937,27 @@
         color: #000;
         font-weight: bold;
     }
+
+    /* THIS IS FOR DISABLED VIEW */
+    .content-tab-in {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .disable-click {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(128, 128, 128, 0.5); /* Grey with 50% opacity */
+        z-index: 2; 
+    }
+
+    .grid-disable {
+        position: relative;
+        z-index: 1; /* Content layer above the background */
+    }
+
 </style>

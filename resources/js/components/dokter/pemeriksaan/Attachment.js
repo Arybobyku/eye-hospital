@@ -24,6 +24,7 @@ export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obat
 	data.append('object', form.object);
 	data.append('assessment', form.assessment);
 	data.append('plan', form.plan);
+	data.append('cppt_sebagai', form.cppt_sebagai);
 	// data.append('pilihan_plan', form.select.pilihanplan.value);
 
 	data.append('listicd10', JSON.stringify(listicdten));

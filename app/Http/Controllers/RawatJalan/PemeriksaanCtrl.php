@@ -313,7 +313,9 @@ class PemeriksaanCtrl extends Controller
 
 				
 			}
-			$cppt = Cppt::where('uuid', '=', $request->uuid)->first();
+			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
+						->where('sebagai','=', $request->cppt_sebagai)
+						->first();
 
 			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
 			if ($cppt != null) {
@@ -323,9 +325,12 @@ class PemeriksaanCtrl extends Controller
 					'asesmen' => $request->assessment,
 					'plan' => $request->plan,
 					'ttd' => $request->ttd,
+					'sebagai' => $request->cppt_sebagai,
 					'pengguna_uuid' => $pengguna_uuid,
 				);
-					$update = Cppt::where('uuid', '=', $request->uuid)->update($arr);
+					$update = Cppt::where('uuid', '=', $request->uuid)
+								->where('sebagai', '=', $request->cppt_sebagai)
+								->update($arr);
 			}
 			else{
 			$item = new Cppt();
@@ -341,6 +346,7 @@ class PemeriksaanCtrl extends Controller
 				$item->objek = $request->object;
 				$item->asesmen = $request->assessment;
 				$item->plan = $request->plan;
+				$item->sebagai = $request->cppt_sebagai;
 				$item->ttd = $request->ttd;
 				$item->save();
 
@@ -668,7 +674,9 @@ class PemeriksaanCtrl extends Controller
 
 
 			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
-			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
+				->where('sebagai', '=', $request->cppt_sebagai)
+				->first();
 
 			if ($cppt != null) {
 				$arr = array(
@@ -677,9 +685,12 @@ class PemeriksaanCtrl extends Controller
 					'asesmen' => $request->assessment,
 					'plan' => $request->plan,
 					'ttd' => $request->ttd,
+					'sebagai' => $request->cppt_sebagai,
 					'pengguna_uuid' => $pengguna_uuid,
 				);
-					$update = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
+					$update = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
+							->where('sebagai', '=', $request->cppt_sebagai)
+							->update($arr);
 			}
 			else{
 			$item = new Cppt();
@@ -696,6 +707,7 @@ class PemeriksaanCtrl extends Controller
 				$item->asesmen = $request->assessment;
 				$item->plan = $request->plan;
 				$item->ttd = $request->ttd;
+				$item->sebagai = $request->cppt_sebagai;
 				$item->pengguna_uuid = $pengguna_uuid;
 				$item->save();
 
@@ -751,7 +763,11 @@ class PemeriksaanCtrl extends Controller
 		$kunjungan = PemeriksaanRo::where('registrasi_uuid', '=', $request->uuid)
 			->orderBy('id', 'desc')->first();
 
-		return response()->json(['data' => $data, 'histori' => $histori, 'kunjungan' => $kunjungan]);
+		$cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
+			->where('sebagai', '=', 'RO')
+			->orderBy('id', 'desc')->first();
+
+		return response()->json(['data' => $data, 'histori' => $histori, 'kunjungan' => $kunjungan, 'cppt'=>$cppt]);
 	}
 	public function detailperawat(Request $request)
 	{
@@ -790,6 +806,10 @@ class PemeriksaanCtrl extends Controller
 
 		$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $request->uuid)
 			->orderBy('id', 'desc')->first();
+
+		$cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
+			->where('sebagai','=','PERAWAT')
+			->orderBy('id', 'desc')->first();
 		
 
 		if ($edukasi_pasien != null){
@@ -797,7 +817,7 @@ class PemeriksaanCtrl extends Controller
 		}
 
 
-		return response()->json(['data' => $data, 'histori' => $histori, 'kunjungan' => $kunjungan]);
+		return response()->json(['data' => $data, 'histori' => $histori, 'kunjungan' => $kunjungan,'cppt'=>$cppt]);
 	}
 
 

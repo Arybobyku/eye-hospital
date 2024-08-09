@@ -1782,7 +1782,9 @@ class PemeriksaanCtrl extends Controller
                     $update = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
                 }
             }
-            $cppt = Cppt::where('uuid', '=', $request->uuid)->first();
+            $cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
+                        ->where('sebagai','=','DOKTER')
+                        ->first();
 
             $pengguna_uuid = \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'Uuid'));
             if ($cppt != null) {
@@ -1792,9 +1794,12 @@ class PemeriksaanCtrl extends Controller
                     'asesmen' => $request->assessment,
                     'plan' => $request->plan,
                     'pengguna_uuid' => $pengguna_uuid,
+					'sebagai' =>  $request->cppt_sebagai,
                     'ttd' => $request->ttd,
                 ];
-                $update = Cppt::where('uuid', '=', $request->uuid)->update($arr);
+                $update = Cppt::where('uuid', '=', $request->uuid)
+                                ->where('sebagai', '=', 'DOKTER')  
+                                ->update($arr);
             } else {
                 $item = new Cppt();
                 $item->uuid = Uuid::uuid4();
@@ -1809,6 +1814,7 @@ class PemeriksaanCtrl extends Controller
                 $item->objek = $request->object;
                 $item->asesmen = $request->assessment;
                 $item->plan = $request->plan;
+                $item->sebagai = $request->cppt_sebagai;
                 $item->ttd = $request->ttd;
                 $item->save();
             }
@@ -1903,6 +1909,10 @@ class PemeriksaanCtrl extends Controller
         $carabayar = $this->carabayar();
         $asuransi = $this->asuransi();
 
+        $cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
+        ->where('sebagai', '=', 'DOKTER')
+        ->orderBy('id', 'desc')->first();
+
         return response()->json([
             'data' => $data,
             'histori' => $histori,
@@ -1925,6 +1935,7 @@ class PemeriksaanCtrl extends Controller
             'layananjalan' => $layananjalan,
             'listicd9' => $listicd9,
             'listicd10' => $listicd10,
+            'cppt' => $cppt,
         ]);
     }
 
