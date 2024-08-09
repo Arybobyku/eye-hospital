@@ -154,7 +154,7 @@
 
 									<div class="col-9"></div>
 									<div class="col-3 form-ml form-mt">
-											<label for="">Tanda Tangan Digital</label>
+											<label for="">Tanda Tangan di Dokumen Ini</label>
 												<img
 													v-if="form.ttd"
 													:src="form.ttd"
@@ -163,7 +163,7 @@
 													width="400"
 												/>
 												<br>
-											<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
+											<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan</button>
 									</div>
 						
 								</div>

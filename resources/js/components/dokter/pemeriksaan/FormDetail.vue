@@ -1262,12 +1262,12 @@
                                     </div>
                                     <div class="col-9"></div>
                                     <div class="col-3 form-ml form-mt">
-                                        <label for="">Tanda Tangan Digital</label>
+                                        <label for="">Tanda Tangan di Dokuem Ini</label>
                                         <img v-if="form.ttd" :src="form.ttd" alt="ttd dokter" height="100"
                                             width="400" />
                                         <br>
                                         <button v-if="!form.ttd" class="button-modal-page button-modal-green"
-                                            v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
+                                            v-on:click="doDigitalSignature()">Tanda Tangan</button>
                                     </div>
 
                                 </div>
