@@ -580,8 +580,8 @@
 
                             <div class="content-tab-in" v-if="tab.content.tindakan">
 
-                                  <div :class="{ 'disable-click': disableButtonSave }" ></div>
-                                <div class="grid">
+                                <div :class="{ 'disable-click': disableButtonSave }" ></div>
+                                <div :class="{ 'pointer-events: none': disableButtonSave }" class="grid">
                                     <div class="col-12">
                                         <Selected v-on:click="
                                             selectbox(
@@ -660,7 +660,7 @@
                             <div class="content-tab-in" v-if="tab.content.resep">
 
                                   <div :class="{ 'disable-click': disableButtonSave }" ></div>
-                                <div class="grid">
+                               <div :class="{ 'pointer-events: none': disableButtonSave }" class="grid">
                                     <div class="col-5 form-mr">
                                         <Selected v-on:click="
         selectbox(
@@ -769,7 +769,7 @@
 
                             <div class="content-tab-in" v-if="tab.content.racikan">
                                 <div :class="{ 'disable-click': disableButtonSave }" ></div>
-                                <div class="grid">
+                                <div :class="{ 'pointer-events: none': disableButtonSave }" class="grid">
                                     <div class="col-3 form-mr">
                                         <Inputed :ref="form.labelracikan.name" :form="form.labelracikan"></Inputed>
                                     </div>
@@ -2928,7 +2928,6 @@
     }
 
     .disable-click {
-        pointer-events: none;
         position: absolute;
         top: 0;
         left: 0;
