@@ -191,8 +191,8 @@ class PasienCtrl extends Controller
         $item->pengguna_uuid = $reg->pengguna_uuid;
         // $item->nama_dokter = $reg->nama_dokter;
 
-        $item->tanggal = date('Y-m-d');
-        $item->waktu = date('H:i');
+        $item->tanggal = $request->tanggal;
+        $item->waktu = $request->waktu;
 
         $item->carabayar_uuid = $reg->carabayar_uuid;
         $item->carabayar_nama = $reg->carabayar_nama;

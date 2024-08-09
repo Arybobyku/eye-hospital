@@ -7,6 +7,14 @@ export const formunit = () => {
 		layanan_uuid: '',
 		nama_layanan: '',
 		tarif: '',
+		tanggal:{
+			title: 'Tanggal', for_id: 'form_'+'tanggal', type: 'date', required: 'required', 
+			name: 'tanggal', value: '', disabled: false, show: true, kinds: ''
+		},
+		waktu:{
+			title: 'Waktu', for_id: 'form_'+'waktu', type: 'text', required: 'required', 
+			name: 'waktu', value: '', disabled: false, show: true, kinds: ''
+		},
 		select: {
 			carabayartindakanrawatjalan: { 
 				key : 'carabayartindakanrawatjalan', for_id: 'form_'+'carabayartindakanrawatjalan', name: 'carabayartindakanrawatjalan', uuid:'', value: '', label: 'Silahkan Pilih', 
@@ -14,6 +22,7 @@ export const formunit = () => {
 				class: 'carabayartindakanrawatjalan', isrequired: true, html: 'Nama Tindakan', issearch: true, disabled: false,
 			},
 		}
+
 	}
 }
 

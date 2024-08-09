@@ -1,4 +1,4 @@
-export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obatracikan, listicdnine, listicdten) => {
+export const parsekelurahan = (form, detail, tindakan,  obat, obatracikan, listicdnine, listicdten) => {
 
 	let data = new FormData();
 	data.append('uuid', form.uuid);
@@ -32,7 +32,6 @@ export const parsekelurahan = (form, detail, tindakan, tindakanjalan, obat, obat
 
 	data.append('tindakan', JSON.stringify(tindakan));
 
-	data.append('tindakanjalan', JSON.stringify(tindakanjalan));
 	data.append('inapjalan', form.inapjalan);
 	data.append('kamar_inap_jalan_uuid', form.kamar_inap_jalan_uuid);
 	data.append('kamar_inap_jalan_nama', form.kamar_inap_jalan_nama);

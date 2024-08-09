@@ -625,7 +625,6 @@ export default {
 				}
 			}
 			else if (vm.position == 'updatedokterdata') {
-				vm.loadingModal('formdetaildokter');
 				vm.$refs.FormDetailDokter.hide();
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
@@ -661,7 +660,7 @@ export default {
 			}
 			else if (vm.position == 'loaddatajadwalkontrol') {
 				vm.$refs.FormJadwalKontrol.setdataform(response); 
-				active = 0; 
+				active = 0; w
 			}
 			else if (vm.position == 'editdata') {
 				vm.$refs.FormUnit.setdataform(response); 
@@ -689,9 +688,8 @@ export default {
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'inapadd') {
-				vm.loadingModal('inapdata');
 				vm.$refs.FormInap.hide();
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
+				setTimeout(() => { vm.$refs.DatatableDone.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'prosesdata') { 
 				setTimeout(() => { vm.tablereload(); }, 125, this); 

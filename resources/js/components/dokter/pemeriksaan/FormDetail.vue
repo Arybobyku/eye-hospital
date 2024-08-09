@@ -37,8 +37,8 @@
                                 Dokter yang menangani<span><strong>{{ detail . nama_dokter }}</strong></span>
                             </li>
                             <li>
-                                 Billing<span><strong>{{
-                                    detail.status_kasir
+                                Billing<span><strong>{{
+                                        detail.status_kasir
                                         }}</strong></span>
                             </li>
                         </ul>
@@ -64,7 +64,9 @@
                         <div class="tab-content">
                             <div class="content-tab-in" v-if="tab.content.ro">
                                 <div class="grid">
-                                    <div class="col-10" style="margin-left: 25%;">
+                                    <div class="col-4" style="margin-left: 25%;">
+                                    </div>
+                                    <div class="col-4" style="margin-left: 0%;">
                                         <table class="table embed" style="border: 0;" v-if="pemeriksaanro">
                                             <tr>
                                                 <td colspan="2">
@@ -221,11 +223,11 @@
                                         <table class="table embed" v-if="pemeriksaanro">
                                             <tbody>
                                                 <tr>
-                                                    <th style="text-align: left">
+                                                    <th width="35%" style="text-align: left">
                                                         Keluhan Utama
                                                     </th>
 
-                                                    <td style="text-align: right">
+                                                    <td width="65%" style="text-align: left">
                                                         {{ pemeriksaanro . keluhan_utama }}
                                                     </td>
                                                 </tr>
@@ -233,7 +235,7 @@
                                                     <th style="text-align: left">
                                                         Riwayat Penyakit
                                                     </th>
-                                                    <td style="text-align: right">
+                                                    <td style="text-align: left">
                                                         {{ pemeriksaanro . riwayat_penyakit }}
                                                     </td>
                                                 </tr>
@@ -241,7 +243,7 @@
                                                     <th style="text-align: left">
                                                         Kasus Urgent
                                                     </th>
-                                                    <td style="text-align: right">
+                                                    <td style="text-align: left">
                                                         {{ pemeriksaanro . kasus_urgent }}
                                                     </td>
                                                 </tr>
@@ -249,7 +251,7 @@
                                                     <th style="text-align: left">
                                                         Status Psikologi
                                                     </th>
-                                                    <td style="text-align: right">
+                                                    <td style="text-align: left">
                                                         {{ pemeriksaanro . status_psikologi }}
                                                     </td>
                                                 </tr>
@@ -257,7 +259,7 @@
                                                     <th style="text-align: left">
                                                         Status Fungsional
                                                     </th>
-                                                    <td style="text-align: right">
+                                                    <td style="text-align: left">
                                                         {{ pemeriksaanro . status_fungsional }}
                                                     </td>
                                                 </tr>
@@ -265,7 +267,7 @@
                                                     <th style="text-align: left">
                                                         Nadi
                                                     </th>
-                                                    <td style="text-align: right">
+                                                    <td style="text-align: left">
                                                         {{ pemeriksaanro . nadi }}
                                                     </td>
                                                 </tr>
@@ -273,7 +275,7 @@
                                                     <th style="text-align: left">
                                                         Tinggi Badan
                                                     </th>
-                                                    <td style="text-align: right">
+                                                    <td style="text-align: left">
                                                         {{ pemeriksaanro . tinggi_badan }}
                                                     </td>
                                                 </tr>
@@ -281,7 +283,7 @@
                                                     <th style="text-align: left">
                                                         Berat Badan
                                                     </th>
-                                                    <td style="text-align: right">
+                                                    <td style="text-align: left">
                                                         {{ pemeriksaanro . berat_badan }}
                                                     </td>
                                                 </tr>
@@ -289,7 +291,7 @@
                                                     <th style="text-align: left">
                                                         Tekanan Darah
                                                     </th>
-                                                    <td style="text-align: right">
+                                                    <td style="text-align: left">
                                                         {{ pemeriksaanro . tekanan_darah }}
                                                     </td>
                                                 </tr>
@@ -303,10 +305,10 @@
                                             <tbody>
 
                                                 <tr>
-                                                    <th style="text-align: left">
+                                                    <th width="35%" style="text-align: left">
                                                         Nyeri
                                                     </th>
-                                                    <td style="text-align: right">
+                                                    <td width="65%" style="text-align: right">
                                                         {{ pemeriksaanro . nyeri }}
                                                     </td>
                                                 </tr>
@@ -370,10 +372,10 @@
                                             <tbody>
 
                                                 <tr>
-                                                    <th style="text-align: left">
+                                                    <th width="35%" style="text-align: left">
                                                         Penyakit yang pernah diderita
                                                     </th>
-                                                    <td style="text-align: right">
+                                                    <td width="65%" style="text-align: right">
                                                         {{ pemeriksaanro . penyakit_pernah_diderita_lainnya }}
                                                     </td>
                                                 </tr>
@@ -1119,33 +1121,18 @@
                                     </div>
                                 </div>
                                 <div class="RawatInap grid" v-if="showRawatInap">
-                                    <div class="col-9">
-                                        <Selected v-on:click="
-        selectbox(
-            $event,
-            form.select
-                .carabayartindakanrawatjalanjalan
-                .name,
-            form.select
-                .carabayartindakanrawatjalanjalan
-                .statics
-        )
-        " :ref="form.select
-                                                .carabayartindakanrawatjalanjalan
-                                                .name" @selecteditem="selecteditem" @selectclear="selectclear"
-                                            :selection="form.select
-                                                .carabayartindakanrawatjalanjalan" v-on:keyup="
-        selectfilter(
-            $event,
-            form.select
-                .carabayartindakanrawatjalanjalan
-                .name
-        )
-        ">
-                                        </Selected>
+                                    <div class="col-12">
+
+                                        <h3 style="
+                                                font-size: 15px;
+                                                margin-top: 20px;
+                                                font-weight: bold;
+                                            ">
+                                            Silahkan Pilih Kamar Inap Pasien
+                                        </h3>
                                     </div>
-                                    <div class="col-3 form-ml">
-                                        <Selected v-on:click="
+                                        <div class="col-3">
+                                            <Selected v-on:click="
         selectbox(
             $event,
             form.select.kamarinapjalan
@@ -1154,170 +1141,123 @@
                 .statics
         )
         " :ref="form.select.kamarinapjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-                                            :selection="form.select.kamarinapjalan" v-on:keyup="
+                                                :selection="form.select.kamarinapjalan" v-on:keyup="
         selectfilter(
             $event,
             form.select.kamarinapjalan
                 .name
         )
         ">
-                                        </Selected>
-                                    </div>
+                                            </Selected>
+                                        </div>
 
-                                    <div class="col-12">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nama Tindakan</th>
-                                                    <th>Biaya</th>
-                                                    <th>#</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr v-for="(
-                                                        item, index
-                                                    ) in listdatajalan" v-if="listdatajalan.length > 0
-        ">
-                                                    asas
-                                                    <td>
-                                                        {{ item . nama_tindakan_rawat_jalan }}
-                                                    </td>
-                                                    <td style="display: none">
-                                                        {{ item . is_paket_bedah }}
-                                                    </td>
-                                                    <td>{{ item . harga }}</td>
-                                                    <td>
-                                                        <button v-if="item.default !=
-        'Ya'
-        " class="tooltip btn-danger" v-on:click="
-        removetindakanjalan(
-            index
-        )
-        ">
-                                                            <vue-feather type="trash"></vue-feather>
-                                                            <span class="tooltiptext">Hapus
-                                                                Tindakan</span>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                <tr v-else>
-                                                    <td colspan="3">
-                                                        No Data for Result
-                                                    </td>
-                                                </tr>
-                                                <tr v-if="listdatajalan.length > 0
-        ">
-                                                    <td>Total</td>
-                                                    <td colspan="2">
-                                                        {{ formatrupiah(totalbiayajalan . toString()) }}
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+
                                     </div>
-                                </div>
-                                <div class="Pulang grid" v-if="showPulang">
-                                    <div class="col-12">
-                                        <h3 style="
+                                    <div class="Pulang grid" v-if="showPulang">
+                                        <div class="col-12">
+                                            <h3 style="
                                                 font-size: 15px;
                                                 margin-top: 20px;
                                                 font-weight: bold;
                                             ">
-                                            Silahkan Isi Tindakan/Layanan, Obat, dan Tanggal Kontrol Selanjutnya(apabila
-                                            ada)
-                                        </h3>
-                                    </div>
-                                    <div class="col-3">
-                                        <Inputed :ref="form.tanggal_kontrol_selanjutnya.name"
-                                            :form="form.tanggal_kontrol_selanjutnya">
-                                        </Inputed>
+                                                Silahkan Isi Tindakan/Layanan, Obat, dan Tanggal Kontrol
+                                                Selanjutnya(apabila
+                                                ada)
+                                            </h3>
+                                        </div>
+                                        <div class="col-3">
+                                            <Inputed :ref="form.tanggal_kontrol_selanjutnya.name"
+                                                :form="form.tanggal_kontrol_selanjutnya">
+                                            </Inputed>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="content-tab-in" v-if="tab.content.cppt">
-                                <div class="grid">
-                                    <div class="col-5 form-ml">
-                                        <iframe title="CPPT" width="100%" height="100%" style="border: 0" :src="linkR">
-                                        </iframe>
+                                <div class="content-tab-in" v-if="tab.content.cppt">
+                                    <div class="grid">
+                                        <div class="col-5 form-ml">
+                                            <iframe title="CPPT" width="100%" height="100%" style="border: 0"
+                                                :src="linkR">
+                                            </iframe>
+                                        </div>
+
+                                        <div class="col-7 form-ml">
+                                            <label for=""> SUBJECT </label>
+                                            <ckeditor v-model="form.subject" :editor="editor">
+                                            </ckeditor>
+                                            <br />
+                                            <label for=""> OBJECT </label>
+                                            <ckeditor v-model="form.object" :editor="editor">
+                                            </ckeditor>
+                                            <br />
+
+                                            <label for=""> ASSESSMENT </label>
+                                            <ckeditor v-model="form.assessment" :editor="editor">
+                                            </ckeditor>
+                                            <br />
+                                            <label for=""> PLANNING </label>
+                                            <ckeditor v-model="form.plan" :editor="editor">
+                                            </ckeditor>
+                                        </div>
+                                        <div class="col-9"></div>
+                                        <div class="col-3 form-ml form-mt">
+                                            <label for="">Tanda Tangan Digital</label>
+                                            <img v-if="form.ttd" :src="form.ttd" alt="ttd dokter" height="100"
+                                                width="400" />
+                                            <br>
+                                            <button v-if="!form.ttd" class="button-modal-page button-modal-green"
+                                                v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
+                                        </div>
+
                                     </div>
+                                </div>
 
-                                    <div class="col-7 form-ml">
-                                        <label for=""> SUBJECT </label>
-                                        <ckeditor v-model="form.subject" :editor="editor">
-                                        </ckeditor>
-                                        <br />
-                                        <label for=""> OBJECT </label>
-                                        <ckeditor v-model="form.object" :editor="editor">
-                                        </ckeditor>
-                                        <br />
-
-                                        <label for=""> ASSESSMENT </label>
-                                        <ckeditor v-model="form.assessment" :editor="editor">
-                                        </ckeditor>
-                                        <br />
-                                        <label for=""> PLANNING </label>
-                                        <ckeditor v-model="form.plan" :editor="editor">
-                                        </ckeditor>
-                                    </div>
-                                    <div class="col-9"></div>
-                                    <div class="col-3 form-ml form-mt">
-                                        <label for="">Tanda Tangan Digital</label>
-                                        <img v-if="form.ttd" :src="form.ttd" alt="ttd dokter" height="100"
-                                            width="400" />
-                                        <br>
-                                        <button v-if="!form.ttd" class="button-modal-page button-modal-green"
-                                            v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
-                                    </div>
-
+                                <div v-if="disableButtonSave"
+                                    style="width:100%;height:80%;border-radius:4px;position:absolute;left:-1px;background:rgba(0,0,0,0.4)">
                                 </div>
                             </div>
-
-                             <div v-if="disableButtonSave" style="width:100%;height:80%;border-radius:4px;position:absolute;left:-1px;background:rgba(0,0,0,0.4)"></div>
                         </div>
                     </div>
-                </div>
 
-                <div v-if="!disableButtonSave"> 
+                    <div v-if="!disableButtonSave">
                         <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
-                        <div class="col-8"></div>
-                        <div class="col-4" style="text-align: right" v-if="ishide">
-                            <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
-                                v-on:click="previouseButton()">
-                                {{ previous }}
-                            </button>
-                            <button class="button-modal-page button-modal-green" v-if="tabIndex < tab.button.length - 1"
-                                v-on:click="nextButton()">
-                                {{ next }}
-                            </button>
-
-                            <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-red"
-                                v-on:click="redbutton()">
-                                {{ red }}
-                            </button>
-                            <button v-if="tabIndex == tab.button.length - 1" class="button-modal-page button-modal-green"
-                                v-on:click="greenbutton()">
-                                {{ green }}
-                            </button>
-                            <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
-                        </div>
-                        <div class="col-4" style="text-align: right" v-else>
-                            <button class="button-modal-page button-modal-red" v-on:click="cancel()">
-                                Batalkan Kunjungan
-                            </button>
-                            <button class="button-modal-page button-modal-green" v-on:click="edit()">
-                                Edit Data
-                            </button>
+                            <div class="col-8"></div>
+                            <div class="col-4" style="text-align: right" v-if="ishide">
+                                <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
+                                    v-on:click="previouseButton()">
+                                    {{ previous }}
+                                </button>
+                                <button class="button-modal-page button-modal-green"
+                                    v-if="tabIndex < tab.button.length - 1" v-on:click="nextButton()">
+                                    {{ next }}
+                                </button>
+                                <button v-if="tabIndex == tab.button.length - 1"
+                                    class="button-modal-page button-modal-red" v-on:click="redbutton()">
+                                    {{ red }}
+                                </button>
+                                <button v-if="tabIndex == tab.button.length - 1"
+                                    class="button-modal-page button-modal-green" v-on:click="greenbutton()">
+                                    {{ green }}
+                                </button>
+                                <!-- <button class="button-modal-page button-modal-red" v-on:click="pendingbutton()">{{ pendings }}</button> -->
+                            </div>
+                            <div class="col-4" style="text-align: right" v-else>
+                                <button class="button-modal-page button-modal-red" v-on:click="cancel()">
+                                    Batalkan Kunjungan
+                                </button>
+                                <button class="button-modal-page button-modal-green" v-on:click="edit()">
+                                    Edit Data
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <Loader ref="Loader"></Loader>
             </div>
-
-            <Loader ref="Loader"></Loader>
         </div>
-    </div>
 
-    <div style=""></div>
+        <div style=""></div>
 </template>
 
 <script>
@@ -1426,14 +1366,6 @@
                 let ab = parseInt(temp);
                 return ab;
             },
-            totalbiayajalan: function() {
-                let temp = 0;
-                for (let i = 0; i < vm.listdatajalan.length; i++) {
-                    temp += parseInt(vm.listdatajalan[i].harga);
-                }
-                let ab = parseInt(temp);
-                return ab;
-            },
             totalobat: function() {
                 let temp = 0;
                 for (let i = 0; i < vm.listobat.length; i++) {
@@ -1477,7 +1409,6 @@
                 listdata: [],
                 listicdnine: [],
                 listicdten: [],
-                listdatajalan: [],
                 listobat: [],
                 tempobat: null,
                 listobatracikan: [],
@@ -1628,10 +1559,6 @@
             removeicd10: function (index) {
                 vm.listicdten.splice(index, 1);
             }, 
-            removetindakanjalan: function(index) {
-                vm.listdatajalan.splice(index, 1);
-            },
-
             removeobat: function(index) {
                 vm.listobat.splice(index, 1);
             },
@@ -2097,6 +2024,8 @@
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showPulang = true; // Menyembunyikan div dengan kelas 'Operasi'
+                        vm.form.select.paketbedah.value = "";
+                        vm.form.select.paketbedah.label = "Silahkan Pilih";
                     } else {
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
@@ -2119,20 +2048,6 @@
 
                     vm.form.select.carabayartindakanrawatjalan.value = "";
                     vm.form.select.carabayartindakanrawatjalan.label =
-                        "Silahkan Pilih";
-                } else if (key == "carabayartindakanrawatjalanjalan") {
-                    let _item = {
-                        nama_tindakan_rawat_jalan: item.nama_tindakan_rawat_jalan,
-                        is_paket_bedah: 0,
-                        tindakan_rawat_jalan_uuid: item.tindakan_rawat_jalan_uuid,
-                        default: item.default,
-                        harga: parseInt(item.harga),
-                    };
-
-                    vm.listdatajalan.push(_item);
-
-                    vm.form.select.carabayartindakanrawatjalanjalan.value = "";
-                    vm.form.select.carabayartindakanrawatjalanjalan.label =
                         "Silahkan Pilih";
                   } else if (key == "icd9") {
                     let _item = {
@@ -2329,7 +2244,6 @@
                 vm.listicdnine= [];
                 vm.listicdten = [];
                 vm.listdata = [];
-                vm.listdatajalan = [];
                 vm.listobat = [];
                 vm.tempobat = null;
                 vm.disableButtonSave = false;
@@ -2386,18 +2300,6 @@
                 );
             },
             parsingForm: function() {
-                // for (let i = 0; i < vm.listdata.length; i++) {
-                // 	vm.listdata[i].harga = vm.listdata[i].harga.replace(/\D/g, "");
-                // }
-
-                // for (let i = 0; i < vm.listdatajalan.length; i++) {
-                // 	vm.listdatajalan[i].harga = vm.listdatajalan[i].harga.replace(/\D/g, "");
-                // }
-
-                // for (let i = 0; i < vm.listobat.length; i++) {
-                // 	vm.listobat[i].hja_resep = vm.listobat[i].hja_resep.replace(/\D/g, "");
-                // 	vm.listobat[i].total = vm.listobat[i].total.replace(/\D/g, "");
-                // }
 
                 let testing = [];
 
@@ -2454,7 +2356,6 @@
                         vm.form,
                         vm.detail,
                         vm.listdata,
-                        vm.listdatajalan,
                         vm.listobat,
                         testing,
                         vm.listicdnine,
@@ -2526,19 +2427,6 @@
 
                 let a = response.data.layananjalan;
 
-                if (response.data.layananjalan) {
-                    for (let i = 0; i < response.data.layananjalan.length; i++) {
-                        let _item = {
-                            nama_tindakan_rawat_jalan: response.data.layananjalan[i].nama_layanan,
-                            tindakan_rawat_jalan_uuid: response.data.layananjalan[i].layanan_uuid,
-                            is_paket_bedah: response.data.layanan[i].is_paket_bedah,
-                            default: response.data.layananjalan[i].default,
-                            harga: parseInt(response.data.layananjalan[i].tarif),
-                        };
-
-                        vm.listdatajalan.push(_item);
-                    }
-                }
                 console.log("LIST icd9");
                 console.log(response.data.listicd9);
                 if (response.data.listicd9) {
