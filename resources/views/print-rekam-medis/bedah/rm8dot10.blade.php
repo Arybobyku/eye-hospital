@@ -63,10 +63,11 @@
         @include('print-rekam-medis.partials.header')
     </div>
     <div>
+        
         <H4 style="text-align: center; padding-top: 1%; padding-bottom: 1%;">LAPORAN OPERASI TRABEKULEKTOMI</H4>
         @if ($tindakan4 != null  && $tindakan4->namatindakan == 'Laporan Operasi Trabekulektomi' )
             
-        
+        ui
         <table class="tablee8dot10" style="width: 100%;">
             <p style="text-align: right; padding-bottom: 4%;"> Tgl. Operasi
                 :{{ $tindakan4->tanggal }}</p>

@@ -59,6 +59,8 @@
 
     <div style="position:fixed; right: 13px; bottom: 10px;"></div>
     <?php $fullpath = storage_path('app/public/images/header_rme.png'); ?>
+    <?php $matakanan = storage_path('app/public/images/Matakanan.png'); ?>
+    <?php $matakiri = storage_path('app/public/images/Matakiri.png'); ?>
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
             RM 1.9/SM(PO)/22
@@ -90,8 +92,12 @@
             <table style="width: 50%; text-align:center; margin-left:25%">
                 <tr style="text-align: center">
 
-                    <td class="td21dot9"><img src="images/header.png" alt="Logo" class="logo1dot9"></td>
-                    <td class="td21dot9"><img src="images/header.png" alt="Logo" class="logo1dot9"></td>
+                    <td class="td21dot9"><img style="width: 100%;"
+                        src="data:image/png;base64,
+    <?php echo base64_encode(file_get_contents($matakanan)); ?>" /></td>
+                    <td class="td21dot9"><img style="width: 100%;"
+                        src="data:image/png;base64,
+    <?php echo base64_encode(file_get_contents($matakiri)); ?>" /></td>
 
                 </tr> <br>
                 <tr>

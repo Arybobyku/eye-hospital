@@ -63,7 +63,7 @@
             <table style="width: 100%; margin:3px;">
                 <tr>
                     <td>Tanggal Pelaksanaan</td>
-                    <td> : {{  $ppj->tanggal_pelaksanaan }}</td>
+                    <td> : {{  $ppj != null && $ppj->tanggal_pelaksanaan }}</td>
                 </tr>
                 <tr>
                     <td>Keterangan</td>
@@ -84,41 +84,41 @@
                     <td colspan="2">Lakukan Intervensi jatuh standart:</td>
                 </tr>
                 <tr>
-                    <td class="td12dot9"><input type="checkbox" {{ $ppj->rjr1 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td class="td12dot9"><input type="checkbox" {{ $ppj != null && $ppj->rjr1 == 'Ya' ? 'Checked' : '' }}></td>
                     <td class="td22dot9">Benda-benda pribadi dalam jangkauan (telepon genggam, bel pasien, air
                         minum,kacamata, dll)</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjr2 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjr2 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Roda tempat tidur dalam posisi terkunci</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjr3 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjr3 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Posisikan tempat tidur pada posi rendah</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjr4 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjr4 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Pagar pengaman tempat tidur dinaikkan</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjr5 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjr5 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Monitor kebutuhan pasien secara berkala, kunjungi pasien minimal 2 kali dalam 1 shift</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjr6 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjr6 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Berikan edukasi untuk menjegah jatuh kepada pasien dan keluarga. Berikan brosur mencegah jatuh
                         jika ada</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjr7 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjr7 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Biarkan pintu terbuka, gunakan lampu pada malam hari</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjr8 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjr8 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Gunakan alat bantu jalan (walker,handrail)</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjr9 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjr9 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Anjurkan pasien mengggunakan kaus kaki atau sandal/ sepatu yang tidak licin</td>
                 </tr><br>
                 <tr>
@@ -128,44 +128,44 @@
                     <td colspan="2">Lakukan Intervensi Jatuh Tinggi:</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjt1 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjt1 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Lakukan semua intervensi jatuh standar</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjt2 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjt2 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Pasangkan gelang khusus (warna kuning) sebagai tanda risiko pasien jatuh</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjt3 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjt3 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Berikan tanda risiko pasien jatuh pada pintu kamar pasien atau pada bed pasien</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjt4 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjt4 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Pasien ditempatkan dekat nurse station</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjt5 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjt5 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Kunjungi dan monitor pasien setiap 1 jam</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjt6 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjt6 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Edukasi pasien tentang efek samping obat yang diberikan</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjt7 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjt7 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Dampingi pasien ke kamar mandi dan tidak meninggalkan pasien di kamar mandi,</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjt8 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjt8 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Anjurkan menggunakan tempat duduk di kamar mandi saat pasien mandi</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjt9 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjt9 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Informasikan cara menggunakan bel di toilet untuk memanggil perawat, pintu kamar mandi jangan
                         dikunci</td>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" {{ $ppj->rjt10 == 'Ya' ? 'Checked' : '' }}></td>
+                    <td><input type="checkbox" {{ $ppj != null && $ppj->rjt10 == 'Ya' ? 'Checked' : '' }}></td>
                     <td>Komunikasikan risiko pasien jatuh pada saat laporan antara shift</td>
                 </tr>
             </table>

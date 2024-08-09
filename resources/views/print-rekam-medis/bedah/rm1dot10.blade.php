@@ -62,8 +62,8 @@
         </table>
         <table style="width: 100%; border:1px solid">
             <tr>
-                <td style="text-align: center">Tanggal : {{ $ppo->tanggal }}</td>
-                <td style="text-align: center">Jam : {{ $ppo->jam }} WIB</td>
+                <td style="text-align: center">Tanggal : {{ $ppo != null && $ppo->tanggal }}</td>
+                <td style="text-align: center">Jam : {{ $ppo != null && $ppo->jam }} WIB</td>
             </tr>
         </table>
         <table class="table1dot102" style="width: 100%;">
@@ -74,7 +74,7 @@
                 <td>
                     <table class="tablee1dot10" style="width:100%; padding:8px">
                         <tr class="tablee1dot10">
-                            <td class="tablee1dot10" style="padding: 5px">Ruangan : {{ $ppo->ruangan }}</td>
+                            <td class="tablee1dot10" style="padding: 5px">Ruangan : {{ $ppo != null && $ppo->ruangan }}</td>
                             <td class="tablee1dot10" style="padding: 5px"><table>
                                 <tr>
                                     <td>Jenis Pasien : </td>
@@ -89,12 +89,12 @@
                         </td>
                         </tr>
                         <tr>
-                            <td class="tablee1dot10" style="padding: 5px">Diagnosis : {{ $ppo->diagnosis }}</td>
-                            <td class="tablee1dot10" style="padding: 5px">Tindakan Operasi : {{ $ppo->tindakan_operasi }}</td>
+                            <td class="tablee1dot10" style="padding: 5px">Diagnosis : {{ $ppo != null && $ppo->diagnosis }}</td>
+                            <td class="tablee1dot10" style="padding: 5px">Tindakan Operasi : {{ $ppo != null && $ppo->tindakan_operasi }}</td>
                         </tr>
                         <tr>
-                            <td class="tablee1dot10" style="padding: 5px">Dokter Operator : {{ $ppo->dokter_operator }}</td>
-                            <td class="tablee1dot10" style="padding: 5px">Dokter Anastesi : {{ $ppo->dokter_anastesi }}</td>
+                            <td class="tablee1dot10" style="padding: 5px">Dokter Operator : {{ $ppo != null && $ppo->dokter_operator }}</td>
+                            <td class="tablee1dot10" style="padding: 5px">Dokter Anastesi : {{ $ppo != null && $ppo->dokter_anastesi }}</td>
                         </tr>
                     </table>
                 </td>
@@ -105,7 +105,7 @@
                     <table style="padding: 5px">
                         <tr>
                             <td>1. Vital Sign :</td>
-                            <td>Temp: <b>{{ $ppo->vs_temp }} </b> Nadi <b> {{ $ppo->vs_nadi }} </b> Pernafasan: <b> {{ $ppo->vs_pernapasan }} </b> Tekanan Darah: <b> {{ $ppo->vs_tekanan_darah }} </b> Tinggi: <b> {{ $ppo->vs_tinggi }} cm </b>, Berat:<b> {{ $ppo->vs_berat }} kg </b></td>
+                            <td>Temp: <b>{{ $ppo != null && $ppo->vs_temp }} </b> Nadi <b> {{ $ppo != null && $ppo->vs_nadi }} </b> Pernafasan: <b> {{ $ppo != null && $ppo->vs_pernapasan }} </b> Tekanan Darah: <b> {{ $ppo != null && $ppo->vs_tekanan_darah }} </b> Tinggi: <b> {{ $ppo != null && $ppo->vs_tinggi }} cm </b>, Berat:<b> {{ $ppo != null && $ppo->vs_berat }} kg </b></td>
                         </tr>
                         <tr>
                             <td>2. Riwayat Penyakit :</td>
@@ -125,15 +125,15 @@
                             <td>3. Alergi :</td>
                             <td> <table>
                                 <tr>
-                                    <td><input type="checkbox" {{ $ppo->alergi_obatan == '' ? 'Checked' : '' }}></td>
+                                    <td><input type="checkbox" {{ $ppo != null && $ppo->alergi_obatan == '' ? 'Checked' : '' }}></td>
                                     <td>Tidak Ada</td> 
-                                    <td><input type="checkbox" {{ $ppo->alergi_obatan != '' ? 'Checked' : '' }}></td>
-                                    <td>Ya : {{ $ppo->alergi_obatan }} </td>  
+                                    <td><input type="checkbox" {{ $ppo != null && $ppo->alergi_obatan != '' ? 'Checked' : '' }}></td>
+                                    <td>Ya : {{ $ppo != null && $ppo->alergi_obatan }} </td>  
                                 </tr></table></td>
                         </tr>
                         <tr>
                             <td>4. Hasil KGD :</td>
-                            <td> <b>{{ $ppo->hasil_kgd }}</b> Waktu Pengambilan Pukul : <b> {{ $ppo->waktu_pengambilan_kgd }} WIB</b></td>
+                            <td> <b>{{ $ppo != null && $ppo->hasil_kgd }}</b> Waktu Pengambilan Pukul : <b> {{ $ppo != null && $ppo->waktu_pengambilan_kgd }} WIB</b></td>
                         </tr>
                     </table>
                     </div>
@@ -171,87 +171,87 @@
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">1. Pemeriksaan Identitas Pasien</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_pemeriksaan_identitas_pasien == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_pemeriksaan_identitas_pasien == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_pemeriksaan_identitas_pasien == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->pemeriksaan_identitas_pasien_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_pemeriksaan_identitas_pasien == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_pemeriksaan_identitas_pasien == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_pemeriksaan_identitas_pasien == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->pemeriksaan_identitas_pasien_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">2. Pemeriksaan Gelang Nama</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_pemeriksaan_gelang_nama == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_pemeriksaan_gelang_nama == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_pemeriksaan_gelang_nama == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->pemeriksaan_gelang_nama_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_pemeriksaan_gelang_nama == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_pemeriksaan_gelang_nama == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_pemeriksaan_gelang_nama == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->pemeriksaan_gelang_nama_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">3. Formulir Persetujuan Operasi</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_formulir_persetujuan_operasi == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_formulir_persetujuan_operasi == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_formulir_persetujuan_operasi == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->formulir_persetujuan_operasi_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_formulir_persetujuan_operasi == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_formulir_persetujuan_operasi == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_formulir_persetujuan_operasi == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->formulir_persetujuan_operasi_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">4. Pemberian Premedikasi</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_pemberian_premedikasi == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_pemberian_premedikasi == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_pemberian_premedikasi == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->pemberian_premedikasi_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_pemberian_premedikasi == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_pemberian_premedikasi == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_pemberian_premedikasi == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->pemberian_premedikasi_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">5. Pemberian Makanan dan Minum yang terakhir</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_pemberian_makan_minum_last == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_pemberian_makan_minum_last == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_pemberian_makan_minum_last == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->pemberian_makan_minum_last_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_pemberian_makan_minum_last == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_pemberian_makan_minum_last == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_pemberian_makan_minum_last == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->pemberian_makan_minum_last_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">6. Alat Prothesa Luar, mis: Gigi Palsu, Kontak Lensa</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_alat_protesa_luar == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_alat_protesa_luar == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_alat_protesa_luar == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->alat_protesa_luar_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_alat_protesa_luar == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_alat_protesa_luar == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_alat_protesa_luar == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->alat_protesa_luar_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">7. Penjepit Rambut/Cat Kuku/Perhiasan</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_alat_perhiasan== 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_alat_perhiasan == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_alat_perhiasan == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->alat_perhiasan_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_alat_perhiasan== 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_alat_perhiasan == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_alat_perhiasan == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->alat_perhiasan_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">8. Status Pasien Terlampir</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_status_pasien_terlampir == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_status_pasien_terlampir == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_status_pasien_terlampir == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->status_pasien_terlampir_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_status_pasien_terlampir == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_status_pasien_terlampir == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_status_pasien_terlampir == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->status_pasien_terlampir_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">9. X-Ray/Scan *Pasien Terlampir</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_xray_scan == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_xray_scan == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_xray_scan == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->xray_scan_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_xray_scan == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_xray_scan == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_xray_scan == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->xray_scan_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">10. Persiapan Pencukuran Buku Mata</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_pencukuran_bulu_mata == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_pencukuran_bulu_mata == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_pencukuran_bulu_mata == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->pencukuran_bulu_mata_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_pencukuran_bulu_mata == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_pencukuran_bulu_mata == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_pencukuran_bulu_mata == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->pencukuran_bulu_mata_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">11. Pemeriksaan Darah (PMI/Lab. R.S*)</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_pemeriksaan_darah == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_pemeriksaan_darah == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_pemeriksaan_darah == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->pemeriksaan_darah_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_pemeriksaan_darah == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_pemeriksaan_darah == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_pemeriksaan_darah == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->pemeriksaan_darah_ket }}</td>
                         </tr>
                         <tr>
                             <td><div style="margin-left: 10px">12. Site Marker</div></td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->r_site_marker == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok1_site_marker == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center"><input type="checkbox" {{ $ppo->ok2_site_marker == 'ada' ? 'Checked' : '' }}> </td>
-                            <td style="text-align: center">{{ $ppo->site_marker_ket }}</td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->r_site_marker == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok1_site_marker == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center"><input type="checkbox" {{ $ppo != null && $ppo->ok2_site_marker == 'ada' ? 'Checked' : '' }}> </td>
+                            <td style="text-align: center">{{ $ppo != null && $ppo->site_marker_ket }}</td>
                         </tr>
                     </table>
                 </td>
@@ -263,19 +263,25 @@
                         <tr>
                             <td>Diperiksa Oleh :</td>
                             <td>Perawat Ruangan </td>
-                            <td>: {{ $ppo->perawat_ruangan }}</td>
+                            <td>: {{ $ppo != null && $ppo->perawat_ruangan }}</td>
                         </tr>
                         <tr>
                             <td></td>
                             <td>Perawat Kamar Bedah</td>
-                            <td>: {{ $ppo->perawat_kamar_bedah }}</td>
+                            <td>: {{ $ppo != null && $ppo->perawat_kamar_bedah }}</td>
                         </tr>
                         <tr>
-                            <td>Tanggal : @php
-                                list($date, $time) = explode(' ', $ppo->created_at);
-                                $timeWithoutMilliseconds = explode('.', $time)[0];
-                            @endphp {{ $date }} </td>
-                            <td colspan="2">, Pukul: {{ $timeWithoutMilliseconds }} </td>
+                                
+                            
+                            <td>Tanggal : 
+                                {{-- @php
+                                // list($date, $time) = explode(' ', $ppo->created_at);
+                                // $timeWithoutMilliseconds = explode('.', $time)[0];
+                            @endphp {{ $date }}  --}}
+                            </td>
+                            <td colspan="2">, Pukul: 
+                                {{-- {{ $timeWithoutMilliseconds }}  --}}
+                            </td>
                         </tr>
                     </table>
                 </td>

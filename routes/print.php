@@ -50,11 +50,11 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/bedah/rm2dot9/{uuid}', [PrintRekamMedisCtrl::class, 'printRm2dot9']);
     Route::get('rekammedis/bedah/rm4dot9/{uuid}', [PrintRekamMedisCtrl::class, 'printRm4dot9']);
     Route::get('rekammedis/bedah/rm8dot7/{uuid}', [PrintRekamMedisCtrl::class, 'printRm8dot7']);
-    Route::get('rekammedis/bedah/rm8dot8/{uuid}', [PrintRekamMedisCtrl::class, 'printRm8dot8']);
-    Route::get('rekammedis/bedah/rm8dot9/{uuid}', [PrintRekamMedisCtrl::class, 'printRm8dot9']);
-    Route::get('rekammedis/bedah/rm8dot10/{uuid}', [PrintRekamMedisCtrl::class, 'printRm8dot10']);
-    Route::get('rekammedis/bedah/rm9dot0/{uuid}', [PrintRekamMedisCtrl::class, 'printRm9dot0']);
-    Route::get('rekammedis/bedah/rm9dot1/{uuid}', [PrintRekamMedisCtrl::class, 'printRm9dot1']);
+    // Route::get('rekammedis/bedah/rm8dot8/{uuid}', [PrintRekamMedisCtrl::class, 'printRm8dot8']);
+    // Route::get('rekammedis/bedah/rm8dot9/{uuid}', [PrintRekamMedisCtrl::class, 'printRm8dot9']);
+    // Route::get('rekammedis/bedah/rm8dot10/{uuid}', [PrintRekamMedisCtrl::class, 'printRm8dot10']);
+    // Route::get('rekammedis/bedah/rm9dot0/{uuid}', [PrintRekamMedisCtrl::class, 'printRm9dot0']);
+    // Route::get('rekammedis/bedah/rm9dot1/{uuid}', [PrintRekamMedisCtrl::class, 'printRm9dot1']);
     Route::get('rekammedis/rawat-jalan/all/{uuid}', [PrintRekamMedisCtrl::class, 'all']);
     Route::get('rekammedis/bedah/all_bedah/{uuid}', [PrintRekamMedisCtrl::class, 'all_bedah']);
 });

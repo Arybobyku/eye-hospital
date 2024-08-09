@@ -50,6 +50,8 @@
         }
 
     </style>
+    @if ($ckb != null)
+        
 <body>
     <div style="position:fixed; right: 13px; bottom: 10px;"></div>
     <?php $fullpath = storage_path('app/public/images/header_rme.png'); ?>
@@ -152,19 +154,19 @@
             <td colspan="2"><b>Linen Steril</b></td>
         </tr>        
         <tr>            
-            <td><input type="checkbox" {{ $linen_steril[0]?'checked': '' }}></td>
+            <td><input type="checkbox" {{ $linen_steril != null && $linen_steril[0]?'checked': '' }}></td>
             <td>Jas steril</td>   
         </tr>
         <tr>            
-            <td><input type="checkbox" {{ $linen_steril[1]?'checked': '' }}></td>
+            <td><input type="checkbox" {{ $linen_steril != null && $linen_steril[1]?'checked': '' }}></td>
             <td>Duk Steril</td>   
         </tr>
         <tr>            
-            <td><input type="checkbox" {{ $linen_steril[2]?'checked': '' }}></td>
+            <td><input type="checkbox" {{ $linen_steril != null && $linen_steril[2]?'checked': '' }}></td>
             <td>Linen meja instrumen</td>   
         </tr>
         <tr>            
-            <td><input type="checkbox" {{ $linen_steril[3]?'checked': '' }}></td>
+            <td><input type="checkbox" {{ $linen_steril != null && $linen_steril[3]?'checked': '' }}></td>
             <td>Kasa</td>   
         </tr>
         <br>
@@ -215,4 +217,6 @@
         </tr>
     </table>
     </table>
+</body>
+@endif
 </head>

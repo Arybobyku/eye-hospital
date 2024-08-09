@@ -130,11 +130,11 @@
     <div class="smallfont4dot9">
         <table class="tablee4dot9" style="width: 100%;">
             <tr>
-                <td class="td14dot9"><b>Sebelum Induksi anestesi/ Sign In <br>Waktu :{{ $kb->si_jam }} </b></td>
+                <td class="td14dot9"><b>Sebelum Induksi anestesi/ Sign In <br>Waktu :{{ $kb != null && $kb->si_jam }} </b></td>
                 <td class="td24dot9"><b>--></b></td>
-                <td class="td34dot9"><b>Sebelum Insisi/Time Out <br> Waktu :{{ $kb->to_jam }}</b></td>
+                <td class="td34dot9"><b>Sebelum Insisi/Time Out <br> Waktu :{{ $kb != null && $kb->to_jam }}</b></td>
                 <td class="td44dot9"><b>--></b></td>
-                <td class="td54dot9"><b>Sebelum Pasien Meninggalkan Kamar Operasi/ Sign Out <br> Waktu :{{ $kb->so_jam }}</td>
+                <td class="td54dot9"><b>Sebelum Pasien Meninggalkan Kamar Operasi/ Sign Out <br> Waktu :{{ $kb != null && $kb->so_jam }}</td>
             </tr>
             <tr style="vertical-align: top;">
                 <td class="td14dot9">
@@ -150,7 +150,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_1 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_1 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -158,7 +158,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_1 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_1 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -170,7 +170,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_2 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_2 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -178,7 +178,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_2 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_2 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak diperlukan</td>
                                     </tr>
                                 </table>
@@ -190,7 +190,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_3 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_3 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -198,7 +198,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_3 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_3 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -211,7 +211,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_4 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_4 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -219,7 +219,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_4 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_4 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -231,7 +231,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_5 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_5 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -239,7 +239,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_5 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_5 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -252,7 +252,7 @@
                             <td colspan="2">
                                 <table>
                                     <tr>
-                                        <td> <input type="checkbox" {{ $kb->si_bagian_6 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td> <input type="checkbox" {{ $kb != null && $kb->si_bagian_6 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya, dan alat/bantuan sudah tersedia</td>
                                     </tr>
                                 </table>
@@ -262,7 +262,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_6 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_6 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -275,7 +275,7 @@
                             <td colspan="2">
                                 <table>
                                     <tr>
-                                        <td> <input type="checkbox" {{ $kb->si_bagian_6 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td> <input type="checkbox" {{ $kb != null && $kb->si_bagian_6 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td colspan="2">Ya, dan sudah direncanakan pemasangan infus 2 (<i>line</i>) dan
                                             tersedia cairan-cairan yang akan diberikan</td>
                                     </tr>
@@ -286,7 +286,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->si_bagian_6 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_6 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -301,21 +301,21 @@
                             <td colspan="2"> <u>dr. Anestesi :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->nama_ahli_anastesi }}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->nama_ahli_anastesi }}</b>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2"><u>Perawat Anestesi :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->asisten_operasi }}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->asisten_operasi }}</b>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2"><u>Perawat :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->si_nama }}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->si_nama }}</b>
                             </td>
                         </tr> 
                     </table>
@@ -336,7 +336,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_1 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_1 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -344,7 +344,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_2 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_2 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -357,7 +357,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_2_1 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_2_1 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -365,7 +365,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_2_1 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_2_1 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -378,7 +378,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_2_2 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_2_2 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -386,7 +386,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_2_2 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_2_2 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak perlu</td>
                                     </tr>
                                 </table>
@@ -402,7 +402,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td colspan="2">{{ $kb->to_bagian_2_3 }}</td>
+                                        <td colspan="2">{{ $kb != null && $kb->to_bagian_2_3 }}</td>
                                     </tr>
                                 </table>
                             </td>
@@ -414,7 +414,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td colspan="2">{{ $kb->to_bagian_3 }}</td>
+                                        <td colspan="2">{{ $kb != null && $kb->to_bagian_3 }}</td>
                                     </tr>
                                 </table>
                             </td>
@@ -426,7 +426,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_4_1 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_4_1 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -434,7 +434,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_4_1 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_4_1 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -450,7 +450,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_4_2 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_4_2 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -458,7 +458,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_4_2 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_4_2 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -474,7 +474,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_5 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_5 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -482,7 +482,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_5 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_5 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -495,7 +495,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_6 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_6 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -503,7 +503,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->to_bagian_6 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_6 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -517,7 +517,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_asisten_1 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_asisten_1 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -525,7 +525,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_asisten_1 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_asisten_1 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -538,7 +538,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_penata == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_penata == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -546,7 +546,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_penata == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_penata == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -560,21 +560,21 @@
                             <td colspan="2"><u>dr. Anestesi :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->nama_ahli_anastesi }}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->nama_ahli_anastesi }}</b>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2"><u>Perawat Anestesi :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->asisten_operasi }}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->asisten_operasi }}</b>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2"><u>Perawat Sirkuler :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->to_nama }}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->to_nama }}</b>
                             </td>
                         </tr> 
                     </table>
@@ -594,7 +594,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_bagian_1 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_1 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -602,7 +602,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_bagian_1 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_1 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -614,7 +614,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_bagian_2 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_2 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Lengkap</td>
                                     </tr>
                                 </table>
@@ -622,7 +622,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_bagian_2 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_2 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -635,7 +635,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_bagian_3 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_3 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -643,7 +643,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_bagian_3 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_3 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak </td>
                                     </tr>
                                 </table>
@@ -656,7 +656,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_bagian_4 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_4 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -664,7 +664,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_bagian_4 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_4 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak </td>
                                     </tr>
                                 </table>
@@ -681,7 +681,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_bagian_5 == 'Ya' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_5 == 'Ya' ? 'Checked' : '' }}></td>
                                         <td>Ya</td>
                                     </tr>
                                 </table>
@@ -689,7 +689,7 @@
                             <td>
                                 <table style="margin-top: -10px">
                                     <tr>
-                                        <td><input type="checkbox" {{ $kb->so_bagian_5 == 'Tidak' ? 'Checked' : '' }}></td>
+                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_5 == 'Tidak' ? 'Checked' : '' }}></td>
                                         <td>Tidak</td>
                                     </tr>
                                 </table>
@@ -697,11 +697,7 @@
                         </tr>
                         <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
                          <tr>
-                            <td colspan="2" >Medan,@php
-                                list($date, $time) = explode(' ', $kb->created_at);
-                            @endphp
-                            
-                            {{ $date }}</td>
+                            <td colspan="2" >Medan, {{ $kb != null && $kb->created_at }}</td>
                         </tr>
                         <br>
                         <tr>
@@ -711,35 +707,35 @@
                             <td colspan="2"><u>dr. Bedah :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->nama_operator }}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->nama_operator }}</b>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2"><u>dr. Anestesi :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->nama_ahli_anastesi }}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->nama_ahli_anastesi }}</b>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2"><u>Perawat Anestesi :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->asisten_operasi }}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->asisten_operasi }}</b>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2"><u>Perawat Instrumen :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->scrub_nurses}}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->scrub_nurses}}</b>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2"><u>Perawat Sirkuler :</u></td>
                         </tr>
                         <tr>
-                            <td colspan="2"><b>{{ $kb->to_nama }}</b>
+                            <td colspan="2"><b>{{ $kb != null && $kb->to_nama }}</b>
                             </td>
                         </tr> 
                     </table>
