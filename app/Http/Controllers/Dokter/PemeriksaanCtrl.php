@@ -1049,10 +1049,10 @@ class PemeriksaanCtrl extends Controller
                 $item->pengguna_uuid = $request->pengguna_uuid;
                 $item->nama_dokter = $request->nama_dokter;
                 $item->ttd_dokter = $request->ttd_dokter;
-
+                
                 $item->tanggal = date('Y-m-d');
                 $item->waktu = date('H:i');
-
+                
                 $item->posisi_bola_mata = $request->posisi_bola_mata;
                 $item->pergerakan_bola_mata = $request->pergerakan_bola_mata;
                 $item->ocular_dextra_palpebra = $request->ocular_dextra_palpebra;
@@ -1080,11 +1080,54 @@ class PemeriksaanCtrl extends Controller
                 $item->pemeriksaan_prognosa = $request->pemeriksaan_prognosa;
                 $item->anamnese = $request->anamnese;
                 $item->pilihan_plan = $request->pilihan_plan;
-
+                $item->tanggal_kontrol_selanjutnya = $request->tanggal_kontrol_selanjutnya;
+                
                 $item->save();
 
-                $remove = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+                PemeriksaanDokterIcd9::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+                $icd9 = json_decode($request->listicd9);
+                echo 'uuidicdnine';
+                echo $request->listicd9;
+                foreach ($icd9 as $row) {
+                    $item = new PemeriksaanDokterIcd9();
+                    $item->uuid = Uuid::uuid4();
+                    $item->registrasi_uuid = $request->registrasi_uuid;
+                    $item->pemeriksaan_dokter_uuid = $request->uuid;
+                    $item->registrasi_kode = $request->kode;
+                    $item->registrasi_nomor = $request->nomor;
+                    $item->pasien_uuid = $request->pasien_uuid;
+                    $item->rekam_medis = $request->rekam_medis;
+                    $item->nama_pasien = $request->nama_pasien;
+                    $item->pengguna_uuid = $request->pengguna_uuid;
+                    $item->icdnine_uuid = $row->uuid_icdnine;
 
+                    $item->kode_icdnine = $row->kode_icdnine;
+                    $item->nama_icdnine = $row->nama_icdnine;
+                    $item->save();
+                }
+
+                PemeriksaanDokterIcd10::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+                $icd10 = json_decode($request->listicd10);
+                foreach ($icd10 as $row) {
+                    $item = new PemeriksaanDokterIcd10();
+                    $item->uuid = Uuid::uuid4();
+                    $item->registrasi_uuid = $request->registrasi_uuid;
+                    $item->pemeriksaan_dokter_uuid = $request->uuid;
+                    $item->registrasi_kode = $request->kode;
+                    $item->registrasi_nomor = $request->nomor;
+                    $item->pasien_uuid = $request->pasien_uuid;
+                    $item->rekam_medis = $request->rekam_medis;
+                    $item->nama_pasien = $request->nama_pasien;
+                    $item->pengguna_uuid = $request->pengguna_uuid;
+                    $item->icdten_uuid = $row->uuid_icdten;
+                    $item->kode_icdten = $row->kode_icdten;
+                    $item->nama_icdten = $row->nama_icdten;
+                    $item->save();
+                }
+
+
+                $remove = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+                
                 $obat = json_decode($request->obat);
 
                 $nama_layanan = 'Obat-obatan';

@@ -233,6 +233,8 @@ class FarmasiCtrl extends Controller
             \DB::beginTransaction();
 
             $obat = json_decode($request->obat);
+            $obatTambahan = json_decode($request->obattambahan);
+
 
             if (count($obat) > 0) {
                 $nama_layanan = 'Obat-obatan';
@@ -318,7 +320,10 @@ class FarmasiCtrl extends Controller
                 $item->default = 'Tidak';
                 $item->save();
 
-                $obatTambahan = json_decode($request->obattambahan);
+               
+             if(count($obatTambahan) > 0) {
+                $tarif = 0;
+                $nama_layanan = 'Obat/Vit Tambahan';
 
                 foreach ($obatTambahan as $row) {
                     $item = new Resep();
@@ -396,7 +401,9 @@ class FarmasiCtrl extends Controller
                 $item->jenis = 'Obat/Vitamin Tambahan';
                 $item->default = 'Tidak';
                 $item->save();
-            } else {
+            }
+        }
+             else {
                 $delete_resep = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
                 $detele_tindakan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatan')->delete();
                 $cek = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatracikan')->first();
