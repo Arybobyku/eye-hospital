@@ -1664,7 +1664,7 @@
                 vm.form.ttd = window.localStorage.getItem("ttd") ?? "";
             },
             setCkEditor: function () {
-                console.log('===> SET CK EDITOR',vm.listobat[0]); 
+                console.log('===> SET CK EDITOR',vm.listobatracikan[0]); 
                 vm.form.subject = vm.form.anamnese.value;
                 vm.form.assessment = ``;
                 vm.form.plan = ``;
@@ -1704,10 +1704,10 @@
                             <tbody>
                             ${vm.listobat.map((element) => `
                                 <tr>
-                                    <td>${element.nama}</td>
-                                    <td>${element.signa}</td>
-                                    <td>${element.posisimata}</td>
-                                    <td>${element.jumlah_kecil} ${element.nama_satuan_kecil}</td>
+                                    <td>${element.nama ?? ""}</td>
+                                    <td>${element.signa ?? ""}</td>
+                                    <td>${element.posisimata ?? ""}</td>
+                                    <td>${element.jumlah_kecil ?? ""} ${element.nama_satuan_kecil ?? ""}</td>
                                 </tr>
                             `)}
                             </tbody>
@@ -1723,19 +1723,19 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <td>Nama Obat</td>
+                                    <td>Kemasan</td>
+                                    <td>Racikan</td>
                                     <td>Signa</td>
-                                    <td>Posisi</td>
                                     <td>Qty</td>
                                 </tr>
                             </thead>
                             <tbody>
                             ${vm.listobatracikan.map((element) => `
                                 <tr>
-                                    <td>${element.nama}</td>
-                                    <td>${element.signa}</td>
-                                    <td>${element.posisimata}</td>
-                                    <td>${element.jumlah_kecil} ${element.nama_satuan_kecil}</td>
+                                    <td>${element.kemasan ?? ""}</td>
+                                    <td>${element.label ?? ""}</td>
+                                    <td>${element.signa ?? ""}</td>
+                                    <td>${element.jumlah ?? ""}</td>
                                 </tr>
                             `)}
                             </tbody>
