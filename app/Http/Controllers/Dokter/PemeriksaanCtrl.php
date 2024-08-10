@@ -1049,10 +1049,10 @@ class PemeriksaanCtrl extends Controller
                 $item->pengguna_uuid = $request->pengguna_uuid;
                 $item->nama_dokter = $request->nama_dokter;
                 $item->ttd_dokter = $request->ttd_dokter;
-                
+
                 $item->tanggal = date('Y-m-d');
                 $item->waktu = date('H:i');
-                
+
                 $item->posisi_bola_mata = $request->posisi_bola_mata;
                 $item->pergerakan_bola_mata = $request->pergerakan_bola_mata;
                 $item->ocular_dextra_palpebra = $request->ocular_dextra_palpebra;
@@ -1081,7 +1081,7 @@ class PemeriksaanCtrl extends Controller
                 $item->anamnese = $request->anamnese;
                 $item->pilihan_plan = $request->pilihan_plan;
                 $item->tanggal_kontrol_selanjutnya = $request->tanggal_kontrol_selanjutnya;
-                
+
                 $item->save();
 
                 PemeriksaanDokterIcd9::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
@@ -1125,9 +1125,8 @@ class PemeriksaanCtrl extends Controller
                     $item->save();
                 }
 
-
                 $remove = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
-                
+
                 $obat = json_decode($request->obat);
 
                 $nama_layanan = 'Obat-obatan';
@@ -1730,7 +1729,7 @@ class PemeriksaanCtrl extends Controller
                 }
             }
             $cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
-                        ->where('sebagai','=','DOKTER')
+                        ->where('sebagai', '=', 'DOKTER')
                         ->first();
 
             $pengguna_uuid = \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'Uuid'));
@@ -1741,11 +1740,11 @@ class PemeriksaanCtrl extends Controller
                     'asesmen' => $request->assessment,
                     'plan' => $request->plan,
                     'pengguna_uuid' => $pengguna_uuid,
-					'sebagai' =>  $request->cppt_sebagai,
+                    'sebagai' => $request->cppt_sebagai,
                     'ttd' => $request->ttd,
                 ];
                 $update = Cppt::where('uuid', '=', $request->uuid)
-                                ->where('sebagai', '=', 'DOKTER')  
+                                ->where('sebagai', '=', 'DOKTER')
                                 ->update($arr);
             } else {
                 $item = new Cppt();
@@ -1840,7 +1839,7 @@ class PemeriksaanCtrl extends Controller
                         ->where('jenis', '=', 'Inap dan Bedah')
                         ->orderBy('id', 'desc')->first();
 
-        $obat = Resep::where('registrasi_uuid', '=', $request->uuid)
+        $obat = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', '=', 0)
                         ->orderBy('id', 'desc')->get();
 
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
