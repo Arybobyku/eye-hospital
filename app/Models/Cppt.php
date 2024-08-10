@@ -11,4 +11,9 @@ class Cppt extends Model
   use HasFactory, Notifiable;
   protected $table = 'cppt';
   public $timestamps = false;
+
+  public function pengguna()
+  {
+    return $this->belongsTo(Pengguna::class, 'pengguna_uuid', 'uuid');
+  }
 }

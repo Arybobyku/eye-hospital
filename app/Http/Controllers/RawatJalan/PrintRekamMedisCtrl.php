@@ -744,8 +744,7 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     $cppt = Cppt::where('pasien_uuid', '=', $uuid)
-            ->leftJoin('pengguna', 'cppt.pengguna_uuid', '=', 'pengguna.uuid')
-            ->orderBy('cppt.created_at', 'desc')
+            ->with('pengguna') 
             ->get();    
 
      return view('print-rekam-medis.rawat-jalan.cppt',compact('pasien','cppt',));
