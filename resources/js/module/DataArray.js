@@ -70,6 +70,7 @@ export const arrbiodata = () => {
 			{ value: 'KTA', label: 'KTA' },
 			{ value: 'KITAS', label: 'KITAS' },
 			{ value: 'Paspor', label: 'Paspor' },
+			
 		],
 		posisiakun: [
 			{ value: '8807', label: 'Karyawan' },
@@ -122,6 +123,7 @@ export const arrbiodata = () => {
 			{ value: 'Sr.', label: 'Sr.' },
 			{ value: 'Jr.', label: 'Jr.' },
 		],
+	
 	}
 }
 
@@ -312,5 +314,30 @@ export const arrpemeriksaan = () => {
 			{ value: 'Ya', label: 'Ya, Terjatuh' },
 			{ value: 'Tidak', label: 'Tidak Terjatuh' },
 		],
+		pilihanplan: [
+			{ value: 'Pulang Berobat Jalan', label: 'Pulang Berobat Jalan' },
+			{ value: 'Rawat Inap', label: 'Rawat Inap' },
+			{ value: 'Operasi', label: 'Operasi' },
+		],
+		posisimata: [
+			{value: '-', label: '-'},
+			{value: 'OD', label: 'OD'},
+			{value: 'OS', label: 'OS'},
+			{value: 'OD dan OS', label: 'OD dan OS'},
+		]
+	
 	}
+	}
+	export const arrlaporantindakanbedah = () => {
+	return {
+		pilihantindakan: [
+			{ value: 'Injeksi Antivega', label: 'Laporan Injeksi Antivega' },
+			{ value: 'Tindakan Laser PRP', label: 'Tindakan Laser PRP' },
+			{ value: 'Tindakan Laser PRP Capsulotomy', label: 'Tindakan Laser PRP Capsulotomy' },
+			{ value: 'Laporan Operasi Trabekulektomi', label: 'Laporan Operasi Trabekulektomi' },
+			{ value: 'Laporan Operasi Pterygium', label: 'Laporan Operasi Pterygium' },
+			{ value: 'Laporan Insisi Chalazion', label: 'Laporan Insisi Chalazion' },
+		],
+	}
+
 };

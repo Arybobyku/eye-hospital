@@ -449,7 +449,7 @@ export default {
 				vm.form.diagnosisprabedah.value = data.diagnosis_pra_bedah;
 				vm.form.diagnosispascabedah.value = data.diagnosis_pasca_bedah;
 				vm.form.catatantambahan.value = data.catatan_tambahan;
-				vm.form.namaoperator.value = data.nama_operator;
+				vm.form.namaoperator.value = data.operator;
 				if (data.an_topical == 'ada') { vm.an_topical = true; }
 				if (data.an_retrobulbar_peribulbar == 'ada') { vm.an_retrobulbar_peribulbar = true; }
 				if (data.an_sub_conjunctival == 'ada') { vm.an_sub_conjunctival = true; }
@@ -523,7 +523,6 @@ export default {
 					else if (input[i].value == 'an_intracamelar') { vm.form.an_intracamelar = 'ada'; }
 					else if (input[i].value == 'an_nu_bius_umum') { vm.form.an_nu_bius_umum = 'ada'; }
 					else if (input[i].value == 'an_xylocain') { vm.form.an_xylocain = 'ada'; }
-
 					else if (input[i].value == 'an_lidocain') { vm.form.an_lidocain = 'ada'; }
 					else if (input[i].value == 'in_kornea') { vm.form.in_kornea = 'ada'; }
 					else if (input[i].value == 'in_limbus') { vm.form.in_limbus = 'ada'; }
@@ -579,7 +578,6 @@ export default {
 					else if (input[i].value == 'an_intracamelar') { vm.form.an_intracamelar = 'tidak ada'; }
 					else if (input[i].value == 'an_nu_bius_umum') { vm.form.an_nu_bius_umum = 'tidak ada'; }
 					else if (input[i].value == 'an_xylocain') { vm.form.an_xylocain = 'tidak ada'; }
-
 					else if (input[i].value == 'an_lidocain') { vm.form.an_lidocain = 'tidak ada'; }
 					else if (input[i].value == 'in_kornea') { vm.form.in_kornea = 'tidak ada'; }
 					else if (input[i].value == 'in_limbus') { vm.form.in_limbus = 'tidak ada'; }

@@ -43,6 +43,8 @@ export default {
 				catatanoperasikatarak: '/bedah/dataform/catatanoperasikatarak',
 				persetujuantindakankedokteran: '/bedah/dataform/persetujuantindakankedokteran',
 				checklistkeselamatanbedah: '/bedah/dataform/checklistkeselamatanbedah',
+				pencegahanpasienjatuh: '/bedah/dataform/pencegahanpasienjatuh',
+				laporaninjeksiantivega: '/bedah/dataform/laporaninjeksiantivega',
 			}, url: '', data: null
 		},
 		column: [
@@ -110,7 +112,9 @@ export default {
 			else if (key == 'perawatanperioperative') { vm.attach.url = vm.attach.link.perawatanperioperative; }
 			else if (key == 'catatanoperasikatarak') { vm.attach.url = vm.attach.link.catatanoperasikatarak; }
 			else if (key == 'persetujuantindakankedokteran') { vm.attach.url = vm.attach.link.persetujuantindakankedokteran; }
-			else if (key == 'checklistkeselamatanbedah') { vm.attach.url = vm.attach.link.checklistkeselamatanbedah; }
+			else if (key == 'keselamatanbedah') { vm.attach.url = vm.attach.link.checklistkeselamatanbedah; }
+			else if (key == 'pencegahanpasienjatuh') { vm.attach.url = vm.attach.link.pencegahanpasienjatuh; }
+			else if (key == 'laporaninjeksiantivega') { vm.attach.url = vm.attach.link.laporaninjeksiantivega; }
 		},
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },

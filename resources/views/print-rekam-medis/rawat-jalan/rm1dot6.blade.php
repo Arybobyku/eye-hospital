@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>RM1.6</title>
+    <style>
+        @page {
+            margin: 18px;
+        }
+
+        body {
+            margin: 18px;
+        }
+
+        .wrap {
+            width: 100%;
+            height: auto;
+            display: inline-block;
+        }
+
+        .tablee {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+
+        .page_break {
+            page-break-before: always;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div style="position:fixed; right: 13px; bottom: 10px;">
+    </div>
+    <?php $fullpath = storage_path('app/public/images/header_rme.png'); ?>
+    <?php $eyero = storage_path('app/public/images/EYE-RO.png'); ?>
+    <div class="wrap">
+        <div style="width:100%; text-align:right; margin-bottom:5px">
+            RM 1.6/RPPRJ/22
+        </div>
+
+        @include('print-rekam-medis.partials.header')
+        {{-- table content --}}
+        <h3 style="text-align: center">RESUME PERAWATAN PASIEN RAWAT JALAN</h3>
+        <table class="tablee" style="width:100%; position:relative">
+            <tr class="tablee">
+                <th class="tablee">Tanggal kunjungan</th>
+                <th class="tablee">Poli</th>
+                <th class="tablee">Diagnosa</th>
+                <th class="tablee">Terapi/Tindakan</th>
+                <th class="tablee">Dokter</th>
+            </tr>
+            @foreach ($ro as $dataRo)
+            <tr class="tablee">
+                <td class="tablee" style="padding: 5px"> <br> <b style="padding: 5px"> {{  $dataRo->tanggal }} </td>
+                <td class="tablee" style="padding: 5px"> <br> <b> Poli Mata {{ $dataRo->registrasi->ruang_poliklinik }}</td>
+                <td class="tablee" style="padding: 5px"> <br> <table> @foreach ($dataRo->pemeriksaanDokterIcdten as $icd10)
+                    <tr><td> {{   $icd10->nama_icdten }} </td></tr>  @endforeach </table></td>
+                <td class="tablee" style="padding: 5px"> <br> <table> @foreach ($dataRo->pemeriksaanDokterIcdnine as $icd9)
+                    <tr><td> {{   $icd9->nama_icdnine }} </td></tr>  @endforeach </table></td>
+                <td class="tablee" style="padding: 5px"> <br> {{ $dataRo->nama_dokter }}</td>
+            </tr>
+            @endforeach
+            {{-- <tr class="tablee" style="padding: 5px">
+                <td class="tablee"> <br> </td>
+                <td class="tablee"> <br> </td>
+                <td class="tablee"> <br> </td>
+                <td class="tablee"> <br> </td>
+                <td class="tablee"> <br> </td>
+            </tr> --}}
+
+        </table>
+    </div>
+</body>
+
+</html>

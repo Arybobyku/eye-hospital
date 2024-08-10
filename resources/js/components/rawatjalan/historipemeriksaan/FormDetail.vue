@@ -21,6 +21,7 @@
 							<li>Alamat<span><strong>{{ detail.alamat }}</strong></span></li>
 							<li>Triase<span><strong>{{ detail.berkebutuhan_khusus }}</strong></span></li>
 							<li v-if="detail.berkebutuhan_khusus!='Tidak'">Keterangan<span><strong>{{ detail.keterangan_berkebutuhan }}</strong></span></li>
+							<li><Inputed :ref="form.nama_pemeriksa.name" :form="form.nama_pemeriksa"></Inputed></li>
 							
 						</ul>
 					</div>
@@ -333,7 +334,7 @@ export default {
 				vm.tab.content[values] = true;
 			}
 		},
-
+			
 		parsekelurahan, formkelurahan, initindexdb, indexdbprocessing, arrpemeriksaan, datename,
 		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected,
 
@@ -343,9 +344,10 @@ export default {
 		selectclear:function(key) { vm.form = vm.clearselected(vm.form, key); },
 		selectbox:function(event, key, statics) {
 			let result = vm.boxselected(event, vm.form, key);
-			console.log(key);
+			console.log('aaa', result);
 			if (result._position == 'stop') { return ; }
 			else if (result._position == 'nextstop') { vm.form = result._form; }
+			
 			else { vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block'; }
 		},
 
@@ -403,6 +405,7 @@ export default {
 			if (temps) {
 				vm.form.uuid = temps.uuid;
 				vm.form.penetesanobat.value = vm.nullcheck(temps.penetesan_obat);
+				vm.form.nama_pemeriksa.value = vm.nullcheck(temps.nama_pemeriksa);
 				vm.form.keluhanutama.value = vm.nullcheck(temps.keluhan_utama);
 				vm.form.riwayatpenyakit.value = vm.nullcheck(temps.riwayat_penyakit);
 				vm.form.kasusurgentlainnya.value = vm.nullcheck(temps.kasus_urgent_lainnya);

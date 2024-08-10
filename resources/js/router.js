@@ -645,6 +645,24 @@ const routes = [
 	},
 
 	/**********************************************************************************
+	 * Bagian Master Resume Medis
+	 ***********************************************************************************/
+		{ 
+			path: _base + 'master-resume-medis', 
+			name: 'Rekam Medis', 
+			component: () => import('./components/master/resumemedis/index.vue'),
+			meta: { title: 'Rekam Medis' },
+			props: true 
+		},
+		{ 
+			path: _base + 'cppt', 
+			name: 'CPPT', 
+			component: () => import('./components/master/cppt/index.vue'),
+			meta: { title: 'CPPT' },
+			props: true 
+		},
+
+	/**********************************************************************************
 	 * Bagian Customer Services
 	 ***********************************************************************************/
 	{ 

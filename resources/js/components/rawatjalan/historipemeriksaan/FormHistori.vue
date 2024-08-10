@@ -253,7 +253,11 @@ export default {
 			 body.style.overflowY = 'hidden'; vm.terminate.display = 'display: block'; vm.terminate.show = true;
     },
 
-		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
+		hide:function() { vm.terminate.show = false; setTimeout(function() 
+		{ vm.terminate.display = 'display: none'; 
+		body.style.overflowY = 'auto';
+		vm.detail = null; // Reset detail data
+	 	}, 250, this); },
 
 		loaderprocess:function() { const left = this.$refs.rootmodal.getBoundingClientRect(); vm.$refs.Loader.running(left, 'modal', 250); },
 		setdataform: function (response) {

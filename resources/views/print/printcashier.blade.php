@@ -297,7 +297,7 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 
 			@if(count($honorbedah) > 0)
 
-				<?php $nomor = 1; $subtotal = 0; ?>
+				<?php $nomor = 1; $subtotalBedah = 0; ?>
 				
 				@foreach ($honorbedah as $item)
 					
@@ -311,16 +311,16 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 					</tr>
 				<?php $nomor++; ?>
 
-				<?php $subtotal += $item->total_tarif; ?>
+				<?php $subtotalBedah += $item->total_tarif; ?>
 				
 				@endforeach
 					
-				<?php $grandtotal += $subtotal; ?>
-				<?php $grandtotaltemp += $subtotal; ?>
+				<?php $grandtotal += $subtotalBedah ; ?>
+				<?php $grandtotaltemp += $subtotalBedah; ?>
 
 				<tr style="border-bottom: 1px solid #343224">
 					<td style="padding: 5px 7px; font-weight: bold;" colspan="2">Sub Total</td>
-					<td align="right" style="padding: 5px 7px; font-weight: bold;">{{ number_format($subtotal) }}</td>
+					<td align="right" style="padding: 5px 7px; font-weight: bold;">{{ number_format($subtotalBedah + $subtotal) }}</td>
 				</tr>
 
 			@endif

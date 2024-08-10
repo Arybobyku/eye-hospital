@@ -72,6 +72,11 @@ export const formtransfer = () => {
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'dokter', isrequired: false, html: 'Dokter yang menangani', issearch: false, disabled: false,
 			},
+		pilihanplan: { 
+				key : 'pilihanplan', for_id: 'form_'+'pilihanplan', name: 'pilihanplan', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'pilihanplan', isrequired: false, html: 'Pilih Planning', issearch: false, disabled: false,
+			},
 		}
 	}
 }
@@ -112,6 +117,11 @@ export const formkelurahan = () => {
 		kamar_inap_jalan_jumlah_bed: '',
 		jenis_kamar_jalan_uuid: '',
 		nama_jenis_jalan_kamar: '',
+		ttd: '',
+		subject: '',
+		object: '',
+		assessment: '',
+		plan: '',
 
 		catatan:{
 			title: 'Catatan', for_id: 'form_'+'catatan', type: 'text', required: '', 
@@ -123,8 +133,13 @@ export const formkelurahan = () => {
 			name: 'penjadwalanodc', value: '', disabled: false, show: true, kinds: ''
 		},
 
+		tanggal_kontrol_selanjutnya:{
+			title: 'Tanggal Kontrol Selanjutnya', for_id: 'form_'+'tanggal_kontrol_selanjutnya', type: 'date', required: '', 
+			name: 'tanggal_kontrol_selanjutnya', value: '', disabled: false, show: true, kinds: ''
+		},
+
 		waktuodc:{
-			title: 'Pada Pukul', for_id: 'form_'+'waktuodc', type: 'text', required: '', 
+			title: 'Pada Pukul', for_id: 'form_'+'waktuodc', type: 'time', required: '', 
 			name: 'waktuodc', value: '', disabled: false, show: true, kinds: ''
 		},
 
@@ -171,6 +186,11 @@ export const formkelurahan = () => {
 		pemeriksaanpenunjang:{
 			title: 'Pemeriksaan Penunjang', for_id: 'form_'+'pemeriksaanpenunjang', type: 'text', required: '', 
 			name: 'pemeriksaanpenunjang', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		anamnese:{
+			title: 'Anamnese', for_id: 'form_'+'anamnese', type: 'text', required: '', 
+			name: 'anamnese', value: '', disabled: false, show: true, kinds: ''
 		},
 
 		pemeriksaantatalaksana:{
@@ -392,6 +412,19 @@ export const formkelurahan = () => {
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'carabayar', isrequired: false, html: 'Metode Pembayaran', issearch: false, disabled: false,
 			},
+			pilihanplan: { 
+				key : 'pilihanplan', for_id: 'form_'+'pilihanplan', name: 'pilihanplan', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'pilihanplan', isrequired: false, html: 'Pilih Planning', issearch: false, disabled: false,
+			},
+			posisimata: { 
+				key : 'posisimata', for_id: 'form_'+'posisimata', name: 'posisimata', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'posisimata', isrequired: false, html: 'Posisi Mata', issearch: false, disabled: false,
+			},
+
+			
+			
 
 			asuransi: { 
 				key : 'asuransi', for_id: 'form_'+'asuransi', name: 'asuransi', uuid:'', value: '', label: 'Silahkan Pilih', 

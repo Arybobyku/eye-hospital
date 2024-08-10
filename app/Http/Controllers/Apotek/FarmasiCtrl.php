@@ -46,7 +46,7 @@ class FarmasiCtrl extends Controller
                                 ->orderBy('id', 'desc')
                                 ->where('ada_obat', '=', 'Ya')
                                 ->where('jenis', '=', 'Rawat Jalan')
-                                ->whereDate('tanggal', '=', date('Y-m-d'))
+                                // ->whereDate('tanggal', '=', date('Y-m-d'))
                                 ->where(function ($q) {
                                     $q->where('status', 'Kunjungan');
                                 })
@@ -57,7 +57,7 @@ class FarmasiCtrl extends Controller
                                 ->get();
             $total = Registrasi::where('delete_soft', '=', 1)
                                 ->where('ada_obat', '=', 'Ya')
-                                ->whereDate('tanggal', '=', date('Y-m-d'))
+                                // ->whereDate('tanggal', '=', date('Y-m-d'))
                                 ->where('jenis', '=', 'Rawat Jalan')->where('approvement_obat', 'no')
                                 ->where(function ($q) {
                                     $q->where('status', 'Kunjungan');
@@ -71,7 +71,7 @@ class FarmasiCtrl extends Controller
             $data = Registrasi::where('delete_soft', '=', 1)
                                     ->orderBy('id', 'desc')
                                     ->where('ada_obat', '=', 'Ya')
-                                    ->whereDate('tanggal', '=', date('Y-m-d'))
+                                    // ->whereDate('tanggal', '=', date('Y-m-d'))
                                     ->where('jenis', '=', 'Rawat Jalan')->where('approvement_obat', 'no')
 
                                     ->where(function ($q) {
@@ -85,7 +85,7 @@ class FarmasiCtrl extends Controller
 
             $total = Registrasi::where('delete_soft', '=', 1)
                                 ->where('ada_obat', '=', 'Ya')
-                                ->whereDate('tanggal', '=', date('Y-m-d'))
+                                // ->whereDate('tanggal', '=', date('Y-m-d'))
                                 ->where('jenis', '=', 'Rawat Jalan')
                                 ->where(function ($q) {
                                     $q->where('status', 'Kunjungan');
@@ -215,13 +215,16 @@ class FarmasiCtrl extends Controller
         $layanan = LayananPasien::where('registrasi_uuid', '=', $request->uuid)
                         ->orderBy('id', 'desc')->get();
 
-        $obat = Resep::where('registrasi_uuid', '=', $request->uuid)
+        $obat = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 0)
+                        ->orderBy('id', 'desc')->get();
+
+        $obattambahan = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 1)
                         ->orderBy('id', 'desc')->get();
 
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
                         ->orderBy('id', 'desc')->get();
 
-        return response()->json(['data' => $data, 'layanan' => $layanan, 'obat' => $obat, 'obatracikan' => $obatracikan]);
+        return response()->json(['data' => $data, 'layanan' => $layanan, 'obat' => $obat, 'obatracikan' => $obatracikan, 'obattambahan' => $obattambahan]);
     }
 
     public function editobat(Request $request)
@@ -279,6 +282,7 @@ class FarmasiCtrl extends Controller
                     $item->jumlah_besar = $row->jumlah_besar;
                     $item->signa = $row->signa;
                     $item->total = $row->total;
+                    $item->is_tambahan = 0;
                     $item->save();
 
                     $hasil = (int) $row->hja_resep * (int) $row->jumlah_kecil;
@@ -311,6 +315,85 @@ class FarmasiCtrl extends Controller
                 $item->tarif = $tarif;
                 $item->total = $tarif;
                 $item->jenis = 'Obat-Obatan';
+                $item->default = 'Tidak';
+                $item->save();
+
+                $obatTambahan = json_decode($request->obattambahan);
+
+                foreach ($obatTambahan as $row) {
+                    $item = new Resep();
+                    $item->uuid = Uuid::uuid4();
+                    $item->registrasi_uuid = $request->registrasi_uuid;
+                    $item->no_pendaftaran = $request->no_pendaftaran;
+                    $item->registrasi_kode = $request->kode;
+                    $item->registrasi_nomor = $request->nomor;
+                    $item->registrasi_jenis = $request->jenis;
+                    $item->pasien_uuid = $request->pasien_uuid;
+                    $item->rekam_medis = $request->rekam_medis;
+                    $item->nama_pasien = $request->nama_pasien;
+                    $item->dokter_uuid = $request->pengguna_uuid;
+                    $item->nama_dokter = $request->nama_dokter;
+
+                    $item->tanggal = date('Y-m-d');
+                    $item->waktu = date('H:i');
+
+                    $item->obat_uuid = $row->obat_uuid;
+                    $item->nama_obat = $row->nama;
+                    $item->kategori = $row->kategori;
+                    $item->formularium = $row->formularium;
+                    $item->golongan = $row->golongan;
+                    $item->satuan_uuid_besar = $row->satuan_uuid_besar;
+                    $item->nama_satuan_besar = $row->nama_satuan_besar;
+                    $item->satuan_uuid_kecil = $row->satuan_uuid_kecil;
+                    $item->nama_satuan_kecil = $row->nama_satuan_kecil;
+                    $item->hitung_besar = $row->hitung_besar;
+                    $item->hitung_kecil = $row->hitung_kecil;
+                    $item->harga_netto = $row->harga_netto;
+                    $item->harga_netto_discount = $row->harga_netto_discount;
+                    $item->harga_netto_ppn = $row->harga_netto_ppn;
+                    $item->hpp = $row->hpp;
+                    $item->hja_resep = $row->hja_resep;
+                    $item->hja_non_resep = $row->hja_non_resep;
+                    $item->hja_resep_besar = $row->hja_resep_besar;
+                    $item->hja_non_resep_besar = $row->hja_non_resep_besar;
+                    $item->margin_resep = $row->margin_resep;
+                    $item->margin_non_resep = $row->margin_non_resep;
+                    $item->jumlah_kecil = $row->jumlah_kecil;
+                    $item->jumlah_besar = $row->jumlah_besar;
+                    $item->signa = $row->signa;
+                    $item->total = $row->total;
+                    $item->is_tambahan = 1;
+                    $item->save();
+
+                    $hasil = (int) $row->hja_resep * (int) $row->jumlah_kecil;
+                    $tarif += $hasil;
+                }
+                $detele = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatantambahan')->delete();
+
+                $item = new LayananPasien();
+                $item->uuid = Uuid::uuid4();
+                $item->registrasi_uuid = $request->registrasi_uuid;
+                $item->no_pendaftaran = $request->no_pendaftaran;
+                $item->registrasi_kode = $request->kode;
+                $item->registrasi_nomor = $request->nomor;
+                $item->registrasi_jenis = $request->jenis;
+                $item->pasien_uuid = $request->pasien_uuid;
+                $item->rekam_medis = $request->rekam_medis;
+                $item->nama_pasien = $request->nama_pasien;
+                $item->pengguna_uuid = $request->pengguna_uuid;
+                $item->nama_dokter = $request->nama_dokter;
+
+                $item->tanggal = date('Y-m-d');
+                $item->waktu = date('H:i');
+
+                $item->carabayar_uuid = $request->carabayar_uuid;
+                $item->carabayar_nama = $request->carabayar_nama;
+
+                $item->layanan_uuid = 'obatantambahan';
+                $item->nama_layanan = $nama_layanan;
+                $item->tarif = $tarif;
+                $item->total = $tarif;
+                $item->jenis = 'Obat/Vitamin Tambahan';
                 $item->default = 'Tidak';
                 $item->save();
             } else {

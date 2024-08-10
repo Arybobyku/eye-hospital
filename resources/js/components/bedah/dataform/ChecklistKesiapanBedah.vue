@@ -1,7 +1,7 @@
 <template>
 	<div class="grid" v-if="form && activetab">
 		<div class="col-6">
-			<Inputed :ref="form.ruang.name" :form="form.ruang"></Inputed>
+			<Inputed :ref="form.ruangan.name" :form="form.ruangan"></Inputed>
 		</div>
 		<div class="col-6 form-ml">
 			<Inputed :ref="form.kamar.name" :form="form.kamar"></Inputed>
@@ -270,7 +270,7 @@ export default {
 				if (data.linen_steril && data.linensteril != '') { vm.listdata.linen_steril = JSON.parse(data.linen_steril); }
 				if (data.akhp && data.akhp != '') { vm.listdata.akhp = JSON.parse(data.akhp); }
 
-				vm.form.ruang.value = data.ruangan ? data.ruangan : '';
+				vm.form.ruangan.value = data.ruangan ? data.ruangan : '';
 				vm.form.kamar.value = data.kamar ? data.kamar : '';
 				vm.form.diagnosa.value = data.diagnosa ? data.diagnosa : '';
 				vm.form.tindakan.value = data.tindakan ? data.tindakan : '';
@@ -296,7 +296,7 @@ export default {
 			let tmp_akhp = '';
 			if (vm.listdata.listrik.length > 0) { tmp_listrik = JSON.stringify(vm.listdata.listrik); }
 			if (vm.listdata.alat.length > 0) { tmp_alat = JSON.stringify(vm.listdata.alat); }
-			if (vm.listdata.linensteril.length > 0) { tmp_alat = JSON.stringify(vm.listdata.linensteril); }
+			if (vm.listdata.linensteril.length > 0) { tmp_linensteril = JSON.stringify(vm.listdata.linensteril); }
 			if (vm.listdata.akhp.length > 0) { tmp_akhp = JSON.stringify(vm.listdata.akhp); }
 
 
