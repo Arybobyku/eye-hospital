@@ -155,7 +155,7 @@
 				<div style="padding-top: 4px">Dept.Keu / Klaim</div>
 				<br /><br /><br /><br /><br />
 				<span style="text-decoration: underline">
-					<b>Debora Solavide Simanjuntak, S.E</b>
+					<b>Edria Asnita Lestari Sitorus, SE</b>
 				</span>
 			</td>
 		</tr>
