@@ -359,14 +359,14 @@ class PemeriksaanCtrl extends Controller
                     'ttd_dokter' => $request->ttd_dokter,
                     'tanggal_kontrol_selanjutnya' => $request->tanggal_kontrol_selanjutnya,
                 ];
-                echo "tanggal_kontrol_selanjutnya";
+                echo 'tanggal_kontrol_selanjutnya';
                 echo $request->tanggal_kontrol_selanjutnya;
                 $update = PemeriksaanDokter::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
 
                 PemeriksaanDokterIcd9::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
                 $icd9 = json_decode($request->listicd9);
-                  echo "uuidicdnine";
-                    echo $request->listicd9;
+                echo 'uuidicdnine';
+                echo $request->listicd9;
                 foreach ($icd9 as $row) {
                     $item = new PemeriksaanDokterIcd9();
                     $item->uuid = Uuid::uuid4();
@@ -379,7 +379,7 @@ class PemeriksaanCtrl extends Controller
                     $item->nama_pasien = $request->nama_pasien;
                     $item->pengguna_uuid = $request->pengguna_uuid;
                     $item->icdnine_uuid = $row->uuid_icdnine;
-                  
+
                     $item->kode_icdnine = $row->kode_icdnine;
                     $item->nama_icdnine = $row->nama_icdnine;
                     $item->save();
@@ -472,63 +472,6 @@ class PemeriksaanCtrl extends Controller
                         } else {
                             $item->jenis = 'Rawat Jalan';
                             $item->nama_dokter = $request->nama_dokter;
-                        }
-                    }
-                    $item->default = $row->default;
-                    $item->save();
-                }
-
-                $tindakanjalan = json_decode($request->tindakanjalan);
-
-                foreach ($tindakanjalan as $row) {
-                    $item = new LayananPasien();
-                    $item->uuid = Uuid::uuid4();
-                    $item->registrasi_uuid = $request->registrasi_uuid;
-                    $item->no_pendaftaran = $request->no_pendaftaran;
-                    $item->registrasi_kode = $request->kode;
-                    $item->registrasi_nomor = $request->nomor;
-                    $item->registrasi_jenis = $request->jenis;
-                    $item->pasien_uuid = $request->pasien_uuid;
-                    $item->rekam_medis = $request->rekam_medis;
-                    $item->nama_pasien = $request->nama_pasien;
-                    $item->pengguna_uuid = $request->pengguna_uuid;
-                    $item->nama_dokter = $request->nama_dokter;
-
-                    $item->tanggal = date('Y-m-d');
-                    $item->waktu = date('H:i');
-
-                    $item->carabayar_uuid = $request->carabayar_uuid;
-                    $item->carabayar_nama = $request->carabayar_nama;
-                    $item->is_paket_bedah = $row->is_paket_bedah;
-                    $item->layanan_uuid = $row->tindakan_rawat_jalan_uuid;
-                    $item->nama_layanan = $row->nama_tindakan_rawat_jalan;
-                    $item->tarif = $row->harga;
-                    $item->total = $row->harga;
-                    if ($row->default == 'Ya' || $row->default == 'YA') {
-                        $cek = explode(' ', $row->nama_tindakan_rawat_jalan);
-                        if (count($cek) > 0) {
-                            if ($cek[0] == 'Honor' || $cek[0] == 'Konsul' || $cek[0] == 'Konsultasi' || $cek[0] == 'Gaji') {
-                                $item->jenis = 'Honor';
-                            } else {
-                                $item->jenis = 'Administrasi';
-                            }
-                        } else {
-                            $item->jenis = 'Administrasi';
-                        }
-                    } else {
-                        $cek = explode(' ', $row->nama_tindakan_rawat_jalan);
-                        if (count($cek) > 0) {
-                            if ($cek[0] == 'Honor' || $cek[0] == 'Konsul' || $cek[0] == 'Konsultasi' || $cek[0] == 'Gaji') {
-                                $item->jenis = 'Honor';
-                            } elseif ($cek[0] == 'Administrasi') {
-                                $item->jenis = 'Administrasi';
-                            } elseif ($cek[0] == 'Operation' || $cek[0] == 'Room') {
-                                $item->jenis = 'Room';
-                            } else {
-                                $item->jenis = 'Rawat Jalan';
-                            }
-                        } else {
-                            $item->jenis = 'Rawat Jalan';
                         }
                     }
                     $item->default = $row->default;
@@ -1308,45 +1251,6 @@ class PemeriksaanCtrl extends Controller
                     $item->save();
                 }
 
-                $tindakanjalan = json_decode($request->tindakanjalan);
-
-                foreach ($tindakanjalan as $row) {
-                    $item = new LayananPasien();
-                    $item->uuid = Uuid::uuid4();
-                    $item->registrasi_uuid = $request->registrasi_uuid;
-                    $item->no_pendaftaran = $request->no_pendaftaran;
-                    $item->registrasi_kode = $request->kode;
-                    $item->registrasi_nomor = $request->nomor;
-                    $item->registrasi_jenis = $request->jenis;
-                    $item->pasien_uuid = $request->pasien_uuid;
-                    $item->rekam_medis = $request->rekam_medis;
-                    $item->nama_pasien = $request->nama_pasien;
-                    $item->pengguna_uuid = $request->pengguna_uuid;
-                    $item->nama_dokter = $request->nama_dokter;
-
-                    $item->tanggal = date('Y-m-d');
-                    $item->waktu = date('H:i');
-
-                    $item->carabayar_uuid = $request->carabayar_uuid;
-                    $item->carabayar_nama = $request->carabayar_nama;
-                    $item->layanan_uuid = $row->tindakan_rawat_jalan_uuid;
-                    $item->nama_layanan = $row->nama_tindakan_rawat_jalan;
-                    $item->tarif = $row->harga;
-                    $item->total = $row->harga;
-                    $cek = explode(' ', $row->nama_tindakan_rawat_jalan);
-                    if (count($cek) > 0) {
-                        if ($cek[0] == 'Room' || $row->nama_tindakan_rawat_jalan == 'Operation Room' || $row->nama_tindakan_rawat_jalan == 'Room Operation') {
-                            $item->jenis = 'Room Inap Jalan';
-                        } else {
-                            $item->jenis = 'Rawat Inap Jalan';
-                        }
-                    } else {
-                        $item->jenis = 'Rawat Inap Jalan';
-                    }
-                    $item->default = $row->default;
-                    $item->save();
-                }
-
                 if (count($obat) > 0) {
                     $item = new LayananPasien();
                     $item->uuid = Uuid::uuid4();
@@ -1879,10 +1783,10 @@ class PemeriksaanCtrl extends Controller
                                         ->orWhere('jenis', '=', 'Rawat Inap Jalan');
                             })
                         ->orderBy('id', 'desc')->get();
-        $listicd9= PemeriksaanDokterIcd9::where('registrasi_uuid', '=', $request->uuid)
+        $listicd9 = PemeriksaanDokterIcd9::where('registrasi_uuid', '=', $request->uuid)
                         ->orderBy('id', 'desc')->get();
 
-        $listicd10= PemeriksaanDokterIcd10::where('registrasi_uuid', '=', $request->uuid)
+        $listicd10 = PemeriksaanDokterIcd10::where('registrasi_uuid', '=', $request->uuid)
                         ->orderBy('id', 'desc')->get();
 
         $onedaycare = RegistrasiOperasi::where('registrasi_uuid', '=', $request->uuid)
@@ -2127,6 +2031,7 @@ class PemeriksaanCtrl extends Controller
     {
         return \DB::table('paket_bedah')->orderBy('id', 'asc')->where('delete_soft', '=', '1')->get();
     }
+
     private function icd9()
     {
         return \DB::table('icd_nine')->orderBy('id', 'asc')->where('delete_soft', '=', '1')->get();

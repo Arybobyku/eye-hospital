@@ -1,6 +1,7 @@
 <template>
 	<div :style="terminate.display" class="modal">
-		<div ref="rootmodal" class="modal-content modal-semi-besar" :class="terminate.show ? 'modal-opened' : 'modal-closed'">
+		<div ref="rootmodal" class="modal-content modal-semi-besar"
+			:class="terminate.show ? 'modal-opened' : 'modal-closed'">
 			<div class="modal-header">
 				<button v-on:click="action()">{{ btnlbl }}</button>
 				<span class="close" v-on:click="hide()">&times;</span>
@@ -9,9 +10,27 @@
 			<div class="modal-body" v-if="form">
 				<div class="grid">
 					<div class="col-12">
-						<Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)" 
-							:ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-							:selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name)"></Selected>
+						<Selected
+							v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)"
+							:ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem"
+							@selectclear="selectclear" :selection="form.select.carabayartindakanrawatjalan"
+							v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name)"></Selected>
+					</div>
+					<div class="col-12">
+						<div class="col-8">
+
+							<div class="grid">
+
+								<div class="col-8">
+									<Inputed :ref="form.tanggal.name" :form="form.tanggal">
+									</Inputed>
+								</div>
+								<div class="col-4 form-ml">
+									<Timepicker :ref="form.waktu.name" :form="form.waktu">
+									</Timepicker>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="col-12">
 						<table class="table">
@@ -19,6 +38,8 @@
 								<tr>
 									<th>Nama Tindakan</th>
 									<th>Biaya</th>
+									<th>Tanggal Ditambahkan</th>
+									<th>Waktu Ditambahkan</th>
 									<th>#</th>
 								</tr>
 							</thead>
@@ -26,9 +47,11 @@
 								<tr v-for="(item, index) in listdata" v-if="listdata.length > 0">
 									<td>{{ item.nama_layanan }}</td>
 									<td>{{ formatrupiah(item.tarif.toString()) }}</td>
+									<td>{{ item.tanggal }}</td>
+									<td>{{ item.waktu }}</td>
 									<td>
 										<button class="tooltip btn-danger" v-on:click="removetindakan(item, index)">
-											<vue-feather type="trash"></vue-feather> 
+											<vue-feather type="trash"></vue-feather>
 											<span class="tooltiptext">Hapus Tindakan</span>
 										</button>
 									</td>
@@ -36,7 +59,7 @@
 								<tr v-else>
 									<td colspan="3">No Data for Result</td>
 								</tr>
-							</tbody>			
+							</tbody>
 						</table>
 					</div>
 				</div>
@@ -60,6 +83,8 @@ export default {
 	components: {
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
+		Timepicker: defineAsyncComponent(() => import('../../../section/Timepicker.vue')),  
+
 	},
 	mounted:function() { 
 		vm = this; body = document.body;

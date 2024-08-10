@@ -5,6 +5,8 @@ export const parseunit = (form) => {
 	data.append('uuid', form.uuid);
 	data.append('registrasi_uuid', form.registrasi_uuid);
 	data.append('nama_layanan', form.nama_layanan);
+	data.append('tanggal', form.tanggal.value);
+	data.append('waktu', form.waktu.value);
 	data.append('layanan_uuid', form.layanan_uuid);
 	data.append('tarif', form.tarif);
 	

@@ -320,6 +320,7 @@ export const arrpemeriksaan = () => {
 			{ value: 'Operasi', label: 'Operasi' },
 		],
 		posisimata: [
+			{value: '-', label: '-'},
 			{value: 'OD', label: 'OD'},
 			{value: 'OS', label: 'OS'},
 			{value: 'OD dan OS', label: 'OD dan OS'},

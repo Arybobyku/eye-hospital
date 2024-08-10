@@ -99,6 +99,7 @@
         datename,
         formatrupiah
     } from '../../../module/Manipulation.js';
+import Timepicker from '../../../section/Timepicker.vue';
 
 
 
@@ -617,31 +618,24 @@
 
             setdataform: function(response) {
                 let data = response.data.data;
-                console.log("memek");
-                console.log(response.data);
 
-                let keys = ['kamar_inap']
-                console.log("keys");
-                console.log(keys);
+                // let keys = ['kamar_inap']
                 /* Setting index DB */
-                vm.updatedblocal(keys, response);
+                // vm.updatedblocal(keys, response);
 
 
                 vm.detail = response.data.data;
+                console.log("VM DETAIL")
                 console.log(vm.detail)
   
-                console.log(data)
-                vm.form.carabayar_nama = vm.detail.carabayar_nama;
-
-
-
                 //vm.listdata = response.data.layanan;
 
 
 
                 console.log("response");
                 console.log(response.data);
-                vm.form.waktu_masuk_inap.value = response.data.data.waktu;
+                vm.form.waktu_masuk_inap.value = vm.detail.waktu_masuk_inap;
+                vm.form.tanggal_masuk_inap.value = vm.detail.tanggal_masuk_inap.value;
                 console.log(vm.form.waktu_masuk_inap.value);
 
                 // vm.form.waktu_masuk_inap.label = response.data.data.waktu;
@@ -678,10 +672,6 @@
                     vm.form.select.kamarinap.label = 'Silahkan Pilih';
 
                 }
-
-                console.log('UUID')
-                
-                console.log(vm.form.kamar_inap_uuid)
 
                 vm.loaderprocess();
             },
