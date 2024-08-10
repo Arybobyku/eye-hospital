@@ -634,9 +634,17 @@ import Timepicker from '../../../section/Timepicker.vue';
 
                 console.log("response");
                 console.log(response.data);
-                vm.form.waktu_masuk_inap.value = vm.detail.waktu_masuk_inap;
+                if (vm.detail.waktu_masuk_inap != '-' && vm.detail.waktu_masuk_inap != '' && vm.detail
+                .waktu_masuk_inap != null) {
+                vm.form.waktu_masuk_inap.value = "00:00";
+                }
+                if (vm.detail.waktu_masuk_inap != '-' && vm.detail.waktu_masuk_inap != '' && vm.detail
+                .waktu_masuk_inap != null) {
                 vm.form.tanggal_masuk_inap.value = vm.detail.tanggal_masuk_inap.value;
+                vm.form.tanggal_masuk_inap.value = null;
+
                 console.log(vm.form.waktu_masuk_inap.value);
+                }
 
                 // vm.form.waktu_masuk_inap.label = response.data.data.waktu;
                 // vm.form.waktu_masuk_inap.label = data.waktu_masuk_inap;

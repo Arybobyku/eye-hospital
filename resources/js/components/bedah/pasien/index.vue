@@ -94,7 +94,6 @@ export default {
 			{ value: 'nama_dokter', label: 'Dokter Poli', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_dokter_bedah', label: 'Dokter Bedah', type: 'text', search: false, close: false, button: false },
 			{ value: 'nama_paket_bedah', label: 'Paket Bedah', type: 'text', search: true, close: false, button: false },
-			{ value: 'jenis', label: 'Jenis Kunjungan', type: 'text', search: false, close: false, button: false },
 			{ value: 'bedah_status', label: 'Status', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
 		],
@@ -109,7 +108,6 @@ export default {
 			{ value: 'kamar_inap_nama', label: 'Kamar Inap', type: 'text', search: true, close: false, button: false },
 			{ value: 'tanggal_masuk_inap', label: 'Tanggal Masuk Inap', type: 'date', search: false, close: false, button: false },
 			{ value: 'waktu_masuk_inap', label: 'Pukul', type: 'time', search: false, close: false, button: false },
-			{ value: 'jenis', label: 'Jenis Kunjungan', type: 'text', search: false, close: false, button: false },
 			{ value: 'bedah_status', label: 'Status', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
 		],
