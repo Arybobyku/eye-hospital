@@ -11,4 +11,16 @@ class PemeriksaanDokter extends Model
   use HasFactory, Notifiable;
   protected $table = 'pemeriksaan_dokter';
   public $timestamps = false;
+  public function pemeriksaanDokterIcdnine()
+  {
+      return $this->hasMany(PemeriksaanDokterIcd9::class, 'registrasi_uuid', 'registrasi_uuid');
+  }
+  public function pemeriksaanDokterIcdten()
+  {
+      return $this->hasMany(PemeriksaanDokterIcd10::class, 'registrasi_uuid', 'registrasi_uuid');
+  }
+  public function resep()
+  {
+      return $this->hasMany(Resep::class, 'registrasi_uuid', 'registrasi_uuid');
+  }
 }

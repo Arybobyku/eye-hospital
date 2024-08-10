@@ -154,7 +154,7 @@
 
 									<div class="col-9"></div>
 									<div class="col-3 form-ml form-mt">
-											<label for="">Tanda Tangan Digital</label>
+											<label for="">Tanda Tangan di Dokumen Ini</label>
 												<img
 													v-if="form.ttd"
 													:src="form.ttd"
@@ -163,7 +163,7 @@
 													width="400"
 												/>
 												<br>
-											<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
+											<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan</button>
 									</div>
 						
 								</div>
@@ -232,6 +232,7 @@ export default {
 		editor: ClassicEditor,
 		terminate: { show: false, display: 'display: none' },
 		form: null, btnlbl: '', arr: null,
+		cpptResponse: null,
 		green: 'Save Data', red: 'Clear Form', test: null, cover: '', temporer: null,
 		detail : { uuid: '',
 			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
@@ -272,8 +273,9 @@ export default {
 					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; }
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
-				console.log("===>")
-				vm.setCkEditor();
+				if(vm.cpptResponse == null){
+					vm.setCkEditor();
+				}
 			}
 		},
 
@@ -423,6 +425,16 @@ export default {
 				vm.form.select.klinik.label = 'Poli ' + vm.detail.ruang_poliklinik;
 			}
 			
+			vm.form.cppt_sebagai = 'RO';
+
+			let cppt = response.data.cppt;
+			if(cppt != null){
+				vm.cpptResponse = cppt;
+				vm.form.subject = cppt.subjek;
+				vm.form.object = cppt.objek;
+				vm.form.assessment = cppt.asesmen;
+				vm.form.plan = cppt.plan;
+			}
 
 			let temps = response.data.kunjungan;
 

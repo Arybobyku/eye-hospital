@@ -53,15 +53,14 @@
                 <th class="tablee">Dokter</th>
             </tr>
             @foreach ($ro as $dataRo)
-            <tr class="tablee" style="padding: 5px">
-                <td class="tablee"> <br> <b> @php
-                    list($date, $time) = explode(' ', $dataRo->created_at);
-                    $timeWithoutMilliseconds = explode('.', $time)[0];
-                @endphp {{ $date }}/<br>{{ $timeWithoutMilliseconds }}</b> </td>
-                <td class="tablee"> <br> <b></b> </td>
-                <td class="tablee"> <br> {{ $dataRo->keluhan_utama }}</td>
-                <td class="tablee"> <br> </td>
-                <td class="tablee"> <br> {{ $dataRo->nama_dokter }}</td>
+            <tr class="tablee">
+                <td class="tablee" style="padding: 5px"> <br> <b style="padding: 5px"> {{  $dataRo->tanggal }} </td>
+                <td class="tablee" style="padding: 5px"> <br> <b> Poli Mata {{ $dataRo->registrasi->ruang_poliklinik }}</td>
+                <td class="tablee" style="padding: 5px"> <br> <table> @foreach ($dataRo->pemeriksaanDokterIcdten as $icd10)
+                    <tr><td> {{   $icd10->nama_icdten }} </td></tr>  @endforeach </table></td>
+                <td class="tablee" style="padding: 5px"> <br> <table> @foreach ($dataRo->pemeriksaanDokterIcdnine as $icd9)
+                    <tr><td> {{   $icd9->nama_icdnine }} </td></tr>  @endforeach </table></td>
+                <td class="tablee" style="padding: 5px"> <br> {{ $dataRo->nama_dokter }}</td>
             </tr>
             @endforeach
             {{-- <tr class="tablee" style="padding: 5px">

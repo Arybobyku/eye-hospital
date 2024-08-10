@@ -239,8 +239,8 @@
         <p style="text-align: right; margin-right:30px">(_____________________)</p>
     
 </body>
-@if ($loop->index < count($jenistindakan) - 1)
+{{-- @if ($loop->index < count($jenistindakan) - 1)
 <div class="page_break"></div>
-@endif
+@endif --}}
 @endforeach
 </html>

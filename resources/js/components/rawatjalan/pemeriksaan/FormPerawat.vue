@@ -730,7 +730,6 @@
 										<iframe title="CPPT" width="100%" height="100%" style="border: 0" :src="linkR">
 										</iframe>
 									</div>
-
 									<div class="col-7 form-ml">
 										<label for=""> Subject</label>
 										<ckeditor v-model="form.subject" :editor="editor">
@@ -751,7 +750,7 @@
 									</div>
 									<div class="col-9"></div>
 									<div class="col-3 form-ml form-mt">
-										<label for="">Tanda Tangan Digital</label>
+										<label for="">Tanda Tangan di Dokumen Ini</label>
 											<img
 												v-if="form.ttd"
 												:src="form.ttd"
@@ -760,7 +759,7 @@
 												width="400"
 											/>
 											<br>
-										<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan Digital</button>
+										<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan</button>
 									</div>
 								</div>
 							</div>
@@ -892,7 +891,7 @@ export default {
 			rpk_lain_lain: false,
 			kp_ya: false,
 			kp_tidak: false,
-
+            cpptResponse: null,
 			detailperawat: {
 				uuid: '', registrasi_uuid: '',
 				agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '',
@@ -939,7 +938,9 @@ export default {
 					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';	}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
-				vm.setCkEditor();
+				if(vm.cpptResponse == null){
+					vm.setCkEditor();
+				}
 			}
 		},
 
@@ -1080,6 +1081,45 @@ export default {
 		// },
 		setCkEditor: function(val, title){
 			vm.form.subject = `${vm.form.keluhanutama.value}`;
+			vm.form.object = `
+                    <figure class="table">
+                        <table>
+							<thead>
+                            <tr>
+                                <td>Nama Obat</td>
+                                <td>Nilai</td>
+                            </tr>
+							</thead>
+                            <tbody>
+    
+								<tr>
+                                    <td>Nadi</td>
+									<td>${vm.form.nadi.value}</td>
+                                </tr>
+								<tr>
+                                    <td>Respiratory Rate</td>
+									<td>${vm.form.respiratoryrate.value}</td>
+                                </tr>
+								<tr>
+                                    <td>Suhu Tubuh</td>
+									<td>${vm.form.suhu.value}</td>
+                                </tr>
+								<tr>
+                                    <td>Berat Badan</td>
+									<td>${vm.form.beratbadan.value}</td>
+                                </tr>
+								<tr>
+                                    <td>Tinggi Badan</td>
+									<td>${vm.form.tinggibadan.value}</td>
+                                </tr>
+								<tr>
+                                    <td>Tekanan Darah</td>
+									<td>${vm.form.tekanandarah.value}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </figure>   
+			`;
 		},
 
 
@@ -1101,7 +1141,16 @@ export default {
 			vm.histori = response.data.histori;
 			let temps = response.data.kunjungan;
 			vm.linkR = vm.linkR + vm.detailperawat.pasien_uuid;
-			console.log(vm.linkR);
+			vm.form.cppt_sebagai = 'PERAWAT';
+
+			let cppt = response.data.cppt;
+			if(cppt != null){
+				vm.cpptResponse = cppt;
+				vm.form.subject = cppt.subjek;
+				vm.form.object = cppt.objek;
+				vm.form.assessment = cppt.asesmen;
+				vm.form.plan = cppt.plan;
+			}
 
 			if (temps) {
 				vm.form.uuid = temps.uuid;

@@ -6,6 +6,7 @@ use App\Models\CatatanOperasiKatarak;
 use App\Models\EdukasiPasien;
 use App\Models\KeselamatanBedah;
 use App\Models\LaporanPembedahan;
+use App\Models\PemeriksaanDokterIcd10;
 use App\Models\PerawatanPeriOperative;
 use App\Models\RegistrasiOperasi;
 use Illuminate\Http\Request;
@@ -18,6 +19,7 @@ use App\Models\PencegahanPasienJatuh;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\Registrasi;
 use App\Models\Cppt;
+use App\Models\PemeriksaanDokterIcd9;
 use App\Models\Pengguna;
 use App\Models\Resep;
 use Ramsey\Uuid\Uuid;
@@ -84,10 +86,9 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $ro = DB::table('pemeriksaan_ro')
-      ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
-      ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
-      ->get();
+    $dataRo = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+
+     
 
     // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
 
@@ -95,7 +96,7 @@ class PrintRekamMedisCtrl extends Controller
       'print-rekam-medis.rawat-jalan.rm1dot3',
       compact(
         'pasien',
-        'ro'
+        'dataRo',
       ),
     )->setPaper('a4', 'potrait');
 
@@ -106,10 +107,11 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $ro = DB::table('pemeriksaan_ro')
-      ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
-      ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
-      ->get();
+    $dataRo = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $dataDokter = PemeriksaanDokter::where('pasien_uuid', '=', $uuid)->first();
+    $icd10 = PemeriksaanDokter::with(['pemeriksaanDokterIcdten'])
+    ->where('pasien_uuid', $uuid)
+    ->get();
 
     // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
 
@@ -117,7 +119,7 @@ class PrintRekamMedisCtrl extends Controller
       'print-rekam-medis.rawat-jalan.rm1dot4',
       compact(
         'pasien',
-        'ro'
+        'dataRo', 'dataDokter','icd10',
       ),
     )->setPaper('a4', 'potrait');
 
@@ -153,10 +155,9 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $ro = DB::table('pemeriksaan_ro')
-      ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
-      ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
-      ->get();
+    $ro = PemeriksaanRO::with(['pemeriksaanDokter', 'pemeriksaanDokterIcdnine', 'pemeriksaanDokterIcdten', 'resep', 'registrasi'])
+    ->where('pasien_uuid', $uuid)
+    ->get();
     // $pdf->loadView('print.printrekammedis', compact('registrasi', 'pemeriksaanro', 'pemeriksaandokter', 'pasien'))->setPaper('a4', 'potrait');
 
     $pdf->loadView('print-rekam-medis.rawat-jalan.rm1dot6', compact('pasien', 'ro',))->setPaper('a4', 'potrait');
@@ -171,10 +172,12 @@ class PrintRekamMedisCtrl extends Controller
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     $ep = EdukasiPasien::where('pasien_uuid', '=', $uuid) ->first();
     $cppt = Cppt::where('pasien_uuid', '=', $uuid)->get();
-    $ro = DB::table('pemeriksaan_ro')
-      ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
-      ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
-      ->get();
+    $dataRo = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $dataDokter = PemeriksaanDokter::where('pasien_uuid', '=', $uuid)->first();
+    $ro = PemeriksaanRO::with(['pemeriksaanDokter', 'pemeriksaanDokterIcdnine', 'pemeriksaanDokterIcdten', 'resep', 'registrasi'])
+    ->where('pasien_uuid', $uuid)
+    ->get();
+    
 
     // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
 
@@ -182,7 +185,7 @@ class PrintRekamMedisCtrl extends Controller
       'print-rekam-medis.rawat-jalan.all',
       compact(
         'pasien',
-        'ro','ep','cppt',
+        'ro','ep','cppt','dataRo', 'dataDokter'
       ),
     )->setPaper('a4', 'potrait');
 
@@ -194,18 +197,15 @@ class PrintRekamMedisCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $ro = DB::table('pemeriksaan_ro')
-      ->leftJoin('pemeriksaan_dokter', 'pemeriksaan_ro.registrasi_uuid', '=', 'pemeriksaan_dokter.registrasi_uuid')
-      ->where('pemeriksaan_ro.pasien_uuid', '=', $uuid)
-      ->get();
-
-    // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
+    $ro = PemeriksaanRO::with(['pemeriksaanDokter', 'pemeriksaanDokterIcdnine', 'pemeriksaanDokterIcdten', 'resep'])
+    ->where('pasien_uuid', $uuid)
+    ->get();
 
     $pdf->loadView(
       'print-rekam-medis.rawat-jalan.rm1dot7',
       compact(
         'pasien',
-        'ro'
+        'ro',
       ),
     )->setPaper('a4', 'potrait');
 
@@ -266,7 +266,8 @@ class PrintRekamMedisCtrl extends Controller
       false,
     ];
    
-    $jsonDatalinen_steril = $ckb != null && $ckb->linen_steril;
+    if ($ckb != null) {
+    $jsonDatalinen_steril = $ckb->linen_steril; 
     if ($jsonDatalinen_steril != '' || $jsonDatalinen_steril != null) {
       $dataArraylinen_steril = json_decode($jsonDatalinen_steril, true);
 
@@ -285,6 +286,7 @@ class PrintRekamMedisCtrl extends Controller
         }
       }
     }
+  }
 
     $alat = [
       false,
@@ -295,7 +297,8 @@ class PrintRekamMedisCtrl extends Controller
 
     ];
 
-    $jsonDataalat = $ckb != null && $ckb->alat;
+    if ($ckb != null) {
+    $jsonDataalat = $ckb->alat; 
     if ($jsonDataalat != '' || $jsonDataalat != null) {
       $dataArrayalat = json_decode($jsonDataalat, true);
 
@@ -317,6 +320,7 @@ class PrintRekamMedisCtrl extends Controller
         }
       }
     }
+  }
 
     $listrik = [
       false,
@@ -329,9 +333,13 @@ class PrintRekamMedisCtrl extends Controller
       false,
       false,
     ];
-    $jsonDatalistrik = $ckb != null && $ckb->listrik;
+
+    if ($ckb != null) {
+    $jsonDatalistrik = $ckb->listrik;
 
     // Menguraikan JSON menjadi array PHP
+
+    
     if ($jsonDatalistrik != '' || $jsonDatalistrik != null) {
       $dataArraylistrik = json_decode($jsonDatalistrik, true);
 
@@ -365,6 +373,7 @@ class PrintRekamMedisCtrl extends Controller
         }
       }
     }
+  }
 
     $pasien = Pasien::where('uuid', '=', $uuid)->first();
     
@@ -423,7 +432,6 @@ class PrintRekamMedisCtrl extends Controller
       'print-rekam-medis.bedah.rm8dot7',
       compact('pasien', 'jenistindakan')
     )->setPaper('a4', 'potrait');
-
 
     return $pdf->stream();
     // return view('print-rekam-medis.rawat-jalan.rm1dot1',compact('pasien'));
@@ -608,7 +616,7 @@ class PrintRekamMedisCtrl extends Controller
         false,
       ];
   
-      $jsonDatalinen_steril = $ckb != null && $ckb->linen_steril;
+      $jsonDatalinen_steril = $ckb != null || $ckb->linen_steril;
       if ($jsonDatalinen_steril != '' || $jsonDatalinen_steril != null) {
         $dataArraylinen_steril = json_decode($jsonDatalinen_steril, true);
   
@@ -636,8 +644,9 @@ class PrintRekamMedisCtrl extends Controller
         false,
   
       ];
-  
-      $jsonDataalat = $ckb != null && $ckb->alat;
+      
+      if ($ckb != null) {
+      $jsonDataalat = $ckb->alat; }
       if ($jsonDataalat != '' || $jsonDataalat != null) {
         $dataArrayalat = json_decode($jsonDataalat, true);
   
@@ -671,7 +680,7 @@ class PrintRekamMedisCtrl extends Controller
         false,
         false,
       ];
-      $jsonDatalistrik = $ckb != null && $ckb->listrik;
+      $jsonDatalistrik = $ckb->listrik;
   
       // Menguraikan JSON menjadi array PHP
       if ($jsonDatalistrik != '' || $jsonDatalistrik != null) {
