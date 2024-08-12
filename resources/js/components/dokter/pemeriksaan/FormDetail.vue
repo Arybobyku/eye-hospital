@@ -2783,9 +2783,11 @@ export default {
                 ("");
             }
             vm.tabIndex = index;
-            if (vm.cpptResponse == null) {
-                vm.setCkEditor();
-            }
+            //- if (vm.cpptResponse == null) {
+            //-     vm.setCkEditor();
+            //- }
+
+             vm.setCkEditor();
         },
 
         parsekelurahan,

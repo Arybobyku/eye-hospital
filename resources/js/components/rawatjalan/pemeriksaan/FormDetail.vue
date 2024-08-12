@@ -273,9 +273,10 @@ export default {
 					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; }
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
-				if(vm.cpptResponse == null){
-					vm.setCkEditor();
-				}
+				//- if(vm.cpptResponse == null){
+				//- 	vm.setCkEditor();
+				//- }
+				vm.setCkEditor();
 			}
 		},
 
