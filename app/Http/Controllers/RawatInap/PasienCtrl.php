@@ -651,7 +651,12 @@ class PasienCtrl extends Controller
         try {
             // $reg = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
             $data = Registrasi::where('uuid', '=', $request->uuid)->first();
-            $billKamar = LayananPasien::where('registrasi_uuid', $request->uuid)->where('jenis', 'Kamar Inap')->first();
+            $billKamar = LayananPasien::where('registrasi_uuid', $request->uuid)
+                ->where(function ($query) {
+                    $query->where('jenis', 'Kamar Inap')
+                    ->orWhere('jenis', 'Kamar');
+                })
+                ->first();
             $cekkamar = KamarInap::where('uuid', '=', $data->kamar_inap_uuid)->first();
             echo 'Reg UUID';
             echo $request->uuid;
