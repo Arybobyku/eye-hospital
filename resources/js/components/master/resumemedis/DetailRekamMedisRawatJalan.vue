@@ -115,7 +115,7 @@ export default {
             terminate_detail: { show: false, display: "display: none" },
             listdata: [],
             linkResume: "",
-            base_url: "http://127.0.0.1:8000",
+            base_url: "",
             linkResumeAll: "/print/rekammedis/rawat-jalan/all/",
             selectedIndex: -1,
             listResume: [

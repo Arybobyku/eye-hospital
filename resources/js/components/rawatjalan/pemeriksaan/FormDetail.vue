@@ -269,9 +269,10 @@ export default {
 					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; }
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
-				if(vm.cpptResponse == null){
-					vm.setCkEditor();
-				}
+				//- if(vm.cpptResponse == null){
+				//- 	vm.setCkEditor();
+				//- }
+				vm.setCkEditor();
 			}
 		},
 
@@ -372,7 +373,14 @@ export default {
 
 		action:function() {
 			let next = true;
-			
+			//- for (const key in vm.form) {
+			//- 	if (key != 'select') { if (vm.form[key].required != '') { if (vm.form[key].value == '') { next = false; } } }
+			//- 	else {
+			//- 		for (const keyselect in vm.form.select) {
+			//- 			if (vm.form.select[keyselect].isrequired) { if (vm.form.select[keyselect].value == '') { next = false; } }
+			//- 		}
+			//- 	}
+			//- }
 			
 			if (next) { vm.parsingForm(); vm.dialog(); }
 		},

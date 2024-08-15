@@ -397,10 +397,7 @@
                 // }
 
                 
-  ;
-                console.log(vm.form.waktu_keluar_inap)
-                console.log('Form');
-                console.log(vm.form);
+                console.log('WAKTU KELUAR INAP', `${vm.form.waktu_keluar_inap.value.HH}:${vm.form.waktu_keluar_inap.value.mm}`)
                 vm.$emit('parsingForm', vm.parsedetailpulang(vm.form), 'pulang');
             },
 
@@ -412,8 +409,6 @@
             setdataform: function(response) {
                 let waktu = response.data.data.waktu_keluar_inap;
                 let tgl = response.data.data.tanggal_keluar_inap;
-                console.log("memek");
-                console.log(response.data);
 
                 // let keys = ['kamar_inap']
                 // console.log("keys");

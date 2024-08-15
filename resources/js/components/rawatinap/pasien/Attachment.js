@@ -59,7 +59,7 @@ export const parsedetailpulang = (form) => {
 	data.append('uuid', form.uuid);
 	data.append('registrasi_uuid', form.registrasi_uuid);
 	data.append('tanggal_keluar_inap', form.tanggal_keluar_inap.value);
-	data.append('waktu_keluar_inap', form.waktu_keluar_inap.value);
+	data.append('waktu_keluar_inap', `${form.waktu_keluar_inap.value.HH}:${form.waktu_keluar_inap.value.mm}`);
 	return data;
 }
 

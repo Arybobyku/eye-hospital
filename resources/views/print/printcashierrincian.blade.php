@@ -414,10 +414,9 @@
 					<td colspan="8" style="padding: 13px 8px 11px"><b>Farmasi Pelayanan</b></td>
 				</tr>
 			@endif
-
 			@if(count($resep_obat) > 0)
 
-			<?php $nomor = 1; $subtotal = 0; ?>
+				<?php $nomor = 1; $subtotal = 0; ?>
 
 				<tr>
 					<td colspan="8" style="padding: 13px 8px 11px">- <i>Obat-obatan</i></td>
@@ -579,7 +578,138 @@
 				</tr>
 				<?php $grandtotal += $subtotal; ?>
 			@endif
+			
+			@if (count($resep_obat_tambahan) > 0 || count($resep_alkes_tambahan) > 0) 
+			<tr>
+				<td colspan="8" style="padding: 13px 8px 11px"><b>Farmasi Pelayanan Tambahan</b></td>
+			</tr>
+			@endif
+			@if(count($resep_obat_tambahan) > 0)
 
+				<?php $nomor = 1; $subtotal = 0; ?>
+
+				<tr>
+					<td colspan="8" style="padding: 13px 8px 11px">- <i>Obat/Vit Tambahan</i></td>
+				</tr>
+				{{-- <tr>
+					<td align="left" colspan="4" style="padding: 10px 8px"><b>Farmasi Pelayanan</b></td>
+					<td align="center" style="padding: 10px 8px">{{ number_format($obatan->diskon_rp) }}</td>
+					<td align="center" style="padding: 10px 8px">{{ $obatan->diskon_persen }}</td>
+					<td align="right" style="padding: 10px 8px"><b style="color: #640404">{{ number_format($obatan->total) }}</b></td>
+				</tr> --}}
+				<?php $nomor = 1; ?>
+				@foreach ($resep_obat_tambahan as $item)
+					<tr>
+						<td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
+						<td align="left" style="padding: 10px 2px;">{{ $item->nama_obat }}</td>
+						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahDate($item->created_at) }}</td>
+						<td align="center" style="padding: 10px 2px">{{ number_format($item->hja_resep) }}</td>
+						<td align="center" style="padding: 10px 2px">{{ $item->jumlah_kecil }}</td>
+						<td align="right" style="padding: 10px 2px;" colspan="3">{{ number_format($item->total) }}</td>
+						{{-- <td align="right" style="padding: 5px 7px;" colspan="3"></td> --}}
+					</tr>
+					<?php $nomor++; ?>
+
+					<?php $subtotal += $item->total; ?>
+				@endforeach
+				@if (count($resep_alkes_tambahan) > 0)
+				<tr>
+					<td style="padding: 12px 5px; font-weight: bold;" colspan="7">Sub Total</td>
+					<td align="right" style="padding: 12px 5px; font-weight: bold;">{{ number_format($subtotal) }}</td>
+				</tr>
+				@else
+					<tr>
+						<td style="padding: 12px 5px; font-weight: bold;" colspan="5">Sub Total</td>
+						<td style="padding: 12px 5px;" align="center">{{ $diskon_rp }}</td>
+						<td style="padding: 12px 5px;" align="center">{{ $diskon_persen }}</td>
+						<td align="right" style="padding: 12px 5px; font-weight: bold;">
+							<?php 
+								$sementara = $subtotal; 
+								if ($diskon_rp > 0) {
+									$sementara = $sementara - $diskon_rp;
+								}
+								
+								if ($diskon_persen > 0) {
+									$n_persen = (int) ($subtotal * ($diskon_persen/100));
+									$sementara = $sementara - $n_persen;
+								}
+							?>
+
+							<?php
+								if ($obatantambahan) {
+									$sementara = $obatantambahan->total;
+								}
+							?>
+							{{ number_format($sementara) }}
+							<?php $subtotal = $sementara; ?>
+							<?php $grandtotal += $sementara; ?>
+						</td>
+					</tr>
+				@endif
+				<?php 
+					//$grandtotal += $subtotal; 
+				?>
+			@endif
+
+			@if(count($resep_alkes_tambahan) > 0)
+
+			<?php $nomor = 1; $subtotal = 0; ?>
+
+				<tr>
+					<td colspan="8" style="padding: 13px 8px 11px">- <i>Alkes</i></td>
+				</tr>
+				{{-- <tr>
+					<td align="left" colspan="4" style="padding: 10px 8px"><b>Farmasi Pelayanan</b></td>
+					<td align="center" style="padding: 10px 8px">{{ number_format($obatan->diskon_rp) }}</td>
+					<td align="center" style="padding: 10px 8px">{{ $obatan->diskon_persen }}</td>
+					<td align="right" style="padding: 10px 8px"><b style="color: #640404">{{ number_format($obatan->total) }}</b></td>
+				</tr> --}}
+				<?php $nomor = 1; ?>
+				@foreach ($resep_alkes_tambahan as $item)
+					<tr>
+						<td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
+						<td align="left" style="padding: 10px 2px;">{{ $item->nama_obat }}</td>
+						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahDate($item->created_at) }}</td>
+						<td align="center" style="padding: 10px 2px">{{ number_format($item->hja_resep) }}</td>
+						<td align="center" style="padding: 10px 2px">{{ $item->jumlah_kecil }}</td>
+						<td align="right" style="padding: 10px 2px;" colspan="3">{{ number_format($item->total) }}</td>
+						{{-- <td align="right" style="padding: 5px 7px;" colspan="3"></td> --}}
+					</tr>
+					<?php $nomor++; ?>
+
+					<?php $subtotal += $item->total; ?>
+				@endforeach
+
+				<tr>
+					<td style="padding: 12px 5px; font-weight: bold;" colspan="5">Sub Total</td>
+					<td style="padding: 12px 5px;" align="center">{{ $diskon_rp }}</td>
+					<td style="padding: 12px 5px;" align="center">{{ $diskon_persen }}</td>
+					<td align="right" style="padding: 12px 5px; font-weight: bold;">
+						<?php 
+							$sementara = $subtotal; 
+							if ($diskon_rp > 0) {
+								$sementara = $sementara - $diskon_rp;
+							}
+							
+							if ($diskon_persen > 0) {
+								$n_persen = (int) ($subtotal * ($diskon_persen/100));
+								$sementara = $sementara - $n_persen;
+							}
+						?>
+						<?php
+							if ($obatantambahan) {
+								$sementara = $obatantambahan->total;
+							}
+						?>
+						{{ number_format($sementara) }}
+						<?php $subtotal = $sementara; ?>
+						<?php $grandtotal += $sementara; ?>
+					</td>
+				</tr>
+				<?php 
+					// $grandtotal += $subtotal; 
+				?>
+			@endif
 			<tr>
 				<td colspan="8"><hr /></td>
 			</tr>

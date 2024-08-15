@@ -309,132 +309,137 @@ class BebasCtrl extends Controller
 
 			$obat = json_decode($request->obat);
 
-			foreach ($obat as $row) {
-				$item = new ResepBebas();
-				$item->uuid = Uuid::uuid4();
+			if($obat){
+				foreach ($obat as $row) {
+					$item = new ResepBebas();
+					$item->uuid = Uuid::uuid4();
 
-				$item->pasienbebas_uuid = $request->pasienbebas_uuid;
-				$item->ada_tindakan = 'Ya';
-				$item->layanan_uuid = '-';
-				$item->nama_layanan = '-';
-				$item->tarif_layanan = 0;
-				$item->default_layanan = '-';
-				$item->jenis_layanan = '-';
+					$item->pasienbebas_uuid = $request->pasienbebas_uuid;
+					$item->ada_tindakan = 'Ya';
+					$item->layanan_uuid = '-';
+					$item->nama_layanan = '-';
+					$item->tarif_layanan = 0;
+					$item->default_layanan = '-';
+					$item->jenis_layanan = '-';
 
-				$item->registrasi_uuid = '-';
-				$item->no_pendaftaran = '-';
-				$item->registrasi_kode = '-';
-				$item->registrasi_nomor = '-';
-				$item->registrasi_jenis = '-';
-				$item->pasien_uuid = '-';
-				$item->rekam_medis = '-';
-				$item->nama_pasien = '-';
-				$item->dokter_uuid = '-';
-				$item->nama_dokter = '-';
+					$item->registrasi_uuid = '-';
+					$item->no_pendaftaran = '-';
+					$item->registrasi_kode = '-';
+					$item->registrasi_nomor = '-';
+					$item->registrasi_jenis = '-';
+					$item->pasien_uuid = '-';
+					$item->rekam_medis = '-';
+					$item->nama_pasien = '-';
+					$item->dokter_uuid = '-';
+					$item->nama_dokter = '-';
 
-				$item->carabayar_uuid = $request->carabayar_uuid;
-				$item->carabayar_nama = $request->carabayar_nama;
-					
-				$item->tanggal = date('Y-m-d');
-				$item->waktu = date('H:i');
+					$item->carabayar_uuid = $request->carabayar_uuid;
+					$item->carabayar_nama = $request->carabayar_nama;
+						
+					$item->tanggal = date('Y-m-d');
+					$item->waktu = date('H:i');
 
-				$item->obat_uuid = $row->obat_uuid;
-				$item->nama_obat = $row->nama;
-				$item->kategori = $row->kategori;
-				$item->formularium = $row->formularium;
-				$item->golongan = $row->golongan;
-				$item->satuan_uuid_besar = $row->satuan_uuid_besar;
-				$item->nama_satuan_besar = $row->nama_satuan_besar;
-				$item->satuan_uuid_kecil = $row->satuan_uuid_kecil;
-				$item->nama_satuan_kecil = $row->nama_satuan_kecil;
-				$item->hitung_besar = $row->hitung_besar;
-				$item->hitung_kecil = $row->hitung_kecil;
-				$item->harga_netto = $row->harga_netto;
-				$item->harga_netto_discount = $row->harga_netto_discount;
-				$item->harga_netto_ppn = $row->harga_netto_ppn;
-				$item->hpp = $row->hpp;
-				$item->hja_resep = $row->hja_resep;
-				$item->hja_non_resep = $row->hja_non_resep;
-				$item->hja_resep_besar = $row->hja_resep_besar;
-				$item->hja_non_resep_besar = $row->hja_non_resep_besar;
-				$item->margin_resep = $row->margin_resep;
-				$item->margin_non_resep = $row->margin_non_resep;
-				$item->jumlah_kecil = $row->jumlah_kecil;
-				$item->jumlah_besar = $row->jumlah_besar;
-				$item->signa = $row->signa;
-				$item->total = $row->total;
-				$item->save();
+					$item->obat_uuid = $row->obat_uuid;
+					$item->nama_obat = $row->nama;
+					$item->kategori = $row->kategori;
+					$item->formularium = $row->formularium;
+					$item->golongan = $row->golongan;
+					$item->satuan_uuid_besar = $row->satuan_uuid_besar;
+					$item->nama_satuan_besar = $row->nama_satuan_besar;
+					$item->satuan_uuid_kecil = $row->satuan_uuid_kecil;
+					$item->nama_satuan_kecil = $row->nama_satuan_kecil;
+					$item->hitung_besar = $row->hitung_besar;
+					$item->hitung_kecil = $row->hitung_kecil;
+					$item->harga_netto = $row->harga_netto;
+					$item->harga_netto_discount = $row->harga_netto_discount;
+					$item->harga_netto_ppn = $row->harga_netto_ppn;
+					$item->hpp = $row->hpp;
+					$item->hja_resep = $row->hja_resep;
+					$item->hja_non_resep = $row->hja_non_resep;
+					$item->hja_resep_besar = $row->hja_resep_besar;
+					$item->hja_non_resep_besar = $row->hja_non_resep_besar;
+					$item->margin_resep = $row->margin_resep;
+					$item->margin_non_resep = $row->margin_non_resep;
+					$item->jumlah_kecil = $row->jumlah_kecil;
+					$item->jumlah_besar = $row->jumlah_besar;
+					$item->signa = $row->signa;
+					$item->total = $row->total;
+					$item->save();
+				}
 			}
 
 			$remove = ResepRacikanBebas::where('pasienbebas_uuid', '=', $request->pasienbebas_uuid)->delete();
 			$obatracikan = json_decode($request->obatracikan);
-			foreach ($obatracikan as $row) {
-				$item = new ResepRacikanBebas();
-				$item->uuid = Uuid::uuid4();
-				$item->pasienbebas_uuid = $request->pasienbebas_uuid;
-				$item->ada_tindakan = 'Ya';
-				$item->layanan_uuid = '-';
-				$item->nama_layanan = '-';
-				$item->tarif_layanan = 0;
-				$item->default_layanan = '-';
-				$item->jenis_layanan = '-';
+			if($obatracikan){
+				foreach ($obatracikan as $row) {
+					$item = new ResepRacikanBebas();
+					$item->uuid = Uuid::uuid4();
+					$item->pasienbebas_uuid = $request->pasienbebas_uuid;
+					$item->ada_tindakan = 'Ya';
+					$item->layanan_uuid = '-';
+					$item->nama_layanan = '-';
+					$item->tarif_layanan = 0;
+					$item->default_layanan = '-';
+					$item->jenis_layanan = '-';
 
-				$item->registrasi_uuid = '-';
-				$item->no_pendaftaran = '-';
-				$item->registrasi_kode = '-';
-				$item->registrasi_nomor = '-';
-				$item->registrasi_jenis = '-';
-				$item->pasien_uuid = '-';
-				$item->rekam_medis = '-';
-				$item->nama_pasien = '-';
-				$item->dokter_uuid = '-';
-				$item->nama_dokter = '-';
-							
-				$item->tanggal = date('Y-m-d');
-				$item->waktu = date('H:i');
+					$item->registrasi_uuid = '-';
+					$item->no_pendaftaran = '-';
+					$item->registrasi_kode = '-';
+					$item->registrasi_nomor = '-';
+					$item->registrasi_jenis = '-';
+					$item->pasien_uuid = '-';
+					$item->rekam_medis = '-';
+					$item->nama_pasien = '-';
+					$item->dokter_uuid = '-';
+					$item->nama_dokter = '-';
+								
+					$item->tanggal = date('Y-m-d');
+					$item->waktu = date('H:i');
 
-				$item->carabayar_uuid = $request->carabayar_uuid;
-				$item->carabayar_nama = $request->carabayar_nama;
+					$item->carabayar_uuid = $request->carabayar_uuid;
+					$item->carabayar_nama = $request->carabayar_nama;
 
-				$item->label = $row->label;
-				$item->kemasan = $row->kemasan;
-				$item->jumlah = $row->jumlah;
-				$item->signa = $row->signa;
-				$item->total = $row->total;
-				$item->informasi = $row->informasi;
-				$item->save();
+					$item->label = $row->label;
+					$item->kemasan = $row->kemasan;
+					$item->jumlah = $row->jumlah;
+					$item->signa = $row->signa;
+					$item->total = $row->total;
+					$item->informasi = $row->informasi;
+					$item->save();
+				}
 			}
 
 			$remove = LayananPasien::where('pasien_uuid', '=', $request->pasienbebas_uuid)->delete();
 
 			$tindakan = json_decode($request->tindakan);
-
-			foreach ($tindakan as $row) {
-				$item = new LayananPasien();
-				$item->uuid = Uuid::uuid4();
-				$item->registrasi_uuid = '-';
-				$item->no_pendaftaran = '-';
-				$item->registrasi_kode = '-';
-				$item->registrasi_nomor = '-';
-				$item->registrasi_jenis = '-';
-				$item->pasien_uuid = $request->pasienbebas_uuid;
-				$item->rekam_medis = '-';
-				$item->nama_pasien = '-';
-				$item->pengguna_uuid = '-';
-				$item->nama_dokter = '-';
+			if($tindakan){
+				foreach ($tindakan as $row) {
+					$item = new LayananPasien();
+					$item->uuid = Uuid::uuid4();
+					$item->registrasi_uuid = '-';
+					$item->no_pendaftaran = '-';
+					$item->registrasi_kode = '-';
+					$item->registrasi_nomor = '-';
+					$item->registrasi_jenis = '-';
+					$item->pasien_uuid = $request->pasienbebas_uuid;
+					$item->rekam_medis = '-';
+					$item->nama_pasien = '-';
+					$item->pengguna_uuid = '-';
+					$item->nama_dokter = '-';
+						
+					$item->tanggal = date('Y-m-d');
+					$item->waktu = date('H:i');
 					
-				$item->tanggal = date('Y-m-d');
-				$item->waktu = date('H:i');
-				
-				$item->carabayar_uuid = 'umum';
-				$item->carabayar_nama = 'umum';
-				$item->layanan_uuid = $row->tindakan_rawat_jalan_uuid;
-				$item->nama_layanan = $row->nama_tindakan_rawat_jalan;
-				$item->tarif = $row->harga;
-				$item->total = $row->harga;
-				$item->jenis = 'Tindakan Obat Bebas';
-				$item->default = $row->default;
-				$item->save();
+					$item->carabayar_uuid = 'umum';
+					$item->carabayar_nama = 'umum';
+					$item->layanan_uuid = $row->tindakan_rawat_jalan_uuid;
+					$item->nama_layanan = $row->nama_tindakan_rawat_jalan;
+					$item->tarif = $row->harga;
+					$item->total = $row->harga;
+					$item->jenis = 'Tindakan Obat Bebas';
+					$item->default = $row->default;
+					$item->save();
+				}
 			}
 
 			$arr = array('ada_obat' => 'Ya');
