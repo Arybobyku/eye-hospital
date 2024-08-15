@@ -87,6 +87,7 @@
 										<Inputed :ref="form.beratbadan.name" :form="form.beratbadan"></Inputed>
 										<Inputed :ref="form.tinggibadan.name" :form="form.tinggibadan"></Inputed>
 										<Inputed :ref="form.tekanandarah.name" :form="form.tekanandarah"></Inputed>
+										<Inputed :ref="form.kgd.name" :form="form.kgd"></Inputed>
 
 									</div>
 								</div>
@@ -1094,27 +1095,31 @@ export default {
     
 								<tr>
                                     <td>Nadi</td>
-									<td>${vm.form.nadi.value}</td>
+									<td>${vm.form.nadi.value} x/Menit</td>
                                 </tr>
 								<tr>
                                     <td>Respiratory Rate</td>
-									<td>${vm.form.respiratoryrate.value}</td>
+									<td>${vm.form.respiratoryrate.value} x/Menit</td>
                                 </tr>
 								<tr>
                                     <td>Suhu Tubuh</td>
-									<td>${vm.form.suhu.value}</td>
+									<td>${vm.form.suhu.value} °C</td>
                                 </tr>
 								<tr>
                                     <td>Berat Badan</td>
-									<td>${vm.form.beratbadan.value}</td>
+									<td>${vm.form.beratbadan.value} Kg</td>
                                 </tr>
 								<tr>
                                     <td>Tinggi Badan</td>
-									<td>${vm.form.tinggibadan.value}</td>
+									<td>${vm.form.tinggibadan.value} Cm</td>
                                 </tr>
 								<tr>
                                     <td>Tekanan Darah</td>
-									<td>${vm.form.tekanandarah.value}</td>
+									<td>${vm.form.tekanandarah.value} mmHg</td>
+                                </tr>
+								<tr>
+                                    <td>KGD</td>
+									<td>${vm.form.kgd.value} mg/dL</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1168,6 +1173,7 @@ export default {
 				vm.form.kasusurgentlainnya.value = vm.nullcheck(temps.kasus_urgent_lainnya);
 				vm.form.tekanandarah.value = vm.nullcheck(temps.tekanan_darah);
 				vm.form.nadi.value = vm.nullcheck(temps.nadi);
+				vm.form.kgd.value = vm.nullcheck(temps.kgd);
 				vm.form.respiratoryrate.value = vm.nullcheck(temps.respiratory_rate);
 				vm.form.beratbadan.value = vm.nullcheck(temps.berat_badan);
 				vm.form.tinggibadan.value = vm.nullcheck(temps.tinggi_badan);

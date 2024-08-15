@@ -7,7 +7,8 @@
 			placeholder="Ketik disini" 
 			v-model="form.value" 
 			:disabled="form.disabled ? 'disabled' : false" />
-		<label :for="form.for_id" :class="form.required">{{ form.title }}</label>
+		<label :for="form.for_id" :class="form.required">{{ form.title }} </label>
+		<label :for="form.for_id" :class="form.required" style="margin-top: 25px; margin-left: 80%"> {{ form.satuan }}</label>
 	</div>
 </template>
 

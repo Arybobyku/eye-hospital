@@ -400,6 +400,7 @@ class PemeriksaanCtrl extends Controller
 					'status_psikologi' => $request->status_psikologis,
 					'tekanan_darah' => $request->tekanan_darah,
 					'nadi' => $request->nadi,
+					'kgd' => $request->kgd,
 					'respiratory_rate' => $request->respiratory_rate,
 					'suhu' => $request->suhu,
 					'berat_badan' => $request->berat_badan,
@@ -467,6 +468,7 @@ class PemeriksaanCtrl extends Controller
 				$item->status_psikologi = $request->status_psikologis;
 				$item->tekanan_darah = $request->tekanan_darah;
 				$item->nadi = $request->nadi;
+				$item->kgd = $request->kgd;
 				$item->respiratory_rate = $request->respiratory_rate;
 				$item->suhu = $request->suhu;
 				$item->berat_badan = $request->berat_badan;

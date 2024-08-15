@@ -159,7 +159,7 @@ export default {
 		tab: {
 			button: [
 				{ value: 'histori', label: 'Histori', class: 'tab-active' },
-				{ value: 'rawatjalan', label: 'Rawat Jalan', class: 'tab-no-active' },
+				{ value: 'rawatjalan', label: 'Registrasi', class: 'tab-no-active' },
 				// { value: 'pembelianobatkhusus', label: 'Pembelian Obat Khusus', class: 'tab-no-active' },
 				// { value: 'operasi', label: 'Operasi/Bedah', class: 'tab-no-active' },
 			],
@@ -338,7 +338,7 @@ export default {
 					vm.tab = {
 						button: [
 							{ value: 'histori', label: 'Histori', class: 'tab-active' },
-							{ value: 'rawatjalan', label: 'Rawat Jalan', class: 'tab-no-active' },
+							{ value: 'rawatjalan', label: 'Registrasi', class: 'tab-no-active' },
 						],
 						content: { histori: true, rawatjalan: false }
 					}
