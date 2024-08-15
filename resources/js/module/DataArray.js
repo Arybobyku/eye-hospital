@@ -316,6 +316,7 @@ export const arrpemeriksaan = () => {
 		],
 		pilihanplan: [
 			{ value: 'Pulang Berobat Jalan', label: 'Pulang Berobat Jalan' },
+			{ value: 'Operasi pada jadwal yang ditentukan', label: 'Operasi pada jadwal yang ditentukan' },
 			{ value: 'Rawat Inap', label: 'Rawat Inap' },
 			{ value: 'Operasi', label: 'Operasi' },
 		],

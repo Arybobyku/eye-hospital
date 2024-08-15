@@ -20,6 +20,11 @@
 						<ul class="list-detail">
 							<li>Jenis Kelamin<span><strong>{{ detailperawat.jenis_kelamin }}</strong></span></li>
 							<li>Dokter yang menangani<span><strong>{{ detailperawat.nama_dokter }}</strong></span></li>
+							<li>
+								<Selected v-on:click="selectbox($event, form.select.klinik.name, form.select.klinik.statics)" 
+							:ref="form.select.klinik.name" @selecteditem="selecteditem" @selectclear="selectclear"
+							:selection="form.select.klinik"></Selected>
+							</li>
 						</ul>
 					</div>
 					<div class="col-4 form-mr">
@@ -972,15 +977,15 @@ export default {
 		},
 
 		action: function () {
-			// let next = true;
-			// for (const key in vm.form) {
-			// 	if (key != 'select') { if (vm.form[key].required != '') { if (vm.form[key].value == '') { next = false; } } }
-			// 	else {
-			// 		for (const keyselect in vm.form.select) {
-			// 			if (vm.form.select[keyselect].isrequired) { if (vm.form.select[keyselect].value == '') { next = false; } }
-			// 		}
-			// 	}
-			// }
+			 let next = true;
+			 for (const key in vm.form) {
+			 	if (key != 'select') { if (vm.form[key].required != '') { if (vm.form[key].value == '') { next = false; } } }
+			 	else {
+			 		for (const keyselect in vm.form.select) {
+			 			if (vm.form.select[keyselect].isrequired) { if (vm.form.select[keyselect].value == '') { next = false; } }
+			 		}
+			 	}
+			}
 
 			vm.parsingForm(); vm.dialog();
 		},
@@ -1146,6 +1151,12 @@ export default {
 			vm.histori = response.data.histori;
 			let temps = response.data.kunjungan;
 			vm.linkR = vm.linkR + vm.detailperawat.pasien_uuid;
+
+			if (vm.detailperawat.ruang_poliklinik != '0') {
+				vm.form.select.klinik.value = vm.detailperawat.ruang_poliklinik;
+				vm.form.select.klinik.label = 'Poli ' + vm.detailperawat.ruang_poliklinik;
+			}
+
 			vm.form.cppt_sebagai = 'PERAWAT';
 
 			let cppt = response.data.cppt;

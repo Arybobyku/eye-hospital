@@ -1747,11 +1747,20 @@ export default {
                         `;
             }
 
-            if (vm.form.select.pilihanplan.value) {
+            if (vm.form.select.pilihanplan.value === 'Pulang Berobat Jalan') {
                 vm.form.plan += `
                     <div>Planning</div>
                         <ul>
-                           <li>${vm.form.select.pilihanplan.value}</li>
+                           <li>${vm.form.select.pilihanplan.value}</li>  
+                        </ul>
+                    `;
+            }
+            else if (vm.form.select.pilihanplan.value === 'Operasi pada jadwal yang ditentukan') {
+                vm.form.plan += `
+                    <div>Planning</div>
+                        <ul>
+                           <li>${vm.form.select.pilihanplan.value} :</li>  
+                             <li>${vm.form.tanggal_kontrol_selanjutnya.value}</li> 
                         </ul>
                     `;
             }
@@ -1769,53 +1778,53 @@ export default {
                         <tbody>
                         <tr>
                             <td>Autoref</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_autoref}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_autoref}</td>
+                            <td>${vm.pemeriksaanro.ocular_dextra_autoref || ''}</td>
+                            <td>${vm.pemeriksaanro.ocular_sinistra_autoref || ''}</td>
                         </tr>
                         <tr>
                             <td>Add</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_add}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_add}</td>
+                            <td>${vm.pemeriksaanro.ocular_dextra_add || ''}</td>
+                            <td>${vm.pemeriksaanro.ocular_sinistra_add || ''}</td>
                         </tr>
                         <tr>
                             <td>BCVA</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_bcva1} => ${vm.pemeriksaanro.ocular_dextra_bcva2}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_bcva1} => ${vm.pemeriksaanro.ocular_sinistra_bcva2}</td>
+                            <td>${vm.pemeriksaanro.ocular_dextra_bcva1 || ''} => ${vm.pemeriksaanro.ocular_dextra_bcva2 || ''}</td>
+                            <td>${vm.pemeriksaanro.ocular_sinistra_bcva1 || ''} => ${vm.pemeriksaanro.ocular_sinistra_bcva2 || ''}</td>
                         </tr>
                         <tr>
                             <td>Keratometri K1</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_keratometri_k1}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_keratometri_k1}</td>
+                            <td>${vm.pemeriksaanro.ocular_dextra_keratometri_k1 || ''}</td>
+                            <td>${vm.pemeriksaanro.ocular_sinistra_keratometri_k1 || ''}</td>
                         </tr>
                         <tr>
                             <td>Keratometri K2</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_keratometri_k2}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_keratometri_k2}</td>
+                            <td>${vm.pemeriksaanro.ocular_dextra_keratometri_k2 || ''}</td>
+                            <td>${vm.pemeriksaanro.ocular_sinistra_keratometri_k2 || ''}</td>
                         </tr>
                         <tr>
                             <td>Tonometri</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_tonometri}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_tonometri}</td>
+                            <td>${vm.pemeriksaanro.ocular_dextra_tonometri || ''}</td>
+                            <td>${vm.pemeriksaanro.ocular_sinistra_tonometri || ''}</td>
                         </tr>
                         <tr>
                             <td>Visus</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_visus}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_visus}</td>
+                            <td>${vm.pemeriksaanro.ocular_dextra_visus || ''}</td>
+                            <td>${vm.pemeriksaanro.ocular_sinistra_visus || ''}</td>
                         </tr>
                         <tr>
                             <td>Kacamata Sph</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_sph}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_sph}</td>
+                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_sph || ''}</td>
+                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_sph || ''}</td>
                         </tr>
                         <tr>
                             <td>Kacamata Cyl</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_cyl}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_cyl}</td>
+                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_cyl || ''}</td>
+                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_cyl || ''}</td>
                         </tr>
                         <tr>
                             <td>Kacamata Add</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_addisi}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_addisi}</td>
+                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_addisi || ''}</td>
+                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_addisi || ''}</td>
                         </tr>
                         </tbody>
                     </table>
@@ -2108,6 +2117,11 @@ export default {
                     vm.form.select.paketbedah.value = "";
                     vm.form.select.paketbedah.label = "Silahkan Pilih";
                 } else if (planning === "Pulang Berobat Jalan") {
+                    this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
+                    this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
+                    this.showPulang = true; // Menyembunyikan div dengan kelas 'Operasi'
+                }
+                else if (planning === "Operasi pada jadwal yang ditentukan") {
                     this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                     this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
                     this.showPulang = true; // Menyembunyikan div dengan kelas 'Operasi'
@@ -2800,6 +2814,16 @@ export default {
                         this.showRawatInap = true; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showPulang = false; // Menyembunyikan div dengan kelas 'Operasi'
                     } else if (planning === "Pulang Berobat Jalan") {
+                        this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
+                        this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
+                        this.showPulang = true; // Menyembunyikan div dengan kelas 'Operasi'
+                        if (response.data.kunjungan.tanggal_kontrol_selanjutnya != '' && response.data.kunjungan.tanggal_kontrol_selanjutnya != null) {
+                            vm.form.tanggal_kontrol_selanjutnya.value = response.data.kunjungan.tanggal_kontrol_selanjutnya;
+                        } else {
+                            vm.form.tanggal_kontrol_selanjutnya.value = '';
+                        }
+                    } 
+                    else if (planning === "Operasi pada jadwal yang ditentukan") {
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showPulang = true; // Menyembunyikan div dengan kelas 'Operasi'
