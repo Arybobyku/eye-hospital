@@ -7,34 +7,74 @@
 				<h2 v-if="form">{{ form.title }}</h2>
 			</div>
 			<div class="modal-body" v-if="form">
-				<div class="grid">		
+				<div class="grid">
 					<div class="col-4 form-mr">
 						<ul class="list-detail">
 							<li>No Rekam Medis<span><strong>{{ detailperawat.rekam_medis }}</strong></span></li>
-							<li>Nama Lengkap<span><strong>{{ detailperawat.nama_pasien }}</strong></span></li>
-							<li>Tanggal Lahir<span><strong>{{ datename(detailperawat.tanggal_lahir) }}</strong></span>
-							</li>
 						</ul>
 					</div>
-					<div class="col-4 form-mr">
+					<div class="col-8 form-mr">
 						<ul class="list-detail">
-							<li>Jenis Kelamin<span><strong>{{ detailperawat.jenis_kelamin }}</strong></span></li>
 							<li>Dokter yang menangani<span><strong>{{ detailperawat.nama_dokter }}</strong></span></li>
-							<li>
-								<Selected v-on:click="selectbox($event, form.select.klinik.name, form.select.klinik.statics)" 
-							:ref="form.select.klinik.name" @selecteditem="selecteditem" @selectclear="selectclear"
-							:selection="form.select.klinik"></Selected>
+						</ul>
+					</div>
+					<div class="col-4 form-mr" style="margin-top: -35px;">
+						<ul class="list-detail">
+							<li>Nama Lengkap<span><strong>{{ detailperawat.nama_pasien }}</strong></span></li>
+						</ul>
+					</div>
+					<div class="col-4 form-mr" style="margin-top: -35px;">
+						<ul class="list-detail">
+							<li>Jenis Kelamin<span><strong>{{ detailperawat.jenis_kelamin }}</strong></span>
 							</li>
 						</ul>
 					</div>
-					<div class="col-4 form-mr">
+					<div class="col-4 form-mr" style="margin-top: -35px;">
 						<ul class="list-detail">
+							<li>Nomor Handphone<span><strong>{{ detailperawat.no_handphone }}</strong></span>
+
+							</li>
+						</ul>
+					</div>
+					<div class="col-4 form-mr" style="margin-top: -35px;">
+						<ul class="list-detail">
+							<li>Tanggal Lahir<span><strong>{{ datename(detailperawat.tanggal_lahir) }}</strong></span>
+
+							</li>
+						</ul>
+					</div>
+					<div class="col-4 form-mr" style="margin-top: -30px;">
+						<ul class="list-detail">
+
 							<li>Cara Bayar<span><strong>{{ detailperawat.carabayar_nama }}</strong></span></li>
-							<li>Nomor Handphone<span><strong>{{ detailperawat.no_handphone }}</strong></span></li>
+						</ul>
+					</div>
+
+					<div class="col-4 form-mr" style="margin-top: -35px;">
+						<ul class="list-detail">
 							<li>Triase<span><strong>{{ detailperawat.berkebutuhan_khusus }}</strong></span></li>
 						</ul>
 					</div>
+
+
+
+
+					<div class="col-4 form-mr" style="margin-top: -35px;">
+
+						<Selected v-on:click="selectbox($event, form.select.klinik.name, form.select.klinik.statics)"
+							:ref="form.select.klinik.name" @selecteditem="selecteditem" @selectclear="selectclear"
+							:selection="form.select.klinik"></Selected>
+
+
+					</div>
+
+
+
+
 				</div>
+
+
+
 
 				<div class="grid">
 					<div class="col-12">
@@ -117,7 +157,8 @@
 										</Selected>
 
 										<Inputed :ref="form.nyerihilangbilalainnya.name"
-											:form="form.nyerihilangbilalainnya"></Inputed>
+											:form="form.nyerihilangbilalainnya">
+										</Inputed>
 
 										<Inputed :ref="form.skalanyeri.name" :form="form.skalanyeri"></Inputed>
 
@@ -158,7 +199,8 @@
 										</Selected>
 
 										<Inputed :ref="form.pernahdioperasilainnya.name"
-											:form="form.pernahdioperasilainnya"></Inputed>
+											:form="form.pernahdioperasilainnya">
+										</Inputed>
 
 
 										<Selected
@@ -225,70 +267,82 @@
 												<tr>
 													<td style="text-align: left;">Pendengaran</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_pendengaran" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ph_pendengaran"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Masalah Penglihatan</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_masalah_penglihatan" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="ph_masalah_penglihatan" style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Bicara Buruk</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_bicara_buruk" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="ph_bicara_buruk" style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Hilang Memori</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_hilang_memori" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="ph_hilang_memori" style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Tidak Ada Partisipasi</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_tidak_ada_partisipasi" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="ph_tidak_ada_partisipasi" style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Secara Fisiologi Tidak Mampu Belajar
 													</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_tidak_mampu_belajar" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="ph_tidak_mampu_belajar" style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Tidak Ditemukan Hambatan Belajar</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_tidak_ada_hambatan_belajar" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="ph_tidak_ada_hambatan_belajar"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 
 												<tr>
 													<td style="text-align: left;">Cemas</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_cemas" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ph_cemas"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Emoosi</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_emosi" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ph_emosi"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Kognitif</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_kognitif" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ph_kognitif"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="text-align: left;">Motivasi</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ph_motivasi" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ph_motivasi"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 											</tbody>
 										</table>
@@ -301,14 +355,17 @@
 												<tr>
 													<td>Tata Tertib RS</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="edukasi_tata_tertib" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="edukasi_tata_tertib" style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Hak dan Kewajiban Pasien</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="edukasi_hak_dan_kewajiban" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="edukasi_hak_dan_kewajiban"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 											</tbody>
 										</table>
@@ -322,32 +379,37 @@
 												<tr>
 													<td>Audio</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="metode_audio" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="metode_audio"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Demonstrasi</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="metode_demonstrasi" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="metode_demonstrasi" style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Lisan</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="metode_lisan" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="metode_lisan"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Tulisan</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="metode_tulisan" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="metode_tulisan"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Visual</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="metode_visual" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="metode_visual"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 											</tbody>
 										</table>
@@ -360,38 +422,44 @@
 												<tr>
 													<td>Islam</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ag_islam" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ag_islam"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Protestan</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ag_protestan" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ag_protestan"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Katolik</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ag_katolik" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ag_katolik"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Hindu</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ag_hindu" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ag_hindu"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Budha</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ag_budha" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ag_budha"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Lain-lain</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="ag_lainnya" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="ag_lainnya"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 
 
@@ -407,38 +475,44 @@
 												<tr>
 													<td>Proses Penyakit</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="rpk_proses_penyakit" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="rpk_proses_penyakit" style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Pengobatan / Tindakan</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="rpk_pengobatan" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="rpk_pengobatan"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Nutrisi</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="rpk_nutrisi" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="rpk_nutrisi"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Edukasi Kolaboratif</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="rpk_edukasi" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="rpk_edukasi"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Lainnya</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="rpk_lain_lain" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="rpk_lain_lain"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="width: 60%;">Jelaskan</td>
 													<td>
 														<Inputed2 :ref="form.rpk_jelaskan.name"
-															:form="form.rpk_jelaskan"></Inputed2>
+															:form="form.rpk_jelaskan">
+														</Inputed2>
 													</td>
 												</tr>
 
@@ -454,14 +528,16 @@
 												<tr>
 													<td>Ya</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="kp_ya" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="kp_ya"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Tidak</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="kp_tidak" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="kp_tidak"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 
 											</tbody>
@@ -480,14 +556,16 @@
 												<tr>
 													<td>Normal</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="pb_normal" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="pb_normal"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Gangguan Bicara</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="pb_gangguan" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="pb_gangguan"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 
 											</tbody>
@@ -501,20 +579,23 @@
 												<tr>
 													<td>Bahasa Indonesia</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="bs_indonesia" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="bs_indonesia"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Bahasa Inggris</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="bs_inggris" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="bs_inggris"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Bahasa Daerah</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="bs_daerah" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="bs_daerah"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="width: 60%;">Bahasa Lainnya</td>
@@ -535,14 +616,16 @@
 												<tr>
 													<td>Tidak</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="bi_tidak" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="bi_tidak"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Iya</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="bi_iya" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="bi_iya"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 											</tbody>
 										</table>
@@ -555,44 +638,51 @@
 												<tr>
 													<td>TK</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="tp_tk" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="tp_tk"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>SD</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="tp_sd" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="tp_sd"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>SMP</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="tp_smp" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="tp_smp"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>SMA</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="tp_sma" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="tp_sma"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Diploma</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="tp_diploma" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="tp_diploma"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Sarjana</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="tp_sarjana" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="tp_sarjana"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Lainnya</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="tp_lainnya" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="tp_lainnya"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 											</tbody>
 										</table>
@@ -606,20 +696,23 @@
 												<tr>
 													<td>Paham</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="tp_paham" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="tp_paham"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Kurang Paham</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="tp_kurang_paham" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="tp_kurang_paham" style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Tidak Paham</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="tp_tidak" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="tp_tidak"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 
 											</tbody>
@@ -634,21 +727,24 @@
 												<tr>
 													<td>Modern</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="np_modern" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="np_modern"
+															style="cursor: pointer;">
+													</td>
 
 												</tr>
 												<tr>
 													<td>Moderat</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="np_moderat" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="np_moderat"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Konvensional</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="np_konvensional" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox"
+															v-model="np_konvensional" style="cursor: pointer;">
+													</td>
 												</tr>
 											</tbody>
 										</table>
@@ -661,14 +757,16 @@
 												<tr>
 													<td>Ya</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="rokok_ya" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="rokok_ya"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Tidak</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="rokok_tidak" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="rokok_tidak"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 
 											</tbody>
@@ -682,14 +780,16 @@
 												<tr>
 													<td>Ya</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="alkohol_ya" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="alkohol_ya"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Tidak</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="alkohol_tidak" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="alkohol_tidak"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 
 											</tbody>
@@ -704,14 +804,16 @@
 												<tr>
 													<td>Ya</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="kmi_ya" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="kmi_ya"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td>Tidak</td>
 													<td style="text-align: right;">
-    <input class="checkbox" type="checkbox" v-model="kmi_tidak" style="cursor: pointer;">
-</td>
+														<input class="checkbox" type="checkbox" v-model="kmi_tidak"
+															style="cursor: pointer;">
+													</td>
 												</tr>
 												<tr>
 													<td style="width: 60%;">Alasan</td>
@@ -757,15 +859,11 @@
 									<div class="col-9"></div>
 									<div class="col-3 form-ml form-mt">
 										<label for="">Tanda Tangan di Dokumen Ini</label>
-											<img
-												v-if="form.ttd"
-												:src="form.ttd"
-												alt="ttd dokter"
-												height="100"
-												width="400"
-											/>
-											<br>
-										<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan</button>
+										<img v-if="form.ttd" :src="form.ttd" alt="ttd dokter" height="100"
+											width="400" />
+										<br>
+										<button v-if="!form.ttd" class="button-modal-page button-modal-green"
+											v-on:click="doDigitalSignature()">Tanda Tangan</button>
 									</div>
 								</div>
 							</div>
@@ -897,7 +995,7 @@ export default {
 			rpk_lain_lain: false,
 			kp_ya: false,
 			kp_tidak: false,
-            cpptResponse: null,
+			cpptResponse: null,
 			detailperawat: {
 				uuid: '', registrasi_uuid: '',
 				agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '',
@@ -929,7 +1027,7 @@ export default {
 			}
 		},
 
-		doDigitalSignature: function () { 
+		doDigitalSignature: function () {
 			vm.form.ttd = window.localStorage.getItem("ttd") ?? "";
 		},
 
@@ -941,7 +1039,8 @@ export default {
 		changesTab: function (values, index, classes) {
 			if (classes != 'tab-active') {
 				for (let i = 0; i < vm.tab.button.length; i++) {
-					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';	}
+					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';
+				}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
 				//- if(vm.cpptResponse == null){
@@ -978,15 +1077,15 @@ export default {
 		},
 
 		action: function () {
-			 let next = true;
-			 for (const key in vm.form) {
-			 	if (key != 'select') { if (vm.form[key].required != '') { if (vm.form[key].value == '') { next = false; } } }
-			 	else {
-			 		for (const keyselect in vm.form.select) {
-			 			if (vm.form.select[keyselect].isrequired) { if (vm.form.select[keyselect].value == '') { next = false; } }
-			 		}
-			 	}
-			}
+			let next = true;
+			//  for (const key in vm.form) {
+			//  	if (key != 'select') { if (vm.form[key].required != '') { if (vm.form[key].value == '') { next = false; } } }
+			//  	else {
+			//  		for (const keyselect in vm.form.select) {
+			//  			if (vm.form.select[keyselect].isrequired) { if (vm.form.select[keyselect].value == '') { next = false; } }
+			//  		}
+			//  	}
+			// }
 
 			vm.parsingForm(); vm.dialog();
 		},
@@ -1086,7 +1185,7 @@ export default {
 		// parsingForm: function () { 
 		// 	vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detailperawat), 'addperawat'); 
 		// },
-		setCkEditor: function(val, title){
+		setCkEditor: function (val, title) {
 			vm.form.subject = `${vm.form.keluhanutama.value}`;
 			vm.form.object = `
                     <figure class="table">
@@ -1161,7 +1260,7 @@ export default {
 			vm.form.cppt_sebagai = 'PERAWAT';
 
 			let cppt = response.data.cppt;
-			if(cppt != null){
+			if (cppt != null) {
 				vm.cpptResponse = cppt;
 				vm.form.subject = cppt.subjek;
 				vm.form.object = cppt.objek;
