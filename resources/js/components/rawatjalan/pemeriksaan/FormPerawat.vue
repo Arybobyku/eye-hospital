@@ -20,6 +20,11 @@
 						<ul class="list-detail">
 							<li>Jenis Kelamin<span><strong>{{ detailperawat.jenis_kelamin }}</strong></span></li>
 							<li>Dokter yang menangani<span><strong>{{ detailperawat.nama_dokter }}</strong></span></li>
+							<li>
+								<Selected v-on:click="selectbox($event, form.select.klinik.name, form.select.klinik.statics)" 
+							:ref="form.select.klinik.name" @selecteditem="selecteditem" @selectclear="selectclear"
+							:selection="form.select.klinik"></Selected>
+							</li>
 						</ul>
 					</div>
 					<div class="col-4 form-mr">
@@ -87,6 +92,7 @@
 										<Inputed :ref="form.beratbadan.name" :form="form.beratbadan"></Inputed>
 										<Inputed :ref="form.tinggibadan.name" :form="form.tinggibadan"></Inputed>
 										<Inputed :ref="form.tekanandarah.name" :form="form.tekanandarah"></Inputed>
+										<Inputed :ref="form.kgd.name" :form="form.kgd"></Inputed>
 
 									</div>
 								</div>
@@ -972,15 +978,15 @@ export default {
 		},
 
 		action: function () {
-			// let next = true;
-			// for (const key in vm.form) {
-			// 	if (key != 'select') { if (vm.form[key].required != '') { if (vm.form[key].value == '') { next = false; } } }
-			// 	else {
-			// 		for (const keyselect in vm.form.select) {
-			// 			if (vm.form.select[keyselect].isrequired) { if (vm.form.select[keyselect].value == '') { next = false; } }
-			// 		}
-			// 	}
-			// }
+			 let next = true;
+			 for (const key in vm.form) {
+			 	if (key != 'select') { if (vm.form[key].required != '') { if (vm.form[key].value == '') { next = false; } } }
+			 	else {
+			 		for (const keyselect in vm.form.select) {
+			 			if (vm.form.select[keyselect].isrequired) { if (vm.form.select[keyselect].value == '') { next = false; } }
+			 		}
+			 	}
+			}
 
 			vm.parsingForm(); vm.dialog();
 		},
@@ -1095,27 +1101,31 @@ export default {
     
 								<tr>
                                     <td>Nadi</td>
-									<td>${vm.form.nadi.value}</td>
+									<td>${vm.form.nadi.value} x/Menit</td>
                                 </tr>
 								<tr>
                                     <td>Respiratory Rate</td>
-									<td>${vm.form.respiratoryrate.value}</td>
+									<td>${vm.form.respiratoryrate.value} x/Menit</td>
                                 </tr>
 								<tr>
                                     <td>Suhu Tubuh</td>
-									<td>${vm.form.suhu.value}</td>
+									<td>${vm.form.suhu.value} °C</td>
                                 </tr>
 								<tr>
                                     <td>Berat Badan</td>
-									<td>${vm.form.beratbadan.value}</td>
+									<td>${vm.form.beratbadan.value} Kg</td>
                                 </tr>
 								<tr>
                                     <td>Tinggi Badan</td>
-									<td>${vm.form.tinggibadan.value}</td>
+									<td>${vm.form.tinggibadan.value} Cm</td>
                                 </tr>
 								<tr>
                                     <td>Tekanan Darah</td>
-									<td>${vm.form.tekanandarah.value}</td>
+									<td>${vm.form.tekanandarah.value} mmHg</td>
+                                </tr>
+								<tr>
+                                    <td>KGD</td>
+									<td>${vm.form.kgd.value} mg/dL</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1142,6 +1152,12 @@ export default {
 			vm.histori = response.data.histori;
 			let temps = response.data.kunjungan;
 			vm.linkR = vm.linkR + vm.detailperawat.pasien_uuid;
+
+			if (vm.detailperawat.ruang_poliklinik != '0') {
+				vm.form.select.klinik.value = vm.detailperawat.ruang_poliklinik;
+				vm.form.select.klinik.label = 'Poli ' + vm.detailperawat.ruang_poliklinik;
+			}
+
 			vm.form.cppt_sebagai = 'PERAWAT';
 
 			let cppt = response.data.cppt;
@@ -1169,6 +1185,7 @@ export default {
 				vm.form.kasusurgentlainnya.value = vm.nullcheck(temps.kasus_urgent_lainnya);
 				vm.form.tekanandarah.value = vm.nullcheck(temps.tekanan_darah);
 				vm.form.nadi.value = vm.nullcheck(temps.nadi);
+				vm.form.kgd.value = vm.nullcheck(temps.kgd);
 				vm.form.respiratoryrate.value = vm.nullcheck(temps.respiratory_rate);
 				vm.form.beratbadan.value = vm.nullcheck(temps.berat_badan);
 				vm.form.tinggibadan.value = vm.nullcheck(temps.tinggi_badan);

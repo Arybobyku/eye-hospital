@@ -88,8 +88,8 @@ export default {
 
 		btnhtml:function(_item, _index) {
 			let str = [
-				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detailperawat', tooltip: 'Pemeriksaan Perawat', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Pemeriksaan RO', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detailperawat', tooltip: 'Pemeriksaan Perawat', item: _item, index: _index, show: true },
 				{ icon: 'bell', color: 'btn-info', posisi: 'panggil', tooltip: 'Panggil Pasien', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Log Pemeriksaan RO', item: _item, index: _index, show: true },
 			]

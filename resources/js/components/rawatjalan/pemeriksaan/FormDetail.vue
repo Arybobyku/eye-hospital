@@ -21,13 +21,9 @@
 							<li>Alamat<span><strong>{{ detail.alamat }}</strong></span></li>
 							<li>Triase<span><strong>{{ detail.berkebutuhan_khusus }}</strong></span></li>
 							<li v-if="detail.berkebutuhan_khusus!='Tidak'">Keterangan<span><strong>{{ detail.keterangan_berkebutuhan }}</strong></span></li>
-							<li>
-								<Selected v-on:click="selectbox($event, form.select.klinik.name, form.select.klinik.statics)" 
-							:ref="form.select.klinik.name" @selecteditem="selecteditem" @selectclear="selectclear"
-							:selection="form.select.klinik"></Selected>
-							</li>
+							
 							<li><Inputed :ref="form.ocularsinistraro.name" :form="form.ocularsinistraro"></Inputed></li>
-							<li><Inputed :ref="form.nama_pemeriksa.name" :form="form.nama_pemeriksa"></Inputed></li>
+							<!-- <li><Inputed :ref="form.nama_pemeriksa.name" :form="form.nama_pemeriksa"></Inputed></li> -->
 						</ul>
 					</div>
 					<div class="col-8">
@@ -421,10 +417,7 @@ export default {
 			vm.histori = response.data.histori;
 			vm.linkR = vm.linkR + vm.detail.pasien_uuid;
 
-			if (vm.detail.ruang_poliklinik != '0') {
-				vm.form.select.klinik.value = vm.detail.ruang_poliklinik;
-				vm.form.select.klinik.label = 'Poli ' + vm.detail.ruang_poliklinik;
-			}
+			
 			
 			vm.form.cppt_sebagai = 'RO';
 

@@ -25,6 +25,7 @@ export const parsekelurahan = (form, detail) => {
 	data.append('status_fungsional', form.select.statusfungsional.value);
 	data.append('tekanan_darah', form.tekanandarah.value);
 	data.append('nadi', form.nadi.value);
+	data.append('kgd', form.kgd.value);
 	data.append('respiratory_rate', form.respiratoryrate.value);
 	data.append('suhu', form.suhu.value);
 	data.append('berat_badan', form.beratbadan.value);

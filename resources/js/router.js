@@ -775,17 +775,17 @@ const routes = [
 	 ***********************************************************************************/
 	{ 
 		path: _base + 'rawatjalan-pemeriksaan-ro', 
-		name: 'Data Pemeriksaan Ro (Rawat Jalan)', 
+		name: 'Data Pemeriksaan', 
 		component: () => import('./components/rawatjalan/pemeriksaan/index.vue'),
-		meta: { title: 'Data Pemeriksaan Ro' },
+		meta: { title: 'Data Pemeriksaan' },
 		props: true 
 	},
 
 	{ 
 		path: _base + 'histori-pemeriksaan-ro', 
-		name: 'Histori Pemeriksaan Ro (Rawat Jalan)', 
+		name: 'Histori Pemeriksaan', 
 		component: () => import('./components/rawatjalan/historipemeriksaan/index.vue'),
-		meta: { title: 'Histori Pemeriksaan Ro (Rawat Jalan)' },
+		meta: { title: 'Histori Pemeriksaan' },
 		props: true 
 	},
 
@@ -872,9 +872,9 @@ const routes = [
 
 	{ 
 		path: _base + 'kasir', 
-		name: 'Kasir (Tagihan Rawat Jalan)', 
+		name: 'Kasir', 
 		component: () => import('./components/finance/kasir/index.vue'),
-		meta: { title: 'Kasir (Tagihan Rawat Jalan)' },
+		meta: { title: 'Kasir' },
 		props: true 
 	},
 

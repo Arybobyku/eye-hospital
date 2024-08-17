@@ -44,14 +44,15 @@
 													<th style="width: 3%;">No.</th>
 													<th style="width: 30%;">Nama Item</th>
 													<template v-if="detail.status_kasir == 'Belum Bayar'">
-														<th style="width: 11%;">Qty</th>
+														<th style="width: 7%;">Qty</th>
 														<th style="width: 9%;">Satuan</th>
 													</template>
 													<template v-else>
 														<th style="width: 19%;">Qty</th>
 													</template>
-													<th style="width: 9%;">Signa</th>
-													<th style="width: 15%;">Harga</th>
+													<th style="width: 7%;">Signa</th>
+													<th style="width: 8%;">Posisi</th>
+													<th style="width: 13%;">Harga</th>
 													<th style="width: 15%;">Total</th>
 													<!-- <td v-if="detail.status_kasir == 'Belum Bayar'">#</td> -->
 												</tr>
@@ -72,6 +73,7 @@
 														<td>{{ item.jumlah_kecil }} {{ item.nama_satuan_kecil }}</td>
 													</template>
 													<td>{{ item.signa }}</td>
+													<td>{{ item.posisimata }}</td>
 													<td>{{ formatrupiah(Math.floor(item.hja_resep).toString()) }}</td>
 													<td>{{ formatrupiah(Math.floor(item.total).toString()) }}</td>
 													<!-- <td v-if="detail.status_kasir == 'Belum Bayar'">
@@ -585,6 +587,7 @@ export default {
 					jumlah_kecil: obats[i].jumlah_kecil,
 					jumlah_besar: obats[i].jumlah_besar,
 					signa: obats[i].signa,
+					posisimata: obats[i].posisimata,
 					total: obats[i].total,
 				}
 				vm.listobat.push(tmp);

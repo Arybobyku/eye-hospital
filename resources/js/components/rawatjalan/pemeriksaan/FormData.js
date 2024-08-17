@@ -88,7 +88,7 @@ export const formkelurahan = () => {
 		},
 		keluhanutama: {
 			title: 'Keluhan Utama', for_id: 'form_' + 'keluhanutama', type: 'text', required: '',
-			name: 'keluhanutama', value: '', disabled: false, show: true, kinds: ''
+			name: 'keluhanutama', value: '', disabled: false, show: true, kinds: '',
 		},
 		riwayatpenyakit: {
 			title: 'Riwayat Penyakit', for_id: 'form_' + 'riwayatpenyakit', type: 'text', required: '',
@@ -100,27 +100,31 @@ export const formkelurahan = () => {
 		},
 		tekanandarah: {
 			title: 'Tekanan Darah', for_id: 'form_' + 'tekanandarah', type: 'text', required: '',
-			name: 'tekanandarah', value: '', disabled: false, show: true, kinds: ''
+			name: 'tekanandarah', value: '', disabled: false, show: true, kinds: '', satuan: 'mmHg'
 		},
 		nadi: {
 			title: 'Nadi', for_id: 'form_' + 'nadi', type: 'text', required: '',
-			name: 'nadi', value: '', disabled: false, show: true, kinds: ''
+			name: 'nadi', value: '', disabled: false, show: true, kinds: '', satuan: 'x/Menit',
+		},
+		kgd: {
+			title: 'KGD', for_id: 'form_' + 'kgd', type: 'text', required: '',
+			name: 'kgd', value: '', disabled: false, show: true, kinds: '', satuan: 'mg/dL'
 		},
 		respiratoryrate: {
 			title: 'Respiratory Rate', for_id: 'form_' + 'respiratoryrate', type: 'text', required: '',
-			name: 'respiratoryrate', value: '', disabled: false, show: true, kinds: ''
+			name: 'respiratoryrate', value: '', disabled: false, show: true, kinds: '',  satuan: 'x/Menit',
 		},
 		beratbadan: {
 			title: 'Berat Badan', for_id: 'form_' + 'beratbadan', type: 'text', required: '',
-			name: 'beratbadan', value: '', disabled: false, show: true, kinds: ''
+			name: 'beratbadan', value: '', disabled: false, show: true, kinds: '', satuan: 'Kg'
 		},
 		tinggibadan: {
 			title: 'Tinggi Badan', for_id: 'form_' + 'tinggibadan', type: 'text', required: '',
-			name: 'tinggibadan', value: '', disabled: false, show: true, kinds: ''
+			name: 'tinggibadan', value: '', disabled: false, show: true, kinds: '', satuan: 'Cm'
 		},
 		suhu: {
 			title: 'Suhu Tubuh', for_id: 'form_' + 'suhu', type: 'text', required: '',
-			name: 'suhu', value: '', disabled: false, show: true, kinds: ''
+			name: 'suhu', value: '', disabled: false, show: true, kinds: '', satuan : '°C'
 		},
 		nyerihilangbilalainnya: {
 			title: 'Ketik disini bila pilih lainnya', for_id: 'form_' + 'nyerihilangbilalainnya', type: 'text', required: '',

@@ -219,42 +219,22 @@ class PemeriksaanCtrl extends Controller
 					'ocular_sinistra_kacamata_lama_cyl' => $request->ocular_sinistra_kacamata_lama_cyl,
 					'ocular_sinistra_kacamata_lama_addisi' => $request->ocular_sinistra_kacamata_lama_addisi,
 				);
+			
 
 				$update = PemeriksaanRo::where("uuid", '=', $request->uuid)->update($arr);
+				$arr = array(
+					'ruang_poliklinik' => $request->ruang_poliklinik,
+					'status_ro' => 'Sudah Diperiksa RO',
+				);
+
+				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+
 
 
 
 				$registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
 
-				if ($registrasi->ruang_poliklinik != $request->ruang_poliklinik) {
-					$posisi_antrian_dokter = 1;
-					$registrasi_poli = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
-						->where('status', '=', 'Kunjungan')
-						->where('ruang_poliklinik', '=', $request->ruang_poliklinik)
-						->orderBy('posisi_antrian_dokter', 'desc')
-						->first();
 
-					if ($registrasi_poli) {
-						$posisi_antrian_dokter += $registrasi_poli->posisi_antrian_dokter;
-					}
-					$arr = array(
-						'ruang_poliklinik' => $request->ruang_poliklinik,
-						'posisi_antrian_dokter' => $posisi_antrian_dokter,
-						
-					);
-					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
-				} else {
-					$arr = array('ro_jam_update' => date('H:i'));
-					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
-				}
-				$arr = array(
-					'ruang_poliklinik' => $request->ruang_poliklinik,
-					'ro_jam_selesai' => date('H:i'),
-					'status_ro' => 'Sudah Diperiksa',
-					'last_position' => 'Pemeriksaan RO (Selesai)'
-				);
-
-				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 			} else {
 				$item = new PemeriksaanRo();
 				$item->uuid = $uuid;
@@ -311,6 +291,16 @@ class PemeriksaanCtrl extends Controller
 					$posisi_antrian_dokter += $registrasi_poli->posisi_antrian_dokter;
 				}
 
+				$arr = array(
+					'ruang_poliklinik' => $request->ruang_poliklinik,
+					'status_ro' => 'Sudah Diperiksa RO',
+					'posisi_antrian_dokter' => $posisi_antrian_dokter,
+					'ro_jam_selesai' => date('H:i'),
+					'last_position' => 'Pemeriksaan RO (Selesai)'
+				);
+
+				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+
 				
 			}
 			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
@@ -350,6 +340,7 @@ class PemeriksaanCtrl extends Controller
 				$item->ttd = $request->ttd;
 				$item->save();
 
+			
 			}
 
 
@@ -400,6 +391,7 @@ class PemeriksaanCtrl extends Controller
 					'status_psikologi' => $request->status_psikologis,
 					'tekanan_darah' => $request->tekanan_darah,
 					'nadi' => $request->nadi,
+					'kgd' => $request->kgd,
 					'respiratory_rate' => $request->respiratory_rate,
 					'suhu' => $request->suhu,
 					'berat_badan' => $request->berat_badan,
@@ -436,7 +428,40 @@ class PemeriksaanCtrl extends Controller
 
 				$update = PemeriksaanRo::where("uuid", '=', $request->uuid)->update($arr);
 
+
+
 				$registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+
+				if ($registrasi->ruang_poliklinik != $request->ruang_poliklinik) {
+					$posisi_antrian_dokter = 1;
+					$registrasi_poli = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
+						->where('status', '=', 'Kunjungan')
+						->where('ruang_poliklinik', '=', $request->ruang_poliklinik)
+						->orderBy('posisi_antrian_dokter', 'desc')
+						->first();
+
+					if ($registrasi_poli) {
+						$posisi_antrian_dokter += $registrasi_poli->posisi_antrian_dokter;
+					}
+					$arr = array(
+						'ruang_poliklinik' => $request->ruang_poliklinik,
+						'posisi_antrian_dokter' => $posisi_antrian_dokter,
+						
+					);
+					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+				} else {
+					$arr = array('ro_jam_update' => date('H:i'));
+					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+				}
+				$arr = array(
+					'ruang_poliklinik' => $request->ruang_poliklinik,
+					'ro_jam_selesai' => date('H:i'),
+					'status_ro' => 'Sudah Diperiksa',
+					'last_position' => 'Pemeriksaan RO (Selesai)'
+				);
+
+				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+
 			} else {
 				$item = new PemeriksaanRo();
 				$item->uuid = $uuid;
@@ -467,6 +492,7 @@ class PemeriksaanCtrl extends Controller
 				$item->status_psikologi = $request->status_psikologis;
 				$item->tekanan_darah = $request->tekanan_darah;
 				$item->nadi = $request->nadi;
+				$item->kgd = $request->kgd;
 				$item->respiratory_rate = $request->respiratory_rate;
 				$item->suhu = $request->suhu;
 				$item->berat_badan = $request->berat_badan;
@@ -500,28 +526,8 @@ class PemeriksaanCtrl extends Controller
 				$item->penilaian_resiko_jatuh = $request->penilaian_resiko_jatuh;
 
 				$item->save();
-
-				$posisi_antrian_dokter = 1;
-				$registrasi_poli = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
-					->where('status', '=', 'Kunjungan')
-					->where('ruang_poliklinik', '=', $request->ruang_poliklinik)
-					->orderBy('posisi_antrian_dokter', 'desc')
-					->first();
-
-				if ($registrasi_poli) {
-					$posisi_antrian_dokter += $registrasi_poli->posisi_antrian_dokter;
-				}
-
-				$arr = array(
-					'ruang_poliklinik' => $request->ruang_poliklinik,
-					'status_ro' => 'Sudah Diperiksa Perawat',
-					'posisi_antrian_dokter' => $posisi_antrian_dokter,
-					'ro_jam_selesai' => date('H:i'),
-					'last_position' => 'Pemeriksaan RO (Selesai)'
-				);
-
-				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 			}
+			
 
 
 			$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
@@ -672,47 +678,45 @@ class PemeriksaanCtrl extends Controller
 				$item->save();
 			}
 
-
-			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
 			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
-				->where('sebagai', '=', $request->cppt_sebagai)
-				->first();
+			->where('sebagai','=', $request->cppt_sebagai)
+			->first();
 
-			if ($cppt != null) {
-				$arr = array(
-					'subjek' => $request->subject,
-					'objek' => $request->object,
-					'asesmen' => $request->assessment,
-					'plan' => $request->plan,
-					'ttd' => $request->ttd,
-					'sebagai' => $request->cppt_sebagai,
-					'pengguna_uuid' => $pengguna_uuid,
-				);
-					$update = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
-							->where('sebagai', '=', $request->cppt_sebagai)
-							->update($arr);
-			}
-			else{
-			$item = new Cppt();
-				$item->uuid = Uuid::uuid4();
-				$item->registrasi_uuid = $request->registrasi_uuid;
-				$item->pasien_uuid = $request->pasien_uuid;
-				$item->pengguna_uuid = $request->pengguna_uuid;
-				$item->nama_pengguna = $request->nama_penggunna;
-				$item->nama_pasien = $request->nama_pasien;
-				$item->nama_dokter = $request->nama_dokter;
-				$item->rekam_medis = $request->rekam_medis;
-				$item->subjek = $request->subject;
-				$item->objek = $request->object;
-				$item->asesmen = $request->assessment;
-				$item->plan = $request->plan;
-				$item->ttd = $request->ttd;
-				$item->sebagai = $request->cppt_sebagai;
-				$item->pengguna_uuid = $pengguna_uuid;
-				$item->save();
+$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+if ($cppt != null) {
+	$arr = array(
+		'subjek' => $request->subject,
+		'objek' => $request->object,
+		'asesmen' => $request->assessment,
+		'plan' => $request->plan,
+		'ttd' => $request->ttd,
+		'sebagai' => $request->cppt_sebagai,
+		'pengguna_uuid' => $pengguna_uuid,
+	);
+		$update = Cppt::where('uuid', '=', $request->uuid)
+					->where('sebagai', '=', $request->cppt_sebagai)
+					->update($arr);
+}
+else{
+$item = new Cppt();
+	$item->uuid = Uuid::uuid4();
+	$item->registrasi_uuid = $request->registrasi_uuid;
+	$item->pasien_uuid = $request->pasien_uuid;
+	$item->pengguna_uuid = $pengguna_uuid;
+	$item->nama_pengguna = $request->nama_penggunna;
+	$item->nama_pasien = $request->nama_pasien;
+	$item->nama_dokter = $request->nama_dokter;
+	$item->rekam_medis = $request->rekam_medis;
+	$item->subjek = $request->subject;
+	$item->objek = $request->object;
+	$item->asesmen = $request->assessment;
+	$item->plan = $request->plan;
+	$item->sebagai = $request->cppt_sebagai;
+	$item->ttd = $request->ttd;
+	$item->save();
 
-			}
-	
+
+}
 			
 		//	$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $registrasi->registrasi_uuid)->first();
 	
