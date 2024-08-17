@@ -751,10 +751,14 @@ class PrintRekamMedisCtrl extends Controller
             WHEN sebagai = 'DOKTER' THEN 3
             END
             ")
-            ->orderBy('created_at', 'asc')
+            ->orderBy('created_at', 'desc')
             ->get();    
 
-     return view('print-rekam-medis.rawat-jalan.cppt',compact('pasien','cppt',));
+      $registrasi = Registrasi::where('pasien_uuid','=',$uuid)
+      ->orderBy('created_at', 'desc')
+      ->get();
+
+     return view('print-rekam-medis.rawat-jalan.cppt',compact('pasien','cppt','registrasi'));
   }
 
 }
