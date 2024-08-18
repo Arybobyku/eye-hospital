@@ -157,7 +157,7 @@ export default {
 
 		btnhtml:function(_item, _index) {
 			let str = [
-				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detaildokter', tooltip: 'Dokter Bedah', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detaildokter', tooltip: 'Dokter Bedah', item: _item, index: _index, show: _item.bedah_status == 'Selesai Dioperasi' ? false : true },
 				{ icon: 'refresh-cw', color: 'btn-info', posisi: 'proses', tooltip: 'Mulai Pembedahan', item: _item, index: _index, 
 					show: _item.bedah_status == '-' ? true : false },
 				{ icon: 'check-circle', color: 'btn-success', posisi: 'selesai', tooltip: 'Selesai Pembedahan', item: _item, index: _index, 
@@ -167,6 +167,8 @@ export default {
 				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'inap', tooltip: 'Tambah Kamar Inap', item: _item, index: _index,
 					show: _item.bedah_status == 'Selesai Dioperasi' ? true : false
 				},
+				{ icon: 'aperture', color: 'btn-warning', posisi: 'resep', tooltip: 'Pemberian Obat', item: _item, index: _index, show: _item.bedah_status == 'Selesai Dioperasi' ? true : false },
+
 				//{ icon: 'plus-circle', color: 'btn-info', posisi: 'add', tooltip: 'Tambah Tindakan', item: _item, index: _index, show: true },
 				//{ icon: 'aperture', color: 'btn-warning', posisi: 'obat', tooltip: 'Pemberian Obat', item: _item, index: _index, show: true },
 				//{ icon: 'aperture', color: 'btn-success', posisi: 'resep', tooltip: 'Resep Obat', item: _item, index: _index, show: true },
@@ -189,6 +191,7 @@ export default {
 					icon: 'arrow-up', color: 'btn-warning', posisi: 'inap', tooltip: 'Tambah Kamar Inap', item: _item, index: _index,
 					show: _item.bedah_status == 'Selesai Dioperasi' ? true : false
 				},
+
 				//{ icon: 'plus-circle', color: 'btn-info', posisi: 'add', tooltip: 'Tambah Tindakan', item: _item, index: _index, show: true },
 				//{ icon: 'aperture', color: 'btn-warning', posisi: 'obat', tooltip: 'Pemberian Obat', item: _item, index: _index, show: true },
 				//{ icon: 'aperture', color: 'btn-success', posisi: 'resep', tooltip: 'Resep Obat', item: _item, index: _index, show: true },
@@ -417,9 +420,13 @@ export default {
 				vm.$refs.FormResep.aturulang();
 				vm.position = "loaddataresep";
 				vm.$refs.FormResep.show('loaddataresep', 'Data obat yang dibawa pulang', data.uuid, data);
+				console.log("uuid");
+				console.log(data.uuid);
 				setTimeout(() => { vm.loadingModal('formresep'); }, 250, this);
 				vm.attach.data = new FormData();
-				vm.attach.data.append('registrasi_uuid', data.registrasi_uuid);
+				// vm.attach.data.append('registrasi_uuid', data.registrasi_uuid);
+				vm.attach.data.append('uuid', data.uuid);
+
 				vm.attach.data.append('jenis', data.jenis);
 				vm.attach.url = vm.attach.link.getresep;
 				vm.executions();

@@ -1,6 +1,7 @@
 <template>
 	<div :style="terminate.display" class="modal">
-		<div ref="rootmodal" class="modal-content modal-besar" :class="terminate.show ? 'modal-opened' : 'modal-closed'">
+		<div ref="rootmodal" class="modal-content modal-besar"
+			:class="terminate.show ? 'modal-opened' : 'modal-closed'">
 			<div class="modal-header">
 				<button v-on:click="action()" v-if="pembayaran!='Sudah Bayar'">Add or Update</button>
 				<span class="close" v-on:click="hide()">&times;</span>
@@ -9,25 +10,43 @@
 			<div class="modal-body" v-if="form">
 				<div class="grid">
 					<div class="col-12">
-						<div class="tab-lines"><div class="tab" style="width: 100%;"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
+						<div class="tab-lines">
+							<div class="tab" style="width: 100%;"><button v-for="(item, index) in tab.button"
+									:class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{
+									item.label }}</button></div>
+						</div>
 
 						<div class="tab-content">
 							<div style="position: relative;" class="content-tab-in" v-if="tab.content.nonracikan">
 								<div class="grid" v-if="pembayaran != 'Sudah Bayar'">
 									<div class="col-5 form">
-										<Selected v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)" 
-											:ref="form.select.apotek.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.apotek" v-on:keyup="selectfilter($event, form.select.apotek.name)"></Selected>
+										<Selected
+											v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)"
+											:ref="form.select.apotek.name" @selecteditem="selecteditem"
+											@selectclear="selectclear" :selection="form.select.apotek"
+											v-on:keyup="selectfilter($event, form.select.apotek.name)"></Selected>
 									</div>
-									<div class="col-3 form-ml">
+									<div class="col-1 form-ml">
 										<Inputed :ref="form.quantity.name" :form="form.quantity"></Inputed>
 									</div>
-									<div class="col-3 form-ml">
+									<div class="col-2 form-ml">
 										<Inputed :ref="form.signa.name" :form="form.signa"></Inputed>
 									</div>
+									<div class="col-2 form-mr">
+										<Selected v-on:click="
+											selectbox(
+												$event,
+												form.select.posisimata.name,
+												form.select.posisimata
+													.statics
+											)" :ref="form.select.posisimata.name" @selecteditem="selecteditem" @selectclear="selectclear"
+											:selection="form.select.posisimata">
+										</Selected>
+									</div>
 									<div class="col-1">
-										<button class="tooltip btn-danger" v-on:click="additemobat()" style="margin-top: 20px">
-											<vue-feather type="plus"></vue-feather> 
+										<button class="tooltip btn-danger" v-on:click="additemobat()"
+											style="margin-top: 20px">
+											<vue-feather type="plus"></vue-feather>
 											<span class="tooltiptext">Add Item Obat</span>
 										</button>
 									</div>
@@ -40,6 +59,7 @@
 													<th>Nama Obat</th>
 													<th>Signa</th>
 													<th>Qty</th>
+													<th>Posisi Mata</th>
 													<th>Harga</th>
 													<th>Total</th>
 													<th v-if="pembayaran != 'Sudah Bayar'">#</th>
@@ -50,11 +70,14 @@
 													<td>{{ item.nama }}</td>
 													<td>{{ item.signa }}</td>
 													<td>{{ item.jumlah_kecil }} {{ item.nama_satuan_kecil }}</td>
+													<td> {{ item.posisimata }}</td>
 													<td>{{ formatrupiah(item.hja_non_resep.toString()) }}</td>
 													<td>{{ formatrupiah(item.total.toString()) }}</td>
+
 													<td v-if="pembayaran != 'Sudah Bayar'">
-														<button class="tooltip btn-danger" v-on:click="removeobat(index)">
-															<vue-feather type="trash"></vue-feather> 
+														<button class="tooltip btn-danger"
+															v-on:click="removeobat(index)">
+															<vue-feather type="trash"></vue-feather>
 															<span class="tooltiptext">Hapus Obat</span>
 														</button>
 													</td>
@@ -66,37 +89,55 @@
 													<td colspan="4">Grant Total</td>
 													<td colspan="2">{{ totalobat }}</td>
 												</tr>
-											</tbody>					
+											</tbody>
 										</table>
 									</div>
 								</div>
 							</div>
 							<div style="position: relative;" class="content-tab-in" v-if="tab.content.racikan">
 								<div class="grid">
-									<div class="col-3 form-mr"><Inputed :ref="form.labelracikan.name" :form="form.labelracikan"></Inputed></div>
-									<div class="col-3"><Inputed :ref="form.jeniskemasan.name" :form="form.jeniskemasan"></Inputed></div>
-									<div class="col-3 form-ml"><Inputed :ref="form.jumlahkemasan.name" :form="form.jumlahkemasan"></Inputed></div>
-									<div class="col-2 form-ml"><Inputed :ref="form.signaracikan.name" :form="form.signaracikan"></Inputed></div>
+									<div class="col-3 form-mr">
+										<Inputed :ref="form.labelracikan.name" :form="form.labelracikan"></Inputed>
+									</div>
+									<div class="col-3">
+										<Inputed :ref="form.jeniskemasan.name" :form="form.jeniskemasan"></Inputed>
+									</div>
+									<div class="col-3 form-ml">
+										<Inputed :ref="form.jumlahkemasan.name" :form="form.jumlahkemasan"></Inputed>
+									</div>
+									<div class="col-2 form-ml">
+										<Inputed :ref="form.signaracikan.name" :form="form.signaracikan"></Inputed>
+									</div>
 									<div class="col-1 form-ml">
-										<button class="tooltip btn-success" v-on:click="additemobatracikan()" style="margin-top: 20px">
-											<vue-feather type="plus"></vue-feather> 
+										<button class="tooltip btn-success" v-on:click="additemobatracikan()"
+											style="margin-top: 20px">
+											<vue-feather type="plus"></vue-feather>
 											<span class="tooltiptext">Add Item Racikan</span>
 										</button>
 									</div>
 
 									<div class="col-12" v-if="title_racikan != ''">
-										<div style="position: relative; width: 100%; height: auto; border: 1px solid #811927; border-radius: 8px; padding: 16px; margin-top: 5px; margin-bottom: 16px">
-											<span style="position: absolute; top: -11px; padding: 0 10px; background: #fff; color: #000; font-weight: bold;" >{{ title_racikan }}</span>
+										<div
+											style="position: relative; width: 100%; height: auto; border: 1px solid #811927; border-radius: 8px; padding: 16px; margin-top: 5px; margin-bottom: 16px">
+											<span
+												style="position: absolute; top: -11px; padding: 0 10px; background: #fff; color: #000; font-weight: bold;">{{
+												title_racikan }}</span>
 											<span class="obatracikanclose" v-on:click="closeform()">Close form</span>
 											<div class="grid">
 												<div class="col-11">
-													<Selected v-on:click="selectbox($event, form.select.apotekracikan.name, form.select.apotekracikan.statics)" 
-														:ref="form.select.apotekracikan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-														:selection="form.select.apotekracikan" v-on:keyup="selectfilter($event, form.select.apotekracikan.name)"></Selected>
+													<Selected
+														v-on:click="selectbox($event, form.select.apotekracikan.name, form.select.apotekracikan.statics)"
+														:ref="form.select.apotekracikan.name"
+														@selecteditem="selecteditem" @selectclear="selectclear"
+														:selection="form.select.apotekracikan"
+														v-on:keyup="selectfilter($event, form.select.apotekracikan.name)">
+													</Selected>
 												</div>
 												<div class="col-1 form-ml">
-													<button class="tooltip btn-success" v-on:click="additemobatracikandetail()" style="margin-top: 20px">
-														<vue-feather type="plus"></vue-feather> 
+													<button class="tooltip btn-success"
+														v-on:click="additemobatracikandetail()"
+														style="margin-top: 20px">
+														<vue-feather type="plus"></vue-feather>
 														<span class="tooltiptext">Add Obat/Alkes</span>
 													</button>
 												</div>
@@ -120,7 +161,7 @@
 														</div>
 													</div>
 												</template> -->
-												
+
 											</div>
 										</div>
 									</div>
@@ -135,14 +176,17 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr v-for="(item, index) in listobatracikan" v-if="listobatracikan.length > 0">
+												<tr v-for="(item, index) in listobatracikan"
+													v-if="listobatracikan.length > 0">
 													<td>
-														<button class="tooltip btn-danger" v-on:click="removeobatracikan(index)">
-															<vue-feather type="trash"></vue-feather> 
+														<button class="tooltip btn-danger"
+															v-on:click="removeobatracikan(index)">
+															<vue-feather type="trash"></vue-feather>
 															<span class="tooltiptext">Hapus Racikan</span>
 														</button>
-														<button class="tooltip btn-success" v-on:click="showobatracikan(item, index)">
-															<vue-feather type="plus"></vue-feather> 
+														<button class="tooltip btn-success"
+															v-on:click="showobatracikan(item, index)">
+															<vue-feather type="plus"></vue-feather>
 															<span class="tooltiptext">Tambah Data Obat</span>
 														</button>
 													</td>
@@ -186,20 +230,25 @@
 																	<td>{{ itemin.nama }}</td>
 																	<!-- <td>{{ itemin.komposisi }} {{ itemin.nama_satuan_komposisi }}</td>
 																	<td>{{ itemin.dosis_diperlukan }} {{ itemin.nama_satuan_diperlukan }}</td> -->
-																	<td>{{ itemin.jumlah_kecil }} {{ itemin.nama_satuan_kecil }}</td>
-																	<td>{{ formatrupiah(itemin.hja_resep.toString()) }}</td>
+																	<td>{{ itemin.jumlah_kecil }} {{
+																		itemin.nama_satuan_kecil }}</td>
+																	<td>{{ formatrupiah(itemin.hja_resep.toString()) }}
+																	</td>
 																	<td>{{ formatrupiah(itemin.total.toString()) }}</td>
 																	<td>
-																		<button class="tooltip btn-danger" v-on:click="removeobatracikandetail(index, indexin)">
-																			<vue-feather type="trash"></vue-feather> 
-																			<span class="tooltiptext">Hapus Data Obat</span>
+																		<button class="tooltip btn-danger"
+																			v-on:click="removeobatracikandetail(index, indexin)">
+																			<vue-feather type="trash"></vue-feather>
+																			<span class="tooltiptext">Hapus Data
+																				Obat</span>
 																		</button>
 																	</td>
 																</tr>
 															</tbody>
 															<tbody v-else>
 																<tr>
-																	<td colspan="3">List data obat racikan belum ditambahkan</td>
+																	<td colspan="3">List data obat racikan belum
+																		ditambahkan</td>
 																</tr>
 															</tbody>
 														</table>
@@ -209,7 +258,7 @@
 													<td colspan="3">No Data for Result</td>
 												</tr>
 											</tbody>
-											
+
 										</table>
 									</div>
 								</div>
@@ -217,7 +266,7 @@
 						</div>
 					</div>
 				</div>
-				
+
 			</div>
 			<Loader ref="Loader"></Loader>
 		</div>
@@ -231,6 +280,8 @@ import { parseresep } from './Attachment.js';
 import { filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected } from '../../../module/SelectedFilter.js';
 import { initindexdb, indexdbprocessing } from '../../../module/Indexdb.js';
 import { datename, formatrupiah } from '../../../module/Manipulation.js';
+import { arrpemeriksaan } from "../../../module/DataArray.js";
+
 var vm, body;
 export default {
 	emits: ["dialog", "parsingForm"],
@@ -240,7 +291,9 @@ export default {
 	},
 	mounted:function() { 
 		vm = this; body = document.body;
+		vm.arr = vm.arrpemeriksaan();
 		vm.form = vm.formresep();
+
 		window.addEventListener("click", function(event) { let a = event.target.className; try { if (a.split(" ")) { a = a.split(" "); if (a[0] != 'hospitals') { vm.selecthide(); } } if (event.target.className == '') { vm.selecthide(); } } catch { console.log('mistmatch'); } })
 	},
 	created:function() {},
@@ -250,6 +303,8 @@ export default {
 		quantity_racikan: 0,
 		terminate: { show: false, display: 'display: none' },
 		form: null, btnlbl: '',
+		arr: {
+		},
 		listobat: [], tempobat: null, listobatracikan: [], tempobatracikan: null, detail: null, pembayaran: '',
 		tab: {
 			button: [
@@ -397,7 +452,7 @@ export default {
 
 		parseresep, formresep, formatrupiah, datename,
 		initindexdb, indexdbprocessing,
-		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected,
+		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected, arrpemeriksaan,
 
 		selectfilter: function (event, key) { vm.form = vm.filterselected(vm.form, key); },
 		selecthide:function() { vm.form = vm.hideselected(vm.form); },
@@ -411,15 +466,31 @@ export default {
 			else if (key == 'apotekracikan') {
 				vm.tempobatracikan = item;
 			}
+			 else if (key == "posisimata") {
+                vm.tempobat.posisimata = item;
+            }
 		},
 
-		selectclear:function(key) { vm.form = vm.clearselected(vm.form, key); },
-		selectbox:function(event, key, statics) {
-			let result = vm.boxselected(event, vm.form, key);
-			console.log(key);
-			if (result._position == 'stop') { return ; }
-			else if (result._position == 'nextstop') { vm.form = result._form; }
-			else { vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block'; }
+		selectclear:function(key) { vm.form = vm.clearselected(vm.form, key)
+			if(key == "posisimata") {
+				vm.tempobat.posisimata = null;
+			}; },
+		selectbox: function (event, key, statics) {
+			let msg = "select-close select-close-" + key;
+			if (event.target.className != msg) {
+				if (!vm.form.select[key].disabled) {
+					let result = vm.boxselected(event, vm.form, key);
+					if (result._position == "stop") {
+						return;
+					} else if (result._position == "nextstop") {
+						vm.form = result._form;
+					} else {
+						vm.selecthide();
+						vm.getIndexDB(key, statics);
+						vm.form.select[key].option = "display: block";
+					}
+				}
+			}
 		},
 
 		getIndexDB:function(key, statics) {
@@ -465,6 +536,7 @@ export default {
 					jumlah_besar: parseFloat(vm.form.quantity.value/vm.tempobat.hitung_kecil),
 					signa: vm.form.signa.value,
 					total: _total,
+					posisimata: vm.tempobat.posisimata.value,
 				}
 				vm.listobat.push(tmp);
 				
@@ -474,6 +546,8 @@ export default {
 				vm.form.quantity.value = '';
 				vm.form.select.apotek.value = '';
 				vm.form.select.apotek.label = 'Silahkan Pilih';
+				vm.form.select.posisimata.value = "";
+				vm.form.select.posisimata.label = "Silahkan Pilih";
 			}
 		},
 
@@ -524,7 +598,9 @@ export default {
 		loaderprocess:function() { const left = this.$refs.rootmodal.getBoundingClientRect(); vm.$refs.Loader.running(left, 'modal', 250); },
 
 		setdataform: function (response) {
-			vm.detail = response.data.detail;
+			// vm.detail = response.data.detail;
+			vm.form.uuid = response.data.data.uuid;
+			console.log('response');
 			console.log(response)
 			vm.listobat = [];
 			vm.listobatracikan = [];
@@ -558,6 +634,8 @@ export default {
 					jumlah_besar: obats[i].jumlah_besar,
 					signa: obats[i].signa,
 					total: obats[i].total,
+					posisimata: obats[i].posisimata,
+
 				}
 				vm.listobat.push(tmp);
 			}

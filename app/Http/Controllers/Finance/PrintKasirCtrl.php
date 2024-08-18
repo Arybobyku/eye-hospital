@@ -418,9 +418,11 @@ class PrintKasirCtrl extends Controller
         $bedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Operasi/Bedah')->get();
 
         $obatan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatan')->first();
+        $obatanbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatanbedah')->first();
         $obatantambahan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatantambahan')->first();
 
         $obatracikan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatracikan')->first();
+        $obatracikanbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatracikanbedah')->first();
         $bedah = Bedah::where('registrasi_uuid', '=', $uuid)->get();
         $pasien = Pasien::where('uuid', '=', $registrasi->pasien_uuid)->first();
 
@@ -429,13 +431,24 @@ class PrintKasirCtrl extends Controller
         $honorbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Honor Dokter Bedah Mata')->get();
 
         $resep_obat = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
-                            ->where('obat.jenis', '!=', 'Alkes')->where('is_tambahan', '=', 0)
+                            ->where('obat.jenis', '!=', 'Alkes')->where('is_tambahan', '=', 0)->where('is_bedah', '=', 0)
+                            ->where('resep.registrasi_uuid', '=', $uuid)
+                            ->select(['resep.*'])
+                            ->get();
+
+        $resep_obat_bedah = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
+                            ->where('obat.jenis', '!=', 'Alkes')->where('is_tambahan', '=', 0)->where('is_bedah', '=', 1)
                             ->where('resep.registrasi_uuid', '=', $uuid)
                             ->select(['resep.*'])
                             ->get();
 
         $resep_alkes = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
-                            ->where('obat.jenis', '=', 'Alkes')->where('is_tambahan', '=', 0)
+                            ->where('obat.jenis', '=', 'Alkes')->where('is_tambahan', '=', 0)->where('is_bedah', '=', 0)
+                            ->where('resep.registrasi_uuid', '=', $uuid)
+                            ->select(['resep.*'])
+                            ->get();
+        $resep_alkes_bedah = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
+                            ->where('obat.jenis', '=', 'Alkes')->where('is_tambahan', '=', 0)->where('is_bedah', '=', 1)
                             ->where('resep.registrasi_uuid', '=', $uuid)
                             ->select(['resep.*'])
                             ->get();
@@ -452,7 +465,8 @@ class PrintKasirCtrl extends Controller
                             ->select(['resep.*'])
                             ->get();
 
-        $resepracikan = ResepRacikan::where('registrasi_uuid', '=', $uuid)->get();
+        $resepracikan = ResepRacikan::where('registrasi_uuid', '=', $uuid)->where('is_bedah', '=', 0)->get();
+        $resepracikanbedah = ResepRacikan::where('registrasi_uuid', '=', $uuid)->where('is_bedah', '=', 1)->get();
 
         $groupping = LayananPasien::where('registrasi_uuid', '=', $uuid)->select('jenis')
                                             ->groupBy('jenis')
@@ -462,6 +476,8 @@ class PrintKasirCtrl extends Controller
                                             ->where('jenis', '!=', 'Honor Dokter Bedah Mata')
                                             ->where('jenis', '!=', 'Obat-Obatan')
                                             ->where('jenis', '!=', 'Obat-Obatan')
+                                            ->where('jenis', '!=', 'Obat-Obatan Pasca Bedah')
+                                            ->where('jenis', '!=', 'Obat Racikan Pasca Bedah')
                                             ->where('jenis', '!=', 'Obat/Vitamin Tambahan')
                                             ->where('jenis', '!=', 'Obat Racikan')
                                             ->get();
@@ -535,7 +551,7 @@ class PrintKasirCtrl extends Controller
 
         $pdf->loadView('print.printcashierrincian',
             compact('layananpasien', 'registrasi', 'collection', 'pasien', 'surat', 'honor', 'rawatjalan', 'bedah', 'administrasi', 'diskon', 'diskon_rp', 'diskon_persen',
-                'resep_obat', 'resep_obat_tambahan', 'room', 'resep_alkes', 'resep_alkes_tambahan', 'honorbedah', 'resepracikan', 'rawatinap', 'bedah', 'obatan','obatantambahan', 'obatracikan'))->setPaper('a4', 'potrait');
+                'resep_obat', 'resep_obat_bedah', 'resepracikanbedah', 'resep_obat_tambahan', 'room', 'resep_alkes', 'resep_alkes_bedah', 'resep_alkes_tambahan', 'honorbedah', 'resepracikan', 'rawatinap', 'bedah', 'obatan', 'obatantambahan', 'obatracikan', 'obatanbedah', 'obatracikanbedah'))->setPaper('a4', 'potrait');
 
         return $pdf->stream();
     }
