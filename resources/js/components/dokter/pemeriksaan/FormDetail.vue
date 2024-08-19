@@ -1726,19 +1726,19 @@ export default {
                         <table>
                             <thead>
                                 <tr>
-                                    <td>Nama Obat</td>
+                                    <td>Nama Racikan</td>
                                     <td>Signa</td>
-                                    <td>Posisi</td>
                                     <td>Qty</td>
+                                    <td>Kemasan</td>
                                 </tr>
                             </thead>
                             <tbody>
                             ${vm.listobatracikan.map((element) => `
                                 <tr>
-                                    <td>${element.nama}</td>
-                                    <td>${element.signa}</td>
-                                    <td>${element.posisimata}</td>
-                                    <td>${element.jumlah_kecil} ${element.nama_satuan_kecil}</td>
+                                    <td>${element.label ?? ""}</td>
+                                    <td>${element.signa ?? ""}</td>
+                                    <td>${element.jumlah ?? ""}</td>
+                                    <td>${element.kemasan ?? ""}</td>
                                 </tr>
                             `)}
                             </tbody>
@@ -2484,7 +2484,6 @@ export default {
                     vm.form,
                     vm.detail,
                     vm.listdata,
-                    vm.listdatajalan,
                     vm.listobat,
                     testing,
                     vm.listicdnine,
