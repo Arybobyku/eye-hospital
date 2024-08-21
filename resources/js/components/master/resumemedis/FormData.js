@@ -136,6 +136,17 @@ export const formfile = () => {
 	}
 }
 
+export const formRekamMedisJalan = () => {
+	return {
+		title: '', posisi: '', uuid: '',
+		lampiran: { 
+			title: 'Lampiran', for_id: 'form_'+'lampiran', type: 'text', required: '', 
+			name: 'lampiran', value: '', disabled: false, show: true, kinds: ''
+		},
+
+	}
+}
+
 export const formrawatjalan = () => {
 	return {
 		title: '', posisi: '', uuid: '', photos: '',

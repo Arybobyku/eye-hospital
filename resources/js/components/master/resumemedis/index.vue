@@ -138,9 +138,14 @@ export default {
 		tablebutton:function(posisi, data, index) {
 			if (posisi == 'rawatjalan') {
 				vm.position = "modalrawatjalan";
+				vm.$refs.DetailRekamMedisRawatJalan.aturulang();
 				vm.$refs.DetailRekamMedisRawatJalan.show('modalrawatjalan', 'Resume Medis Rawat Jalan', data.pasien_uuid);
 				setTimeout(() => { vm.loadingModal('rawatjalan'); }, 250, this);
+				vm.attach.data = new FormData();
 				vm.$refs.DetailRekamMedisRawatJalan.setdataform(data);
+
+				vm.attach.data.append('pasien_uuid', data.uuid);
+				vm.executions();
 			}
 			else if (posisi == 'operasi') {
 				vm.position = "modalBedah";
