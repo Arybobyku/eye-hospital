@@ -1015,10 +1015,10 @@ class PemeriksaanCtrl extends Controller
                     $item->default = 'Tidak';
                     $item->save();
                 } else {
-                    $cek = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)->get();
+                    $cek = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_bedah', 0)->get();
 
                     if (count($cek) > 1) {
-                        $remove = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+                        $remove = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_bedah', 0)->delete();
                     }
                 }
 
@@ -1183,7 +1183,7 @@ class PemeriksaanCtrl extends Controller
 
                 // Bagian obat racikan
 
-                $remove = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+                $remove = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_bedah', 0)->delete();
 
                 $obatracikan = json_decode($request->obatracikan);
 
@@ -1842,7 +1842,7 @@ class PemeriksaanCtrl extends Controller
         $obat = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', '=', 0)->where('is_bedah', '=', 0)
             ->orderBy('id', 'desc')->get();
 
-        $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
+        $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)->where('is_bedah', '=', 0)
             ->orderBy('id', 'desc')->get();
 
         $apotek = $this->apotek();

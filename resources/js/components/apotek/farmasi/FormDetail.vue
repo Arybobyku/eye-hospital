@@ -32,9 +32,6 @@
 							</div>
 						</div>
 						<div class="tab-content">
-
-
-
 							<div class="content-tab-in" v-if="tab.content.obatdokter">
 								<div class="grid">
 									<div class="col-12">
@@ -58,7 +55,7 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr v-for="(item, index) in listobat">
+												<tr v-for="(item, index) in listobat" v-if="listobat.length > 0">
 													<td>{{ index + 1 }}</td>
 													<td>{{ item.nama }}</td>
 													<template v-if="detail.status_kasir == 'Belum Bayar'">
@@ -82,6 +79,9 @@
 													<span class="tooltiptext">Hapus Data Obat</span>
 												</button>
 											</td> -->
+												</tr>
+												<tr v-else>
+													<td colspan="3">No Data for Result</td>
 												</tr>
 											</tbody>
 										</table>
@@ -172,7 +172,147 @@
 									</div>
 								</div>
 							</div>
+							<div class="content-tab-in" v-if="tab.content.obatbedah">
+								<div class="grid">
+									<div class="col-12">
+										<table class="table">
+											<thead>
+												<tr>
+													<th style="width: 3%;">No.</th>
+													<th style="width: 30%;">Nama Item</th>
+													<template v-if="detail.status_kasir == 'Belum Bayar'">
+														<th style="width: 7%;">Qty</th>
+														<th style="width: 9%;">Satuan</th>
+													</template>
+													<template v-else>
+														<th style="width: 19%;">Qty</th>
+													</template>
+													<th style="width: 7%;">Signa</th>
+													<th style="width: 8%;">Posisi</th>
+													<th style="width: 13%;">Harga</th>
+													<th style="width: 15%;">Total</th>
+													<!-- <td v-if="detail.status_kasir == 'Belum Bayar'">#</td> -->
+												</tr>
+											</thead>
+											<tbody>
+												<tr v-for="(item, index) in listobatbedah"
+													v-if="listobatbedah.length > 0">
+													<td>{{ index + 1 }}</td>
+													<td>{{ item.nama }}</td>
+													<template v-if="detail.status_kasir == 'Belum Bayar'">
+														<td>
+															<input type="number" :value="item.jumlah_kecil"
+																style="width: 100%;"
+																v-on:keyup="ubahbedah($event, item, index)" />
+														</td>
+														<td>{{ item.nama_satuan_kecil }}</td>
+													</template>
+													<template v-else>
+														<td>{{ item.jumlah_kecil }} {{ item.nama_satuan_kecil }}</td>
+													</template>
+													<td>{{ item.signa }}</td>
+													<td>{{ item.posisimata }}</td>
+													<td>{{ formatrupiah(Math.floor(item.hja_resep).toString()) }}</td>
+													<td>{{ formatrupiah(Math.floor(item.total).toString()) }}</td>
+													<!-- <td v-if="detail.status_kasir == 'Belum Bayar'">
+												<button class="tooltip btn-danger" v-on:click="removeobat(index, indexin)">
+													<vue-feather type="trash"></vue-feather> 
+													<span class="tooltiptext">Hapus Data Obat</span>
+												</button>
+											</td> -->
+												</tr>
+												<tr v-else>
+													<td colspan="3">No Data for Result</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
 
+									<div class="col-12">
+										<table class="table">
+											<thead>
+												<tr>
+													<th>Data Racikan</th>
+													<th>Informasi Obat</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr v-for="(item, index) in listobatracikanbedah"
+													v-if="listobatracikanbedah.length > 0">
+													<td>
+														<table class="table">
+															<tbody>
+																<tr>
+																	<td>Nama Racikan</td>
+																	<td>{{ item.label }}</td>
+																</tr>
+																<tr>
+																	<td>Signa</td>
+																	<td>{{ item.signa }}</td>
+																</tr>
+																<tr>
+																	<td>Jumlah Kemasan</td>
+																	<td>{{ item.jumlah }} {{ item.kemasan }}</td>
+																</tr>
+															</tbody>
+														</table>
+													</td>
+													<td>
+														<table class="table">
+															<thead>
+																<tr>
+																	<th>Nama Obat/Alkes</th>
+																	<!-- <th>Komposisi dikemasan</th>
+														<th>Dosis yang diperlukan</th> -->
+																	<th>Qty</th>
+																	<th>Harga</th>
+																	<th>Total</th>
+																	<!-- <th>#</th> -->
+																</tr>
+															</thead>
+															<tbody v-if="item.informasi.length > 0">
+																<tr v-for="(itemin, indexin) in item.informasi">
+																	<td>{{ itemin.nama }}</td>
+																	<!-- <td>{{ itemin.komposisi }} {{ itemin.nama_satuan_komposisi }}</td>
+														<td>{{ itemin.dosis_diperlukan }} {{ itemin.nama_satuan_diperlukan }}</td> -->
+																	<td>{{ itemin.jumlah_kecil }} {{
+																		itemin.nama_satuan_kecil }}
+																	</td>
+																	<td>{{ itemin.jumlah_kecil }} {{
+																		itemin.nama_satuan_kecil }}
+																	</td>
+																	<td>{{ formatrupiah(itemin.hja_resep.toString()) }}
+																	</td>
+																	<td>{{ formatrupiah(itemin.total.toString()) }}</td>
+																	<!-- <td>
+															<td>
+																	<button class="tooltip btn-danger" v-on:click="removeobatracikandetail(index, indexin)">
+																		<vue-feather type="trash"></vue-feather> 
+																		<span class="tooltiptext">Edit Data Obat</span>
+																	</button>
+																</td>
+														</td> -->
+
+																</tr>
+															</tbody>
+															<tbody v-else>
+																<tr>
+																	<td colspan="3">List data obat racikan belum
+																		ditambahkan
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</td>
+												</tr>
+												<tr v-else>
+													<td colspan="3">No Data for Result</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
 							<div class="content-tab-in" v-if="tab.content.obattambahan">
 								<div class="grid">
 
@@ -210,7 +350,8 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr v-for="(item, index) in listobattambahan" v-if="listobattambahan.length > 0">
+												<tr v-for="(item, index) in listobattambahan"
+													v-if="listobattambahan.length > 0">
 													<td>{{ item.nama }}</td>
 													<td>{{ item.signa }}</td>
 													<td>{{ item.jumlah_kecil }} {{ item.nama_satuan_kecil }}</td>
@@ -229,7 +370,8 @@
 												</tr>
 												<tr v-if="listobattambahan.length > 0">
 													<td colspan="4">Grant Total</td>
-													<td colspan="2">{{ formatrupiah(totalobattambahan.toString()) }}</td>
+													<td colspan="2">{{ formatrupiah(totalobattambahan.toString()) }}
+													</td>
 												</tr>
 											</tbody>
 
@@ -309,6 +451,14 @@ export default {
 			let ab = vm.formatrupiah(temp.toString());
 			return ab;
 		},
+		totalobat: function () {
+			let temp = 0;
+			for (let i = 0; i < vm.listobatbedah.length; i++) {
+				temp += parseInt(vm.listobatbedah[i].total.replace(/\D/g, ""));
+			}
+			let ab = vm.formatrupiah(temp.toString());
+			return ab;
+		},
 		totalobattambahan: function () {
 				let temp = 0;
 				for (let i = 0; i < vm.listobattambahan.length; i++) {
@@ -327,7 +477,7 @@ export default {
 	},
 	created:function() {},
 	data:function() { return { 
-		listdata: [], tmplistdata: [], templistobat: [], listobat: [], templistobattambahan: [], listobattambahan: [], listobatracikan: [], tempobat: null, tempobattambahan: null,
+		listdata: [], tmplistdata: [], templistobat: [], listobat: [], templistobattambahan: [], templistobatbedah: [], listobatbedah: [], listobattambahan: [], listobatracikan: [], tempobat: null, tempobatbedah: null, tempobattambahan: null,
 		terminate: { show: false, display: 'display: none' },
 		form: null, btnlbl: '', arr: null,
 		green: 'Proses Pembayaran', red: 'Cancel', pendings: 'Ubah Menjadi Pending', test: null, cover: '', temporer: null,
@@ -344,11 +494,17 @@ export default {
 				label: 'Obat Dari Dokter',
 				class: 'tab-active'
 			},
+				{
+					value: 'obatbedah',
+					label: 'Obat Pasca Bedah',
+					class: 'tab-no-active'
+				},
 			{
 				value: 'obattambahan',
 				label: 'Obat/Vit Tambahan',
 				class: 'tab-no-active'
 			},
+		
 			
 
 			],
@@ -370,6 +526,15 @@ export default {
 				vm.listobat[index].total = parseInt(Math.floor(hitungan));
 			}
 			
+		},
+		ubahbedah: function (event, item, index) {
+			let number = event.target.value;
+			if (number != '') {
+				let hitungan = parseInt(number * item.hja_resep);
+				vm.listobatbedah[index].jumlah_kecil = number;
+				vm.listobatbedah[index].total = parseInt(Math.floor(hitungan));
+			}
+
 		},
 
 		formatrupiah,
@@ -514,11 +679,14 @@ export default {
 			vm.form = vm.formkelurahan(); 
 			vm.listdata = [];
 			vm.listobat = [];
+			vm.listobatbedah = [];
 			vm.listobattambahan = [];
 			vm.tempobattambahan = null;
 			vm.tempobat = null;
+			vm.tempobatbedah = null;
 			vm.tempobattambahan = null;
 			vm.listobatracikan = [];
+			vm.listobatracikanbedah = [];
 			vm.detail = { uuid: '',
 				agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
 				kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
@@ -528,7 +696,7 @@ export default {
 		},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
 		parsingForm:function() { 
-			vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail, vm.listobat, vm.listobattambahan), 'editobat'); 
+			vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail, vm.listobat, vm.listobatbedah, vm.listobattambahan), 'editobat'); 
 		},
 
 		loaderprocess:function() { const left = this.$refs.rootmodal.getBoundingClientRect(); vm.$refs.Loader.running(left, 'modal', 250); },
@@ -607,6 +775,57 @@ export default {
 					informasi: JSON.parse(obatsracikan[i].informasi)
 				}
 				vm.listobatracikan.push(tmp);
+			}
+			console.log(vm.listobat, 'fdfdf');
+			let obatsbedah = response.data.obatbedah;
+			for (let i = 0; i < obatsbedah.length; i++) {
+
+				let _total = parseInt(obatsbedah[i].quantity) * parseInt(obatsbedah[i].harga);
+				let tmp = {
+					nama: obatsbedah[i].nama_obat,
+					obat_uuid: obatsbedah[i].obat_uuid,
+					kategori: obatsbedah[i].kategori,
+					formularium: obatsbedah[i].formularium,
+					golongan: obatsbedah[i].golongan,
+					satuan_uuid_besar: obatsbedah[i].satuan_uuid_besar,
+					nama_satuan_besar: obatsbedah[i].nama_satuan_besar,
+					satuan_uuid_kecil: obatsbedah[i].satuan_uuid_kecil,
+					nama_satuan_kecil: obatsbedah[i].nama_satuan_kecil,
+					hitung_besar: obatsbedah[i].hitung_besar,
+					hitung_kecil: obatsbedah[i].hitung_kecil,
+					harga_netto: parseInt(obatsbedah[i].harga_netto),
+					harga_netto_discount: parseInt(obatsbedah[i].harga_netto_discount),
+					harga_netto_ppn: parseInt(obatsbedah[i].harga_netto_ppn),
+					hpp: parseInt(obatsbedah[i].hpp),
+					margin_resep: obatsbedah[i].margin_resep,
+					margin_non_resep: obatsbedah[i].margin_non_resep,
+					hja_resep: parseInt(obatsbedah[i].hja_resep),
+					hja_non_resep: parseInt(obatsbedah[i].hja_non_resep),
+					hja_resep_besar: parseInt(obatsbedah[i].hja_resep_besar),
+					hja_non_resep_besar: parseInt(obatsbedah[i].hja_non_resep_besar),
+					jumlah_kecil: obatsbedah[i].jumlah_kecil,
+					jumlah_besar: obatsbedah[i].jumlah_besar,
+					signa: obatsbedah[i].signa,
+					posisimata: obatsbedah[i].posisimata,
+					total: obatsbedah[i].total,
+				}
+				vm.listobatbedah.push(tmp);
+			}
+
+			vm.templistobatbedah = vm.listobatbedah;
+
+			let obatsracikanbedah = response.data.obatracikanbedah;
+			for (let i = 0; i < obatsracikanbedah.length; i++) {
+
+				let tmp = {
+					label: obatsracikanbedah[i].label,
+					kemasan: obatsracikanbedah[i].kemasan,
+					jumlah: obatsracikanbedah[i].jumlah,
+					signa: obatsracikanbedah[i].signa,
+					total: obatsracikanbedah[i].total,
+					informasi: JSON.parse(obatsracikanbedah[i].informasi)
+				}
+				vm.listobatracikanbedah.push(tmp);
 			}
 			console.log(vm.listobat, 'fdfdf')
 

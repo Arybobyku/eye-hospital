@@ -215,7 +215,10 @@ class FarmasiCtrl extends Controller
         $layanan = LayananPasien::where('registrasi_uuid', '=', $request->uuid)
                         ->orderBy('id', 'desc')->get();
 
-        $obat = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 0)
+        $obat = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 0)->where('is_bedah', 0)
+                        ->orderBy('id', 'desc')->get();
+
+        $obatbedah = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 0)->where('is_bedah', 1)
                         ->orderBy('id', 'desc')->get();
 
         $obattambahan = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 1)
@@ -224,7 +227,10 @@ class FarmasiCtrl extends Controller
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
                         ->orderBy('id', 'desc')->get();
 
-        return response()->json(['data' => $data, 'layanan' => $layanan, 'obat' => $obat, 'obatracikan' => $obatracikan, 'obattambahan' => $obattambahan]);
+        $obatracikanbedah = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
+                        ->orderBy('id', 'desc')->get();
+
+        return response()->json(['data' => $data, 'layanan' => $layanan, 'obat' => $obat, 'obatracikan' => $obatracikan, 'obatbedah' => $obatbedah, 'obatracikanbedah' => $obatracikanbedah, 'obattambahan' => $obattambahan]);
     }
 
     public function editobat(Request $request)
@@ -233,6 +239,7 @@ class FarmasiCtrl extends Controller
             \DB::beginTransaction();
 
             $obat = json_decode($request->obat);
+            $obatbedah = json_decode($request->obatbedah);
             $obatTambahan = json_decode($request->obattambahan);
 
             if (count($obat) > 0) {
@@ -319,9 +326,101 @@ class FarmasiCtrl extends Controller
                 $item->default = 'Tidak';
                 $item->save();
             } else {
-                $delete_resep = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->delete();
+                $delete_resep = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_tambahan', 0)->where('is_bedah', 0)->delete();
                 $detele_tindakan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatan')->delete();
                 $cek = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatracikan')->first();
+                if (!$cek) {
+                    $arr = ['ada_obat' => 'Tidak'];
+                    $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+                }
+            }
+
+            if (count($obatbedah) > 0) {
+                $nama_layanan = 'Obat-obatan Pasca Bedah';
+                $tarif = 0;
+
+                foreach ($obatbedah as $row) {
+                    $item = new Resep();
+                    $item->uuid = Uuid::uuid4();
+                    $item->registrasi_uuid = $request->registrasi_uuid;
+                    $item->no_pendaftaran = $request->no_pendaftaran;
+                    $item->registrasi_kode = $request->kode;
+                    $item->registrasi_nomor = $request->nomor;
+                    $item->registrasi_jenis = $request->jenis;
+                    $item->pasien_uuid = $request->pasien_uuid;
+                    $item->rekam_medis = $request->rekam_medis;
+                    $item->nama_pasien = $request->nama_pasien;
+                    $item->dokter_uuid = $request->pengguna_uuid;
+                    $item->nama_dokter = $request->nama_dokter;
+
+                    $item->tanggal = date('Y-m-d');
+                    $item->waktu = date('H:i');
+
+                    $item->obat_uuid = $row->obat_uuid;
+                    $item->nama_obat = $row->nama;
+                    $item->kategori = $row->kategori;
+                    $item->formularium = $row->formularium;
+                    $item->golongan = $row->golongan;
+                    $item->satuan_uuid_besar = $row->satuan_uuid_besar;
+                    $item->nama_satuan_besar = $row->nama_satuan_besar;
+                    $item->satuan_uuid_kecil = $row->satuan_uuid_kecil;
+                    $item->nama_satuan_kecil = $row->nama_satuan_kecil;
+                    $item->hitung_besar = $row->hitung_besar;
+                    $item->hitung_kecil = $row->hitung_kecil;
+                    $item->harga_netto = $row->harga_netto;
+                    $item->harga_netto_discount = $row->harga_netto_discount;
+                    $item->harga_netto_ppn = $row->harga_netto_ppn;
+                    $item->hpp = $row->hpp;
+                    $item->hja_resep = $row->hja_resep;
+                    $item->hja_non_resep = $row->hja_non_resep;
+                    $item->hja_resep_besar = $row->hja_resep_besar;
+                    $item->hja_non_resep_besar = $row->hja_non_resep_besar;
+                    $item->margin_resep = $row->margin_resep;
+                    $item->margin_non_resep = $row->margin_non_resep;
+                    $item->jumlah_kecil = $row->jumlah_kecil;
+                    $item->jumlah_besar = $row->jumlah_besar;
+                    $item->signa = $row->signa;
+                    $item->total = $row->total;
+                    $item->is_tambahan = 0;
+                    $item->is_bedah = 1;
+                    $item->save();
+
+                    $hasil = (int) $row->hja_resep * (int) $row->jumlah_kecil;
+                    $tarif += $hasil;
+                }
+
+                $detele = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatanbedah')->delete();
+
+                $item = new LayananPasien();
+                $item->uuid = Uuid::uuid4();
+                $item->registrasi_uuid = $request->registrasi_uuid;
+                $item->no_pendaftaran = $request->no_pendaftaran;
+                $item->registrasi_kode = $request->kode;
+                $item->registrasi_nomor = $request->nomor;
+                $item->registrasi_jenis = $request->jenis;
+                $item->pasien_uuid = $request->pasien_uuid;
+                $item->rekam_medis = $request->rekam_medis;
+                $item->nama_pasien = $request->nama_pasien;
+                $item->pengguna_uuid = $request->pengguna_uuid;
+                $item->nama_dokter = $request->nama_dokter;
+
+                $item->tanggal = date('Y-m-d');
+                $item->waktu = date('H:i');
+
+                $item->carabayar_uuid = $request->carabayar_uuid;
+                $item->carabayar_nama = $request->carabayar_nama;
+
+                $item->layanan_uuid = 'obatanbedah';
+                $item->nama_layanan = $nama_layanan;
+                $item->tarif = $tarif;
+                $item->total = $tarif;
+                $item->jenis = 'Obat-Obatan Pasca Bedah';
+                $item->default = 'Tidak';
+                $item->save();
+            } else {
+                $delete_resep = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_tambahan', 0)->where('is_bedah', 0)->delete();
+                $detele_tindakan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatanbedah')->delete();
+                $cek = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatracikan')->orwhere('layanan_uuid', '=', 'obatan')->orwhere('layanan_uuid', '=', 'obatracikanbedah')->first();
                 if (!$cek) {
                     $arr = ['ada_obat' => 'Tidak'];
                     $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
@@ -407,6 +506,14 @@ class FarmasiCtrl extends Controller
                 $item->jenis = 'Obat/Vitamin Tambahan';
                 $item->default = 'Tidak';
                 $item->save();
+            } else {
+                $delete_resep = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_tambahan', 1)->where('is_bedah', 0)->delete();
+                $detele_tindakan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatantambahan')->delete();
+                $cek = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatracikan')->orwhere('layanan_uuid', '=', 'obatan')->orwhere('layanan_uuid', '=', 'obatanbedah')->orwhere('layanan_uuid', '=', 'obatracikanbedah')->first();
+                if (!$cek) {
+                    $arr = ['ada_obat' => 'Tidak'];
+                    $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+                }
             }
 
             \DB::commit();
