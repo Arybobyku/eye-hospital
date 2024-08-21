@@ -221,7 +221,7 @@ class FarmasiCtrl extends Controller
         $obatbedah = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 0)->where('is_bedah', 1)
                         ->orderBy('id', 'desc')->get();
 
-        $obattambahan = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 1)
+        $obattambahan = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 1)->where('is_bedah', 1)
                         ->orderBy('id', 'desc')->get();
 
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
