@@ -970,6 +970,7 @@ class PasienBedahCtrl extends Controller
                 $hasil = (int) $row->hja_resep * (int) $row->jumlah_kecil;
                 $tarif += $hasil;
             }
+            LayananPasien::where('registrasi_uuid', '=', $request->uuid)->where('layanan_uuid', '=', 'obatanbedah')->delete();
 
             $item = new LayananPasien();
             $item->uuid = Uuid::uuid4();
@@ -1041,6 +1042,7 @@ class PasienBedahCtrl extends Controller
 
                 $tarif += $row->total;
             }
+            LayananPasien::where('registrasi_uuid', '=', $request->uuid)->where('layanan_uuid', '=', 'obatracikanbedah')->delete();
 
             $item = new LayananPasien();
             $item->uuid = Uuid::uuid4();
