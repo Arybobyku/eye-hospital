@@ -1074,7 +1074,7 @@ class PasienBedahCtrl extends Controller
             $cek = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)->where('is_bedah', 1)->get();
 
             if (count($cek) > 1) {
-                $remove = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_bedah', 1)->delete();
+                $remove = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)->where('is_bedah', 1)->delete();
             }
         }
 
