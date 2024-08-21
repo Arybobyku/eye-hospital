@@ -478,6 +478,8 @@ class PrintKasirCtrl extends Controller
                                             ->where('jenis', '!=', 'Obat-Obatan')
                                             ->where('jenis', '!=', 'Obat-obatan Pasca Bedah')
                                             ->where('jenis', '!=', 'Obat-Obatan Pasca Bedah')
+                                            ->where('layanan_uuid', '!=', 'obatanbedah')
+                                            ->where('layanan_uuid', '!=', 'obatracikanbedah')
                                             ->where('jenis', '!=', 'Obat Racikan Pasca Bedah')
                                             ->where('jenis', '!=', 'Obat/Vitamin Tambahan')
                                             ->where('jenis', '!=', 'Obat Racikan')
