@@ -1077,15 +1077,20 @@ class PasienBedahCtrl extends Controller
         }
 
         if (count($obat) > 0 || count($obatracikan) > 0) {
-            $cek = Registrasi::where('uuid', '=', $request->registrasi_uuid)->select('rke')->orderBy('rke', 'desc')->first();
+            $cek = Registrasi::where('uuid', '=', $request->uuid)->select('rke')->orderBy('rke', 'desc')->first();
             $nomor = 1;
             if ($cek) {
                 $nomor += $cek->rke;
             }
-            $arr = ['ada_obat' => 'Ya',
-                //  'rke' => $nomor
-            ];
-            $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+            if ($data->rke != null && $data->rke != '') {
+                $arr = ['ada_obat' => 'Ya',
+                ];
+            } else {
+                $arr = ['ada_obat' => 'Ya',
+                    'rke' => $nomor,
+                ];
+            }
+            Registrasi::where('uuid', '=', $request->uuid)->update($arr);
         } else {
             // $arr = ['ada_obat' => 'Tidak',
             //  'rke' => 0
