@@ -418,7 +418,7 @@ class FarmasiCtrl extends Controller
                 $item->default = 'Tidak';
                 $item->save();
             } else {
-                $delete_resep = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_tambahan', 0)->where('is_bedah', 0)->delete();
+                $delete_resep = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_tambahan', 0)->where('is_bedah', 1)->delete();
                 $detele_tindakan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatanbedah')->delete();
                 $cek = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('layanan_uuid', '=', 'obatracikan')->orwhere('layanan_uuid', '=', 'obatan')->orwhere('layanan_uuid', '=', 'obatracikanbedah')->first();
                 if (!$cek) {
