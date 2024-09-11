@@ -40,7 +40,11 @@ class PrintKasirCtrl extends Controller
                 ->groupBy('jenis')
                                 ->get();
 
-        $honorbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'HONOR BEDAH')->orWhere('jenis', '=', 'Honor Operator Bedah')
+        $honorbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)
+                                ->where(function ($query) {
+                                    $query->where('jenis', '=', 'HONOR BEDAH')
+                                        ->orWhere('jenis', '=', 'Honor Operator Bedah');
+                                })
                                 ->select(
                                     'jenis',
                                     'nama_dokter',
