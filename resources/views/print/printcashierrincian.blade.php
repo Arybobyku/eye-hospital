@@ -636,11 +636,11 @@
 							?>
 
 							<?php
-								if ($obatan) {
-									$sementara = $obatan->total;
-								}
+								// if ($obatan) {
+								// 	$sementara = $obatan->total;
+								// }
 							?>
-							{{ number_format($sementara) }}
+							{{ number_format($sementara) }} 
 							<?php $subtotal = $sementara; ?>
 							<?php $grandtotal += $sementara; ?>
 						</td>
