@@ -867,9 +867,9 @@
 							}
 						?>
 						<?php
-							if ($obatantambahan) {
-								$sementara = $obatantambahan->total;
-							}
+							// if ($obatantambahan) {
+							// 	$sementara = $obatantambahan->total;
+							// }
 						?>
 						{{ number_format($sementara) }}
 						<?php $subtotal = $sementara; ?>
