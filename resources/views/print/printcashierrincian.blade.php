@@ -472,12 +472,11 @@
 							?>
 							{{ number_format($sementara) }}
 							<?php $subtotal = $sementara; ?>
-							<?php $grandtotal += $sementara; ?>
 						</td>
 					</tr>
 				@endif
 				<?php 
-					//$grandtotal += $subtotal; 
+					$grandtotal += $subtotal; 
 				?>
 			@endif
 
@@ -527,9 +526,9 @@
 							}
 						?>
 						<?php
-							if ($obatan) {
-								$sementara = $obatan->total;
-							}
+							// if ($obatan) {
+							// 	$sementara = $obatan->total;
+							// }
 						?>
 						{{ number_format($sementara) }}
 						<?php $subtotal = $sementara; ?>
