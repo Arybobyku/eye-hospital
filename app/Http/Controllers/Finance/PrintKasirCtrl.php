@@ -402,6 +402,8 @@ class PrintKasirCtrl extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
         $rawatjalan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Rawat Jalan')
+                                ->where('nama_layanan', '!=', 'Obat Racikan Pasca Bedah')
+                                ->where('nama_layanan', '!=', 'Obat-obatan Pasca Bedah')
                                 ->select(
                                     'nama_dokter',
                                     'nama_layanan',
