@@ -654,7 +654,8 @@ class PasienCtrl extends Controller
             $billKamar = LayananPasien::where('registrasi_uuid', $request->uuid)
                 ->where(function ($query) {
                     $query->where('jenis', 'Kamar Inap')
-                    ->orWhere('jenis', 'Kamar');
+                    ->orWhere('jenis', 'Kamar')
+                    ->orWhere('jenis', 'Kamar Rawat Inap');
                 })
                 ->first();
             $cekkamar = KamarInap::where('uuid', '=', $data->kamar_inap_uuid)->first();
@@ -683,7 +684,7 @@ class PasienCtrl extends Controller
                 'waktu_keluar_inap' => $request->waktu_keluar_inap,
             ];
             $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr2);
-            PenggunaHelp::log('Pasien Pulang nama pasien "' . $$data->nama_pasien . '".');
+            PenggunaHelp::log('Pasien Pulang nama pasien "' . $data->nama_pasien . '".');
 
             return response()->json(['hasil' => 'berhasil']);
         } catch (Exception $e) {
