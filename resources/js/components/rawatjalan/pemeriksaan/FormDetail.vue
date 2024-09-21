@@ -336,6 +336,11 @@ export default {
 						<td>${vm.form.oculardextrakacamatalamaaddisi.value}</td>
 						<td>${vm.form.ocularsinistrakacamatalamaaddisi.value}</td>
 					</tr>
+					<tr>
+						<td>PD</td>
+						<td>${vm.form.oculardextrapd.value}</td>
+						<td></td>
+					</tr>
 					</tbody>
 				</table>
 				</figure>
