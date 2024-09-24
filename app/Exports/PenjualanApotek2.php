@@ -91,7 +91,7 @@ class PenjualanApotek implements FromView, ShouldAutoSize
 					'nama_satuan_kecil' => $rowin->nama_satuan_kecil,
 					'hja_resep' => $rowin->hja_resep,
 					'total' => $rowin->total
-					
+				]);
 		}
 
 		foreach ($data3 as $row) {
