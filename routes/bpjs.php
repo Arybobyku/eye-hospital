@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 */
 use App\Http\Controllers\Bpjs\DiagnosaCtrl;
 use App\Http\Controllers\Bpjs\DokterCtrl;
+use App\Http\Controllers\Bpjs\AntrolController;
+
 
 Route::group(['middleware' => 'throttle: 250, 1'], function () {
 
@@ -23,5 +25,9 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
 
     Route::prefix('dokter')->group(function () {
         Route::post('list', [DokterCtrl::class, 'list'])->name('bpjs-dokter-list');
+    });
+
+    Route::prefix('antrol')->group(function () {
+        Route::get('antrian', [AntrolController::class, 'getAntrian']);
     });
 });

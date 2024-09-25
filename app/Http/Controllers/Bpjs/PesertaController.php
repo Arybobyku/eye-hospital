@@ -8,6 +8,7 @@ use App\Services\Bpjs\Bridging\Vclaim\BridgeVclaim;
 
 class PesertaController extends Controller
 {
+	protected $bridging;
     public function __construct()
 	{
 		date_default_timezone_set("Asia/Jakarta");
