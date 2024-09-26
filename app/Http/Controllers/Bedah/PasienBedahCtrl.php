@@ -7,6 +7,7 @@ use App\Models\Bedah;
 use App\Models\CaraBayarKamar;
 use App\Models\JadwalKontrol;
 use App\Models\KamarInap;
+use App\Models\LampiranRekamMedis;
 use App\Models\LayananPasien;
 use App\Models\ListPaketBedahBaru;
 use App\Models\PaketBedah;
@@ -334,8 +335,9 @@ class PasienBedahCtrl extends Controller
             return response()->json(['data' => $this->error]);
         }
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
+        $tes = LampiranRekamMedis::where('filetype', 'image')->first();
 
-        return response()->json(['data' => $data]);
+        return response()->json(['data' => $data, 'tes' => $tes]);
     }
 
     public function detaildokter(Request $request)

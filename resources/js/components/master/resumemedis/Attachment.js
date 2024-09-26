@@ -97,9 +97,11 @@ export const parsecetakan = (form, detail) => {
 export const parseRawatJalan = (form, detail) => {
 	let data = new FormData();
 	data.append('pasien_uuid', form.uuid);
-	data.append('rekam_medis', detail.rekam_medis);
-	data.append('nama_pasien', detail.nama);
+	// data.append('rekam_medis', detail.rekam_medis);
+	// data.append('nama_pasien', detail.nama);
 	data.append('lampiran', form.lampiran.value);
+	data.append('filedata', form.fileData);
+	data.append('filetype', form.filetype);
 
 	return data;
 }

@@ -17,10 +17,16 @@
                             <li>Jenis Kelamin<span><strong>{{ detail . jenis_kelamin }}</strong></span></li>
                         </ul>
                     </div>
+
+
                     <div class="col-8">
 
                         <div class="grid">
                             <div class="col-8">
+                                <template>
+                                    <img :src="`data:image/*;base64,${fileBase64}`" alt="Loaded Image"
+                                        :ref="form.imagetes.name" :form="form.imagetes" />
+                                </template>
                                 <Selected
                                     v-on:click="selectbox($event, form.select.kamarinap.name, form.select.kamarinap.statics)"
                                     :ref="form.select.kamarinap.name" @selecteditem="selecteditem"
@@ -33,7 +39,7 @@
                                 </Inputed>
                             </div>
                             <div class="col-4 form-ml">
-                           
+
                                 <Timepicker :ref="form.waktu_masuk_inap.name" :form="form.waktu_masuk_inap">
                                 </Timepicker>
 
@@ -625,13 +631,13 @@ import Timepicker from '../../../section/Timepicker.vue';
 
 
                 vm.detail = response.data.data;
+                vm.detail2 = response.data;
                 console.log("VM DETAIL")
                 console.log(vm.detail)
+                console.log(vm.detail2)
   
                 //vm.listdata = response.data.layanan;
-
-
-
+                vm.form.imagetes = response.data.tes.filedata;
                 console.log("response");
                 console.log(response.data);
                 if (vm.detail.waktu_masuk_inap != '-' && vm.detail.waktu_masuk_inap != '' && vm.detail

@@ -140,7 +140,7 @@ export const formRekamMedisJalan = () => {
 	return {
 		title: '', posisi: '', uuid: '',
 		lampiran: { 
-			title: 'Lampiran', for_id: 'form_'+'lampiran', type: 'text', required: '', 
+			title: 'Lampiran', for_id: 'form_'+'lampiran', type: 'file', required: '', 
 			name: 'lampiran', value: '', disabled: false, show: true, kinds: ''
 		},
 

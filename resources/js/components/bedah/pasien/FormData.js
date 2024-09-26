@@ -43,7 +43,12 @@ export const formrawatinap = () => {
 			title: 'Tanggal Masuk Kamar', for_id: 'form_'+'tanggal_masuk_inap', type: 'date', required: '', 
 			name: 'tanggal_masuk_inap', value: '', disabled: false, show: true, kinds: ''
 		},
-
+		
+		imagetes:{
+			title: 'Image', for_id: 'form_'+'imagetes', type: 'file', required: '', 
+			name: 'imagetes', value: '', disabled: false, show: true, kinds: ''
+		},
+		
 		waktu_masuk_inap:{
 			title: 'Pada Pukul', for_id: 'form_'+'waktu_masuk_inap', type: 'time', required: '', 
 			name: 'waktu_masuk_inap', value: '', disabled: false, show: true, kinds: ''

@@ -54,6 +54,8 @@ export default {
 				obat: '/master/pasien/obat',
 				tindakan: '/master/pasien/tindakan',
 				kunjungan: '/master/pasien/kunjungan',
+				lampiran: '/master/pasien/lampiran',
+
 			}, url: '', data: null
 		},
 		tab: {
@@ -172,7 +174,10 @@ export default {
 			if (key == 'pasien') {
 				if (vm.position == 'adddata') { vm.attach.url = vm.attach.link.add; } 
 				else if (vm.position == 'updatedata') { vm.attach.url = vm.attach.link.update; }  
-			}
+			}else if (key == 'lampiran') {
+					vm.position = 'lampiran';
+					vm.attach.url = vm.attach.link.lampiran;
+				}
 		},
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },

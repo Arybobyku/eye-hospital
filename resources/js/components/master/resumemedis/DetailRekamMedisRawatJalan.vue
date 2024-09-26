@@ -53,10 +53,19 @@
                         </button>
 
                         <div class="col-8">
-                            <Inputed v-if="form && form.lampiran" :ref="form.lampiran.name" :form="form.lampiran">
+                            <Inputed v-if="form && form.lampiran" @change="onFileChange" :ref="form.lampiran.name"
+                                :form="form.lampiran">
                             </Inputed>
+                            <div v-if="fileUrl">
+                                <template v-if="isImage">
+                                    <img :src="fileUrl" alt="Selected Image" />
+                                </template>
+                                <template v-else-if="isPdf">
+                                    <embed :src="fileUrl" type="application/pdf" width="100%" height="100px" />
+                                </template>
+                            </div>
                         </div>
-                        <div  v-if="form">
+                        <div v-if="form">
                             <div class="col-4" style="text-align: right" v-if="ishide">
                                 <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red
                                     }}</button>
@@ -131,6 +140,9 @@ export default {
     },
     data: function () {
         return {
+            fileUrl: null,
+            isImage: false,
+            isPdf: false,
             terminate_detail: { show: false, display: "display: none" },
             listdata: [],
             linkResume: "",
@@ -179,6 +191,46 @@ export default {
         formatrupiah,
         parseRawatJalan,
         formRekamMedisJalan,
+        onFileChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const fileType = file.type;
+                if (fileType.startsWith("image/")) {
+                    this.isImage = true;
+                    vm.form.filetype = 'image';
+                    this.isPdf = false;
+                    this.fileUrl = URL.createObjectURL(file);
+                    
+                    this.convertToBase64(file);
+                } else if (fileType === "application/pdf") {
+                    this.isImage = false;
+                    vm.form.filetype = 'pdf';
+                    this.isPdf = true;
+                    this.fileUrl = URL.createObjectURL(file);
+                    this.convertToBase64(file);
+                } else {
+                    this.resetPreview();
+                    alert("Please select an image or PDF file.");
+                }
+            }
+        },
+        convertToBase64(file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                this.fileBase64 = reader.result.split(',')[1]; // Hanya mengambil bagian base64-nya
+                vm.form.fileData = this.fileBase64;
+            };
+            reader.onerror = error => {
+                console.error("Error: ", error);
+            };
+        },
+        resetPreview() {
+            this.fileUrl = null;
+            this.fileBase64 = null;
+            this.isImage = false;
+            this.isPdf = false;
+        },
         pendingbutton: function () {
             if (vm.form.panjar.value != '' && vm.form.panjar.value != ' ') {
                 vm.form.ispending = 'yes';
@@ -227,7 +279,7 @@ export default {
         },
         parsingForm: function () {
             console.log(vm.form);
-            vm.$emit("parsingForm", vm.parseRawatJalan(vm.form), "pasien");
+            vm.$emit("parsingForm", vm.parseRawatJalan(vm.form), "lampiran");
         },
  
         setdataform: function (data) {
@@ -269,6 +321,18 @@ export default {
             vm.dialog();
             // }
         },  
+        dialog: function () {
+            let text = "",
+                button = "";
+            if (vm.form.posisi == "adddata") {
+                text = "Yakin ingin menambah data pada halaman ini.";
+                button = "Ya, tambah data";
+            } else {
+                text = "Yakin ingin memperbaharui data ini.";
+                button = "Ya, perbaharui data";
+            }
+            vm.$emit("dialog", text, button, "rawatjalan");
+        },
         show: function () {
             body.style.overflowY = "hidden";
             vm.terminate_detail.display = "display: block";
@@ -303,5 +367,15 @@ table.embed tr td {
 table.embed tr th {
     padding: 10px;
     border-bottom: 1px solid #c0c0c0;
+}
+img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}
+
+embed {
+    margin-top: 10px;
+    border: 1px solid #ccc;
 }
 </style>

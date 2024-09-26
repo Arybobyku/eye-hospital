@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RawatJalan\LampiranRekamMedisCtrl;
 use App\Http\Controllers\Master\RekamMedisCtrl;
 use Illuminate\Support\Facades\Route;
 
@@ -22,6 +23,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('obat', [PasienCtrl::class, 'obat'])->name('master-pasien-obat');
 		Route::post('tindakan', [PasienCtrl::class, 'tindakan'])->name('master-pasien-tindakan');
 		Route::post('kunjungan', [PasienCtrl::class, 'kunjungan'])->name('master-pasien-kunjungan');
+    	Route::post('lampiran', [LampiranRekamMedisCtrl::class, 'lampiran'])->name('lampiran-rekammedis');
+
 	});
 
 	Route::prefix('rekammedis')->group(function () {
@@ -30,6 +33,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('statsjumlahpengunjung', [RekamMedisCtrl::class, 'statsjumlahpengunjung'])->name('master-rekammedis-statsjumlahpengunjung');
 		Route::post('statsjumlahkunjungan', [RekamMedisCtrl::class, 'statsjumlahkunjungan'])->name('master-rekammedis-statsjumlahkunjungan');
 		Route::post('statspenyakitterbanyak', [RekamMedisCtrl::class, 'statspenyakitterbanyak'])->name('master-rekammedis-statspenyakitterbanyak');
+    	Route::post('lampiran', [LampiranRekamMedisCtrl::class, 'lampiran'])->name('lampiran-rekammedis');
+
 		
 	});
 });

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Bedah\PrintBedahCtrl;
+use App\Http\Controllers\Dokter\LampiranRekamMedisCtrl;
 use App\Http\Controllers\Finance\PrintKasirCtrl;
 /*
 |--------------------------------------------------------------------------
@@ -57,4 +58,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     // Route::get('rekammedis/bedah/rm9dot1/{uuid}', [PrintRekamMedisCtrl::class, 'printRm9dot1']);
     Route::get('rekammedis/rawat-jalan/all/{uuid}', [PrintRekamMedisCtrl::class, 'all']);
     Route::get('rekammedis/bedah/all_bedah/{uuid}', [PrintRekamMedisCtrl::class, 'all_bedah']);
+
+    // Upload
+    // Route::post('lampiran', [LampiranRekamMedisCtrl::class, 'lampiran'])->name('lampiran-rekammedis');
+
 });
