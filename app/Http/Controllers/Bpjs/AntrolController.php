@@ -92,6 +92,65 @@ class AntrolController extends Controller
 		return response()->json($data);
 	}
 
+	public function getAntreanBelumDilayani(Request $request)
+	{
+		$data = [
+			"list" => [
+				[
+					"kodebooking" => "ABC0000001",
+					"tanggal" => "2021-03-24",
+					"kodepoli" => "INT",
+					"kodedokter" => 1234,
+					"jampraktek" => "08:00-17:00",
+					"nik" => "2749494383830001",
+					"nokapst" => "0000000000013",
+					"nohp" => "081234567890",
+					"norekammedis" => "654321",
+					"jeniskunjungan" => 1,
+					"nomorreferensi" => "1029R0021221K000012",
+					"sumberdata" => "Mobile JKN",
+					"ispeserta" => 1,
+					"noantrean" => "INT-0001",
+					"estimasidilayani" => 1669278161000,
+					"createdtime" => 1669278161000,
+					"status" => "Selesai dilayani"
+				]
+			]
+		];
+
+		return response()->json($data);
+	}
+
+	public function getAntreanPerKodeBooking(Request $request)
+	{
+		$data = [
+			"list" => [
+				[
+					"kodebooking" => "ABC0000001",
+					"tanggal" => "2021-03-24",
+					"kodepoli" => "INT",
+					"kodedokter" => 1234,
+					"jampraktek" => "08:00-17:00",
+					"nik" => "2749494383830001",
+					"nokapst" => "0000000000013",
+					"nohp" => "081234567890",
+					"norekammedis" => "654321",
+					"jeniskunjungan" => 1,
+					"nomorreferensi" => "1029R0021221K000012",
+					"sumberdata" => "Mobile JKN",
+					"ispeserta" => 1,
+					"noantrean" => "INT-0001",
+					"estimasidilayani" => 1669278161000,
+					"createdtime" => 1669278161000,
+					"status" => "Selesai dilayani"
+				]
+			]
+		];
+
+
+		return response()->json($data);
+	}
+
 	public function getAntrian(Request $request)
 	{
 

@@ -31,6 +31,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
         Route::get('referensi-poli', [AntrolController::class, 'getReferensiPoli']);
         Route::get('referensi-dokter', [AntrolController::class, 'getReferensiDokter']);
         Route::get('referensi-jadwal-dokter', [AntrolController::class, 'getReferensiJadwalDokter']);
+        Route::get('antrean/pendaftaran/aktif', [AntrolController::class, 'getAntreanBelumDilayani']);
+        Route::get('antrean/pendaftaran/kodebooking/{kodebooking}', [AntrolController::class, 'getAntreanPerKodeBooking']);
         Route::get('antrian', [AntrolController::class, 'getAntrian']);
     });
 });
