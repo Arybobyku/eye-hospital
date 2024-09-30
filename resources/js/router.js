@@ -7,6 +7,41 @@ const routes = [
 	 * Bagian BPJS
 	 ***********************************************************************************/
 	{
+		path: _base + 'vclaim-pengajuan',
+		name: 'Pengajuan',
+		component: () => import('./components/bpjs/vclaim/pengajuan.vue'),
+		meta: { title: 'VClaim - Pengajuan' },
+		props: true
+	},
+	{
+		path: _base + 'vclaim-sep',
+		name: 'SEP',
+		component: () => import('./components/bpjs/vclaim/sep.vue'),
+		meta: { title: 'VClaim - SEP' },
+		props: true
+	},
+	{
+		path: _base + 'vclaim-rujukan',
+		name: 'Rujukan',
+		component: () => import('./components/bpjs/vclaim/rujukan.vue'),
+		meta: { title: 'VClaim - Rujukan' },
+		props: true
+	},
+	{
+		path: _base + 'vclaim-skdp',
+		name: 'SKDP',
+		component: () => import('./components/bpjs/vclaim/skdp.vue'),
+		meta: { title: 'VClaim - SKDP' },
+		props: true
+	},
+	{
+		path: _base + 'vclaim-pulang',
+		name: 'Pulang',
+		component: () => import('./components/bpjs/vclaim/pulang.vue'),
+		meta: { title: 'VClaim - Pulang' },
+		props: true
+	},
+	{
 		path: _base + 'bridging-vclaim',
 		name: 'BPJS - Bridging Vclaim',
 		component: () => import('./components/bpjs/bridging/index.vue'),
@@ -918,6 +953,28 @@ const routes = [
 		props: true 
 	},
 
+
+
+	/**********************************************************************************
+	 * BPJS Antrol
+	 ***********************************************************************************/
+
+	{ 
+		path: _base + 'antrol-referensi-poli', 
+		name: 'Referensi Poli', 
+		component: () => import('./components/antrol/poli/index.vue'),
+		meta: { title: 'Referensi Poli' },
+		props: true 
+	},
+	{ 
+		path: _base + 'antrol-referensi-dokter', 
+		name: 'Referensi Dokter', 
+		component: () => import('./components/antrol/dokter/index.vue'),
+		meta: { title: 'Referensi Dokter' },
+		props: true 
+	},
+		
+
 	/**********************************************************************************
 	 * Bagian ERROR
 	 ***********************************************************************************/
@@ -943,7 +1000,6 @@ const routes = [
 		meta: { title: 'Not Found Page' },
 		props: true 
 	},
-		
 	
 	/**********************************************************************************
 	 * Bagian Rawat Jalan
