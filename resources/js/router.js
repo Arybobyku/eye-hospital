@@ -973,6 +973,20 @@ const routes = [
 		meta: { title: 'Referensi Dokter' },
 		props: true 
 	},
+	{ 
+		path: _base + 'antrol-loket', 
+		name: 'Loket', 
+		component: () => import('./components/antrol/loket/index.vue'),
+		meta: { title: 'Loket' },
+		props: true 
+	},
+	{ 
+		path: _base + 'antrol-setting', 
+		name: 'Setting', 
+		component: () => import('./components/antrol/setting/index.vue'),
+		meta: { title: 'Setting' },
+		props: true 
+	},
 		
 
 	/**********************************************************************************
