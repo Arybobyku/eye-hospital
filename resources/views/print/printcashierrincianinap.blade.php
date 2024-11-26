@@ -168,7 +168,7 @@
 							@endif
 							
 						</td>
-						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahs($item->created_at) }}</td>
+						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahTanpaJam($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">1</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->diskon_rp) }}</td>
@@ -203,7 +203,7 @@
 					<tr>
 						<td align="center" style="padding: 10px 2px; width: 3%">{{ $nomor }}.</td>
 						<td align="left" style="padding: 10px 2px;">{{ $item->nama_layanan }}</td>
-						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahs($item->created_at) }}</td>
+						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahTanpaJam($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ $item->jumlah_nama_layanan }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->total_diskon_rp) }}</td>
@@ -238,7 +238,7 @@
 							{{ $item->nama_layanan }}<br />
 							{{ $item->nama_dokter }}
 						</td>
-						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahs($item->created_at) }}</td>
+						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahTanpaJam($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">1</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->diskon_rp) }}</td>
@@ -272,7 +272,7 @@
 					<tr>
 						<td align="center" style="padding: 10px 2px; width: 3%">{{ $nomor }}.</td>
 						<td align="left" style="padding: 10px 2px;">{{ $item->nama_layanan }}</td>
-						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahs($item->created_at) }}</td>
+						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahTanpaJam($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}</td>
 						<td align="center" style="padding: 10px 2px" valign="top">1</td>
 						<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->diskon_rp) }}</td>
@@ -315,7 +315,7 @@
 							<tr>
 								<td align="center" style="padding: 10px 2px; width: 3%">{{ $nomor }}.</td>
 								<td align="left" style="padding: 10px 2px;">{{ $row->nama_layanan }}</td>
-								<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahs($row->created_at) }}</td>
+								<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahTanpaJam($row->created_at) }}</td>
 								<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($row->tarif) }}</td>
 								<td align="center" style="padding: 10px 2px" valign="top">1</td>
 								<td align="center" style="padding: 10px 2px" valign="top">{{ number_format($row->diskon_rp) }}</td>
@@ -350,7 +350,7 @@
 					<tr>
 						<td align="center" style="padding: 10px 3px; width: 5%">{{ $nomor }}.</td>
 						<td align="left" style="padding: 10px 3px;">{{ $item->nama_layanan }}</td>
-						<td align="center" style="padding: 10px 3px; width: 17%" valign="top">{{ ubahs($item->created_at) }}</td>
+						<td align="center" style="padding: 10px 3px; width: 17%" valign="top">{{ ubahTanpaJam($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 3px" valign="top">{{ number_format($item->tarif) }}</td>
 						<td align="center" style="padding: 10px 3px" valign="top">1</td>
 						<td align="center" style="padding: 10px 3px" valign="top">{{ number_format($item->diskon_rp) }}</td>
@@ -444,7 +444,7 @@
 					<tr>
 						<td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
 						<td align="left" style="padding: 10px 2px;">{{ $item->nama_obat }}</td>
-						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahs($item->created_at) }}</td>
+						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahTanpaJam($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 2px">{{ number_format($item->hja_resep) }}</td>
 						<td align="center" style="padding: 10px 2px">{{ $item->jumlah_kecil }}</td>
 						<td align="right" style="padding: 10px 2px;" colspan="3">{{ number_format($item->total) }}</td>
@@ -511,7 +511,7 @@
 					<tr>
 						<td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
 						<td align="left" style="padding: 10px 2px;">{{ $item->nama_obat }}</td>
-						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahs($item->created_at) }}</td>
+						<td align="center" style="padding: 10px 2px; width: 17%" valign="top">{{ ubahTanpaJam($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 2px">{{ number_format($item->hja_resep) }}</td>
 						<td align="center" style="padding: 10px 2px">{{ $item->jumlah_kecil }}</td>
 						<td align="right" style="padding: 10px 2px;" colspan="3">{{ number_format($item->total) }}</td>
@@ -564,7 +564,7 @@
 					<tr>
 						<td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
 						<td align="left" style="padding: 10px 2px;" >{{ $item->label }}</td>
-						<td align="center" style="padding: 10px 2px; width: 17%" colspan="2" valign="top">{{ ubahs($item->created_at) }}</td>
+						<td align="center" style="padding: 10px 2px; width: 17%" colspan="2" valign="top">{{ ubahTanpaJam($item->created_at) }}</td>
 						<td align="center" style="padding: 10px 2px">{{ $item->jumlah }} {{ $item->kemasan }}</td>
 						{{-- <td align="right" style="padding: 5px 7px;" colspan="3"><b>{{ number_format($item->total) }}</b></td> --}}
 						<td align="right" style="padding: 10px 2px;" colspan="3"></td>
@@ -792,7 +792,38 @@ function ubahs($created) {
 	else if ($bln == '11') { $bln = 'November'; }
 	else { $bln = 'Desember'; }
 
+	// return $tgl . ' ' . $bln . ' ' . $thn . ' ' . $jam . ':' . $menit . ':' . $detik;
 	return $tgl . ' ' . $bln . ' ' . $thn . ' ' . $jam . ':' . $menit . ':' . $detik;
+}
+
+function ubahTanpaJam($created) {
+	$data = explode(' ',$created);
+	$dates = $data[0];
+	$times = $data[1];
+
+	$tgl_ = explode('-',$dates);
+	$thn = $tgl_[0]; $bln = $tgl_[1]; $tgl = $tgl_[2];
+
+	$times_ = explode(':',$times);
+	$jam = $times_[0];
+	$menit = $times_[1];
+	$second = explode('.',$times_[2]);
+	$detik = $second[0];
+	if ($bln == '01') { $bln = 'Januari'; }
+	else if ($bln == '02') { $bln = 'Februari'; }
+	else if ($bln == '03') { $bln = 'Maret'; }
+	else if ($bln == '04') { $bln = 'April'; }
+	else if ($bln == '05') { $bln = 'Mei'; }
+	else if ($bln == '06') { $bln = 'Juni'; }
+	else if ($bln == '07') { $bln = 'Juli'; }
+	else if ($bln == '08') { $bln = 'Agustus'; }
+	else if ($bln == '09') { $bln = 'September'; }
+	else if ($bln == '10') { $bln = 'Oktober'; }
+	else if ($bln == '11') { $bln = 'November'; }
+	else { $bln = 'Desember'; }
+
+	// return $tgl . ' ' . $bln . ' ' . $thn . ' ' . $jam . ':' . $menit . ':' . $detik;
+	return $tgl . ' ' . $bln . ' ' . $thn;
 }
 
 function umurs($tanggal) {
