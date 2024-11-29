@@ -29,6 +29,6 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	});
 
 	Route::prefix('kartustock')->group(function () {
-		Route::get('stock/{posisi}/{dari}/{ke}', [KartuStockCtrl::class, 'stock'])->name('preview-kartustock-stock');
+		// Route::get('stock/{posisi}/{dari}/{ke}', [KartuStockCtrl::class, 'stock'])->name('preview-kartustock-stock');
 	});
 });

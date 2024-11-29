@@ -973,7 +973,22 @@ const routes = [
 		meta: { title: 'Referensi Dokter' },
 		props: true 
 	},
+
+		{ 
+		path: _base + 'antrol-tempat-tidur', 
+		name: 'Referensi Dokter', 
+		component: () => import('./components/antrol/tempattidur/index.vue'),
+		meta: { title: 'Antrol Tempat Tidur' },
+		props: true 
+	},
 		
+	{ 
+		path: _base + 'antrol-history-noka', 
+		name: 'Referensi Dokter', 
+		component: () => import('./components/antrol/historybynoka/index.vue'),
+		meta: { title: 'Antrol History by NOKA' },
+		props: true 
+	},
 
 	/**********************************************************************************
 	 * Bagian ERROR

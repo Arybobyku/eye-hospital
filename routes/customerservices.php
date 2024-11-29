@@ -112,9 +112,9 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	});
 
 	Route::prefix('registrasirawatinap')->group(function () {
-    Route::post('list', [RegistrasiRawatInapCtrl::class, 'list'])->name('cs-registrasirawatinap-list');
-    Route::post('registrasi', [RegistrasiRawatInapCtrl::class, 'registrasi'])->name('cs-registrasirawatinap-registrasi');
-    Route::post('pindahkamar', [RegistrasiRawatInapCtrl::class, 'pindahkamar'])->name('cs-registrasirawatinap-pindahkamar');
+    // Route::post('list', [RegistrasiRawatInapCtrl::class, 'list'])->name('cs-registrasirawatinap-list');
+    // Route::post('registrasi', [RegistrasiRawatInapCtrl::class, 'registrasi'])->name('cs-registrasirawatinap-registrasi');
+    // Route::post('pindahkamar', [RegistrasiRawatInapCtrl::class, 'pindahkamar'])->name('cs-registrasirawatinap-pindahkamar');
 	});
 
 	Route::prefix('bebas')->group(function () {

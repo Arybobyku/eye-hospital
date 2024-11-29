@@ -34,5 +34,12 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
         Route::get('antrean/pendaftaran/aktif', [AntrolController::class, 'getAntreanBelumDilayani']);
         Route::get('antrean/pendaftaran/kodebooking/{kodebooking}', [AntrolController::class, 'getAntreanPerKodeBooking']);
         Route::get('antrian', [AntrolController::class, 'getAntrian']);
+
     });
+
+    Route::prefix('fasyankes')->group(function () {
+        Route::get('listtempattidur', [TempatTidurCtrl::class, 'getTempatTidur']);
 });
+
+});
+

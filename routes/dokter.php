@@ -23,7 +23,7 @@ use App\Http\Controllers\Dokter\PemeriksaanTransferCtrl;
 Route::group(['middleware' => 'throttle: 250, 1'], function(){
 
 	Route::prefix('stockopname')->group(function () {
-		Route::post('list', [StockOpnameCtrl::class, 'list'])->name('stockopname-list');
+		// Route::post('list', [StockOpnameCtrl::class, 'list'])->name('stockopname-list');
 	});
 
 	Route::prefix('pemeriksaan')->group(function () {
