@@ -4,7 +4,7 @@
             :class="terminate.show ? 'modal-opened' : 'modal-closed'">
             <div class="modal-header">
                 <span class="close" v-on:click="hide()">&times;</span>
-                <h2>Detail Data Pemeriksaan Dokter</h2>
+                <h2>Detail Data Pemeriksaan Dokter </h2>
             </div>
             <div class="modal-body">
                 <div class="grid">
@@ -41,6 +41,12 @@
                                     detail.status_kasir
                                         }}</strong></span>
                             </li>
+                            <li>
+                                Jenis<span><strong>{{
+                                    detail.jenis
+                                        }}</strong></span>
+                            </li>
+                            
                         </ul>
                     </div>
 
@@ -1286,8 +1292,10 @@
                         </div>
                     </div>
                 </div>
+                <!-- Ketika Rawat Inap Tidak bisa merubah atau mensave -->
+                <div v-if="detail.jenis != 'Rawat Inap'">
 
-                <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
+                    <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
                     <div class="col-8"></div>
                     <div class="col-4" style="text-align: right" v-if="ishide">
                         <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
@@ -1317,6 +1325,7 @@
                             Edit Data
                         </button>
                     </div>
+                </div>
                 </div>
             </div>
 

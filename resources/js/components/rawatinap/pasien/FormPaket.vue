@@ -4,7 +4,7 @@
 			<div class="modal-header">
 				<button v-on:click="action()">Add/Update Jadwal</button>
 				<span class="close" v-on:click="hide()">&times;</span>
-				<h2 v-if="form">Jadwal kontrol Pasien</h2>
+				<h2 v-if="form">Tambah Paket Operasi</h2>
 			</div>
 			<div class="modal-body" v-if="form">
 				<div class="grid">
