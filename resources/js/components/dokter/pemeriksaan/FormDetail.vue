@@ -1194,7 +1194,6 @@
                                                         item, index
                                                     ) in listdatajalan" v-if="listdatajalan.length > 0
                                                     ">
-                                                    asas
                                                     <td>
                                                         {{ item.nama_tindakan_rawat_jalan }}
                                                     </td>

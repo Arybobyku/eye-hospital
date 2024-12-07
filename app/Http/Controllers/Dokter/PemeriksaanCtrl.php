@@ -72,9 +72,9 @@ class PemeriksaanCtrl extends Controller
                 // ->where('carabayar_nama', '!=', 'bpjs-sehat')
                 // ->where('carabayar_nama', '!=', 'bpjs_sehat')
                 // ->where('berkebutuhan_khusus', '=', 'Tidak')
-                ->where('berkebutuhan_khusus', '!=', 'Ya')
+                ->where('berkebutuhan_khusus', '!=', 'Ya');
                 // ->where('apakah_paket', '=', 'Tidak')
-                ->whereDate('tanggal', '=', date('Y-m-d'));
+                // ->whereDate('tanggal', '=', date('Y-m-d'));
             if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
                 $data = $data->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
             }
@@ -478,8 +478,8 @@ class PemeriksaanCtrl extends Controller
                     $item->save();
                 }
 
-                if ($request->kamar_inap_jalan_uuid != '') {
-                    $kamar = CaraBayarKamar::where('jenis_kamar_uuid', '=', $request->jenis_kamar_jalan_uuid)
+                if ($request->pilihan_plan == 'Rawat Inap') {
+                    $kamar = CaraBayarKamar::where('jenis_kamar_uuid', '=', $request->kamar_inap_jalan_jumlah_bed ?? "-")
                         ->where('carabayar_uuid', '=', $request->carabayar_uuid)
                         ->select('harga')
                         ->first();
@@ -493,12 +493,12 @@ class PemeriksaanCtrl extends Controller
                         'jenis' => 'Rawat Inap',
                         'inap_jalan' => 'Rawat Inap Jalan Asuransi',
                         'status_dokter' => 'Sudah Diperiksa',
-                        'kamar_inap_uuid' => $request->kamar_inap_jalan_uuid,
-                        'kamar_inap_nama' => $request->kamar_inap_jalan_nama,
-                        'kamar_inap_lantai' => $request->kamar_inap_jalan_lantai,
-                        'kamar_inap_jumlah_bed' => $request->kamar_inap_jalan_jumlah_bed,
-                        'jenis_kamar_uuid' => $request->jenis_kamar_jalan_uuid,
-                        'nama_jenis_kamar' => $request->nama_jenis_jalan_kamar,
+                        'kamar_inap_uuid' => $request->kamar_inap_jalan_uuid ?? "-",
+                        'kamar_inap_nama' => $request->kamar_inap_jalan_nama ?? "-",
+                        'kamar_inap_lantai' => $request->kamar_inap_jalan_lantai ?? 0,
+                        'kamar_inap_jumlah_bed' => $request->kamar_inap_jalan_jumlah_bed ?? 0,
+                        'jenis_kamar_uuid' => $request->kamar_inap_jalan_jumlah_bed ?? "-",
+                        'nama_jenis_kamar' => $request->nama_jenis_jalan_kamar ?? "-",
                         'harga_kamar' => $harga_kamar,
                         'status' => 'Rawat Inap',
                     ];
@@ -557,7 +557,7 @@ class PemeriksaanCtrl extends Controller
                     $update = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
                 }
 
-                if ($request->kamar_inap_uuid != '') {
+                if ($request->pilihan_plan == 'Rawat Inap') {
                     echo 'UUID Rwat Inap:';
                     echo $request->kamar_inap_uuid;
                     $kamar = CaraBayarKamar::where('jenis_kamar_uuid', '=', $request->jenis_kamar_uuid)
@@ -1531,7 +1531,7 @@ class PemeriksaanCtrl extends Controller
 
                 $no_kwitansi = '';
                 $kwitansi = '';
-                if ($request->kamar_inap_jalan_uuid != '') {
+                if ($request->pilihan_plan == 'Rawat Inap') {
                     $kwitansi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
                         ->where('jenis', '=', 'Rawat Inap')
                         ->where('no_kwitansi', '!=', '-')
@@ -1561,7 +1561,7 @@ class PemeriksaanCtrl extends Controller
                     $nomor_i = '0'.$nomor_i;
                 }
 
-                if ($request->kamar_inap_jalan_uuid != '') {
+                if ($request->pilihan_plan == 'Rawat Inap') {
                     $no_kwitansi = 'RI/RSKMPV/8875/'.date('Ymd').$nomor_i;
                 } else {
                     $no_kwitansi = 'RJ/RSKMPV/8875/'.date('Ymd').$nomor_i;
@@ -1577,7 +1577,7 @@ class PemeriksaanCtrl extends Controller
                 $invoice = '';
                 $no_invoice = '';
 
-                if ($request->kamar_inap_jalan_uuid != '') {
+                if ($request->pilihan_plan == 'Rawat Inap') {
                     $invoice = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
                         ->where('jenis', '=', 'Rawat Inap')
                         ->where('no_invoice', '!=', '-')
@@ -1611,7 +1611,7 @@ class PemeriksaanCtrl extends Controller
                 $resep = '';
                 $no_resep = '';
 
-                if ($request->kamar_inap_jalan_uuid != '') {
+                if ($request->pilihan_plan == 'Rawat Inap') {
                     $resep = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
                         ->where('jenis', '=', 'Rawat Inap')
                         ->where('no_resep', '!=', '-')
@@ -1668,8 +1668,8 @@ class PemeriksaanCtrl extends Controller
                     $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
                 }
 
-                if ($request->kamar_inap_jalan_uuid != '') {
-                    $kamar = CaraBayarKamar::where('jenis_kamar_uuid', '=', $request->jenis_kamar_jalan_uuid)
+                if ($request->pilihan_plan == 'Rawat Inap') {
+                    $kamar = CaraBayarKamar::where('jenis_kamar_uuid', '=', $request->kamar_inap_jalan_jumlah_bed ?? "-")
                         ->where('carabayar_uuid', '=', $request->carabayar_uuid)
                         ->select('harga')
                         ->first();
@@ -1683,12 +1683,12 @@ class PemeriksaanCtrl extends Controller
                         'jenis' => 'Rawat Inap',
                         'inap_jalan' => 'Rawat Inap Jalan Asuransi',
                         'status_dokter' => 'Sudah Diperiksa',
-                        'kamar_inap_uuid' => $request->kamar_inap_jalan_uuid,
-                        'kamar_inap_nama' => $request->kamar_inap_jalan_nama,
-                        'kamar_inap_lantai' => $request->kamar_inap_jalan_lantai,
-                        'kamar_inap_jumlah_bed' => $request->kamar_inap_jalan_jumlah_bed,
-                        'jenis_kamar_uuid' => $request->jenis_kamar_jalan_uuid,
-                        'nama_jenis_kamar' => $request->nama_jenis_jalan_kamar,
+                        'kamar_inap_uuid' => $request->kamar_inap_jalan_uuid ?? "-",
+                        'kamar_inap_nama' => $request->kamar_inap_jalan_nama ?? "-",
+                        'kamar_inap_lantai' => $request->kamar_inap_jalan_lantai ?? 0,
+                        'kamar_inap_jumlah_bed' => $request->kamar_inap_jalan_jumlah_bed ?? 0,
+                        'jenis_kamar_uuid' => $request->kamar_inap_jalan_jumlah_bed ?? "-",
+                        'nama_jenis_kamar' => $request->nama_jenis_jalan_kamar ?? "-",
                         'harga_kamar' => $harga_kamar,
                         'status' => 'Rawat Inap',
                     ];

@@ -40,26 +40,26 @@ class RawatInapCtrl extends Controller
             $data = Registrasi::where('delete_soft', '=', 1)
                                 ->where($column, 'ilike', '%'.$search.'%')
                                 ->orderBy('id', 'desc')
-                                // ->where('status', 'Rawat Inap')
+                                ->where('status', 'Rawat Inap')
                                 // ->where('masuk_kamar', '=', '-')
                                 ->skip($skip)->take($this->take)
                                 ->get();
 
             $total = Registrasi::where('delete_soft', '=', 1)
-                                // ->where('status', 'Rawat Inap')
+                                ->where('status', 'Rawat Inap')
                                 // ->where('masuk_kamar', '=', '-')
                                 ->where($column, 'ilike', '%'.$search.'%')
                                 ->orderBy('id', 'desc')->count();
         } else {
             $data = Registrasi::where('delete_soft', '=', 1)
                                     ->orderBy('id', 'desc')
-                                    // ->where('status', 'Rawat Inap')
+                                    ->where('status', 'Rawat Inap')
                                     // ->where('masuk_kamar', '=', '-')
                                     ->skip($skip)->take($this->take)
                                     ->get();
 
             $total = Registrasi::where('delete_soft', '=', 1)
-                                // ->where('status', 'Rawat Inap')
+                                ->where('status', 'Rawat Inap')
                                 // ->where('masuk_kamar', '=', '-')
                                 ->orderBy('id', 'desc')
                                 ->count();
