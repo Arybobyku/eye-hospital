@@ -136,7 +136,7 @@ class PasienBedahCtrl extends Controller
                 ->where('registrasi.delete_soft', '=', 1)
                 ->where('registrasi.apakah_paket', '=', 'Ya')
                 // ->whereDate('bedah_selesai', '=', date('Y-m-d'))
-                ->where('bedah_status', '!=', 'Selesai Dioperasi')
+                ->where('bedah_status', '=', 'Selesai Dioperasi')
                 ->where(function ($q) {
                     $q->where('registrasi.paket_bedah_uuid', '!=', '-')->orWhere('registrasi.paket_bedah_uuid', '!=', '')->orWhere('registrasi.paket_bedah_uuid', '!=', null);
                 })->where('registrasi.nama_paket_bedah', '!=', '-')

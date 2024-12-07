@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\RawatInap;
+
 use PenggunaHelp;
 
 use App\Http\Controllers\Controller;
@@ -44,37 +45,37 @@ class PasienCtrl extends Controller
 
         if ($request->search != '') {
             $data = Registrasi::where('delete_soft', '=', 1)
-                                ->where($column, 'ilike', '%'.$search.'%');
+                ->where($column, 'ilike', '%' . $search . '%');
 
             $data = $data->orderBy('id', 'desc')
-                                ->where('status', 'Rawat Inap')
-                                ->where('jenis', '=', 'Rawat Inap')
-                                // ->where('tanggal_keluar_inap', '<', '2000-01-01')
-                                // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
-                                // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs Kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs_kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs-kesehatan')
-                                // ->where('carabayar_nama', '!=', 'BPJS KESEHATAN')
-                                // ->where('carabayar_nama', '!=', 'BPJS_KESEHATAN')
-                                // ->where('carabayar_nama', '!=', 'BPJS-KESEHATAN')
-                                // ->where('carabayar_nama', '!=', 'BPJS Sehat')
-                                // ->where('carabayar_nama', '!=', 'BPJS-Sehat')
-                                // ->where('carabayar_nama', '!=', 'BPJS_Sehat')
-                                // ->where('carabayar_nama', '!=', 'BPJS SEHAT')
-                                // ->where('carabayar_nama', '!=', 'BPJS-SEHAT')
-                                // ->where('carabayar_nama', '!=', 'BPJS_SEHAT')
-                                // ->where('carabayar_nama', '!=', 'bpjs sehat')
-                                // ->where('carabayar_nama', '!=', 'bpjs-sehat')
-                                // ->where('carabayar_nama', '!=', 'bpjs_sehat')
-                                ->skip($skip)->take($this->take)
-                                ->get();
+                ->where('status', 'Rawat Inap')
+                ->where('jenis', '=', 'Rawat Inap')
+                // ->where('tanggal_keluar_inap', '<', '2000-01-01')
+                // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
+                // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs Kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs_kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs-kesehatan')
+                // ->where('carabayar_nama', '!=', 'BPJS KESEHATAN')
+                // ->where('carabayar_nama', '!=', 'BPJS_KESEHATAN')
+                // ->where('carabayar_nama', '!=', 'BPJS-KESEHATAN')
+                // ->where('carabayar_nama', '!=', 'BPJS Sehat')
+                // ->where('carabayar_nama', '!=', 'BPJS-Sehat')
+                // ->where('carabayar_nama', '!=', 'BPJS_Sehat')
+                // ->where('carabayar_nama', '!=', 'BPJS SEHAT')
+                // ->where('carabayar_nama', '!=', 'BPJS-SEHAT')
+                // ->where('carabayar_nama', '!=', 'BPJS_SEHAT')
+                // ->where('carabayar_nama', '!=', 'bpjs sehat')
+                // ->where('carabayar_nama', '!=', 'bpjs-sehat')
+                // ->where('carabayar_nama', '!=', 'bpjs_sehat')
+                ->skip($skip)->take($this->take)
+                ->get();
 
             $total = Registrasi::where('delete_soft', '=', 1)
-                                ->where('status', 'Rawat Inap')
-                                // ->where('tanggal_keluar_inap', '<', '2000-01-01')
-                                ->where('jenis', '=', 'Rawat Inap');
+                ->where('status', 'Rawat Inap')
+                // ->where('tanggal_keluar_inap', '<', '2000-01-01')
+                ->where('jenis', '=', 'Rawat Inap');
             // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
             // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
             // ->where('carabayar_nama', '!=', 'bpjs kesehatan')
@@ -94,59 +95,59 @@ class PasienCtrl extends Controller
             // ->where('carabayar_nama', '!=', 'bpjs-sehat')
             // ->where('carabayar_nama', '!=', 'bpjs_sehat')
             // ->where('masuk_kamar', '=', 'ya');
-            $total = $total->where($column, 'ilike', '%'.$search.'%')
-                                ->orderBy('id', 'desc')->count();
+            $total = $total->where($column, 'ilike', '%' . $search . '%')
+                ->orderBy('id', 'desc')->count();
         } else {
             $data = Registrasi::where('delete_soft', '=', 1)
-                                    ->orderBy('id', 'desc')
-                                    // ->where('tanggal_keluar_inap', '<', '2000-01-01')
-                                // 	->where('carabayar_nama', '!=', 'BPJS Kesehatan')
-                                // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs Kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs_kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs-kesehatan')
-                                // ->where('carabayar_nama', '!=', 'BPJS KESEHATAN')
-                                // ->where('carabayar_nama', '!=', 'BPJS_KESEHATAN')
-                                // ->where('carabayar_nama', '!=', 'BPJS-KESEHATAN')
-                                // ->where('carabayar_nama', '!=', 'BPJS Sehat')
-                                // ->where('carabayar_nama', '!=', 'BPJS-Sehat')
-                                // ->where('carabayar_nama', '!=', 'BPJS_Sehat')
-                                // ->where('carabayar_nama', '!=', 'BPJS SEHAT')
-                                // ->where('carabayar_nama', '!=', 'BPJS-SEHAT')
-                                // ->where('carabayar_nama', '!=', 'BPJS_SEHAT')
-                                // ->where('carabayar_nama', '!=', 'bpjs sehat')
-                                // ->where('carabayar_nama', '!=', 'bpjs-sehat')
-                                // ->where('carabayar_nama', '!=', 'bpjs_sehat')
-                                    ->where('status', 'Rawat Inap')
-                                    // ->where('tanggal_keluar_inap', '<', '2000-01-01')
-                                    ->where('jenis', '=', 'Rawat Inap');
+                ->orderBy('id', 'desc')
+                // ->where('tanggal_keluar_inap', '<', '2000-01-01')
+                // 	->where('carabayar_nama', '!=', 'BPJS Kesehatan')
+                // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs Kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs_kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs-kesehatan')
+                // ->where('carabayar_nama', '!=', 'BPJS KESEHATAN')
+                // ->where('carabayar_nama', '!=', 'BPJS_KESEHATAN')
+                // ->where('carabayar_nama', '!=', 'BPJS-KESEHATAN')
+                // ->where('carabayar_nama', '!=', 'BPJS Sehat')
+                // ->where('carabayar_nama', '!=', 'BPJS-Sehat')
+                // ->where('carabayar_nama', '!=', 'BPJS_Sehat')
+                // ->where('carabayar_nama', '!=', 'BPJS SEHAT')
+                // ->where('carabayar_nama', '!=', 'BPJS-SEHAT')
+                // ->where('carabayar_nama', '!=', 'BPJS_SEHAT')
+                // ->where('carabayar_nama', '!=', 'bpjs sehat')
+                // ->where('carabayar_nama', '!=', 'bpjs-sehat')
+                // ->where('carabayar_nama', '!=', 'bpjs_sehat')
+                ->where('status', 'Rawat Inap')
+                // ->where('tanggal_keluar_inap', '<', '2000-01-01')
+                ->where('jenis', '=', 'Rawat Inap');
 
             $data = $data->skip($skip)->take($this->take)
-                                    ->get();
+                ->get();
 
             $total = Registrasi::where('delete_soft', '=', 1)
-                                ->where('status', 'Rawat Inap')
-                                ->where('jenis', '=', 'Rawat Inap')
-                                // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
-                                // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs Kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs_kesehatan')
-                                // ->where('carabayar_nama', '!=', 'bpjs-kesehatan')
-                                // ->where('carabayar_nama', '!=', 'BPJS KESEHATAN')
-                                // ->where('carabayar_nama', '!=', 'BPJS_KESEHATAN')
-                                // ->where('carabayar_nama', '!=', 'BPJS-KESEHATAN')
-                                // ->where('carabayar_nama', '!=', 'BPJS Sehat')
-                                // ->where('carabayar_nama', '!=', 'BPJS-Sehat')
-                                // ->where('carabayar_nama', '!=', 'BPJS_Sehat')
-                                // ->where('carabayar_nama', '!=', 'BPJS SEHAT')
-                                // ->where('carabayar_nama', '!=', 'BPJS-SEHAT')
-                                // ->where('carabayar_nama', '!=', 'BPJS_SEHAT')
-                                // ->where('carabayar_nama', '!=', 'bpjs sehat')
-                                // ->where('carabayar_nama', '!=', 'bpjs-sehat')
-                                // ->where('carabayar_nama', '!=', 'bpjs_sehat')
-                                ->orderBy('id', 'desc')->count();
+                ->where('status', 'Rawat Inap')
+                ->where('jenis', '=', 'Rawat Inap')
+                // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
+                // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs Kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs_kesehatan')
+                // ->where('carabayar_nama', '!=', 'bpjs-kesehatan')
+                // ->where('carabayar_nama', '!=', 'BPJS KESEHATAN')
+                // ->where('carabayar_nama', '!=', 'BPJS_KESEHATAN')
+                // ->where('carabayar_nama', '!=', 'BPJS-KESEHATAN')
+                // ->where('carabayar_nama', '!=', 'BPJS Sehat')
+                // ->where('carabayar_nama', '!=', 'BPJS-Sehat')
+                // ->where('carabayar_nama', '!=', 'BPJS_Sehat')
+                // ->where('carabayar_nama', '!=', 'BPJS SEHAT')
+                // ->where('carabayar_nama', '!=', 'BPJS-SEHAT')
+                // ->where('carabayar_nama', '!=', 'BPJS_SEHAT')
+                // ->where('carabayar_nama', '!=', 'bpjs sehat')
+                // ->where('carabayar_nama', '!=', 'bpjs-sehat')
+                // ->where('carabayar_nama', '!=', 'bpjs_sehat')
+                ->orderBy('id', 'desc')->count();
         }
 
         return response()->json(['data' => $data, 'total' => $total]);
@@ -155,8 +156,8 @@ class PasienCtrl extends Controller
     public function getlayanan(Request $request)
     {
         $data = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                ->where('layanan_uuid', '!=', 'obatan')
-                                ->where('others', '=', '0')->get();
+            ->where('layanan_uuid', '!=', 'obatan')
+            ->where('others', '=', '0')->get();
 
         return response()->json(['data' => $data]);
     }
@@ -165,12 +166,12 @@ class PasienCtrl extends Controller
     {
         $data = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
         $obat = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                        ->where('jenis', '=', 'Rawat Inap')
-                        ->orderBy('id', 'desc')->get();
+            ->where('jenis', '=', 'Rawat Inap')
+            ->orderBy('id', 'desc')->get();
 
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                        ->where('jenis', '=', 'Rawat Inap')
-                        ->orderBy('id', 'desc')->get();
+            ->where('jenis', '=', 'Rawat Inap')
+            ->orderBy('id', 'desc')->get();
 
         return response()->json(['data' => $data, 'obat' => $obat, 'obatracikan' => $obatracikan]);
     }
@@ -231,8 +232,8 @@ class PasienCtrl extends Controller
         $this->registrasi_jam_selesai($request->registrasi_uuid);
 
         $data = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                ->where('layanan_uuid', '!=', 'obatan')
-                                ->where('others', '=', '0')->get();
+            ->where('layanan_uuid', '!=', 'obatan')
+            ->where('others', '=', '0')->get();
 
         return response()->json(['data' => $data]);
     }
@@ -252,10 +253,10 @@ class PasienCtrl extends Controller
                 $no_kwitansi = '';
                 $kwitansi = '';
                 $kwitansi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('no_kwitansi', '!=', '-')
-                                ->where('jenis', '=', 'Rawat Inap')
-                                ->orderBy('no_kwitansi', 'desc')->first();
-                $no_kwitansi = 'RI/RSKMPV/8875/'.date('Ymd').'00001';
+                    ->where('no_kwitansi', '!=', '-')
+                    ->where('jenis', '=', 'Rawat Inap')
+                    ->orderBy('no_kwitansi', 'desc')->first();
+                $no_kwitansi = 'RI/RSKMPV/8875/' . date('Ymd') . '00001';
 
                 $nomor_k = 1;
                 if ($kwitansi) {
@@ -264,24 +265,24 @@ class PasienCtrl extends Controller
                     $nomor_k += $potong_kalimat;
                 }
                 if ($nomor_k < 10) {
-                    $nomor_k = '0000'.$nomor_k;
+                    $nomor_k = '0000' . $nomor_k;
                 } elseif ($nomor_k > 9 && $nomor_k < 100) {
-                    $nomor_k = '000'.$nomor_k;
+                    $nomor_k = '000' . $nomor_k;
                 } elseif ($nomor_k > 99 && $nomor_k < 1000) {
-                    $nomor_k = '00'.$nomor_k;
+                    $nomor_k = '00' . $nomor_k;
                 } elseif ($nomor_k > 999 && $nomor_k < 10000) {
-                    $nomor_k = '0'.$nomor_k;
+                    $nomor_k = '0' . $nomor_k;
                 }
-                $no_kwitansi = 'RI/RSKMPV/8875/'.date('Ymd').$nomor_k;
+                $no_kwitansi = 'RI/RSKMPV/8875/' . date('Ymd') . $nomor_k;
 
                 $invoice = '';
                 $no_invoice = '';
 
                 $invoice = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('no_invoice', '!=', '-')
-                                ->where('jenis', '=', 'Rawat Inap')
-                                ->orderBy('no_invoice', 'desc')->first();
-                $no_invoice = date('Ymd').'00001';
+                    ->where('no_invoice', '!=', '-')
+                    ->where('jenis', '=', 'Rawat Inap')
+                    ->orderBy('no_invoice', 'desc')->first();
+                $no_invoice = date('Ymd') . '00001';
 
                 $nomor_i = 1;
                 if ($invoice) {
@@ -290,24 +291,24 @@ class PasienCtrl extends Controller
                     $nomor_i += $potong_kalimat;
                 }
                 if ($nomor_i < 10) {
-                    $nomor_i = '0000'.$nomor_i;
+                    $nomor_i = '0000' . $nomor_i;
                 } elseif ($nomor_i > 9 && $nomor_i < 100) {
-                    $nomor_i = '000'.$nomor_i;
+                    $nomor_i = '000' . $nomor_i;
                 } elseif ($nomor_i > 99 && $nomor_i < 1000) {
-                    $nomor_i = '00'.$nomor_i;
+                    $nomor_i = '00' . $nomor_i;
                 } elseif ($nomor_i > 999 && $nomor_i < 10000) {
-                    $nomor_i = '0'.$nomor_i;
+                    $nomor_i = '0' . $nomor_i;
                 }
-                $no_invoice = date('Ymd').$nomor_i;
+                $no_invoice = date('Ymd') . $nomor_i;
 
                 $resep = '';
                 $no_resep = '';
 
                 $resep = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('no_resep', '!=', '-')
-                                ->where('jenis', '=', 'Rawat Inap')
-                                ->orderBy('no_resep', 'desc')->first();
-                $no_resep = date('Ymd').'00001';
+                    ->where('no_resep', '!=', '-')
+                    ->where('jenis', '=', 'Rawat Inap')
+                    ->orderBy('no_resep', 'desc')->first();
+                $no_resep = date('Ymd') . '00001';
 
                 $nomor_r = 1;
                 if ($resep) {
@@ -316,15 +317,15 @@ class PasienCtrl extends Controller
                     $nomor_r += $potong_kalimat;
                 }
                 if ($nomor_r < 10) {
-                    $nomor_r = '0000'.$nomor_r;
+                    $nomor_r = '0000' . $nomor_r;
                 } elseif ($nomor_r > 9 && $nomor_r < 100) {
-                    $nomor_r = '000'.$nomor_r;
+                    $nomor_r = '000' . $nomor_r;
                 } elseif ($nomor_r > 99 && $nomor_r < 1000) {
-                    $nomor_r = '00'.$nomor_r;
+                    $nomor_r = '00' . $nomor_r;
                 } elseif ($nomor_r > 999 && $nomor_r < 10000) {
-                    $nomor_r = '0'.$nomor_r;
+                    $nomor_r = '0' . $nomor_r;
                 }
-                $no_resep = date('Ymd').$nomor_r;
+                $no_resep = date('Ymd') . $nomor_r;
 
                 $arr = [
                     'no_kwitansi' => $no_kwitansi,
@@ -342,8 +343,8 @@ class PasienCtrl extends Controller
         $remove = LayananPasien::where('uuid', '=', $request->uuid)->delete();
 
         $data = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                ->where('layanan_uuid', '!=', 'obatan')
-                                ->where('others', '=', '0')->get();
+            ->where('layanan_uuid', '!=', 'obatan')
+            ->where('others', '=', '0')->get();
 
         return response()->json(['data' => $data]);
     }
@@ -351,7 +352,11 @@ class PasienCtrl extends Controller
     public function getobat(Request $request)
     {
         $data = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                ->where('jenis', '=', 'Rawat Inap')->get();
+            ->where(function ($query) {
+                $query
+                    ->where('jenis', '=', 'Rawat Inap')
+                    ->orWhere('is_bedah', 1);
+            })->get();
 
         return response()->json(['data' => $data]);
     }
@@ -407,15 +412,15 @@ class PasienCtrl extends Controller
         $tarif = (int) $request->hja_resep * (int) $request->jumlah_kecil;
 
         $ceklayanan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                    ->where('jenis', '=', 'Obat-Obatan')
-                                    ->first();
+            ->where('jenis', '=', 'Obat-Obatan')
+            ->first();
 
         if ($ceklayanan) {
             $tarif += $ceklayanan->tarif;
             $arr = ['tarif' => $tarif, 'total' => $tarif];
             $update = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                    ->where('jenis', '=', 'Obat-Obatan')
-                                    ->update($arr);
+                ->where('jenis', '=', 'Obat-Obatan')
+                ->update($arr);
         } else {
             $item = new LayananPasien();
             $item->uuid = Uuid::uuid4();
@@ -457,7 +462,7 @@ class PasienCtrl extends Controller
         }
 
         $data = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                ->where('jenis', '=', 'Rawat Inap')->get();
+            ->where('jenis', '=', 'Rawat Inap')->get();
 
         return response()->json(['data' => $data]);
     }
@@ -469,21 +474,21 @@ class PasienCtrl extends Controller
         $tarif = (int) $resep->hja_resep * (int) $resep->jumlah_kecil;
 
         $ceklayanan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                    ->where('jenis', '=', 'Obat-Obatan')
-                                    ->first();
+            ->where('jenis', '=', 'Obat-Obatan')
+            ->first();
 
         if ($ceklayanan) {
             $sisa = $ceklayanan->tarif - $tarif;
 
             if ($sisa < 1) {
                 $remove = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                    ->where('jenis', '=', 'Obat-Obatan')
-                                    ->delete();
+                    ->where('jenis', '=', 'Obat-Obatan')
+                    ->delete();
             } else {
                 $arr = ['tarif' => $sisa, 'total' => $sisa];
                 $update = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                    ->where('jenis', '=', 'Obat-Obatan')
-                                    ->update($arr);
+                    ->where('jenis', '=', 'Obat-Obatan')
+                    ->update($arr);
             }
         }
         $remove = Resep::where('uuid', '=', $request->uuid)->delete();
@@ -498,7 +503,7 @@ class PasienCtrl extends Controller
         }
 
         $data = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                                ->where('jenis', '=', 'Rawat Inap')->get();
+            ->where('jenis', '=', 'Rawat Inap')->get();
 
         return response()->json(['data' => $data]);
     }
@@ -603,12 +608,12 @@ class PasienCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         $obat = Resep::where('registrasi_uuid', '=', $request->uuid)
-                        ->where('jenis', '=', 'Rawat Inap')
-                        ->orderBy('id', 'desc')->get();
+            ->where('jenis', '=', 'Rawat Inap')
+            ->orderBy('id', 'desc')->get();
 
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
-                        ->where('jenis', '=', 'Rawat Inap')
-                        ->orderBy('id', 'desc')->get();
+            ->where('jenis', '=', 'Rawat Inap')
+            ->orderBy('id', 'desc')->get();
 
         return response()->json(['data' => $data, 'obat' => $obat, 'obatracikan' => $obatracikan]);
     }
@@ -654,8 +659,8 @@ class PasienCtrl extends Controller
             $billKamar = LayananPasien::where('registrasi_uuid', $request->uuid)
                 ->where(function ($query) {
                     $query->where('jenis', 'Kamar Inap')
-                    ->orWhere('jenis', 'Kamar')
-                    ->orWhere('jenis', 'Kamar Rawat Inap');
+                        ->orWhere('jenis', 'Kamar')
+                        ->orWhere('jenis', 'Kamar Rawat Inap');
                 })
                 ->first();
             $cekkamar = KamarInap::where('uuid', '=', $data->kamar_inap_uuid)->first();
