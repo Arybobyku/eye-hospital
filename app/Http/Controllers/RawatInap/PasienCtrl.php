@@ -16,6 +16,9 @@ use App\Models\ResepRacikan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
+use App\Models\LogPengguna;
+use Crypt;
+use Cookie;
 
 class PasienCtrl extends Controller
 {
@@ -30,6 +33,9 @@ class PasienCtrl extends Controller
 
     public function list(Request $request)
     {
+        $namaDokter = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+        $sebagai = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Sebagai'));
+
         if ($this->error != 'next') {
             return response()->json(['data' => $this->error]);
         }
@@ -46,6 +52,10 @@ class PasienCtrl extends Controller
         if ($request->search != '') {
             $data = Registrasi::where('delete_soft', '=', 1)
                 ->where($column, 'ilike', '%' . $search . '%');
+
+            if ($sebagai == 'Dokter') {
+                $data = $data->where('nama_dokter', $namaDokter);
+            }
 
             $data = $data->orderBy('id', 'desc')
                 ->where('status', 'Rawat Inap')
@@ -122,6 +132,11 @@ class PasienCtrl extends Controller
                 ->where('status', 'Rawat Inap')
                 // ->where('tanggal_keluar_inap', '<', '2000-01-01')
                 ->where('jenis', '=', 'Rawat Inap');
+
+
+            if ($sebagai == 'Dokter') {
+                $data = $data->where('nama_dokter', $namaDokter);
+            }
 
             $data = $data->skip($skip)->take($this->take)
                 ->get();
