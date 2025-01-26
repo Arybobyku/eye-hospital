@@ -666,6 +666,13 @@ const routes = [
 	 * Bagian Customer Services
 	 ***********************************************************************************/
 	{ 
+		path: _base + 'customer-service-vclaim', 
+		name: 'BPJS - VClaim', 
+		component: () => import('./components/customerservices/vclaim/index.vue'),
+		meta: { title: 'BPJS - VClaim' },
+		props: true 
+	},
+	{ 
 		path: _base + 'pasien', 
 		name: 'Data Pasien', 
 		component: () => import('./components/customerservices/pasien/index.vue'),
