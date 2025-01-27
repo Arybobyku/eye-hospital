@@ -63,7 +63,6 @@ export default {
     methods: {
         setLinkIframe: function (link) {
             vm.linkR = link;
-			console.log("LINK", link);
             vm.show();
         },
 
@@ -75,10 +74,11 @@ export default {
 
         loaderprocess: function () {
             const left = this.$refs.rootmodal.getBoundingClientRect();
-            vm.$refs.Loader.running(left, "modal", 1000);
+            vm.$refs.Loader.running(left, "modal", 500);
         },
 
         hide: function () {
+			 vm.linkR = null;
             vm.terminate.show = false;
             setTimeout(
                 function () {

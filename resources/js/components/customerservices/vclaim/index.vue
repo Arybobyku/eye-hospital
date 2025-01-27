@@ -5,7 +5,9 @@
                 <h3 class="card-title">
                     {{ item.title }}
                 </h3>
-                <button @click="onClickSEP(item.link)" class="card-button"> Klik </button>
+                <button @click="onClickSEP(item.link)" class="card-button">
+                    Klik
+                </button>
             </div>
         </div>
         <Loader ref="Loader"></Loader>
@@ -16,6 +18,7 @@
 <script>
 import { defineAsyncComponent } from "vue";
 var vm;
+var hostVclaim = import.meta.env.VITE_VCLAIM_PENGAJUAN;
 export default {
     beforeUnmount: function () {},
     components: {
@@ -28,12 +31,18 @@ export default {
     data() {
         return {
             vclaim: [
-                { title: "Pembuatan SEP", link: "http://localhost:7001/" },
-                { title: "Persetujuan SEP", link: "" },
-                { title: "Update Pulang SEP", link: "" },
-                { title: "Form Rujukan", link: "" },
-                { title: "SKDP & SPRI", link: "" },
-                { title: "Laporan", link: "" },
+                { title: "Pembuatan SEP", link: `${hostVclaim}/` },
+                {
+                    title: "Persetujuan SEP",
+                    link: `${hostVclaim}/sep/persetujuan`,
+                },
+                {
+                    title: "Update Pulang SEP",
+                    link: `${hostVclaim}/sep/updatepulang`,
+                },
+                { title: "Form Rujukan", link: `${hostVclaim}/rujukan` },
+                { title: "Kunjungan kontrol/inap", link: `${hostVclaim}/skdp` },
+                { title: "Laporan", link: `${hostVclaim}/` },
             ],
         };
     },
