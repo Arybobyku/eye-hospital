@@ -18,7 +18,7 @@
 <script>
 import { defineAsyncComponent } from "vue";
 var vm;
-var hostVclaim = import.meta.env.VITE_VCLAIM_PENGAJUAN;
+var hostVclaim = import.meta.env.VITE_VCLAIM_HOST;
 export default {
     beforeUnmount: function () {},
     components: {
