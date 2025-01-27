@@ -941,8 +941,8 @@
 					<td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Global</b></td>
 					<td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($diskonGlobal) }}</b></td>
 				</tr>
-				<tr >
-						@endif
+				@endif
+				<tr>
 
 
 					<td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Diskon</b></td>
