@@ -304,7 +304,11 @@ class KasirCtrl extends Controller
                 'status' => 'Selesai',
                 'tanggal_bayar' => date('Y-m-d'),
                 'metode_pembayaran' => $metode_pembayaran,
+                'diskon_persen' => $request->diskon_persen,
+                'diskon_rp' => $request->diskon_rp,
+
             ];
+            // var_dump( $request->diskon_rp);
             $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 
             $tindakan = json_decode($request->tindakan);
