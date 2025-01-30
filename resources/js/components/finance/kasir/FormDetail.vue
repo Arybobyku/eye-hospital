@@ -1,6 +1,7 @@
 <template>
 	<div :style="terminate.display" class="modal">
-		<div ref="rootmodal" class="modal-content modal-besar" :class="terminate.show ? 'modal-opened' : 'modal-closed'">
+		<div ref="rootmodal" class="modal-content modal-besar"
+			:class="terminate.show ? 'modal-opened' : 'modal-closed'">
 			<div class="modal-header">
 				<button v-on:click="printsa('kwitansi')">Cetak Kwitansi</button>
 				<button v-on:click="printsa('rincian')" style="margin-right: 140px;">Cetak Rincian Tagihan</button>
@@ -21,20 +22,23 @@
 							<li>Cara Bayar<span><strong>{{ detail.carabayar_nama }}</strong></span></li>
 							<li>Dokter yang menangani<span><strong>{{ detail.nama_dokter }}</strong></span></li>
 							<li>Triase<span><strong>{{ detail.berkebutuhan_khusus }}</strong></span></li>
-							<li v-if="detail.berkebutuhan_khusus!='Tidak'">Keterangan<span><strong>{{ detail.keterangan_berkebutuhan }}</strong></span></li>
+							<li v-if="detail.berkebutuhan_khusus!='Tidak'">Keterangan<span><strong>{{
+										detail.keterangan_berkebutuhan }}</strong></span></li>
 							<li v-if="detail.carabayar_nama == 'Umum'">
-								<Selected v-on:click="selectbox($event, form.select.metodepembayaran.name, form.select.metodepembayaran.statics)" 
-									:ref="form.select.metodepembayaran.name" @selecteditem="selecteditem" @selectclear="selectclear"
-									:selection="form.select.metodepembayaran" v-on:keyup="selectfilter($event, form.select.metodepembayaran.name)"></Selected>
+								<Selected
+									v-on:click="selectbox($event, form.select.metodepembayaran.name, form.select.metodepembayaran.statics)"
+									:ref="form.select.metodepembayaran.name" @selecteditem="selecteditem"
+									@selectclear="selectclear" :selection="form.select.metodepembayaran"
+									v-on:keyup="selectfilter($event, form.select.metodepembayaran.name)"></Selected>
 							</li>
 						</ul>
 					</div>
 					<div class="col-8">
-						
+
 						<div class="grid">
 							<div class="col-2"></div>
 							<div class="col-8">
-								<div class="cop-surat" >
+								<div class="cop-surat">
 									<div class="top" style="left: 70px">
 										<img src="/images/favicon.png">
 										<div class="label">
@@ -44,8 +48,10 @@
 										</div>
 									</div>
 									<div class="bottom">
-										<span class="label1">Jalan Pabrik Tenun NO. 51-53. Medan Petisah. 20118. <br /> Sumatera Utara. Indonesia</span><br />
-										<span class="label2">Email : rsprimavision@gmail.com - HOSPITAL HOTLINE (061) 805 14 888</span>
+										<span class="label1">Jalan Pabrik Tenun NO. 51-53. Medan Petisah. 20118. <br />
+											Sumatera Utara. Indonesia</span><br />
+										<span class="label2">Email : rsprimavision@gmail.com - HOSPITAL HOTLINE (061)
+											805 14 888</span>
 									</div>
 								</div>
 							</div>
@@ -80,39 +86,74 @@
 											<td><strong>{{ index+1 }}</strong></td>
 											<td><strong>{{ item.nama_layanan }}</strong></td>
 											<td :colspan="item.editharga ? '3' : ''">
-												<input type="number" :ref="item.name" :value="item.tarif" v-if="item.editharga" v-on:keyup="ubahharga($event, item, index)" />
+												<input type="number" :ref="item.name" :value="item.tarif"
+													v-if="item.editharga" v-on:keyup="ubahharga($event, item, index)" />
 												<strong v-else>{{ formatrupiah(item.tarif.toString()) }}</strong>
 											</td>
-											<td v-if="!item.editharga"><input type="number" :value="item.diskon_rp" style="width: 100%;" v-on:keyup="ubah($event, item, index, 'rupiah')" /></td>
-											<td v-if="!item.editharga"><input type="number" :value="item.diskon_persen" style="width: 100%;" v-on:keyup="ubah($event, item, index, 'persen')" /></td>
+											<td v-if="!item.editharga"><input type="number" :value="item.diskon_rp"
+													style="width: 100%;"
+													v-on:keyup="ubah($event, item, index, 'rupiah')" /></td>
+											<td v-if="!item.editharga"><input type="number" :value="item.diskon_persen"
+													style="width: 100%;"
+													v-on:keyup="ubah($event, item, index, 'persen')" /></td>
 											<td><strong>{{ formatrupiah(item.total.toString()) }}</strong></td>
 											<td>
-												<template v-if="item.jenis != 'Obat-Obatan' && item.jenis != 'Obat Racikan'">
+												<template
+													v-if="item.jenis != 'Obat-Obatan' && item.jenis != 'Obat Racikan'">
 													<template v-if="!item.editharga">
 														<button class="tooltip btn-warning" style="width: 27px;">
-															<vue-feather type="edit" style="width: 18px; right: 2px; top: 1px; position: relative;" v-on:click="edit(item, index)"></vue-feather> <span class="tooltiptext">Edit Data</span>
+															<vue-feather type="edit"
+																style="width: 18px; right: 2px; top: 1px; position: relative;"
+																v-on:click="edit(item, index)"></vue-feather> <span
+																class="tooltiptext">Edit Data</span>
 														</button>
 														<button class="tooltip btn-danger" style="width: 27px;">
-															<vue-feather type="trash-2" style="width: 18px; right: 2px; top: 1px; position: relative;" v-on:click="hapus(item, index)"></vue-feather> <span class="tooltiptext">Hapus Data</span>
+															<vue-feather type="trash-2"
+																style="width: 18px; right: 2px; top: 1px; position: relative;"
+																v-on:click="hapus(item, index)"></vue-feather> <span
+																class="tooltiptext">Hapus Data</span>
 														</button>
 													</template>
 													<template v-else>
 														<button class="tooltip btn-warning" style="width: 27px;">
-															<vue-feather type="x-octagon" style="width: 18px; right: 2px; top: 1px; position: relative;" v-on:click="batal(item, index)"></vue-feather> <span class="tooltiptext">Cancel Edit</span>
+															<vue-feather type="x-octagon"
+																style="width: 18px; right: 2px; top: 1px; position: relative;"
+																v-on:click="batal(item, index)"></vue-feather> <span
+																class="tooltiptext">Cancel Edit</span>
 														</button>
 														<button class="tooltip btn-success" style="width: 27px;">
-															<vue-feather type="check" style="width: 18px; right: 2px; top: 1px; position: relative;" v-on:click="perbaharui(item, index)"></vue-feather> <span class="tooltiptext">Perbaharui Data</span>
+															<vue-feather type="check"
+																style="width: 18px; right: 2px; top: 1px; position: relative;"
+																v-on:click="perbaharui(item, index)"></vue-feather>
+															<span class="tooltiptext">Perbaharui Data</span>
 														</button>
 													</template>
 												</template>
 											</td>
 										</tr>
 										<tr>
-											<td colspan="5">
-												<span v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">Sub Total</span>
+											<td colspan="3">
+												<span
+													v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">Sub
+													Total</span>
 												<span v-else>Grand Total</span>
 											</td>
-											<td><strong>{{ formatrupiah(totalbiaya.toString()) }}</strong></td>
+											<td>
+												<input name="diskon_rp" :ref="form.diskon_rp" :form="form.diskon_rp"
+													type="number" style="width: 100%;"
+													v-model.number="globalDiscountNominal"
+													v-on:keyup="ubahDiskonGlobal($event, 'rupiah')"
+													placeholder="Diskon Nominal"></input>
+
+											</td>
+											<td>
+												<input name="diskon_persen" :ref="form.diskon_persen"
+													:form="form.diskon_persen" type="number" style="width: 100%;"
+													v-model.number="globalDiscountPercent"
+													v-on:keyup="ubahDiskonGlobal($event, 'persen')"
+													placeholder="Diskon Persen"></input>
+											</td>
+											<td><strong>{{ formatrupiah(totalbiaya2.toString()) }}</strong></td>
 										</tr>
 										<tr v-if="detail.panjar != '0' && detail.status == 'Pending'">
 											<td colspan="5">
@@ -126,7 +167,8 @@
 											</td>
 											<td>{{ formatrupiah(coverasuransis.toString()) }}</td>
 										</tr>
-										<tr v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">
+										<tr
+											v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">
 											<td colspan="5">
 												Grand Total
 											</td>
@@ -154,15 +196,19 @@
 
 				</div>
 
-				<div class="grid" style="border-top: 1px solid #d0d0d0; margin-top: 16px; padding-top: 20px;" v-if="detail">
+				<div class="grid" style="border-top: 1px solid #d0d0d0; margin-top: 16px; padding-top: 20px;"
+					v-if="detail">
 					<div class="col-8"></div>
 					<div class="col-4" style="text-align: right" v-if="detail.approvement_obat == 'yes'">
 						<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
+							}}</button>
 					</div>
-					<div class="col-4" style="text-align: right" v-if="listobat.length < 1 || listobatracikan.length < 1 ">
+					<div class="col-4" style="text-align: right"
+						v-if="listobat.length < 1 || listobatracikan.length < 1 ">
 						<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
+							}}</button>
 					</div>
 				</div>
 			</div>
@@ -206,12 +252,26 @@ export default {
 			for (let i = 0; i < vm.listdata.length; i++) {
 				temp += parseInt(vm.listdata[i].total);
 			}
+
+
+			return temp ;
+		},
+		totalbiaya2: function () {
+			let temp = 0;
+
+
+			temp = vm.totalbiaya - this.globalDiscountNominal;
 			return temp;
 		},
-		supergrandtotal:function() {
-			let temp = vm.totalbiaya - vm.detail.panjar;
-			temp -= vm.detail.cover_asuransi;
-			return temp;
+		
+		supergrandtotal() {
+			if (this.globalDiscountNominal == NaN) {
+				this.globalDiscountNominal = 0;
+			};
+			let temp = parseInt(vm.totalbiaya - this.globalDiscountNominal);
+			temp -= this.detail.panjar;
+			temp -= this.detail.cover_asuransi;
+			return temp > 0 ? temp : 0;
 		},
 		totalobat:function() {
 			let temp = 0;
@@ -240,9 +300,11 @@ export default {
 			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
 			kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
 			nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
-			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', catatan: ''
+			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', catatan: '', diskon_rp: '', diskon_global: '',
 		},
 		temphitung: [],
+				globalDiscountNominal: 0, // For nominal discount
+				globalDiscountPercentage: 0, // For percentage discount
 	}},
 	methods: {
 
@@ -353,9 +415,29 @@ export default {
 			}
 			
 		},
+		ubahDiskonGlobal(event, posisi) {
+			let value = parseFloat(event.target.value);
+			if (this.globalDiscountNominal === NaN) {
+				this.globalDiscountNominal = 0;
+			}
+			this.globalDiscountNominal = this.globalDiscountNominal ? this.globalDiscountNominal : 0;
+			if (posisi === "rupiah") {
+				this.globalDiscountNominal = value;
+				this.globalDiscountPercentage = parseInt((value / this.totalbiaya) * 100);
+			} else if (posisi === "persen") {
+				this.globalDiscountPercentage = value;
+				this.globalDiscountNominal = parseInt((value / 100) * this.totalbiaya);
+			}
+			this.globalDiscountNominal = this.globalDiscountNominal ? this.globalDiscountNominal : 0;
 
+			
+			// this.totalbiaya;
+		},
 		greenbutton:function() {
 			if (vm.green == 'Proses Pembayaran') {
+				vm.form.diskon_rp = this.globalDiscountNominal;
+				vm.form.diskon_persen = this.globalDiscountPercentage;
+				console.log("vm.form", vm.form);
 				if (vm.detail.carabayar_nama == 'Umum') {
 					if (vm.form.select.metodepembayaran.value != '' && vm.form.select.metodepembayaran.value != ' ' && vm.form.select.metodepembayaran.value) {
 						vm.action();
