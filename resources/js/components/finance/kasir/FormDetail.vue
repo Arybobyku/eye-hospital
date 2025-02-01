@@ -149,7 +149,7 @@
 											<td>
 												<input name="diskon_persen" :ref="form.diskon_persen"
 													:form="form.diskon_persen" type="number" style="width: 100%;"
-													v-model.number="globalDiscountPercent"
+													v-model.number="globalDiscountPercentage"
 													v-on:keyup="ubahDiskonGlobal($event, 'persen')"
 													placeholder="Diskon Persen"></input>
 											</td>
@@ -520,7 +520,10 @@ export default {
 				kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
 				nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
 				rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: ''
-			}
+				, diskon_rp: '', diskon_persen: ''
+			};
+			vm.globalDiscountNominal = 0;
+				vm.globalDiscountPercentage = 0;
 		},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
 		parsingForm:function(position = 'main') { 
