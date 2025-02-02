@@ -139,7 +139,7 @@
 												<span v-else>Grand Total</span>
 											</td>
 											<td>
-												<input name="diskon_rp" :ref="form.diskon_rp" :form="form.diskon_rp"
+												<input name="diskon_rp" :form="form.diskon_rp"
 													type="number" style="width: 100%;"
 													v-model.number="globalDiscountNominal"
 													v-on:keyup="ubahDiskonGlobal($event, 'rupiah')"
@@ -147,7 +147,7 @@
 
 											</td>
 											<td>
-												<input name="diskon_persen" :ref="form.diskon_persen"
+												<input name="diskon_persen"
 													:form="form.diskon_persen" type="number" style="width: 100%;"
 													v-model.number="globalDiscountPercentage"
 													v-on:keyup="ubahDiskonGlobal($event, 'persen')"
