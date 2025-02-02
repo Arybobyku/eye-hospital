@@ -17,6 +17,7 @@ use App\Models\PemeriksaanDokterIcd9;
 use App\Models\PemeriksaanRo;
 use App\Models\Registrasi;
 use App\Models\RegistrasiOperasi;
+use App\Models\Bedah;
 use App\Models\Resep;
 use App\Models\ResepRacikan;
 use Carbon\Carbon;
@@ -749,6 +750,71 @@ class PemeriksaanCtrl extends Controller
                             $item->others = 1;
                             $item->save();
                         }
+                        //START PANGKAS ALUR
+                        $data = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
+                          $registrasi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->select('nomor')->first();
+
+                            $nomor = 1;
+                            if ($registrasi) {
+                                $potong_kalimat = substr($registrasi->nomor, -5);
+                                $potong_kalimat = (int) $potong_kalimat;
+                                $nomor += $potong_kalimat;
+                            }
+
+                            if ($nomor < 9) {
+                                $nomor = '0000'.$nomor;
+                            } elseif ($nomor > 9 && $nomor < 100) {
+                                $nomor = '000'.$nomor;
+                            } elseif ($nomor > 99 && $nomor < 1000) {
+                                $nomor = '00'.$nomor;
+                            } elseif ($nomor > 999 && $nomor < 10000) {
+                                $nomor = '0'.$nomor;
+                            }
+
+                            $nomor = date('Y').date('m').date('d').$nomor;
+                            $nomor_bedah = $nomor;
+                            $uuid = Uuid::uuid4();
+                            $uuid_bedah = $uuid;
+                            $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
+                            $arr = [
+                                    'status_dokter' => 'Sudah Diperiksa',
+                                    'nama_paket_bedah' => $regOp->nama_layanan,
+                                    'paket_bedah_uuid' => $regOp->layanan_uuid,
+                                    'last_position' => 'Pendaftaran',
+                                ];
+
+                            Registrasi::where('uuid', '=', $regOp->registrasi_uuid)->update($arr);
+                            /* Bagian Data Bedah */
+                            $item = new Bedah();
+                            $item->uuid = Uuid::uuid4();
+                            $item->jenis = $data->jenis;
+
+                            $item->registrasi_uuid = $uuid_bedah;
+                            $item->no_pendaftaran = '-';
+                            $item->registrasi_kode = 'ODC';
+                            $item->registrasi_nomor = $nomor_bedah;
+                            $item->registrasi_jenis = 'One Day Care';
+
+                            $item->pasien_uuid = $data->pasien_uuid;
+                            $item->rekam_medis = $data->rekam_medis;
+                            $item->nama_pasien = $data->nama_pasien;
+                            $item->pengguna_uuid = $data->pengguna_uuid;
+                            $item->nama_dokter = $data->nama_dokter;
+
+                            $item->tanggal = $data->tanggal;
+                            $item->waktu = $data->waktu;
+
+                            $item->paket_uuid = $data->layanan_uuid;
+                            $item->nama_paket = $data->nama_layanan;
+                            $item->harga_paket = $data->tarif;
+                            $item->keterangan = $data->keterangan;
+                            $item->save();
+
+                            $arr = ['status' => 'One Day Care'];
+                            Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
+                            //END PANGKAS ALUR
                     }
                 }
                 $listpaketbedah = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $request->paket_uuid_bedah)->get();
@@ -860,6 +926,72 @@ class PemeriksaanCtrl extends Controller
                         $item->others = 1;
                         $item->save();
                     }
+
+                                            //START PANGKAS ALUR
+                        $data = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
+                          $registrasi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->select('nomor')->first();
+
+                            $nomor = 1;
+                            if ($registrasi) {
+                                $potong_kalimat = substr($registrasi->nomor, -5);
+                                $potong_kalimat = (int) $potong_kalimat;
+                                $nomor += $potong_kalimat;
+                            }
+
+                            if ($nomor < 9) {
+                                $nomor = '0000'.$nomor;
+                            } elseif ($nomor > 9 && $nomor < 100) {
+                                $nomor = '000'.$nomor;
+                            } elseif ($nomor > 99 && $nomor < 1000) {
+                                $nomor = '00'.$nomor;
+                            } elseif ($nomor > 999 && $nomor < 10000) {
+                                $nomor = '0'.$nomor;
+                            }
+
+                            $nomor = date('Y').date('m').date('d').$nomor;
+                            $nomor_bedah = $nomor;
+                            $uuid = Uuid::uuid4();
+                            $uuid_bedah = $uuid;
+                            $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
+                            $arr = [
+                                    'status_dokter' => 'Sudah Diperiksa',
+                                    'nama_paket_bedah' => $regOp->nama_layanan,
+                                    'paket_bedah_uuid' => $regOp->layanan_uuid,
+                                    'last_position' => 'Pendaftaran',
+                                ];
+
+                            Registrasi::where('uuid', '=', $regOp->registrasi_uuid)->update($arr);
+                            /* Bagian Data Bedah */
+                            $item = new Bedah();
+                            $item->uuid = Uuid::uuid4();
+                            $item->jenis = $data->jenis;
+
+                            $item->registrasi_uuid = $uuid_bedah;
+                            $item->no_pendaftaran = '-';
+                            $item->registrasi_kode = 'ODC';
+                            $item->registrasi_nomor = $nomor_bedah;
+                            $item->registrasi_jenis = 'One Day Care';
+
+                            $item->pasien_uuid = $data->pasien_uuid;
+                            $item->rekam_medis = $data->rekam_medis;
+                            $item->nama_pasien = $data->nama_pasien;
+                            $item->pengguna_uuid = $data->pengguna_uuid;
+                            $item->nama_dokter = $data->nama_dokter;
+
+                            $item->tanggal = $data->tanggal;
+                            $item->waktu = $data->waktu;
+
+                            $item->paket_uuid = $data->layanan_uuid;
+                            $item->nama_paket = $data->nama_layanan;
+                            $item->harga_paket = $data->tarif;
+                            $item->keterangan = $data->keterangan;
+                            $item->save();
+
+                            $arr = ['status' => 'One Day Care'];
+                            Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
+                            //END PANGKAS ALUR
                 }
 
                 $remove = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_tambahan', 0)->where('is_bedah', 0)->delete();
@@ -1447,6 +1579,71 @@ class PemeriksaanCtrl extends Controller
                         $item->others = 1;
                         $item->save();
                     }
+                                            //START PANGKAS ALUR
+                        $data = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
+                          $registrasi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->select('nomor')->first();
+
+                            $nomor = 1;
+                            if ($registrasi) {
+                                $potong_kalimat = substr($registrasi->nomor, -5);
+                                $potong_kalimat = (int) $potong_kalimat;
+                                $nomor += $potong_kalimat;
+                            }
+
+                            if ($nomor < 9) {
+                                $nomor = '0000'.$nomor;
+                            } elseif ($nomor > 9 && $nomor < 100) {
+                                $nomor = '000'.$nomor;
+                            } elseif ($nomor > 99 && $nomor < 1000) {
+                                $nomor = '00'.$nomor;
+                            } elseif ($nomor > 999 && $nomor < 10000) {
+                                $nomor = '0'.$nomor;
+                            }
+
+                            $nomor = date('Y').date('m').date('d').$nomor;
+                            $nomor_bedah = $nomor;
+                            $uuid = Uuid::uuid4();
+                            $uuid_bedah = $uuid;
+                            $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+
+                            $arr = [
+                                    'status_dokter' => 'Sudah Diperiksa',
+                                    'nama_paket_bedah' => $regOp->nama_layanan,
+                                    'paket_bedah_uuid' => $regOp->layanan_uuid,
+                                    'last_position' => 'Pendaftaran',
+                                ];
+
+                            Registrasi::where('uuid', '=', $regOp->registrasi_uuid)->update($arr);
+                            /* Bagian Data Bedah */
+                            $item = new Bedah();
+                            $item->uuid = Uuid::uuid4();
+                            $item->jenis = $data->jenis;
+
+                            $item->registrasi_uuid = $uuid_bedah;
+                            $item->no_pendaftaran = '-';
+                            $item->registrasi_kode = 'ODC';
+                            $item->registrasi_nomor = $nomor_bedah;
+                            $item->registrasi_jenis = 'One Day Care';
+
+                            $item->pasien_uuid = $data->pasien_uuid;
+                            $item->rekam_medis = $data->rekam_medis;
+                            $item->nama_pasien = $data->nama_pasien;
+                            $item->pengguna_uuid = $data->pengguna_uuid;
+                            $item->nama_dokter = $data->nama_dokter;
+
+                            $item->tanggal = $data->tanggal;
+                            $item->waktu = $data->waktu;
+
+                            $item->paket_uuid = $data->layanan_uuid;
+                            $item->nama_paket = $data->nama_layanan;
+                            $item->harga_paket = $data->tarif;
+                            $item->keterangan = $data->keterangan;
+                            $item->save();
+
+                            $arr = ['status' => 'One Day Care'];
+                            Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
+                            //END PANGKAS ALUR
                 }
 
                 if ($request->paket_uuid_bedah != '' && $request->paket_uuid_bedah != ' ' && $request->paket_uuid_bedah) {
