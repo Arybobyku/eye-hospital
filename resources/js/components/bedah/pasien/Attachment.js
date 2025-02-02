@@ -133,3 +133,15 @@ export const parserawatinap = (form) => {
 
 	return data;
 }
+
+	export const parseeditbedah = (form) => {
+
+	let data = new FormData();
+	data.append('uuid', form.uuid);
+	data.append('registrasi_uuid', form.registrasi_uuid);
+	data.append('layanan_uuid', form.select.paketbedah.value);
+	data.append('paketbedah', form.select.paketbedah.label);
+
+
+	return data;
+}
