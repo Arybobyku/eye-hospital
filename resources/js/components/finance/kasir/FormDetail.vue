@@ -143,7 +143,7 @@
 													type="number" style="width: 100%;"
 													v-model.number="globalDiscountNominal"
 													v-on:keyup="ubahDiskonGlobal($event, 'rupiah')"
-													placeholder="Diskon Nominal"></input>
+													placeholder="Diskon Nominal"/>
 
 											</td>
 											<td>
@@ -151,7 +151,7 @@
 													:form="form.diskon_persen" type="number" style="width: 100%;"
 													v-model.number="globalDiscountPercentage"
 													v-on:keyup="ubahDiskonGlobal($event, 'persen')"
-													placeholder="Diskon Persen"></input>
+													placeholder="Diskon Persen"/>
 											</td>
 											<td><strong>{{ formatrupiah(totalbiaya2.toString()) }}</strong></td>
 										</tr>

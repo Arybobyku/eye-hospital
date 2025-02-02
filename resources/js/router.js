@@ -763,9 +763,9 @@ const routes = [
 
 	{ 
 		path: _base + 'cs-onedaycare-pasien', 
-		name: '(Registrasi) Pasien Bedah (One Day Care)', 
+		name: 'Registrasi Pasien Bedah', 
 		component: () => import('./components/customerservices/onedaycare/index.vue'),
-		meta: { title: '(Registrasi) Pasien Bedah (One Day Care)' },
+		meta: { title: 'Registrasi Pasien Bedah' },
 		props: true 
 	},
 
