@@ -361,9 +361,9 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 					<td align="right" style="padding: 7px"><b>Rp. {{ number_format($grandtotaltemp) }}</b></td>
 				</tr>
 			@endif
-			@if ($diskon != 0)
+			{{-- @if ($diskon != 0)
 				<?php 
-				$grandtotal = $grandtotal - $diskon; 
+				// $grandtotal = $grandtotal - $diskon; 
 				?>
 				<tr >
 					<td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Diskon</b></td>
@@ -372,6 +372,37 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 				<tr >
 					<td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Pembayaran</b></td>
 					<td align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($grandtotal) }}</b></td>
+				</tr>
+			@endif --}}
+			@if ($diskon != 0 || $registrasi->diskon_rp != 0)
+				<?php 
+					$diskonGlobal = $registrasi->diskon_rp; 
+					$totalDiskonGlobal = $diskonGlobal + $diskon; 
+					// $grandtotal2 = $grandtotal - $diskonGlobal;
+					$grandtotal = $grandtotal - $diskon - $diskonGlobal; 
+				?>
+			@if ($diskon != 0)
+
+				<tr >
+					<td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Item</b></td>
+					<td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($diskon) }}</b></td>
+				</tr>
+			@endif
+			@if ($diskonGlobal != 0)
+
+				<tr >
+					<td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Global</b></td>
+					<td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($diskonGlobal) }}</b></td>
+				</tr>
+			@endif
+				<tr >
+					<td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Diskon</b></td>
+					
+					<td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($totalDiskonGlobal) }}</b></td>
+				</tr>
+				<tr >
+					<td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Pembayaran</b></td>
+					<td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($grandtotal) }}</b></td>
 				</tr>
 			@endif
 

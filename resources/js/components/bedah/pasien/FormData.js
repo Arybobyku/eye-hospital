@@ -74,6 +74,20 @@ export const formdetaildokter = () => {
 		}
 	}
 }
+export const formeditbedah = () => {
+	return {
+		title: '', posisi: '', uuid: '',
+		registrasi_uuid: '',
+		tarif: '',
+		select : {
+			paketbedah: {
+				key : 'paketbedah', for_id: 'form_'+'paketbedah', name: 'paketbedah', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'paketbedah', isrequired: false, html: 'Nama Paket Bedah', issearch: true, disabled: false,
+			},
+		}
+	}
+}
 
 
 export const formobat = () => {
@@ -101,6 +115,10 @@ export const formobat = () => {
 		signaracikan:{
 			title: 'Signa', for_id: 'form_'+'signaracikan', type: 'text', required: '', 
 			name: 'signaracikan', value: '', disabled: false, show: true, kinds: ''
+		},
+		signaform:{
+			title: 'Signa', for_id: 'form_'+'signaform', type: 'text', required: '', 
+			name: 'signaform', value: '', disabled: false, show: true, kinds: ''
 		},
 
 		dosisdiperlukan:{
