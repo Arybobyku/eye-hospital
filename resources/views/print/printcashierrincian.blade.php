@@ -974,12 +974,12 @@
 				@if (($registrasi->apakah_paket == 'Ya' || $registrasi->apakah_paket == 'ya') && $registrasi->cover_asuransi != 0)
 					<tr>
 						<td colspan="6" align="left" style="padding: 4px 7px; width: 65%"><b>Dibayarkan pasien</b></td>
-						<td colspan="2" align="right" style="padding: 4px 7px"><b>Rp. {{ number_format($grandtotal2) }}</b></td>
+						<td colspan="2" align="right" style="padding: 4px 7px"><b>Rp. {{ number_format($grandtotal2 ?? $grandtotal) }}</b></td>
 					</tr>
 				@elseif (($registrasi->apakah_paket == 'Tidak' || $registrasi->apakah_paket == 'tidak') && $registrasi->cover_asuransi != 0)
 					<tr>
 						<td colspan="6" align="left" style="padding: 4px 7px; width: 65%"><b>Dibayarkan pasien</b></td>
-						<td colspan="2" align="right" style="padding: 4px 7px"><b>Rp. {{ number_format($grandtotal2) }}</b></td>
+						<td colspan="2" align="right" style="padding: 4px 7px"><b>Rp. {{ number_format($grandtotal2 ?? $grandtotal) }}</b></td>
 					</tr>
 				@endif
 			@endif
