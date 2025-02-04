@@ -28,10 +28,47 @@
                 {{-- First Information --}}
                 <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('first')" style="margin-left: 10px">
                     <div class="button">
-                        <button class="umum" v-on:click="onChangeState('')">Pesert Lama</button>
-                        <button class="umum" v-on:click="onChangeState('ambil-umum')">Umum</button>
-                        <button class="umum" v-on:click="onChangeState('')">BPJS</button>
+                        <button class="umum" v-on:click="onChangeState('ambil-umum')">Pesert Baru</button>
+                        <button class="umum" v-on:click="onChangeState('peserta-lama')">Pesert Lama</button>
                     </div>
+                </div>
+                {{-- Ambil Antrian BPJS --}}
+                <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('peserta-lama')"
+                    style="margin-left: 10px">
+                    <div class="button">
+                        <button class="bpjs" v-on:click="onChangeState('bpjs')">BPJS</button>
+                        <button class="umum" v-on:click="onChangeState('ambil-umum')">Non BPJS</button>
+                        <button class="check-in" v-on:click="onChangeState('mbjkn')">Check In</button>
+                    </div>
+
+                    <h3 class="back" v-on:click="onChangeState('first')">Kembali</h3>
+                </div>
+                {{-- Ambil Antrian MBJKN --}}
+                <div class="ambil-antrian-inner" v-if="shouldShow('mbjkn')">
+                    <h2>CHECK IN</h2>
+                    <p>* Masukkan Kode Booking.</p>
+
+                    <!-- Input Kode Booking -->
+                    <div class="input-container" style="padding: 0px 100px">
+                        <input type="text" v-model="kodeBooking" class="kode-input" placeholder="KODE BOOKING" />
+                        <button class="keyboard-btn">
+                            Keyboard
+                        </button>
+                    </div>
+
+                    <!-- Numpad -->
+                    <div class="numpad" style="padding: 0px 100px">
+                        <button v-for="num in numbers" :key="num" class="numpad-btn"
+                            @click="appendToBooking(num)">
+                            {% num %}
+                        </button>
+                        <button class="delete-btn" @click="deleteLast">Del</button>
+                        <button class="numpad-btn" @click="appendToBooking(0)">0</button>
+                        <button class="ok-btn" @click="confirmBooking">OK</button>
+                    </div>
+
+                    <!-- Tombol Peserta -->
+                    <h3 class="back" v-on:click="onChangeState('peserta-lama')">Kembali</h3>
                 </div>
                 {{-- Ambil Antrian Umum --}}
                 <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('ambil-umum')"
@@ -44,6 +81,8 @@
                         {{-- <button class="asuransi" v-on:click="add('ASURANSI')">ASURANSI</button> --}}
                     </div>
 
+
+                    <h3 class="back" v-on:click="onChangeState('first')">Kembali</h3>
                     <div :style="loading.display" class="wrap-loading-main">
                         <div class="loading-main">
                             <div class="boxes">
@@ -75,25 +114,59 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="ambil-antrian-inner" ref="rootmodalright" style="margin-left: 10px">
-        <h2>No. Antrian : K - <span v-html="checknumberbebas()"></span></h2>
-        <p>Antrian Kunjungan Pasien ke Pelayanan Apotek</p>
-        <div class="button">
-					<button class="umum" v-on:click="addbebas('-')">Racikan</button>
-          <button class="umum" style=" margin-right: 0" v-on:click="addbebas('nonracikan')">Non Racikan</button>
-        </div>
+                {{-- BPJS --}}
+                <div class="ambil-antrian-inner" v-if="shouldShow('bpjs')">
+                    <h2>PESERTA BPJS</h2>
 
-				<div :style="loading.displayright" class="wrap-loading-main">
-					<div class="loading-main">
-						<div class="boxes">
-							<div class="box"><div></div><div></div><div></div><div></div></div>
-							<div class="box"><div></div><div></div><div></div><div></div></div>
-							<div class="box"><div></div><div></div><div></div><div></div></div>
-							<div class="box"><div></div><div></div><div></div><div></div></div>
-						</div>
-					</div>
-				</div>
-      </div> --}}
+                    <!-- Radio Buttons -->
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" v-model="pesertaType" value="nik" /> NIK
+                        </label>
+                        <label>
+                            <input type="radio" v-model="pesertaType" value="bpjs" /> NO KARTU BPJS
+                        </label>
+                    </div>
+
+                    <!-- Input Field with Icons -->
+                    <div class="input-container">
+                        <input type="text" v-model="kodeBooking" class="kode-input" placeholder="NIK" />
+                        <button class="keyboard-btn">
+                            Keyboard
+                        </button>
+                        <button class="search-btn">
+                            Cari
+                        </button>
+                    </div>
+
+                    <!-- Numeric Keypad -->
+                    <div class="numpad">
+                        <button v-for="num in numbers" :key="num" class="numpad-btn"
+                            @click="appendToBooking(num)">
+                            {% num %}
+                        </button>
+                        <button class="delete-btn" @click="deleteLast">del</button>
+                        <button class="numpad-btn" @click="appendToBooking(0)">0</button>
+                        <button class="ok-btn" @click="confirmBooking">OK</button>
+                    </div>
+                    <br>
+                    <!-- Dropdown for Doctor Selection -->
+                    <div class="dropdown">
+                        <label>-- PILIH DOKTER --</label>
+                        <select v-model="selectedDoctor">
+                            <option disabled value="">Pilih Dokter</option>
+                            <option v-for="doctor in doctors" :key="doctor.id" :value="doctor.id">
+                                {% doctor . name %}</option>
+                        </select>
+                    </div>
+                    <br>
+                    <!-- Validation Messages -->
+                    <div class="validation">
+                        <p>* NIK harus 16 digit. <br>* NO PESERTA harus 13 digit.</p>
+                    </div>
+
+                    <h3 class="back" v-on:click="onChangeState('peserta-lama')">Kembali</h3>
+                </div>
 
             </div>
         </div>
@@ -131,6 +204,20 @@
                     number: 0,
                     numberbebas: 0,
                     position: 'firstload',
+                    // STATE DATA TERBARU
+                    kodeBooking: '',
+                    numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9], // Pastikan array ini ada
+                    selectedDoctor: "",
+                    doctors: [{
+                            id: 1,
+                            name: "Dr. A"
+                        },
+                        {
+                            id: 2,
+                            name: "Dr. B"
+                        },
+                    ],
+                    pesertaType: "nik",
                 }
             },
             methods: {
@@ -139,6 +226,17 @@
                 },
                 shouldShow: function(state) {
                     return state == this.state;
+                },
+                appendToBooking: function(num) {
+                    console.log("Menambahkan angka:", num); // Debugging
+                    this.kodeBooking += num;
+                },
+                deleteLast: function() {
+                    console.log("Menghapus angka terakhir");
+                    this.kodeBooking = this.kodeBooking.slice(0, -1);
+                },
+                confirmBooking: function() {
+                    alert(`Kode Booking: ${this.kodeBooking}`);
                 },
                 firstloads: function() {
                     vm.attach.url = vm.attach.link.load;

@@ -245,6 +245,10 @@ body { margin: 0; padding: 0 }
 		padding: 95px 0;
  }
 
+ .ambil-antrian-inner .back{
+  color: red;
+}
+
  .ambil-antrian-inner h2 {
     font-size: 52px;
     font-family: "Roboto Regular";
@@ -275,6 +279,20 @@ body { margin: 0; padding: 0 }
  .ambil-antrian-inner > .button > button.umum {
     background-color: #084b75;
     border: 1px solid #033350;
+    color: #FFF;
+    margin-right: 16px;
+    margin-top:10px;
+ }
+ .ambil-antrian-inner > .button > button.bpjs {
+    background-color: #28a745; /* Green */
+    border: 1px solid #1e7e34;
+    color: #FFF;
+    margin-right: 16px;
+    margin-top:10px;
+ }
+ .ambil-antrian-inner > .button > button.check-in {
+    background-color: #ff5733; /* Bright orange-red */
+    border: 1px solid #c70039;
     color: #FFF;
     margin-right: 16px;
     margin-top:10px;
@@ -315,6 +333,106 @@ body { margin: 0; padding: 0 }
 	text-align: center;
 	position: absolute;
 	top: 120px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 10px;
+  border-radius: 5px;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.kode-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: black;
+  font-size: 18px;
+  padding: 5px;
+}
+
+.keyboard-btn {
+  background: #7752a3;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+}
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+  margin-left: 100px;
+  margin-right: 100px;
+}
+
+.numpad-btn {
+  background: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.delete-btn {
+  background: #d9534f;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+}
+
+.ok-btn {
+  background: #5a75a3;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 18px;
+  color: white;
+  cursor: pointer;
+}
+
+.radio-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.input-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.search-btn {
+  background: green;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+}
+
+.dropdown {
+  margin-top: 15px;
+}
+
+.validation p {
+  color: red;
+  font-size: 12px;
 }
 
 .boxes {
