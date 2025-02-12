@@ -80,43 +80,43 @@ class AntrianCtrl extends Controller
 
 		$item = new Antrian();
 		$item->uuid = $uuid;
-		$item->kode = 'A';
+		$item->kode = 'CS';
 		$item->number = $request->number;
 		$item->jenis = $request->jenis;
 		$item->tanggal = date('Y-m-d');
 		$item->save();
 
-		$item = new AntrianPoli();
-		$item->uuid = Uuid::uuid4();
-		$item->kode = 'A';
-		$item->number = $request->number;
-		$item->jenis = $request->jenis;
-		$item->tanggal = date('Y-m-d');
-		$item->save();
+		// $item = new AntrianPoli();
+		// $item->uuid = Uuid::uuid4();
+		// $item->kode = 'A';
+		// $item->number = $request->number;
+		// $item->jenis = $request->jenis;
+		// $item->tanggal = date('Y-m-d');
+		// $item->save();
 
-		$item = new AntrianRo();
-		$item->uuid = Uuid::uuid4();
-		$item->kode = 'A';
-		$item->number = $request->number;
-		$item->jenis = $request->jenis;
-		$item->tanggal = date('Y-m-d');
-		$item->save();
+		// $item = new AntrianRo();
+		// $item->uuid = Uuid::uuid4();
+		// $item->kode = 'A';
+		// $item->number = $request->number;
+		// $item->jenis = $request->jenis;
+		// $item->tanggal = date('Y-m-d');
+		// $item->save();
 
-		$item = new AntrianKasir();
-		$item->uuid = Uuid::uuid4();
-		$item->kode = 'A';
-		$item->number = $request->number;
-		$item->jenis = $request->jenis;
-		$item->tanggal = date('Y-m-d');
-		$item->save();
+		// $item = new AntrianKasir();
+		// $item->uuid = Uuid::uuid4();
+		// $item->kode = 'A';
+		// $item->number = $request->number;
+		// $item->jenis = $request->jenis;
+		// $item->tanggal = date('Y-m-d');
+		// $item->save();
 
-		$item = new AntrianFarmasi();
-		$item->uuid = Uuid::uuid4();
-		$item->kode = 'A';
-		$item->number = $request->number;
-		$item->jenis = $request->jenis;
-		$item->tanggal = date('Y-m-d');
-		$item->save();
+		// $item = new AntrianFarmasi();
+		// $item->uuid = Uuid::uuid4();
+		// $item->kode = 'A';
+		// $item->number = $request->number;
+		// $item->jenis = $request->jenis;
+		// $item->tanggal = date('Y-m-d');
+		// $item->save();
 
 		$pdf = \App::make('dompdf.wrapper');
     $jenis = $request->jenis;

@@ -101,10 +101,10 @@ new Vue({
 		ngulang: 0,
 		hitung: 0,
 		dataslide: [],
-		display: 'A-000',
+		display: 'CS-000',
 		customer: [
-			{ nomor: 'A-000', label: 'Customer Service 1' },
-			{ nomor: 'A-000', label: 'Customer Service 2' },
+			{ nomor: 'CS-000', label: 'Customer Service 1' },
+			{ nomor: 'CS-000', label: 'Customer Service 2' },
 		],
 		angka: 1,
     currentDateTime: null,
@@ -118,8 +118,10 @@ new Vue({
   }},
   methods: {
 		triggercall:function(data) {
+      console.log("CHECK DATA", data);
 			const vm = this, myArray = data.split("=");
 			let cs = myArray[0].split(" ");
+      console.log("CS", data);
 			let number = vm.calculate(parseInt(myArray[1]));
 			if (cs[2] == '1') {
 				vm.customer[0].nomor = number;
@@ -141,13 +143,14 @@ new Vue({
 				
 			vm.timetime = window.setTimeout(function() {
 				let  tmp = nomor.split("");
+        console.log("TEMP",tmp)
 							
-				let msg = 'Nomor antrian, '+ tmp[0] +', ';
-				let angka = tmp[2]+''+tmp[3]+''+tmp[4];
+				let msg = 'Nomor antrian, '+ tmp[0] + tmp[1] +', ';
+				let angka = tmp[3]+''+tmp[4]+''+tmp[5];
 				if (parseInt(angka) > 0 && parseInt(angka) < 10) { msg = msg + '0, 0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 9 && parseInt(angka) < 100) { msg = msg + '0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 99 && parseInt(angka) < 1000) { msg = msg + ' ' + parseInt(angka) + ', '; }
-				msg = msg + 'ke Kastemer Service, '+ posisi;
+				msg = msg + 'ke Kastemer Service, '+ posisi ?? "";
 
 				const parameters = {
 					pitch: 1, rate: 0.97, volume: 1,
@@ -178,7 +181,7 @@ new Vue({
       
     },
 		calculate:function(data) {
-			let msg = 'A-';
+			let msg = 'CS-';
 			if (parseInt(data) > 0 && parseInt(data) < 10) { msg += '00' + data; }
 			else if (parseInt(data) > 9 && parseInt(data) < 100) { msg += '0' + data; }
 			else if (parseInt(data) > 99 && parseInt(data) < 1000) { msg += data; }

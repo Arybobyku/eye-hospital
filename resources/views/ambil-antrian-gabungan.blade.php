@@ -74,7 +74,7 @@
                 {{-- Ambil Antrian Umum --}}
                 <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('ambil-umum')"
                     style="margin-right: 0px">
-                    <h2>No. Antrian : A - <span v-html="checknumber()"></span></h2>
+                    <h2>No. Antrian : CS - <span v-html="checknumber()"></span></h2>
                     <p>Antrian Kunjungan Pasien ke Poli Mata</p>
                     <div class="button">
                         <button class="umum" v-on:click="add('Umum')">UMUM</button>
