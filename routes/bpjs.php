@@ -1,5 +1,7 @@
 <?php
 
+
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Bpjs\DiagnosaCtrl;
 use App\Http\Controllers\Bpjs\DokterCtrl;
 
-Route::group(['middleware' => 'throttle: 250, 1'], function () {
+Route::group([], function () {
 
     Route::prefix('diagnosa')->group(function () {
         Route::post('list', [DiagnosaCtrl::class, 'list'])->name('bpjs-diagnosa-list');
@@ -23,5 +25,19 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
 
     Route::prefix('dokter')->group(function () {
         Route::post('list', [DokterCtrl::class, 'list'])->name('bpjs-dokter-list');
+    });
+
+    // BPJS Antrol WS
+    Route::prefix('antrol-bpjs')->group(function () {
+        Route::get('ref/dokter', [AntrolBpjsCtrl::class, 'referensiDokter']);
+        Route::get('ref/poli', [AntrolBpjsCtrl::class, 'referensiPoli']);
+        Route::get('ref/poli/fp', [AntrolBpjsCtrl::class, 'referensiPoliFingerPrint']);
+        Route::get('ref/pasien/fp/identitas/{nik}/noidentitas/{noidentitas}', [AntrolBpjsCtrl::class, 'referensiPasienFingerPrint']);
+        
+        Route::get('dashboard/waktutunggu/tanggal/{params1}/waktu/{params2}', [AntrolBpjsCtrl::class, 'dashboardPerTanggal']);
+        Route::get('jadwaldokter/kodepoli/{params1}/tanggal/{params2}', [AntrolBpjsCtrl::class, 'referensiJadwalDokter']);
+
+        Route::get('antrean/pendaftaran/aktif', [AntrolBpjsCtrl::class, 'antrianBelumDilayani']);
+        Route::get('antrean/getlisttask', [AntrolBpjsCtrl::class, 'listTask']);
     });
 });

@@ -28,8 +28,9 @@
                 {{-- First Information --}}
                 <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('first')" style="margin-left: 10px">
                     <div class="button">
-                        <button class="umum" v-on:click="onChangeState('ambil-umum')">Pesert Baru</button>
-                        <button class="umum" v-on:click="onChangeState('peserta-lama')">Pesert Lama</button>
+                        <button class="bpjs" v-on:click="onChangeState('ambil-umum')">Customer Service</button>
+                        <button class="umum" v-on:click="">Obat Bebas</button>
+                        <button class="check-in" v-on:click="onChangeState('mbjkn')">Check In</button>
                     </div>
                 </div>
                 {{-- Ambil Antrian BPJS --}}
@@ -68,7 +69,7 @@
                     </div>
 
                     <!-- Tombol Peserta -->
-                    <h3 class="back" v-on:click="onChangeState('peserta-lama')">Kembali</h3>
+                    <h3 class="back" v-on:click="onChangeState('first')">Kembali</h3>
                 </div>
                 {{-- Ambil Antrian Umum --}}
                 <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('ambil-umum')"
@@ -116,56 +117,57 @@
                 </div>
                 {{-- BPJS --}}
                 <div class="ambil-antrian-inner" v-if="shouldShow('bpjs')">
-                    <h2>PESERTA BPJS</h2>
+                    <center>
 
-                    <!-- Radio Buttons -->
-                    <div class="radio-group">
-                        <label>
-                            <input type="radio" v-model="pesertaType" value="nik" /> NIK
-                        </label>
-                        <label>
-                            <input type="radio" v-model="pesertaType" value="bpjs" /> NO KARTU BPJS
-                        </label>
-                    </div>
+                        <h2>PESERTA BPJS</h2>
 
-                    <!-- Input Field with Icons -->
-                    <div class="input-container">
-                        <input type="text" v-model="kodeBooking" class="kode-input" placeholder="NIK" />
-                        <button class="keyboard-btn">
-                            Keyboard
-                        </button>
-                        <button class="search-btn">
-                            Cari
-                        </button>
-                    </div>
+                        <!-- Radio Buttons -->
+                        <div class="radio-group" style="margin-left: 100px">
+                            <label>
+                                <input type="radio" v-model="pesertaType" value="nik" /> NIK
+                            </label>
+                            <label>
+                                <input type="radio" v-model="pesertaType" value="bpjs" /> NO KARTU BPJS
+                            </label>
+                        </div>
 
-                    <!-- Numeric Keypad -->
-                    <div class="numpad">
-                        <button v-for="num in numbers" :key="num" class="numpad-btn"
-                            @click="appendToBooking(num)">
-                            {% num %}
-                        </button>
-                        <button class="delete-btn" @click="deleteLast">del</button>
-                        <button class="numpad-btn" @click="appendToBooking(0)">0</button>
-                        <button class="ok-btn" @click="confirmBooking">OK</button>
-                    </div>
-                    <br>
-                    <!-- Dropdown for Doctor Selection -->
-                    <div class="dropdown">
-                        <label>-- PILIH DOKTER --</label>
-                        <select v-model="selectedDoctor">
+                        <!-- Input Field with Icons -->
+                        <div class="input-container">
+                            <input type="text" v-model="kodeBooking" class="kode-input" placeholder="NIK" />
+                            <button class="keyboard-btn">
+                                Keyboard
+                            </button>
+                            <button class="search-btn">
+                                Cari
+                            </button>
+                        </div>
+
+                        <!-- Numeric Keypad -->
+                        <div class="numpad">
+                            <button v-for="num in numbers" :key="num" class="numpad-btn"
+                                @click="appendToBooking(num)">
+                                {% num %}
+                            </button>
+                            <button class="delete-btn" @click="deleteLast">del</button>
+                            <button class="numpad-btn" @click="appendToBooking(0)">0</button>
+                            <button class="ok-btn" @click="confirmBooking">OK</button>
+                        </div>
+                        <!-- Dropdown for Doctor Selection -->
+                        <label for="selectedDoctor" style="margin-top:10px">-- PILIH DOKTER --</label>
+                        <select id="selectedDoctor" v-model="selectedDoctor" class="custom-select">
                             <option disabled value="">Pilih Dokter</option>
-                            <option v-for="doctor in doctors" :key="doctor.id" :value="doctor.id">
-                                {% doctor . name %}</option>
+                            <option v-for="doctor in doctors" :key="doctor.nik" :value="doctor.kodedokter">
+                                {% doctor . nik %} - {% doctor . namadokter %}
+                            </option>
                         </select>
-                    </div>
-                    <br>
-                    <!-- Validation Messages -->
-                    <div class="validation">
-                        <p>* NIK harus 16 digit. <br>* NO PESERTA harus 13 digit.</p>
-                    </div>
 
-                    <h3 class="back" v-on:click="onChangeState('peserta-lama')">Kembali</h3>
+                        <!-- Validation Messages -->
+                        <div class="validation">
+                            <p>* NIK harus 16 digit. <br>* NO PESERTA harus 13 digit.</p>
+                        </div>
+
+                        <h3 class="back" v-on:click="onChangeState('peserta-lama')">Kembali</h3>
+                    </center>
                 </div>
 
             </div>
@@ -195,7 +197,8 @@
                         link: {
                             load: '/antrian/tiketing/load',
                             add: '/antrian/tiketing/add',
-                            addbebas: '/apotek/bebas/antrian'
+                            addbebas: '/apotek/bebas/antrian',
+                            listDokter: '/bpjs/antrol-bpjs/ref/dokter',
                         },
                         url: '',
                         data: null
@@ -208,21 +211,17 @@
                     kodeBooking: '',
                     numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9], // Pastikan array ini ada
                     selectedDoctor: "",
-                    doctors: [{
-                            id: 1,
-                            name: "Dr. A"
-                        },
-                        {
-                            id: 2,
-                            name: "Dr. B"
-                        },
-                    ],
+                    doctors: [],
                     pesertaType: "nik",
                 }
             },
             methods: {
                 onChangeState: function(state) {
                     this.state = state;
+
+                    if (this.state == 'bpjs') {
+                        this.getListDokter();
+                    }
                 },
                 shouldShow: function(state) {
                     return state == this.state;
@@ -237,6 +236,20 @@
                 },
                 confirmBooking: function() {
                     alert(`Kode Booking: ${this.kodeBooking}`);
+                },
+                getListDokter: function() {
+                    axios.get(vm.attach.link.listDokter)
+                        .then(function(response) {
+                            setTimeout(function() {
+                                console.log(response);
+                                vm.doctors = response?.data?.response;
+
+                            }, 250, this);
+                        })
+                        .catch(function(error) {
+                            console.log(error.response);
+                            alert('gagal');
+                        });
                 },
                 firstloads: function() {
                     vm.attach.url = vm.attach.link.load;
