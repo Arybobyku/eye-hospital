@@ -138,7 +138,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('pasien.status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
+								->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro','registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
 								->orderBy('registrasi.nomor', 'desc')
 								->skip($skip)->take($this->take)
 								->get();
@@ -151,7 +151,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('pasien.status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
+								->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro','registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
 								->orderBy('registrasi.nomor', 'desc')
 								->count();
 			}
@@ -165,7 +165,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('pasien.status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
+								->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro','registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
 								->orderBy('registrasi.nomor', 'desc')
 								->skip($skip)->take($this->take)
 								->get();
@@ -178,7 +178,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
+								->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro','registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
 								->orderBy('registrasi.nomor', 'desc')
 								->count();
 			}
@@ -192,7 +192,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('pasien.status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
+								->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro','registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
 								->orderBy('registrasi.nomor', 'desc')
 								->skip($skip)->take($this->take)
 								->get();
@@ -205,13 +205,14 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('pasien.status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
+								->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro','registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
 								->orderBy('registrasi.nomor', 'desc')
 								->count();
 			}
 		}
 		else {
 			$data = Pasien::leftJoin('registrasi', function($query) {
+				// TODO CHECK	
 											$query->on('registrasi.pasien_uuid','=','pasien.uuid')
 												->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
 									})
@@ -220,7 +221,7 @@ class PasienCtrl extends Controller
 									->where('pasien.rekam_medis', '!=', 'AP026418')
 									->where('pasien.status', '!=', 'Aktif')
 									->skip($skip)->take($this->take)
-									->select('pasien.*', 'registrasi.nomor')
+									->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro','registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
 									->orderBy('registrasi.nomor', 'desc')
 									->get();
 
@@ -232,7 +233,7 @@ class PasienCtrl extends Controller
 									->where('pasien.rekam_medis', '!=', 'AP020739')
 									->where('pasien.rekam_medis', '!=', 'AP026418')
 									->where('pasien.status', '!=', 'Aktif')
-									->select('pasien.*', 'registrasi.nomor')
+									->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro','registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
 									->orderBy('registrasi.nomor', 'desc')
 									->count();
 

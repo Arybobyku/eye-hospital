@@ -116,6 +116,7 @@ export default {
 		],
 		columnkunjungan: [
 			{ value: 'is_printer_card', label: 'Cetak Kartu?', type: 'text', search: false, close: false, button: false },
+			{ value: 'no_antrian_ro', label: 'Antrian RO', type: 'text', search: false, close: false, button: false },
 			{ value: 'rekam_medis', label: 'No Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'tanggal_lahir', label: 'Tanggal Lahir', type: 'date', search: true, close: false, button: false },
@@ -272,6 +273,7 @@ export default {
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column), ishtml: 'html', style: '' }; }
 			else if (identity == 'usia') { _tmp = { value: vm.usia(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_ro') { _tmp = { value: data.no_antrian_ro ?? "-", ishtml: 'html', style: '' }; }
 			else if (identity == 'status') { _tmp = { value: vm.status(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'is_printer_card') { _tmp = { value: vm.is_printer_card(data), ishtml: 'html', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }

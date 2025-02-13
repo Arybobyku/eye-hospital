@@ -309,13 +309,13 @@ export default {
 			str = str.replace("-", "");
 			str = str.split("");
 			if (str.length > 0) {
-				if (str.length < 5) {
-					if (str[0].length === 1 && str[0].match(/[a-z]/i)) { str[0] = str[0] + '-'; }
+				if (str.length < 6) {
+					if (str[1].length === 1 && str[1].match(/[a-z]/i)) { str[1] = str[1] + '-'; }
 					else { vm.form.nopendaftaran.value = ''; return ; }
 					for (let i = 0; i < str.length; i++) { tmp += str[i]; }
 					vm.form.nopendaftaran.value = tmp;
 				}
-				else { let str = vm.form.nopendaftaran.value; str = str.substring(0, str.length - (str.length - 5)); vm.form.nopendaftaran.value = str; }	
+				else { let str = vm.form.nopendaftaran.value; str = str.substring(0, str.length - (str.length - 6)); vm.form.nopendaftaran.value = str; }	
 			}
 		},
 
