@@ -1171,9 +1171,9 @@ class PemeriksaanCtrl extends Controller
 
 
 
-                // Start Antrian Farmasi
                 $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
 
+                // Start Antrian Farmasi
                 if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0)) {
                     // Create Antrian RO
                     $uuid = '';
@@ -1204,6 +1204,37 @@ class PemeriksaanCtrl extends Controller
                         ->update(['no_antrian_farmasi' => $kodeFarmasi]);
                 }
                 // End Antrian Farmasi
+
+                // Start Antrian Kasir
+                if ($registrasi->no_antrian_kasir == null && (count($obat) == 0 || count($obatracikan) == 0)) {
+                    $uuid = '';
+                    $loop = false;
+                    do {
+                        $uuid = Uuid::uuid4();
+                        $check = AntrianKasir::where('uuid', '=', $uuid)->first();
+                        if (!$check) {
+                            $loop = true;
+                        }
+                    } while ($loop == false);
+
+                    $latestAntrianKasir = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+                    $latestNumber = $latestAntrianKasir->number ?? 0;
+                    $latestNumber = $latestNumber + 1;
+                    $kodeKasir = 'K-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+                    $antrianKasir = new AntrianKasir();
+                    $antrianKasir->uuid = Uuid::uuid4();
+                    $antrianKasir->kode = 'K';
+                    $antrianKasir->number = $latestNumber;
+                    $antrianKasir->jenis = $request->jenis;
+                    $antrianKasir->tanggal = date('Y-m-d');
+                    $antrianKasir->save();
+
+                    Registrasi::where('uuid', $request->registrasi_uuid)
+                        ->update(['no_antrian_kasir' => $kodeKasir]);
+                }
+                // End Antrian Kasir
             } else {
                 $item = new PemeriksaanDokter();
                 $item->uuid = $uuid;
@@ -1963,9 +1994,9 @@ class PemeriksaanCtrl extends Controller
                     $update = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
                 }
 
-                // Start Antrian Farmasi
                 $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
 
+                // Start Antrian Farmasi
                 if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0)) {
                     // Create Antrian RO
                     $uuid = '';
@@ -1996,6 +2027,37 @@ class PemeriksaanCtrl extends Controller
                         ->update(['no_antrian_farmasi' => $kodeFarmasi]);
                 }
                 // End Antrian Farmasi
+
+                // Start Antrian Kasir
+                if ($registrasi->no_antrian_kasir == null && (count($obat) == 0 || count($obatracikan) == 0)) {
+                    $uuid = '';
+                    $loop = false;
+                    do {
+                        $uuid = Uuid::uuid4();
+                        $check = AntrianKasir::where('uuid', '=', $uuid)->first();
+                        if (!$check) {
+                            $loop = true;
+                        }
+                    } while ($loop == false);
+
+                    $latestAntrianKasir = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+                    $latestNumber = $latestAntrianKasir->number ?? 0;
+                    $latestNumber = $latestNumber + 1;
+                    $kodeKasir = 'K-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+                    $antrianKasir = new AntrianKasir();
+                    $antrianKasir->uuid = Uuid::uuid4();
+                    $antrianKasir->kode = 'K';
+                    $antrianKasir->number = $latestNumber;
+                    $antrianKasir->jenis = $request->jenis;
+                    $antrianKasir->tanggal = date('Y-m-d');
+                    $antrianKasir->save();
+
+                    Registrasi::where('uuid', $request->registrasi_uuid)
+                        ->update(['no_antrian_kasir' => $kodeKasir]);
+                }
+                // End Antrian Kasir
 
             }
             $cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
