@@ -270,12 +270,17 @@ export default {
 			}
 			return '<div class="badge badge-success">'+data.status_dokter+'</div>'
 		},
-
+		printAntrian:function(noAntrian, jenis){
+			if(noAntrian == null){
+				return "-"
+			}
+			return '<a href="/antrian/cetak-antrian-all/'+noAntrian+'/'+jenis+'" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">'+noAntrian+'</a>'
+		},
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
-			else if (identity == 'no_antrian_poli') { _tmp = { value: data.no_antrian_poli ?? "-", ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_poli') { _tmp = { value: vm.printAntrian(data.no_antrian_poli, data.carabayar_nama)?? "-", ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'status_dokter') { _tmp = { value: vm.statusdokter(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
@@ -287,9 +292,9 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
-			else if (identity == 'no_antrian_poli') { _tmp = { value: data.no_antrian_poli ?? "-", ishtml: 'html', style: '' }; }
-			else if (identity == 'no_antrian_farmasi') { _tmp = { value: data.no_antrian_farmasi ?? "-", ishtml: 'html', style: '' }; }
-			else if (identity == 'no_antrian_kasir') { _tmp = { value: data.no_antrian_kasir ?? "-", ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_poli') { _tmp = { value: vm.printAntrian(data.no_antrian_poli, data.carabayar_nama)?? "-", ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_farmasi') { _tmp = { value: vm.printAntrian(data.no_antrian_farmasi, data.carabayar_nama)?? "-", ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_kasir') { _tmp = { value: vm.printAntrian(data.no_antrian_kasir, data.carabayar_nama)?? "-", ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'status_dokter') { _tmp = { value: vm.statusdokter(data), ishtml: 'html', style: '' }; }

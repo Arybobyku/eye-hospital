@@ -103,7 +103,12 @@ export default {
 			}
 			return '<div class="badge badge-success">'+data.status_ro+'</div>'
 		},
-
+		printAntrian:function(noAntrian, jenis){
+			if(noAntrian == null){
+				return "-"
+			}
+			return '<a href="/antrian/cetak-antrian-all/'+noAntrian+'/'+jenis+'" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">'+noAntrian+'</a>'
+		},
 		nopendaftaran:function(data) {
 			if (data.status_antrian_ro == 'active') {
 				return data.no_pendaftaran + '<div class="badge badge-success">'+ data.status_antrian_ro +'</div>';
@@ -118,8 +123,8 @@ export default {
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
-			else if (identity == 'no_antrian_poli') { _tmp = { value: data.no_antrian_poli ?? "-", ishtml: 'html', style: '' }; }
-			else if (identity == 'no_antrian_ro') { _tmp = { value: data.no_antrian_ro ?? "-", ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_poli') { _tmp = { value: vm.printAntrian(data.no_antrian_poli, data.carabayar_nama), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_ro') { _tmp = { value: vm.printAntrian(data.no_antrian_ro, data.carabayar_nama), ishtml: 'html', style: '' }; }
 			else if (identity == 'status_ro') { _tmp = { value: vm.statusro(data), ishtml: 'html', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';

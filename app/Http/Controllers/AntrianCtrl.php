@@ -184,6 +184,13 @@ class AntrianCtrl extends Controller
 		return response()->json(['data' => 'berhasil']);
 	}
 
+
+	public function cetakAntrianAll($noAntrian, $jenis){
+		$pdf = \App::make('dompdf.wrapper');
+		$pdf->loadView('cetak-antrian-all', compact('noAntrian','jenis'))->setPaper(array(0, 0, 220, 220), 'potrait');
+		return $pdf->stream();
+	}
+
 	public function cs(Request $request)
 	{
 		$text = RunningText::where('status', '=', 'active')->orderBy('id', 'desc')->first();
