@@ -232,11 +232,11 @@ class RegistrasiCtrl extends Controller
 
 				$latestNumber = $latestAntrianRO->number ?? 0;
 				$latestNumber = $latestNumber + 1;
-				$kodeRo = 'RO-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+				$kodeRo = 'R-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
 
 				$antrianRO = new AntrianRo();
 				$antrianRO->uuid = Uuid::uuid4();
-				$antrianRO->kode = 'RO';
+				$antrianRO->kode = 'R';
 				$antrianRO->number = $latestNumber;
 				$antrianRO->jenis = $request->jenis;
 				$antrianRO->tanggal = date('Y-m-d');

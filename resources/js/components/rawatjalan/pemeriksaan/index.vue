@@ -56,7 +56,8 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
-			{ value: 'no_pendaftaran', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_ro', label: 'No Ro', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_poli', label: 'No Poli', type: 'text', search: true, close: false, button: false },
 			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'text', search: true, close: false, button: false },
@@ -117,7 +118,8 @@ export default {
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
-			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_poli') { _tmp = { value: data.no_antrian_poli ?? "-", ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_ro') { _tmp = { value: data.no_antrian_ro ?? "-", ishtml: 'html', style: '' }; }
 			else if (identity == 'status_ro') { _tmp = { value: vm.statusro(data), ishtml: 'html', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';
@@ -159,7 +161,7 @@ export default {
 				vm.attach.url = vm.attach.link.call;
 				console.log(data)
 				vm.attach.data = new FormData();
-				let number = data.no_pendaftaran.split("-");
+				let number = data.no_antrian_ro.split("-");
 				number = parseInt(number[1]);
 				vm.attach.data.append('number', number);
 				vm.attach.data.append('uuid', data.uuid);

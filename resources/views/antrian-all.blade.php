@@ -106,13 +106,13 @@ new Vue({
   data:function() { return {
 		ngulang: 0,
 		hitung: 0,
-		display: 'A-000',
-		displayright: 'A-000',
+		display: 'P-000',
+		displayright: 'P-000',
 		poliklinik: [
-			{ nomor: 'A-000', label: 'Poli 5' },
-			{ nomor: 'A-000', label: 'Poli 6' },
-			{ nomor: 'A-000', label: 'Farmasi 1' },
-			{ nomor: 'A-000', label: 'Kasir 1' },
+			{ nomor: 'P-000', label: 'Poli 5' },
+			{ nomor: 'P-000', label: 'Poli 6' },
+			{ nomor: 'F-000', label: 'Farmasi 1' },
+			{ nomor: 'K-000', label: 'Kasir 1' },
 		],
 		angka: 1,
     currentDateTime: null,
@@ -127,15 +127,14 @@ new Vue({
   methods: {	
 		triggercall:function(data) {
 			const vm = this, myArray = data.split("=");
-			let kode = 'A';
 			if (myArray.length > 2) {
 				if (myArray[2] == 'bebas') { kode = 'K'; }
 				else if (myArray[2] == 'bebask') { kode = 'K'; }
 				else { kode = 'A'; }
 			}
-			let number = vm.calculate(parseInt(myArray[1]), kode);
 			let tmp = myArray[0].split(" ");
 			if (tmp[0] == 'Poliklinik') {
+				let number = vm.calculate(parseInt(myArray[1]), "P");
 				if (tmp[1] == '5') {
 					vm.poliklinik[0].nomor = number;
 					vm.display = number;
@@ -148,11 +147,13 @@ new Vue({
 				}
 			}
 			else if (tmp[0] == 'Farmasi') {
+				let number = vm.calculate(parseInt(myArray[1]), "F");
 				vm.poliklinik[2].nomor = number;
 				vm.displayright = number;
 				vm.bunyi(number, tmp[1], 'farmasi');
 			}
 			else if (tmp[0] == 'Kasir') {
+				let number = vm.calculate(parseInt(myArray[1]), "K");
 				vm.poliklinik[3].nomor = number;
 				vm.displayright = number;
 				vm.bunyi(number, tmp[1], 'kasir');

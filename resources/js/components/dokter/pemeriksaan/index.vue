@@ -83,7 +83,7 @@ export default {
 		},
 		column: [
 			{ value: 'created_at', label: 'Waktu Pendaftaran', type: 'text', search: false, close: false, button: false },
-			{ value: 'no_pendaftaran', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_poli', label: 'No Poli', type: 'text', search: false, close: false, button: false },
 			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'text', search: true, close: false, button: false },
@@ -94,6 +94,9 @@ export default {
 		],
 		columnhistori: [
 			{ value: 'tanggal', label: 'Tanggal', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_poli', label: 'No Poli', type: 'text', search: false, close: false, button: false },
+			{ value: 'no_antrian_farmasi', label: 'No Farmasi', type: 'text', search: false, close: false, button: false },
+			{ value: 'no_antrian_kasir', label: 'No Kasir', type: 'text', search: false, close: false, button: false },
 			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'text', search: true, close: false, button: false },
@@ -272,6 +275,7 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_poli') { _tmp = { value: data.no_antrian_poli ?? "-", ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'status_dokter') { _tmp = { value: vm.statusdokter(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
@@ -283,6 +287,9 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_poli') { _tmp = { value: data.no_antrian_poli ?? "-", ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_farmasi') { _tmp = { value: data.no_antrian_farmasi ?? "-", ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_kasir') { _tmp = { value: data.no_antrian_kasir ?? "-", ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'status_dokter') { _tmp = { value: vm.statusdokter(data), ishtml: 'html', style: '' }; }
@@ -366,7 +373,7 @@ export default {
 				vm.attach.url = vm.attach.link.call;
 				console.log(data)
 				vm.attach.data = new FormData();
-				let number = data.no_pendaftaran.split("-");
+				let number = data.no_antrian_poli.split("-");
 				number = parseInt(number[1]);
 				vm.attach.data.append('number', number);
 				vm.attach.data.append('ruang_poliklinik', data.ruang_poliklinik);

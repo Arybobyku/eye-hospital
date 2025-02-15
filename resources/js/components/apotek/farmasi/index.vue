@@ -70,7 +70,7 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
-			{ value: 'no_pendaftaran', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_farmasi', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
 			{ value: 'tanggal', label: 'Tanggal', type: 'date', search: true, close: false, button: false },
 			{ value: 'no_kwitansi', label: 'No Kwitansi', type: 'text', search: true, close: false, button: false },
 			{ value: 'carabayar_nama', label: 'Metode Pembayaran', type: 'text', search: true, close: false, button: false },
@@ -82,7 +82,7 @@ export default {
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
 		],
 		columnbayar: [
-			{ value: 'no_pendaftaran', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_farmasi', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
 			{ value: 'tanggal', label: 'Tanggal', type: 'date', search: true, close: false, button: false },
 			{ value: 'no_kwitansi', label: 'No Kwitansi', type: 'text', search: true, close: false, button: false },
 			{ value: 'carabayar_nama', label: 'Metode Pembayaran', type: 'text', search: true, close: false, button: false },
@@ -214,6 +214,7 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_farmasi') { _tmp = { value: data.no_antrian_farmasi ?? "-", ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
@@ -226,6 +227,7 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_farmasi') { _tmp = { value: data.no_antrian_farmasi ?? "-", ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
@@ -348,7 +350,7 @@ export default {
 				vm.attach.url = vm.attach.link.call;
 				console.log(data)
 				vm.attach.data = new FormData();
-				let number = data.no_pendaftaran.split("-");
+				let number = data.no_antrian_farmasi.split("-");
 				number = parseInt(number[1]);
 				vm.attach.data.append('number', number);
 				vm.attach.data.append('ruang_poliklinik', data.ruang_poliklinik);
@@ -363,7 +365,7 @@ export default {
 				vm.attach.url = vm.attach.link.approvement;
 				console.log(data)
 				vm.attach.data = new FormData();
-				let number = data.no_pendaftaran.split("-");
+				let number = data.no_antrian_farmasi.split("-");
 				number = parseInt(number[1]);
 				vm.attach.data.append('uuid', data.uuid);
 				//if (data.ruang_poliklinik != 0) {
