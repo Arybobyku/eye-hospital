@@ -70,7 +70,8 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
-			{ value: 'no_antrian_farmasi', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_farmasi', label: 'No Farmasi', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_kasir', label: 'No Kasir', type: 'text', search: true, close: false, button: false },
 			{ value: 'tanggal', label: 'Tanggal', type: 'date', search: true, close: false, button: false },
 			{ value: 'no_kwitansi', label: 'No Kwitansi', type: 'text', search: true, close: false, button: false },
 			{ value: 'carabayar_nama', label: 'Metode Pembayaran', type: 'text', search: true, close: false, button: false },
@@ -82,7 +83,8 @@ export default {
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
 		],
 		columnbayar: [
-			{ value: 'no_antrian_farmasi', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_farmasi', label: 'No Farmasi', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_kasir', label: 'No Kasir', type: 'text', search: true, close: false, button: false },
 			{ value: 'tanggal', label: 'Tanggal', type: 'date', search: true, close: false, button: false },
 			{ value: 'no_kwitansi', label: 'No Kwitansi', type: 'text', search: true, close: false, button: false },
 			{ value: 'carabayar_nama', label: 'Metode Pembayaran', type: 'text', search: true, close: false, button: false },
@@ -209,12 +211,18 @@ export default {
 			if (data.approvement_obat == 'no') { return 'Belum diapprove'; }
 			return 'Sudah diapprove';
 		},
-
+		printAntrian:function(noAntrian, jenis){
+			if(noAntrian == null){
+				return "-"
+			}
+			return '<a href="/antrian/cetak-antrian-all/'+noAntrian+'/'+jenis+'" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">'+noAntrian+'</a>'
+		},
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
-			else if (identity == 'no_antrian_farmasi') { _tmp = { value: data.no_antrian_farmasi ?? "-", ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_kasir') { _tmp = { value: vm.printAntrian(data.no_antrian_kasir, data.carabayar_nama), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_farmasi') { _tmp = { value: vm.printAntrian(data.no_antrian_farmasi, data.carabayar_nama), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
@@ -227,6 +235,8 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_kasir') { _tmp = { value: vm.printAntrian(data.no_antrian_kasir, data.carabayar_nama), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_farmasi') { _tmp = { value: vm.printAntrian(data.no_antrian_farmasi, data.carabayar_nama), ishtml: 'html', style: '' }; }
 			else if (identity == 'no_antrian_farmasi') { _tmp = { value: data.no_antrian_farmasi ?? "-", ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }

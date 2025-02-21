@@ -13,6 +13,7 @@ use App\Models\ResepRacikan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
+use App\Models\AntrianKasir;
 
 class FarmasiCtrl extends Controller
 {
@@ -528,6 +529,7 @@ class FarmasiCtrl extends Controller
 
     public function approvement(Request $request)
     {
+        // TODO: GENERATE NEXT ANTRIAN KASIR
         if ($this->error != 'next') {
             return response()->json(['data' => $this->error]);
         }
@@ -536,6 +538,37 @@ class FarmasiCtrl extends Controller
         if ($data) {
             \PenggunaHelp::log('Mengambil data icd 9 dengan nama "'.$data->nama_pasien);
         }
+
+        // START Antrian Kasir
+        if ($data->no_antrian_kasir == null) {
+            $uuid = '';
+            $loop = false;
+            do {
+                $uuid = Uuid::uuid4();
+                $check = AntrianKasir::where('uuid', '=', $uuid)->first();
+                if (!$check) {
+                    $loop = true;
+                }
+            } while ($loop == false);
+
+            $latestAntrianKasir = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+            $latestNumber = $latestAntrianKasir->number ?? 0;
+            $latestNumber = $latestNumber + 1;
+            $kodeKasir = 'K-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+            $antrianKasir = new AntrianKasir();
+            $antrianKasir->uuid = Uuid::uuid4();
+            $antrianKasir->kode = 'K';
+            $antrianKasir->number = $latestNumber;
+            $antrianKasir->jenis = $data->jenis;
+            $antrianKasir->tanggal = date('Y-m-d');
+            $antrianKasir->save();
+
+            Registrasi::where('uuid', $request->uuid)
+                ->update(['no_antrian_kasir' => $kodeKasir]);
+        }
+        // End Antrian Kasir
 
         $arr = ['approvement_obat' => 'yes'];
         $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);

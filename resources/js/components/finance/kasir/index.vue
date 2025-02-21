@@ -75,6 +75,7 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
+			{ value: 'tanggal', label: 'Tanggal Registrasi', type: 'text', search: true, close: false, button: false },
 			{ value: 'no_kwitansi', label: 'No Kwitansi', type: 'text', search: true, close: false, button: false },
 			{ value: 'no_antrian_kasir', label: 'No Antrian', type: 'text', search: true, close: false, button: false },
 			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },

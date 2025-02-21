@@ -1206,7 +1206,7 @@ class PemeriksaanCtrl extends Controller
                 // End Antrian Farmasi
 
                 // Start Antrian Kasir
-                if ($registrasi->no_antrian_kasir == null && (count($obat) == 0 || count($obatracikan) == 0)) {
+                if ($registrasi->no_antrian_kasir == null && (count($obat) == 0 && count($obatracikan) == 0)) {
                     $uuid = '';
                     $loop = false;
                     do {
@@ -2029,7 +2029,7 @@ class PemeriksaanCtrl extends Controller
                 // End Antrian Farmasi
 
                 // Start Antrian Kasir
-                if ($registrasi->no_antrian_kasir == null && (count($obat) == 0 || count($obatracikan) == 0)) {
+                if ($registrasi->no_antrian_kasir == null && (count($obat) == 0 && count($obatracikan) == 0)) {
                     $uuid = '';
                     $loop = false;
                     do {
