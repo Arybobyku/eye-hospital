@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 use App\Http\Controllers\Apotek\StockOpnameCtrl;
+use App\Http\Controllers\Apotek\AccOpnameCtrl;
 use App\Http\Controllers\Apotek\ReqOpnameCtrl;
 use App\Http\Controllers\Apotek\FarmasiCtrl;
 use App\Http\Controllers\Apotek\HistoriFarmasiCtrl;
@@ -99,12 +100,12 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('batal', [ReqOpnameCtrl::class, 'batal'])->name('apotek-reqopname-batal');
 	});
 
-	// Route::prefix('accopname')->group(function () {
-	// 	Route::post('list', [AccOpnameCtrl::class, 'list'])->name('apotek-accopname-list');
-	// 	Route::post('detail', [AccOpnameCtrl::class, 'detail'])->name('apotek-accopname-detail');
-	// 	Route::post('proses', [AccOpnameCtrl::class, 'proses'])->name('apotek-accopname-proses');
-	// 	Route::post('kirim', [AccOpnameCtrl::class, 'kirim'])->name('apotek-accopname-kirim');
-	// 	Route::post('tolak', [AccOpnameCtrl::class, 'tolak'])->name('apotek-accopname-tolak');
-	// });
+	Route::prefix('accopname')->group(function () {
+		Route::post('list', [AccOpnameCtrl::class, 'list'])->name('apotek-accopname-list');
+		Route::post('detail', [AccOpnameCtrl::class, 'detail'])->name('apotek-accopname-detail');
+		Route::post('proses', [AccOpnameCtrl::class, 'proses'])->name('apotek-accopname-proses');
+		Route::post('kirim', [AccOpnameCtrl::class, 'kirim'])->name('apotek-accopname-kirim');
+		Route::post('tolak', [AccOpnameCtrl::class, 'tolak'])->name('apotek-accopname-tolak');
+	});
 
 });
