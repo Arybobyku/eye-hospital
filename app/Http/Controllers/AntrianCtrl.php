@@ -22,6 +22,7 @@ use App\Models\AntrianFarmasi;
 use App\Models\DisplayAntrian;
 use App\Models\LogPengguna;
 use App\Models\RunningText;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
 
 class AntrianCtrl extends Controller
 {
@@ -43,8 +44,8 @@ class AntrianCtrl extends Controller
 		date_default_timezone_set("Asia/Jakarta");
 		$number = 1;
 		$numberbebas = 1;
-		$bebas = PasienBebas::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
-		$antrian = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+		$bebas = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->where('kode', 'F')->orderBy('id', 'desc')->first();
+		$antrian = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->where('kode', 'CS')->orderBy('id', 'desc')->first();
 		if ($antrian) {
 			$number += $antrian->number;
 		}
@@ -183,6 +184,60 @@ class AntrianCtrl extends Controller
 
 		return response()->json(['data' => 'berhasil']);
 	}
+
+public function addbebas(Request $request)
+{
+    $uuid = '';
+    $loop = false;
+    do {
+        $uuid = Uuid::uuid4();
+        $check = Antrian::where('uuid', '=', $uuid)->first();
+        if (!$check) {
+            $loop = true;
+        }
+    } while ($loop == false);
+
+    $item = new AntrianFarmasi();
+    $item->uuid = $uuid;
+    $item->kode = 'F';
+    $item->number = $request->number;
+    $item->jenis = $request->jenis;
+    $item->tanggal = date('Y-m-d');
+
+    $nomor = 1;
+    $nomor_ = '';
+    $antrianNomors = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
+                ->where('kode', '=', 'F')->orderBy('nomor', 'desc')->sharedLock()->first();
+    if ($antrianNomors) {
+        $potong_kalimat = substr($antrianNomors->nomor, -5);
+        $potong_kalimat = (int) $potong_kalimat;
+        $nomor += $potong_kalimat;
+    }
+
+    $nomor_ = date('Y') . date('m') . date('d') . str_pad($nomor, 5, '0', STR_PAD_LEFT);
+    $item->nomor  = $nomor_;
+    $item->save();
+
+    // **Panggil tambahAntreanFarmasi dengan cara yang benar**
+    $response = app(AntrolBpjsCtrl::class)->tambahAntreanFarmasi($item);
+
+    // **Proses PDF**
+    $pdf = \App::make('dompdf.wrapper');
+    $jenis = $request->jenis;
+    $number = $request->number;
+    $kode = 'F';
+    $pdf->loadView('cetak-antrian', compact('kode', 'jenis', 'number'))
+        ->setPaper([0, 0, 220, 220], 'potrait');
+    $content = $pdf->download()->getOriginalContent();
+    Storage::put('public/antrian/number.pdf', $content);
+
+    // **Return response dari BPJS**
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Antrean berhasil ditambahkan',
+        'bpjs_response' => $response // Kirim response dari BPJS ke frontend
+    ]);
+}
 
 
 	public function cetakAntrianAll($noAntrian, $jenis){

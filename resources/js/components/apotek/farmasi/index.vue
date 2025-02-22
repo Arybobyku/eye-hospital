@@ -98,6 +98,7 @@ export default {
 		columnbeli: [
 			{ value: 'tanggal', label: 'Tanggal', type: 'date', search: true, close: false, button: false },
 			{ value: 'no_invoice', label: 'No Invoice', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian', label: 'No Antrian', type: 'text', search: true, close: false, button: false },
 			{ value: 'kode', label: 'Kode Pendaftaran', type: 'text', search: true, close: false, button: false },
 			{ value: 'jenis', label: 'Jenis Obat', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pembeli', type: 'text', search: true, close: false, button: false },

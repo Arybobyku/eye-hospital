@@ -260,7 +260,6 @@ class BebasCtrl extends Controller
 			$invoice = PasienBebas::whereDate('tanggal', '=', date('Y-m-d'))
 									->where('no_invoice', '!=', '-')
 									->orderBy('no_invoice', 'desc')->first();
-
 			$nomor_i = 1;
 			if ($invoice) {
 				$potong_kalimat = substr($invoice->no_invoice,-5);
@@ -282,6 +281,7 @@ class BebasCtrl extends Controller
 			$item->carabayar_uuid = '1bddd542-fd1e-4b6a-b629-53bd35428796';
 			$item->carabayar_nama = 'Umum';
 			$item->nama_pasien = $request->nama;
+			$item->no_antrian = $request->no_antrian;
 			$item->jenis = $request->jenis;
 			$item->no_invoice = $no_invoice;
 			$item->save();

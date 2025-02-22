@@ -18,6 +18,7 @@ use App\Models\LayananPasien;
 use App\Models\CaraBayarTindakanRawatJalan;
 use App\Events\NewTradeRo;
 use App\Models\AntrianRo;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
 
 class RegistrasiCtrl extends Controller
 {
@@ -130,6 +131,7 @@ class RegistrasiCtrl extends Controller
 							'is_pay' => $is_pay,
 							'is_asuransi' => $is_asuransi,
 						);
+						
 					} else {
 						$arr = array(
 							'pengguna_uuid' => $request->pengguna_uuid,
@@ -327,6 +329,8 @@ class RegistrasiCtrl extends Controller
 				$item->rujukan = $request->rujukan ? $request->rujukan : '-';
 				$item->carabayar_uuid = $request->carabayar_uuid ? $request->carabayar_uuid : '-';
 				$item->carabayar_nama = $request->carabayar_nama ? $request->carabayar_nama : '-';
+				$item->no_bpjs_kes = $request->no_bpjs_kes;
+				$item->carabayar_nama = $request->carabayar_nama ? $request->carabayar_nama : '-';
 				$item->asuransi_uuid = $request->asuransi_uuid ? $request->asuransi_uuid : '-';
 				$item->nama_asuransi = $request->nama_asuransi ? $request->nama_asuransi : '-';
 				$item->posisi_antrian_ro = $posisi_antrian_ro;
@@ -359,8 +363,16 @@ class RegistrasiCtrl extends Controller
 				$item->last_position = 'Pendaftaran';
 				$item->save();
 
+
+
 				$arr = array('status' => 'Kunjungan');
 				$update = Pasien::where('uuid', '=', $request->uuid)->update($arr);
+				if ($item->carabayar_nama == 'BPJS Kesehatan') {
+					$controller = new AntrolBpjsCtrl();
+					$pasien = Pasien::where('pasien_uuid', $request->pasien_uuid);
+					$response = $controller->tambahAntrean($item, $pasien);
+					
+				}
 
 				$registrasi_uuid = $uuid;
 				$registrasi_kode = 'RJ';

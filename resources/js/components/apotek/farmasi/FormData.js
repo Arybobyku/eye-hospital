@@ -5,11 +5,17 @@ export const formpembeli = () => {
 			title: 'Nama Pembeli', for_id: 'form_'+'nama', type: 'text', required: '', 
 			name: 'nama', value: 'Pasien Bebas', disabled: false, show: true, kinds: ''
 		},
-
-		jenis:{
-			title: 'Jenis Obat', for_id: 'form_'+'jenis', type: 'text', required: '', 
-			name: 'jenis', value: 'Non Racikan', disabled: false, show: true, kinds: ''
+		no_antrian:{
+			title: 'Nomor Antrian', for_id: 'form_'+'no_antrian', type: 'text', required: '', 
+			name: 'no_antrian', value: '', disabled: false, show: true, kinds: ''
 		},
+		select: {
+		jenisracikan: { 
+				key : 'jenisracikan', for_id: 'form_'+'jenisracikan', name: 'jenisracikan', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'jenisracikan', isrequired: false, html: 'Pilih Jenis', issearch: false, disabled: false,
+			},
+		}
 	}
 }
 

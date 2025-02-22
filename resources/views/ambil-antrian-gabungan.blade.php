@@ -29,7 +29,7 @@
                 <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('first')" style="margin-left: 10px">
                     <div class="button">
                         <button class="bpjs" v-on:click="onChangeState('ambil-umum')">Customer Service</button>
-                        <button class="umum" v-on:click="">Obat Bebas</button>
+                        <button class="umum" v-on:click="onChangeState('ambil-obat')">Obat Bebas</button>
                         <button class="check-in" v-on:click="onChangeState('mbjkn')">Check In</button>
                     </div>
                 </div>
@@ -169,8 +169,50 @@
                         <h3 class="back" v-on:click="onChangeState('peserta-lama')">Kembali</h3>
                     </center>
                 </div>
+                {{-- Ambil Antrian Farmasi --}}
+                <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('ambil-obat')">
+                    <h2>No. Antrian : F - <span v-html="checknumberbebas()"></span></h2>
+                    <p>Antrian Kunjungan Pasien ke Farmasi</p>
 
+                  <div class="button">
+                        <button class="umum" v-on:click="addbebas('racikan')">Racikan</button>
+                        <button class="umum" v-on:click="addbebas('non rajikan')">Non Racikan</button>
+                    </div>
+
+                    <h3 class="back" v-on:click="onChangeState('first')">Kembali</h3>
+                    <div :style="loading.display" class="wrap-loading-main">
+                        <div class="loading-main">
+                            <div class="boxes">
+                                <div class="box">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="box">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="box">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                                <div class="box">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -197,7 +239,8 @@
                         link: {
                             load: '/antrian/tiketing/load',
                             add: '/antrian/tiketing/add',
-                            addbebas: '/apotek/bebas/antrian',
+                            addbebas: '/antrian/tiketing/addbebas',
+                            farmasi: '/antrian/tiketing/add',
                             listDokter: '/bpjs/antrol-bpjs/ref/dokter',
                         },
                         url: '',
@@ -308,7 +351,7 @@
                     vm.attach.data = new FormData();
                     vm.attach.data.append('jenis', posisi);
                     vm.attach.data.append('number', vm.numberbebas);
-                    vm.position = 'adddatabebas';
+                    vm.position = 'addbebas';
                     vm.loaders();
                     vm.executions();
                 },
@@ -351,7 +394,7 @@
                                 } else if (vm.position == 'adddata') {
                                     vm.printout();
                                     vm.loads();
-                                } else if (vm.position == 'adddatabebas') {
+                                } else if (vm.position == 'addbebas') {
                                     vm.printoutbebas();
                                     vm.loads();
                                 }
