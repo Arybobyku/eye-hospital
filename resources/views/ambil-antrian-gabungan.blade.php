@@ -174,9 +174,25 @@
                     <h2>No. Antrian : F - <span v-html="checknumberbebas()"></span></h2>
                     <p>Antrian Kunjungan Pasien ke Farmasi</p>
 
-                  <div class="button">
+                <!-- Radio Button BPJS & Non BPJS (Sejajar Horizontal) -->
+                    <div style="display: flex; justify-content: center; gap: 40px; margin-bottom: 20px;">
+                    <div style="display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: bold;">
+                        <input type="radio" v-model="jenisPembayaran" value="1" 
+                        style="width: 24px; height: 24px; cursor: pointer;">
+                        <label style="cursor: pointer; color: green;">BPJS</label>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: bold;">
+                        <input type="radio" v-model="jenisPembayaran" value="0" 
+                        style="width: 24px; height: 24px; cursor: pointer;">
+                        <label style="cursor: pointer; color: blue;">Non BPJS</label>
+                    </div>
+                    </div>
+
+                    <!-- Tombol Pilihan Racikan atau Non Racikan -->
+                    <div class="button">
                         <button class="umum" v-on:click="addbebas('racikan')">Racikan</button>
-                        <button class="umum" v-on:click="addbebas('non rajikan')">Non Racikan</button>
+                        <button class="umum" v-on:click="addbebas('non racikan')">Non Racikan</button>
                     </div>
 
                     <h3 class="back" v-on:click="onChangeState('first')">Kembali</h3>
@@ -256,6 +272,7 @@
                     selectedDoctor: "",
                     doctors: [],
                     pesertaType: "nik",
+                    jenisPembayaran: 1, // Default value
                 }
             },
             methods: {
@@ -347,11 +364,13 @@
                 },
 
                 addbebas: function(posisi) {
+                    const pembayaran = this.jenisPembayaran;
                     vm.attach.url = vm.attach.link.addbebas;
                     vm.attach.data = new FormData();
                     vm.attach.data.append('jenis', posisi);
+                    vm.attach.data.append('is_bpjs', pembayaran);
                     // TODO Check BPJS or NOT
-                    vm.attach.data.append('isbpjs', false);
+                    // vm.attach.data.append('isbpjs', false);
 
                     vm.attach.data.append('number', vm.numberbebas);
                     vm.position = 'addbebas';

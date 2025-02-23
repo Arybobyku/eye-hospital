@@ -7,7 +7,9 @@ use App\Services\Bpjs\Bridging\Antrol\BridgeAntrol;
 use App\Helpers\ResponseFormatter;
 use App\Models\Registrasi;
 use App\Models\Pasien;
+use App\Models\PasienBebas;
 use App\Models\Antrian;
+use App\Models\AntrianFarmasi;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Services\Bpjs\Bridging\Vclaim\BridgeVclaim;
@@ -139,7 +141,7 @@ class AntrolBpjsCtrl extends Controller
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
         return $this->bridging->postRequest($endpoint, $jsonData);
     }
-    public function tambahAntreanFarmasi(Antrian $item)
+    public function tambahAntreanFarmasi(AntrianFarmasi $item)
     {
         $endpoint = "antrean/farmasi/add";
         $data = [
@@ -162,6 +164,22 @@ class AntrolBpjsCtrl extends Controller
             "taskid" => 5,
             "waktu" => 1616559330000,
             "jenisresep" => "Tidak ada" // khusus yang sudah implementasi antrean farmasi
+        ];
+        $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+
+        return $this->bridging->postRequest($endpoint, $jsonData);
+
+    }
+
+    public function updateWaktuAntreanFarmasi(PasienBebas $item)
+    {
+        $endpoint = "antrean/updatewaktu";
+        $timestamp = round(microtime(true) * 1000);
+        $data = [
+            "kodebooking" => $item->nomor,
+            "taskid" => 7,
+            "waktu" => $timestamp,
+            // "jenisresep" => "Tidak ada"// khusus yang sudah implementasi antrean farmasi
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 

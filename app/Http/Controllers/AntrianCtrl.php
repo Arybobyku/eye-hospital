@@ -202,9 +202,32 @@ class AntrianCtrl extends Controller
 		$item = new AntrianFarmasi();
 		$item->uuid = $uuid;
 		$item->kode = 'F';
+		$item->is_bpjs = $request->is_bpjs;
 		$item->number = $request->number;
 		$item->jenis = $request->jenis;
 		$item->tanggal = date('Y-m-d');
+
+    $nomor = 1;
+    $tanggal = date('Ymd');
+    
+    // Ambil antrean terakhir untuk hari ini berdasarkan kode
+    $lastEntry = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
+        ->where('kode', '=', 'F')
+        ->orderBy('id', 'desc')
+        ->first();
+    
+    if ($lastEntry && strlen($lastEntry->nomor) >= 13) {
+        // Ambil 5 digit terakhir sebagai nomor antrean
+        $lastNumber = (int) substr($lastEntry->nomor, -5);
+        $nomor = $lastNumber + 1;
+    }
+    
+    // Format nomor menjadi 5 digit (00001, 00002, ...)
+    $nomor = str_pad($nomor, 5, '0', STR_PAD_LEFT);
+    $nomorFormatted = $tanggal.$nomor;
+    
+		$item->nomor = $nomorFormatted;
+
 		$item->save();
 
 		do {
@@ -232,37 +255,24 @@ class AntrianCtrl extends Controller
 		else if ($nomor_i > 999 && $nomor_i < 10000) { $nomor_i = '0'.$nomor_i; }
 		$no_invoice = date('Ymd').$nomor_i;
 
-		// TODO CREATE PASIEN BEBAS
+		// CREATE PASIEN BEBAS
 		$pasienBebas = new PasienBebas();
 		$pasienBebas->uuid = $uuidPasienBebas;
 		$pasienBebas->kode = 'F';
 		$pasienBebas->number = $request->number;
-		$pasienBebas->number = $request->number;
+		$pasienBebas->nomor = $nomorFormatted;
 		$pasienBebas->jenis = $request->jenis;
 		$pasienBebas->no_invoice = $no_invoice;
+		$pasienBebas->is_bpjs = $request->is_bpjs;
 		$pasienBebas->tanggal = date('Y-m-d');
 		$pasienBebas->no_antrian = $item->kode . '-' . str_pad($request->number, 3, '0', STR_PAD_LEFT);
 		$pasienBebas->save();
 
-		
 
 		// Handling BPJS atau tidak
-		if($request->isbpjs === true){
-			$nomor = 1;
-			$nomor_ = '';
-			$antrianNomors = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
-			->where('kode', '=', 'F')->orderBy('nomor', 'desc')->sharedLock()->first();
+		$response = '';
+		if($request->is_bpjs == '1'){
 
-			if ($antrianNomors) {
-			$potong_kalimat = substr($antrianNomors->nomor, -5);
-			$potong_kalimat = (int) $potong_kalimat;
-			$nomor += $potong_kalimat;
-			}
-
-			$nomor_ = date('Y') . date('m') . date('d') . str_pad($nomor, 5, '0', STR_PAD_LEFT);
-			$item->nomor  = $nomor_;
-			$item->save();
-		
 			// **Panggil tambahAntreanFarmasi dengan cara yang benar**
 			$response = app(AntrolBpjsCtrl::class)->tambahAntreanFarmasi($item);
 		}
@@ -278,13 +288,12 @@ class AntrianCtrl extends Controller
 		Storage::put('public/antrian/number.pdf', $content);
 
 		// **Return response dari BPJS**
-		// return response()->json([
-		//     'status' => 'success',
-		//     'message' => 'Antrean berhasil ditambahkan',
-		//     'bpjs_response' => $response // Kirim response dari BPJS ke frontend
-		// ]);
 		DB::commit();
-		return response()->json(['data' => 'berhasil']);
+		// return response()->json(['data' => 'berhasil']);
+		return response()->json([
+		    'status' => 'success',
+		    'bpjs_response' => $response // Kirim response dari BPJS ke frontend buat testing
+		]);
 	}
 
 

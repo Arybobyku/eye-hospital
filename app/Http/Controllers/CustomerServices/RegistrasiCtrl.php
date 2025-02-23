@@ -206,8 +206,6 @@ class RegistrasiCtrl extends Controller
 				// 	$remove = LayananPasien::where('registrasi_uuid', '=', $registrasi_uuid)->where('default', '=', 'Ya')->delete();
 				// }
 			} else {
-
-
 				$uuid = '';
 				$loop = false;
 				do {
