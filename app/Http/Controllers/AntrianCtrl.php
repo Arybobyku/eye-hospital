@@ -44,7 +44,7 @@ class AntrianCtrl extends Controller
 		date_default_timezone_set("Asia/Jakarta");
 		$number = 1;
 		$numberbebas = 1;
-		$bebas = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->where('kode', 'F')->orderBy('id', 'desc')->first();
+		$bebas = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))->where('kode', 'F')->orderBy('id', 'desc')->first();
 		$antrian = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->where('kode', 'CS')->orderBy('id', 'desc')->first();
 		if ($antrian) {
 			$number += $antrian->number;
@@ -185,59 +185,107 @@ class AntrianCtrl extends Controller
 		return response()->json(['data' => 'berhasil']);
 	}
 
-public function addbebas(Request $request)
-{
-    $uuid = '';
-    $loop = false;
-    do {
-        $uuid = Uuid::uuid4();
-        $check = Antrian::where('uuid', '=', $uuid)->first();
-        if (!$check) {
-            $loop = true;
-        }
-    } while ($loop == false);
+	public function addbebas(Request $request)
+	{
 
-    $item = new AntrianFarmasi();
-    $item->uuid = $uuid;
-    $item->kode = 'F';
-    $item->number = $request->number;
-    $item->jenis = $request->jenis;
-    $item->tanggal = date('Y-m-d');
+		DB::beginTransaction();
+		$uuid = '';
+		$loop = false;
+		do {
+			$uuid = Uuid::uuid4();
+			$check = AntrianFarmasi::where('uuid', '=', $uuid)->first();
+			if (!$check) {
+				$loop = true;
+			}
+		} while ($loop == false);
 
-    $nomor = 1;
-    $nomor_ = '';
-    $antrianNomors = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
-                ->where('kode', '=', 'F')->orderBy('nomor', 'desc')->sharedLock()->first();
-    if ($antrianNomors) {
-        $potong_kalimat = substr($antrianNomors->nomor, -5);
-        $potong_kalimat = (int) $potong_kalimat;
-        $nomor += $potong_kalimat;
-    }
+		$item = new AntrianFarmasi();
+		$item->uuid = $uuid;
+		$item->kode = 'F';
+		$item->number = $request->number;
+		$item->jenis = $request->jenis;
+		$item->tanggal = date('Y-m-d');
+		$item->save();
 
-    $nomor_ = date('Y') . date('m') . date('d') . str_pad($nomor, 5, '0', STR_PAD_LEFT);
-    $item->nomor  = $nomor_;
-    $item->save();
+		do {
+			$uuidPasienBebas = Uuid::uuid4();
+			$check = PasienBebas::where('uuid', '=', $uuid)->first();
+			if (!$check) {
+				$loop = true;
+			}
+		} while ($loop == false);
 
-    // **Panggil tambahAntreanFarmasi dengan cara yang benar**
-    $response = app(AntrolBpjsCtrl::class)->tambahAntreanFarmasi($item);
+		// Generate Invoice
+		$no_invoice = '';
+		$invoice = PasienBebas::whereDate('tanggal', '=', date('Y-m-d'))
+								->where('no_invoice', '!=', '-')
+								->orderBy('no_invoice', 'desc')->first();
+		$nomor_i = 1;
+		if ($invoice) {
+			$potong_kalimat = substr($invoice->no_invoice,-5);
+			$potong_kalimat = (int) $potong_kalimat;
+			$nomor_i += $potong_kalimat;
+		}
+		if ($nomor_i < 10) { $nomor_i = '0000'.$nomor_i; }
+		else if ($nomor_i > 9 && $nomor_i < 100) { $nomor_i = '000'.$nomor_i; }
+		else if ($nomor_i > 99 && $nomor_i < 1000) { $nomor_i = '00'.$nomor_i; }
+		else if ($nomor_i > 999 && $nomor_i < 10000) { $nomor_i = '0'.$nomor_i; }
+		$no_invoice = date('Ymd').$nomor_i;
 
-    // **Proses PDF**
-    $pdf = \App::make('dompdf.wrapper');
-    $jenis = $request->jenis;
-    $number = $request->number;
-    $kode = 'F';
-    $pdf->loadView('cetak-antrian', compact('kode', 'jenis', 'number'))
-        ->setPaper([0, 0, 220, 220], 'potrait');
-    $content = $pdf->download()->getOriginalContent();
-    Storage::put('public/antrian/number.pdf', $content);
+		// TODO CREATE PASIEN BEBAS
+		$pasienBebas = new PasienBebas();
+		$pasienBebas->uuid = $uuidPasienBebas;
+		$pasienBebas->kode = 'F';
+		$pasienBebas->number = $request->number;
+		$pasienBebas->number = $request->number;
+		$pasienBebas->jenis = $request->jenis;
+		$pasienBebas->no_invoice = $no_invoice;
+		$pasienBebas->tanggal = date('Y-m-d');
+		$pasienBebas->no_antrian = $item->kode . '-' . str_pad($request->number, 3, '0', STR_PAD_LEFT);
+		$pasienBebas->save();
 
-    // **Return response dari BPJS**
-    return response()->json([
-        'status' => 'success',
-        'message' => 'Antrean berhasil ditambahkan',
-        'bpjs_response' => $response // Kirim response dari BPJS ke frontend
-    ]);
-}
+		
+
+		// Handling BPJS atau tidak
+		if($request->isbpjs === true){
+			$nomor = 1;
+			$nomor_ = '';
+			$antrianNomors = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
+			->where('kode', '=', 'F')->orderBy('nomor', 'desc')->sharedLock()->first();
+
+			if ($antrianNomors) {
+			$potong_kalimat = substr($antrianNomors->nomor, -5);
+			$potong_kalimat = (int) $potong_kalimat;
+			$nomor += $potong_kalimat;
+			}
+
+			$nomor_ = date('Y') . date('m') . date('d') . str_pad($nomor, 5, '0', STR_PAD_LEFT);
+			$item->nomor  = $nomor_;
+			$item->save();
+		
+			// **Panggil tambahAntreanFarmasi dengan cara yang benar**
+			$response = app(AntrolBpjsCtrl::class)->tambahAntreanFarmasi($item);
+		}
+
+		// **Proses PDF**
+		$pdf = \App::make('dompdf.wrapper');
+		$jenis = $request->jenis;
+		$number = $request->number;
+		$kode = 'F';
+		$pdf->loadView('cetak-antrian', compact('kode', 'jenis', 'number'))
+			->setPaper([0, 0, 220, 220], 'potrait');
+		$content = $pdf->download()->getOriginalContent();
+		Storage::put('public/antrian/number.pdf', $content);
+
+		// **Return response dari BPJS**
+		// return response()->json([
+		//     'status' => 'success',
+		//     'message' => 'Antrean berhasil ditambahkan',
+		//     'bpjs_response' => $response // Kirim response dari BPJS ke frontend
+		// ]);
+		DB::commit();
+		return response()->json(['data' => 'berhasil']);
+	}
 
 
 	public function cetakAntrianAll($noAntrian, $jenis){

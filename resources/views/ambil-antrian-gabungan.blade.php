@@ -350,6 +350,9 @@
                     vm.attach.url = vm.attach.link.addbebas;
                     vm.attach.data = new FormData();
                     vm.attach.data.append('jenis', posisi);
+                    // TODO Check BPJS or NOT
+                    vm.attach.data.append('isbpjs', false);
+
                     vm.attach.data.append('number', vm.numberbebas);
                     vm.position = 'addbebas';
                     vm.loaders();
