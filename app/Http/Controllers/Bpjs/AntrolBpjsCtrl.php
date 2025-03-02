@@ -10,6 +10,8 @@ use App\Models\Pasien;
 use App\Models\PasienBebas;
 use App\Models\Antrian;
 use App\Models\AntrianFarmasi;
+use App\Models\MasterDokterBpjs;
+use App\Models\MasterPoliBpjs;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Services\Bpjs\Bridging\Vclaim\BridgeVclaim;
@@ -56,6 +58,54 @@ class AntrolBpjsCtrl extends Controller
     {
         $endpoint = 'ref/poli';
         return $this->bridging->getRequest($endpoint);
+    }
+    public function syncPoli()
+    {
+        $endpoint = 'ref/poli';
+        $jsonString = $this->bridging->getRequest($endpoint);
+    
+        // Convert to PHP object
+        $result = json_decode($jsonString);
+        if(!empty($result->response)) {
+            foreach ($result->response as $poli) {
+                MasterPoliBpjs::updateOrCreate(
+                    ['kdsubspesialis' => $poli->kdsubspesialis],  // Search by `kdsubspesialis`
+                    [
+                        'nmpoli' => $poli->nmpoli,
+                        'nmsubspesialis' => $poli->nmsubspesialis,
+                        'kdsubspesialis' => $poli->kdsubspesialis,
+                        'kdpoli' => $poli->kdpoli
+                    ]
+                );
+                
+            }
+        }
+
+        return 'ok';
+    }
+
+    public function syncDokter()
+    {
+        $endpoint = 'ref/dokter';
+        $jsonString = $this->bridging->getRequest($endpoint);
+    
+        // Convert to PHP object
+        $result = json_decode($jsonString);
+        if(!empty($result->response)) {
+            foreach ($result->response as $dokter) {
+                MasterDokterBpjs::updateOrCreate(
+                    ['nik' => $dokter->nik],  // Search by `kdsubspesialis`
+                    [
+                        'nmpoli' => $dokter->nik,
+                        'namadokter' => $dokter->namadokter,
+                        'kodedokter' => $dokter->kodedokter,
+                    ]
+                );
+                
+            }
+        }
+
+        return 'ok';
     }
 
     public function referensiPoliFingerPrint()
@@ -107,12 +157,11 @@ class AntrolBpjsCtrl extends Controller
         // echo $jsonData;
 
         return $this->bridging->postRequest($endpoint, $jsonData);
-
     }
     public function tambahAntrean(Registrasi $item, Pasien $pasien)
     {
         $endpoint = "antrean/add";
-        echo($item);
+        echo ($item);
         $data = [
             "kodebooking" => $item->nomor,
             "jenispasien" => "Non JKN",
@@ -154,7 +203,6 @@ class AntrolBpjsCtrl extends Controller
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
         return $this->bridging->postRequest($endpoint, $jsonData);
-
     }
     public function updateWaktuAntrean(Request $request)
     {
@@ -168,7 +216,6 @@ class AntrolBpjsCtrl extends Controller
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
         return $this->bridging->postRequest($endpoint, $jsonData);
-
     }
 
     public function updateWaktuAntreanFarmasi(PasienBebas $item)
@@ -184,22 +231,20 @@ class AntrolBpjsCtrl extends Controller
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
         return $this->bridging->postRequest($endpoint, $jsonData);
-
     }
     public function batalAntrean()
-    {   
+    {
         $endpoint = "antrean/batal";
         $data = [
             "kodebooking" => "16032021A001",
-            "keterangan" => "Testing" 
+            "keterangan" => "Testing"
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
         return $this->bridging->postRequest($endpoint, $jsonData);
-    
     }
     public function listWaktuTaskId()
-    {   
+    {
         $endpoint = "antrean/getlisttask";
         $data = [
             "kodebooking" => "Y03-20#1617068533",
@@ -207,6 +252,5 @@ class AntrolBpjsCtrl extends Controller
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
         return $this->bridging->postRequest($endpoint, $jsonData);
-    
     }
 }
