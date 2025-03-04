@@ -171,6 +171,10 @@ export const formrawatjalan = () => {
 			title: 'No Handphone', for_id: 'form_'+'pjnohandphone', type: 'text', required: '', 
 			name: 'pjnohandphone', value: '', disabled: false, show: true, kinds: ''
 		},
+		no_bpjs_kes: { 
+			title: 'No BPJS Kesehatan', for_id: 'form_'+'no_bpjs_kes', type: 'text', required: '', 
+			name: 'no_bpjs_kes', value: '', disabled: false, show: false, kinds: ''
+		},
 		select: {
 			caramasuk: { 
 				key : 'caramasuk', for_id: 'form_'+'caramasuk', name: 'caramasuk', uuid:'', value: '', label: 'Silahkan Pilih', 
@@ -210,6 +214,7 @@ export const formrawatjalan = () => {
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'asuransi', isrequired: false, html: 'Nama Asuransi', issearch: true, disabled: true,
 			},
+
 		}
 	}
 }

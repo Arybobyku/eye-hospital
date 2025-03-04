@@ -40,7 +40,7 @@ export const parsepasien = (form) => {
 	return data;
 }
 
-export const parserawatjalan = (form, detail) => {
+export const parserawatjalan = (form, detail, selectedPoli, selectedDokter, jadwalDokterBpjs, namaPoli, namaDokter) => {
 	let data = new FormData();
 	data.append('uuid', form.uuid);
 	data.append('photos', form.photos);
@@ -66,6 +66,12 @@ export const parserawatjalan = (form, detail) => {
 	data.append('ruang_poliklinik', form.select.klinik.value);
 	data.append('berkebutuhan_khusus', form.select.berkebutuhankhusus.value);
 	data.append('keterangan_berkebutuhan', form.keteranganberkebutuhan.value);
+	data.append('no_bpjs_kes', form.no_bpjs_kes.value);
+	data.append('kode_poli_bpjs', selectedPoli);
+	data.append('nama_poli_bpjs', namaPoli);
+	data.append('kode_dokter_bpjs', selectedDokter);
+	data.append('nama_dokter_bpjs', namaDokter);
+	data.append('jadwal_dokter_bpjs', jadwalDokterBpjs);
 
 	data.append('nama', form.pjnama.value);
 	data.append('hubungan', form.pjhubungan.value);

@@ -10,6 +10,7 @@ use App\Models\Pasien;
 use App\Models\PasienBebas;
 use App\Models\Antrian;
 use App\Models\AntrianFarmasi;
+use App\Models\Pengguna;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Services\Bpjs\Bridging\Vclaim\BridgeVclaim;
@@ -70,10 +71,50 @@ class AntrolBpjsCtrl extends Controller
         return $this->bridging->getRequest($endpoint);
     }
 
+    public function referensiDokterByKode($kodeDokterBpjs)
+    {
+        $endpoint = 'ref/dokter';
+        $response = $this->bridging->getRequest($endpoint);
+
+        // Pastikan response dari API BPJS valid
+        if (!isset($response['list']) || !is_array($response['list'])) {
+            return response()->json(['message' => 'Data dokter tidak ditemukan'], 404);
+        }
+
+        // Cari dokter berdasarkan kode_dokter_bpjs_kes
+        $dokter = collect($response['list'])->firstWhere('kodedokter', $kodeDokterBpjs);
+
+        if (!$dokter) {
+            return response()->json(['message' => 'Dokter dengan kode tersebut tidak ditemukan'], 404);
+        }
+
+        return response()->json($dokter);
+    }
+
+
     public function referensiJadwalDokter($params1, $params2)
     {
         $endpoint = "jadwaldokter/kodepoli/{$params1}/tanggal/{$params2}";
         return $this->bridging->getRequest($endpoint);
+    }
+
+    public function referensiJadwalDokterByKodeDokter($params1, $params2, $kodeDokterBpjs)
+    {
+        $endpoint = "jadwaldokter/kodepoli/{$params1}/tanggal/{$params2}";
+        return $this->bridging->getRequest($endpoint);
+          // Pastikan response dari API BPJS valid
+        if (!isset($response['list']) || !is_array($response['list'])) {
+            return response()->json(['message' => 'Data dokter tidak ditemukan'], 404);
+        }
+
+        // Cari dokter berdasarkan kode_dokter_bpjs_kes
+        $dokter = collect($response['list'])->firstWhere('kodedokter', $kodeDokterBpjs);
+
+        if (!$dokter) {
+            return response()->json(['message' => 'Dokter dengan kode tersebut tidak ditemukan'], 404);
+        }
+
+        return response()->json($dokter);
     }
 
     public function referensiPasienFingerPrint($nik, $noidentitas)
@@ -113,24 +154,35 @@ class AntrolBpjsCtrl extends Controller
     {
         $endpoint = "antrean/add";
         echo($item);
+		$dokter = Pengguna::where('uuid', '=', $item->pengguna_uuid)->first();
+        if (!$dokter) {
+        return response()->json(['message' => 'Dokter tidak ditemukan'], 404);
+         }
+
+        // Ambil dokter dari API BPJS berdasarkan kode_dokter_bpjs_kes
+        // $dokterBpjs = $this->referensiDokterByKode($dokter->kode_dokter_bpjs_kes);
+        $nomorOnly = preg_replace('/\D/', '', $item->no_pendaftaran);
+        // if (!isset($dokterBpjs['kode'])) {
+        //     return response()->json(['message' => 'Dokter tidak ditemukan di BPJS'], 404);
+        // }
         $data = [
             "kodebooking" => $item->nomor,
             "jenispasien" => "Non JKN",
             "nomorkartu" => $item->no_bpjs_kes,
             "nik" => $pasien->no_identitas,
             "nohp" => $item->no_handphone,
-            "kodepoli" => "ANA",
-            "namapoli" => "MATA",
+            "kodepoli" => $item->kode_poli_bpjs,
+            "namapoli" => $item->nama_poli_bpjs,
             "pasienbaru" => "0",
-            "norm" => "123345",
-            "tanggalperiksa" => "2021-01-28",
-            "kodedokter" => "12345",
-            "namadokter" => "Dr. Hendra",
-            "jampraktek" => "08:00-16:00",
+            "norm" => $pasien->rekam_medis,
+            "tanggalperiksa" => $item->tanggal,
+            "kodedokter" => $item->kode_dokter_bpjs,
+            "namadokter" => $item->nama_dokter_bpjs,
+            "jampraktek" => $item->jadwal_dokter_bpjs,
             "jeniskunjungan" => "1",
             "nomorreferensi" => "0001R0040116A000001",
-            "nomorantrean" => "A-12",
-            "angkaantrean" => "12",
+            "nomorantrean" => $item->no_pendaftaran,
+            "angkaantrean" => $nomorOnly,
             "estimasidilayani" => 1615869169000,
             "sisakuotajkn" => 5,
             "kuotajkn" => 30,

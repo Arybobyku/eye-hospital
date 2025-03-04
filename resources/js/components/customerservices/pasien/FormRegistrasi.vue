@@ -1,6 +1,7 @@
 <template>
 	<div :style="terminate_detail.display" class="modal">
-		<div ref="rootdetail" class="modal-content modal-besar" :class="terminate_detail.show ? 'modal-opened' : 'modal-closed'">
+		<div ref="rootdetail" class="modal-content modal-besar"
+			:class="terminate_detail.show ? 'modal-opened' : 'modal-closed'">
 			<div class="modal-header">
 				<span class="close" v-on:click="hide()">&times;</span>
 				<h2>Halaman Registrasi</h2>
@@ -22,7 +23,8 @@
 								</tr>
 								<tr>
 									<td>Tempat, Tanggal Lahir</td>
-									<td><strong>{{ detail.tempat_lahir }}, {{ datename(detail.tanggal_lahir) }}</strong></td>
+									<td><strong>{{ detail.tempat_lahir }}, {{ datename(detail.tanggal_lahir) }}</strong>
+									</td>
 								</tr>
 								<tr>
 									<td>Jenis Kelamin</td>
@@ -73,31 +75,35 @@
 								<tr>
 									<td>Provinsi</td>
 									<td><strong>{{ detail.nama_provinsi }}</strong></td>
-								</tr><tr>
+								</tr>
+								<tr>
 									<td>Kabupaten/Kota</td>
 									<td><strong>{{ detail.nama_kab_kota }}</strong></td>
-								</tr><tr>
+								</tr>
+								<tr>
 									<td>Kecamatan</td>
 									<td><strong>{{ detail.nama_kecamatan }}</strong></td>
-								</tr><tr>
+								</tr>
+								<tr>
 									<td>Kelurahan</td>
 									<td><strong>{{ detail.nama_kelurahan }}</strong></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-					
-					
+
+
 					<div class="col-12">
-						
+
 						<div class="tab-lines">
 							<div class="tab">
-								<button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">
+								<button v-for="(item, index) in tab.button" :class="item.class"
+									v-on:click="changesTab(item.value, index, item.class)">
 									{{ item.label }}
 								</button>
 							</div>
 						</div>
-					
+
 						<div class="tab-content">
 
 							<!-- Bagian tab content untuk data histori -->
@@ -106,9 +112,11 @@
 							</div>
 
 							<!-- Bagian tab content untuk data rawatjalan -->
-							<div class="content-tab-in" v-if="tab.content.rawatjalan" >
-								<FormRawatJalan ref="FormRawatJalan" @dialog="dialog" @cancel="cancel" @edit="edit" @parsingForm="parsingForm" :detail="detail" :iskunjungan="iskunjungan"></FormRawatJalan>
-								
+							<div class="content-tab-in" v-if="tab.content.rawatjalan">
+								<FormRawatJalan ref="FormRawatJalan" @dialog="dialog" @cancel="cancel" @edit="edit"
+									:poliBpjs="poliBpjs" @parsingForm="parsingForm" :detail="detail" :iskunjungan="iskunjungan">
+								</FormRawatJalan>
+
 							</div>
 
 						</div>
@@ -135,9 +143,14 @@ export default {
 		HistoriRegistrasi: defineAsyncComponent(() => import('./HistoriRegistrasi.vue')), 
 		FormRawatJalan: defineAsyncComponent(() => import('./FormRawatJalan.vue')), 
 	},
-	mounted:function() { vm = this; body = document.body; },
+	mounted:function() { vm = this; body = document.body;
+		// this.fetchPoliBpjs();
+		// this.fetchPoliBpjs(); // Pastikan data diambil saat komponen dimuat
+		// console.log("Data poliBpjs di main.vue sebelum dikirim:", this.poliBpjs);
+	 },
 	created:function() { this.item = this.modal },
 	data:function() { return { 
+
 		attach: {
 			link : {
 				rawatjalan: '/customerservices/pasien/registrasi/rawatjalan',
@@ -167,8 +180,12 @@ export default {
 				// pembelianobatkhusus: false 
 			}
 		},
+		
 		position: '',
+		selectedPoli: "", // Untuk menyimpan nilai yang dipilih
+		poliBpjs: [] // Data poli_bpjs dari API
 	}},
+
 	methods: {
 
 		datename, nullAndZero,
@@ -322,6 +339,9 @@ export default {
 			let data = response.data.data;
 			vm.histori = response.data.registrasi;
 			vm.iskunjungan = response.data.kunjungan;
+			vm.poliBpjs = response.data.poli_bpjs.response.filter(poli => poli.kdpoli === "MAT");
+
+			console.log("vm.poliBpjs", vm.poliBpjs);
 
 			if (vm.iskunjungan) {
 				console.log(vm.iskunjungan.status, 'sfsddsfdddsfdf')

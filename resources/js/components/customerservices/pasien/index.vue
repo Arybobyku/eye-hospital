@@ -24,7 +24,7 @@
 <FormPilihRoSuratRo ref="FormPilihRoSuratRo" @dialog="dialog" />
 <FormPasien ref="FormPasien" @dialog="dialog" @parsingForm="parsingForm"></FormPasien>
 <FormDetail ref="FormDetail" @dialog="dialog" @parsingForm="parsingForm"></FormDetail>
-<FormRegistrasi ref="FormRegistrasi" @mainreload="mainreload"></FormRegistrasi>
+<FormRegistrasi  ref="FormRegistrasi" @mainreload="mainreload"></FormRegistrasi>
 <FormRegistrasiInap ref="FormRegistrasiInap" @mainreload="mainreload"></FormRegistrasiInap>
 <FormRegistrasiOdc ref="FormRegistrasiOdc" @mainreload="mainreload"></FormRegistrasiOdc>
 <FormCetakan ref="FormCetakan" @dialog="dialog" @parsingForm="parsingForm"></FormCetakan>
@@ -581,9 +581,9 @@ export default {
 		},
 
 		berhasil: function (response) {
-			if (vm.$debugs) { console.log(response.data); } let active = 1;
+			if (vm.$debugs) { console.log("masuk form",response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
-	
+			console.log(vm.position);
 			if (response.data.data == 'cannot') {
 				setTimeout(() => { vm.posisieksternal='antrian'; vm.tablereload(); }, 500, this);
 				vm.notification('Nomor yang anda panggil sudah berada di customer service.', 3000, 'warning'); 
@@ -676,7 +676,8 @@ export default {
 				}
 				else if (vm.position == 'registrasidata') {
 					vm.posisieksternal='pasien';
-					vm.$refs.FormRegistrasi.setdataform(response); 
+					vm.$refs.FormRegistrasi.setdataform(response);
+					vm.$refs.FormRegistrasi.fetchPoliBpjs(response); 
 					vm.position = "-"; 
 					active = 0; 
 				}
