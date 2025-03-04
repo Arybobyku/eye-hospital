@@ -193,6 +193,7 @@ export default {
 		btnhtmlbeli:function(_item, _index) {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detailbeli', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'bell', color: 'btn-info', posisi: 'panggil_bebas', tooltip: 'Panggil Pasien', item: _item, index: _index, show: true },
 				{ icon: 'bell', color: 'btn-info', posisi: 'batal', tooltip: 'Batalkan Pembelian', item: _item, index: _index, show: true },
 				{ icon: 'check-circle', color: 'btn-warning', posisi: 'selesaibeli', tooltip: 'Selesai', item: _item, index: _index, show: true }
 			]
@@ -362,6 +363,21 @@ export default {
 				console.log(data)
 				vm.attach.data = new FormData();
 				let number = data.no_antrian_farmasi.split("-");
+				number = parseInt(number[1]);
+				vm.attach.data.append('number', number);
+				vm.attach.data.append('ruang_poliklinik', data.ruang_poliklinik);
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.data.append('pengguna_uuid', data.pengguna_uuid);
+				//if (data.ruang_poliklinik != 0) {
+					vm.dialog('Yakin ingin memanggil nomor antrian pasien ini.', 'Ya, panggil', 'call');
+				//}
+			}
+			else if (posisi == 'panggil_bebas') {
+				vm.position = 'call';
+				vm.attach.url = vm.attach.link.call;
+				console.log(data)
+				vm.attach.data = new FormData();
+				let number = data.no_antrian.split("-");
 				number = parseInt(number[1]);
 				vm.attach.data.append('number', number);
 				vm.attach.data.append('ruang_poliklinik', data.ruang_poliklinik);
@@ -567,7 +583,7 @@ export default {
 					vm.$refs.Datatable.backpage(); 
 				} 
 			}
-			else if (vm.position == 'call') { vm.$refs.Datatable.skeleton(); }
+			else if (vm.position == 'call') { vm.$refs.Datatable?.skeleton() ??  vm.$refs.DatatableBeli?.skeleton(); }
 			else if (vm.position == 'adddata') { vm.loadingModal('formpembeli'); }
 			else if (vm.position == 'approvement') { vm.$refs.Datatable.skeleton(); }
 			else if (vm.position == 'updatedata') { vm.loadingModal('formdetail'); }
@@ -750,7 +766,7 @@ export default {
 			else if (posisi == 'formpembeli') { vm.loadingModal('formpembeli'); }
 			else if (posisi == 'formobat') { vm.loadingModal('formobat'); }
 			else if (posisi == 'terimadata') { vm.$refs.Datatable.skeleton(); }
-			else if (posisi == 'call') { vm.$refs.Datatable.skeleton(); }
+			else if (posisi == 'call') { vm.$refs.Datatable?.skeleton() ??  vm.$refs.DatatableBeli?.skeleton();; }
 			else if (posisi == 'approvement') { vm.$refs.Datatable?.skeleton() ?? vm.$refs.DatatableBayar?.skeleton(); }
 			else if (posisi == 'batalbeli') { vm.$refs.DatatableBeli.skeleton(); }
 			else if (posisi == 'selesaibeli') { vm.$refs.DatatableBeli.skeleton(); }

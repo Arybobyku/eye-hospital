@@ -888,7 +888,7 @@ class PemeriksaanCtrl extends Controller
 			->first();
 
 		if ($get) {
-			$str = 'Refraksi Optisi=' . $request->number;
+			$str = 'Refraksi Optisi=' . $request->number.'='.$cek->nama_pasien;
 			// after 14 Detik
 			$on = Carbon::now()->subSeconds(14);
 			dispatch(new SendPoliJob($str))->delay($on);
@@ -915,7 +915,7 @@ class PemeriksaanCtrl extends Controller
 		$arr = array('pemanggil' => 'Refraksi Optisi');
 		$panggil = AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))->where('number', '=', $request->number)->update($arr);
 
-		$str = 'Refraksi Optisi=' . $request->number;
+		$str = 'Refraksi Optisi=' . $request->number.'='.$cek->nama_pasien;
 		$on = Carbon::now()->subSeconds(14);
 		dispatch(new SendPoliJob($str))->delay($on);
 
