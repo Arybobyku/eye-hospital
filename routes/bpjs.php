@@ -32,6 +32,8 @@ Route::group([], function () {
     Route::prefix('antrol-bpjs')->group(function () {
         Route::get('ref/dokter', [AntrolBpjsCtrl::class, 'referensiDokter']);
         Route::get('ref/poli', [AntrolBpjsCtrl::class, 'referensiPoli']);
+        Route::get('sync/poli', [AntrolBpjsCtrl::class, 'syncPoli']);
+        Route::get('sync/dokter', [AntrolBpjsCtrl::class, 'syncDokter']);
         Route::get('ref/poli/fp', [AntrolBpjsCtrl::class, 'referensiPoliFingerPrint']);
         Route::get('ref/pasien/fp/identitas/{nik}/noidentitas/{noidentitas}', [AntrolBpjsCtrl::class, 'referensiPasienFingerPrint']);
         
