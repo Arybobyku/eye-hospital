@@ -218,13 +218,12 @@ class RegistrasiCtrl extends Controller
 					}
 				} while ($loop == false);
 
-
-				// Create Antrian RO
-				$uuid = '';
+				// Start Antrian RO
+				$uuidRO = '';
 				$loop = false;
 				do {
-					$uuid = Uuid::uuid4();
-					$check = AntrianRO::where('uuid', '=', $uuid)->first();
+					$uuidRO = Uuid::uuid4();
+					$check = AntrianRO::where('uuid', '=', $uuidRO)->first();
 					if (!$check) {
 						$loop = true;
 					}
@@ -237,14 +236,22 @@ class RegistrasiCtrl extends Controller
 				$kodeRo = 'R-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
 
 				$antrianRO = new AntrianRo();
-				$antrianRO->uuid = Uuid::uuid4();
+				$antrianRO->uuid = $uuidRO;
 				$antrianRO->kode = 'R';
+				$antrianRO->is_jkn = 0;
+				// BPJS
+				$antrianRO->kode_poli=  $request->kode_poli_bpjs;
+				$antrianRO->poli= $request->nama_poli_bpjs;
+				$antrianRO->uuid_pasien=  $request->pasien_uuid;
+				$antrianRO->kode_dokter=  $request->kode_dokter_bpjs;
+				$antrianRO->uuid_registrasi =  $uuid;
+				
 				$antrianRO->number = $latestNumber;
 				$antrianRO->jenis = $request->jenis;
 				$antrianRO->tanggal = date('Y-m-d');
 				$antrianRO->save();
 
-				// End Create Antrian RO
+				// End Antrian RO
 
 				$photos = $request->photos;
 				$photos = str_replace('data:image/jpeg;base64,', '', $photos);
