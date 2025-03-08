@@ -23,6 +23,7 @@ use App\Models\DisplayAntrian;
 use App\Models\LogPengguna;
 use App\Models\RunningText;
 use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
+use App\Models\AntrolLogs;
 
 class AntrianCtrl extends Controller
 {
@@ -207,25 +208,25 @@ class AntrianCtrl extends Controller
 		$item->jenis = $request->jenis;
 		$item->tanggal = date('Y-m-d');
 
-    $nomor = 1;
-    $tanggal = date('Ymd');
-    
-    // Ambil antrean terakhir untuk hari ini berdasarkan kode
-    $lastEntry = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
-        ->where('kode', '=', 'F')
-        ->orderBy('id', 'desc')
-        ->first();
-    
-    if ($lastEntry && strlen($lastEntry->nomor) >= 13) {
-        // Ambil 5 digit terakhir sebagai nomor antrean
-        $lastNumber = (int) substr($lastEntry->nomor, -5);
-        $nomor = $lastNumber + 1;
-    }
-    
-    // Format nomor menjadi 5 digit (00001, 00002, ...)
-    $nomor = str_pad($nomor, 5, '0', STR_PAD_LEFT);
-    $nomorFormatted = $tanggal.$nomor;
-    
+		$nomor = 1;
+		$tanggal = date('Ymd');
+
+		// Ambil antrean terakhir untuk hari ini berdasarkan kode
+		$lastEntry = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
+			->where('kode', '=', 'F')
+			->orderBy('id', 'desc')
+			->first();
+
+		if ($lastEntry && strlen($lastEntry->nomor) >= 13) {
+			// Ambil 5 digit terakhir sebagai nomor antrean
+			$lastNumber = (int) substr($lastEntry->nomor, -5);
+			$nomor = $lastNumber + 1;
+		}
+
+		// Format nomor menjadi 5 digit (00001, 00002, ...)
+		$nomor = str_pad($nomor, 5, '0', STR_PAD_LEFT);
+		$nomorFormatted = $tanggal . $nomor;
+
 		$item->nomor = $nomorFormatted;
 
 		$item->save();
@@ -241,19 +242,24 @@ class AntrianCtrl extends Controller
 		// Generate Invoice
 		$no_invoice = '';
 		$invoice = PasienBebas::whereDate('tanggal', '=', date('Y-m-d'))
-								->where('no_invoice', '!=', '-')
-								->orderBy('no_invoice', 'desc')->first();
+			->where('no_invoice', '!=', '-')
+			->orderBy('no_invoice', 'desc')->first();
 		$nomor_i = 1;
 		if ($invoice) {
-			$potong_kalimat = substr($invoice->no_invoice,-5);
+			$potong_kalimat = substr($invoice->no_invoice, -5);
 			$potong_kalimat = (int) $potong_kalimat;
 			$nomor_i += $potong_kalimat;
 		}
-		if ($nomor_i < 10) { $nomor_i = '0000'.$nomor_i; }
-		else if ($nomor_i > 9 && $nomor_i < 100) { $nomor_i = '000'.$nomor_i; }
-		else if ($nomor_i > 99 && $nomor_i < 1000) { $nomor_i = '00'.$nomor_i; }
-		else if ($nomor_i > 999 && $nomor_i < 10000) { $nomor_i = '0'.$nomor_i; }
-		$no_invoice = date('Ymd').$nomor_i;
+		if ($nomor_i < 10) {
+			$nomor_i = '0000' . $nomor_i;
+		} else if ($nomor_i > 9 && $nomor_i < 100) {
+			$nomor_i = '000' . $nomor_i;
+		} else if ($nomor_i > 99 && $nomor_i < 1000) {
+			$nomor_i = '00' . $nomor_i;
+		} else if ($nomor_i > 999 && $nomor_i < 10000) {
+			$nomor_i = '0' . $nomor_i;
+		}
+		$no_invoice = date('Ymd') . $nomor_i;
 
 		// CREATE PASIEN BEBAS
 		$pasienBebas = new PasienBebas();
@@ -271,11 +277,12 @@ class AntrianCtrl extends Controller
 
 		// Handling BPJS atau tidak
 		$response = '';
-		if($request->is_bpjs == '1'){
+		// if($request->is_bpjs == '1'){
 
-			// **Panggil tambahAntreanFarmasi dengan cara yang benar**
-			$response = app(AntrolBpjsCtrl::class)->tambahAntreanFarmasi($item);
-		}
+		// }
+
+		// **Panggil tambahAntreanFarmasi dengan cara yang benar**
+		$response = app(AntrolBpjsCtrl::class)->tambahAntreanFarmasi($item);
 
 		// **Proses PDF**
 		$pdf = \App::make('dompdf.wrapper');
@@ -291,15 +298,16 @@ class AntrianCtrl extends Controller
 		DB::commit();
 		// return response()->json(['data' => 'berhasil']);
 		return response()->json([
-		    'status' => 'success',
-		    'bpjs_response' => $response // Kirim response dari BPJS ke frontend buat testing
+			'status' => 'success',
+			'bpjs_response' => $response // Kirim response dari BPJS ke frontend buat testing
 		]);
 	}
 
 
-	public function cetakAntrianAll($noAntrian, $jenis){
+	public function cetakAntrianAll($noAntrian, $jenis)
+	{
 		$pdf = \App::make('dompdf.wrapper');
-		$pdf->loadView('cetak-antrian-all', compact('noAntrian','jenis'))->setPaper(array(0, 0, 220, 220), 'potrait');
+		$pdf->loadView('cetak-antrian-all', compact('noAntrian', 'jenis'))->setPaper(array(0, 0, 220, 220), 'potrait');
 		return $pdf->stream();
 	}
 

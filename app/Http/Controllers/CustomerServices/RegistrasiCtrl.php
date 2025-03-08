@@ -54,7 +54,7 @@ class RegistrasiCtrl extends Controller
 		$refPoli = app(AntrolBpjsCtrl::class)->referensiPoli();
 		$refPoliArray = json_decode($refPoli, true);
 
-		return response()->json(['data' => $data, 'registrasi' => $registrasi, 'kunjungan' => $kunjungan, 'pj' => $pj, 'poli_bpjs'=> $refPoliArray]);
+		return response()->json(['data' => $data, 'registrasi' => $registrasi, 'kunjungan' => $kunjungan, 'pj' => $pj, 'poli_bpjs' => $refPoliArray]);
 	}
 
 	public function rawatjalan(Request $request)
@@ -133,7 +133,6 @@ class RegistrasiCtrl extends Controller
 							'is_pay' => $is_pay,
 							'is_asuransi' => $is_asuransi,
 						);
-						
 					} else {
 						$arr = array(
 							'pengguna_uuid' => $request->pengguna_uuid,
@@ -240,12 +239,12 @@ class RegistrasiCtrl extends Controller
 				$antrianRO->kode = 'R';
 				$antrianRO->is_jkn = 0;
 				// BPJS
-				$antrianRO->kode_poli=  $request->kode_poli_bpjs;
-				$antrianRO->poli= $request->nama_poli_bpjs;
-				$antrianRO->uuid_pasien=  $request->pasien_uuid;
-				$antrianRO->kode_dokter=  $request->kode_dokter_bpjs;
+				$antrianRO->kode_poli =  $request->kode_poli_bpjs;
+				$antrianRO->poli = $request->nama_poli_bpjs;
+				$antrianRO->uuid_pasien =  $request->pasien_uuid;
+				$antrianRO->kode_dokter =  $request->kode_dokter_bpjs;
 				$antrianRO->uuid_registrasi =  $uuid;
-				
+
 				$antrianRO->number = $latestNumber;
 				$antrianRO->jenis = $request->jenis;
 				$antrianRO->tanggal = date('Y-m-d');
@@ -326,23 +325,32 @@ class RegistrasiCtrl extends Controller
 				$item->jenis_kelamin = $request->jenis_kelamin ? $request->jenis_kelamin : '-';
 				$item->no_handphone = $request->no_handphone ? $request->no_handphone : '-';
 				$item->agama = $request->agama ? $request->agama : '-';
-				
+
 				$item->tanggal = date('Y-m-d');
 				$item->waktu = date('H:i');
 
-				if ($request->carabayar_nama == 'BPJS Kesehatan') { // GET DARI API BPJS
-					$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->dokter_bpjs)->first();
-					$item->pengguna_uuid = $dokterLocal->uuid;
-					$item->nama_dokter = $dokterLocal->nama;
-					$item->kode_dokter_bpjs = $request->kode_dokter_bpjs;
-					$item->nama_dokter_bpjs = $request->nama_dokter_bpjs;
-					$item->jadwal_dokter_bpjs = $request->jadwal_dokter_bpjs;
-					$item->kode_poli_bpjs = $request->kode_poli_bpjs;
-					$item->nama_poli_bpjs = $request->nama_poli_bpjs;
-				} else {
-					$item->pengguna_uuid = $request->pengguna_uuid ? $request->pengguna_uuid : '-';
-					$item->nama_dokter = $request->nama_dokter ? $request->nama_dokter : '-';
-				}
+				// if ($request->carabayar_nama == 'BPJS Kesehatan') { // GET DARI API BPJS
+				// 	$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->dokter_bpjs)->first();
+				// 	$item->pengguna_uuid = $dokterLocal->uuid;
+				// 	$item->nama_dokter = $dokterLocal->nama;
+				// 	$item->kode_dokter_bpjs = $request->kode_dokter_bpjs;
+				// 	$item->nama_dokter_bpjs = $request->nama_dokter_bpjs;
+				// 	$item->jadwal_dokter_bpjs = $request->jadwal_dokter_bpjs;
+				// 	$item->kode_poli_bpjs = $request->kode_poli_bpjs;
+				// 	$item->nama_poli_bpjs = $request->nama_poli_bpjs;
+				// } else {
+				// 	$item->pengguna_uuid = $request->pengguna_uuid ? $request->pengguna_uuid : '-';
+				// 	$item->nama_dokter = $request->nama_dokter ? $request->nama_dokter : '-';
+				// }
+
+				$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->dokter_bpjs)->first();
+				$item->pengguna_uuid = $dokterLocal->uuid;
+				$item->nama_dokter = $dokterLocal->nama;
+				$item->kode_dokter_bpjs = $request->kode_dokter_bpjs;
+				$item->nama_dokter_bpjs = $request->nama_dokter_bpjs;
+				$item->jadwal_dokter_bpjs = $request->jadwal_dokter_bpjs;
+				$item->kode_poli_bpjs = $request->kode_poli_bpjs;
+				$item->nama_poli_bpjs = $request->nama_poli_bpjs;
 
 				$item->no_pendaftaran = $request->no_pendaftaran ? $request->no_pendaftaran : '-';
 				$item->cara_masuk = $request->cara_masuk ? $request->cara_masuk : '-';
@@ -382,19 +390,15 @@ class RegistrasiCtrl extends Controller
 				$item->is_asuransi = $is_asuransi;
 				$item->last_position = 'Pendaftaran';
 				$item->save();
-				echo("poli_bpjs". $request->poli_bpjs);
+				echo ("poli_bpjs" . $request->poli_bpjs);
 				$item->is_asuransi = $is_asuransi;
 
 				$arr = array('status' => 'Kunjungan');
 				$update = Pasien::where('uuid', '=', $request->uuid)->update($arr);
-				if ($item->carabayar_nama == 'BPJS Kesehatan') {
-					$pasien = new Pasien();
-					$pasien = Pasien::where('uuid', $request->pasien_uuid)->first();
-				// echo("pepek". $request->pasien_uuid);
+				// if ($item->carabayar_nama == 'BPJS Kesehatan') {
 
-					$response = app(AntrolBpjsCtrl::class)->tambahAntrean($item, $pasien);
-					echo("response". $response);
-				}
+				// }
+
 
 				$registrasi_uuid = $uuid;
 				$registrasi_kode = 'RJ';
@@ -423,6 +427,10 @@ class RegistrasiCtrl extends Controller
 				$data->no_handphone = $request->no_handphone;
 				$data->save();
 
+
+				$pasien = Pasien::where('uuid', $request->pasien_uuid)->first();
+				$response = app(AntrolBpjsCtrl::class)->tambahAntrean($item, $pasien);
+
 				$rekammedis = $request->rekam_medis;
 				$result = substr($rekammedis, 0, 1);
 				// if ($request->carabayar_nama == 'Umum') {
@@ -432,6 +440,7 @@ class RegistrasiCtrl extends Controller
 				// 	$remove = LayananPasien::where('registrasi_uuid', '=', $registrasi_uuid)->where('default', '=', 'Ya')->delete();
 				// }
 
+				
 				if ($result == '0') {
 					$this->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
 				} else {
@@ -442,6 +451,8 @@ class RegistrasiCtrl extends Controller
 						$this->savepasienbaru($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
 					}
 				}
+
+
 
 				$arr = array('status' => 'Kunjungan');
 				$pasien = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
@@ -455,10 +466,10 @@ class RegistrasiCtrl extends Controller
 			DB::commit();
 
 			// return response()->json(['data' => 'berhasil']);
-					return response()->json([
-		    'data' => 'success',
-		    'bpjs_response' => $response // Kirim response dari BPJS ke frontend buat testing
-		]);
+			return response()->json([
+				'data' => 'success',
+				'bpjs'=> $response
+			]);
 		} catch (Exception $e) {
 			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);

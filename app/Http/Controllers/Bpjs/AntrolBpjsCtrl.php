@@ -10,6 +10,7 @@ use App\Models\Pasien;
 use App\Models\PasienBebas;
 use App\Models\Antrian;
 use App\Models\AntrianFarmasi;
+use App\Models\AntrolLogs;
 use App\Models\Pengguna;
 use App\Models\MasterDokterBpjs;
 use App\Models\MasterPoliBpjs;
@@ -64,10 +65,10 @@ class AntrolBpjsCtrl extends Controller
     {
         $endpoint = 'ref/poli';
         $jsonString = $this->bridging->getRequest($endpoint);
-    
+
         // Convert to PHP object
         $result = json_decode($jsonString);
-        if(!empty($result->response)) {
+        if (!empty($result->response)) {
             foreach ($result->response as $poli) {
                 MasterPoliBpjs::updateOrCreate(
                     ['kdsubspesialis' => $poli->kdsubspesialis],  // Search by `kdsubspesialis`
@@ -78,7 +79,6 @@ class AntrolBpjsCtrl extends Controller
                         'kdpoli' => $poli->kdpoli
                     ]
                 );
-                
             }
         }
 
@@ -89,10 +89,10 @@ class AntrolBpjsCtrl extends Controller
     {
         $endpoint = 'ref/dokter';
         $jsonString = $this->bridging->getRequest($endpoint);
-    
+
         // Convert to PHP object
         $result = json_decode($jsonString);
-        if(!empty($result->response)) {
+        if (!empty($result->response)) {
             foreach ($result->response as $dokter) {
                 MasterDokterBpjs::updateOrCreate(
                     ['nik' => $dokter->nik],  // Search by `kdsubspesialis`
@@ -102,7 +102,6 @@ class AntrolBpjsCtrl extends Controller
                         'kodedokter' => $dokter->kodedokter,
                     ]
                 );
-                
             }
         }
 
@@ -152,7 +151,7 @@ class AntrolBpjsCtrl extends Controller
     {
         $endpoint = "jadwaldokter/kodepoli/{$params1}/tanggal/{$params2}";
         return $this->bridging->getRequest($endpoint);
-          // Pastikan response dari API BPJS valid
+        // Pastikan response dari API BPJS valid
         if (!isset($response['list']) || !is_array($response['list'])) {
             return response()->json(['message' => 'Data dokter tidak ditemukan'], 404);
         }
@@ -202,11 +201,10 @@ class AntrolBpjsCtrl extends Controller
     public function tambahAntrean(Registrasi $item, Pasien $pasien)
     {
         $endpoint = "antrean/add";
-        echo($item);
-		$dokter = Pengguna::where('uuid', '=', $item->pengguna_uuid)->first();
+        $dokter = Pengguna::where('uuid', '=', $item->pengguna_uuid)->first();
         if (!$dokter) {
-        return response()->json(['message' => 'Dokter tidak ditemukan'], 404);
-         }
+            return response()->json(['message' => 'Dokter tidak ditemukan'], 404);
+        }
 
         // Ambil dokter dari API BPJS berdasarkan kode_dokter_bpjs_kes
         // $dokterBpjs = $this->referensiDokterByKode($dokter->kode_dokter_bpjs_kes);
@@ -214,20 +212,23 @@ class AntrolBpjsCtrl extends Controller
         // if (!isset($dokterBpjs['kode'])) {
         //     return response()->json(['message' => 'Dokter tidak ditemukan di BPJS'], 404);
         // }
+
+        $jumlahRegistrasi = Registrasi::where("pasien_uuid", "=", $pasien->uuid)->count() > 1 ? "0" : "1";
+
         $data = [
             "kodebooking" => $item->nomor,
-            "jenispasien" => "Non JKN",
-            "nomorkartu" => $item->no_bpjs_kes,
-            "nik" => $pasien->no_identitas,
-            "nohp" => $item->no_handphone,
-            "kodepoli" => $item->kode_poli_bpjs,
-            "namapoli" => $item->nama_poli_bpjs,
-            "pasienbaru" => "0",
-            "norm" => $pasien->rekam_medis,
-            "tanggalperiksa" => $item->tanggal,
-            "kodedokter" => $item->kode_dokter_bpjs,
-            "namadokter" => $item->nama_dokter_bpjs,
-            "jampraktek" => $item->jadwal_dokter_bpjs,
+            "jenispasien" => $item->carabayar_nama == 'BPJS Kesehatan' ? "JKN" : "NON JKN",
+            "nomorkartu" => $item->no_bpjs_kes ?? "",
+            "nik" => $pasien->no_identitas ?? "",
+            "nohp" => $item->no_handphone ?? "",
+            "kodepoli" => $item->kode_poli_bpjs ?? "",
+            "namapoli" => $item->nama_poli_bpjs ?? "",
+            "pasienbaru" => $jumlahRegistrasi ?? "",
+            "norm" => $pasien->rekam_medis ?? "",
+            "tanggalperiksa" => $item->tanggal ?? "",
+            "kodedokter" => $item->kode_dokter_bpjs ?? "",
+            "namadokter" => $item->nama_dokter_bpjs ?? "",
+            "jampraktek" => $item->jadwal_dokter_bpjs ?? "",
             "jeniskunjungan" => "1",
             "nomorreferensi" => "0001R0040116A000001",
             "nomorantrean" => $item->no_pendaftaran,
@@ -240,7 +241,18 @@ class AntrolBpjsCtrl extends Controller
             "keterangan" => "Peserta harap 30 menit lebih awal guna pencatatan administrasi."
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-        return $this->bridging->postRequest($endpoint, $jsonData);
+
+        $antrolLogs = new AntrolLogs();
+        $antrolLogs->action = 'tambahAntrean';
+        $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $antrolLogs->save();
+
+        $result = $this->bridging->postRequest($endpoint, $jsonData);
+        
+        $antrolLogs->response = $result;
+        $antrolLogs->update();
+
+        return $result;
     }
     public function tambahAntreanFarmasi(AntrianFarmasi $item)
     {
@@ -249,13 +261,22 @@ class AntrolBpjsCtrl extends Controller
             "kodebooking" => $item->nomor,
             "jenisresep" => $item->jenis, // (racikan / non racikan)
             "nomorantrean" => $item->number,
-            "keterangan" => "testing"
+            "keterangan" => "Testing"
         ];
 
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
-        return $this->bridging->postRequest($endpoint, $jsonData);
+        $result = $this->bridging->postRequest($endpoint, $jsonData);
+
+        $antrolLogs = new AntrolLogs();
+        $antrolLogs->action = 'tambahAntreanFarmasi';
+        $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $antrolLogs->response = json_encode($result, JSON_UNESCAPED_UNICODE);
+        $antrolLogs->save();
+
+        return $result;
     }
+
     public function updateWaktuAntrean(Request $request)
     {
         $endpoint = "antrean/updatewaktu";

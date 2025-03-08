@@ -14,16 +14,19 @@
 				:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)">
 			</Selected>
 			<Inputed :ref="form.no_bpjs_kes.name" :form="form.no_bpjs_kes" v-if="form.no_bpjs_kes.show"></Inputed>
+
 			<select style="width: 200px;" v-model="selectedPoli" @change="fetchJadwalDokter" v-if="showSelectPoli">
 				<option v-for="poli in poliBpjs" :key="poli.kdpoli" :value="poli.kdpoli">
 					{{ poli.nmpoli }} - {{ poli.nmsubspesialis }}
 				</option>
 			</select>
+
 			<select v-model="selectedDokter" @change="updateJadwalDokter" v-if="showSelectDokter">
 				<option v-for="dokter in filteredDokter" :key="dokter.kodedokter" :value="dokter.kodedokter">
 					{{ dokter.namadokter }}
 				</option>
 			</select>
+
 			<p v-if="selectedDokter">
 				Jadwal Dokter: {{ dokterTerpilih ? dokterTerpilih.jadwal : 'Tidak ada jadwal tersedia' }}
 				({{ dokterTerpilih ? dokterTerpilih.kodesubspesialis : '-' }})
@@ -203,10 +206,10 @@ export default {
 	data: function() {
 		return {
 			isCameraOpen: false,
-      isPhotoTaken: false,
-      isShotPhoto: false,
-      isLoading: false,
-      link: '#',
+			isPhotoTaken: false,
+			isShotPhoto: false,
+			isLoading: false,
+			link: '#',
 			green: 'Save Data',
 			red: 'Clear Form', test: null,
 			form: null, arr: null, cover: '', temporer: null,
@@ -230,26 +233,15 @@ export default {
 	methods: {
 
 		async fetchJadwalDokter() {
-			if (!this.selectedPoli) return;
 
+			//- TODO: Ganti Tanggal dengan hari ini
 			const today = "2025-03-03"; // Format: YYYY-MM-DD
+
 			try {
 				const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/${this.selectedPoli}/tanggal/${today}`);
-				const responseDokter = await axios.get(`/api/bpjs/antrol-bpjs/ref/dokter`);	
 
 				this.jadwalDokter = responseJadwal.data.response || [];
-				const daftarDokter = responseDokter.data.response ;
-
-				// Filter dokter yang ada di jadwal
-				this.filteredDokter = daftarDokter.filter(dokter =>
-					this.jadwalDokter.some(jadwal => jadwal.kodedokter === dokter.kodedokter)
-				);
-
-				console.log("Jadwal Dokter:", responseJadwal);
-				console.log("Dokter yang sesuai dengan jadwal:", responseDokter);
-
-				this.filteredDokter = [...filteredDokter];
-				console.log("filteredDokter setelah update:", this.filteredDokter);
+				this.filteredDokter = this.jadwalDokter;
 
 			} catch (error) {
 				console.error("Gagal mengambil jadwal dokter:", error.response ? error.response.data : error.message);
@@ -641,8 +633,8 @@ export default {
 				vm.form.select.dokter.value = '';
 				vm.form.select.dokter.label = 'Silahkan Pilih';
 				vm.form.select.dokter.show = true;
-				this.showSelectDokter = false; // Sembunyikan select biasa
-				this.showSelectPoli = false; // Sembunyikan select biasa
+				this.showSelectDokter = true; // Sembunyikan select biasa
+				this.showSelectPoli = true; // Sembunyikan select biasa
 			} else {
 				// vm.form.no_bpjs_kes.value = '';
 				vm.form.no_bpjs_kes.show = true;
@@ -651,7 +643,7 @@ export default {
 				vm.form.select.dokter.isrequired = false;
 				vm.form.select.dokter.value = '';
 				vm.form.select.dokter.label = '';
-				vm.form.select.dokter.show = false;
+				vm.form.select.dokter.show = true;
 
 
 				this.showSelectDokter = true;  // Tampilkan select biasa
