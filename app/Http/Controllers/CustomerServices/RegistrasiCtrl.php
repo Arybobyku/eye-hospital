@@ -367,6 +367,7 @@ class RegistrasiCtrl extends Controller
 				$item->berkebutuhan_khusus = $request->berkebutuhan_khusus ? $request->berkebutuhan_khusus : '-';
 				$item->keterangan_berkebutuhan = $request->keterangan_berkebutuhan ? $request->keterangan_berkebutuhan : '-';
 				$item->no_antrian_ro = $kodeRo;
+				$item->is_integrated_antrol = 1;
 				$status_penjamin = '-';
 				$is_approve = '-';
 				$is_pay = '-';
@@ -425,7 +426,6 @@ class RegistrasiCtrl extends Controller
 				$data->jenis_identitas = $request->jenis_identitas;
 				$data->no_identitas = $request->no_identitas;
 				$data->no_handphone = $request->no_handphone;
-				$data->is_integrated_antrol = 1;
 				$data->save();
 
 
