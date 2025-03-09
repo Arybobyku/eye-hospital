@@ -270,6 +270,7 @@ class AntrolBpjsCtrl extends Controller
 
         $antrolLogs = new AntrolLogs();
         $antrolLogs->action = 'tambahAntrean';
+        $antrolLogs->uuid_register = $item->uuid;
         $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
         $antrolLogs->save();
         try {
