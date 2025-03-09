@@ -425,6 +425,7 @@ class RegistrasiCtrl extends Controller
 				$data->jenis_identitas = $request->jenis_identitas;
 				$data->no_identitas = $request->no_identitas;
 				$data->no_handphone = $request->no_handphone;
+				$data->is_integrated_antrol = 1;
 				$data->save();
 
 
