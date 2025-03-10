@@ -369,13 +369,13 @@ class AntrolBpjsCtrl extends Controller
         return $result;
     }
 
-    public function batalAntrean()
+    public function batalAntrean(Registrasi $item)
     {
         $result = null;
         $endpoint = "antrean/batal";
         $data = [
-            "kodebooking" => "16032021A001",
-            "keterangan" => "Testing"
+            "kodebooking" => $item->nomor,
+            "keterangan" => "Batal Antrean"
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
@@ -394,6 +394,33 @@ class AntrolBpjsCtrl extends Controller
         $antrolLogs->update();
         return $result;
     }
+
+    public function batalAntreanFarmasiBebas(PasienBebas $item)
+    {
+        $result = null;
+        $endpoint = "antrean/batal";
+        $data = [
+            "kodebooking" => $item->nomor,
+            "keterangan" => "Batal Antrean"
+        ];
+        $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+
+        $antrolLogs = new AntrolLogs();
+        $antrolLogs->action = 'batalAntrean';
+        $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $antrolLogs->save();
+        try {
+            $result = $this->bridging->postRequest($endpoint, $jsonData);
+        } catch (\Exception $e) {
+            $antrolLogs->response = json_encode($e, JSON_UNESCAPED_UNICODE);
+            $antrolLogs->update();
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+        $antrolLogs->response = $result;
+        $antrolLogs->update();
+        return $result;
+    }
+
     public function listWaktuTaskId()
     {
         $endpoint = "antrean/getlisttask";

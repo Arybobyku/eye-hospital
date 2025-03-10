@@ -590,10 +590,13 @@ class RegistrasiCtrl extends Controller
 		if ($this->error != 'next') {
 			return response()->json(['data' => $this->error]);
 		}
-
 		$data = Registrasi::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
 			PenggunaHelp::log('Mengambil data pasien dengan nama pasien "' . $data->nama . '" dan id "' . $data->id . '" untuk ditampilkan dihalaman registrasi');
+		}
+		$response = "";
+		if ($data->is_integrated_antrol == 1) {
+			$response = app(AntrolBpjsCtrl::class)->batalAntreanFarmasiBebas($data);
 		}
 
 		$arr = array('status' => 'Batal');
@@ -602,7 +605,11 @@ class RegistrasiCtrl extends Controller
 		$arr = array('status' => 'Aktif');
 		$pasien = Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
 
-		return response()->json(['data' => $data]);
+		// return response()->json(['data' => $data]);
+		return response()->json([
+				'data' => $data,
+				'bpjs'=> $response
+			]);
 	}
 
 	public function api(Request $request)

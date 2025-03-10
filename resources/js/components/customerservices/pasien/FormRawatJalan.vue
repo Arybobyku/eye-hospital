@@ -526,7 +526,6 @@ export default {
       	context.drawImage(base_image, 0, 0, vm.width_number, vm.height_number);
 			}, 750);
 			
-			console.log("kontol");
 			console.log("kontol", response);
 			vm.temporer = vm.test;
 			vm.test = null;
@@ -643,7 +642,7 @@ export default {
 				vm.form.select.dokter.isrequired = false;
 				vm.form.select.dokter.value = '';
 				vm.form.select.dokter.label = '';
-				vm.form.select.dokter.show = true;
+				vm.form.select.dokter.show = false;
 
 
 				this.showSelectDokter = true;  // Tampilkan select biasa

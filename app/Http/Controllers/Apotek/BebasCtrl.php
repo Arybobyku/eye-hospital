@@ -17,6 +17,8 @@ use App\Models\LayananPasien;
 use App\Models\PasienBebas;
 use App\Jobs\SendAllJob;
 use Carbon\Carbon;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
+
 
 class BebasCtrl extends Controller
 {
@@ -193,7 +195,17 @@ class BebasCtrl extends Controller
 
 		$arr = array('status' => 'batal', 'farmasi_jam_selesai' => date('H:i'));
 		$update = PasienBebas::where('uuid', '=', $request->uuid)->update($arr);
-		return response()->json(['data' => 'success']);
+		$data = PasienBebas::where('uuid', '=', $request->uuid)->first();
+
+		$response = "";
+		// if ($data->is_integrated_antrol == 1) {
+		$response = app(AntrolBpjsCtrl::class)->batalAntreanFarmasiBebas($data);
+		// }
+		// return response()->json(['data' => 'success']);
+		return response()->json([
+				'data' => 'success',
+				'bpjs'=> $response
+			]);
 	}
 
 	public function antrian(Request $request) { 
