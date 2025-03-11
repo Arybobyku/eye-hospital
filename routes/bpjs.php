@@ -41,6 +41,7 @@ Route::group([], function () {
 
         Route::get('antrean/pendaftaran/aktif', [AntrolBpjsCtrl::class, 'antrianBelumDilayani']);
         Route::get('antrean/getlisttask', [AntrolBpjsCtrl::class, 'listTask']);
+        Route::get('antrean/pendaftaran/kodebooking/{param1}', [AntrolBpjsCtrl::class, 'getAntrianByKodeBooking']);
 
         //Yudha
         Route::post('jadwaldokter/updatejadwaldokter', [AntrolBpjsCtrl::class, 'updateJadwalDokter']);

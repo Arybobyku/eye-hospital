@@ -23,6 +23,7 @@ use DB;
 use Cookie;
 use Crypt;
 use PenggunaHelp;
+use Carbon\Carbon;
 use Svg\Tag\Rect;
 
 class AntrolBpjsCtrl extends Controller
@@ -49,6 +50,12 @@ class AntrolBpjsCtrl extends Controller
     public function listTask()
     {
         $endpoint = 'antrean/getlisttask';
+        return $this->bridging->getRequest($endpoint);
+    }
+
+    public function getAntrianByKodeBooking($kodeBooking)
+    {
+        $endpoint = 'antrean/pendaftaran/kodebooking/'.$kodeBooking;
         return $this->bridging->getRequest($endpoint);
     }
 
@@ -294,6 +301,21 @@ class AntrolBpjsCtrl extends Controller
         }
         $antrolLogs->response = $result;
         $antrolLogs->update();
+
+        $number = (int) preg_replace('/[^0-9]/', '', $item->no_pendaftaran,);
+
+        $antrianCS =  Antrian::whereDate('tanggal', '=', date('Y-m-d'))
+        ->where('number', '=', $number)
+        ->first();
+
+        // Waktu Start Admisi
+        $admisiWaktu = Carbon::parse($antrianCS->created_at)->timestamp;
+        $this->updateWaktuAntrean($item->nomor, 1, $admisiWaktu);
+        $epochTime = strtotime(date('Y-m-d'));
+
+        $this->updateWaktuAntrean($item->nomor, 2, $epochTime);
+        $this->updateWaktuAntrean($item->nomor, 3, $epochTime);
+
         return $result;
     }
     public function tambahAntreanFarmasi(AntrianFarmasi $item)
@@ -325,15 +347,14 @@ class AntrolBpjsCtrl extends Controller
         return $result;
     }
 
-    public function updateWaktuAntrean(Request $request)
+    public function updateWaktuAntrean($kodeBooking, $taskID, $waktu)
     {
         $result = null;
         $endpoint = "antrean/updatewaktu";
         $data = [
-            "kodebooking" => "16032021A001",
-            "taskid" => 5,
-            "waktu" => 1616559330000,
-            "jenisresep" => "Tidak ada" // khusus yang sudah implementasi antrean farmasi
+            "kodebooking" => $kodeBooking,
+            "taskid" => $taskID,
+            "waktu" => $waktu,
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
         $antrolLogs = new AntrolLogs();
@@ -352,6 +373,7 @@ class AntrolBpjsCtrl extends Controller
         return $result;
     }
 
+
     public function updateWaktuAntreanFarmasi(PasienBebas $item)
     {
         $endpoint = "antrean/updatewaktu";
@@ -361,7 +383,7 @@ class AntrolBpjsCtrl extends Controller
             "kodebooking" => $item->nomor,
             "taskid" => 7,
             "waktu" => $timestamp,
-            // "jenisresep" => "Tidak ada"// khusus yang sudah implementasi antrean farmasi
+            "jenisresep" => "Tidak ada"// khusus yang sudah implementasi antrean farmasi
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
