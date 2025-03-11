@@ -217,6 +217,11 @@ class RegistrasiCtrl extends Controller
 					}
 				} while ($loop == false);
 
+				$is_jkn = 0;
+				if ($request->carabayar_nama == 'BPJS Kesehatan') {
+					$is_jkn = 1;
+				}
+
 				// Start Antrian RO
 				$uuidRO = '';
 				$loop = false;
@@ -233,11 +238,11 @@ class RegistrasiCtrl extends Controller
 				$latestNumber = $latestAntrianRO->number ?? 0;
 				$latestNumber = $latestNumber + 1;
 				$kodeRo = 'R-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
-
+				
 				$antrianRO = new AntrianRo();
 				$antrianRO->uuid = $uuidRO;
 				$antrianRO->kode = 'R';
-				$antrianRO->is_jkn = 0;
+				$antrianRO->is_jkn = $is_jkn;
 				// BPJS
 				$antrianRO->kode_poli =  $request->kode_poli_bpjs;
 				$antrianRO->poli = $request->nama_poli_bpjs;
@@ -390,6 +395,8 @@ class RegistrasiCtrl extends Controller
 				$item->is_pay = $is_pay;
 				$item->is_asuransi = $is_asuransi;
 				$item->last_position = 'Pendaftaran';
+
+				$item->is_jkn = $is_jkn;
 				$item->save();
 				echo ("poli_bpjs" . $request->poli_bpjs);
 				$item->is_asuransi = $is_asuransi;

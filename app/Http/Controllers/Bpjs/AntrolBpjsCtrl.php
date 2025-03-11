@@ -10,9 +10,11 @@ use App\Models\Pasien;
 use App\Models\PasienBebas;
 use App\Models\Antrian;
 use App\Models\AntrianFarmasi;
+use App\Models\AntrianRo;
 use App\Models\AntrolLogs;
 use App\Models\Pengguna;
 use App\Models\MasterDokterBpjs;
+use App\Models\MasterKuotaAntrian;
 use App\Models\MasterPoliBpjs;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -230,6 +232,16 @@ class AntrolBpjsCtrl extends Controller
 
         $jumlahRegistrasi = Registrasi::where("pasien_uuid", "=", $pasien->uuid)->count() > 1 ? "0" : "1";
 
+        $masterKuotaAntrian = MasterKuotaAntrian::first();
+
+        $sisaKuotaJKN =  AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))
+        ->where('is_jkn', '=', 1)
+        ->count();
+
+        $sisaKuotaNonJKN =  AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))
+        ->where('is_jkn', '=', 0)
+        ->count();
+
         $data = [
             "kodebooking" => $item->nomor,
             "jenispasien" => $item->carabayar_nama == 'BPJS Kesehatan' ? "JKN" : "NON JKN",
@@ -249,10 +261,10 @@ class AntrolBpjsCtrl extends Controller
             "nomorantrean" => $item->no_pendaftaran,
             "angkaantrean" => $nomorOnly,
             "estimasidilayani" => 1615869169000,
-            "sisakuotajkn" => 5,
-            "kuotajkn" => 30,
-            "sisakuotanonjkn" => 5,
-            "kuotanonjkn" => 30,
+            "sisakuotajkn" => $sisaKuotaJKN,
+            "kuotajkn" => $masterKuotaAntrian->kuota_non_jkn,
+            "sisakuotanonjkn" => $sisaKuotaNonJKN,
+            "kuotanonjkn" => $masterKuotaAntrian->kuota_jkn,
             "keterangan" => "Peserta harap 30 menit lebih awal guna pencatatan administrasi."
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
