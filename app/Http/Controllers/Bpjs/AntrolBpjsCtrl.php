@@ -374,14 +374,14 @@ class AntrolBpjsCtrl extends Controller
     }
 
 
-    public function updateWaktuAntreanFarmasi(PasienBebas $item)
+    public function updateWaktuAntreanFarmasi($kodeBooking, $taskID)
     {
         $endpoint = "antrean/updatewaktu";
         $result = null;
         $timestamp = round(microtime(true) * 1000);
         $data = [
-            "kodebooking" => $item->nomor,
-            "taskid" => 7,
+            "kodebooking" => $kodeBooking,
+            "taskid" => $taskID,
             "waktu" => $timestamp,
             "jenisresep" => "Tidak ada"// khusus yang sudah implementasi antrean farmasi
         ];

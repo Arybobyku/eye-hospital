@@ -155,6 +155,8 @@ class BebasCtrl extends Controller
 
 		$get = PasienBebas::whereDate('tanggal', '=', date('Y-m-d'))
 								->where('number', '=', $request->number)->first();
+		$kodeBooking = $get->nomor;
+        $taskId = 6;
 		if ($get) {
 			if ($get->pemanggil != '-') { return response()->json(['data' => 'cannot']); }
 		}
@@ -173,8 +175,11 @@ class BebasCtrl extends Controller
 
 		$str = 'Farmasi 1'.'='.$request->number.'=bebas';
 		$this->jeda(1, $str);
-		
-		return response()->json(['data' => 'success']);
+		$response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking, $taskId);
+
+		// return response()->json(['data' => 'success']);
+		return response()->json(['data' => 'success', 'bpjs' => $response]);
+
 	}
 
 	private function jeda($delay, $str) {

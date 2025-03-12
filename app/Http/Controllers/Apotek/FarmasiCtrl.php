@@ -14,6 +14,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Models\AntrianKasir;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
+
 
 class FarmasiCtrl extends Controller
 {
@@ -588,26 +590,36 @@ class FarmasiCtrl extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
 
+
+        $item = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
+                                ->where('number', '=', $request->number)->first();
+        $kodeBooking = $item->nomor;
+        $taskId = 6;
+        
         $arr = ['status_antrian_farmasi' => '-', 'last_position' => 'Farmasi'];
         $cek = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->update($arr);
-
+        
         $arr = ['status_antrian_farmasi' => 'active', 'farmasi_jam_layani' => date('H:i')];
         $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
-
+        
         $get = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('number', '=', $request->number)
-                ->where('pemanggil', '=', '1')
-                                ->first();
-
+        ->where('number', '=', $request->number)
+        ->where('pemanggil', '=', '1')
+        ->first();
+        echo("kode book".$kodeBooking);
         if ($get) {
             $str = 'Farmasi 1='.$request->number.'=kunjungan';
             $this->jeda(1, $str);
+		    
+            $response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking, $taskId);
+            // return response()->json(['data' => 'success']);
+            return response()->json(['data' => 'success', 'bpjs' => $response]);
 
-            return response()->json(['data' => 'success']);
         }
 
         $get = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
                                 ->where('number', '=', $request->number)->first();
+
         if ($get) {
             if ($get->pemanggil != '-') {
                 return response()->json(['data' => 'cannot']);
@@ -628,8 +640,10 @@ class FarmasiCtrl extends Controller
 
         $str = 'Farmasi 1='.$request->number.'=kunjungan';
         $this->jeda(1, $str);
+		$response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking, $taskId);
 
-        return response()->json(['data' => 'success']);
+        return response()->json(['data' => 'success', 'bpjs' => $response]);
+        
     }
 
     private function jeda($delay, $str)
