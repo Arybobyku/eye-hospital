@@ -95,7 +95,7 @@ class RouteServiceProvider extends ServiceProvider
 			Route::middleware('web')
 	->prefix('master')
 	->group(base_path('routes/master.php'));
-			Route::middleware('web')
+			Route::middleware('api')
         ->prefix('bpjs')
         ->group(base_path('routes/bpjs.php'));
     });

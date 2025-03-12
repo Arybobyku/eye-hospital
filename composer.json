@@ -23,6 +23,7 @@
         "phpoffice/phpword": "^1.2",
         "pusher/pusher-php-server": "~7.0.2",
         "ramsey/uuid": "^4.7",
+        "tymon/jwt-auth": "^2.1",
         "virusphp/bridging-bpjs": "^2.1"
     },
     "require-dev": {

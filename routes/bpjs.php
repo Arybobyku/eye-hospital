@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
+use App\Http\Controllers\Bpjs\AntrolMbjknCtrl;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,4 +41,23 @@ Route::group([], function () {
         Route::get('antrean/pendaftaran/aktif', [AntrolBpjsCtrl::class, 'antrianBelumDilayani']);
         Route::get('antrean/getlisttask', [AntrolBpjsCtrl::class, 'listTask']);
     });
+
+    // API Endpoint Web Service
+    Route::prefix('ws')->group(function () {
+        Route::get('token', [AntrolMbjknCtrl::class, 'generateToken']);
+        Route::get('payload', [AntrolMbjknCtrl::class, 'getPayload']);
+
+        Route::post('status-antrean', [AntrolMbjknCtrl::class, 'statusAntrean']);
+        Route::post('ambil-antrean', [AntrolMbjknCtrl::class, 'ambilAntrean']);
+        Route::post('sisa-antrian', [AntrolMbjknCtrl::class, 'sisaAntrean']);
+        Route::post('batal-antrean', [AntrolMbjknCtrl::class, 'batalAntrean']);
+        Route::post('checkin', [AntrolMbjknCtrl::class, 'checkIn']);
+        Route::post('info-pasien-baru', [AntrolMbjknCtrl::class, 'infoPasienBaru']);
+        Route::post('jadwal-operasi-rs', [AntrolMbjknCtrl::class, 'jadwalOperasiRs']);
+        Route::post('jadwal-operasi-pasien', [AntrolMbjknCtrl::class, 'jadwalOperasiPasien']);
+        Route::post('ambil-antrean-farmasi', [AntrolMbjknCtrl::class, 'ambilAntreanFarmasi']);
+        Route::post('status-antrean-farmasi', [AntrolMbjknCtrl::class, 'statusAntreanFarmasi']);
+
+    });
+
 });
