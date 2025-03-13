@@ -29,16 +29,19 @@
             <h2 v-html=""></h2>
             <h3>Nomor Antrian</h3>
             <h1 v-html="display"></h1>
+            <h3 v-html="displayPasien"></h3>
           </span>
         </div>
       	<div class="bottom">
         	<div class="sides">
         		<h2 v-html="poliklinik[0].label"></h2>
             <h1><span v-html="poliklinik[0].nomor"></span></h1>
+            <h4><span v-html="poliklinik[0].pasien"></span></h4>
         	</div>
       		<div class="sides">
             <h2 v-on:click="bunyi()" v-html="poliklinik[1].label"></h2>
           	<h1><span v-html="poliklinik[1].nomor"></span></h1>
+			<h4><span v-html="poliklinik[1].pasien"></span></h4>
           </div>
         </div>
       </div>
@@ -50,16 +53,19 @@
             <h2 v-html=""></h2>
             <h3>Nomor Antrian</h3>
             <h1 v-html="displayright"></h1>
+            <h3 v-html="displayPasienRight"></h3>
           </span>
         </div>
       	<div class="bottom">
         	<div class="sides">
         		<h2 v-html="poliklinik[2].label"></h2>
             <h1><span v-html="poliklinik[2].nomor"></span></h1>
+            <h4><span v-html="poliklinik[2].pasien"></span></h4>
         	</div>
       		<div class="sides">
             <h2 v-html="poliklinik[3].label"></h2>
           	<h1><span v-html="poliklinik[3].nomor"></span></h1>
+			<h4><span v-html="poliklinik[2].pasien"></span></h4>
           </div>
         </div>
       </div>
@@ -114,11 +120,13 @@ new Vue({
 		hitung: 0,
 		display: 'P-000',
 		displayright: 'P-000',
+		displayPasien:'',
+		displayPasienRight:'',
 		poliklinik: [
-			{ nomor: 'R-000', label: 'Refraksi Optisi' },
-			{ nomor: 'P-000', label: 'Poli 1' },
-			{ nomor: 'P-000', label: 'Poli 2' },
-			{ nomor: 'P-000', label: 'Poli 3' },
+			{ nomor: 'R-000', label: 'Refraksi Optisi', pasien:'' },
+			{ nomor: 'P-000', label: 'Poli 1', pasien:'' },
+			{ nomor: 'P-000', label: 'Poli 2', pasien:'' },
+			{ nomor: 'P-000', label: 'Poli 3', pasien:''},
 		],
 		angka: 1,
     currentDateTime: null,
@@ -132,30 +140,40 @@ new Vue({
   }},
   methods: {
 		triggercall:function(data) {
+		console.log("TEST",data);
 			const vm = this, myArray = data.split("=");
 			let tmp = myArray[0].split(" ");
 			let jenis = tmp[0] == 'Poliklinik' ? "P" : "R";
 			let number = vm.calculate(jenis, parseInt(myArray[1]));
+			let pasienName = myArray[2];
 			if (tmp[0] == 'Poliklinik') {
 				if (tmp[1] == '1') {
 					vm.poliklinik[1].nomor = number;
+					vm.poliklinik[1].pasien = pasienName;
 					vm.display = number;
+					vm.displayPasien = pasienName;
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 				else if (tmp[1] == '2') {
 					vm.poliklinik[2].nomor = number;
+					vm.poliklinik[2].pasien = pasienName;
 					vm.displayright = number;
+					vm.displayPasienRight = pasienName;
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 				else if (tmp[1] == '3') {
 					vm.poliklinik[3].nomor = number;
+					vm.poliklinik[2].pasien = pasienName;
 					vm.displayright = number;
+					vm.displayPasienRight = pasienName;
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 			}
 			else if (tmp[0] == 'Refraksi') {
 				vm.poliklinik[0].nomor = number;
+				vm.poliklinik[0].pasien = pasienName;
 				vm.display = number;
+				vm.displayPasien = pasienName;
 				vm.bunyi(number, tmp[1], 'refraksi optisi');
 			}
 		},

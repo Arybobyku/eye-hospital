@@ -12,12 +12,14 @@ use PenggunaHelp;
 use Storage;
 
 use App\Models\Pasien;
+use App\Models\Pengguna;
 use App\Models\Registrasi;
 use App\Models\PenanggungJawab;
 use App\Models\LayananPasien;
 use App\Models\CaraBayarTindakanRawatJalan;
 use App\Events\NewTradeRo;
 use App\Models\AntrianRo;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
 
 class RegistrasiCtrl extends Controller
 {
@@ -49,9 +51,10 @@ class RegistrasiCtrl extends Controller
 		if ($kunjungan) {
 			$pj = PenanggungJawab::where('registrasi_uuid', '=', $kunjungan->uuid)->first();
 		}
+		$refPoli = app(AntrolBpjsCtrl::class)->referensiPoli();
+		$refPoliArray = json_decode($refPoli, true);
 
-
-		return response()->json(['data' => $data, 'registrasi' => $registrasi, 'kunjungan' => $kunjungan, 'pj' => $pj]);
+		return response()->json(['data' => $data, 'registrasi' => $registrasi, 'kunjungan' => $kunjungan, 'pj' => $pj, 'poli_bpjs' => $refPoliArray]);
 	}
 
 	public function rawatjalan(Request $request)
@@ -204,8 +207,6 @@ class RegistrasiCtrl extends Controller
 				// 	$remove = LayananPasien::where('registrasi_uuid', '=', $registrasi_uuid)->where('default', '=', 'Ya')->delete();
 				// }
 			} else {
-
-
 				$uuid = '';
 				$loop = false;
 				do {
@@ -216,13 +217,17 @@ class RegistrasiCtrl extends Controller
 					}
 				} while ($loop == false);
 
+				$is_jkn = 0;
+				if ($request->carabayar_nama == 'BPJS Kesehatan') {
+					$is_jkn = 1;
+				}
 
-				// Create Antrian RO
-				$uuid = '';
+				// Start Antrian RO
+				$uuidRO = '';
 				$loop = false;
 				do {
-					$uuid = Uuid::uuid4();
-					$check = AntrianRO::where('uuid', '=', $uuid)->first();
+					$uuidRO = Uuid::uuid4();
+					$check = AntrianRO::where('uuid', '=', $uuidRO)->first();
 					if (!$check) {
 						$loop = true;
 					}
@@ -233,16 +238,24 @@ class RegistrasiCtrl extends Controller
 				$latestNumber = $latestAntrianRO->number ?? 0;
 				$latestNumber = $latestNumber + 1;
 				$kodeRo = 'R-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
-
+				
 				$antrianRO = new AntrianRo();
-				$antrianRO->uuid = Uuid::uuid4();
+				$antrianRO->uuid = $uuidRO;
 				$antrianRO->kode = 'R';
+				$antrianRO->is_jkn = $is_jkn;
+				// BPJS
+				$antrianRO->kode_poli =  $request->kode_poli_bpjs;
+				$antrianRO->poli = $request->nama_poli_bpjs;
+				$antrianRO->uuid_pasien =  $request->pasien_uuid;
+				$antrianRO->kode_dokter =  $request->kode_dokter_bpjs;
+				$antrianRO->uuid_registrasi =  $uuid;
+
 				$antrianRO->number = $latestNumber;
 				$antrianRO->jenis = $request->jenis;
 				$antrianRO->tanggal = date('Y-m-d');
 				$antrianRO->save();
 
-				// End Create Antrian RO
+				// End Antrian RO
 
 				$photos = $request->photos;
 				$photos = str_replace('data:image/jpeg;base64,', '', $photos);
@@ -318,14 +331,38 @@ class RegistrasiCtrl extends Controller
 				$item->no_handphone = $request->no_handphone ? $request->no_handphone : '-';
 				$item->agama = $request->agama ? $request->agama : '-';
 
-				$item->pengguna_uuid = $request->pengguna_uuid ? $request->pengguna_uuid : '-';
-				$item->nama_dokter = $request->nama_dokter ? $request->nama_dokter : '-';
 				$item->tanggal = date('Y-m-d');
 				$item->waktu = date('H:i');
+
+				// if ($request->carabayar_nama == 'BPJS Kesehatan') { // GET DARI API BPJS
+				// 	$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->dokter_bpjs)->first();
+				// 	$item->pengguna_uuid = $dokterLocal->uuid;
+				// 	$item->nama_dokter = $dokterLocal->nama;
+				// 	$item->kode_dokter_bpjs = $request->kode_dokter_bpjs;
+				// 	$item->nama_dokter_bpjs = $request->nama_dokter_bpjs;
+				// 	$item->jadwal_dokter_bpjs = $request->jadwal_dokter_bpjs;
+				// 	$item->kode_poli_bpjs = $request->kode_poli_bpjs;
+				// 	$item->nama_poli_bpjs = $request->nama_poli_bpjs;
+				// } else {
+				// 	$item->pengguna_uuid = $request->pengguna_uuid ? $request->pengguna_uuid : '-';
+				// 	$item->nama_dokter = $request->nama_dokter ? $request->nama_dokter : '-';
+				// }
+
+				$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->dokter_bpjs)->first();
+				$item->pengguna_uuid = $dokterLocal->uuid;
+				$item->nama_dokter = $dokterLocal->nama;
+				$item->kode_dokter_bpjs = $request->kode_dokter_bpjs;
+				$item->nama_dokter_bpjs = $request->nama_dokter_bpjs;
+				$item->jadwal_dokter_bpjs = $request->jadwal_dokter_bpjs;
+				$item->kode_poli_bpjs = $request->kode_poli_bpjs;
+				$item->nama_poli_bpjs = $request->nama_poli_bpjs;
+
 				$item->no_pendaftaran = $request->no_pendaftaran ? $request->no_pendaftaran : '-';
 				$item->cara_masuk = $request->cara_masuk ? $request->cara_masuk : '-';
 				$item->rujukan = $request->rujukan ? $request->rujukan : '-';
 				$item->carabayar_uuid = $request->carabayar_uuid ? $request->carabayar_uuid : '-';
+				$item->carabayar_nama = $request->carabayar_nama ? $request->carabayar_nama : '-';
+				$item->no_bpjs_kes = $request->no_bpjs_kes;
 				$item->carabayar_nama = $request->carabayar_nama ? $request->carabayar_nama : '-';
 				$item->asuransi_uuid = $request->asuransi_uuid ? $request->asuransi_uuid : '-';
 				$item->nama_asuransi = $request->nama_asuransi ? $request->nama_asuransi : '-';
@@ -335,6 +372,7 @@ class RegistrasiCtrl extends Controller
 				$item->berkebutuhan_khusus = $request->berkebutuhan_khusus ? $request->berkebutuhan_khusus : '-';
 				$item->keterangan_berkebutuhan = $request->keterangan_berkebutuhan ? $request->keterangan_berkebutuhan : '-';
 				$item->no_antrian_ro = $kodeRo;
+				$item->is_integrated_antrol = 1;
 				$status_penjamin = '-';
 				$is_approve = '-';
 				$is_pay = '-';
@@ -357,10 +395,18 @@ class RegistrasiCtrl extends Controller
 				$item->is_pay = $is_pay;
 				$item->is_asuransi = $is_asuransi;
 				$item->last_position = 'Pendaftaran';
+
+				$item->is_jkn = $is_jkn;
 				$item->save();
+				echo ("poli_bpjs" . $request->poli_bpjs);
+				$item->is_asuransi = $is_asuransi;
 
 				$arr = array('status' => 'Kunjungan');
 				$update = Pasien::where('uuid', '=', $request->uuid)->update($arr);
+				// if ($item->carabayar_nama == 'BPJS Kesehatan') {
+
+				// }
+
 
 				$registrasi_uuid = $uuid;
 				$registrasi_kode = 'RJ';
@@ -389,6 +435,10 @@ class RegistrasiCtrl extends Controller
 				$data->no_handphone = $request->no_handphone;
 				$data->save();
 
+
+				$pasien = Pasien::where('uuid', $request->pasien_uuid)->first();
+				$response = app(AntrolBpjsCtrl::class)->tambahAntrean($item, $pasien);
+
 				$rekammedis = $request->rekam_medis;
 				$result = substr($rekammedis, 0, 1);
 				// if ($request->carabayar_nama == 'Umum') {
@@ -398,6 +448,7 @@ class RegistrasiCtrl extends Controller
 				// 	$remove = LayananPasien::where('registrasi_uuid', '=', $registrasi_uuid)->where('default', '=', 'Ya')->delete();
 				// }
 
+				
 				if ($result == '0') {
 					$this->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
 				} else {
@@ -408,6 +459,8 @@ class RegistrasiCtrl extends Controller
 						$this->savepasienbaru($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
 					}
 				}
+
+
 
 				$arr = array('status' => 'Kunjungan');
 				$pasien = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
@@ -420,7 +473,11 @@ class RegistrasiCtrl extends Controller
 
 			DB::commit();
 
-			return response()->json(['data' => 'berhasil']);
+			// return response()->json(['data' => 'berhasil']);
+			return response()->json([
+				'data' => 'success',
+				'bpjs'=> $response
+			]);
 		} catch (Exception $e) {
 			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
@@ -540,10 +597,13 @@ class RegistrasiCtrl extends Controller
 		if ($this->error != 'next') {
 			return response()->json(['data' => $this->error]);
 		}
-
 		$data = Registrasi::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
 			PenggunaHelp::log('Mengambil data pasien dengan nama pasien "' . $data->nama . '" dan id "' . $data->id . '" untuk ditampilkan dihalaman registrasi');
+		}
+		$response = "";
+		if ($data->is_integrated_antrol == 1) {
+			$response = app(AntrolBpjsCtrl::class)->batalAntreanFarmasiBebas($data);
 		}
 
 		$arr = array('status' => 'Batal');
@@ -552,7 +612,11 @@ class RegistrasiCtrl extends Controller
 		$arr = array('status' => 'Aktif');
 		$pasien = Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
 
-		return response()->json(['data' => $data]);
+		// return response()->json(['data' => $data]);
+		return response()->json([
+				'data' => $data,
+				'bpjs'=> $response
+			]);
 	}
 
 	public function api(Request $request)

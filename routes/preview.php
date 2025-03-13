@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 use App\Http\Controllers\Preview\ClaimGabunganCtrl;
 use App\Http\Controllers\Preview\StockCtrl;
+use App\Http\Controllers\Preview\KartuStockCtrl;
 
 Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::prefix('claimgabungan')->group(function () {

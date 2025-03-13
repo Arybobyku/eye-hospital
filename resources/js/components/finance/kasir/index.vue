@@ -75,6 +75,7 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
+			{ value: 'tanggal', label: 'Tanggal Registrasi', type: 'text', search: true, close: false, button: false },
 			{ value: 'no_kwitansi', label: 'No Kwitansi', type: 'text', search: true, close: false, button: false },
 			{ value: 'no_antrian_kasir', label: 'No Antrian', type: 'text', search: true, close: false, button: false },
 			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
@@ -101,6 +102,7 @@ export default {
 		columnbeli: [
 			{ value: 'tanggal', label: 'Tanggal', type: 'text', search: true, close: false, button: false },
 			{ value: 'no_invoice', label: 'No Invoice', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian', label: 'Nomor Antrian', type: 'text', search: true, close: false, button: false },
 			{ value: 'kode', label: 'Kode Pendaftaran', type: 'text', search: true, close: false, button: false },
 			{ value: 'jenis', label: 'Jenis Obat', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pembeli', type: 'text', search: true, close: false, button: false },
@@ -111,9 +113,11 @@ export default {
 		columnbelibayar: [
 			{ value: 'tanggal', label: 'Tanggal', type: 'text', search: true, close: false, button: false },
 			{ value: 'no_invoice', label: 'No Invoice', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian', label: 'Nomor Antrian', type: 'text', search: true, close: false, button: false },
 			{ value: 'kode', label: 'Kode Pendaftaran', type: 'text', search: true, close: false, button: false },
 			{ value: 'jenis', label: 'Jenis Obat', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pembeli', type: 'text', search: true, close: false, button: false },
+
 			{ value: 'ada_obat', label: 'Obat Sudah Ditambahkan?', type: 'text', search: false, close: false, button: false },
 			{ value: 'pembayaran', label: 'Pembayaran', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }

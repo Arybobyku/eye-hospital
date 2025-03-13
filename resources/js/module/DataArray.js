@@ -325,7 +325,7 @@ export const arrpemeriksaan = () => {
 			{value: 'OD', label: 'OD'},
 			{value: 'OS', label: 'OS'},
 			{value: 'OD dan OS', label: 'OD dan OS'},
-		]
+		],
 	
 	}
 	}
@@ -341,4 +341,13 @@ export const arrpemeriksaan = () => {
 		],
 	}
 
+
+}
+	export const arrfarmasibebas = () => {
+	return {
+		jenisracikan: [
+			{ value: 'racikan', label: 'Racikan' },
+			{ value: 'non racikan', label: 'Non Racikan' },
+		],
+	}
 };

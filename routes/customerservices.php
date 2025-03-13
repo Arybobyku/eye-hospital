@@ -21,6 +21,7 @@ use App\Http\Controllers\CustomerServices\RegistrasiOdcCtrl;
 use App\Http\Controllers\CustomerServices\AntrianCtrl;
 use App\Http\Controllers\CustomerServices\PemeriksaanDokterCtrl;
 use App\Http\Controllers\CustomerServices\RawatInapCtrl;
+use App\Http\Controllers\CustomerServices\RegistrasiRawatInapCtrl;
 use App\Http\Controllers\CustomerServices\BebasCtrl;
 use App\Http\Controllers\CustomerServices\ReminderKontrolCtrl;
 use App\Http\Controllers\CustomerServices\PasienKontrolCtrl;

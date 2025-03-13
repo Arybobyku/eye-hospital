@@ -13,6 +13,9 @@ use App\Models\ResepRacikan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
+use App\Models\AntrianKasir;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
+
 
 class FarmasiCtrl extends Controller
 {
@@ -528,6 +531,7 @@ class FarmasiCtrl extends Controller
 
     public function approvement(Request $request)
     {
+        // TODO: GENERATE NEXT ANTRIAN KASIR
         if ($this->error != 'next') {
             return response()->json(['data' => $this->error]);
         }
@@ -536,6 +540,45 @@ class FarmasiCtrl extends Controller
         if ($data) {
             \PenggunaHelp::log('Mengambil data icd 9 dengan nama "'.$data->nama_pasien);
         }
+
+        // START Antrian Kasir
+        if ($data->no_antrian_kasir == null) {
+            $uuidKasir = '';
+            $loop = false;
+            do {
+                $uuidKasir = Uuid::uuid4();
+                $check = AntrianKasir::where('uuid', '=', $uuidKasir)->first();
+                if (!$check) {
+                    $loop = true;
+                }
+            } while ($loop == false);
+
+            $latestAntrianKasir = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+            $latestNumber = $latestAntrianKasir->number ?? 0;
+            $latestNumber = $latestNumber + 1;
+            $kodeKasir = 'K-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+            $antrianKasir = new AntrianKasir();
+            $antrianKasir->uuid = $uuidKasir;
+            $antrianKasir->kode = 'K';
+            $antrianKasir->number = $latestNumber;
+            $antrianKasir->jenis = $data->jenis;
+            $antrianKasir->tanggal = date('Y-m-d');
+
+            // BPJS
+            $antrianKasir->kode_poli=  $data->kode_poli_bpjs;
+            $antrianKasir->poli=  $data->nama_poli_bpjs;
+            $antrianKasir->uuid_pasien =  $data->pasien_uuid;
+            $antrianKasir->kode_dokter =  $data->kode_dokter_bpjs;
+            $antrianKasir->uuid_registrasi =  $data->uuid;
+
+            $antrianKasir->save();
+
+            Registrasi::where('uuid', $request->uuid)
+                ->update(['no_antrian_kasir' => $kodeKasir]);
+        }
+        // End Antrian Kasir
 
         $arr = ['approvement_obat' => 'yes'];
         $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
@@ -547,26 +590,36 @@ class FarmasiCtrl extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
 
+
+        $item = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
+                                ->where('number', '=', $request->number)->first();
+        $kodeBooking = $item->nomor;
+        $taskId = 6;
+        
         $arr = ['status_antrian_farmasi' => '-', 'last_position' => 'Farmasi'];
         $cek = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->update($arr);
-
+        
         $arr = ['status_antrian_farmasi' => 'active', 'farmasi_jam_layani' => date('H:i')];
         $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
-
+        
         $get = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('number', '=', $request->number)
-                ->where('pemanggil', '=', '1')
-                                ->first();
-
+        ->where('number', '=', $request->number)
+        ->where('pemanggil', '=', '1')
+        ->first();
+        echo("kode book".$kodeBooking);
         if ($get) {
             $str = 'Farmasi 1='.$request->number.'=kunjungan';
             $this->jeda(1, $str);
+		    
+            $response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking, $taskId);
+            // return response()->json(['data' => 'success']);
+            return response()->json(['data' => 'success', 'bpjs' => $response]);
 
-            return response()->json(['data' => 'success']);
         }
 
         $get = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
                                 ->where('number', '=', $request->number)->first();
+
         if ($get) {
             if ($get->pemanggil != '-') {
                 return response()->json(['data' => 'cannot']);
@@ -587,8 +640,10 @@ class FarmasiCtrl extends Controller
 
         $str = 'Farmasi 1='.$request->number.'=kunjungan';
         $this->jeda(1, $str);
+		$response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking, $taskId);
 
-        return response()->json(['data' => 'success']);
+        return response()->json(['data' => 'success', 'bpjs' => $response]);
+        
     }
 
     private function jeda($delay, $str)

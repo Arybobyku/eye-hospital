@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 use App\Http\Controllers\Apotek\StockOpnameCtrl;
+use App\Http\Controllers\Apotek\AccOpnameCtrl;
 use App\Http\Controllers\Apotek\ReqOpnameCtrl;
 use App\Http\Controllers\Apotek\FarmasiCtrl;
 use App\Http\Controllers\Apotek\HistoriFarmasiCtrl;

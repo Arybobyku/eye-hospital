@@ -17,6 +17,8 @@ use App\Models\LayananPasien;
 use App\Models\PasienBebas;
 use App\Jobs\SendAllJob;
 use Carbon\Carbon;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
+
 
 class BebasCtrl extends Controller
 {
@@ -153,6 +155,8 @@ class BebasCtrl extends Controller
 
 		$get = PasienBebas::whereDate('tanggal', '=', date('Y-m-d'))
 								->where('number', '=', $request->number)->first();
+		$kodeBooking = $get->nomor;
+        $taskId = 6;
 		if ($get) {
 			if ($get->pemanggil != '-') { return response()->json(['data' => 'cannot']); }
 		}
@@ -171,8 +175,11 @@ class BebasCtrl extends Controller
 
 		$str = 'Farmasi 1'.'='.$request->number.'=bebas';
 		$this->jeda(1, $str);
-		
-		return response()->json(['data' => 'success']);
+		$response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking, $taskId);
+
+		// return response()->json(['data' => 'success']);
+		return response()->json(['data' => 'success', 'bpjs' => $response]);
+
 	}
 
 	private function jeda($delay, $str) {
@@ -193,7 +200,17 @@ class BebasCtrl extends Controller
 
 		$arr = array('status' => 'batal', 'farmasi_jam_selesai' => date('H:i'));
 		$update = PasienBebas::where('uuid', '=', $request->uuid)->update($arr);
-		return response()->json(['data' => 'success']);
+		$data = PasienBebas::where('uuid', '=', $request->uuid)->first();
+
+		$response = "";
+		// if ($data->is_integrated_antrol == 1) {
+		$response = app(AntrolBpjsCtrl::class)->batalAntreanFarmasiBebas($data);
+		// }
+		// return response()->json(['data' => 'success']);
+		return response()->json([
+				'data' => 'success',
+				'bpjs'=> $response
+			]);
 	}
 
 	public function antrian(Request $request) { 
@@ -260,7 +277,6 @@ class BebasCtrl extends Controller
 			$invoice = PasienBebas::whereDate('tanggal', '=', date('Y-m-d'))
 									->where('no_invoice', '!=', '-')
 									->orderBy('no_invoice', 'desc')->first();
-
 			$nomor_i = 1;
 			if ($invoice) {
 				$potong_kalimat = substr($invoice->no_invoice,-5);
@@ -282,6 +298,7 @@ class BebasCtrl extends Controller
 			$item->carabayar_uuid = '1bddd542-fd1e-4b6a-b629-53bd35428796';
 			$item->carabayar_nama = 'Umum';
 			$item->nama_pasien = $request->nama;
+			$item->no_antrian = $request->no_antrian;
 			$item->jenis = $request->jenis;
 			$item->no_invoice = $no_invoice;
 			$item->save();

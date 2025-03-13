@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Bpjs;
 
 use App\Http\Controllers\Controller;
+use App\Models\AntrianPoli;
+use App\Models\MasterDokterBpjs;
+use App\Models\MasterKuotaAntrian;
 use App\Models\Pengguna;
+use App\Models\Registrasi;
 use App\Models\WsAuth;
 use App\Services\Bpjs\Bridging\Antrol\BridgeAntrol;
 use Illuminate\Http\Request;
@@ -143,31 +147,52 @@ class AntrolMbjknCtrl extends Controller
 
 
             $request->validate([
-                'kodepoli' => 'required|string|max:10',
-                'kodedokter' => 'required|integer',
-                'tanggalperiksa' => 'required|date_format:Y-m-d',
-                'jampraktek' => 'required|string'
+                'kodepoli' => 'string|max:10',
+                'kodedokter' => 'integer',
+                'tanggalperiksa' => 'date_format:Y-m-d',
+                'jampraktek' => 'string'
             ]);
             
-            $respPoli = $request -> kodepoli;
+            $masterKuotaAntrian = MasterKuotaAntrian::first();
+
+            // Safely destructure quotas
+            $kuotaJkn = $masterKuotaAntrian->kuota_jkn ?? 0;
+            $kuotaNonJkn = $masterKuotaAntrian->kuota_non_jkn ?? 0;
+
+            // Fetch Antrian Data once
+            $data = AntrianPoli::where('kode_poli', $request->kodepoli)
+                ->where('kode_dokter', $request->kodedokter)
+                ->get();
+
+            // Calculate total antrian and retrieve 'poli' from the first record
+            $totalAntrian = $data->count();
+            $poli = $data->first()->poli ?? null;
+
+            // Calculate remaining quotas
+            $sisaKuotaJkn = $kuotaJkn - max(0, $data->where('is_jkn', "1")->count());
+            $sisaKuotaNonJkn = $kuotaNonJkn - max(0, $data->where('is_jkn', "0")->count());
+
+            $namaDokter = optional(
+                MasterDokterBpjs::where('kodedokter', $request->kodedokter)->first()
+            )->namadokter;
 
             return response()->json([
                 'response' => [
-                    "namapoli" => "",
-                    "namadokter" => "",
-                    "totalantrean" => "",
+                    "namapoli" => $poli,
+                    "namadokter" => $namaDokter,
+                    "totalantrean" => $totalAntrian,
                     "sisaantrean" => "",
                     "antreanpanggil" => "",
-                    "sisakuotajkn" => "",
-                    "kuotajkn" => "",
-                    "sisakuotanonjkn" => "",
-                    "kuotajkn" => "",
+                    "sisakuotajkn" => $sisaKuotaJkn,
+                    "kuotajkn" => $kuotaJkn,
+                    "sisakuotanonjkn" => $sisaKuotaNonJkn,
+                    "kuotanonjkn" => $kuotaNonJkn,
                     "keterangan" => "",
                 ],
                 "metadeta" => [
                     'message' => 'Ok',
                     'code' => '200'
-                ]
+                ],
                 ], 200);
             
         } catch (\Exception $e) {
@@ -214,6 +239,7 @@ class AntrolMbjknCtrl extends Controller
                 "jeniskunjungan" => "required|string",
                 "nomorreferensi" => "required|string"
             ]);
+            
             
 
             return response()->json([
@@ -276,8 +302,20 @@ class AntrolMbjknCtrl extends Controller
             
 
             return response()->json([
-                'nomor kartu' => "ini dia"
-            ]);
+                "response" => [
+                    "nomorantrean" => "",
+                    "namapoli" => "",
+                    "namadokter" => "",
+                    "sisaantrean" => "",
+                    "antreanpanggil" => "",
+                    "waktutunggu" => "",
+                    "keterangan" => ""
+                ],
+                "metadata" => [
+                    "message" => "Ok",
+                    "code" => "200"
+                ]
+            ], 200);
             
         } catch (\Exception $e) {
             return response()->json([
@@ -318,7 +356,10 @@ class AntrolMbjknCtrl extends Controller
             ]);
 
             return response()->json([
-                'nomor kartu' => "ini dia"
+                "metadata" => [
+                    "message" => "Ok",
+                    "code" => "200"
+                ]
             ]);
             
         } catch (\Exception $e) {
@@ -359,7 +400,10 @@ class AntrolMbjknCtrl extends Controller
             ]);
 
             return response()->json([
-                'nomor kartu' => "ini dia"
+                "metadata" => [
+                    "code" => "200",
+                    "message" => "Ok"
+                ]
             ]);
             
         } catch (\Exception $e) {
@@ -416,7 +460,12 @@ class AntrolMbjknCtrl extends Controller
             ]);
 
             return response()->json([
-                'nomor kartu' => "ini dia"
+                'response' => [
+                    "norm" => ""
+                ],
+                "metadata" => [
+                    "message" => "Harap datang ke admisi untuk melengkapi data rekam medis"
+                ]
             ]);
             
         } catch (\Exception $e) {

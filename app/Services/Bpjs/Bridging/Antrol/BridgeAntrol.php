@@ -32,6 +32,7 @@ class BridgeAntrol extends CurlFactory
     public function postRequest($endpoint, $data)
     {
         $result = $this->request($this->config->setUrl().$endpoint, $this->header, "POST", $data);
+        
         $result = $this->response->responseAntrol($result, $this->config->keyDecrypt($this->header['X-timestamp']));
         return $result;
     }

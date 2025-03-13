@@ -429,12 +429,12 @@ class PemeriksaanCtrl extends Controller
 				$registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
 
 				if ($registrasi->no_antrian_poli == null) {
-					// Create Antrian RO
-					$uuid = '';
+					// Start Antrian Poli
+					$uuidPoli = '';
 					$loop = false;
 					do {
-						$uuid = Uuid::uuid4();
-						$check = AntrianPoli::where('uuid', '=', $uuid)->first();
+						$uuidPoli = Uuid::uuid4();
+						$check = AntrianPoli::where('uuid', '=', $uuidPoli)->first();
 						if (!$check) {
 							$loop = true;
 						}
@@ -447,8 +447,16 @@ class PemeriksaanCtrl extends Controller
 					$kodePoli = 'P-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
 
 					$antrianPO = new AntrianPoli();
-					$antrianPO->uuid = Uuid::uuid4();
+					$antrianPO->uuid = $uuidPoli;
 					$antrianPO->kode = 'P';
+
+					// BPJS
+					$antrianPO->kode_poli=  $registrasi->kode_poli_bpjs;
+					$antrianPO->poli=  $registrasi->nama_poli_bpjs;
+					$antrianPO->uuid_pasien =  $registrasi->pasien_uuid;
+					$antrianPO->kode_dokter =  $registrasi->kode_dokter_bpjs;
+					$antrianPO->uuid_registrasi =  $registrasi->uuid;
+
 					$antrianPO->number = $latestNumber;
 					$antrianPO->jenis = $request->jenis;
 					$antrianPO->tanggal = date('Y-m-d');
@@ -457,6 +465,8 @@ class PemeriksaanCtrl extends Controller
 					Registrasi::where('uuid', $request->registrasi_uuid)
 						->update(['no_antrian_poli' => $kodePoli]);
 				}
+
+				// End Create Antrian POLI
 
 				if ($registrasi->ruang_poliklinik != $request->ruang_poliklinik) {
 					$posisi_antrian_dokter = 1;
@@ -488,7 +498,6 @@ class PemeriksaanCtrl extends Controller
 
 				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 			} else {
-				// End Create Antrian RO
 
 				$item = new PemeriksaanRo();
 				$item->uuid = $uuid;
@@ -888,7 +897,7 @@ class PemeriksaanCtrl extends Controller
 			->first();
 
 		if ($get) {
-			$str = 'Refraksi Optisi=' . $request->number;
+			$str = 'Refraksi Optisi=' . $request->number.'='.$cek->nama_pasien;
 			// after 14 Detik
 			$on = Carbon::now()->subSeconds(14);
 			dispatch(new SendPoliJob($str))->delay($on);
@@ -915,7 +924,7 @@ class PemeriksaanCtrl extends Controller
 		$arr = array('pemanggil' => 'Refraksi Optisi');
 		$panggil = AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))->where('number', '=', $request->number)->update($arr);
 
-		$str = 'Refraksi Optisi=' . $request->number;
+		$str = 'Refraksi Optisi=' . $request->number.'='.$cek->nama_pasien;
 		$on = Carbon::now()->subSeconds(14);
 		dispatch(new SendPoliJob($str))->delay($on);
 
