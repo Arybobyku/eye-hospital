@@ -339,7 +339,7 @@ export default {
 			let data = response.data.data;
 			vm.histori = response.data.registrasi;
 			vm.iskunjungan = response.data.kunjungan;
-			vm.poliBpjs = response.data.poli_bpjs.response.filter(poli => poli.kdpoli === "MAT");
+			vm.poliBpjs = response.data.poli_bpjs?.response?.filter(poli => poli.kdpoli === "MAT") || [];
 
 			console.log("vm.poliBpjs", vm.poliBpjs);
 
