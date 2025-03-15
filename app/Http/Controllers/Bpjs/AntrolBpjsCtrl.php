@@ -273,9 +273,11 @@ class AntrolBpjsCtrl extends Controller
             "angkaantrean" => $nomorOnly,
             "estimasidilayani" => $estimasidilayani,
             "sisakuotajkn" => $sisaKuotaJKN,
-            "kuotajkn" => $masterKuotaAntrian->kuota_non_jkn,
+            // "kuotajkn" => $masterKuotaAntrian->kuota_non_jkn, //sementara remark dulu biar ga eror
+            "kuotajkn" => 10,
             "sisakuotanonjkn" => $sisaKuotaNonJKN,
-            "kuotanonjkn" => $masterKuotaAntrian->kuota_jkn,
+            // "kuotanonjkn" => $masterKuotaAntrian->kuota_jkn, //sementara remark dulu ga eror
+            "kuotanonjkn" => 10,
             "keterangan" => "Peserta harap 30 menit lebih awal guna pencatatan administrasi."
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
