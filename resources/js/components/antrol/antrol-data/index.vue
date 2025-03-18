@@ -34,25 +34,50 @@
     .filter-container button:hover {
         background-color: #0056b3;
     }
+    #filterType{
+        width: 250px;
+    }
 </style>
 <template>
     <div class="filter-container">
-        <select v-model="filterType">
-            <option value="">Pilih Filter</option>
-            <option value="tanggal">Filter Per Tanggal</option>
-            <option value="bulan">Filter Per Bulan</option>
-        </select>
+        <div class="filterType">
+            <select id="filterType" v-model="filterType">
+                <option value="">Pilih Filter</option>
+                <option value="tanggal">Antrean Per Tanggal</option>
+                <option value="booking">Antrean Per Kode Booking</option>
+                <option value="aktif">Antrean Belum Dilayani</option>
+                <option value="filter">Antrean Belum Dilayani Per Filter</option>
+            </select>
+        </div>
 
         <input v-if="filterType === 'tanggal'" type="date" v-model="params1" />
+        <input v-if="filterType === 'booking'" type="text" v-model="params1" />
 
-        <div v-if="filterType === 'bulan'" class="filter-group">
+        <div v-if="filterType === 'filter'" class="filter-group">
             <select v-model="params1">
-                <option value="">Pilih Bulan</option>
+                <option value="">Pilih Kode Poli</option>
                 <option v-for="(bulan, index) in bulanList" :key="index" :value="index + 1">
                     {{ bulan }}
                 </option>
             </select>
-            <input type="number" v-model="params2" placeholder="Tahun" />
+            <select v-model="params2">
+                <option value="">Pilih Kode Dokter</option>
+                <option v-for="(bulan, index) in bulanList" :key="index" :value="index + 1">
+                    {{ bulan }}
+                </option>
+            </select>
+            <select v-model="params3">
+                <option value="">Pilih Hari</option>
+                <option v-for="(bulan, index) in bulanList" :key="index" :value="index + 1">
+                    {{ bulan }}
+                </option>
+            </select>
+            <select v-model="params4">
+                <option value="">Pilih Jam Praktek</option>
+                <option v-for="(bulan, index) in bulanList" :key="index" :value="index + 1">
+                    {{ bulan }}
+                </option>
+            </select>
         </div>
 
 
@@ -138,120 +163,8 @@
                     data: null
                 },
                 column: [{
-                        value: 'kdppk',
-                        label: 'Kode PPK',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'nmppk',
-                        label: 'Nama PPK',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'namapoli',
-                        label: 'Nama Poli',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'waktu_task1',
-                        label: 'Waktu Task 1',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'avg_waktu_task1',
-                        label: 'Rata-Rata Waktu Task 1',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'waktu_task2',
-                        label: 'Waktu Task 2',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'avg_waktu_task2',
-                        label: 'Rata-Rata Waktu Task 2',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'waktu_task3',
-                        label: 'Waktu Task 3',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'avg_waktu_task3',
-                        label: 'Rata-Rata Waktu Task 3',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'waktu_task4',
-                        label: 'Waktu Task 4',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'avg_waktu_task4',
-                        label: 'Rata-Rata Waktu Task 4',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'waktu_task5',
-                        label: 'Waktu Task 5',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'avg_waktu_task5',
-                        label: 'Rata-Rata Waktu Task 5',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'waktu_task6',
-                        label: 'Waktu Task 6',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: false
-                    },
-                    {
-                        value: 'avg_waktu_task6',
-                        label: 'Rata-Rata Waktu Task 6',
+                    value: 'kodebooking',
+                        label: 'Kode Booking',
                         type: 'text',
                         search: false,
                         close: false,
@@ -260,6 +173,118 @@
                     {
                         value: 'tanggal',
                         label: 'Tanggal',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'kodepoli',
+                        label: 'Kode Poli',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'kodedokter',
+                        label: 'Kode Dokter',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'jampraktek',
+                        label: 'Jam Praktek',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'nik',
+                        label: 'NIK',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'nokapst',
+                        label: 'No Kartu Peserta',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'nohp',
+                        label: 'No HP',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'norekammedis',
+                        label: 'No Rekam Medis',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'jeniskunjungan',
+                        label: 'Jenis Kunjungan',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'nomorreferensi',
+                        label: 'Nomor Referensi',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'sumberdata',
+                        label: 'Sumber Data',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'ispeserta',
+                        label: 'Status Peserta',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'noantrean',
+                        label: 'No Antrean',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'estimasidilayani',
+                        label: 'Est. Dilayani',
+                        type: 'text',
+                        search: false,
+                        close: false,
+                        button: false
+                    },
+                    {
+                        value: 'status',
+                        label: 'Status',
                         type: 'text',
                         search: false,
                         close: false,
@@ -291,7 +316,7 @@
              * Bagian fungsi untuk pemrosesan table
              *************************************************************************************************************************/
 			async applyFilter() {
-				if (!this.filterType) {
+                if (!this.filterType && this.filterType != "aktif") {
 					alert("Silakan pilih jenis filter terlebih dahulu");
 					return;
 				}
@@ -302,14 +327,22 @@
 						alert("Silakan pilih tanggal");
 						return;
 					}
-                    url = `/api/bpjs//antrol-bpjs/dashboard/waktutunggu/tanggal/${this.params1}?ts=${Date.now()}`;
-				} else if (this.filterType === "bulan") {
-					if (!this.params1 || !this.params2) {
-						alert("Silakan pilih bulan dan tahun");
+                    url = `/api/bpjs/antrol-bpjs/antrean/pendaftaran/tanggal/${this.params1}`;
+				} else if (this.filterType === "booking") {
+					if (!this.params1) {
+						alert("Silakan masukkan kode booking");
 						return;
 					}
-                    url = `/api/bpjs//antrol-bpjs/dashboard/waktutunggu/bulan/${this.params1}/tahun/${this.params2}?ts=${Date.now()}`;
-				}
+                    url = `/api/bpjs/antrol-bpjs/antrean/pendaftaran/kodebooking/${this.params1}`;
+				} else if (this.filterType === "aktif") {
+                    url = `/api/bpjs/antrol-bpjs/antrean/pendaftaran/aktif`;
+                } else if (this.filterType === "filter"){
+                    if (!this.params1) {
+                        alert("Silakan masukkan filter");
+                        return;
+                    }
+                    url = `/api/bpjs/antrol-bpjs/antrean/pendaftaran/kodepoli/${this.params1}/kodedokter/${this.params2}/hari/${this.params3}/jampraktek/${this.params4}`;
+                }
 
 				try {
 					this.showDatatable = false;
@@ -318,16 +351,16 @@
 					const response = await axios.get(url);
 
 					// Cek jika response null atau data kosong
+                    console.log("response", response);
                     if (!response.data || !response.data.response || response.data.response.length === 0) {
 						this.notification('Data tidak ditemukan untuk filter yang dipilih', 3000, 'error');
 						this.showDatatable = false; // Pastikan tabel tetap tersembunyi
 						return;
 					}
-
 					// Proses data response ke datatable
                     const processedData = this.setDatatable(response.data.response, response.data.response.length);
 					this.module.data = processedData;
-					this.module.total = response.data.data.length;
+                    this.module.total = response.data.response.length;
 
                     this.$refs.Datatable.update(this.column, processedData, response.data.response.length);
 					this.$refs.Datatable.paging();

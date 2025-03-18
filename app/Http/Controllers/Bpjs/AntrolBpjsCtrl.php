@@ -66,6 +66,18 @@ class AntrolBpjsCtrl extends Controller
         return $this->bridging->getRequest($endpoint);
     }
 
+    public function getAntrianbyTanggal($params1)
+    {
+        $endpoint = "antrean/pendaftaran/tanggal/{$params1}";
+        return $this->bridging->getRequest($endpoint);
+    }
+
+    public function getAntrianbyAll($params1, $params2, $params3, $params4)
+    {
+        $endpoint = "antrean/pendaftaran/kodepoli/{$params1}/kodedokter/{$params2}/hari/{$params3}/jampraktek/{$params4}";
+        return $this->bridging->getRequest($endpoint);
+    }
+
     public function referensiPoli()
     {
         $endpoint = 'ref/poli';
@@ -264,6 +276,7 @@ class AntrolBpjsCtrl extends Controller
             "pasienbaru" => $jumlahRegistrasi ?? "",
             "norm" => $pasien->rekam_medis ?? "",
             "tanggalperiksa" => $item->tanggal ?? "",
+            // "tanggalperiksa" => "2025-02-09",
             "kodedokter" => $item->kode_dokter_bpjs ?? "",
             "namadokter" => $item->nama_dokter_bpjs ?? "",
             "jampraktek" => $item->jadwal_dokter_bpjs ?? "",
@@ -273,9 +286,11 @@ class AntrolBpjsCtrl extends Controller
             "angkaantrean" => $nomorOnly,
             "estimasidilayani" => $estimasidilayani,
             "sisakuotajkn" => $sisaKuotaJKN,
-            "kuotajkn" => $masterKuotaAntrian->kuota_non_jkn,
+            // "kuotajkn" => $masterKuotaAntrian->kuota_non_jkn, //sementara remark dulu biar ga eror
+            "kuotajkn" => 10,
             "sisakuotanonjkn" => $sisaKuotaNonJKN,
-            "kuotanonjkn" => $masterKuotaAntrian->kuota_jkn,
+            // "kuotanonjkn" => $masterKuotaAntrian->kuota_jkn, //sementara remark dulu ga eror
+            "kuotanonjkn" => 10,
             "keterangan" => "Peserta harap 30 menit lebih awal guna pencatatan administrasi."
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);

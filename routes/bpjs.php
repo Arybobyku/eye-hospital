@@ -39,11 +39,13 @@ Route::group([], function () {
         
         Route::get('jadwaldokter/kodepoli/{params1}/tanggal/{params2}', [AntrolBpjsCtrl::class, 'referensiJadwalDokter']);
 
-        Route::get('antrean/pendaftaran/aktif', [AntrolBpjsCtrl::class, 'antrianBelumDilayani']);
         Route::get('antrean/getlisttask', [AntrolBpjsCtrl::class, 'listTask']);
+        
+        Route::get('antrean/pendaftaran/aktif', [AntrolBpjsCtrl::class, 'antrianBelumDilayani']);
+        Route::get('antrean/pendaftaran/tanggal/{param1}', [AntrolBpjsCtrl::class, 'getAntrianByTanggal']);
         Route::get('antrean/pendaftaran/kodebooking/{param1}', [AntrolBpjsCtrl::class, 'getAntrianByKodeBooking']);
+        Route::get('antrean/pendaftaran/kodepoli/{param1}/kodedokter/{param2}/hari/{param3}/jampraktek/{param4}', [AntrolBpjsCtrl::class, 'getAntrianByAll']);
 
-        //Yudha
         Route::post('jadwaldokter/updatejadwaldokter', [AntrolBpjsCtrl::class, 'updateJadwalDokter']);
         Route::post('antrean/add', [AntrolBpjsCtrl::class, 'tambahAntrean']);
         Route::post('antrean/farmasi/add', [AntrolBpjsCtrl::class, 'tambahAntreanFarmasi']);

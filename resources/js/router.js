@@ -196,6 +196,13 @@ const routes = [
 		path: _base + 'antrol-ro', 
 		name: 'Dashboard Antrian RO', 
 		component: () => import('./components/antrol/ro/index.vue'),
+		meta: { title: 'Dashboard Antrian RO' },
+		props: true 
+	},
+	{ 
+		path: _base + 'antrol-data', 
+		name: 'Dashboard Antrian Online', 
+		component: () => import('./components/antrol/antrol-data/index.vue'),
 		meta: { title: 'Dashboard Antrian Online' },
 		props: true 
 	},
