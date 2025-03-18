@@ -42,83 +42,83 @@ class KasirCtrl extends Controller
 
         if ($request->search != '') {
             $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
-                                ->where('registrasi.delete_soft', '=', 1)
-                                ->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
-                                ->where(function ($q) {
-                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
-                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
-                                })
-                                ->orderBy('registrasi.no_kwitansi', 'desc')
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status', 'Kunjungan');
-                                    $q->orWhere('registrasi.status', '=', 'One Day Care');
-                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->skip($skip)->take($this->take)
-                                ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
-                                ->get();
-                                
+                ->where('registrasi.delete_soft', '=', 1)
+                ->where('registrasi.' . $column, 'ilike', '%' . $search . '%')
+                ->where(function ($q) {
+                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
+                })
+                ->orderBy('registrasi.no_kwitansi', 'desc')
+                ->where(function ($q) {
+                    $q->where('registrasi.status', 'Kunjungan');
+                    $q->orWhere('registrasi.status', '=', 'One Day Care');
+                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->skip($skip)->take($this->take)
+                ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
+                ->get();
+
             $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
-                                ->where('registrasi.delete_soft', '=', 1)
-                                ->where(function ($q) {
-                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
-                                     $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status', 'Kunjungan');
-                                   $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
-                                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
+                ->where('registrasi.delete_soft', '=', 1)
+                ->where(function ($q) {
+                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status', 'Kunjungan');
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->where('registrasi.' . $column, 'ilike', '%' . $search . '%')
+                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
         } else {
             $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
-                                    ->where('registrasi.delete_soft', '=', 1)
-                                    ->orderBy('registrasi.no_kwitansi', 'desc')
-                                    ->where(function ($q) {
-                                        $q->where('registrasi.jenis', '=', 'Rawat Jalan');
-                                        $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                        $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
-                                    })
-                                    ->where(function ($q) {
-                                        $q->where('registrasi.status', 'Kunjungan');
+                ->where('registrasi.delete_soft', '=', 1)
+                ->orderBy('registrasi.no_kwitansi', 'desc')
+                ->where(function ($q) {
+                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status', 'Kunjungan');
 
-                                        $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                        $q->orWhere('registrasi.status', 'Rawat Inap');
-                                    })
-                                    ->where(function ($q) {
-                                        $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
-                                    })
-                                    ->skip($skip)->take($this->take)
-                                    ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
-                                    ->get();
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                    $q->orWhere('registrasi.status', 'Rawat Inap');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->skip($skip)->take($this->take)
+                ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
+                ->get();
 
             $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
-                                ->where('registrasi.delete_soft', '=', 1)
-                                ->where(function ($q) {
-                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                ->where('registrasi.delete_soft', '=', 1)
+                ->where(function ($q) {
+                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
 
-                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status', 'Kunjungan');
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status', 'Kunjungan');
 
-                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                    $q->orWhere('registrasi.status', 'Rawat Inap');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                    $q->orWhere('registrasi.status', 'Rawat Inap');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
         }
 
         return response()->json(['data' => $data, 'total' => $total]);
@@ -141,71 +141,71 @@ class KasirCtrl extends Controller
 
         if ($request->search != '') {
             $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
-                                ->where('registrasi.delete_soft', '=', 1)
-                                ->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
-                                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
-                                ->where(function ($q) {
-                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
-                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                })
-                                ->orderBy('registrasi.no_kwitansi', 'desc')
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status', 'Selesai');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->skip($skip)->take($this->take)
-                                ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
-                                ->get();
+                ->where('registrasi.delete_soft', '=', 1)
+                ->where('registrasi.' . $column, 'ilike', '%' . $search . '%')
+                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
+                ->where(function ($q) {
+                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                })
+                ->orderBy('registrasi.no_kwitansi', 'desc')
+                ->where(function ($q) {
+                    $q->where('registrasi.status', 'Selesai');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->skip($skip)->take($this->take)
+                ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
+                ->get();
             $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
-                                ->where('registrasi.delete_soft', '=', 1)
-                                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
-                                ->where(function ($q) {
-                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
-                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status', 'Selesai');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->where($column, 'ilike', '%'.$search.'%')
-                                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
+                ->where('registrasi.delete_soft', '=', 1)
+                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
+                ->where(function ($q) {
+                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status', 'Selesai');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->where($column, 'ilike', '%' . $search . '%')
+                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
         } else {
             $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
-                                    ->where('registrasi.delete_soft', '=', 1)
-                                    ->orderBy('registrasi.no_kwitansi', 'desc')
-                                    ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
-                                    ->where(function ($q) {
-                                        $q->where('registrasi.jenis', '=', 'Rawat Jalan');
-                                        $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                    })
-                                    ->where(function ($q) {
-                                        $q->where('registrasi.status', 'Selesai');
-                                    })
-                                    ->where(function ($q) {
-                                        $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
-                                    })
-                                    ->skip($skip)->take($this->take)
-                                    ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
-                                    ->get();
+                ->where('registrasi.delete_soft', '=', 1)
+                ->orderBy('registrasi.no_kwitansi', 'desc')
+                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
+                ->where(function ($q) {
+                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status', 'Selesai');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->skip($skip)->take($this->take)
+                ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
+                ->get();
 
             $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
-                                ->where('registrasi.delete_soft', '=', 1)
-                                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
-                                ->where(function ($q) {
-                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
-                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status', 'Selesai');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
+                ->where('registrasi.delete_soft', '=', 1)
+                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
+                ->where(function ($q) {
+                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status', 'Selesai');
+                })
+                ->where(function ($q) {
+                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
         }
 
         return response()->json(['data' => $data, 'total' => $total]);
@@ -253,13 +253,13 @@ class KasirCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
         $layanan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obat = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         return response()->json(['data' => $data, 'obatracikan' => $obatracikan, 'layanan' => $layanan, 'obat' => $obat]);
     }
@@ -271,13 +271,13 @@ class KasirCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
         $layanan = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obat = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->registrasi_uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         return response()->json(['data' => $data, 'obatracikan' => $obatracikan, 'layanan' => $layanan, 'obat' => $obat]);
     }
@@ -290,7 +290,7 @@ class KasirCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Menerima tagihan atas nama pasien '.$data->nama_pasien.' pada tanggal '.date('Y-m-d'));
+            \PenggunaHelp::log('Menerima tagihan atas nama pasien ' . $data->nama_pasien . ' pada tanggal ' . date('Y-m-d'));
         }
 
         try {
@@ -377,7 +377,7 @@ class KasirCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Membatalkan pembayaran atas nama pasien '.$data->nama_pasien.' pada tanggal '.date('Y-m-d'));
+            \PenggunaHelp::log('Membatalkan pembayaran atas nama pasien ' . $data->nama_pasien . ' pada tanggal ' . date('Y-m-d'));
         }
 
         $arr = [
@@ -432,17 +432,17 @@ class KasirCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "'.$data->nama_pasien);
+            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "' . $data->nama_pasien);
         }
 
         $layanan = LayananPasien::where('registrasi_uuid', '=', $request->uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obat = Resep::where('registrasi_uuid', '=', $request->uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         return response()->json(['data' => $data, 'obatracikan' => $obatracikan, 'layanan' => $layanan, 'obat' => $obat]);
     }
@@ -458,19 +458,23 @@ class KasirCtrl extends Controller
         $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 
         $get = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('number', '=', $request->number)
-                ->where('pemanggil', '=', '1')
-                                ->first();
+            ->where('number', '=', $request->number)
+            ->where('pemanggil', '=', '1')
+            ->first();
+
+        $arr = array('panggil' => 1);
+        $update = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))
+            ->where('number', '=', $request->number)->update($arr);
 
         if ($get) {
-            $str = 'Kasir 1='.$request->number;
+            $str = 'Kasir 1=' . $request->number;
             $this->jeda(1, $str);
 
             return response()->json(['data' => 'berhasil']);
         }
 
         $get = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('number', '=', $request->number)->first();
+            ->where('number', '=', $request->number)->first();
         if ($get) {
             if ($get->pemanggil != '-') {
                 return response()->json(['data' => 'cannot']);
@@ -478,8 +482,8 @@ class KasirCtrl extends Controller
         }
 
         $get = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))
-                ->where('pemanggil', '=', '1')
-                                ->first();
+            ->where('pemanggil', '=', '1')
+            ->first();
 
         if ($get) {
             $arr = ['pemanggil' => '-'];
@@ -489,7 +493,7 @@ class KasirCtrl extends Controller
         $arr = ['pemanggil' => '1'];
         $panggil = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))->where('number', '=', $request->number)->update($arr);
 
-        $str = 'Kasir 1='.$request->number;
+        $str = 'Kasir 1=' . $request->number;
         $this->jeda(1, $str);
 
         return response()->json(['data' => 'berhasil']);
@@ -509,7 +513,7 @@ class KasirCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "'.$data->nama_pasien);
+            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "' . $data->nama_pasien);
         }
 
         $arr = ['approve_panjar' => '1'];
@@ -535,45 +539,45 @@ class KasirCtrl extends Controller
 
         if ($request->search != '') {
             $data = Registrasi::where('delete_soft', '=', 1)
-                                ->where($column, 'ilike', '%'.$search.'%')
-                                ->orderBy('id', 'desc')
-                                ->where('panjar', '!=', '0')
-                                ->where('status', '=', 'Pending')
-                                ->where(function ($q) {
-                                    $q->where('status_dokter', '=', 'Sudah Diperiksa (Pending)')
-                                    ->orWhere('status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->skip($skip)->take($this->take)
-                                ->get();
+                ->where($column, 'ilike', '%' . $search . '%')
+                ->orderBy('id', 'desc')
+                ->where('panjar', '!=', '0')
+                ->where('status', '=', 'Pending')
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa (Pending)')
+                        ->orWhere('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->skip($skip)->take($this->take)
+                ->get();
             $total = Registrasi::where('delete_soft', '=', 1)
-                                ->where('status', '=', 'Pending')
-                                ->where('panjar', '!=', '0')
-                                ->where(function ($q) {
-                                    $q->where('status_dokter', '=', 'Sudah Diperiksa (Pending)')
-                                    ->orWhere('status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->where($column, 'ilike', '%'.$search.'%')
-                                ->orderBy('id', 'desc')->count();
+                ->where('status', '=', 'Pending')
+                ->where('panjar', '!=', '0')
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa (Pending)')
+                        ->orWhere('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->where($column, 'ilike', '%' . $search . '%')
+                ->orderBy('id', 'desc')->count();
         } else {
             $data = Registrasi::where('delete_soft', '=', 1)
-                                    ->orderBy('id', 'desc')
-                                    ->where('status', '=', 'Pending')
-                                    ->where('panjar', '!=', '0')
-                                    ->where(function ($q) {
-                                        $q->where('status_dokter', '=', 'Sudah Diperiksa (Pending)')
-                                        ->orWhere('status_dokter', '=', 'Sudah Diperiksa');
-                                    })
-                                    ->skip($skip)->take($this->take)
-                                    ->get();
+                ->orderBy('id', 'desc')
+                ->where('status', '=', 'Pending')
+                ->where('panjar', '!=', '0')
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa (Pending)')
+                        ->orWhere('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->skip($skip)->take($this->take)
+                ->get();
 
             $total = Registrasi::where('delete_soft', '=', 1)
-                                ->where('status', '=', 'Pending')
-                                ->where('panjar', '!=', '0')
-                                ->where(function ($q) {
-                                    $q->where('status_dokter', '=', 'Sudah Diperiksa (Pending)')
-                                    ->orWhere('status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->orderBy('id', 'desc')->count();
+                ->where('status', '=', 'Pending')
+                ->where('panjar', '!=', '0')
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa (Pending)')
+                        ->orWhere('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->orderBy('id', 'desc')->count();
         }
 
         return response()->json(['data' => $data, 'total' => $total]);

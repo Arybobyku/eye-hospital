@@ -1200,10 +1200,10 @@ class PemeriksaanCtrl extends Controller
                     $antrianFarmasi->tanggal = date('Y-m-d');
 
                     // BPJS
-					$antrianFarmasi->kode_poli=  $registrasi->kode_poli_bpjs;
-					$antrianFarmasi->poli=  $registrasi->nama_poli_bpjs;
-					$antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
-					$antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianFarmasi->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianFarmasi->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
                     $antrianFarmasi->uuid_registrasi =  $registrasi->uuid;
 
                     $antrianFarmasi->save();
@@ -1238,11 +1238,11 @@ class PemeriksaanCtrl extends Controller
                     $antrianKasir->jenis = $request->jenis;
                     $antrianKasir->tanggal = date('Y-m-d');
                     // BPJS
-					$antrianKasir->kode_poli=  $registrasi->kode_poli_bpjs;
-					$antrianKasir->poli=  $registrasi->nama_poli_bpjs;
-					$antrianKasir->uuid_pasien =  $registrasi->pasien_uuid;
-					$antrianKasir->kode_dokter =  $registrasi->kode_dokter_bpjs;
-					$antrianKasir->uuid_registrasi =  $registrasi->uuid;
+                    $antrianKasir->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianKasir->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianKasir->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianKasir->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianKasir->uuid_registrasi =  $registrasi->uuid;
 
                     $antrianKasir->save();
 
@@ -2038,10 +2038,10 @@ class PemeriksaanCtrl extends Controller
                     $antrianFarmasi->tanggal = date('Y-m-d');
 
                     // BPJS
-					$antrianFarmasi->kode_poli=  $registrasi->kode_poli_bpjs;
-					$antrianFarmasi->poli=  $registrasi->nama_poli_bpjs;
-					$antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
-					$antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianFarmasi->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianFarmasi->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
                     $antrianFarmasi->uuid_registrasi =  $registrasi->uuid;
 
                     $antrianFarmasi->save();
@@ -2076,11 +2076,11 @@ class PemeriksaanCtrl extends Controller
                     $antrianKasir->jenis = $request->jenis;
                     $antrianKasir->tanggal = date('Y-m-d');
                     // BPJS
-					$antrianKasir->kode_poli=  $registrasi->kode_poli_bpjs;
-					$antrianKasir->poli=  $registrasi->nama_poli_bpjs;
-					$antrianKasir->uuid_pasien =  $registrasi->pasien_uuid;
-					$antrianKasir->kode_dokter =  $registrasi->kode_dokter_bpjs;
-					$antrianKasir->uuid_registrasi =  $registrasi->uuid;
+                    $antrianKasir->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianKasir->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianKasir->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianKasir->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianKasir->uuid_registrasi =  $registrasi->uuid;
 
                     $antrianKasir->save();
 
@@ -2341,6 +2341,11 @@ class PemeriksaanCtrl extends Controller
             ->where('number', '=', $request->number)
             ->where('pemanggil', '=', $request->ruang_poliklinik)
             ->first();
+
+        $arr = array('panggil' => 1);
+        $update = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))
+            ->where('number', '=', $request->number)->update($arr);
+
 
         if ($get) {
             $str = 'Poliklinik ' . $request->ruang_poliklinik . '=' . $request->number;

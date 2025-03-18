@@ -460,11 +460,11 @@ class AntrolBpjsCtrl extends Controller
         return $result;
     }
 
-    public function listWaktuTaskId()
+    public function listWaktuTaskId($kodebooking)
     {
         $endpoint = "antrean/getlisttask";
         $data = [
-            "kodebooking" => "Y03-20#1617068533",
+            "kodebooking" => $kodebooking,
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 

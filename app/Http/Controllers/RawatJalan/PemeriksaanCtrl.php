@@ -451,8 +451,8 @@ class PemeriksaanCtrl extends Controller
 					$antrianPO->kode = 'P';
 
 					// BPJS
-					$antrianPO->kode_poli=  $registrasi->kode_poli_bpjs;
-					$antrianPO->poli=  $registrasi->nama_poli_bpjs;
+					$antrianPO->kode_poli =  $registrasi->kode_poli_bpjs;
+					$antrianPO->poli =  $registrasi->nama_poli_bpjs;
 					$antrianPO->uuid_pasien =  $registrasi->pasien_uuid;
 					$antrianPO->kode_dokter =  $registrasi->kode_dokter_bpjs;
 					$antrianPO->uuid_registrasi =  $registrasi->uuid;
@@ -896,8 +896,13 @@ class PemeriksaanCtrl extends Controller
 			->where('pemanggil', '=', 'Refraksi Optisi')
 			->first();
 
+		$arr = array('panggil' => 1);
+		$update = AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))
+			->where('number', '=', $request->number)->update($arr);
+
+
 		if ($get) {
-			$str = 'Refraksi Optisi=' . $request->number.'='.$cek->nama_pasien;
+			$str = 'Refraksi Optisi=' . $request->number . '=' . $cek->nama_pasien;
 			// after 14 Detik
 			$on = Carbon::now()->subSeconds(14);
 			dispatch(new SendPoliJob($str))->delay($on);
@@ -924,7 +929,7 @@ class PemeriksaanCtrl extends Controller
 		$arr = array('pemanggil' => 'Refraksi Optisi');
 		$panggil = AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))->where('number', '=', $request->number)->update($arr);
 
-		$str = 'Refraksi Optisi=' . $request->number.'='.$cek->nama_pasien;
+		$str = 'Refraksi Optisi=' . $request->number . '=' . $cek->nama_pasien;
 		$on = Carbon::now()->subSeconds(14);
 		dispatch(new SendPoliJob($str))->delay($on);
 

@@ -49,7 +49,7 @@ Route::group([], function () {
         Route::post('antrean/farmasi/add', [AntrolBpjsCtrl::class, 'tambahAntreanFarmasi']);
         Route::post('antrean/updatewaktu', [AntrolBpjsCtrl::class, 'updateWaktuAntrean']);
         Route::post('antrean/batal', [AntrolBpjsCtrl::class, 'batalAntrean']);
-        Route::post('antrean/getlisttask', [AntrolBpjsCtrl::class, 'listWaktuTaskId']);
+        Route::post('antrean/getlisttask/{kodebooking}', [AntrolBpjsCtrl::class, 'listWaktuTaskId']);
 
         Route::get('dashboard/waktutunggu/tanggal/{params1}/waktu/{params2}', [AntrolBpjsCtrl::class, 'dashboardPerTanggal']);
         Route::get('dashboard/waktutunggu/bulan/{params1}/tahun/{params2}/waktu/{params3}', [AntrolBpjsCtrl::class, 'dashboardPerBulan']);
