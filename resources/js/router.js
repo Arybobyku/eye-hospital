@@ -201,9 +201,16 @@ const routes = [
 	},
 	{ 
 		path: _base + 'antrol-data', 
-		name: 'Dashboard Antrian Online', 
+		name: 'Data Antrian Online', 
 		component: () => import('./components/antrol/antrol-data/index.vue'),
 		meta: { title: 'Dashboard Antrian Online' },
+		props: true 
+	},
+	{ 
+		path: _base + 'antrol-list-task', 
+		name: 'List Task Antrian Online', 
+		component: () => import('./components/antrol/antrol-list-task/index.vue'),
+		meta: { title: 'List Task Antrian Online' },
 		props: true 
 	},
 	{ 

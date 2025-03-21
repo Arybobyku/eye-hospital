@@ -372,9 +372,6 @@ class PemeriksaanCtrl extends Controller
 			//return response()->json(['data' => $request]);
 
 			if ($request->uuid != '') {
-
-
-
 				$arr = array(
 					'penetesan_obat' => $request->penetesan_obat,
 					'nama_pemeriksa' => $request->nama_pemeriksa,
