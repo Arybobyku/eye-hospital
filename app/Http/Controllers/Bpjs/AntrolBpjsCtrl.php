@@ -281,7 +281,7 @@ class AntrolBpjsCtrl extends Controller
             "namadokter" => $item->nama_dokter_bpjs ?? "",
             "jampraktek" => $item->jadwal_dokter_bpjs ?? "",
             "jeniskunjungan" => "1",
-            "nomorreferensi" => "0001R0040116A000001",
+            "nomorreferensi" => $item->nomorregistrasi,
             "nomorantrean" => $item->no_pendaftaran,
             "angkaantrean" => $nomorOnly,
             "estimasidilayani" => $estimasidilayani,

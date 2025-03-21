@@ -616,7 +616,7 @@
                 }).catch(function(error) {
                     setTimeout(function() {
                         vm.gagal(error);
-                    }, 750, this);
+                    }, 750, this);  
                 });
             },
             dialog: function(_text, _confirm, posisi) {

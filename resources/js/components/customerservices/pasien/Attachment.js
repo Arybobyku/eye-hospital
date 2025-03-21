@@ -79,6 +79,7 @@ export const parserawatjalan = (form, detail, selectedPoli, selectedDokter, jadw
 	data.append('jenis_identitas', form.select.jenisidentitas.value);
 	data.append('no_identitas', form.pjnoidentitas.value);
 	data.append('no_handphone', form.pjnohandphone.value);
+	data.append('nomorreferensi', form.nomorreferensi.value);
 
 	return data;
 }
