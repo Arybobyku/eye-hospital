@@ -41,7 +41,7 @@
 <template>
     <div class="filter-container">
         <div class="filterType">
-            <select id="filterType" v-model="filterType">
+            <select @change="fetchPoli" id="filterType" v-model="filterType">
                 <option value="">Pilih Filter</option>
                 <option value="tanggal">Antrean Per Tanggal</option>
                 <option value="booking">Antrean Per Kode Booking</option>
@@ -54,16 +54,17 @@
         <input v-if="filterType === 'booking'" type="text" v-model="params1" />
 
         <div v-if="filterType === 'filter'" class="filter-group">
+
             <select v-model="params1">
                 <option value="">Pilih Kode Poli</option>
-                <option v-for="(bulan, index) in bulanList" :key="index" :value="index + 1">
-                    {{ bulan }}
+                <option v-for="poli in poliBpjs" :key="poli.kdpoli" :value="poli.nmpoli">
+                    {{ poli.nmpoli }} - {{ poli.nmsubspesialis }}
                 </option>
             </select>
             <select v-model="params2">
-                <option value="">Pilih Kode Dokter</option>
-                <option v-for="(bulan, index) in bulanList" :key="index" :value="index + 1">
-                    {{ bulan }}
+                <option value="">Pilih Dokter</option>
+                <option v-for="dokter in dokterBpjs" :key="dokter.kodedokter" :value="dokter.kodedokter">
+                    {{ dokter.kodedokter }} - {{ dokter.namadokter }}
                 </option>
             </select>
             <select v-model="params3">
@@ -79,6 +80,7 @@
                 </option>
             </select>
         </div>
+
 
 
         <button @click="applyFilter">Apply Filter</button>
@@ -110,6 +112,7 @@
     import 'vue3-toastify/dist/index.css';
     import Swal from 'sweetalert2';
     export default {
+        
         emits: ["titletrigger", "repatch"],
         beforeUnmount: function() {},
         components: {
@@ -132,6 +135,8 @@
         },
         data: function() {
             return {
+                poliBpjs: [],
+                dokterBpjs: [],
                 filterType: "",
                 showDatatable: false, // Awalnya tersembunyi
                 params1: "",
@@ -311,7 +316,25 @@
         methods: {
             nullAndZero,
             datename,
+            async fetchPoli() {
 
+                //- TODO: Ganti Tanggal dengan hari ini
+                const today = "2025-03-03"; // Format: YYYY-MM-DD
+
+                try {
+                    const response = await axios.get(`/api/bpjs/antrol-bpjs/ref/poli`);
+                    const responseDokter = await axios.get(`/api/bpjs/antrol-bpjs/ref/dokter`);
+                    console.log(response);
+                    // this.poli = response.data.response || [];
+                    vm.poliBpjs = response.data?.response?.filter(poli => poli.kdpoli === "MAT") || [];
+                    vm.dokterBpjs = responseDokter.data?.response || [];
+                    console.log(vm.poliBpjs);
+
+
+                } catch (error) {
+                    console.error("Gagal mengambil jadwal dokter:", error.response ? error.response.data : error.message);
+                }
+            },
             /*************************************************************************************************************************
              * Bagian fungsi untuk pemrosesan table
              *************************************************************************************************************************/

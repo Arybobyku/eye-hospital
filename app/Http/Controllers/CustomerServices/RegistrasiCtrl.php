@@ -363,6 +363,7 @@ class RegistrasiCtrl extends Controller
 				$item->carabayar_uuid = $request->carabayar_uuid ? $request->carabayar_uuid : '-';
 				$item->carabayar_nama = $request->carabayar_nama ? $request->carabayar_nama : '-';
 				$item->no_bpjs_kes = $request->no_bpjs_kes;
+				$item->nomorreferensi = $request->nomorreferensi;
 				$item->carabayar_nama = $request->carabayar_nama ? $request->carabayar_nama : '-';
 				$item->asuransi_uuid = $request->asuransi_uuid ? $request->asuransi_uuid : '-';
 				$item->nama_asuransi = $request->nama_asuransi ? $request->nama_asuransi : '-';

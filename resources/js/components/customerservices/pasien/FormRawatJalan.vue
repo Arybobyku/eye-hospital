@@ -14,6 +14,8 @@
 				:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)">
 			</Selected>
 			<Inputed :ref="form.no_bpjs_kes.name" :form="form.no_bpjs_kes" v-if="form.no_bpjs_kes.show"></Inputed>
+			<Inputed :ref="form.nomorreferensi.name" :form="form.nomorreferensi" v-if="form.nomorreferensi.show">
+			</Inputed>
 
 			<select style="width: 200px;" v-model="selectedPoli" @change="fetchJadwalDokter" v-if="showSelectPoli">
 				<option v-for="poli in poliBpjs" :key="poli.kdpoli" :value="poli.kdpoli">
@@ -163,7 +165,7 @@ export default {
 		vm = this; body = document.body;
 		vm.form = vm.formrawatjalan();
 		vm.arr = vm.arrregistrasi();
-		console.log("Data poliBpjs diterima di FormRawatJalan:", this.poliBpjs);
+		console.log("Data poliBpjs diterima di FormRawatJalan:", this.eng);
 		setTimeout(() => {
 			vm.test = vm.iskunjungan;
 			vm.coverblock();
@@ -628,6 +630,10 @@ export default {
 				vm.form.no_bpjs_kes.show = false;
 				vm.form.no_bpjs_kes.disabled = true;
 				vm.form.no_bpjs_kes.required = '';
+				vm.form.nomorreferensi.value = '';
+				vm.form.nomorreferensi.show = false;
+				vm.form.nomorreferensi.disabled = true;
+				vm.form.nomorreferensi.required = '';
 				vm.form.select.dokter.isrequired = true;
 				vm.form.select.dokter.value = '';
 				vm.form.select.dokter.label = 'Silahkan Pilih';
@@ -635,10 +641,15 @@ export default {
 				this.showSelectDokter = true; // Sembunyikan select biasa
 				this.showSelectPoli = true; // Sembunyikan select biasa
 			} else {
-				// vm.form.no_bpjs_kes.value = '';
+				vm.form.no_bpjs_kes.value = ''; 
 				vm.form.no_bpjs_kes.show = true;
 				vm.form.no_bpjs_kes.disabled = false;
 				vm.form.no_bpjs_kes.required = 'required';
+				
+				vm.form.nomorreferensi.value = '';
+				vm.form.nomorreferensi.show = true;
+				vm.form.nomorreferensi.disabled = false;
+				vm.form.nomorreferensi.required = 'required';
 				vm.form.select.dokter.isrequired = false;
 				vm.form.select.dokter.value = '';
 				vm.form.select.dokter.label = '';
