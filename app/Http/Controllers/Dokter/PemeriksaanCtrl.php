@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Models\AntrianKasir;
 use App\Models\AntrianFarmasi;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
 
 class PemeriksaanCtrl extends Controller
 {
@@ -1174,7 +1175,7 @@ class PemeriksaanCtrl extends Controller
                 $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
 
                 // Start Antrian Farmasi
-                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0)) {
+                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0) && $registrasi->carabayar_nama != 'Umum') {
                     // Create Antrian Farmasi
                     $uuidFarmasi = '';
                     $loop = false;
@@ -1214,7 +1215,7 @@ class PemeriksaanCtrl extends Controller
                 // End Antrian Farmasi
 
                 // Start Antrian Kasir
-                if ($registrasi->no_antrian_kasir == null && (count($obat) == 0 && count($obatracikan) == 0)) {
+                if ($registrasi->no_antrian_kasir == null && $registrasi->carabayar_nama == 'Umum') {
                     $uuidKasir = '';
                     $loop = false;
                     do {
@@ -2012,7 +2013,7 @@ class PemeriksaanCtrl extends Controller
                 $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
 
                 // Start Antrian Farmasi
-                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0)) {
+                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0) && $registrasi->carabayar_nama != 'Umum') {
                     // Create Antrian Farmasi
                     $uuidFarmasi = '';
                     $loop = false;
@@ -2052,7 +2053,7 @@ class PemeriksaanCtrl extends Controller
                 // End Antrian Farmasi
 
                 // Start Antrian Kasir
-                if ($registrasi->no_antrian_kasir == null && (count($obat) == 0 && count($obatracikan) == 0)) {
+                if ($registrasi->no_antrian_kasir == null && $registrasi->carabayar_nama == 'Umum') {
                     $uuidKasir = '';
                     $loop = false;
                     do {
@@ -2088,6 +2089,11 @@ class PemeriksaanCtrl extends Controller
                         ->update(['no_antrian_kasir' => $kodeKasir]);
                 }
                 // End Antrian Kasir
+
+
+                // UPDATE TASK ID 5
+                $epochTime = time() * 1000;
+                $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($registrasi->nomor, 5, $epochTime, $registrasi->uuid);    
 
             }
             $cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
@@ -2345,6 +2351,10 @@ class PemeriksaanCtrl extends Controller
         $arr = array('panggil' => 1);
         $update = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))
             ->where('number', '=', $request->number)->update($arr);
+
+        // UPDATE TASK ID 4
+        $epochTime = time() * 1000;
+        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($cek->nomor, 4, $epochTime, $cek->uuid);    
 
 
         if ($get) {

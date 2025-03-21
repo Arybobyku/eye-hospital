@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Finance;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\SendAllJob;
+use App\Models\AntrianFarmasi;
 use App\Models\AntrianKasir;
 use App\Models\LayananPasien;
 use App\Models\Pasien;
@@ -13,6 +14,7 @@ use App\Models\ResepRacikan;
 use App\Models\StockOpname;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class KasirCtrl extends Controller
 {
@@ -358,6 +360,48 @@ class KasirCtrl extends Controller
                 'status' => 'Selesai',
             ];
             $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+
+
+            $registrasi = Registrasi::where('uuid', '=', $request->uuid)->first();
+            // Start Antrian Farmasi
+            if ($registrasi->no_antrian_farmasi == null && (count($data) > 0 || count($obatracikan) > 0)) {
+                // Create Antrian Farmasi
+                $uuidFarmasi = '';
+                $loop = false;
+                do {
+                    $uuidFarmasi = Uuid::uuid4();
+                    $check = AntrianFarmasi::where('uuid', '=', $uuidFarmasi)->first();
+                    if (!$check) {
+                        $loop = true;
+                    }
+                } while ($loop == false);
+
+                $latestAntrianRO = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+                $latestNumber = $latestAntrianRO->number ?? 0;
+                $latestNumber = $latestNumber + 1;
+                $kodeFarmasi = 'F-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+                $antrianFarmasi = new AntrianFarmasi();
+                $antrianFarmasi->uuid = $uuidFarmasi;
+                $antrianFarmasi->kode = 'F';
+                $antrianFarmasi->number = $latestNumber;
+                $antrianFarmasi->jenis = $request->jenis;
+                $antrianFarmasi->tanggal = date('Y-m-d');
+
+                // BPJS
+                $antrianFarmasi->kode_poli =  $registrasi->kode_poli_bpjs;
+                $antrianFarmasi->poli =  $registrasi->nama_poli_bpjs;
+                $antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
+                $antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                $antrianFarmasi->uuid_registrasi =  $registrasi->uuid;
+
+                $antrianFarmasi->save();
+
+                Registrasi::where('uuid', $registrasi->uuid)
+                    ->update(['no_antrian_farmasi' => $kodeFarmasi]);
+            }
+            // End Antrian Farmasi
 
             \DB::commit();
 
