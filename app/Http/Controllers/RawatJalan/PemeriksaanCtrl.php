@@ -17,6 +17,7 @@ use App\Jobs\SendPoliJob;
 use App\Models\EdukasiPasien;
 use App\Models\Cppt;
 use Carbon\Carbon;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
 
 use App\Models\AntrianPoli;
 
@@ -107,13 +108,14 @@ class PemeriksaanCtrl extends Controller
 				->orderBy('status_ro', 'asc')
 				->orderBy('id', 'asc')->count();
 		} else {
-			$data = Registrasi::where('delete_soft', '=', 1)
-				->orderBy('status_ro', 'asc')
-				->orderBy('id', 'asc')
+			$data = Registrasi::join('antrian_ro', 'registrasi.uuid', '=', 'antrian_ro.uuid_registrasi')
+				->where('registrasi.delete_soft', '=', 1)
+				->orderBy('registrasi.status_ro', 'asc')
+				->orderBy('registrasi.id', 'asc')
 				->where(function ($q) {
-					$q->where('status', 'Kunjungan')
-						->orWhere('status', 'Rawat Inap')
-						->orWhere('status', 'Selesai');
+					$q->where('registrasi.status', 'Kunjungan')
+						->orWhere('registrasi.status', 'Rawat Inap')
+						->orWhere('registrasi.status', 'Selesai');
 				})
 				// 	->where('carabayar_nama', '!=', 'BPJS Kesehatan')
 				// ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
@@ -133,7 +135,13 @@ class PemeriksaanCtrl extends Controller
 				// ->where('carabayar_nama', '!=', 'bpjs sehat')
 				// ->where('carabayar_nama', '!=', 'bpjs-sehat')
 				// ->where('carabayar_nama', '!=', 'bpjs_sehat')
-				->whereDate('tanggal', '=', date('Y-m-d'))
+				->whereDate('registrasi.tanggal', '=', date('Y-m-d'))
+				->select(
+					'registrasi.*',
+					'antrian_ro.id as antrian_ro_id',
+					'antrian_ro.uuid as antrian_ro_uuid',
+					'antrian_ro.status as antrian_ro_status',
+				)
 				->skip($skip)->take($this->take)
 				->get();
 
@@ -424,7 +432,7 @@ class PemeriksaanCtrl extends Controller
 				$update = PemeriksaanRo::where("uuid", '=', $request->uuid)->update($arr);
 
 				$registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
-
+				
 				if ($registrasi->no_antrian_poli == null) {
 					// Start Antrian Poli
 					$uuidPoli = '';
@@ -929,6 +937,70 @@ class PemeriksaanCtrl extends Controller
 		$str = 'Refraksi Optisi=' . $request->number . '=' . $cek->nama_pasien;
 		$on = Carbon::now()->subSeconds(14);
 		dispatch(new SendPoliJob($str))->delay($on);
+
+		return response()->json(['data' => 'berhasil']);
+	}
+
+	public function finishcall(Request $request)
+	{
+		date_default_timezone_set("Asia/Jakarta");
+
+		$get = AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))
+			->where('number', '=', $request->number)
+			->first();
+
+		$registrasi = null; 
+		if ($get) {
+			$registrasi = Registrasi::where('uuid', '=', $get->uuid_registrasi)->first();
+		} 
+
+		if($registrasi->no_antrian_poli == null) {
+			// Start Antrian Poli
+			$uuidPoli = '';
+			$loop = false;
+			do {
+				$uuidPoli = Uuid::uuid4();
+				$check = AntrianPoli::where('uuid', '=', $uuidPoli)->first();
+				if (!$check) {
+					$loop = true;
+				}
+			} while ($loop == false);
+
+			$latestAntrianRO = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+			$latestNumber = $latestAntrianRO->number ?? 0;
+			$latestNumber = $latestNumber + 1;
+			$kodePoli = 'P-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+			$antrianPO = new AntrianPoli();
+			$antrianPO->uuid = $uuidPoli;
+			$antrianPO->kode = 'P';
+
+			// BPJS
+			$antrianPO->kode_poli =  $registrasi->kode_poli_bpjs;
+			$antrianPO->poli =  $registrasi->nama_poli_bpjs;
+			$antrianPO->uuid_pasien =  $registrasi->pasien_uuid;
+			$antrianPO->kode_dokter =  $registrasi->kode_dokter_bpjs;
+			$antrianPO->uuid_registrasi =  $registrasi->uuid;
+
+			$antrianPO->number = $latestNumber;
+			$antrianPO->jenis = $request->jenis;
+			$antrianPO->tanggal = date('Y-m-d');
+			$antrianPO->save();
+
+			Registrasi::where('uuid', '=', $get->uuid_registrasi)
+				->update(['no_antrian_poli' => $kodePoli]);
+		}
+
+		$get->status = 'selesai';
+		$get->save();	
+
+		// End Create Antrian POLI
+
+		// $registrasi = Registrasi::where('uuid', '=', $get->uuid_registrasi)->first();
+
+		// $epochTime = time() * 1000;
+		// $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($get->nomor, 1, $epochTime, $registrasi->uuid);;
 
 		return response()->json(['data' => 'berhasil']);
 	}

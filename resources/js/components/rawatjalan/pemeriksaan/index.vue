@@ -53,6 +53,7 @@ export default {
 				detailperawat: '/rawatjalan/pemeriksaan/detailperawat',
 				histori: '/rawatjalan/pemeriksaan/histori',
 				call: '/rawatjalan/pemeriksaan/call',
+				finishCall: '/rawatjalan/pemeriksaan/finishcall',
 			}, url: '', data: null
 		},
 		column: [
@@ -91,8 +92,9 @@ export default {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Pemeriksaan RO', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detailperawat', tooltip: 'Pemeriksaan Perawat', item: _item, index: _index, show: true },
-				{ icon: 'bell', color: 'btn-info', posisi: 'panggil', tooltip: 'Panggil Pasien', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Log Pemeriksaan RO', item: _item, index: _index, show: true },
+				{ icon: 'bell', color: 'btn-info', posisi: 'panggil', tooltip: 'Panggil Pasien', item: _item, index: _index, show: true },
+				{ icon: 'bell', color: 'btn-info', posisi: 'selesaiPanggil', tooltip: 'Selesai Panggil', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -103,9 +105,12 @@ export default {
 			}
 			return '<div class="badge badge-success">'+data.status_ro+'</div>'
 		},
-		printAntrian:function(noAntrian, jenis){
+		printAntrian:function(noAntrian, jenis, status){
 			if(noAntrian == null){
 				return "-"
+			}
+			if(status == 'selesai'){
+				return `${noAntrian} </br> Selesai`
 			}
 			return '<a href="/antrian/cetak-antrian-all/'+noAntrian+'/'+jenis+'" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">'+noAntrian+'</a>'
 		},
@@ -123,8 +128,8 @@ export default {
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
-			else if (identity == 'no_antrian_poli') { _tmp = { value: vm.printAntrian(data.no_antrian_poli, data.carabayar_nama), ishtml: 'html', style: '' }; }
-			else if (identity == 'no_antrian_ro') { _tmp = { value: vm.printAntrian(data.no_antrian_ro, data.carabayar_nama), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_poli') { _tmp = { value: vm.printAntrian(data.no_antrian_poli, data.carabayar_nama, 'active'), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_ro') { _tmp = { value: vm.printAntrian(data.no_antrian_ro, data.carabayar_nama, data.antrian_ro_status), ishtml: 'html', style: '' }; }
 			else if (identity == 'status_ro') { _tmp = { value: vm.statusro(data), ishtml: 'html', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';
@@ -174,6 +179,19 @@ export default {
 				vm.dialog('Yakin ingin memanggil nomor antrian pasien ini.', 'Ya, panggil', 'call');
 				
 			}
+			else if (posisi == 'selesaiPanggil') {
+				vm.position = 'finishcall';
+				vm.attach.url = vm.attach.link.finishCall;
+				console.log(data)
+				vm.attach.data = new FormData();
+				let number = data.no_antrian_ro.split("-");
+				number = parseInt(number[1]);
+				vm.attach.data.append('number', number);
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.data.append('pengguna_uuid', data.pengguna_uuid);
+				vm.dialog('Yakin menyelesaikan panggilan pasien ini.', 'Ya, selesai', 'finishcall');
+				
+			}
 		},
 
 		loadingModal: function (position) { 
@@ -209,6 +227,7 @@ export default {
 			else if (vm.position == 'detaildataperawat') { vm.loadingModal('formdetailperawat'); vm.$refs.FormPerawat.hide();  }
 			else if (vm.position == 'historidata') { vm.loadingModal('formhistori'); vm.$refs.FormHistori.hide();  }
 			else if (vm.position == 'call') { vm.$refs.Datatable.skeleton(); }
+			else if (vm.position == 'finishcall') { vm.$refs.Datatable.skeleton(); }
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
 		},
@@ -258,6 +277,9 @@ export default {
 			else if (vm.position == 'call') { 
 				setTimeout(() => { vm.tablereload(); }, 500, this);
 			}
+			else if (vm.position == 'finishcall') { 
+				setTimeout(() => { vm.tablereload(); }, 500, this);
+			}
 			vm.message('success', active);
 		},
 
@@ -268,6 +290,7 @@ export default {
 				else if (vm.position == 'adddata') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'adddataperawat') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'call') { vm.notification('Gagal memanggil antrian pasien.', 3000, position); }
+				else if (vm.position == 'finishcall') { vm.notification('Gagal menyelesaikan antrian pasien.', 3000, position); }
 				else if (vm.position == 'detaildata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 				else if (vm.position == 'detaildataperawat') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 				else if (vm.position == 'historidata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
@@ -276,6 +299,7 @@ export default {
 				if (vm.position == 'adddata') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				if (vm.position == 'adddataperawat') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'call') { vm.notification('Antrian pasien berhasil dipanggil.', 3000, position); }
+				else if (vm.position == 'finishcall') { vm.notification('Antrian pasien berhasil diselesaikan.', 3000, position); }
 				else if (vm.position == 'updatedata') { vm.notification('Pembaharuan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'updatedataperawat') { vm.notification('Pembaharuan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'removedata') { vm.notification('Penghapusan data berhasil diproses.', 3000, position); }
@@ -287,6 +311,7 @@ export default {
 			else if (posisi == 'formdetailperawat') { vm.loadingModal('formdetailperawat'); }
 			else if (posisi == 'removedata') { vm.$refs.Datatable.skeleton(); }
 			else if (posisi == 'call') { vm.$refs.Datatable.skeleton(); }
+			else if (posisi == 'finishcall') { vm.$refs.Datatable.skeleton(); }
 			vm.executions();
 		},
 
