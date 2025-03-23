@@ -61,7 +61,7 @@
                     {{ poli.nmpoli }} - {{ poli.nmsubspesialis }}
                 </option>
             </select>
-            <select v-model="params2">
+            <select @change="fetchJadwalDokter" v-model="params2">
                 <option value="">Pilih Dokter</option>
                 <option v-for="dokter in dokterBpjs" :key="dokter.kodedokter" :value="dokter.kodedokter">
                     {{ dokter.kodedokter }} - {{ dokter.namadokter }}
@@ -69,14 +69,14 @@
             </select>
             <select v-model="params3">
                 <option value="">Pilih Hari</option>
-                <option v-for="(bulan, index) in bulanList" :key="index" :value="index + 1">
+                <option v-for="(bulan, index) in hariList" :key="index" :value="index + 1">
                     {{ bulan }}
                 </option>
             </select>
             <select v-model="params4">
                 <option value="">Pilih Jam Praktek</option>
-                <option v-for="(bulan, index) in bulanList" :key="index" :value="index + 1">
-                    {{ bulan }}
+                <option v-for="jadwal in jadwalDokter" :key="jadwal.jadwal" :value="jadwal.jadwal">
+                    {{ jadwal.namadokter }} - {{ jadwal.jadwal }}
                 </option>
             </select>
         </div>
@@ -137,24 +137,20 @@
             return {
                 poliBpjs: [],
                 dokterBpjs: [],
+                jadwalDokter: [],
                 filterType: "",
                 showDatatable: false, // Awalnya tersembunyi
                 params1: "",
                 params2: "",
                 paramsWaktu: "",
-                bulanList: [
-                    "Januari",
-                    "Februari",
-                    "Maret",
-                    "April",
-                    "Mei",
-                    "Juni",
-                    "Juli",
-                    "Agustus",
-                    "September",
-                    "Oktober",
-                    "November",
-                    "Desember",
+                hariList: [
+                    "Senin",
+                    "Selasa",
+                    "Rabu",
+                    "Kamis",
+                    "Jumat",
+                    "Sabtu",
+                    "Minggu",
                 ],
                 uri: 'unit',
                 position: '',
@@ -317,10 +313,6 @@
             nullAndZero,
             datename,
             async fetchPoli() {
-
-                //- TODO: Ganti Tanggal dengan hari ini
-                const today = "2025-03-03"; // Format: YYYY-MM-DD
-
                 try {
                     const response = await axios.get(`/api/bpjs/antrol-bpjs/ref/poli`);
                     const responseDokter = await axios.get(`/api/bpjs/antrol-bpjs/ref/dokter`);
@@ -332,12 +324,22 @@
 
 
                 } catch (error) {
-                    console.error("Gagal mengambil jadwal dokter:", error.response ? error.response.data : error.message);
+                    console.error("Gagal mengambil poli:", error.response ? error.response.data : error.message);
                 }
             },
-            /*************************************************************************************************************************
-             * Bagian fungsi untuk pemrosesan table
-             *************************************************************************************************************************/
+            async fetchJadwalDokter() {
+                const today = "2025-03-03"; // Format: YYYY-MM-DD
+                // const today = new Date().toISOString().split('T')[0];
+                try {
+                    const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/MAT/tanggal/${today}`);
+                    vm.jadwalDokter = responseJadwal?.data?.response || [];
+                    vm.jadwalDokter = responseJadwal?.data?.response?.filter(jadwal => jadwal.kodedokter === this.params2) || [];
+                    console.log(vm.jadwalDokter);
+
+                } catch (error) {
+                    console.error("Gagal mengambil jadwal dokter:", error.responseJadwal ? error.responseJadwal.data : error.message);
+                }
+            },
 			async applyFilter() {
                 if (!this.filterType && this.filterType != "aktif") {
 					alert("Silakan pilih jenis filter terlebih dahulu");
