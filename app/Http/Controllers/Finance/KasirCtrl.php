@@ -386,7 +386,7 @@ class KasirCtrl extends Controller
                 $antrianFarmasi->uuid = $uuidFarmasi;
                 $antrianFarmasi->kode = 'F';
                 $antrianFarmasi->number = $latestNumber;
-                $antrianFarmasi->jenis = $request->jenis;
+                $antrianFarmasi->jenis = $registrasi->jenis;
                 $antrianFarmasi->tanggal = date('Y-m-d');
 
                 // BPJS

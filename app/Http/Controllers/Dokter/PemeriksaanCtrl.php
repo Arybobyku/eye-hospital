@@ -1197,7 +1197,7 @@ class PemeriksaanCtrl extends Controller
                     $antrianFarmasi->uuid = $uuidFarmasi;
                     $antrianFarmasi->kode = 'F';
                     $antrianFarmasi->number = $latestNumber;
-                    $antrianFarmasi->jenis = $request->jenis;
+                    $antrianFarmasi->jenis = $registrasi->jenis;
                     $antrianFarmasi->tanggal = date('Y-m-d');
 
                     // BPJS
@@ -1236,7 +1236,7 @@ class PemeriksaanCtrl extends Controller
                     $antrianKasir->uuid = $uuidKasir;
                     $antrianKasir->kode = 'K';
                     $antrianKasir->number = $latestNumber;
-                    $antrianKasir->jenis = $request->jenis;
+                    $antrianKasir->jenis = $registrasi->jenis;
                     $antrianKasir->tanggal = date('Y-m-d');
                     // BPJS
                     $antrianKasir->kode_poli =  $registrasi->kode_poli_bpjs;
@@ -2074,7 +2074,7 @@ class PemeriksaanCtrl extends Controller
                     $antrianKasir->uuid = $uuidKasir;
                     $antrianKasir->kode = 'K';
                     $antrianKasir->number = $latestNumber;
-                    $antrianKasir->jenis = $request->jenis;
+                    $antrianKasir->jenis = $registrasi->jenis;
                     $antrianKasir->tanggal = date('Y-m-d');
                     // BPJS
                     $antrianKasir->kode_poli =  $registrasi->kode_poli_bpjs;

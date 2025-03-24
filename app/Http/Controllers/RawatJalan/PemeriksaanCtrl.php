@@ -432,7 +432,7 @@ class PemeriksaanCtrl extends Controller
 				$update = PemeriksaanRo::where("uuid", '=', $request->uuid)->update($arr);
 
 				$registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
-				
+
 				if ($registrasi->no_antrian_poli == null) {
 					// Start Antrian Poli
 					$uuidPoli = '';
@@ -445,15 +445,16 @@ class PemeriksaanCtrl extends Controller
 						}
 					} while ($loop == false);
 
-					$latestAntrianRO = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+					$latestAntrianRO = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))->where('no_poli', '=', $request->ruang_poliklinik)->orderBy('id', 'desc')->first();
 
 					$latestNumber = $latestAntrianRO->number ?? 0;
 					$latestNumber = $latestNumber + 1;
-					$kodePoli = 'P-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+					$kodePoli = 'P' . $request->ruang_poliklinik . '-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
 
 					$antrianPO = new AntrianPoli();
 					$antrianPO->uuid = $uuidPoli;
-					$antrianPO->kode = 'P';
+					$antrianPO->kode = 'P' . $request->ruang_poliklinik;
+					$antrianPO->no_poli = $request->ruang_poliklinik;
 
 					// BPJS
 					$antrianPO->kode_poli =  $registrasi->kode_poli_bpjs;
@@ -463,12 +464,19 @@ class PemeriksaanCtrl extends Controller
 					$antrianPO->uuid_registrasi =  $registrasi->uuid;
 
 					$antrianPO->number = $latestNumber;
-					$antrianPO->jenis = $request->jenis;
+					$antrianPO->jenis = $registrasi->jenis;
 					$antrianPO->tanggal = date('Y-m-d');
 					$antrianPO->save();
 
 					Registrasi::where('uuid', $request->registrasi_uuid)
 						->update(['no_antrian_poli' => $kodePoli]);
+
+					preg_match('/\d+/', $registrasi->no_antrian_ro, $matches);
+					$numberRO = (int) $matches[0];
+
+					$antrianRo = AntrianRo::where('uuid_registrasi', '=', $registrasi->uuid)->first();
+					$antrianRo->status = 'selesai';
+					$antrianRo->save();
 				}
 
 				// End Create Antrian POLI
@@ -949,12 +957,12 @@ class PemeriksaanCtrl extends Controller
 			->where('number', '=', $request->number)
 			->first();
 
-		$registrasi = null; 
+		$registrasi = null;
 		if ($get) {
 			$registrasi = Registrasi::where('uuid', '=', $get->uuid_registrasi)->first();
-		} 
+		}
 
-		if($registrasi->no_antrian_poli == null) {
+		if ($registrasi->no_antrian_poli == null) {
 			// Start Antrian Poli
 			$uuidPoli = '';
 			$loop = false;
@@ -993,7 +1001,7 @@ class PemeriksaanCtrl extends Controller
 		}
 
 		$get->status = 'selesai';
-		$get->save();	
+		$get->save();
 
 		// End Create Antrian POLI
 
