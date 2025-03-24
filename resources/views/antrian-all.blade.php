@@ -127,6 +127,7 @@ new Vue({
   methods: {	
 		triggercall:function(data) {
 			const vm = this, myArray = data.split("=");
+			console.log(vm);
 			if (myArray.length > 2) {
 				if (myArray[2] == 'bebas') { kode = 'K'; }
 				else if (myArray[2] == 'bebask') { kode = 'K'; }
@@ -134,13 +135,14 @@ new Vue({
 			}
 			let tmp = myArray[0].split(" ");
 			if (tmp[0] == 'Poliklinik') {
-				let number = vm.calculate(parseInt(myArray[1]), "P");
 				if (tmp[1] == '5') {
+					let number = vm.calculate(parseInt(myArray[1]), `P5`);
 					vm.poliklinik[0].nomor = number;
 					vm.display = number;
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 				else if (tmp[1] == '6') {
+					let number = vm.calculate(parseInt(myArray[1]), `P6`);
 					vm.poliklinik[1].nomor = number;
 					vm.display = number;
 					vm.bunyi(number, tmp[1], 'poli');
@@ -169,13 +171,24 @@ new Vue({
 					
 			vm.timetime = window.setTimeout(function() {
 				let  tmp = nomor.split("");
-				let msg = 'Nomor antrian, '+ tmp[0] +', ';
-				let angka = tmp[2]+''+tmp[3]+''+tmp[4];
+				let msg = 'Nomor antrian, ';
+
+				let angka = '';
+				if(jenis == 'poli'){
+					msg = msg + tmp[0] + ', ' + tmp[1] +', ';
+					angka = tmp[3]+''+tmp[4]+''+tmp[5]
+				}else{
+					msg = msg + tmp[0] +', ';
+					angka = tmp[2]+''+tmp[3]+''+tmp[4];
+				}
+
 				if (parseInt(angka) > 0 && parseInt(angka) < 10) { msg = msg + '0, 0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 9 && parseInt(angka) < 100) { msg = msg + '0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 99 && parseInt(angka) < 1000) { msg = msg + ' ' + parseInt(angka) + ', '; }
 							
-				if (jenis == 'poli') { msg = msg + 'ke Poli, '+ posisi; }
+				if (jenis == 'poli') { 
+					msg = msg + 'ke Poli, '+ posisi;
+				}
 				else { msg = msg + 'ke ' + jenis +', '+ posisi; }
 
 				const parameters = {

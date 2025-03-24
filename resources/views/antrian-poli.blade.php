@@ -148,6 +148,7 @@ new Vue({
 			let pasienName = myArray[2];
 			if (tmp[0] == 'Poliklinik') {
 				if (tmp[1] == '1') {
+					let number = vm.calculate("P1", parseInt(myArray[1]));
 					vm.poliklinik[1].nomor = number;
 					vm.poliklinik[1].pasien = pasienName;
 					vm.display = number;
@@ -155,6 +156,7 @@ new Vue({
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 				else if (tmp[1] == '2') {
+					let number = vm.calculate("P2", parseInt(myArray[1]));
 					vm.poliklinik[2].nomor = number;
 					vm.poliklinik[2].pasien = pasienName;
 					vm.displayright = number;
@@ -162,6 +164,7 @@ new Vue({
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 				else if (tmp[1] == '3') {
+					let number = vm.calculate("P3", parseInt(myArray[1]));
 					vm.poliklinik[3].nomor = number;
 					vm.poliklinik[2].pasien = pasienName;
 					vm.displayright = number;
@@ -187,15 +190,24 @@ new Vue({
 			if (vm.timetime) { window.clearTimeout(vm.timetime); }
 				
 			vm.timetime = window.setTimeout(function() {
-				let  tmp = nomor.split("");
-							
-				let msg = 'Nomor antrian, '+ tmp[0] +', ';
-				let angka = tmp[2]+''+tmp[3]+''+tmp[4];
+				let tmp = nomor.split("");
+				let msg = 'Nomor antrian, ';
+
+				let angka = '';
+				if(jenis == 'poli'){
+					msg = msg + tmp[0] + ', ' + tmp[1] +', ';
+					angka = tmp[3]+''+tmp[4]+''+tmp[5]
+				}else{
+					msg = msg + tmp[0] +', ';
+					angka = tmp[2]+''+tmp[3]+''+tmp[4];
+				}
 				if (parseInt(angka) > 0 && parseInt(angka) < 10) { msg = msg + '0, 0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 9 && parseInt(angka) < 100) { msg = msg + '0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 99 && parseInt(angka) < 1000) { msg = msg + ' ' + parseInt(angka) + ', '; }
 
-				if (jenis == 'poli') { msg = msg + 'ke Poli, '+ posisi; }
+				if (jenis == 'poli') {
+					msg = msg + 'ke Poli, '+ posisi;
+				 }
 				else { msg = msg + 'ke ruangan ' + jenis; }
 
 				const parameters = {
