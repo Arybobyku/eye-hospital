@@ -54,6 +54,14 @@
 									// $grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi; 
 								?>
 							@endif
+							@if ($registrasi->diskon_rp != 0)
+							<?php 
+								$diskonGlobalTop = $registrasi->diskon_rp; 
+								$totalDiskonGlobalTop = $diskonGlobalTop ; 
+								// $grandtotal2 = $grandtotal - $diskonGlobal;
+								$grandtotaltop = $grandtotaltop - $totalDiskonGlobalTop; 
+							?>
+							@endif
 							Rp. {{ number_format($grandtotaltop) }}
 						</td>
 					</tr>
