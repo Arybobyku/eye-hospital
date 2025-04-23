@@ -122,10 +122,13 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 						// $grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi; 
 					?>
 				@endif
-				@if ($diskon != 0)
-					<?php 
-						//$grandtotaltop = $grandtotaltop - $diskon; 
-					?>
+				@if ($registrasi->diskon_rp != 0)
+				<?php 
+					$diskonGlobalTop = $registrasi->diskon_rp; 
+					$totalDiskonGlobalTop = $diskonGlobalTop ; 
+					// $grandtotal2 = $grandtotal - $diskonGlobal;
+					$grandtotaltop = $grandtotaltop - $totalDiskonGlobalTop; 
+				?>
 				@endif
 				Rp. {{ number_format($grandtotaltop) }}
 			</td>
