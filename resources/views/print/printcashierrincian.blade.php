@@ -897,10 +897,14 @@
 			<?php $last = $grandtotal; ?>
 
 			@if ($registrasi->panjar == '0' && $registrasi->cover_asuransi == '0')
-			<?php $last = $last + $diskon ?>
+				@if ($registrasi->diskon_rp != 0)
+					<?php 
+						$grandTotalValid =  $grandtotaltop + $totalDiskonGlobalTop + $diskon; 
+					?>
+				@endif
 				<tr >
 					<td colspan="6" align="left" style="padding: 6px 5px; width: 65%;"><b>Grand Total</b></td>
-					<td colspan="2" align="right" style="padding: 6px 5px;"><b>Rp. {{ number_format($last) }}</b></td>
+					<td colspan="2" align="right" style="padding: 6px 5px;"><b>Rp. {{ number_format($grandTotalValid) }}</b></td>
 				</tr>
 			@endif
 
@@ -958,7 +962,7 @@
 				</tr>
 				<tr >
 					<td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Pembayaran</b></td>
-					<td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($grandtotal2) }}</b></td>
+					<td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($grandtotaltop) }}</b></td>
 				</tr>
 			@endif
 			
