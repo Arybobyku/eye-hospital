@@ -206,6 +206,13 @@ const routes = [
 		meta: { title: 'Dashboard Antrian Online' },
 		props: true 
 	},
+		{ 
+		path: _base + 'update-jadwal-dokter', 
+		name: 'Update Jadwal Dokter', 
+		component: () => import('./components/antrol/updatejadwaldokter/index.vue'),
+		meta: { title: 'Update Jadwal Dokter' },
+		props: true 
+	},
 	{ 
 		path: _base + 'antrol-list-task', 
 		name: 'List Task Antrian Online', 
