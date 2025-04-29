@@ -38,6 +38,11 @@ export default {
 		form: null, btnlbl: '',
 	}},
 	methods: {
+		open() {
+  this.terminate.display = 'display: block';
+  this.terminate.show = true;
+  document.body.style.overflowY = 'hidden';
+},
 
 		parseunit, formdetail,
 
@@ -72,7 +77,7 @@ export default {
 			//vm.form.content.value = response.data.data.content;
 			vm.loaderprocess();
 		},
-
+		
 		dialog:function(){
 			let text = '', button = '';
 			if (vm.form.posisi == 'adddata') {
