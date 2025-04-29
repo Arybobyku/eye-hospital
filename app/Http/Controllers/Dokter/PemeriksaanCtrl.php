@@ -25,6 +25,7 @@ use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use App\Models\AntrianKasir;
 use App\Models\AntrianFarmasi;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
 
 class PemeriksaanCtrl extends Controller
 {
@@ -1174,7 +1175,7 @@ class PemeriksaanCtrl extends Controller
                 $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
 
                 // Start Antrian Farmasi
-                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0)) {
+                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0) && $registrasi->carabayar_nama != 'Umum') {
                     // Create Antrian Farmasi
                     $uuidFarmasi = '';
                     $loop = false;
@@ -1196,14 +1197,14 @@ class PemeriksaanCtrl extends Controller
                     $antrianFarmasi->uuid = $uuidFarmasi;
                     $antrianFarmasi->kode = 'F';
                     $antrianFarmasi->number = $latestNumber;
-                    $antrianFarmasi->jenis = $request->jenis;
+                    $antrianFarmasi->jenis = $registrasi->jenis;
                     $antrianFarmasi->tanggal = date('Y-m-d');
 
                     // BPJS
-					$antrianFarmasi->kode_poli=  $registrasi->kode_poli_bpjs;
-					$antrianFarmasi->poli=  $registrasi->nama_poli_bpjs;
-					$antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
-					$antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianFarmasi->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianFarmasi->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
                     $antrianFarmasi->uuid_registrasi =  $registrasi->uuid;
 
                     $antrianFarmasi->save();
@@ -1214,7 +1215,7 @@ class PemeriksaanCtrl extends Controller
                 // End Antrian Farmasi
 
                 // Start Antrian Kasir
-                if ($registrasi->no_antrian_kasir == null && (count($obat) == 0 && count($obatracikan) == 0)) {
+                if ($registrasi->no_antrian_kasir == null && $registrasi->carabayar_nama == 'Umum') {
                     $uuidKasir = '';
                     $loop = false;
                     do {
@@ -1235,14 +1236,14 @@ class PemeriksaanCtrl extends Controller
                     $antrianKasir->uuid = $uuidKasir;
                     $antrianKasir->kode = 'K';
                     $antrianKasir->number = $latestNumber;
-                    $antrianKasir->jenis = $request->jenis;
+                    $antrianKasir->jenis = $registrasi->jenis;
                     $antrianKasir->tanggal = date('Y-m-d');
                     // BPJS
-					$antrianKasir->kode_poli=  $registrasi->kode_poli_bpjs;
-					$antrianKasir->poli=  $registrasi->nama_poli_bpjs;
-					$antrianKasir->uuid_pasien =  $registrasi->pasien_uuid;
-					$antrianKasir->kode_dokter =  $registrasi->kode_dokter_bpjs;
-					$antrianKasir->uuid_registrasi =  $registrasi->uuid;
+                    $antrianKasir->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianKasir->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianKasir->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianKasir->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianKasir->uuid_registrasi =  $registrasi->uuid;
 
                     $antrianKasir->save();
 
@@ -2012,7 +2013,7 @@ class PemeriksaanCtrl extends Controller
                 $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
 
                 // Start Antrian Farmasi
-                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0)) {
+                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0) && $registrasi->carabayar_nama != 'Umum') {
                     // Create Antrian Farmasi
                     $uuidFarmasi = '';
                     $loop = false;
@@ -2038,10 +2039,10 @@ class PemeriksaanCtrl extends Controller
                     $antrianFarmasi->tanggal = date('Y-m-d');
 
                     // BPJS
-					$antrianFarmasi->kode_poli=  $registrasi->kode_poli_bpjs;
-					$antrianFarmasi->poli=  $registrasi->nama_poli_bpjs;
-					$antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
-					$antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianFarmasi->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianFarmasi->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
                     $antrianFarmasi->uuid_registrasi =  $registrasi->uuid;
 
                     $antrianFarmasi->save();
@@ -2052,7 +2053,7 @@ class PemeriksaanCtrl extends Controller
                 // End Antrian Farmasi
 
                 // Start Antrian Kasir
-                if ($registrasi->no_antrian_kasir == null && (count($obat) == 0 && count($obatracikan) == 0)) {
+                if ($registrasi->no_antrian_kasir == null && $registrasi->carabayar_nama == 'Umum') {
                     $uuidKasir = '';
                     $loop = false;
                     do {
@@ -2073,14 +2074,14 @@ class PemeriksaanCtrl extends Controller
                     $antrianKasir->uuid = $uuidKasir;
                     $antrianKasir->kode = 'K';
                     $antrianKasir->number = $latestNumber;
-                    $antrianKasir->jenis = $request->jenis;
+                    $antrianKasir->jenis = $registrasi->jenis;
                     $antrianKasir->tanggal = date('Y-m-d');
                     // BPJS
-					$antrianKasir->kode_poli=  $registrasi->kode_poli_bpjs;
-					$antrianKasir->poli=  $registrasi->nama_poli_bpjs;
-					$antrianKasir->uuid_pasien =  $registrasi->pasien_uuid;
-					$antrianKasir->kode_dokter =  $registrasi->kode_dokter_bpjs;
-					$antrianKasir->uuid_registrasi =  $registrasi->uuid;
+                    $antrianKasir->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianKasir->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianKasir->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianKasir->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianKasir->uuid_registrasi =  $registrasi->uuid;
 
                     $antrianKasir->save();
 
@@ -2088,6 +2089,11 @@ class PemeriksaanCtrl extends Controller
                         ->update(['no_antrian_kasir' => $kodeKasir]);
                 }
                 // End Antrian Kasir
+
+
+                // UPDATE TASK ID 5
+                $epochTime = time() * 1000;
+                $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($registrasi->nomor, 5, $epochTime, $registrasi->uuid);    
 
             }
             $cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
@@ -2341,6 +2347,15 @@ class PemeriksaanCtrl extends Controller
             ->where('number', '=', $request->number)
             ->where('pemanggil', '=', $request->ruang_poliklinik)
             ->first();
+
+        $arr = array('panggil' => 1);
+        $update = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))
+            ->where('number', '=', $request->number)->update($arr);
+
+        // UPDATE TASK ID 4
+        $epochTime = time() * 1000;
+        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($cek->nomor, 4, $epochTime, $cek->uuid);    
+
 
         if ($get) {
             $str = 'Poliklinik ' . $request->ruang_poliklinik . '=' . $request->number;

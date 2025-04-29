@@ -32,6 +32,7 @@ class AntrolBpjsCtrl extends Controller
 
     public function __construct()
     {
+        date_default_timezone_set("Asia/Jakarta");
         $this->bridging = new BridgeAntrol();
     }
 
@@ -55,13 +56,25 @@ class AntrolBpjsCtrl extends Controller
 
     public function getAntrianByKodeBooking($kodeBooking)
     {
-        $endpoint = 'antrean/pendaftaran/kodebooking/'.$kodeBooking;
+        $endpoint = 'antrean/pendaftaran/kodebooking/' . $kodeBooking;
         return $this->bridging->getRequest($endpoint);
     }
 
     public function antrianBelumDilayani()
     {
         $endpoint = 'antrean/pendaftaran/aktif';
+        return $this->bridging->getRequest($endpoint);
+    }
+
+    public function getAntrianbyTanggal($params1)
+    {
+        $endpoint = "antrean/pendaftaran/tanggal/{$params1}";
+        return $this->bridging->getRequest($endpoint);
+    }
+
+    public function getAntrianbyAll($params1, $params2, $params3, $params4)
+    {
+        $endpoint = "antrean/pendaftaran/kodepoli/{$params1}/kodedokter/{$params2}/hari/{$params3}/jampraktek/{$params4}";
         return $this->bridging->getRequest($endpoint);
     }
 
@@ -204,8 +217,9 @@ class AntrolBpjsCtrl extends Controller
         ];
 
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-    
+
         $antrolLogs = new AntrolLogs();
+        $antrolLogs->url = $endpoint;
         $antrolLogs->action = 'updateJadwalDokter';
         $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
         $antrolLogs->save();
@@ -219,8 +233,8 @@ class AntrolBpjsCtrl extends Controller
         $antrolLogs->response = $result;
         $antrolLogs->update();
         return $result;
-
     }
+
     public function tambahAntrean(Registrasi $item, Pasien $pasien)
     {
         $result = null;
@@ -242,12 +256,14 @@ class AntrolBpjsCtrl extends Controller
         $masterKuotaAntrian = MasterKuotaAntrian::first();
 
         $sisaKuotaJKN =  AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))
-        ->where('is_jkn', '=', 1)
-        ->count();
+            ->where('is_jkn', '=', 1)
+            ->count();
 
         $sisaKuotaNonJKN =  AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))
-        ->where('is_jkn', '=', 0)
-        ->count();
+            ->where('is_jkn', '=', 0)
+            ->count();
+
+        $estimasidilayani = (time() + 3600) * 1000;
 
         $data = [
             "kodebooking" => $item->nomor,
@@ -260,34 +276,27 @@ class AntrolBpjsCtrl extends Controller
             "pasienbaru" => $jumlahRegistrasi ?? "",
             "norm" => $pasien->rekam_medis ?? "",
             "tanggalperiksa" => $item->tanggal ?? "",
+            // "tanggalperiksa" => "2025-02-09",
             "kodedokter" => $item->kode_dokter_bpjs ?? "",
             "namadokter" => $item->nama_dokter_bpjs ?? "",
             "jampraktek" => $item->jadwal_dokter_bpjs ?? "",
             "jeniskunjungan" => "1",
-            "nomorreferensi" => "0001R0040116A000001",
+            "nomorreferensi" => $item->nomorregistrasi,
             "nomorantrean" => $item->no_pendaftaran,
             "angkaantrean" => $nomorOnly,
-            "estimasidilayani" => 1615869169000,
+            "estimasidilayani" => $estimasidilayani,
             "sisakuotajkn" => $sisaKuotaJKN,
-            "kuotajkn" => $masterKuotaAntrian->kuota_non_jkn,
+            // "kuotajkn" => $masterKuotaAntrian->kuota_non_jkn, //sementara remark dulu biar ga eror
+            "kuotajkn" => 10,
             "sisakuotanonjkn" => $sisaKuotaNonJKN,
-            "kuotanonjkn" => $masterKuotaAntrian->kuota_jkn,
+            // "kuotanonjkn" => $masterKuotaAntrian->kuota_jkn, //sementara remark dulu ga eror
+            "kuotanonjkn" => 10,
             "keterangan" => "Peserta harap 30 menit lebih awal guna pencatatan administrasi."
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
-        $result = null;
-        $endpoint = "antrean/farmasi/add";
-        $data = [
-            "kodebooking" => $item->nomor,
-            "jenisresep" => $item->jenis, // (racikan / non racikan)
-            "nomorantrean" => $item->number,
-            "keterangan" => "Testing"
-        ];
-
-        $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-
         $antrolLogs = new AntrolLogs();
+        $antrolLogs->url = $endpoint;
         $antrolLogs->action = 'tambahAntrean';
         $antrolLogs->uuid_register = $item->uuid;
         $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
@@ -305,16 +314,21 @@ class AntrolBpjsCtrl extends Controller
         $number = (int) preg_replace('/[^0-9]/', '', $item->no_pendaftaran,);
 
         $antrianCS =  Antrian::whereDate('tanggal', '=', date('Y-m-d'))
-        ->where('number', '=', $number)
-        ->first();
+            ->where('number', '=', $number)
+            ->first();
 
         // Waktu Start Admisi
-        $admisiWaktu = Carbon::parse($antrianCS->created_at)->timestamp;
-        $this->updateWaktuAntrean($item->nomor, 1, $admisiWaktu);
-        $epochTime = strtotime(date('Y-m-d'));
+        $admisiWaktu = Carbon::parse($antrianCS->created_at, 'Asia/Jakarta') // Stored as GMT+7
+        ->setTimezone('America/Los_Angeles') // Convert to GMT-7
+        ->timestamp * 1000; 
 
-        $this->updateWaktuAntrean($item->nomor, 2, $epochTime);
-        $this->updateWaktuAntrean($item->nomor, 3, $epochTime);
+        $this->updateWaktuAntrean($item->nomor, 1, $admisiWaktu, $item->uuid);
+
+        $epochTime = time() * 1000;
+        $this->updateWaktuAntrean($item->nomor, 2, $epochTime, $item->uuid);
+
+        $epochTime = time() * 1000;
+        $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);
 
         return $result;
     }
@@ -332,6 +346,7 @@ class AntrolBpjsCtrl extends Controller
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
         $antrolLogs = new AntrolLogs();
+        $antrolLogs->url = $endpoint;
         $antrolLogs->action = 'tambahAntreanFarmasi';
         $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
         $antrolLogs->save();
@@ -347,7 +362,7 @@ class AntrolBpjsCtrl extends Controller
         return $result;
     }
 
-    public function updateWaktuAntrean($kodeBooking, $taskID, $waktu)
+    public function updateWaktuAntrean($kodeBooking, $taskID, $waktu, $uuid_register)
     {
         $result = null;
         $endpoint = "antrean/updatewaktu";
@@ -358,6 +373,8 @@ class AntrolBpjsCtrl extends Controller
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
         $antrolLogs = new AntrolLogs();
+        $antrolLogs->url = $endpoint;
+        $antrolLogs->uuid_register = $uuid_register;
         $antrolLogs->action = 'updateWaktuAntrean';
         $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
         $antrolLogs->save();
@@ -383,11 +400,12 @@ class AntrolBpjsCtrl extends Controller
             "kodebooking" => $kodeBooking,
             "taskid" => $taskID,
             "waktu" => $timestamp,
-            "jenisresep" => "Tidak ada"// khusus yang sudah implementasi antrean farmasi
+            "jenisresep" => "Tidak ada" // khusus yang sudah implementasi antrean farmasi
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
         $antrolLogs = new AntrolLogs();
+        $antrolLogs->url = $endpoint;
         $antrolLogs->action = 'updateWaktuAntreanFarmasi';
         $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
         $antrolLogs->save();
@@ -414,6 +432,7 @@ class AntrolBpjsCtrl extends Controller
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
         $antrolLogs = new AntrolLogs();
+        $antrolLogs->url = $endpoint;
         $antrolLogs->action = 'batalAntrean';
         $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
         $antrolLogs->save();
@@ -440,6 +459,7 @@ class AntrolBpjsCtrl extends Controller
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 
         $antrolLogs = new AntrolLogs();
+        $antrolLogs->url = $endpoint;
         $antrolLogs->action = 'batalAntrean';
         $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
         $antrolLogs->save();
@@ -455,11 +475,11 @@ class AntrolBpjsCtrl extends Controller
         return $result;
     }
 
-    public function listWaktuTaskId()
+    public function listWaktuTaskId($kodebooking)
     {
         $endpoint = "antrean/getlisttask";
         $data = [
-            "kodebooking" => "Y03-20#1617068533",
+            "kodebooking" => $kodebooking,
         ];
         $jsonData = json_encode($data, JSON_PRETTY_PRINT);
 

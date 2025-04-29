@@ -40,17 +40,19 @@ Route::group([], function () {
         
         Route::get('jadwaldokter/kodepoli/{params1}/tanggal/{params2}', [AntrolBpjsCtrl::class, 'referensiJadwalDokter']);
 
-        Route::get('antrean/pendaftaran/aktif', [AntrolBpjsCtrl::class, 'antrianBelumDilayani']);
         Route::get('antrean/getlisttask', [AntrolBpjsCtrl::class, 'listTask']);
+        
+        Route::get('antrean/pendaftaran/aktif', [AntrolBpjsCtrl::class, 'antrianBelumDilayani']);
+        Route::get('antrean/pendaftaran/tanggal/{param1}', [AntrolBpjsCtrl::class, 'getAntrianByTanggal']);
         Route::get('antrean/pendaftaran/kodebooking/{param1}', [AntrolBpjsCtrl::class, 'getAntrianByKodeBooking']);
+        Route::get('antrean/pendaftaran/kodepoli/{param1}/kodedokter/{param2}/hari/{param3}/jampraktek/{param4}', [AntrolBpjsCtrl::class, 'getAntrianByAll']);
 
-        //Yudha
         Route::post('jadwaldokter/updatejadwaldokter', [AntrolBpjsCtrl::class, 'updateJadwalDokter']);
         Route::post('antrean/add', [AntrolBpjsCtrl::class, 'tambahAntrean']);
         Route::post('antrean/farmasi/add', [AntrolBpjsCtrl::class, 'tambahAntreanFarmasi']);
         Route::post('antrean/updatewaktu', [AntrolBpjsCtrl::class, 'updateWaktuAntrean']);
         Route::post('antrean/batal', [AntrolBpjsCtrl::class, 'batalAntrean']);
-        Route::post('antrean/getlisttask', [AntrolBpjsCtrl::class, 'listWaktuTaskId']);
+        Route::post('antrean/getlisttask/{kodebooking}', [AntrolBpjsCtrl::class, 'listWaktuTaskId']);
 
         Route::get('dashboard/waktutunggu/tanggal/{params1}/waktu/{params2}', [AntrolBpjsCtrl::class, 'dashboardPerTanggal']);
         Route::get('dashboard/waktutunggu/bulan/{params1}/tahun/{params2}/waktu/{params3}', [AntrolBpjsCtrl::class, 'dashboardPerBulan']);
