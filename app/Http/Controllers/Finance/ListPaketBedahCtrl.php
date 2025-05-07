@@ -29,7 +29,7 @@ class ListPaketBedahCtrl extends Controller
 		PenggunaHelp::log('Melihat data list table pada halaman data unit');
 
 		$data = ListPaketBedahBaru::where('delete_soft', '=', 1)
-									->orderBy('id', 'desc')
+									->orderBy('label', 'asc', 'sublabel','asc', 'nama', 'asc', 'id', 'desc')
 									->where('paket_bedah_uuid', '=', $request->paket_bedah_uuid)
 									->get();
 
