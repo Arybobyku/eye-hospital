@@ -43,6 +43,7 @@ export default {
 				edit: '/finance/paketbedah/edit',
 				update: '/finance/paketbedah/update',
 				remove: '/finance/paketbedah/remove',
+				duplicate: '/finance/paketbedah/duplicate',
 			}, url: '', data: null
 		},
 		column: [
@@ -72,6 +73,7 @@ export default {
 				{ icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: true },
 				{ icon: 'trash-2', color: 'btn-danger', posisi: 'remove', tooltip: 'Hapus Data', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-info', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-info', posisi: 'duplicate', tooltip: 'Duplicate Data', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -112,6 +114,13 @@ export default {
 				vm.attach.url = vm.attach.link.remove;
 				vm.dialog('Yakin ingin menghapus data yang terpilih dihalaman ini.', 'Ya, hapus data', 'removedata');
 			}
+			else if (posisi == 'duplicate') {
+				vm.position = "duplicatedata";
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.duplicate;
+				vm.dialog('Yakin ingin mengduplikat data yang terpilih dihalaman ini.', 'Ya, Duplikasi data', 'duplicatedata');
+			}
 			else if (posisi == 'detail') {
 				vm.$refs.DetailData.aturulang();
 				vm.position = "detaildata";
@@ -150,6 +159,7 @@ export default {
 			else if (vm.position == 'editdata') { vm.loadingModal('formunit'); vm.$refs.FormUnit.hide();  }
 			else if (vm.position == 'updatedata') { vm.loadingModal('formunit'); }
 			else if (vm.position == 'removedata') { vm.$refs.Datatable.skeleton(); }
+			else if (vm.position == 'duplicatedata') { vm.$refs.Datatable.skeleton(); }
 			
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
@@ -189,6 +199,9 @@ export default {
 			else if (vm.position == 'removedata') { 
 				setTimeout(() => { vm.tablereload(); }, 125, this); 
 			}
+			else if (vm.position == 'duplicatedata') { 
+				setTimeout(() => { vm.tablereload(); }, 125, this); 
+			}
 			vm.message('success', active);
 		},
 
@@ -200,17 +213,20 @@ export default {
 				else if (vm.position == 'editdata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 				else if (vm.position == 'updatedata') { vm.notification('Pembaharuan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'removedata') { vm.notification('Penghapusan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'duplicatedata') { vm.notification('Duplikasi data gagal diproses.', 3000, position); }
 			}
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'adddata') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'updatedata') { vm.notification('Pembaharuan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'removedata') { vm.notification('Penghapusan data berhasil diproses.', 3000, position); }
+				else if (vm.position == 'duplicatedata') { vm.notification('Duplikasi data berhasil diproses.', 3000, position); }
 			}
 		},
 
 		runconfirm: function (posisi) {
 			if (posisi == 'formunit') { vm.loadingModal('formunit'); }
 			else if (posisi == 'removedata') { vm.$refs.Datatable.skeleton(); }
+			else if (posisi == 'duplicatedata') { vm.$refs.Datatable.skeleton(); }
 			vm.executions();
 		},
 

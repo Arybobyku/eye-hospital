@@ -166,12 +166,16 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('detail', [PaketBedahCtrl::class, 'detail'])->name('paketbedah-detail');
 		Route::post('add', [PaketBedahCtrl::class, 'add'])->name('paketbedah-add');
 		Route::post('histori', [PaketBedahCtrl::class, 'histori'])->name('paketbedah-histori');
+		Route::post('remove', [PaketBedahCtrl::class, 'remove'])->name('paketbedah-remove');
+		Route::post('duplicate', [PaketBedahCtrl::class, 'duplicate'])->name('paketbedah-duplicate');
+
 	});
 
 	Route::prefix('listpaketbedah')->group(function () {
 		Route::post('list', [ListPaketBedahCtrl::class, 'list'])->name('listpaketbedah-list');
 		Route::post('add', [ListPaketBedahCtrl::class, 'add'])->name('listpaketbedah-add');
 		Route::post('remove', [ListPaketBedahCtrl::class, 'remove'])->name('listpaketbedah-remove');
+		// Route::post('duplicate', [ListPaketBedahCtrl::class, 'duplicate'])->name('listpaketbedah-duplicate');
 	});
 
 });
