@@ -9,8 +9,15 @@
 			<div class="modal-body" v-if="form">
 				<div class="grid">
 					<div class="col-12">
-						<input type="file" @change="handleFileUpload( $event )" accept="image/png, image/jpeg, image/jpg"/>
+						<label>Kode Poli</label>
+						<input type="text" v-model="form.kodepoli" readonly />
 					</div>
+					<div class="col-12">
+						<label>Nama Sub Spesialis Poli</label>
+						<input type="text" v-model="form.nmsubspesialis" readonly />
+					</div>
+
+			
 				</div>
 			</div>
 			<Loader ref="Loader"></Loader>
@@ -35,7 +42,11 @@ export default {
 	created:function() {},
 	data:function() { return { 
 		terminate: { show: false, display: 'display: none' },
-		form: null, btnlbl: '',
+		form: {
+      kodepoli: '',
+      nmsubspesialis: '',
+      // tambahkan field lain jika perlu
+    }, btnlbl: '',
 	}},
 	methods: {
 		open() {
@@ -62,7 +73,7 @@ export default {
 			if (vm.form.datafile != '') { vm.parsingForm(); vm.dialog(); }
 		},
 
-		show:function(posisi, title, uuid){ vm.btnlbl = posisi == 'adddata' ? 'Save Data' : 'Update Data'; vm.form.uuid = uuid;
+		show:function(posisi, title, uuid, kodepoli){ vm.btnlbl = posisi == 'adddata' ? 'Save Data' : 'Update Data'; vm.form.uuid = uuid; vm.form.kodepoli = kodepoli; // <- disimpan ke form
 			vm.form.title = title; vm.form.posisi = posisi; 
 			vm.form.posisi = posisi; body.style.overflowY = 'hidden'; vm.terminate.display = 'display: block'; vm.terminate.show = true;
     },

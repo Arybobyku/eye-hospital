@@ -260,7 +260,9 @@ export default {
     methods: {
 
         showFormDetail() {
-        this.$refs.FormDetail.open(); // memanggil method open() dari FormDetail
+            
+        // this.$refs.FormDetail.open(); // memanggil method open() dari FormDetail
+        this.$refs.FormDetail.show('adddata', 'Tambah Jadwal', null, this.params2, this.params2);
     },
         nullAndZero,
         datename,
