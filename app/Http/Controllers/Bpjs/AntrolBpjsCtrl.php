@@ -324,8 +324,11 @@ class AntrolBpjsCtrl extends Controller
 
         $this->updateWaktuAntrean($item->nomor, 1, $admisiWaktu, $item->uuid);
 
-        $epochTime = time() * 1000;
-        $this->updateWaktuAntrean($item->nomor, 2, $epochTime, $item->uuid);
+         $admisiCallTime = Carbon::parse($antrianCS->call_time, 'Asia/Jakarta') // Stored as GMT+7
+        ->setTimezone('America/Los_Angeles') // Convert to GMT-7
+        ->timestamp * 1000; 
+
+        $this->updateWaktuAntrean($item->nomor, 2, $admisiCallTime, $item->uuid);
 
         $epochTime = time() * 1000;
         $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);

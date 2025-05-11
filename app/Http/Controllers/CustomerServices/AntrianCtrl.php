@@ -46,6 +46,11 @@ class AntrianCtrl extends Controller
                 ->where('pemanggil', '=', Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Sebagai')))
 								->first();
 
+		Antrian::whereDate('tanggal', '=', date('Y-m-d'))
+			->where('number', '=', $request->number)
+			->update(['call_time' => now()]);
+						
+
 		if ($get) { 
 			$str = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Sebagai')).'='.$request->number;
 			$this->jeda(1, $str);
