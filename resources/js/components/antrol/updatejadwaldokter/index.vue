@@ -30,6 +30,15 @@
     cursor: pointer;
     transition: background 0.2s;
 }
+.detail button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
 
 .filter-container button:hover {
     background-color: #0056b3;
@@ -47,9 +56,9 @@
 
         <div class="filter-group">
 
-            <select v-model="params1">
+            <select v-model="params2">
                 <option value="">Pilih Kode Poli</option>
-                <option v-for="poli in poliBpjs" :key="poli.kdpoli" :value="poli.nmpoli">
+                <option v-for="poli in poliBpjs" :key="poli.kdpoli" :value="poli.kdpoli">
                     {{ poli.nmpoli }} - {{ poli.nmsubspesialis }}
                 </option>
             </select>
@@ -60,6 +69,10 @@
 
         <button @click="applyFilter">Apply Filter</button>
     </div>
+    <div class="detail">
+        <button @click="showFormDetail">Update Jadwal Dokter</button>
+    </div>
+
     <div class="inner" ref="roottable" v-show="showDatatable">
         <div class="grid">
             <div class="col-12">
@@ -136,20 +149,68 @@ export default {
                     add: '/administration/runningimage/add',
                     block: '/administration/runningimage/block',
                 },
-                url: '',
+                url: '',    
                 data: null
             },
             column: [{
-                value: 'kodebooking',
-                label: 'Kode Booking',
+                value: 'kodesubspesialis',
+                label: 'Kode Sub Spesialis',
                 type: 'text',
                 search: false,
                 close: false,
                 button: false
             },
             {
-                value: 'tanggal',
-                label: 'Tanggal',
+                value: 'hari',
+                label: 'Hari',
+                type: 'text',
+                search: false,
+                close: false,
+                button: false
+            },
+            {
+                value: 'kapasitaspasien',
+                label: 'Kapasitas Pasien',
+                type: 'text',
+                search: false,
+                close: false,
+                button: false
+            },
+            {
+                value: 'libur',
+                label: 'Libur',
+                type: 'text',
+                search: false,
+                close: false,
+                button: false
+            },
+            {
+                value: 'namahari',
+                label: 'Nama Hari',
+                type: 'text',
+                search: false,
+                close: false,
+                button: false
+            },
+            {
+                value: 'jadwal',
+                label: 'jadwal',
+                type: 'text',
+                search: false,
+                close: false,
+                button: false
+            },
+            {
+                value: 'namasubspesialis',
+                label: 'Nama Sub Spesialis',
+                type: 'text',
+                search: false,
+                close: false,
+                button: false
+            },
+            {
+                value: 'namadokter',
+                label: 'Nama Dokter',
                 type: 'text',
                 search: false,
                 close: false,
@@ -164,118 +225,29 @@ export default {
                 button: false
             },
             {
+                value: 'namapoli',
+                label: 'Nama Poli',
+                type: 'text',
+                search: false,
+                close: false,
+                button: false
+            },
+            {
                 value: 'kodedokter',
                 label: 'Kode Dokter',
                 type: 'text',
                 search: false,
                 close: false,
                 button: false
-            },
-            {
-                value: 'jampraktek',
-                label: 'Jam Praktek',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'nik',
-                label: 'NIK',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'nokapst',
-                label: 'No Kartu Peserta',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'nohp',
-                label: 'No HP',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'norekammedis',
-                label: 'No Rekam Medis',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'jeniskunjungan',
-                label: 'Jenis Kunjungan',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'nomorreferensi',
-                label: 'Nomor Referensi',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'sumberdata',
-                label: 'Sumber Data',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'ispeserta',
-                label: 'Status Peserta',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'noantrean',
-                label: 'No Antrean',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'estimasidilayani',
-                label: 'Est. Dilayani',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            {
-                value: 'status',
-                label: 'Status',
-                type: 'text',
-                search: false,
-                close: false,
-                button: false
-            },
-            // { value: 'status', label: 'Status', type: 'text', search: true, close: false, button: false },
-            {
-                value: 'btnhtml',
-                label: '',
-                type: 'text',
-                search: false,
-                close: false,
-                button: true
             }
+            // {
+            //     value: 'btnhtml',
+            //     label: '',
+            //     type: 'text',
+            //     search: false,
+            //     close: false,
+            //     button: true
+            // }
             ],
             module: {
                 data: [],
@@ -286,6 +258,12 @@ export default {
         }
     },
     methods: {
+
+        showFormDetail() {
+            
+        // this.$refs.FormDetail.open(); // memanggil method open() dari FormDetail
+        this.$refs.FormDetail.show('adddata', 'Tambah Jadwal', null, this.params2, this.params2);
+    },
         nullAndZero,
         datename,
         async fetchPoli() {
@@ -318,37 +296,22 @@ export default {
             }
         },
         async applyFilter() {
-            if (!this.filterType && this.filterType != "aktif") {
-                alert("Silakan pilih jenis filter terlebih dahulu");
-                return;
-            }
 
             let url = '';
-            if (this.filterType === "tanggal") {
                 if (!this.params1) {
                     alert("Silakan pilih tanggal");
                     return;
-                }
-                url = `/api/bpjs/antrol-bpjs/antrean/pendaftaran/tanggal/${this.params1}`;
-            } else if (this.filterType === "booking") {
-                if (!this.params1) {
-                    alert("Silakan masukkan kode booking");
+                } else if (!this.params2) {
+                    alert("Silakan Pilih Poli");
                     return;
                 }
-                url = `/api/bpjs/antrol-bpjs/antrean/pendaftaran/kodebooking/${this.params1}`;
-            } else if (this.filterType === "aktif") {
-                url = `/api/bpjs/antrol-bpjs/antrean/pendaftaran/aktif`;
-            } else if (this.filterType === "filter") {
-                if (!this.params1) {
-                    alert("Silakan masukkan filter");
-                    return;
-                }
-                url = `/api/bpjs/antrol-bpjs/antrean/pendaftaran/kodepoli/${this.params1}/kodedokter/${this.params2}/hari/${this.params3}/jampraktek/${this.params4}`;
-            }
+                console.log("kode poli", this.params2);
+                url = `/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/${this.params2}/tanggal/${this.params1}`; 
+                        
 
             try {
                 this.showDatatable = false;
-                this.firstloader();
+                // this.firstloader();
 
                 const response = await axios.get(url);
 
@@ -376,7 +339,7 @@ export default {
                     this.notification('Gagal memuat data', 3000, 'error');
                 }
             } finally {
-                this.$refs.Loader.close();
+                // this.$refs.Loader.close();
             }
         },
         btnhtml: function (_item, _index) {
