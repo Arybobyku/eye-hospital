@@ -30,7 +30,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 
 	Route::post('fakturobat', [LaporanFakturObatCtrl::class, 'datapage'])->name('laporan-fakturobat');
 	Route::get('excelfakturobat/{dari}', [LaporanFakturObatCtrl::class, 'dataexcel'])->name('laporan-excelfakturobat');
-	Route::post('amprahan', [LaporanPenjualanApotekCtrl::class, 'penjualanapotek'])->name('laporan-amprahan');
-	Route::post('tindakan', [LaporanPenjualanApotekCtrl::class, 'penjualanapotek'])->name('laporan-tindakan');
+	// Route::post('amprahan', [LaporanPenjualanApotekCtrl::class, 'penjualanapotek'])->name('laporan-amprahan');
+	// Route::post('tindakan', [LaporanPenjualanApotekCtrl::class, 'penjualanapotek'])->name('laporan-tindakan');
 
 });

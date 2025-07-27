@@ -29,6 +29,7 @@ use App\Http\Controllers\CustomerServices\PasienInapBedahCtrl;
 use App\Http\Controllers\CustomerServices\HistoriRawatJalanCtrl;
 use App\Http\Controllers\CustomerServices\HistoriRawatInapCtrl;
 use App\Http\Controllers\CustomerServices\HistoriOneDayCareCtrl;
+use App\Http\Controllers\CustomerServices\RegistrasiRawatInapCtrl;
 
 Route::group(['middleware' => 'throttle: 250, 1'], function(){
 
