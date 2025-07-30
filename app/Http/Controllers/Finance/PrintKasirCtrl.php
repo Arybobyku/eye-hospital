@@ -90,6 +90,12 @@ class PrintKasirCtrl extends Controller
 
         $diskon = 0;
 
+        $resep_obat_bedah = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
+                    ->where('obat.jenis', '!=', 'Alkes')->where('is_tambahan', '=', 0)->where('is_bedah', '=', 1)
+                    ->where('resep.registrasi_uuid', '=', $uuid)
+                    ->select(['resep.*'])
+                    ->get();
+
         $getdiskon = LayananPasien::where('registrasi_uuid', '=', $uuid)->get();
 
         foreach ($getdiskon as $row) {
@@ -153,7 +159,7 @@ class PrintKasirCtrl extends Controller
         $surat = KwitansiTagihan::select('surat_ke')->where('registrasi_uuid', '=', $registrasi->uuid)->orderBy('id', 'desc')->first();
 
         $pdf->loadView('print.printcashier', compact('collection', 'registrasi', 'pasien', 'surat', 'layananpasien',
-            'rawatjalan', 'administrasi', 'room', 'honor', 'honorbedah', 'total_obat', 'diskon'))->setPaper('a4', 'potrait');
+            'rawatjalan', 'administrasi', 'room', 'honor', 'honorbedah', 'total_obat', 'diskon', 'resep_obat_bedah'))->setPaper('a4', 'potrait');
 
         return $pdf->stream();
     }
