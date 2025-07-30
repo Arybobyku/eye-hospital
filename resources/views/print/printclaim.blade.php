@@ -186,7 +186,7 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 				<div style="padding-top: 4px">Dept.Keu / Klaim</div>
 				<br /><br /><br /><br /><br />
 				<span style="text-decoration: underline">
-					<b>Edria Asnita Lestari Sitorus, SE</b>
+					<b>Putri Anggi Salsabila, S.Tr.Ak</b>
 				</span>
 			</td>
 		</tr>

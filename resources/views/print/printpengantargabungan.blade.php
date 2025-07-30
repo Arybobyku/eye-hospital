@@ -230,7 +230,7 @@
 		</tr>
 		<tr>
 			<td colspan="2" style="padding-top: 8px; text-align:justify">
-				<span style="line-height: 23px;">Kami mohon kepada Bapak/Ibu, apabila telah melakukan pembayaran melalui rekening kami Bank Mandiri No.Rek : 1060022244423 Cab. KCP Pulo Brayan atas nama : PT. VISI INSAN INDONESIA PRIMA, kami harap agar dapat mengirimkan Bukti Pembayaran via Email : primavisionfinance@gmail.com ,  Up : Edria Asnita Lestari Sitorus, SE</span>	
+				<span style="line-height: 23px;">Kami mohon kepada Bapak/Ibu, apabila telah melakukan pembayaran melalui rekening kami Bank BCA No.Rek : 7865579888 Cab. KCP TOMANG ELOK atas nama : PT. VISI INSAN INDONESIA PRIMA, kami harap agar dapat mengirimkan Bukti Pembayaran via Email : primavisionfinance@gmail.com ,  Up : Putri Anggi Salsabila, S.Tr.Ak</span>	
 			</td>
 		</tr>
 		<tr>
@@ -253,7 +253,7 @@
 				<div style="padding-top: 4px">Bagian Claim</div>
 				<br /><br /><br /><br />
 				<span style="text-decoration: underline">
-					<b>(Edria Asnita Lestari Sitorus, SE, S.E)</b>
+					<b>(Putri Anggi Salsabila, S.Tr.Ak)</b>
 				</span>
 			</td>
 		</tr>
