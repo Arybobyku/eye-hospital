@@ -44,6 +44,9 @@
 							@foreach ($layananpasien as $item)
 								<?php $grandtotaltop += $item->total; ?>
 							@endforeach
+							@foreach ($resep_obat_bedah as $item)
+									<?php $grandtotaltop += $item->total; ?>
+							@endforeach
 							@if ($registrasi->panjar != '0')
 								<?php 
 									//$grandtotaltop = $grandtotaltop - $registrasi->panjar;
@@ -153,7 +156,7 @@
 		<tbody>
 			
 
-			<?php $grandtotal = 0; ?>
+			<?php $grandtotal = 0; $totalTarif = 0; ?>
 			
 			@if(count($administrasi) > 0)
 				<tr>
@@ -183,6 +186,7 @@
 				<?php $nomor++; ?>
 
 				<?php $subtotal += $item->total; ?>
+				<?php $totalTarif += $item->tarif; ?>
 				@endforeach
 
 				<tr style="border-bottom: 1px solid #343224">
@@ -217,6 +221,7 @@
 				<?php $nomor++; ?>
 
 				<?php $subtotal += $item->total; ?>
+				<?php $totalTarif += $item->tarif; ?>
 				@endforeach
 
 				<tr style="border-bottom: 1px solid #343224">
@@ -252,6 +257,7 @@
 				<?php $nomor++; ?>
 
 				<?php $subtotal += $item->total_total; ?>
+				<?php $totalTarif += $item->tarif; ?>
 				@endforeach
 
 				<tr style="border-bottom: 1px solid #343224">
@@ -287,6 +293,7 @@
 				<?php $nomor++; ?>
 
 				<?php $subtotal += $item->total; ?>
+				<?php $totalTarif += $item->tarif; ?>
 				@endforeach
 
 				<tr style="border-bottom: 1px solid #343224">
@@ -321,6 +328,7 @@
 							</tr>
 							<?php $nomor += 1; ?>
 							<?php $subtotal += $row->total; ?>
+							<?php $totalTarif += $row->tarif; ?>
 					@endforeach
 
 					<tr style="border-bottom: 1px solid #343224">
@@ -357,6 +365,7 @@
 				<?php $nomor++; ?>
 
 				<?php $subtotal += $item->total; ?>
+				<?php $totalTarif += $item->tarif; ?>
 				@endforeach
 
 				<tr style="border-bottom: 1px solid #343224">
@@ -449,6 +458,7 @@
 					<?php $nomor++; ?>
 
 					<?php $subtotal += $item->total; ?>
+					<?php $totalTarif += $item->tarif; ?>
 				@endforeach
 				@if (count($resep_alkes) > 0)
 				<tr>
@@ -518,6 +528,7 @@
 					<?php $nomor++; ?>
 
 					<?php $subtotal += $item->total; ?>
+					<?php $totalTarif += $item->total; ?>
 				@endforeach
 
 				<tr>
@@ -557,6 +568,7 @@
 					<td colspan="8" style="padding: 13px 8px 11px">- <i>Obat-Obatan (Racikan)</i></td>
 				</tr>
 				<?php $subtotal += $obatracikan->total; ?>
+				<?php $totalTarif += $obatracikan->total; ?>
 				
 				@foreach ($resepracikan as $item)
 					<tr>
@@ -621,6 +633,7 @@
 					<?php $nomor++; ?>
 
 					<?php $subtotal += $item->total; ?>
+					<?php $totalTarif += $item->total; ?>
 				@endforeach
 				@if (count($resep_alkes_bedah) > 0)
 				<tr>
@@ -688,6 +701,7 @@
 					<?php $nomor++; ?>
 
 					<?php $subtotal += $item->total; ?>
+					<?php $totalTarif += $item->total; ?>
 				@endforeach
 
 				<tr>
@@ -727,6 +741,7 @@
 					<td colspan="8" style="padding: 13px 8px 11px">- <i>Obat-Obatan (Racikan) Pasca Bedah</i></td>
 				</tr>
 				<?php $subtotal += $obatracikanbedah->total; ?>
+				<?php $totalTarif += $obatracikanbedah->total; ?>
 				
 				@foreach ($resepracikanbedah as $item)
 					<tr>
@@ -791,6 +806,7 @@
 					<?php $nomor++; ?>
 
 					<?php $subtotal += $item->total; ?>
+					<?php $totalTarif += $item->total; ?>
 				@endforeach
 				@if (count($resep_alkes_tambahan) > 0)
 				<tr>
@@ -858,6 +874,7 @@
 					<?php $nomor++; ?>
 
 					<?php $subtotal += $item->total; ?>
+					<?php $totalTarif += $item->total; ?>
 				@endforeach
 
 				<tr>
@@ -894,7 +911,10 @@
 				<td colspan="8"><hr /></td>
 			</tr>
 
-			<?php $last = $grandtotal; ?>
+			<?php
+				//  $last = $grandtotal;
+				 $last = $totalTarif;
+			 ?>
 
 			@if ($registrasi->panjar == '0' && $registrasi->cover_asuransi == '0')
 				@if ($registrasi->diskon_rp != 0)
@@ -962,7 +982,7 @@
 				</tr>
 				<tr >
 					<td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Pembayaran</b></td>
-					<td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($grandtotaltop) }}</b></td>
+					<td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format( $totalTarif - $totalDiskonGlobal ) }}</b></td>
 				</tr>
 			@endif
 			
