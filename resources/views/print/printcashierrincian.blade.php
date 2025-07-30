@@ -458,7 +458,7 @@
 					<?php $nomor++; ?>
 
 					<?php $subtotal += $item->total; ?>
-					<?php $totalTarif += $item->tarif; ?>
+					<?php $totalTarif += $item->total; ?>
 				@endforeach
 				@if (count($resep_alkes) > 0)
 				<tr>
