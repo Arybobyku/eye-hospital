@@ -619,7 +619,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td colspan="8" style="font-size: 10pt">*) Harga obat dan alat kesehatan diatas sudah termasuk PPN 10%</td>
+				<td colspan="8" style="font-size: 10pt">*) Harga obat dan alat kesehatan diatas sudah termasuk PPN 11%</td>
 			</tr>
 		</tbody>
 	</table>
