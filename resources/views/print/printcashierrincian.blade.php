@@ -49,12 +49,12 @@
 							@endforeach --}}
 							@if ($registrasi->panjar != '0')
 								<?php 
-									//$grandtotaltop = $grandtotaltop - $registrasi->panjar;
+									$grandtotaltop = $grandtotaltop - $registrasi->panjar;
 								?>
 							@endif
 							@if ($registrasi->cover_asuransi != '0')
 								<?php 
-									// $grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi; 
+									$grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi; 
 								?>
 							@endif
 							@if ($registrasi->diskon_rp != 0)
@@ -916,6 +916,7 @@
 				 $last = $totalTarif;
 			 ?>
 
+			{{-- Untuk Pembayaran Tunai Tanpa Asuransi --}}
 			@if ($registrasi->panjar == '0' && $registrasi->cover_asuransi == '0')
 				@if ($registrasi->diskon_rp != 0)
 					<?php 
@@ -929,28 +930,31 @@
 			@endif
 
 			
-
+			{{-- Untuk Cover Asuransi Dan Panjar --}}
 			@if ($registrasi->panjar != '0' || $registrasi->cover_asuransi != '0')
 				@if ($registrasi->panjar != '0')
 					<?php $grandtotal = $grandtotal - $registrasi->panjar; ?>
+					<?php $totalTarif = $totalTarif - $registrasi->panjar; ?>
 					<tr>
 						<td colspan="6" align="left" style="padding: 6px 5px; width: 65%"><b>Biaya Panjar</b></td>
 						<td colspan="2" align="right" style="padding: 6px 5px"><b>Rp. {{ number_format($registrasi->panjar) }}</b></td>
 					</tr>
 				@endif
 
-				@if ($registrasi->cover_asuransi != '0')
-					<?php $grandtotal = $grandtotal - $registrasi->cover_asuransi; ?>
-					<tr>
-						<td colspan="6" align="left" style="padding: 6px 5px; width: 65%"><b>Nominal Asuransi</b></td>
-						<td colspan="2" align="right" style="padding: 6px 5px"><b>Rp. {{ number_format($registrasi->cover_asuransi) }}</b></td>
-					</tr>
-				@endif
 				<?php $last = $last + $diskon ?>
 				<tr>
 					<td colspan="6" align="left" style="padding: 6px 5px; width: 65%"><b>Grand Total</b></td>
 					<td colspan="2" align="right" style="padding: 6px 5px"><b>Rp. {{ number_format($last) }}</b></td>
 				</tr>
+
+				@if ($registrasi->cover_asuransi != '0')
+					<?php $grandtotal = $grandtotal - $registrasi->cover_asuransi; ?>
+					<?php $totalTarif = $totalTarif - $registrasi->cover_asuransi; ?>
+					<tr>
+						<td colspan="6" align="left" style="padding: 6px 5px; width: 65%"><b>Nominal Asuransi</b></td>
+						<td colspan="2" align="right" style="padding: 6px 5px"><b>Rp. {{ number_format($registrasi->cover_asuransi) }}</b></td>
+					</tr>
+				@endif
 				
 			@endif
 			
