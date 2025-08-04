@@ -932,6 +932,13 @@
 			
 			{{-- Untuk Cover Asuransi Dan Panjar --}}
 			@if ($registrasi->panjar != '0' || $registrasi->cover_asuransi != '0')
+
+				<?php $last = $last + $diskon ?>
+				<tr>
+					<td colspan="6" align="left" style="padding: 6px 5px; width: 65%"><b>Grand Total</b></td>
+					<td colspan="2" align="right" style="padding: 6px 5px"><b>Rp. {{ number_format($last) }}</b></td>
+				</tr>
+
 				@if ($registrasi->panjar != '0')
 					<?php $grandtotal = $grandtotal - $registrasi->panjar; ?>
 					<?php $totalTarif = $totalTarif - $registrasi->panjar; ?>
@@ -940,12 +947,6 @@
 						<td colspan="2" align="right" style="padding: 6px 5px"><b>Rp. {{ number_format($registrasi->panjar) }}</b></td>
 					</tr>
 				@endif
-
-				<?php $last = $last + $diskon ?>
-				<tr>
-					<td colspan="6" align="left" style="padding: 6px 5px; width: 65%"><b>Grand Total</b></td>
-					<td colspan="2" align="right" style="padding: 6px 5px"><b>Rp. {{ number_format($last) }}</b></td>
-				</tr>
 
 				@if ($registrasi->cover_asuransi != '0')
 					<?php $grandtotal = $grandtotal - $registrasi->cover_asuransi; ?>
