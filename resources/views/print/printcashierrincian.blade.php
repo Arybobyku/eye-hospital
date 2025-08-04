@@ -964,6 +964,7 @@
 					$diskonGlobal = $registrasi->diskon_rp; 
 					$totalDiskonGlobal = $diskonGlobal + $diskon; 
 					$grandtotal2 = $grandtotal - $diskonGlobal;
+					$totalTarif = $totalTarif - $totalDiskonGlobal
 				?>
 			@if ($diskon != 0)
 
@@ -987,7 +988,7 @@
 				</tr>
 				<tr >
 					<td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Pembayaran</b></td>
-					<td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format( $totalTarif - $totalDiskonGlobal ) }}</b></td>
+					<td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format( $totalTarif ) }}</b></td>
 				</tr>
 			@endif
 			
@@ -1011,12 +1012,12 @@
 				@if (($registrasi->apakah_paket == 'Ya' || $registrasi->apakah_paket == 'ya') && $registrasi->cover_asuransi != 0)
 					<tr>
 						<td colspan="6" align="left" style="padding: 4px 7px; width: 65%"><b>Dibayarkan pasien</b></td>
-						<td colspan="2" align="right" style="padding: 4px 7px"><b>Rp. {{ number_format($grandtotal2 ?? $grandtotal) }}</b></td>
+						<td colspan="2" align="right" style="padding: 4px 7px"><b>Rp. {{ number_format($totalTarif) }}</b></td>
 					</tr>
 				@elseif (($registrasi->apakah_paket == 'Tidak' || $registrasi->apakah_paket == 'tidak') && $registrasi->cover_asuransi != 0)
 					<tr>
 						<td colspan="6" align="left" style="padding: 4px 7px; width: 65%"><b>Dibayarkan pasien</b></td>
-						<td colspan="2" align="right" style="padding: 4px 7px"><b>Rp. {{ number_format($grandtotal2 ?? $grandtotal) }}</b></td>
+						<td colspan="2" align="right" style="padding: 4px 7px"><b>Rp. {{ number_format($totalTarif) }}</b></td>
 					</tr>
 				@endif
 			@endif
