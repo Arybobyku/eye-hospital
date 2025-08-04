@@ -112,9 +112,9 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 				@foreach ($layananpasien as $item)
 					<?php $grandtotaltop += $item->total; ?>
 				@endforeach
-				@foreach ($resep_obat_bedah as $item)
+				{{-- @foreach ($resep_obat_bedah as $item)
 						<?php $grandtotaltop += $item->total; ?>
-				@endforeach
+				@endforeach --}}
 				@if ($registrasi->panjar != '0')
 					<?php 
 						//$grandtotaltop = $grandtotaltop - $registrasi->panjar;
@@ -233,9 +233,9 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 				@endforeach
 			@endif
 
-			@foreach ($resep_obat_bedah as $item)
+			{{-- @foreach ($resep_obat_bedah as $item)
 				<?php $total_obat += $item->total; ?>
-			@endforeach
+			@endforeach --}}
 
 			@if ($total_obat != 0)
 				<tr>
