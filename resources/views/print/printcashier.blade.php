@@ -117,12 +117,12 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 				@endforeach --}}
 				@if ($registrasi->panjar != '0')
 					<?php 
-						//$grandtotaltop = $grandtotaltop - $registrasi->panjar;
+						$grandtotaltop = $grandtotaltop - $registrasi->panjar;
 					?>
 				@endif
 				@if ($registrasi->cover_asuransi != '0')
 					<?php 
-						// $grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi; 
+						$grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi; 
 					?>
 				@endif
 				@if ($registrasi->diskon_rp != 0)
