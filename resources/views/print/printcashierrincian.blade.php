@@ -1216,9 +1216,9 @@ function penyebut($nilai) {
 		$nilai = abs($nilai);
 		$huruf = array("", "Satu", "Dua", "Tiga", "Empat", "Lima", "Enam", "Tujuh", "Delapan", "Sembilan", "Sepuluh", "Sebelas");
 		$temp = "";
-		if($nilai == 0){
-			return "Nol";
-		}
+		// if($nilai == 0){
+		// 	return "Nol";
+		// }
 
 		if ($nilai < 12) {
 			$temp = " ". $huruf[$nilai];
