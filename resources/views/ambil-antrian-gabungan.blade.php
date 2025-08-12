@@ -77,7 +77,7 @@
                     <h2>No. Antrian : CS - <span v-html="checknumber()"></span></h2>
                     <p>Antrian Kunjungan Pasien ke Poli Mata</p>
                     <div class="button">
-                        <button class="umum" v-on:click="add('Umum')">UMUM</button>
+                        <button class="umum" v-on:click="add('Umum')">AMBIL ANTRIAN</button>
                         {{-- <button class="umum" v-on:click="add('UMUM')">UMUM</button> --}}
                         {{-- <button class="asuransi" v-on:click="add('ASURANSI')">ASURANSI</button> --}}
                     </div>

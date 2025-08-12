@@ -411,6 +411,8 @@ class PasienCtrl extends Controller
 			$item->angka_nol = $angka_nol;
 			$item->nomor = $nomor;
 			$item->nama = $request->nama;
+			$item->no_ktp = $request->no_ktp;
+			$item->no_bpjs = $request->no_bpjs;
 			$item->alias = $request->alias ? $request->alias : '-';
 			$item->tempat_lahir = $request->tempat_lahir;
 			$item->tanggal_lahir = $request->tanggal_lahir;
@@ -574,6 +576,8 @@ class PasienCtrl extends Controller
 
 		$arr = array(
 			'nama' => $request->nama,
+			'no_ktp' => $request->no_ktp,
+			'no_bpjs' => $request->no_bpjs,
 			'alias' => $request->alias ? $request->alias : '-',
 			'tempat_lahir' => $request->tempat_lahir,
 			'tanggal_lahir' => $request->tanggal_lahir,

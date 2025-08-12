@@ -61,7 +61,8 @@ export const arrbiodata = () => {
 			{ value: 'Lainnya', label: 'Lainnya' },
 		],
 		jenisidentitas: [
-			{ value: 'KTP', label: 'KTP' },
+			// { value: 'KTP', label: 'KTP' }, 
+			{ value: 'Passport', label: 'Passport' },
 			{ value: 'SIM A', label: 'SIM A' },
 			{ value: 'SIM B1', label: 'SIM B1' },
 			{ value: 'SIM B2', label: 'SIM B2' },
@@ -168,6 +169,7 @@ export const arrregistrasi = () => {
 	return {
 		jenisidentitas: [
 			{ value: 'KTP', label: 'KTP' },
+			{ value: 'Passport', label: 'Passport' },
 			{ value: 'SIM A', label: 'SIM A' },
 			{ value: 'SIM B1', label: 'SIM B1' },
 			{ value: 'SIM B2', label: 'SIM B2' },

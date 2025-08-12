@@ -292,14 +292,14 @@
                         button: false
                     },
                     // { value: 'status', label: 'Status', type: 'text', search: true, close: false, button: false },
-                    {
-                        value: 'btnhtml',
-                        label: '',
-                        type: 'text',
-                        search: false,
-                        close: false,
-                        button: true
-                    }
+                    // {
+                    //     value: 'btnhtml',
+                    //     label: '',
+                    //     type: 'text',
+                    //     search: false,
+                    //     close: false,
+                    //     button: true
+                    // }
                 ],
                 module: {
                     data: [],
@@ -371,7 +371,7 @@
 
 				try {
 					this.showDatatable = false;
-					this.firstloader();
+					// this.firstloader();
 
 					const response = await axios.get(url);
 

@@ -641,7 +641,8 @@ export default {
 				this.showSelectDokter = true; // Sembunyikan select biasa
 				this.showSelectPoli = true; // Sembunyikan select biasa
 			} else {
-				vm.form.no_bpjs_kes.value = ''; 
+				console.log("tes", vm.detail);
+				vm.form.no_bpjs_kes.value = vm.detail.no_bpjs; 
 				vm.form.no_bpjs_kes.show = true;
 				vm.form.no_bpjs_kes.disabled = false;
 				vm.form.no_bpjs_kes.required = 'required';

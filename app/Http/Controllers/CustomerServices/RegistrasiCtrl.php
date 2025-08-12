@@ -324,6 +324,7 @@ class RegistrasiCtrl extends Controller
 				$item->pasien_uuid = $request->pasien_uuid ? $request->pasien_uuid : '-';
 				$item->rekam_medis = $request->rekam_medis ? $request->rekam_medis : '-';
 				$item->nama_pasien = $request->nama_pasien ? $request->nama_pasien : '-';
+				$item->no_ktp_pasien = $request->no_ktp_pasien ? $request->no_ktp_pasien : '-';
 				$item->tanggal_lahir = $request->tanggal_lahir ? $request->tanggal_lahir : '-';
 				$item->jenis_identitas = $request->jenis_identitas ? $request->jenis_identitas : '-';
 				$item->no_identitas = $request->no_identitas ? $request->no_identitas : '-';
@@ -399,7 +400,6 @@ class RegistrasiCtrl extends Controller
 
 				$item->is_jkn = $is_jkn;
 				$item->save();
-				echo ("poli_bpjs" . $request->poli_bpjs);
 				$item->is_asuransi = $is_asuransi;
 
 				$arr = array('status' => 'Kunjungan');
@@ -439,6 +439,9 @@ class RegistrasiCtrl extends Controller
 
 				$pasien = Pasien::where('uuid', $request->pasien_uuid)->first();
 				$response = app(AntrolBpjsCtrl::class)->tambahAntrean($item, $pasien);
+				$response = json_decode($response);
+				// dd($response['message']);
+				
 
 				$rekammedis = $request->rekam_medis;
 				$result = substr($rekammedis, 0, 1);
@@ -469,7 +472,18 @@ class RegistrasiCtrl extends Controller
 				$str = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Sebagai')) . '=' . 'Registrasi';
 				event(new NewTradeRo($str));
 			}
+			// $dataBpjs = json_decode($response, true); // true = decode ke array
+			// dd($response->metadata->code);
 
+			if ($response->metadata->code !== "200") {
+				DB::rollBack();
+				return response()->json([
+					'hasil' => 'gagal',
+					'data' => $response->metadata->message ?? 'Terjadi kesalahan'
+				], 500);
+				// $response = app(AntrolBpjsCtrl::class)->batalAntrean($item, $pasien)
+			}
+			dd($response->metadata->code);
 
 
 			DB::commit();

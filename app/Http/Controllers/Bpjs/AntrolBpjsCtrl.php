@@ -269,7 +269,7 @@ class AntrolBpjsCtrl extends Controller
             "kodebooking" => $item->nomor,
             "jenispasien" => $item->carabayar_nama == 'BPJS Kesehatan' ? "JKN" : "NON JKN",
             "nomorkartu" => $item->no_bpjs_kes ?? "",
-            "nik" => $pasien->no_identitas ?? "",
+            "nik" => $pasien->no_ktp ?? "",
             "nohp" => $item->no_handphone ?? "",
             "kodepoli" => $item->kode_poli_bpjs ?? "",
             "namapoli" => $item->nama_poli_bpjs ?? "",
@@ -331,7 +331,7 @@ class AntrolBpjsCtrl extends Controller
         $this->updateWaktuAntrean($item->nomor, 2, $admisiCallTime, $item->uuid);
 
         $epochTime = time() * 1000;
-        $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);
+        $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);     
 
         return $result;
     }
@@ -424,7 +424,7 @@ class AntrolBpjsCtrl extends Controller
         return $result;
     }
 
-    public function batalAntrean(Registrasi $item)
+    public function batalAntrean(Registrasi $item, Pasien $pasien)
     {
         $result = null;
         $endpoint = "antrean/batal";

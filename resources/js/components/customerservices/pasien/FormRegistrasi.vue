@@ -42,7 +42,7 @@
 						<table class="table">
 							<tbody>
 								<tr>
-									<td>Jenis Identitas</td>
+									<td>Jenis Identitas Lainnya</td>
 									<td><strong>{{ detail.jenis_identitas }}</strong></td>
 								</tr>
 								<tr>
@@ -54,8 +54,8 @@
 									<td><strong>{{ detail.no_handphone }}</strong></td>
 								</tr>
 								<tr>
-									<td>Email</td>
-									<td><strong>{{ detail.email }}</strong></td>
+									<td>No KTP (NIK)</td>
+									<td><strong>{{ detail.no_ktp }}</strong></td>
 								</tr>
 								<tr>
 									<td>Pekerjaan</td>
@@ -280,8 +280,8 @@ export default {
 		*************************************************************************************************************************/
 
 		gagal: function (error) {
-			if (vm.$debugs) { console.log(error.response); } let active = 0;
-			vm.message('error', 1);
+			if (vm.$debugs) { console.log("RESPONSE EROR", error.response); } let active = 0;
+			vm.message('error', error.response.data.data);
 			vm.loaderprocess();
 			if (vm.position == 'rawatjalan') { }
 			else if (vm.position == 'editrawatjalan') { }
@@ -308,12 +308,16 @@ export default {
 		},
 
 		message: function (position, active) {
+			console.log("lapet", position);
 			if (position == 'error') {
-				if (vm.position == 'rawatjalan') { vm.notification('Gagal memproses pasien rawat jalan.', 3000, position); }
-				else if (vm.position == 'editrawatjalan') { vm.notification('Gagal memproses pasien rawat jalan.', 3000, position); }
-				else if (vm.position == 'cancelrawatjalan') { vm.notification('Gagal memproses pasien rawat jalan.', 3000, position); }
-				else if (vm.position == 'rawatinap') { vm.notification('Gagal memproses pasien rawat inap.', 3000, position); }
-				else if (vm.position == 'bedah') { vm.notification('Gagal memproses pasien ke ruangan bedah.', 3000, position); }
+				if (active === null || active == '') {
+					active = 'Gagal memproses pasien ke ruangan bedah';
+				}
+				if (vm.position == 'rawatjalan') { vm.notification(active, 3000, position); }
+				else if (vm.position == 'editrawatjalan') { vm.notification(active, 3000, position); }
+				else if (vm.position == 'cancelrawatjalan') { vm.notification(active, 3000, position); }
+				else if (vm.position == 'rawatinap') { vm.notification(active, 3000, position); }
+				else if (vm.position == 'bedah') { vm.notification(active, 3000, position); }
 			}
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'rawatjalan') { vm.notification('Berhasil memproses pasien rawat jalan.', 3000, position); }
@@ -331,7 +335,12 @@ export default {
 		/*************************************************************************************************************************
 		* Bagian fungsi yang wajib disertakan disetiap index dan tidak perlu diubah-ubah
 		*************************************************************************************************************************/
-		executions: function () { axios.post(vm.attach.url, vm.attach.data, { headers: { 'Content-Type': 'multipart/form-data' } }).then(function (response) { if (response.data.data == '419') { window.location.href = '/masuk'; } setTimeout(function(){ vm.berhasil(response); }, 750, this); }).catch(function (error){ setTimeout(function(){ vm.gagal(error); }, 750, this); }); },
+		executions: function () { axios.post(vm.attach.url, vm.attach.data, { headers: { 'Content-Type': 'multipart/form-data' } }).then(function (response) 
+			{ if (response.data.data == '419') 
+			{ window.location.href = '/masuk'; } setTimeout(function()
+			{ vm.berhasil(response); }, 750, this); }).catch(function (error){ setTimeout(function()
+			{ console.log ("tes");
+				vm.gagal(error); }, 750, this); }); },
 		dialog: function (_text, _confirm, posisi) { Swal.fire({ title:"Apakah Anda Yakin?", text:_text, icon:"warning", showCancelButton:!0, confirmButtonColor:"#1c84ee", cancelButtonColor:"#fd625e", confirmButtonText: _confirm, cancelButtonText:"Tidak, batal!" }).then(function(e){ if (e.isConfirmed) { vm.runconfirm(posisi); } }); },
 		notification: function (message, timer, position) { if (position == 'error') { toast.error(message, { rtl: false, autoClose: timer }); } else { toast.success(message, { rtl: false, autoClose: timer }); } },
 
@@ -373,7 +382,7 @@ export default {
 			vm.detail.agama = data.agama; vm.detail.alamat = data.alamat; vm.detail.alias = vm.empty(data.alias);
 			vm.detail.email = vm.empty(data.email); vm.detail.golongan_darah = vm.empty(data.golongan_darah);
 			vm.detail.jenis_identitas = data.jenis_identitas; vm.detail.jenis_kelamin = data.jenis_kelamin;
-			vm.detail.kodepos = vm.empty(data.kodepos); vm.detail.nama = data.nama;
+			vm.detail.kodepos = vm.empty(data.kodepos); vm.detail.nama = data.nama; vm.detail.no_ktp = data.no_ktp; vm.detail.no_bpjs = data.no_bpjs;
 			vm.detail.nama_ayah = vm.empty(data.nama_ayah); vm.detail.nama_ibu = vm.empty(data.nama_ibu);
 			vm.detail.nama_kab_kota = data.nama_kab_kota; vm.detail.nama_kecamatan = data.nama_kecamatan;
 			vm.detail.nama_kelurahan = data.nama_kelurahan; vm.detail.nama_provinsi = data.nama_provinsi;
