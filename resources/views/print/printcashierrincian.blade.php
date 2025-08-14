@@ -52,11 +52,11 @@
 									$grandtotaltop = $grandtotaltop - $registrasi->panjar;
 								?>
 							@endif
-							@if ($registrasi->cover_asuransi != '0')
+							{{-- @if ($registrasi->cover_asuransi != '0')
 								<?php 
 									$grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi; 
 								?>
-							@endif
+							@endif --}}
 							@if ($registrasi->diskon_rp != 0)
 							<?php 
 								$diskonGlobalTop = $registrasi->diskon_rp; 
