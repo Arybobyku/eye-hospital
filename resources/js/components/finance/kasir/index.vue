@@ -1,4 +1,8 @@
 <template>
+<button class="tooltip btn-success" @click="goToPage('bedah-kasir')">Kasir (Tagihan Rawat Inap)</button>
+<button class="tooltip btn-success" @click="goToPage('histori-kasir')">Histori (Tagihan Rawat Jalan)</button>
+<button class="tooltip btn-success" @click="goToPage('histori-bebas')">Histori (Tagihan Rawat Inap)</button>
+<button class="tooltip btn-success" @click="goToPage('histori-kasirrawatinap')">Histori (Pasien Bebas)</button>
 <div class="inner" ref="roottable">
 	<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
 	<div class="tab-content">
@@ -144,7 +148,10 @@ export default {
 		* Bagian fungsi yang opsional untuk manipulasi data dan string
 		*************************************************************************************************************************/
 		nullAndZero, datename, formatrupiah,
-
+		goToPage: function(link){
+			const _base = '/dashboard/';
+			this.$router.push(_base + link);
+		},
 		changesTab: function (values, index, classes) {
 			if (classes != 'tab-active') {
 				for (let i = 0; i < vm.tab.button.length; i++) { 
