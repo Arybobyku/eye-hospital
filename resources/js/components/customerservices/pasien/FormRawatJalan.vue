@@ -19,6 +19,10 @@
 		<Selected v-on:click="selectbox($event, form.select.dokter.name, form.select.dokter.statics)" 
 			:ref="form.select.dokter.name" @selecteditem="selecteditem" @selectclear="selectclear"
 			:selection="form.select.dokter" v-on:keyup="selectfilter($event, form.select.dokter.name)"></Selected>
+
+		<Selected v-on:click="selectbox($event, form.select.dokterumum.name, form.select.dokterumum.statics)" 
+			:ref="form.select.dokterumum.name" @selecteditem="selecteditem" @selectclear="selectclear"
+			:selection="form.select.dokterumum" v-on:keyup="selectfilter($event, form.select.dokterumum.name)"></Selected>
 	</div>
 	<div class="col-4 form-ml" ref="camerainternal">
 		<div class="web-camera-container" v-if="isphotos">
@@ -413,6 +417,9 @@ export default {
 
 			vm.form.select.dokter.value =  response.pengguna_uuid;
 			vm.form.select.dokter.label =  response.nama_dokter;
+
+			vm.form.select.dokterumum.label =  response.nama_dokter_umum;
+
 			vm.form.nopendaftaran.value = response.no_pendaftaran;
 			
 			vm.form.select.berkebutuhankhusus.value = response.berkebutuhan_khusus;

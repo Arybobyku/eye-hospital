@@ -198,6 +198,11 @@ export const formrawatjalan = () => {
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'dokter', isrequired: true, html: 'Dokter yang menangani', issearch: false, disabled: false,
 			},
+			dokterumum: { 
+				key : 'dokterumum', for_id: 'form_'+'dokterumum', name: 'dokterumum', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'dokterumum', isrequired: false, html: 'Dokter Umum yang menangani', issearch: false, disabled: false,
+			},
 
 			carabayar: { 
 				key : 'carabayar', for_id: 'form_'+'carabayar', name: 'carabayar', uuid:'', value: '', label: 'Silahkan Pilih', 

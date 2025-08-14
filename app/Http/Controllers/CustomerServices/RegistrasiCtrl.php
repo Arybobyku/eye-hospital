@@ -105,6 +105,7 @@ class RegistrasiCtrl extends Controller
 								$arr = array(
 									'pengguna_uuid' => $request->pengguna_uuid,
 									'nama_dokter' => $request->nama_dokter,
+									'nama_dokter_umum' => $request->nama_dokter_umum,
 									'no_pendaftaran' => $request->no_pendaftaran,
 									'cara_masuk' => $request->cara_masuk,
 									'rujukan' => $request->rujukan,
@@ -126,6 +127,7 @@ class RegistrasiCtrl extends Controller
 							$arr = array(
 								'pengguna_uuid' => $request->pengguna_uuid,
 								'nama_dokter' => $request->nama_dokter,
+								'nama_dokter_umum' => $request->nama_dokter_umum,
 								'no_pendaftaran' => $request->no_pendaftaran,
 								'cara_masuk' => $request->cara_masuk,
 								'rujukan' => $request->rujukan,
@@ -147,6 +149,7 @@ class RegistrasiCtrl extends Controller
 					$arr = array(
 						'pengguna_uuid' => $request->pengguna_uuid,
 						'nama_dokter' => $request->nama_dokter,
+						'nama_dokter_umum' => $request->nama_dokter_umum,
 						'no_pendaftaran' => $request->no_pendaftaran,
 						'cara_masuk' => $request->cara_masuk,
 						'rujukan' => $request->rujukan,
@@ -276,6 +279,7 @@ class RegistrasiCtrl extends Controller
 
 				$item->pengguna_uuid = $request->pengguna_uuid ? $request->pengguna_uuid : '-';
 				$item->nama_dokter = $request->nama_dokter ? $request->nama_dokter : '-';
+				$item->nama_dokter_umum = $request->nama_dokter_umum ? $request->nama_dokter_umum : '-';
 				$item->tanggal = date('Y-m-d');
 				$item->waktu = date('H:i');
 				$item->no_pendaftaran = $request->no_pendaftaran ? $request->no_pendaftaran : '-';
@@ -365,6 +369,10 @@ class RegistrasiCtrl extends Controller
 						$this->savepasienbaru($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
 					}
 				}
+
+				if (!empty($item->nama_dokter_umum) && $item->nama_dokter_umum !== '-') {
+					$this->saveDokterUmum($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
+				}
 				
 				$arr = array('status' => 'Kunjungan');
 				$pasien = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
@@ -435,6 +443,57 @@ class RegistrasiCtrl extends Controller
 					->select(['tindakan_rawat_jalan_uuid', 'nama_tindakan_rawat_jalan', 'harga'])
 					->groupBy(['tindakan_rawat_jalan_uuid', 'nama_tindakan_rawat_jalan', 'harga'])
 					->where('tindakan_rawat_jalan_uuid', '!=', 'c13bf9c8-151f-4718-85de-e4d65cf667a8')->get();
+		foreach ($tindakan as $row) {
+    	$item = new LayananPasien();
+			$item->uuid = Uuid::uuid4();
+			$item->registrasi_uuid = $registrasi_uuid;
+			$item->no_pendaftaran = $request->no_pendaftaran;
+			$item->registrasi_kode = $registrasi_kode;
+			$item->registrasi_nomor = $registrasi_nomor;
+			$item->registrasi_jenis = $registrasi_jenis;
+			$item->pasien_uuid = $request->pasien_uuid;
+			$item->rekam_medis = $request->rekam_medis;
+			$item->nama_pasien = $request->nama_pasien;
+			$item->pengguna_uuid = $request->pengguna_uuid;
+			$item->nama_dokter = $request->nama_dokter;
+
+			$item->tanggal = date('Y-m-d');
+			$item->waktu = date('H:i');
+
+			$item->carabayar_uuid = $request->carabayar_uuid;
+			$item->carabayar_nama = $request->carabayar_nama;
+
+			$item->layanan_uuid = $row->tindakan_rawat_jalan_uuid;
+			$item->nama_layanan = $row->nama_tindakan_rawat_jalan;
+			$item->tarif = $row->harga;
+			$item->total = $row->harga;
+			$item->default = 'Ya';
+			$cek = explode(" ",$row->nama_tindakan_rawat_jalan);
+			if (count($cek) > 0) {
+				if ($cek[0] == 'Honor' || $cek[0] == 'Konsul' || $cek[0] == 'Konsultasi' || $cek[0] == 'Gaji') {
+					$item->jenis = 'Honor';
+				}
+				else {
+					$item->jenis = 'Administrasi';
+				}
+			}
+			else {
+				$item->jenis = 'Administrasi';
+			}
+			$item->save();
+		}
+	}
+
+
+	private function saveDokterUmum($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis){
+		$tindakan = CaraBayarTindakanRawatJalan::query()
+			->where('carabayar_uuid', $request->carabayar_uuid)
+			->where('nama_tindakan_rawat_jalan', 'like', '%Konsultasi Dokter Umum%')
+			->where('tindakan_rawat_jalan_uuid', '!=', 'c13bf9c8-151f-4718-85de-e4d65cf667a8')
+			->select('tindakan_rawat_jalan_uuid', 'nama_tindakan_rawat_jalan', 'harga')
+			->groupBy('tindakan_rawat_jalan_uuid', 'nama_tindakan_rawat_jalan', 'harga')
+			->get();
+
 		foreach ($tindakan as $row) {
     	$item = new LayananPasien();
 			$item->uuid = Uuid::uuid4();
