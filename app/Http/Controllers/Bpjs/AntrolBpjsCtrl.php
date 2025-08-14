@@ -319,13 +319,13 @@ class AntrolBpjsCtrl extends Controller
 
         // Waktu Start Admisi
         $admisiWaktu = Carbon::parse($antrianCS->created_at, 'Asia/Jakarta') // Stored as GMT+7
-        ->setTimezone('America/Los_Angeles') // Convert to GMT-7
+        // ->setTimezone('America/Los_Angeles') // Convert to GMT-7
         ->timestamp * 1000; 
 
         $this->updateWaktuAntrean($item->nomor, 1, $admisiWaktu, $item->uuid);
 
          $admisiCallTime = Carbon::parse($antrianCS->call_time, 'Asia/Jakarta') // Stored as GMT+7
-        ->setTimezone('America/Los_Angeles') // Convert to GMT-7
+        // ->setTimezone('America/Los_Angeles') // Convert to GMT-7
         ->timestamp * 1000; 
 
         $this->updateWaktuAntrean($item->nomor, 2, $admisiCallTime, $item->uuid);
@@ -340,9 +340,10 @@ class AntrolBpjsCtrl extends Controller
         $result = null;
         $endpoint = "antrean/farmasi/add";
         $data = [
-            "kodebooking" => $item->nomor,
+            "kodebooking" =>  $item->nomor,
             "jenisresep" => $item->jenis, // (racikan / non racikan)
-            "nomorantrean" => $item->number,
+            // "nomorantrean" => $item->number,
+            "nomorantrean" => 1, //waiting bpjs answer
             "keterangan" => "Testing"
         ];
 

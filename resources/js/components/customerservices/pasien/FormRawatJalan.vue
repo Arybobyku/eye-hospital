@@ -440,7 +440,7 @@ export default {
 		},
 
 		seteditedv2:function(response, pj, photosstatus) {
-			console.log("kontol",pj)
+			console.log("pj",pj)
 			vm.isphotos = photosstatus;
 			let base_image = new Image();
   		base_image.src = '/' + response.photos;
@@ -515,7 +515,7 @@ export default {
 				vm.form.select.klinik.label = 'Silahkan Pilih';
 			}
 			console.log();
-			console.log("kontol",response);
+			console.log("res",response);
 		},
 
 		setedited:function(response, photosstatus) {
@@ -528,7 +528,7 @@ export default {
       	context.drawImage(base_image, 0, 0, vm.width_number, vm.height_number);
 			}, 750);
 			
-			console.log("kontol", response);
+			console.log("res", response);
 			vm.temporer = vm.test;
 			vm.test = null;
 			vm.red = 'Back';

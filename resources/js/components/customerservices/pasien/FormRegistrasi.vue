@@ -308,7 +308,7 @@ export default {
 		},
 
 		message: function (position, active) {
-			console.log("lapet", position);
+			console.log("posisi", position);
 			if (position == 'error') {
 				if (active === null || active == '') {
 					active = 'Gagal memproses pasien ke ruangan bedah';

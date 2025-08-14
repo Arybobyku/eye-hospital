@@ -310,6 +310,7 @@ class RegistrasiCtrl extends Controller
 				}
 
 				$nomor_ = date('Y') . date('m') . date('d') . $nomor;
+				// $nomor_ = '2025081400008';
 
 				$registrasi_uuid = $uuid;
 
@@ -474,16 +475,17 @@ class RegistrasiCtrl extends Controller
 			}
 			// $dataBpjs = json_decode($response, true); // true = decode ke array
 			// dd($response->metadata->code);
-
-			if ($response->metadata->code !== "200") {
+			// dd($response->metadata);
+			if ($response->metadata->code !== 200) {
 				DB::rollBack();
 				return response()->json([
 					'hasil' => 'gagal',
 					'data' => $response->metadata->message ?? 'Terjadi kesalahan'
 				], 500);
-				// $response = app(AntrolBpjsCtrl::class)->batalAntrean($item, $pasien)
+
+				$response = app(AntrolBpjsCtrl::class)->batalAntrean($item, $pasien);
 			}
-			dd($response->metadata->code);
+			// dd($response->metadata->code);
 
 
 			DB::commit();

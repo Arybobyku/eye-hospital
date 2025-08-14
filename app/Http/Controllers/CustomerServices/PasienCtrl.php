@@ -402,7 +402,6 @@ class PasienCtrl extends Controller
 				$angka_nol = '-';
 				$rekam_medis .= $nomor;
 			}
-
 			$item = new Pasien();
 			$item->uuid = $uuid;
 			$item->rekam_medis = $rekam_medis;
