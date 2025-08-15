@@ -370,7 +370,8 @@ class RegistrasiCtrl extends Controller
 					}
 				}
 
-				if (!empty($item->nama_dokter_umum) && $item->nama_dokter_umum !== '-') {
+				// Create Honor Dokter Umum
+				if (!empty($item->nama_dokter_umum) && $item->nama_dokter_umum !== '-' && $item->nama_dokter_umum !== '' && $item->nama_dokter_umum !== 'Silahkan Pilih') {
 					$this->saveDokterUmum($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
 				}
 				
