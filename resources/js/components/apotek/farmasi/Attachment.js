@@ -24,14 +24,14 @@ export const parsekelurahan = (form, detail, obat, obatbedah,  obattambahan) => 
 	return data;
 }
 
-export const parseunit = (form, obat, obatracikan, obattambahan, tindakan) => {
+export const parseunit = (form, obat, obatracikan, tindakan) => {
 	let data = new FormData();
 	data.append('pasienbebas_uuid', form.uuid);
 	data.append('carabayar_nama', form.carabayar_nama);
 	data.append('carabayar_uuid', form.carabayar_uuid);
 	data.append('obat', JSON.stringify(obat));
 	data.append('obatracikan', JSON.stringify(obatracikan));
-	data.append('obattambahan', JSON.stringify(obattambahan));
+	// data.append('obattambahan', JSON.stringify(obattambahan));
 	data.append('tindakan', JSON.stringify(tindakan));
 	for(var pair of data.entries()) {
 		console.log(pair[0]+ ', '+ pair[1]); 
