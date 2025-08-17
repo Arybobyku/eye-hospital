@@ -2120,7 +2120,7 @@ ul.list-detail > li > span {
 }
 
 /* width */
-.menu-router-link::-webkit-scrollbar { width: 5px; }
+.menu-router-link::-webkit-scrollbar { width: 15px; }
 /* Track */
 .menu-router-link::-webkit-scrollbar-track { background: #f1f1f1; }
 /* Handle */
