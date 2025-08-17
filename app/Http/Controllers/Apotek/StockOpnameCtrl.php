@@ -125,6 +125,7 @@ class StockOpnameCtrl extends Controller
 				DB::raw("'Apotek' as domain"), 
 				DB::raw('minta_kecil::text as jumlah_kecil'), 
 				DB::raw('minta_besar::text as jumlah_besar'), 
+				'minta_pengguna_nama as person',
 				'tanggal_terima as tanggal', 
 				'jam_terima as waktu', 
 				'created_at',
@@ -136,6 +137,7 @@ class StockOpnameCtrl extends Controller
 				DB::raw("'Resep' as domain"), 
 				DB::raw("'1' AS jumlah_kecil"), 
 				DB::raw("'1' AS jumlah_besar"), 
+				'nama_pasien as person',
 				'tanggal', 
 				'waktu', 
 				'created_at'
@@ -147,6 +149,7 @@ class StockOpnameCtrl extends Controller
 				DB::raw("'Resep Bebas' as domain"), 
 				DB::raw("'1' AS jumlah_kecil"), 
 				DB::raw("'1' AS jumlah_besar"), 
+				'nama_pasien as person',
 				'tanggal', 
 				'waktu', 
 				'created_at'
@@ -163,6 +166,7 @@ class StockOpnameCtrl extends Controller
 				DB::raw("'Resep Racikan' as domain"), 
 				DB::raw("subquery.elements::json->>'jumlah_kecil' as jumlah_kecil"), 
 				DB::raw("subquery.elements::json->>'jumlah_besar' as jumlah_besar"), 
+				'nama_pasien as person',
 				'tanggal', 
 				'waktu', 
 				'resepracikan.created_at'
@@ -179,6 +183,7 @@ class StockOpnameCtrl extends Controller
 				DB::raw("'Resep Racikan Bebas' as domain"), 
 				DB::raw("subquery.elements::json->>'jumlah_kecil' as jumlah_kecil"),  
 				DB::raw("subquery.elements::json->>'jumlah_besar' as jumlah_besar"), 
+				'nama_pasien as person',
 				'tanggal', 
 				'waktu', 
 				'resepracikanbebas.created_at'

@@ -16,6 +16,7 @@
 									<th>Jumlah Kecil</th>
 									<th>Jumlah Besar</th>
 									<th>Waktu</th>
+									<th>Pasien / Pengguna</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -25,6 +26,7 @@
 									<td>{{ (+row.jumlah_kecil).toFixed(2) }}</td>
 									<td>{{ (+row.jumlah_besar).toFixed(2) }}</td>
 									<td>{{ row.tanggal }} {{ row.waktu }}</td>
+									<td>{{ row.person }}</td>
 								</tr>
 							</tbody>
 						</table>
