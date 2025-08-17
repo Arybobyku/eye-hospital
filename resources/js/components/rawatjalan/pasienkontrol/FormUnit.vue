@@ -59,7 +59,7 @@ export default {
 				{ value: '1', label: 'Poli 1' },
 				{ value: '2', label: 'Poli 2' },
 				{ value: '3', label: 'Poli 3' },
-				{ value: '4', label: 'Poli 4' },
+				// { value: '4', label: 'Poli 4' },
 				{ value: '5', label: 'Poli 5' },
 				{ value: '6', label: 'Poli 6' },
 			],

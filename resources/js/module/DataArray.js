@@ -61,7 +61,8 @@ export const arrbiodata = () => {
 			{ value: 'Lainnya', label: 'Lainnya' },
 		],
 		jenisidentitas: [
-			{ value: 'KTP', label: 'KTP' },
+			// { value: 'KTP', label: 'KTP' }, 
+			{ value: 'Passport', label: 'Passport' },
 			{ value: 'SIM A', label: 'SIM A' },
 			{ value: 'SIM B1', label: 'SIM B1' },
 			{ value: 'SIM B2', label: 'SIM B2' },
@@ -168,6 +169,7 @@ export const arrregistrasi = () => {
 	return {
 		jenisidentitas: [
 			{ value: 'KTP', label: 'KTP' },
+			{ value: 'Passport', label: 'Passport' },
 			{ value: 'SIM A', label: 'SIM A' },
 			{ value: 'SIM B1', label: 'SIM B1' },
 			{ value: 'SIM B2', label: 'SIM B2' },
@@ -190,7 +192,7 @@ export const arrregistrasi = () => {
 			{ value: '1', label: 'Poli 1' },
 			{ value: '2', label: 'Poli 2' },
 			{ value: '3', label: 'Poli 3' },
-			{ value: '4', label: 'Poli 4' },
+			// { value: '4', label: 'Poli 4' },
 			{ value: '5', label: 'Poli 5' },
 			{ value: '6', label: 'Poli 6' },
 		],
@@ -249,7 +251,7 @@ export const arrpemeriksaan = () => {
 			{ value: '1', label: 'Poli 1' },
 			{ value: '2', label: 'Poli 2' },
 			{ value: '3', label: 'Poli 3' },
-			{ value: '4', label: 'Poli 4' },
+			// { value: '4', label: 'Poli 4' },
 			{ value: '5', label: 'Poli 5' },
 			{ value: '6', label: 'Poli 6' },
 		],

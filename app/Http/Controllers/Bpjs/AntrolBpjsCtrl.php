@@ -269,7 +269,7 @@ class AntrolBpjsCtrl extends Controller
             "kodebooking" => $item->nomor,
             "jenispasien" => $item->carabayar_nama == 'BPJS Kesehatan' ? "JKN" : "NON JKN",
             "nomorkartu" => $item->no_bpjs_kes ?? "",
-            "nik" => $pasien->no_identitas ?? "",
+            "nik" => $pasien->no_ktp ?? "",
             "nohp" => $item->no_handphone ?? "",
             "kodepoli" => $item->kode_poli_bpjs ?? "",
             "namapoli" => $item->nama_poli_bpjs ?? "",
@@ -319,19 +319,19 @@ class AntrolBpjsCtrl extends Controller
 
         // Waktu Start Admisi
         $admisiWaktu = Carbon::parse($antrianCS->created_at, 'Asia/Jakarta') // Stored as GMT+7
-        ->setTimezone('America/Los_Angeles') // Convert to GMT-7
+        // ->setTimezone('America/Los_Angeles') // Convert to GMT-7
         ->timestamp * 1000; 
 
         $this->updateWaktuAntrean($item->nomor, 1, $admisiWaktu, $item->uuid);
 
          $admisiCallTime = Carbon::parse($antrianCS->call_time, 'Asia/Jakarta') // Stored as GMT+7
-        ->setTimezone('America/Los_Angeles') // Convert to GMT-7
+        // ->setTimezone('America/Los_Angeles') // Convert to GMT-7
         ->timestamp * 1000; 
 
         $this->updateWaktuAntrean($item->nomor, 2, $admisiCallTime, $item->uuid);
 
         $epochTime = time() * 1000;
-        $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);
+        $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);     
 
         return $result;
     }
@@ -340,9 +340,10 @@ class AntrolBpjsCtrl extends Controller
         $result = null;
         $endpoint = "antrean/farmasi/add";
         $data = [
-            "kodebooking" => $item->nomor,
+            "kodebooking" =>  $item->nomor,
             "jenisresep" => $item->jenis, // (racikan / non racikan)
-            "nomorantrean" => $item->number,
+            // "nomorantrean" => $item->number,
+            "nomorantrean" => 1, //waiting bpjs answer
             "keterangan" => "Testing"
         ];
 
@@ -424,7 +425,7 @@ class AntrolBpjsCtrl extends Controller
         return $result;
     }
 
-    public function batalAntrean(Registrasi $item)
+    public function batalAntrean(Registrasi $item, Pasien $pasien)
     {
         $result = null;
         $endpoint = "antrean/batal";

@@ -5,6 +5,14 @@ export const formpasien = () => {
 			title: 'Nama Pasien', for_id: 'form_'+'nama', type: 'text', required: 'required', 
 			name: 'nama', value: '', disabled: false, show: true, kinds: ''
 		},
+		no_ktp: { 
+			title: 'No KTP (NIK)', for_id: 'form_'+'no_ktp', type: 'text', required: 'required', 
+			name: 'no_ktp', value: '', disabled: false, show: true, kinds: ''
+		},
+		no_bpjs: { 
+			title: 'No BPJS', for_id: 'form_'+'no_bpjs', type: 'text', required: '', 
+			name: 'no_bpjs', value: '', disabled: false, show: true, kinds: ''
+		},
 		alias: { 
 			title: 'Nama Alias', for_id: 'form_'+'alias', type: 'text', required: '', 
 			name: 'alias', value: '', disabled: false, show: true, kinds: ''
@@ -98,7 +106,7 @@ export const formpasien = () => {
 			jenisidentitas: { 
 				key : 'jenisidentitas', for_id: 'form_'+'jenisidentitas', name: 'jenisidentitas', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: true,
-				class: 'jenisidentitas', isrequired: true, html: 'Jenis Identitas', issearch: false, disabled: false,
+				class: 'jenisidentitas', isrequired: true, html: 'Jenis Identitas Lainnya', issearch: false, disabled: false,
 			},
 			golongandarah: { 
 				key : 'golongandarah', for_id: 'form_'+'golongandarah', name: 'golongandarah', uuid:'', value: '', label: 'Silahkan Pilih', 
@@ -193,7 +201,7 @@ export const formrawatjalan = () => {
 			jenisidentitas: { 
 				key : 'jenisidentitas', for_id: 'form_'+'jenisidentitas', name: 'jenisidentitas', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: true,
-				class: 'jenisidentitas', isrequired: false, html: 'Jenis Identitas', issearch: false, disabled: false,
+				class: 'jenisidentitas', isrequired: false, html: 'Jenis Identitas PJ', issearch: false, disabled: false,
 			},
 			berkebutuhankhusus: { 
 				key : 'berkebutuhankhusus', for_id: 'form_'+'berkebutuhankhusus', name: 'berkebutuhankhusus', uuid:'', value: '', label: 'Silahkan Pilih', 

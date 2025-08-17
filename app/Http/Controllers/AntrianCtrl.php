@@ -227,7 +227,7 @@ class AntrianCtrl extends Controller
 		$nomor = str_pad($nomor, 5, '0', STR_PAD_LEFT);
 		$nomorFormatted = $tanggal . $nomor;
 
-		$item->nomor = $nomorFormatted;
+		$item->nomor = 'F'.$nomorFormatted;
 
 		$item->save();
 
@@ -280,9 +280,10 @@ class AntrianCtrl extends Controller
 		// if($request->is_bpjs == '1'){
 
 		// }
-
+		// dd($item);
 		// **Panggil tambahAntreanFarmasi dengan cara yang benar**
 		$response = app(AntrolBpjsCtrl::class)->tambahAntreanFarmasi($item);
+		// dd($response);
 
 		// **Proses PDF**
 		$pdf = \App::make('dompdf.wrapper');

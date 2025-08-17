@@ -598,6 +598,7 @@ class FarmasiCtrl extends Controller
         $item = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
             ->where('number', '=', $request->number)->first();
         $kodeBooking = $item->nomor;
+        // dd($kodeBooking)
         $taskId = 6;
         
 
@@ -611,14 +612,17 @@ class FarmasiCtrl extends Controller
             ->where('number', '=', $request->number)
             ->where('pemanggil', '=', '1')
             ->first();
-        echo ("kode book" . $kodeBooking);
+        // echo ("kode book" . $kodeBooking);
 
 
 
         // UPDATE TASK ID 6
         $registrasi = Registrasi::where('uuid', '=', $item->uuid_registrasi)->first();
+
+        // dd($registrasi);
         $epochTime = time() * 1000;
-        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($registrasi->nomor, 6, $epochTime, $registrasi->uuid);
+        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking , 5);
+        // dd($response);
 
         // if ($get) {
         //     $str = 'Farmasi 1=' . $request->number . '=kunjungan';

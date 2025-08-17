@@ -13,6 +13,8 @@
 							:ref="form.select.sebutan.name" @selecteditem="selecteditem" @selectclear="selectclear"
 							:selection="form.select.sebutan"></Selected>
 						<Inputed :ref="form.nama.name" :form="form.nama"></Inputed>
+						<Inputed :ref="form.no_ktp.name" :form="form.no_ktp"></Inputed>
+						<Inputed :ref="form.no_bpjs.name" :form="form.no_bpjs"></Inputed>
 						<Inputed :ref="form.alias.name" :form="form.alias"></Inputed>
 						<Inputed :ref="form.tempatlahir.name" :form="form.tempatlahir"></Inputed>
 						<Inputed :ref="form.tanggallahir.name" :form="form.tanggallahir"></Inputed>
@@ -158,6 +160,8 @@ export default {
 			let data = response.data.data;
 			vm.form.uuid = data.uuid;
 			vm.form.nama.value = data.nama;
+			vm.form.no_ktp.value = data.no_ktp;
+			vm.form.no_bpjs.value = data.no_bpjs;
 			vm.form.alias.value = vm.empty(data.alias, 0);
 			vm.form.tempatlahir.value = data.tempat_lahir;
 			vm.form.tanggallahir.value = data.tanggal_lahir;

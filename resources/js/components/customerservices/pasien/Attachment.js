@@ -9,6 +9,8 @@ export const parsepasien = (form) => {
 	let data = new FormData();
 	data.append('uuid', form.uuid);
 	data.append('nama', form.nama.value);
+	data.append('no_ktp', form.no_ktp.value);
+	data.append('no_bpjs', form.no_bpjs.value);
 	data.append('alias', form.alias.value);
 	data.append('tempat_lahir', form.tempatlahir.value);
 	data.append('tanggal_lahir', form.tanggallahir.value);
@@ -47,6 +49,7 @@ export const parserawatjalan = (form, detail, selectedPoli, selectedDokter, jadw
 	data.append('pasien_uuid', detail.uuid);
 	data.append('rekam_medis', detail.rekam_medis);
 	data.append('nama_pasien', detail.nama);
+	data.append('no_ktp_pasien', detail.no_ktp);
 	data.append('tanggal_lahir', detail.tanggal_lahir);
 	data.append('jenis_identitas', detail.jenis_identitas);
 	data.append('no_identitas', detail.no_identitas);
