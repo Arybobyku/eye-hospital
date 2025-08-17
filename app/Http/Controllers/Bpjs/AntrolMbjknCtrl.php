@@ -13,6 +13,7 @@ use App\Models\Pasien;
 use App\Models\Pengguna;
 use App\Models\Registrasi;
 use App\Models\WsAuth;
+use App\Models\RegistrasiOperasi;
 use App\Services\Bpjs\Bridging\Antrol\BridgeAntrol;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -655,11 +656,13 @@ class AntrolMbjknCtrl extends Controller
     {
         $token = $request->header('x-token');
         $username = $request->header('x-username');
-
+        $tanggalAwal = $request->tanggalawal;
+        $tanggalAkhir = $request->tanggalakhir;
+        // echo($tanggalAwal);
         if(!$token) {
             return response()->json(['message' => 'Token not provided'], 401);
         }
-
+        
         try {
 
             $payload = JWTAuth::setToken($token)->getPayload();
@@ -674,15 +677,51 @@ class AntrolMbjknCtrl extends Controller
                     ]
                 ], 403);
             }
-            
+            // Query Dari index list Data bedah pasien
+                $data = Registrasi::select('registrasi.*', 'registrasi_operasi.nama_dokter AS nama_dokter_bedah', 'registrasi_operasi.tanggal AS tanggal_operasi')
+                ->join('registrasi_operasi', 'registrasi.uuid', '=', 'registrasi_operasi.registrasi_uuid')
+                ->where('registrasi.delete_soft', '=', 1)
+                ->where('registrasi.apakah_paket', '=', 'Ya')
+                ->where('bedah_status', '!=', 'Selesai Dioperasi')
+                ->where(function ($q) {
+                    $q->where('registrasi.paket_bedah_uuid', '!=', '-')
+                    ->orWhere('registrasi.paket_bedah_uuid', '!=', '')
+                    ->orWhereNotNull('registrasi.paket_bedah_uuid');
+                })
+                ->where('registrasi.nama_paket_bedah', '!=', '-')
+                ->where('registrasi.nama_paket_bedah', '!=', '')
+                ->whereNotNull('registrasi.nama_paket_bedah');
+
+            $data = $data
+                ->whereBetween('registrasi_operasi.tanggal', [$tanggalAwal, $tanggalAkhir])
+                ->orderBy('registrasi_operasi.tanggal', 'desc') // tambahin filter tanggal
+                ->get();
 
             return response()->json([
-                'nomor kartu' => "ini dia"
+                'response' => [
+                    'list' => $data->map(function($item) {
+                        return [
+                            'kodebooking'    => $item->registrasi_nomor,
+                            'tanggaloperasi' => $item->tanggal_operasi,
+                            'jenistindakan'  => $item->jenis_tindakan,   // sesuaikan field di tabel
+                            'kodepoli'       => $item->kode_poli_bpjs,        // sesuaikan field di tabel
+                            'namapoli'       => $item->nama_poli_bpjs,        // sesuaikan field di tabel
+                            'terlaksana'     => 0,
+                            'nopeserta'      => $item->no_bpjs_kes,
+                            'lastupdate'     => $item->updated_at, // ms
+                        ];
+                    })
+                ],
+                'metadata' => [
+                    'message' => 'Ok',
+                    'code'    => 200
+                ]
             ]);
             
         } catch (\Exception $e) {
             return response()->json([
-                'error' => $e
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ], 401);
         }
         
@@ -863,4 +902,58 @@ class AntrolMbjknCtrl extends Controller
         }
         
     }
+    public function jadwalOperasi(Request $request)
+    {
+        $token = $request->header('x-token');
+        $username = $request->header('x-username');
+
+        
+        if(!$token) {
+            return response()->json(['message' => 'Token not provided'], 401);
+        }
+
+        try {
+
+            $payload = JWTAuth::setToken($token)->getPayload();
+            
+            $tokenUsername = $payload->get('username');
+
+            if ($username !== $tokenUsername) {
+                return response()->json([
+                    'metadata' => [
+                        'message' => 'Username does not match token data',
+                        'code' => 403
+                    ]
+                ], 403);
+            }
+            
+            $request->validate([
+                'kodebooking'   => 'string',
+            ]);
+
+            $data = AntrianFarmasi::where('nomor', $request->kodebooking)->first();
+
+
+            return response()->json([
+                'response' => [
+                    'jenisresep' => $data->jenis,
+                    'totalantrean' => 2,
+                    'sisaantrean' => 1,
+                    'antreanpanggil' => 1,
+                    'keterangan' => ""
+                ],
+                'metadata' => [
+                    'message' => "Ok",
+                    'code' => 200
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e
+            ], 401);
+        }
+        
+    }
+   
 }

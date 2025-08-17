@@ -325,7 +325,6 @@ class RegistrasiCtrl extends Controller
 				$item->pasien_uuid = $request->pasien_uuid ? $request->pasien_uuid : '-';
 				$item->rekam_medis = $request->rekam_medis ? $request->rekam_medis : '-';
 				$item->nama_pasien = $request->nama_pasien ? $request->nama_pasien : '-';
-				$item->no_ktp_pasien = $request->no_ktp_pasien ? $request->no_ktp_pasien : '-';
 				$item->tanggal_lahir = $request->tanggal_lahir ? $request->tanggal_lahir : '-';
 				$item->jenis_identitas = $request->jenis_identitas ? $request->jenis_identitas : '-';
 				$item->no_identitas = $request->no_identitas ? $request->no_identitas : '-';
