@@ -1,6 +1,6 @@
 <template>
 	<div :style="terminate.display" class="modal">
-		<div ref="rootmodal" class="modal-content modal-semi-besar" :class="terminate.show ? 'modal-opened' : 'modal-closed'">
+		<div ref="rootmodal" class="modal-content modal-besar" :class="terminate.show ? 'modal-opened' : 'modal-closed'">
 			<div class="modal-header">
 				<span class="close" v-on:click="hide()">&times;</span>
 				<h2>{{ title }}</h2>
@@ -17,6 +17,7 @@
 									<th>Jumlah Besar</th>
 									<th>Waktu</th>
 									<th>Pasien / Pengguna</th>
+									<th>Kode Input / Nomor Registrasi</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -27,6 +28,7 @@
 									<td>{{ (+row.jumlah_besar).toFixed(2) }}</td>
 									<td>{{ row.tanggal }} {{ row.waktu }}</td>
 									<td>{{ row.person }}</td>
+									<td>{{ row.kode }}</td>
 								</tr>
 							</tbody>
 						</table>

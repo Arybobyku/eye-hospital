@@ -126,6 +126,7 @@ class StockOpnameCtrl extends Controller
 				DB::raw('minta_kecil::text as jumlah_kecil'), 
 				DB::raw('minta_besar::text as jumlah_besar'), 
 				'minta_pengguna_nama as person',
+				'kode as kode',
 				'tanggal_terima as tanggal', 
 				'jam_terima as waktu', 
 				'created_at',
@@ -138,6 +139,7 @@ class StockOpnameCtrl extends Controller
 				DB::raw("'1' AS jumlah_kecil"), 
 				DB::raw("'1' AS jumlah_besar"), 
 				'nama_pasien as person',
+				'registrasi_nomor as kode',
 				'tanggal', 
 				'waktu', 
 				'created_at'
@@ -150,6 +152,7 @@ class StockOpnameCtrl extends Controller
 				DB::raw("'1' AS jumlah_kecil"), 
 				DB::raw("'1' AS jumlah_besar"), 
 				'nama_pasien as person',
+				'registrasi_nomor as kode',
 				'tanggal', 
 				'waktu', 
 				'created_at'
@@ -167,6 +170,7 @@ class StockOpnameCtrl extends Controller
 				DB::raw("subquery.elements::json->>'jumlah_kecil' as jumlah_kecil"), 
 				DB::raw("subquery.elements::json->>'jumlah_besar' as jumlah_besar"), 
 				'nama_pasien as person',
+				'registrasi_nomor as kode',
 				'tanggal', 
 				'waktu', 
 				'resepracikan.created_at'
@@ -184,6 +188,7 @@ class StockOpnameCtrl extends Controller
 				DB::raw("subquery.elements::json->>'jumlah_kecil' as jumlah_kecil"),  
 				DB::raw("subquery.elements::json->>'jumlah_besar' as jumlah_besar"), 
 				'nama_pasien as person',
+				'registrasi_nomor as kode',
 				'tanggal', 
 				'waktu', 
 				'resepracikanbebas.created_at'
