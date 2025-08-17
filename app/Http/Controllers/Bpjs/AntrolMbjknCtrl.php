@@ -678,7 +678,8 @@ class AntrolMbjknCtrl extends Controller
                 ], 403);
             }
             // Query Dari index list Data bedah pasien
-                $data = Registrasi::select('registrasi.*', 'registrasi_operasi.nama_dokter AS nama_dokter_bedah', 'registrasi_operasi.tanggal AS tanggal_operasi')
+                $data = Registrasi::select('registrasi.*', 'registrasi_operasi.nama_dokter AS nama_dokter_bedah','registrasi_operasi.nama_layanan AS nama_layanan',  
+                'registrasi_operasi.tanggal AS tanggal_operasi')
                 ->join('registrasi_operasi', 'registrasi.uuid', '=', 'registrasi_operasi.registrasi_uuid')
                 ->where('registrasi.delete_soft', '=', 1)
                 ->where('registrasi.apakah_paket', '=', 'Ya')
@@ -703,7 +704,7 @@ class AntrolMbjknCtrl extends Controller
                         return [
                             'kodebooking'    => $item->registrasi_nomor,
                             'tanggaloperasi' => $item->tanggal_operasi,
-                            'jenistindakan'  => $item->jenis_tindakan,   // sesuaikan field di tabel
+                            'jenistindakan'  => $item->nama_layanan,   // sesuaikan field di tabel
                             'kodepoli'       => $item->kode_poli_bpjs,        // sesuaikan field di tabel
                             'namapoli'       => $item->nama_poli_bpjs,        // sesuaikan field di tabel
                             'terlaksana'     => 0,
@@ -731,6 +732,7 @@ class AntrolMbjknCtrl extends Controller
     {
         $token = $request->header('x-token');
         $username = $request->header('x-username');
+        $noPeserta = $request->nopeserta;
 
         if(!$token) {
             return response()->json(['message' => 'Token not provided'], 401);
@@ -750,15 +752,50 @@ class AntrolMbjknCtrl extends Controller
                     ]
                 ], 403);
             }
-            
+            // Query Dari index list Data bedah pasien
+                $data = Registrasi::select('registrasi.*', 'registrasi_operasi.nama_dokter AS nama_dokter_bedah', 'registrasi_operasi.tanggal AS tanggal_operasi')
+                ->join('registrasi_operasi', 'registrasi.uuid', '=', 'registrasi_operasi.registrasi_uuid')
+                ->where('registrasi.delete_soft', '=', 1)
+                ->where('registrasi.apakah_paket', '=', 'Ya')
+                ->where('bedah_status', '!=', 'Selesai Dioperasi')
+                ->where(function ($q) {
+                    $q->where('registrasi.paket_bedah_uuid', '!=', '-')
+                    ->orWhere('registrasi.paket_bedah_uuid', '!=', '')
+                    ->orWhereNotNull('registrasi.paket_bedah_uuid');
+                })
+                ->where('registrasi.nama_paket_bedah', '!=', '-')
+                ->where('registrasi.nama_paket_bedah', '!=', '')
+                ->whereNotNull('registrasi.nama_paket_bedah');
+
+            $data = $data
+                ->where('registrasi.no_bpjs_kes', $noPeserta)
+                ->orderBy('registrasi_operasi.tanggal', 'desc') // tambahin filter tanggal
+                ->get();
 
             return response()->json([
-                'nomor kartu' => "ini dia"
+                'response' => [
+                    'list' => $data->map(function($item) {
+                        return [
+                            'kodebooking'    => $item->registrasi_nomor,
+                            'tanggaloperasi' => $item->tanggal_operasi,
+                            'jenistindakan'  => $item->nama_layanan,   // sesuaikan field di tabel
+                            'kodepoli'       => $item->kode_poli_bpjs,        // sesuaikan field di tabel
+                            'namapoli'       => $item->nama_poli_bpjs,        // sesuaikan field di tabel
+                            'terlaksana'     => 0,
+                            'nopeserta'      => $item->no_bpjs_kes,
+                        ];
+                    })
+                ],
+                'metadata' => [
+                    'message' => 'Ok',
+                    'code'    => 200
+                ]
             ]);
             
         } catch (\Exception $e) {
             return response()->json([
-                'error' => $e
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ], 401);
         }
         
