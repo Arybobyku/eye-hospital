@@ -286,6 +286,8 @@ class AntrolMbjknCtrl extends Controller
 
         try {
 
+            DB::beginTransaction();
+
             $payload = JWTAuth::setToken($token)->getPayload();
             
             $tokenUsername = $payload->get('username');
@@ -418,8 +420,6 @@ class AntrolMbjknCtrl extends Controller
 				else if ($no > 9 && $no < 100) { $no = '0'.$no; }
 				else if ($no > 99 && $no < 1000) { $no = ''.$no; }
 				$no_pendaftaran = 'G-'.$no;
-
-            DB::beginTransaction();
             $uuidRegis = '';
 		    $loop = false;
 		    do {
@@ -456,8 +456,8 @@ class AntrolMbjknCtrl extends Controller
             $item -> no_pendaftaran = $no_pendaftaran;
             $item -> cara_masuk = "Datang Sendiri";
             $item -> nama_asuransi = "Silahkan Pilih";
-			$item->last_position = 'Instalasi Gawat Darurat';
-			$item->status = 'Instalasi Gawat Darurat';
+			$item->last_position = 'Pendaftaran';
+			$item->status = 'Kunjungan';
             $item->status_ro = 'Belum diperiksa';
             $item->status_dokter = 'Belum diperiksa';
             $item->status_kasir = 'Belum bayar';
@@ -499,15 +499,13 @@ class AntrolMbjknCtrl extends Controller
 
             $item->save();
 
-            DB::commit();
-            
-
             $masterKuotaAntrian = MasterKuotaAntrian::first();
             $kuotaJkn = $masterKuotaAntrian->kuota_jkn ?? 0;
             $kuotaNonJkn = $masterKuotaAntrian->kuota_non_jkn ?? 0;
             $sisaKuotaJkn = $kuotaJkn - max(0, $data->where('is_jkn', "1")->count());
             $sisaKuotaNonJkn = $kuotaNonJkn - max(0, $data->where('is_jkn', "0")->count());
 
+            DB::commit();
             return response()->json([
                 'response' => [
                     "nomorantrean" => $formattedAntrean,
