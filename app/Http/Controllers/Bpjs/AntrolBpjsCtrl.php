@@ -264,6 +264,8 @@ class AntrolBpjsCtrl extends Controller
             ->count();
 
         $estimasidilayani = (time() + 3600) * 1000;
+        // $estimasidilayani = (time() * 1000) + (3600 * 1000);
+        // dd($estimasidilayani);
 
         $data = [
             "kodebooking" => $item->nomor,

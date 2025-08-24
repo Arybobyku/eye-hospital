@@ -500,7 +500,7 @@ class RegistrasiCtrl extends Controller
 		}
 	}
 
-	private function savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis)
+	public function savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis)
 	{
 		$tindakan = CaraBayarTindakanRawatJalan::where('carabayar_uuid', '=', $request->carabayar_uuid)->where('default', '=', 'Ya')
 			->where('tindakan_rawat_jalan_uuid', '!=', '6808853b-2aad-4ebd-acee-ec9980a2407d')

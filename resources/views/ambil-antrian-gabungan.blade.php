@@ -1,12 +1,84 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ambil Antrian</title>
     <link rel="stylesheet" href="{{ asset('css/antriangabungan.css') }}" type="text/css" />
     <link rel="stylesheet" href="https://printjs-4de6.kxcdn.com/print.min.css" type="text/css" />
+                          
+    <style>
+        .container {
+          max-width: 500px;
+          margin: 20px auto;
+          padding: 25px;
+          font-family: Arial, sans-serif;
+        }
+        h1 {
+          text-align: center;
+          color: #2c3e50;
+          margin-bottom: 25px;
+          font-size: 22px;
+        }
+        
+        .form-group {
+          margin-bottom: 20px;
+        }
+        
+        label {
+          display: block;
+          margin-bottom: 8px;
+          font-weight: bold;
+          color: #34495e;
+        }
+        
+        select, input {
+          width: 100%;
+          padding: 12px;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          font-size: 16px;
+          background-color: white;
+        }
+        
+        select:focus, input:focus {
+          outline: none;
+          border-color: #3498db;
+          box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+        
+        .error-message {
+          color: #e74c3c;
+          font-size: 14px;
+          margin-top: 5px;
+          display: none;
+        }
+        
+        input:invalid:not(:placeholder-shown) + .error-message {
+          display: block;
+        }
+        
+        .submit-btn {
+          width: 100%;
+          padding: 14px;
+          background-color: #3498db;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          font-size: 16px;
+          font-weight: bold;
+          cursor: pointer;
+          transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+          background-color: #2980b9;
+        }
+        </style>
 </head>
 
 <body>
@@ -28,9 +100,10 @@
                 {{-- First Information --}}
                 <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('first')" style="margin-left: 10px">
                     <div class="button">
-                        <button class="bpjs" v-on:click="onChangeState('ambil-umum')">Customer Service</button>
-                        <button class="umum" v-on:click="onChangeState('ambil-obat')">Obat Bebas</button>
-                        <button class="check-in" v-on:click="onChangeState('mbjkn')">Check In</button>
+                        <button class="baru" v-on:click="onChangeState('ambil-umum')">Pasien Baru</button>
+                        <button class="lama" v-on:click="onChangeState('peserta-lama')">Pasien Lama</button>
+                        <button class="obatbebas" v-on:click="onChangeState('ambil-obat')">Obat Bebas</button>
+                        {{-- <button class="check-in" v-on:click="onChangeState('mbjkn')">Check In</button> --}}
                     </div>
                 </div>
                 {{-- Ambil Antrian BPJS --}}
@@ -38,10 +111,53 @@
                     style="margin-left: 10px">
                     <div class="button">
                         <button class="bpjs" v-on:click="onChangeState('bpjs')">BPJS</button>
-                        <button class="umum" v-on:click="onChangeState('ambil-umum')">Non BPJS</button>
-                        <button class="check-in" v-on:click="onChangeState('mbjkn')">Check In</button>
+                        <button class="nonbpjs" v-on:click="onChangeState('non-bpjs')">Non BPJS</button>
+                        <button class="obatbebas" v-on:click="onChangeState('mbjkn')">Check In</button>
                     </div>
 
+                    <h3 class="back" v-on:click="onChangeState('first')">Kembali</h3>
+                </div>
+
+                {{-- Daftar Non BPJS --}}
+                <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('non-bpjs')"
+                    style="margin-left: 10px">
+
+                    <div class="container">
+                        <div class="form-group">
+                            <label for="nik">NIK</label>
+                            <input type="text" id="nik" name="nik" v-model="nik"  placeholder="Masukkan NIK" required>
+                            <div class="error-message">* NIK harus 16 digit.</div>
+                                                    <!-- Numeric Keypad -->
+                        <div class="numpad">
+                            <button v-for="num in numbers" :key="num" class="numpad-btn"
+                                @click="appendToNik(num)">
+                                {% num %}
+                            </button>
+                            <button class="delete-btn" @click="deleteLastNik">del</button>
+                            <button class="numpad-btn" @click="appendToNik(0)">0</button>
+                            <button class="ok-btn" @click="confirmNik">OK</button>
+                        </div>
+                          </div>
+                            
+                          <div class="form-group">
+                            <label for="kode_poli_bpjs">PILIH POLI</label>
+                            <select id="kode_poli_bpjs" @change="fetchJadwalDokter"  name="kode_poli_bpjs" v-model="selectedPoli" required>
+                                <option value="" disabled selected>-- Pilih Poli --</option>
+                                <option v-for="item in poliBpjs" :value="item.kdpoli" v-text="`${item.nmpoli} - ${item.nmsubspesialis || ''}`"></option>
+                            </select>
+                          </div>
+                        
+                        <div class="form-group">
+                          <label for="kode_dokter_bpjs">PILIH DOKTER</label>
+                          <select id="kode_dokter_bpjs" name="kode_dokter_bpjs" v-model="selectedDokter" required>
+                            <option value="" disabled selected>-- Pilih Dokter --</option>
+                            <option v-for="item in jadwalDokter" :value="item.kodedokter" v-text="`${item.namadokter}`"></option>
+                        </select>
+                        </div>
+                        <button  v-on:click="addlamanonbpjs(selectedPoli, selectedDokter)" class="submit-btn">Ambil Nomor Antrian</button>
+                      </div>
+                      <script>
+                      </script>
                     <h3 class="back" v-on:click="onChangeState('first')">Kembali</h3>
                 </div>
                 {{-- Ambil Antrian MBJKN --}}
@@ -153,13 +269,22 @@
                             <button class="ok-btn" @click="confirmBooking">OK</button>
                         </div>
                         <!-- Dropdown for Doctor Selection -->
-                        <label for="selectedDoctor" style="margin-top:10px">-- PILIH DOKTER --</label>
+                        {{-- <label for="selectedDoctor" style="margin-top:10px">-- PILIH DOKTER --</label>
                         <select id="selectedDoctor" v-model="selectedDoctor" class="custom-select">
                             <option disabled value="">Pilih Dokter</option>
                             <option v-for="doctor in doctors" :key="doctor.nik" :value="doctor.kodedokter">
                                 {% doctor . nik %} - {% doctor . namadokter %}
                             </option>
-                        </select>
+                        </select> --}}
+                        <div class="container">
+                        <div class="form-group">
+                            <label for="kode_dokter_bpjs2">PILIH DOKTER</label>
+                            <select id="kode_dokter_bpjs2" name="kode_dokter_bpjs2" v-model="selectedDokter2" required>
+                              <option value="" disabled selected>-- Pilih Dokter --</option>
+                              <option v-for="item in jadwalDokter2" :value="item.kodedokter" v-text="`${item.namadokter}`"></option>
+                          </select>
+                        </div>
+                        </div>
 
                         <!-- Validation Messages -->
                         <div class="validation">
@@ -244,6 +369,7 @@
             mounted: function() {
                 vm = this;
                 vm.firstloads();
+                this.fetchPoli();
             },
             data: () => {
                 return {
@@ -255,6 +381,8 @@
                         link: {
                             load: '/antrian/tiketing/load',
                             add: '/antrian/tiketing/add',
+                            addlamabpjs: '/antrian/tiketing/addlamabpjs',
+                            addlamanonbpjs: '/antrian/tiketing/addlamanonbpjs',
                             addbebas: '/antrian/tiketing/addbebas',
                             farmasi: '/antrian/tiketing/add',
                             listDokter: '/bpjs/antrol-bpjs/ref/dokter',
@@ -264,15 +392,24 @@
                     },
                     state: "first",
                     number: 0,
+                    numberRo: 0,
                     numberbebas: 0,
                     position: 'firstload',
                     // STATE DATA TERBARU
                     kodeBooking: '',
+                    nik: '',
                     numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9], // Pastikan array ini ada
                     selectedDoctor: "",
                     doctors: [],
                     pesertaType: "nik",
                     jenisPembayaran: 1, // Default value
+		            poliBpjs: [], // Data poli_bpjs dari API
+		            jadwalDokter: [], // Buat Non BPJS Pasien LAma
+		            jadwalDokter2: [], // Buat BPJS pasien LAma
+                    selectedPoli: "",
+                    selectedDokter: "",
+                    selectedDokter2: "",
+
                 }
             },
             methods: {
@@ -280,9 +417,69 @@
                     this.state = state;
 
                     if (this.state == 'bpjs') {
-                        this.getListDokter();
+                        // this.getListDokter();
+                        this.fetchJadwalDokter2();
+
+                    }
+                    this.fetchPoli();
+                },
+                async fetchPoli() {
+                    try {
+                    // Pastikan URL API benar
+                    const poliUrl = '/api/bpjs/antrol-bpjs/ref/poli'; // Ganti dengan URL yang benar
+                    const dokterUrl = '/api/bpjs/antrol-bpjs/ref/dokter'; // Ganti dengan URL yang benar
+                    
+                    const response = await axios.get(poliUrl);
+                    const responseDokter = await axios.get(dokterUrl);
+                    
+                    // Pastikan struktur response sesuai dengan yang diharapkan
+                    console.log('Response Poli:', response.data.response);
+                    console.log('Response Dokter:', responseDokter.data);
+                    
+                    // Simpan data ke variabel sesuai struktur data Anda
+                    this.poliBpjs = response.data?.response || [];
+                    this.poliBpjs = response.data?.response?.filter(poli => poli.kdpoli === "MAT") || [];
+                    this.doctors = responseDokter.data?.response || [];
+                    
+                    } catch (error) {
+                    console.error("Gagal mengambil data:", error.response ? error.response.data : error.message);
                     }
                 },
+                async fetchJadwalDokter() {
+                    const today = "2025-03-03"; // Format: YYYY-MM-DD
+
+                    try {
+                        const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/${this.selectedPoli}/tanggal/${today}`);
+
+                        this.jadwalDokter = responseJadwal.data.response || [];
+
+                    } catch (error) {
+                        console.error("Gagal mengambil jadwal dokter:", error.response ? error.response.data : error.message);
+                    }
+                },
+                async fetchJadwalDokter2() {
+                   const today = "2025-03-03"; // Format: YYYY-MM-DD
+
+                    try {
+                        const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/MAT/tanggal/${today}`);
+
+                        this.jadwalDokter2 = responseJadwal.data.response || [];
+
+                    } catch (error) {
+                        console.error("Gagal mengambil jadwal dokter:", error.response ? error.response.data : error.message);
+                    }
+                },
+                    updateJadwalDokter() {
+                    if (!this.jadwalDokter || this.jadwalDokter.length === 0) {
+                        console.warn("Jadwal dokter belum tersedia.");
+                        this.dokterTerpilih = null;
+                        return;
+                    }
+
+                    this.dokterTerpilih = this.jadwalDokter.find(jadwal => jadwal.kodedokter === this.selectedDokter) || null;
+                    console.log("Dokter Terpilih:", this.dokterTerpilih);
+                    },
+
                 shouldShow: function(state) {
                     return state == this.state;
                 },
@@ -290,12 +487,23 @@
                     console.log("Menambahkan angka:", num); // Debugging
                     this.kodeBooking += num;
                 },
+                appendToNik: function(num) {
+                    console.log("Menambahkan angka:", num); // Debugging
+                    this.nik += num;
+                },
                 deleteLast: function() {
                     console.log("Menghapus angka terakhir");
                     this.kodeBooking = this.kodeBooking.slice(0, -1);
                 },
+                deleteLastNik: function() {
+                    console.log("Menghapus angka terakhir");
+                    this.nik = this.nik.slice(0, -1);
+                },
                 confirmBooking: function() {
                     alert(`Kode Booking: ${this.kodeBooking}`);
+                },
+                confirmNik: function() {
+                    alert(`Kode Nik: ${this.nik}`);
                 },
                 getListDokter: function() {
                     axios.get(vm.attach.link.listDokter)
@@ -342,6 +550,17 @@
                     }
                     return msg;
                 },
+                checknumberRo: function() {
+                    let msg = '';
+                    if (this.numberRo < 10) {
+                        msg = '00' + this.numberRo;
+                    } else if (this.numberRo > 9 && this.numberRo < 100) {
+                        msg = '0' + this.numberRo;
+                    } else if (this.numberRo > 99 && this.numberRo < 1000) {
+                        msg = this.numberRo;
+                    }
+                    return msg;
+                },
                 checknumberbebas: function() {
                     let msg = '';
                     if (this.numberbebas < 10) {
@@ -362,6 +581,31 @@
                     vm.loaders();
                     vm.executions();
                 },
+                addlamanonbpjs: function(selectedPoli, selectedDokter) {
+                    const selectedPoliObj = vm.poliBpjs.find(poli => poli.kdpoli === selectedPoli);
+                    const namaPoli = selectedPoliObj ? selectedPoliObj.nmpoli : '';
+                    const selectedDokterObj = vm.jadwalDokter.find(dokter => dokter.kodedokter === selectedDokter);
+                    const namaDokter = selectedDokterObj ? selectedDokterObj.namadokter : '';
+                    const jamDokter = selectedDokterObj ? selectedDokterObj.jadwal : '';
+                    const nik = document.getElementById('nik').value;
+
+                    vm.attach.url = vm.attach.link.addlamanonbpjs;
+                    vm.attach.data = new FormData();
+                    console.log(selectedDokterObj);
+                    console.log(namaDokter);
+                    vm.attach.data.append('nik', nik);
+                    vm.attach.data.append('kode_dokter_bpjs', selectedDokter);
+                    vm.attach.data.append('kode_poli_bpjs', selectedPoli);
+                    vm.attach.data.append('nama_poli_bpjs', namaPoli); // Tambahkan nama poli
+                    vm.attach.data.append('nama_dokter_bpjs', namaDokter); // Tambahkan nama poli
+                    vm.attach.data.append('jadwal_dokter_bpjs', jamDokter);
+                    vm.attach.data.append('jenis', 'Umum'); 
+                    vm.attach.data.append('number', vm.numberRo);
+                    vm.position = 'addlamanonbpjs';
+                    vm.loaders();
+                    vm.executions();
+                    this.resetFormLamaNonBpjs();
+                },
 
                 addbebas: function(posisi) {
                     const pembayaran = this.jenisPembayaran;
@@ -377,6 +621,7 @@
                     vm.loaders();
                     vm.executions();
                 },
+                
                 loaders: function() {
                     const left = this.$refs.rootmodal.getBoundingClientRect();
                     //const leftright = this.$refs.rootmodalright.getBoundingClientRect();
@@ -400,35 +645,82 @@
                         showModal: false
                     });
                 },
+                printoutRo() {
+                    const vm = this;
+                    printJS({
+                        printable: '/storage/antrian/numberRo.pdf',
+                        type: 'pdf',
+                        showModal: false
+                    });
+                },
                 executions: function() {
                     axios.post(vm.attach.url, vm.attach.data, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    .then(function(response) {
+                        setTimeout(function() {
+                            console.log(response);
+                            if (vm.position == 'loaddata') {
+                                vm.number = response.data.number;
+                                vm.numberbebas = response.data.numberbebas;
+                                vm.numberRo = response.data.numberRo;
+                                vm.loaders();
+                            } else if (vm.position == 'adddata') {
+                                vm.printout();
+                                vm.loads();
+                            } else if (vm.position == 'addbebas') {
+                                vm.printoutbebas();
+                                vm.loads();
+                            } else if (vm.position == 'addlamanonbpjs') {
+                                vm.printoutRo();
+                                vm.loads();
                             }
-                        })
-                        .then(function(response) {
-                            setTimeout(function() {
-                                console.log(response);
-                                if (vm.position == 'loaddata') {
-                                    vm.number = response.data.number;
-                                    vm.numberbebas = response.data.numberbebas;
-                                    vm.loaders();
-                                } else if (vm.position == 'adddata') {
-                                    vm.printout();
-                                    vm.loads();
-                                } else if (vm.position == 'addbebas') {
-                                    vm.printoutbebas();
-                                    vm.loads();
-                                }
-                            }, 250, this);
-                        })
-                        .catch(function(error) {
-                            console.log(error.response);
-                            vm.loaders();
-                            alert('gagal');
-                        });
+                        }, 250, this);
+                    })
+                    .catch(function(error) {
+                        console.log(error.response);
+                        vm.loaders();
+                        
+                        // Parsing error message dari response
+                        if (error.response && error.response.data) {
+                            // Jika response memiliki structure {hasil: 'gagal', data: 'message'}
+                            if (error.response.data.data) {
+                                alert(error.response.data.data);
+                            } 
+                            // Jika response langsung string message
+                            else if (typeof error.response.data === 'string') {
+                                alert(error.response.data);
+                            }
+                            // Fallback ke default message
+                            else {
+                                alert('Terjadi kesalahan. Silahkan coba lagi.');
+                            }
+                        } else {
+                            alert('Terjadi kesalahan. Silahkan coba lagi.');
+                        }
+                    });
                 },
+                // Tambahkan method resetForm
+                    resetFormLamaNonBpjs: function() {
+                        document.getElementById('nik').value = '';
+                        document.getElementById('kode_poli_bpjs').selectedIndex = 0;
+                        document.getElementById('kode_dokter_bpjs').selectedIndex = 0;
+                        if (typeof vm !== 'undefined') {
+                            vm.nik = '';
+                            vm.selectedPoli = '';
+                            vm.selectedDokter = '';
+                        }
+                    },
             },
+            computed: {
+                filteredDokters() {
+                    if (!this.selectedPoli) return this.doctors;
+                    // Sesuaikan dengan struktur data dokter Anda
+                    return this.doctors.filter(dokter => dokter.kdpoli === this.selectedPoli);
+                }
+                },
         });
     </script>
 </body>

@@ -55,6 +55,8 @@ Route::prefix('antrian')->group(function () {
 		Route::post('load', [AntrianCtrl::class, 'load'])->name('antrian-load');
 		Route::post('add', [AntrianCtrl::class, 'add'])->name('antrian-add');
 		Route::post('addbebas', [AntrianCtrl::class, 'addbebas'])->name('antrian-addbebas');
+		Route::post('addlamanonbpjs', [AntrianCtrl::class, 'addlamanonbpjs'])->name('antrian-addlamanonbpjs');
+		Route::post('addlamabpjs', [AntrianCtrl::class, 'addlamabpjs'])->name('antrian-addlamabpjs');
 	});
 	Route::get('cetak-antrian-all/{noAntrian}/{jenis}', [AntrianCtrl::class, 'cetakAntrianAll']);
 	Route::post('ambil-ro', [AntrianCtrl::class, 'slider'])->name('antrian-slider');
