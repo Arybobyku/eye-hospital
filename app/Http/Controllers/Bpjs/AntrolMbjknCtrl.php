@@ -31,6 +31,8 @@ class AntrolMbjknCtrl extends Controller
 {
     protected $bridging;
 
+    
+
     public function __construct()
     {
         $this->bridging = new BridgeAntrol();
@@ -78,6 +80,7 @@ class AntrolMbjknCtrl extends Controller
         return $this->bridging->getRequest($endpoint);
     }
 
+    
     public function referensiPasienFingerPrint($nik, $noidentitas)
     {
         $endpoint = "ref/pasien/fp/identitas/{$nik}/noidentitas/{$noidentitas}";
@@ -151,14 +154,70 @@ class AntrolMbjknCtrl extends Controller
                 ], 403);
             }
 
+            $tanggal = $request->tanggalperiksa;
 
-            $request->validate([
-                'kodepoli' => 'string|max:10',
-                'kodedokter' => 'integer',
-                'tanggalperiksa' => 'date_format:Y-m-d',
-                'jampraktek' => 'string'
-            ]);
+            if (!\DateTime::createFromFormat('Y-m-d', $tanggal) || $tanggal != date('Y-m-d', strtotime($tanggal))) {
+                return response()->json([
+                    'metadata' => [
+                        'message' => 'Format Tanggal Tidak Sesuai, format yang benar adalah yyyy-mm-dd',
+                        'code'    => 201
+                    ]
+                ], 201);
+            }
+
+            if ($tanggal < date('Y-m-d')) {
+                return response()->json([
+                    'metadata' => [
+                        'message' => 'Tanggal Periksa Tidak Berlaku',
+                        'code'    => 201
+                    ]
+                ], 201);
+            }
+
+            $antreanPoli = AntrianPoli::where('kode_poli', $request->kodepoli)
+            ->where('tanggal', $request->tanggalperiksa)
+            ->exists();
+            if(!$antreanPoli) {
+                return response()->json([
+                    'metadata' => [
+                        "message" => "Poli tidak ditemukan",
+                        "code" => "201"
+                    ]
+                ], 201);
+            }
+
+
             
+            // $request->validate([
+            //     'kodepoli' => 'string|max:10',
+            //     'kodedokter' => 'integer',
+            //     'tanggalperiksa' => 'date_format:Y-m-d',
+            //     'jampraktek' => 'string'
+            // ]);
+            
+            
+            $namaDokter = MasterDokterBpjs::where('kodedokter', $request->kodedokter)
+            ->value('namadokter');
+
+            $jadwal = $this->referensiJadwalDokter($request->kodepoli, $request->tanggalperiksa);
+            if($jadwal['metadata']['code'] == 1) {
+                return response()->json([
+                    'metadata' => [
+                        "message" => "Poli tidak ditemukan",
+                        "code" => "201"
+                    ]
+                ], 201);
+            }
+            // $kodedokter = array_column($jadwal['response'], 'kodedokter');
+            // if (!in_array($request->kodedokter, $kodedokter)) {
+            //     return response()->json([
+            //         'metadata' => [
+            //             "message" => "Jadwal Dokter {$namaDokter} Tersebut Belum Tersedia, Silahkan Reschedule Tanggal dan Jam Praktek Lainnya ",
+            //             "code" => "201"
+            //         ]
+            //     ], 201);
+            // }
+
             $masterKuotaAntrian = MasterKuotaAntrian::first();
 
             // Safely destructure quotas
@@ -183,19 +242,25 @@ class AntrolMbjknCtrl extends Controller
                 MasterDokterBpjs::where('kodedokter', $request->kodedokter)->first()
             )->namadokter;
 
+            $antreanPanggil = $data->where('panggil', 1)->max('number');
+            if(!$antreanPanggil) {
+                $antreanPanggil = 1;
+            }
+            $sisaAntrean = $data->where('panggil', 0)->count();
             return response()->json([
                 'response' => [
                     "namapoli" => $poli,
                     "namadokter" => $namaDokter,
                     "totalantrean" => $totalAntrian,
-                    "sisaantrean" => 1,
-                    "antreanpanggil" => "P-1",
+                    "sisaantrean" => $sisaAntrean,
+                    "antreanpanggil" => "P-{$antreanPanggil}",
                     "sisakuotajkn" => $sisaKuotaJkn,
                     "kuotajkn" => $kuotaJkn,
                     "sisakuotanonjkn" => $sisaKuotaNonJkn,
                     "kuotanonjkn" => $kuotaNonJkn,
                     "keterangan" => "",
                 ],
+                
                 "metadeta" => [
                     'message' => 'Ok',
                     'code' => '200'
@@ -221,6 +286,8 @@ class AntrolMbjknCtrl extends Controller
 
         try {
 
+            DB::beginTransaction();
+
             $payload = JWTAuth::setToken($token)->getPayload();
             
             $tokenUsername = $payload->get('username');
@@ -234,23 +301,26 @@ class AntrolMbjknCtrl extends Controller
                 ], 403);
             }
             
-            $request->validate([
-                "nomorkartu" => "string",
-                "nik" => "string",
-                "nohp" => "string",
-                "kodepoli" => "string",
-                "norm" => "string",
-                "tanggalperiksa" => "string",
-                "kodedokter" => "string",
-                "jampraktek" => "string",
-                "jeniskunjungan" => "string",
-                "nomorreferensi" => "string"
-            ]);
+            // $request->validate([
+            //     "nomorkartu" => "string",
+            //     "nik" => "string",
+            //     "nohp" => "string",
+            //     "kodepoli" => "string",
+            //     "norm" => "string",
+            //     "tanggalperiksa" => "string",
+            //     "kodedokter" => "string",
+            //     "jampraktek" => "string",
+            //     "jeniskunjungan" => "string",
+            //     "nomorreferensi" => "string"
+            // ]);
             
-            $noRm = Pasien::where('rekam_medis', $request->norm)
-            ->get();
+            $pasien = Pasien::where('rekam_medis', $request->norm)
+            ->first();
 
-            if($noRm->isEmpty()) {
+            $uuidpasien = $pasien->uuid;
+            $namapasien = $pasien->nama;
+
+            if(!$pasien) {
                 return response()->json([
                     'response' => [
                         'message' => "No rm tidak terdaftar silahkan daftar pada info pasien baru"
@@ -262,21 +332,172 @@ class AntrolMbjknCtrl extends Controller
                 ],404);
             }
             
-            $data = AntrianRo::where('tanggal', "2025-03-11")
-                ->where('kode', "R")
+            $data = AntrianPoli::where('tanggal', $request->tanggalperiksa)
                 ->get();
+                
 
-            $angkaAntrean = $data->max('number') + 1;
-
-            $formattedAntrean = 'R-' . str_pad($angkaAntrean, 3, '0', STR_PAD_LEFT);
             
-            $poli = MasterPoliBpjs::where('kdpoli', $request->kodepoli)
+            $exists = AntrianPoli::where('tanggal', $request->tanggalperiksa)
+            ->where('uuid_pasien', $uuidpasien)
+            ->where('kode_poli', $request->kodepoli) // tambahkan cek kodepoli
+            ->exists();
+            
+            if ($exists) {
+                return response()->json([
+                    'metadata' => [
+                        "message" => "Nomor Antrean Hanya Dapat Diambil 1 Kali Pada Tanggal Yang Sama untuk poli yang sama",
+                        "code" => "201"
+                    ],
+                ], 201);
+            }
+            
+            
+            $poli = MasterPoliBpjs::where('kdsubspesialis', $request->kodepoli)
             ->value('nmpoli');
 
             $namaDokter = MasterDokterBpjs::where('kodedokter', $request->kodedokter)
             ->value('namadokter');
 
+            $namaAsli = Pengguna::where('kode_dokter_bpjs_kes', $request->kodedokter)
+            ->value('nama');
+
+            $angkaAntrean = $data->max('number') + 1;
+            $formattedAntrean = 'P-' . str_pad($angkaAntrean, 3, '0', STR_PAD_LEFT);
+
+            $jadwal = json_decode($this->referensiJadwalDokter($request->kodepoli, $request->tanggalperiksa),true);
+            if($jadwal['metadata']['code'] == 1) {
+                return response()->json([
+                    'metadata' => [
+                        "message" => "Pendaftaran ke poli sedang tutup",
+                        "code" => "201"
+                    ]
+                ], 201);
+            }
+            $kodedokter = array_column($jadwal['response'], 'kodedokter');
+            if (!in_array($request->kodedokter, $kodedokter)) {
+                return response()->json([
+                    'metadata' => [
+                        "message" => "Jadwal Dokter {$namaDokter} Tersebut Belum Tersedia, Silahkan Reschedule Tanggal dan Jam Praktek Lainnya ",
+                        "code" => "201"
+                    ]
+                ], 201);
+            }
+
+            //Input registrasi
+            $registrasinomors = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
+            ->where('status', '=', 'Kunjungan')->orderBy('nomor', 'desc')->sharedLock()->first();
+
+            $nomor = 1;
+			$nomor_ = '';
+            if ($registrasinomors) {
+                $potong_kalimat = substr($registrasinomors->nomor, -5);
+                $potong_kalimat = (int) $potong_kalimat;
+                $nomor += $potong_kalimat;
+            }
+
+            if ($nomor < 10) {
+                $nomor = '0000' . $nomor;
+            } else if ($nomor > 9 && $nomor < 100) {
+                $nomor = '000' . $nomor;
+            } else if ($nomor > 99 && $nomor < 1000) {
+                $nomor = '00' . $nomor;
+            } else if ($nomor > 999 && $nomor < 10000) {
+                $nomor = '0' . $nomor;
+            }
+
+            $nomor_ = date('Y') . date('m') . date('d') . $nomor;
+            // $nomor_ = '2025081400008';
+
+            $no = 1;
+				$nopendaftaran = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
+					->where('jalur_masuk', '=', 'Instalasi Gawat Darurat')
+					->orderBy('no_pendaftaran', 'desc')->first();
+				if ($nopendaftaran) { 
+					$temp = explode("-", $nopendaftaran->no_pendaftaran);
+					$no += (int) $temp[1]; 
+				}
+				if ($no < 9) { $no = '00'.$no; }
+				else if ($no > 9 && $no < 100) { $no = '0'.$no; }
+				else if ($no > 99 && $no < 1000) { $no = ''.$no; }
+				$no_pendaftaran = 'G-'.$no;
+            $uuidRegis = '';
+		    $loop = false;
+		    do {
+			    $uuidRegis = Uuid::uuid4();
+			    $check = Registrasi::where('uuid', '=', $uuidRegis)->first();
+			    if (!$check) {
+				    $loop = true;
+			    }
+		    } while ($loop == false);
             
+            $item = new Registrasi();
+            $item -> uuid = $uuidRegis;
+            $item -> kode = "RJ";
+            $item -> rekam_medis = $request->norm;
+            $item -> jenis = "Rawat Jalan";
+            $item -> nomor = $nomor_;
+            $item -> pasien_uuid = $uuidpasien;
+            $item -> nama_pasien = $namapasien;
+            $item -> tanggal_lahir = $pasien->tanggal_lahir;
+            $item -> jenis_identitas = $pasien->jenis_identitas;
+            $item -> no_identitas = $pasien->no_identitas;
+            $item -> jenis_kelamin = $pasien->jenis_kelamin;
+            $item -> no_handphone = $pasien->no_handphone;
+            $item -> agama =  $pasien -> agama;
+            $item -> photos = "-";
+            $item -> pengguna_uuid = "49e7cf52-9bfd-4933-b42e-0444af1eaeb7";
+            $item -> nama_dokter = $namaAsli;
+            $item -> carabayar_uuid = "e3ed042d-2b41-4672-bcc2-7a816a622667";
+            $item -> carabayar_nama = "BPJS Kesehatan";
+            $item -> pengguna_umum_uuid = "-";
+            $item -> nama_dokter_umum = "-";
+            $item -> tanggal = date("Y-m-d");
+            $item -> waktu = date('H:i');
+            $item -> no_pendaftaran = $no_pendaftaran;
+            $item -> cara_masuk = "Datang Sendiri";
+            $item -> nama_asuransi = "Silahkan Pilih";
+			$item->last_position = 'Pendaftaran';
+			$item->status = 'Kunjungan';
+            $item->status_ro = 'Belum diperiksa';
+            $item->status_dokter = 'Belum diperiksa';
+            $item->status_kasir = 'Belum bayar';
+            $item->status_farmasi = 'Belum bayar';
+            $item->no_antrian_poli = $formattedAntrean;
+            $item->no_bpjs_kes = $request->nomorkartu;
+            $item->kode_poli_bpjs = $request->kodepoli;
+            $item->nama_poli_bpjs = $poli;
+            $item->kode_dokter_bpjs = $request->kodedokter;
+            $item->nama_dokter_bpjs = $namaAsli;
+            $item->jadwal_dokter_bpjs = $request->jampraktek;
+            $item->is_integrated_antrol = '1';
+            $item->is_jkn = '1';
+			$item->save();
+
+            $uuidPoli = '';
+		    $loop = false;
+		    do {
+			    $uuidPoli = Uuid::uuid4();
+			    $check = AntrianPoli::where('uuid', '=', $uuidPoli)->first();
+			    if (!$check) {
+				    $loop = true;
+			    }
+		    } while ($loop == false);
+            $item = new AntrianPoli();
+            $item->uuid = $uuidPoli;
+            $item->kode = 'P';
+            $item->number = $angkaAntrean;
+            $item->jenis = 'Rawat Jalan';
+            $item->tanggal = $request->tanggalperiksa;
+            $item->pemanggil = '-';
+            $item->status = 'Pending';
+            $item->poli = $poli;
+            $item->is_jkn = 1;
+            $item->kode_poli = $request->kodepoli;
+            $item->uuid_pasien = $uuidpasien;
+            $item->kode_dokter = $request->kodedokter;
+            $item->uuid_registrasi = $uuidRegis;
+
+            $item->save();
 
             $masterKuotaAntrian = MasterKuotaAntrian::first();
             $kuotaJkn = $masterKuotaAntrian->kuota_jkn ?? 0;
@@ -284,12 +505,13 @@ class AntrolMbjknCtrl extends Controller
             $sisaKuotaJkn = $kuotaJkn - max(0, $data->where('is_jkn', "1")->count());
             $sisaKuotaNonJkn = $kuotaNonJkn - max(0, $data->where('is_jkn', "0")->count());
 
+            DB::commit();
             return response()->json([
                 'response' => [
                     "nomorantrean" => $formattedAntrean,
                     "angkaantrean"=> $angkaAntrean,
-                    "kodebooking"=> "P3140325",
-                    "norm"=> $noRm,
+                    "kodebooking"=> $nomor_,
+                    "norm"=> $request->norm,
                     "namapoli"=> $poli,
                     "namadokter"=> $namaDokter,
                     "estimasidilayani"=> "",
@@ -308,7 +530,7 @@ class AntrolMbjknCtrl extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => $e
-            ], 401);
+            ], 500);
         }
         
         
@@ -342,10 +564,23 @@ class AntrolMbjknCtrl extends Controller
                 "kodebooking" => "string",
             ]);
             
-            $data = AntrianRo::join('registrasi', 'antrian_ro.uuid_registrasi', '=', 'registrasi.uuid')
+            $data = AntrianPoli::join('registrasi', 'antrian_poli.uuid_registrasi', '=', 'registrasi.uuid')
             ->where('registrasi.nomor', $request->kodebooking)
-            ->first(['antrian_ro.*']);
+            ->first(['antrian_poli.*']);
 
+            if(!$data){
+                return response()->json([
+                    'metadata' => [
+                        'message' => 'Antrean tidak ditemukan',
+                        'code' => 201
+                    ]
+                ], 201);
+            }
+            $antreanPanggil = $data->where('panggil', 1)->where('tanggal', $data->tanggal)->max('number');
+            if(!$antreanPanggil) {
+                $antreanPanggil = 1;
+            }
+            $sisaAntrean = $data->where('panggil', 0)->where('tanggal', $data->tanggal)->count();
             $formattedAntrean = $data->kode . '-' . str_pad($data->number, 3, '0', STR_PAD_LEFT);
             $poli = $data->poli;
             $namaDokter = MasterDokterBpjs::where('kodedokter', $data->kode_dokter)
@@ -355,8 +590,8 @@ class AntrolMbjknCtrl extends Controller
                     "nomorantrean" => $formattedAntrean,
                     "namapoli" => $poli,
                     "namadokter" => $namaDokter,
-                    "sisaantrean" => "",
-                    "antreanpanggil" => "",
+                    "sisaantrean" => $sisaAntrean,
+                    "antreanpanggil" => $antreanPanggil,
                     "waktutunggu" => 9000,
                     "keterangan" => ""
                 ],
@@ -364,7 +599,6 @@ class AntrolMbjknCtrl extends Controller
                     "message" => "Ok",
                     "code" => "200"
                 ],
-                $data
             ], 200);
             
         } catch (\Exception $e) {
@@ -400,10 +634,35 @@ class AntrolMbjknCtrl extends Controller
                 ], 403);
             }
             
-            $request->validate([
-                "kodebooking" => "string",
-                "keterangan" => "string",
-            ]);
+            // $request->validate([
+            //     "kodebooking" => "string",
+            //     "keterangan" => "string",
+            // ]);
+
+            $uuid = Registrasi::where('nomor', $request->kodebooking)
+            ->value('uuid');
+
+            $data = AntrianPoli::where('uuid_registrasi', $uuid)
+            ->first();
+            if($data->status == "Cancel") {
+                return response()->json([
+                    "metadata" => [
+                        "code" => "201",
+                        "message" => "Antrean Tidak Ditemukan atau Sudah Dibatalkan"
+                    ]
+                ]);
+            }
+            else if ($data) {
+                $data->status = 'Cancel';
+                $data->save();
+            } else if(!$data) {
+                return response()->json([
+                    "metadata" => [
+                        "code" => "201",
+                        "message" => "Antrean Tidak Ditemukan"
+                    ]
+                ]);
+            }
 
             return response()->json([
                 "metadata" => [
@@ -444,11 +703,27 @@ class AntrolMbjknCtrl extends Controller
                 ], 403);
             }
             
-            $request->validate([
-                "kodebooking" => "string",
-                "waktu" => "string",
-            ]);
+            // $request->validate([
+            //     "kodebooking" => "string",
+            //     "waktu" => "string",
+            // ]);
 
+            $uuid = Registrasi::where('nomor', $request->kodebooking)
+            ->value('uuid');
+
+            $data = AntrianPoli::where('uuid_registrasi', $uuid)
+            ->first();
+            if ($data) {
+                $data->status = 'active';
+                $data->save();
+            } else if(!$data) {
+                return response()->json([
+                    "metadata" => [
+                        "code" => "201",
+                        "message" => "Kode Booking Tidak Ditemukan"
+                    ]
+                ]);
+            }
             return response()->json([
                 "metadata" => [
                     "code" => "200",
