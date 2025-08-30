@@ -58,9 +58,17 @@ class ObatCtrl extends Controller
 
 	public function add(Request $request) { 
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		$checkObat = Obat::where('nama', '=', $request->nama)->where('delete_soft', '=', 1)->first();
+
+		if($checkObat) {
+			return response()->json(['hasil' => 'Obat sudah ada di master data'], 500);
+		}
+		if ($this->error != 'next') 
+			{ return response()->json(['data' => $this->error]); }
 
 		PenggunaHelp::log('Menambahkan data master obat/alkes dengan nama "'.$request->nama.'".');
+
+
 
 		$uuid = ''; $loop = false;
 		do { $uuid = Uuid::uuid4(); $check = Obat::where('uuid', '=', $uuid)->first(); if (!$check) { $loop = true; } }while($loop == false);
