@@ -554,6 +554,10 @@ export default {
 				vm.form.select.metodepembayaran.isrequired = false;
 			}
 			vm.form.carabayar_nama = vm.detail.carabayar_nama;
+			if (vm.carabayar_nama != "" || vm.carabayar_nama != null){
+				vm.form.select.metodepembayaran.value = vm.detail.metode_pembayaran;
+				vm.form.select.metodepembayaran.label = vm.detail.metode_pembayaran;
+			}
 
 			if (vm.detail.panjar != '0') {
 				vm.form.panjar.value = vm.detail.panjar;
@@ -584,6 +588,8 @@ export default {
 
 			console.log(vm.sementara)
 			vm.tmplistdata = vm.listdata;
+			vm.globalDiscountNominal = parseInt(vm.detail.diskon_rp);
+			vm.globalDiscountPercentage = vm.detail.diskon_persen;
 
 			vm.listobat = response.data.obat;
 			vm.listobatracikan = response.data.obatracikan;
