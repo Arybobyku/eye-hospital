@@ -231,79 +231,86 @@
                         </div>
                     </div>
                 </div>
-                {{-- BPJS --}}
+                {{-- PASIEN LAMA BPJS start --}}
                 <div class="ambil-antrian-inner" v-if="shouldShow('bpjs')">
                     <center>
-
+                        
                         <h2>PESERTA BPJS</h2>
-
+                        
                         <!-- Radio Buttons -->
                         <div class="radio-group" style="margin-left: 100px">
                             <label>
-                                <input type="radio" v-model="pesertaType" value="nik" /> NIK
+                                <input type="radio" v-model="pesertaType" value="nik_sect" /> NIK
                             </label>
                             <label>
-                                <input type="radio" v-model="pesertaType" value="bpjs" /> NO KARTU BPJS
+                                <input type="radio" v-model="pesertaType" value="bpjs_sect" /> NO KARTU BPJS
                             </label>
                         </div>
-
-                        <!-- Input Field with Icons -->
+                        
                         <div class="input-container">
-                            <input type="text" v-model="kodeBooking" class="kode-input" placeholder="NIK" />
+                            <!-- Input NIK (ditampilkan ketika pesertaType = 'nik') -->
+                            <input v-if="pesertaType === 'nik_sect'" 
+                                   type="text" 
+                                   v-model="nikSect" 
+                                   class="kode-input" 
+                                   placeholder="Masukkan NIK (16 digit)" 
+                                   maxlength="16" />
+                            
+                            <!-- Input No BPJS (ditampilkan ketika pesertaType = 'bpjs') -->
+                            <input v-else
+                                   type="text" 
+                                   v-model="bpjsSect" 
+                                   class="kode-input" 
+                                   placeholder="Masukkan No Kartu BPJS (13 digit)" 
+                                   maxlength="13" />
+                            
                             <button class="keyboard-btn">
                                 Keyboard
                             </button>
-                            <button class="search-btn">
+                            <button class="search-btn" @click="searchPeserta">
                                 Cari
                             </button>
                         </div>
-
+                        
                         <!-- Numeric Keypad -->
                         <div class="numpad">
                             <button v-for="num in numbers" :key="num" class="numpad-btn"
-                                @click="appendToBooking(num)">
-                                {% num %}
-                            </button>
-                            <button class="delete-btn" @click="deleteLast">del</button>
-                            <button class="numpad-btn" @click="appendToBooking(0)">0</button>
-                            <button class="ok-btn" @click="confirmBooking">OK</button>
-                        </div>
-                        <!-- Dropdown for Doctor Selection -->
-                        {{-- <label for="selectedDoctor" style="margin-top:10px">-- PILIH DOKTER --</label>
-                        <select id="selectedDoctor" v-model="selectedDoctor" class="custom-select">
-                            <option disabled value="">Pilih Dokter</option>
-                            <option v-for="doctor in doctors" :key="doctor.nik" :value="doctor.kodedokter">
-                                {% doctor . nik %} - {% doctor . namadokter %}
-                            </option>
-                        </select> --}}
+                            @click="appendToBooking(num)">
+                            {% num %}
+                        </button>
+                        <button class="delete-btn" @click="deleteLast">del</button>
+                        <button class="numpad-btn" @click="appendToBooking(0)">0</button>
+                        <button class="ok-btn" @click="confirmBooking">OK</button>
+                    </div>
                         <div class="container">
-                        <div class="form-group">
-                            <label for="kode_dokter_bpjs2">PILIH DOKTER</label>
-                            <select id="kode_dokter_bpjs2" name="kode_dokter_bpjs2" v-model="selectedDokter2" required>
-                              <option value="" disabled selected>-- Pilih Dokter --</option>
-                              <option v-for="item in jadwalDokter2" :value="item.kodedokter" v-text="`${item.namadokter}`"></option>
-                          </select>
+                            <div class="form-group">
+                                <label for="kode_dokter_bpjs2">PILIH DOKTER</label>
+                                <select id="kode_dokter_bpjs2" name="kode_dokter_bpjs2" v-model="selectedDokter2" required>
+                                    <option value="" disabled selected>-- Pilih Dokter --</option>
+                                    <option v-for="item in jadwalDokter2" :value="item.kodedokter" v-text="`${item.namadokter}`"></option>
+                                </select>
+                            </div>
                         </div>
-                        </div>
-
+                        
                         <!-- Validation Messages -->
                         <div class="validation">
                             <p>* NIK harus 16 digit. <br>* NO PESERTA harus 13 digit.</p>
                         </div>
-
+                        
                         <h3 class="back" v-on:click="onChangeState('peserta-lama')">Kembali</h3>
                     </center>
                 </div>
+                {{-- PASIEN LAMA BPJS end --}}
                 {{-- Ambil Antrian Farmasi --}}
                 <div class="ambil-antrian-inner" ref="rootmodal" v-if="shouldShow('ambil-obat')">
                     <h2>No. Antrian : F - <span v-html="checknumberbebas()"></span></h2>
                     <p>Antrian Kunjungan Pasien ke Farmasi</p>
-
-                <!-- Radio Button BPJS & Non BPJS (Sejajar Horizontal) -->
+                    
+                    <!-- Radio Button BPJS & Non BPJS (Sejajar Horizontal) -->
                     <div style="display: flex; justify-content: center; gap: 40px; margin-bottom: 20px;">
-                    <div style="display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: bold;">
-                        <input type="radio" v-model="jenisPembayaran" value="1" 
-                        style="width: 24px; height: 24px; cursor: pointer;">
+                        <div style="display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: bold;">
+                            <input type="radio" v-model="jenisPembayaran" value="1" 
+                            style="width: 24px; height: 24px; cursor: pointer;">
                         <label style="cursor: pointer; color: green;">BPJS</label>
                     </div>
 
@@ -401,7 +408,7 @@
                     numbers: [1, 2, 3, 4, 5, 6, 7, 8, 9], // Pastikan array ini ada
                     selectedDoctor: "",
                     doctors: [],
-                    pesertaType: "nik",
+                    pesertaType: "nik_sect",
                     jenisPembayaran: 1, // Default value
 		            poliBpjs: [], // Data poli_bpjs dari API
 		            jadwalDokter: [], // Buat Non BPJS Pasien LAma
@@ -409,6 +416,8 @@
                     selectedPoli: "",
                     selectedDokter: "",
                     selectedDokter2: "",
+                    nikSect: '', // Untuk NIK
+                    bpjsSect: '', // Untuk No Kartu BPJS
 
                 }
             },
