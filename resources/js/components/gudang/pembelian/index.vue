@@ -71,15 +71,29 @@ export default {
 
 		btnhtml:function(_item, _index) {
 			if (_item.status == 'approve') {
-				//return { key: 'html', data: '<span class="badge badge-success" style="padding: 2px 10px">Disetujui</span>' }
+				return {
+				key : 'button',
+				width: _item.status == 'active' ? '195px' : '50px',
+				data : [
+					// { icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: _item.status == 'active' ? true : false, },
+					// { icon: 'trash-2', color: 'btn-danger', posisi: 'remove', tooltip: 'Hapus Data', item: _item, index: _index, show: _item.status == 'active' ? true : false, },
+					{ icon: 'eye', color: 'btn-warning', posisi: 'formobat', tooltip: 'Detail Faktur', item: _item, index: _index, show: _item.status == 'active' ? true : true, },
+					{ icon: 'eye', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Faktur', item: _item, index: _index, show: _item.status == 'active' ? true : true, },
+					// { icon: 'eye', color: 'btn-warning', posisi: 'remove', tooltip: 'Hapus Faktur', item: _item, index: _index, show: _item.status == 'active' ? true : true, },
+					{ icon: 'check-square', color: 'btn-success', posisi: 'approve', tooltip: 'Approve Faktur', item: _item, index: _index, show: _item.status == 'active' ? true : false, }
+				]
+			}
+				// return { key: 'html', data: '<span class="badge badge-success" style="padding: 2px 10px">Disetujui</span>' }
 			}
 			return {
 				key : 'button',
 				width: _item.status == 'active' ? '195px' : '50px',
 				data : [
-					{ icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: _item.status == 'active' ? true : false, },
-					{ icon: 'trash-2', color: 'btn-danger', posisi: 'remove', tooltip: 'Hapus Data', item: _item, index: _index, show: _item.status == 'active' ? true : false, },
+					// { icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: _item.status == 'active' ? true : false, },
+					// { icon: 'trash-2', color: 'btn-danger', posisi: 'remove', tooltip: 'Hapus Data', item: _item, index: _index, show: _item.status == 'active' ? true : false, },
 					{ icon: 'eye', color: 'btn-warning', posisi: 'formobat', tooltip: 'Detail Faktur', item: _item, index: _index, show: _item.status == 'active' ? true : true, },
+					{ icon: 'eye', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Faktur', item: _item, index: _index, show: _item.status == 'active' ? true : true, },
+					{ icon: 'eye', color: 'btn-warning', posisi: 'remove', tooltip: 'Hapus Faktur', item: _item, index: _index, show: _item.status == 'active' ? true : true, },
 					{ icon: 'check-square', color: 'btn-success', posisi: 'approve', tooltip: 'Approve Faktur', item: _item, index: _index, show: _item.status == 'active' ? true : false, }
 				]
 			}
