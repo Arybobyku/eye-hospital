@@ -114,6 +114,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('hapusbiaya', [KasirCtrl::class, 'hapusbiaya'])->name('kasir-hapusbiaya');
 		Route::post('perbaharuibiaya', [KasirCtrl::class, 'perbaharuibiaya'])->name('kasir-perbaharuibiaya');
 		Route::post('listsudahbayar', [KasirCtrl::class, 'listsudahbayar'])->name('kasir-listsudahbayar');
+		Route::post('editlistsudahbayar', [KasirCtrl::class, 'editlistsudahbayar'])->name('kasir-editlistsudahbayar');
 		Route::post('panjar', [KasirCtrl::class, 'panjar'])->name('panjar-list');
 		Route::post('call', [KasirCtrl::class, 'call'])->name('kasir-call');
 		Route::post('detail', [KasirCtrl::class, 'detail'])->name('kasir-detail');
