@@ -396,13 +396,8 @@ class KasirCtrl extends Controller
             $arr['tanggal_bayar'] = date('Y-m-d');
         }
 
-// var_dump($request->diskon_rp);
-$update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
-
-
-// var_dump($request->diskon_rp);
-$update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
-
+          // var_dump($request->diskon_rp);
+           $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 
             $tindakan = json_decode($request->tindakan);
 
@@ -451,6 +446,53 @@ $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
                 'status' => 'Selesai',
             ];
             $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+
+            \DB::commit();
+
+            return response()->json(['data' => 'berhasil']);
+        } catch (Exception $e) {
+            \DB::rollback();
+
+            return response()->json(['hasil' => 'gagal']);
+        }
+    }
+
+
+    public function editbayar(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        $data = Registrasi::where('uuid', '=', $request->uuid)->first();
+        if ($data) {
+            \PenggunaHelp::log('Melakukan perubahan pembayaran dengan nama pasien '.$data->nama_pasien.' pada tanggal '.date('Y-m-d'));
+        }
+
+        try {
+            \DB::beginTransaction();
+
+            $metode_pembayaran = $request->metode_pembayaran && $request->metode_pembayaran != '' ? $request->metode_pembayaran : '-';
+            $arr = [
+                'metode_pembayaran' => $metode_pembayaran,
+                'diskon_persen' => $request->diskon_persen,
+                'diskon_rp' => $request->diskon_rp,
+            ];
+
+           Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+
+            $tindakan = json_decode($request->tindakan);
+
+            foreach ($tindakan as $row) {
+                $item = LayananPasien::find($row->id);
+                $item->layanan_uuid = $row->layanan_uuid;
+                $item->nama_layanan = $row->nama_layanan;
+                $item->tarif = $row->tarif;
+                $item->diskon_rp = $row->diskon_rp;
+                $item->diskon_persen = $row->diskon_persen;
+                $item->total = $row->total;
+                $item->save();
+            }
 
             \DB::commit();
 

@@ -469,6 +469,11 @@ export default {
 				if (vm.form.select.supplierretur.value != 'Silahkan Pilih' && vm.form.select.supplierretur.value != '') { tmp = vm.form.select.supplierretur.value; }
 				uri = '/laporan/excel/' + posisi + '/' + vm.form.dariretur.value + '/' + vm.form.keretur.value + '/' + tmp;
 			}
+			else if (posisi == 'fakturgudang') {
+				let tmp = 'empty';
+				if (vm.form.select.supplierretur.value != 'Silahkan Pilih' && vm.form.select.supplierretur.value != '') { tmp = vm.form.select.supplierretur.value; }
+				uri = '/laporan/excel/' + posisi + '/' + vm.form.dariretur.value + '/' + vm.form.keretur.value + '/' + tmp;
+			}
 			window.open(uri);
 		},
 
