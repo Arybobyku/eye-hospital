@@ -1,8 +1,8 @@
 <template>
-<button class="tooltip btn-success" @click="goToPage('bedah-kasir')">Kasir (Tagihan Rawat Inap)</button>
+<!-- <button class="tooltip btn-success" @click="goToPage('bedah-kasir')">Kasir (Tagihan Rawat Inap)</button>
 <button class="tooltip btn-success" @click="goToPage('histori-kasir')">Histori (Tagihan Rawat Jalan)</button>
 <button class="tooltip btn-success" @click="goToPage('histori-bebas')">Histori (Tagihan Rawat Inap)</button>
-<button class="tooltip btn-success" @click="goToPage('histori-kasirrawatinap')">Histori (Pasien Bebas)</button>
+<button class="tooltip btn-success" @click="goToPage('histori-kasirrawatinap')">Histori (Pasien Bebas)</button> -->
 <div class="inner" ref="roottable">
 	<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
 	<div class="tab-content">
@@ -53,11 +53,11 @@ export default {
 		position: '',
 		attach: {
 			link : {
-				list: '/finance/kasir/list',
-				listsudahbayar: '/finance/kasir/listsudahbayar',
+				list: '/finance/kasir/editlistsudahbayar',
+				listsudahbayar: '/finance/kasir/editlistsudahbayar',
 				call: '/finance/kasir/call',
 				detail: '/finance/kasir/detail',
-				bayar: '/finance/kasir/bayar',
+				bayar: '/finance/kasir/editbayar',
 				cancelbayar: '/finance/kasir/cancelbayar',
 				terima: '/finance/kasir/terima',
 				kasir: '/print/kasir/',
@@ -128,14 +128,14 @@ export default {
 		modulebelibayar: { data: [], column: [], total: 0, ispaging: true },
 		tab: {
 			button: [
-				{ value: 'today', label: 'Tagihan (Aktif)', class: 'tab-active' },
-				{ value: 'bayar', label: 'Tagihan (Sudah Bayar)', class: 'tab-no-active' },
-				{ value: 'beli', label: 'Pasien Bebas (Aktif)', class: 'tab-no-active' },
-				{ value: 'belibayar', label: 'Pasien Bebas (Sudah Bayar)', class: 'tab-no-active' },
+				// { value: 'today', label: 'Tagihan (Aktif)', class: 'tab-active' },
+				{ value: 'bayar', label: 'All Data Kasir', class: 'tab-no-active' },
+				// { value: 'beli', label: 'Pasien Bebas (Aktif)', class: 'tab-no-active' },
+				// { value: 'belibayar', label: 'Pasien Bebas (Sudah Bayar)', class: 'tab-no-active' },
 			],
 			content: { 
-				today: true, 
-				bayar: false, 
+				bayar: true,
+				today: false,  
 				beli: false,
 				belibayar: false,
 			}
@@ -187,6 +187,8 @@ export default {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, 
 				show: _item.status_kasir == 'Belum Bayar' ? true : false },
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Edit Data', item: _item, index: _index, 
+				show: _item.status_kasir == 'Sudah Bayar' ? true : false },
 				{ icon: 'printer', color: 'btn-info', posisi: 'print', tooltip: 'Cetak Kwitansi', item: _item, index: _index, 
 				show: _item.status_kasir == 'Belum Bayar' ? true : false },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'printrincian', tooltip: 'Cetak Rincian Tagihan', item: _item, index: _index, 
@@ -579,7 +581,7 @@ export default {
 		* Bagian fungsi untuk pemrosesan message, fungsi untuk error dan success
 		*************************************************************************************************************************/
 
-		loadmain: () => { vm.position = 'loadmain'; vm.firstloader(); vm.tableload(); },
+		loadmain: () => { vm.position = 'loadbayar'; vm.firstloader(); vm.tableload(); },
 
 		loadbayar:function() {
 			vm.position = 'loadbayar'; 

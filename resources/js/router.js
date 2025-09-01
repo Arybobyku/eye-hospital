@@ -885,6 +885,15 @@ const routes = [
 		props: true 
 	},
 
+		{ 
+		path: _base + 'editkasir', 
+		name: 'Edit Kasir', 
+		component: () => import('./components/finance/editkasir/index.vue'),
+		meta: { title: 'Edit Kasir' },
+		props: true 
+	},
+	
+
 	{ 
 		path: _base + 'histori-kasir', 
 		name: 'Histori (Tagihan Rawat Jalan)', 
