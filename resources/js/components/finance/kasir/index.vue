@@ -187,8 +187,6 @@ export default {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, 
 				show: _item.status_kasir == 'Belum Bayar' ? true : false },
-				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Edit Data', item: _item, index: _index, 
-				show: _item.status_kasir == 'Sudah Bayar' ? true : false },
 				{ icon: 'printer', color: 'btn-info', posisi: 'print', tooltip: 'Cetak Kwitansi', item: _item, index: _index, 
 				show: _item.status_kasir == 'Belum Bayar' ? true : false },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'printrincian', tooltip: 'Cetak Rincian Tagihan', item: _item, index: _index, 
