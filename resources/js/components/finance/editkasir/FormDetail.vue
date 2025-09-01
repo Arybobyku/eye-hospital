@@ -437,6 +437,7 @@ export default {
 			if (vm.green == 'Proses Pembayaran') {
 				vm.form.diskon_rp = this.globalDiscountNominal;
 				vm.form.diskon_persen = this.globalDiscountPercentage;
+				vm.form.edit_superadmin = true;
 				console.log("vm.form", vm.form);
 				if (vm.detail.carabayar_nama == 'Umum') {
 					if (vm.form.select.metodepembayaran.value != '' && vm.form.select.metodepembayaran.value != ' ' && vm.form.select.metodepembayaran.value) {

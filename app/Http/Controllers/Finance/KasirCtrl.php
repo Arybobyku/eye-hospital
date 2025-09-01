@@ -211,6 +211,91 @@ class KasirCtrl extends Controller
         return response()->json(['data' => $data, 'total' => $total]);
     }
 
+    public function editlistsudahbayar(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        \PenggunaHelp::log('Melihat data list table pada halaman data icd 9');
+
+        $list = '';
+        $total = '';
+        $page = $request->page - 1;
+        $skip = $page * $this->take;
+        $search = $request->search;
+        $column = $request->column;
+
+        if ($request->search != '') {
+            $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
+                                ->where('registrasi.delete_soft', '=', 1)
+                                ->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
+                                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
+                                ->where(function ($q) {
+                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                })
+                                ->orderBy('registrasi.no_kwitansi', 'desc')
+                                ->where(function ($q) {
+                                    $q->where('registrasi.status', 'Selesai');
+                                })
+                                ->where(function ($q) {
+                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                                })
+                                ->skip($skip)->take($this->take)
+                                ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
+                                ->get();
+            $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
+                                ->where('registrasi.delete_soft', '=', 1)
+                                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
+                                ->where(function ($q) {
+                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                })
+                                ->where(function ($q) {
+                                    $q->where('registrasi.status', 'Selesai');
+                                })
+                                ->where(function ($q) {
+                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                                })
+                                ->where($column, 'ilike', '%'.$search.'%')
+                                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
+        } else {
+            $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
+                                    ->where('registrasi.delete_soft', '=', 1)
+                                    ->orderBy('registrasi.no_kwitansi', 'desc')
+                                    ->where(function ($q) {
+                                        $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                        $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                    })
+                                    ->where(function ($q) {
+                                        $q->where('registrasi.status', 'Selesai');
+                                    })
+                                    ->where(function ($q) {
+                                        $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                                    })
+                                    ->skip($skip)->take($this->take)
+                                    ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
+                                    ->get();
+
+            $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
+                                ->where('registrasi.delete_soft', '=', 1)
+                                ->where(function ($q) {
+                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                })
+                                ->where(function ($q) {
+                                    $q->where('registrasi.status', 'Selesai');
+                                })
+                                ->where(function ($q) {
+                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                                })
+                                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
+        }
+
+        return response()->json(['data' => $data, 'total' => $total]);
+    }
+
     public function getpanjar(Request $request)
     {
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
@@ -297,19 +382,22 @@ class KasirCtrl extends Controller
             \DB::beginTransaction();
 
             $metode_pembayaran = $request->metode_pembayaran && $request->metode_pembayaran != '' ? $request->metode_pembayaran : '-';
-            $arr = [
-                'status_antrian_kasir' => '-',
-                'kasir_jam_selesai' => date('H:i'),
-                'status_kasir' => 'Sudah Bayar',
-                'status' => 'Selesai',
-                'tanggal_bayar' => date('Y-m-d'),
-                'metode_pembayaran' => $metode_pembayaran,
-                'diskon_persen' => $request->diskon_persen,
-                'diskon_rp' => $request->diskon_rp,
+        $arr = [
+            'status_antrian_kasir' => '-',
+            'kasir_jam_selesai' => date('H:i'),
+            'status_kasir' => 'Sudah Bayar',
+            'status' => 'Selesai',
+            'metode_pembayaran' => $metode_pembayaran,
+            'diskon_persen' => $request->diskon_persen,
+            'diskon_rp' => $request->diskon_rp,
+        ];
 
-            ];
-            // var_dump( $request->diskon_rp);
-            $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+        if (!$request->edit_superadmin) {
+            $arr['tanggal_bayar'] = date('Y-m-d');
+        }
+
+          // var_dump($request->diskon_rp);
+           $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 
             $tindakan = json_decode($request->tindakan);
 
@@ -358,6 +446,53 @@ class KasirCtrl extends Controller
                 'status' => 'Selesai',
             ];
             $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+
+            \DB::commit();
+
+            return response()->json(['data' => 'berhasil']);
+        } catch (Exception $e) {
+            \DB::rollback();
+
+            return response()->json(['hasil' => 'gagal']);
+        }
+    }
+
+
+    public function editbayar(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        $data = Registrasi::where('uuid', '=', $request->uuid)->first();
+        if ($data) {
+            \PenggunaHelp::log('Melakukan perubahan pembayaran dengan nama pasien '.$data->nama_pasien.' pada tanggal '.date('Y-m-d'));
+        }
+
+        try {
+            \DB::beginTransaction();
+
+            $metode_pembayaran = $request->metode_pembayaran && $request->metode_pembayaran != '' ? $request->metode_pembayaran : '-';
+            $arr = [
+                'metode_pembayaran' => $metode_pembayaran,
+                'diskon_persen' => $request->diskon_persen,
+                'diskon_rp' => $request->diskon_rp,
+            ];
+
+           Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+
+            $tindakan = json_decode($request->tindakan);
+
+            foreach ($tindakan as $row) {
+                $item = LayananPasien::find($row->id);
+                $item->layanan_uuid = $row->layanan_uuid;
+                $item->nama_layanan = $row->nama_layanan;
+                $item->tarif = $row->tarif;
+                $item->diskon_rp = $row->diskon_rp;
+                $item->diskon_persen = $row->diskon_persen;
+                $item->total = $row->total;
+                $item->save();
+            }
 
             \DB::commit();
 
