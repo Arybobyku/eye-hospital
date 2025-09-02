@@ -1,6 +1,6 @@
 <table border="1">
 	<tr>
-		<td colspan="9" align="center">Kartu Stock Opname Obat/Alkes Gudang</td>
+		<td colspan="9" align="center">Kartu Stock Opname Obat/Alkes Apotek</td>
 	</tr>
 	<tr>
 		<td colspan="9" align="center">Periode {{ $dari }} Sampai Dengan {{ $ke }}</td>

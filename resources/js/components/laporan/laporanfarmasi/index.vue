@@ -222,9 +222,9 @@
 						<h3 style="text-decoration: underline;">(Apotek) Kartu Stock</h3>
 					</div>
 					<div class="col-12">
-						<Selected v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)" 
-											:ref="form.select.apotek.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.apotek" v-on:keyup="selectfilter($event, form.select.apotek.name)"></Selected>
+						<Selected v-on:click="selectbox($event, form.select.obat3.name, form.select.obat3.statics)" 
+											:ref="form.select.obat3.name" @selecteditem="selecteditem" @selectclear="selectclear"
+											:selection="form.select.obat3" v-on:keyup="selectfilter($event, form.select.obat3.name)"></Selected>
 					</div>
 					<div class="col-12">
 						<Inputed :ref="form.darikartustockapotek.name" :form="form.darikartustockapotek"></Inputed>
@@ -493,7 +493,7 @@ export default {
 				let tmp = 'empty';
 				let tmp2 = 'empty';
 				let tmp3 = 'empty';
-				if (vm.form.select.obatapotek.value != 'Silahkan Pilih' && vm.form.select.obatapotek.value != '') { tmp = vm.form.select.obatapotek.value; }
+				if (vm.form.select.obat3.value != 'Silahkan Pilih' && vm.form.select.obat3.value != '') { tmp = vm.form.select.obat3.value; }
 				if (vm.form.kekartustockapotek.value  != '') { tmp2 = vm.form.select.kekartustockapotek.value; }
 				if (vm.form.darikartustockapotek.value  != '') { tmp3 = vm.form.select.darikartustockapotek.value; }
 				uri = '/laporan/excel/' + posisi + '/' + tmp2  + '/' + tmp3 + '/' + tmp;

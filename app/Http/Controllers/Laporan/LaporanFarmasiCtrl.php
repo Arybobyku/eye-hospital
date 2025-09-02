@@ -16,6 +16,8 @@ use App\Exports\ReturGudang;
 use App\Exports\StockOpnameApotek;
 use App\Exports\StockOpnameGudang;
 use App\Exports\KartuStockGudang;
+use App\Exports\KartuStockApotek;
+use App\Exports\KartuStockBedah;
 use App\Models\LogPengguna;
 use App\Models\Registrasi;
 use App\Models\Resep;
@@ -53,11 +55,17 @@ class LaporanFarmasiCtrl extends Controller
 		$filename = date('Y-m-d').'-Retur Obat-Alkes Gudang.xlsx';
 		return \Excel::download(new ReturGudang($dari, $ke, $supplier_uuid), $filename);
 	}
-
-	
 	public function kartustockgudang($dari, $ke, $obat_uuid) {
 		$filename = date('Y-m-d').'-Kartu Stock Gudang.xlsx';
 		return \Excel::download(new KartuStockGudang($dari, $ke, $obat_uuid), $filename);
+	}
+	public function kartustockapotek($dari, $ke, $obat_uuid) {
+		$filename = date('Y-m-d').'-Kartu Stock Apotek.xlsx';
+		return \Excel::download(new KartuStockApotek($dari, $ke, $obat_uuid), $filename);
+	}
+	public function kartustockbedah($dari, $ke, $obat_uuid) {
+		$filename = date('Y-m-d').'-Kartu Stock Bedah.xlsx';
+		return \Excel::download(new KartuStockBedah($dari, $ke, $obat_uuid), $filename);
 	}
 
 
