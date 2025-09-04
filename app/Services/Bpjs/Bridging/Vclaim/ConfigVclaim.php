@@ -21,6 +21,7 @@ class ConfigVclaim extends ManageService
 		$dotenv->safeLoad();
 
         $this->urlEndpoint = getenv('API_BPJS_VCLAIM');
+        // dd($this->urlEndpoint);
         $this->consId = getenv('CONS_ID');
         $this->secretKey = getenv('SECRET_KEY');
         $this->userKey = getenv('USER_KEY_VCLAIM');

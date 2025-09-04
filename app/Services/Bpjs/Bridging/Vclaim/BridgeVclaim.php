@@ -22,6 +22,7 @@ class BridgeVclaim extends CurlFactory
 
     public function getRequest($endpoint)
     {
+        // dd($this->header);
         $result = $this->request($this->config->setUrl().$endpoint, $this->header);
         var_dump($this->config->setUrl().$endpoint);
         var_dump($this->header);

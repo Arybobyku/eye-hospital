@@ -168,9 +168,9 @@
                     <!-- Input Kode Booking -->
                     <div class="input-container" style="padding: 0px 100px">
                         <input type="text" v-model="kodeBooking" class="kode-input" placeholder="KODE BOOKING" />
-                        <button class="keyboard-btn">
+                        {{-- <button class="keyboard-btn">
                             Keyboard
-                        </button>
+                        </button> --}}
                     </div>
 
                     <!-- Numpad -->
@@ -232,7 +232,7 @@
                     </div>
                 </div>
                 {{-- PASIEN LAMA BPJS start --}}
-                <div class="ambil-antrian-inner" v-if="shouldShow('bpjs')">
+                <div class="ambil-antrian-inner" ref="rootmodal"  v-if="shouldShow('bpjs')">
                     <center>
                         
                         <h2>PESERTA BPJS</h2>
@@ -263,14 +263,16 @@
                                    class="kode-input" 
                                    placeholder="Masukkan No Kartu BPJS (13 digit)" 
                                    maxlength="13" />
+  
                             
-                            <button class="keyboard-btn">
+                            {{-- <button class="keyboard-btn">
                                 Keyboard
-                            </button>
+                            </button> --}}
                             <button class="search-btn" @click="searchPeserta">
                                 Cari
                             </button>
                         </div>
+                        
                         
                         <!-- Numeric Keypad -->
                         <div class="numpad">
@@ -278,18 +280,27 @@
                             @click="appendToBooking(num)">
                             {% num %}
                         </button>
+                        
                         <button class="delete-btn" @click="deleteLast">del</button>
                         <button class="numpad-btn" @click="appendToBooking(0)">0</button>
                         <button class="ok-btn" @click="confirmBooking">OK</button>
                     </div>
                         <div class="container">
                             <div class="form-group">
+                                <label for="no_rujukan">Rujukan</label>
+                                <input 
+                                id ="no_rujukan"
+                                type="text" 
+                                readonly
+                                v-model="noRujukan" 
+                                placeholder="Nomor Rujukan" />
                                 <label for="kode_dokter_bpjs2">PILIH DOKTER</label>
                                 <select id="kode_dokter_bpjs2" name="kode_dokter_bpjs2" v-model="selectedDokter2" required>
                                     <option value="" disabled selected>-- Pilih Dokter --</option>
                                     <option v-for="item in jadwalDokter2" :value="item.kodedokter" v-text="`${item.namadokter}`"></option>
                                 </select>
                             </div>
+                            <button  v-on:click="addlamabpjs(selectedDokter)" class="submit-btn">Ambil Nomor Antrian</button>
                         </div>
                         
                         <!-- Validation Messages -->
@@ -393,6 +404,7 @@
                             addbebas: '/antrian/tiketing/addbebas',
                             farmasi: '/antrian/tiketing/add',
                             listDokter: '/bpjs/antrol-bpjs/ref/dokter',
+                            searchNik: '/antrian/tiketing/searchnik',
                         },
                         url: '',
                         data: null
@@ -418,6 +430,7 @@
                     selectedDokter2: "",
                     nikSect: '', // Untuk NIK
                     bpjsSect: '', // Untuk No Kartu BPJS
+                    noRujukan: '', // Untuk No Kartu BPJS
 
                 }
             },
@@ -614,6 +627,34 @@
                     vm.loaders();
                     vm.executions();
                     this.resetFormLamaNonBpjs();
+                    window.location.reload();
+                },
+                addlamanonbpjs: function(selectedDokter) {
+                    const selectedPoliObj = vm.poliBpjs.find(poli => poli.kdpoli === selectedPoli);
+                    const namaPoli = selectedPoliObj ? selectedPoliObj.nmpoli : '';
+                    const selectedDokterObj = vm.jadwalDokter.find(dokter => dokter.kodedokter === selectedDokter);
+                    const namaDokter = selectedDokterObj ? selectedDokterObj.namadokter : '';
+                    const jamDokter = selectedDokterObj ? selectedDokterObj.jadwal : '';
+                    const nik = document.getElementById('nik').value;
+
+                    vm.attach.url = vm.attach.link.addlamanonbpjs;
+                    vm.attach.data = new FormData();
+                    console.log(selectedDokterObj);
+                    console.log(namaDokter);
+                    vm.attach.data.append('nik', nik);
+                    vm.attach.data.append('kode_dokter_bpjs', selectedDokter);
+                    vm.attach.data.append('kode_poli_bpjs', 'MAT');
+                    vm.attach.data.append('nama_poli_bpjs', 'MATA'); // Tambahkan nama poli
+                    vm.attach.data.append('nama_dokter_bpjs', namaDokter); // Tambahkan nama poli
+                    vm.attach.data.append('jadwal_dokter_bpjs', jamDokter);
+                    vm.attach.data.append('no_rujukan', vm.noRujukan);
+                    vm.attach.data.append('jenis', 'Umum'); 
+                    vm.attach.data.append('number', vm.numberRo);
+                    vm.position = 'addlamabpjs';
+                    vm.loaders();
+                    vm.executions();
+                    this.resetFormLamaNonBpjs();
+                    window.location.reload();
                 },
 
                 addbebas: function(posisi) {
@@ -629,6 +670,42 @@
                     vm.position = 'addbebas';
                     vm.loaders();
                     vm.executions();
+                },
+                searchPeserta: function() {
+                    if (this.pesertaType === 'nik_sect') {
+                        if (this.nikSect.length !== 16) {
+                            alert('NIK harus 16 digit!');
+                            return;
+                        }
+                        this.bpjsSect = '';
+                        vm.attach.url = vm.attach.link.searchNik;
+                        vm.attach.data = new FormData();
+                        vm.attach.data.append('nik', this.nikSect);
+                        vm.attach.data.append('noKa', this.bpjsSect);
+                        vm.attach.data.append('section', this.pesertaType);
+                        vm.position = 'searchnik';
+                        vm.loaders();
+                        vm.executions();
+                     
+                        console.log('Cari peserta dengan NIK:', this.nikSect);
+
+                    } else {
+                        if (this.noBpjs.length !== 13) {
+                            alert('No Kartu BPJS harus 13 digit!');
+                            return;
+                        }
+                        this.bpjsSect = '';
+                        vm.attach.url = vm.attach.link.searchNik;
+                        vm.attach.data = new FormData();
+                        vm.attach.data.append('nik', this.nikSect);
+                        vm.attach.data.append('noKa', this.bpjsSect);
+                        vm.attach.data.append('section', this.pesertaType);
+                        vm.position = 'searchnik';
+                        vm.loaders();
+                        vm.executions();
+                        // Panggil API untuk cari peserta berdasarkan No BPJS
+                        console.log('Cari peserta dengan No BPJS:', this.bpjsSect);
+                    }
                 },
                 
                 loaders: function() {
@@ -676,15 +753,24 @@
                                 vm.numberbebas = response.data.numberbebas;
                                 vm.numberRo = response.data.numberRo;
                                 vm.loaders();
+                                
                             } else if (vm.position == 'adddata') {
                                 vm.printout();
                                 vm.loads();
+                                window.location.reload();
+
                             } else if (vm.position == 'addbebas') {
                                 vm.printoutbebas();
                                 vm.loads();
+                                window.location.reload();
+
                             } else if (vm.position == 'addlamanonbpjs') {
                                 vm.printoutRo();
                                 vm.loads();
+                                window.location.reload();
+
+                            } else if (vm.position == 'searchnik') {
+                                vm.noRujukan = response.response.data;
                             }
                         }, 250, this);
                     })
@@ -697,20 +783,29 @@
                             // Jika response memiliki structure {hasil: 'gagal', data: 'message'}
                             if (error.response.data.data) {
                                 alert(error.response.data.data);
+                            window.location.reload();
+
                             } 
+
                             // Jika response langsung string message
                             else if (typeof error.response.data === 'string') {
                                 alert(error.response.data);
+                            window.location.reload();
+
                             }
                             // Fallback ke default message
                             else {
                                 alert('Terjadi kesalahan. Silahkan coba lagi.');
+                                window.location.reload();
                             }
                         } else {
                             alert('Terjadi kesalahan. Silahkan coba lagi.');
+                            window.location.reload();
                         }
+                        
                     });
                 },
+
                 // Tambahkan method resetForm
                     resetFormLamaNonBpjs: function() {
                         document.getElementById('nik').value = '';
