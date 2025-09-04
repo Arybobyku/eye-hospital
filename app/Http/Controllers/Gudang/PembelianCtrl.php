@@ -38,6 +38,7 @@ class PembelianCtrl extends Controller
 			$data = DB::table('pembelian')
 								->leftjoin('pembelian_detail', 'pembelian.no_faktur', '=', 'pembelian_detail.no_faktur')
 								->where('pembelian.'.$column, 'ilike', '%'.$search.'%')
+								->where("pembelian.delete_soft", "=", 1)
 								->select(
 									'pembelian.uuid as uuid',
 									'pembelian.no_faktur as no_faktur',
@@ -61,7 +62,11 @@ class PembelianCtrl extends Controller
 								->orderBy('pembelian.tanggal_faktur', 'desc')
 								->skip($skip)->take($this->take)
 								->get();
-			$total = DB::table('pembelian')->where($column, 'ilike', '%'.$search.'%')->count();
+			$total = DB::table('pembelian')
+			->where($column, 'ilike', '%'.$search.'%')
+			->where("pembelian.delete_soft", "=", 1)
+			->count();
+			
 			// $total = DB::table('pembelian')
 			// 					->leftjoin('pembelian_detail', 'pembelian.no_faktur', '=', 'pembelian_detail.no_faktur')
 			// 					->where('pembelian.'.$column, 'ilike', '%'.$search.'%')
@@ -101,6 +106,7 @@ class PembelianCtrl extends Controller
 		else {
 			$data = DB::table('pembelian')
 								->leftjoin('pembelian_detail', 'pembelian.no_faktur', '=', 'pembelian_detail.no_faktur')
+								->where("pembelian.delete_soft", "=", 1)
 								->select(
 									'pembelian.uuid as uuid',
 									'pembelian.no_faktur as no_faktur',
@@ -148,7 +154,9 @@ class PembelianCtrl extends Controller
 			// 						])
 			// 					->orderBy('pembelian.tanggal_faktur', 'desc')
 			// 					->count();
-			$total = DB::table('pembelian')->count();
+			$total = DB::table('pembelian')
+			->where("pembelian.delete_soft", "=", 1)
+			->count();
 			// $data = Pembelian::where('delete_soft', '=', 1)
 			// 						->orderBy('id', 'desc')
 			// 						->skip($skip)->take($this->take)

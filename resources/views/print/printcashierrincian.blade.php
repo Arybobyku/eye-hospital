@@ -291,7 +291,7 @@
                     <?php $nomor++; ?>
 
                     <?php $subtotal += $item->total_total; ?>
-                    <?php $totalTarif += $item->tarif; ?>
+                    <?php $totalTarif += ($item->tarif * $item->jumlah_nama_layanan); ?>
                 @endforeach
 
                 <tr style="border-bottom: 1px solid #343224">
