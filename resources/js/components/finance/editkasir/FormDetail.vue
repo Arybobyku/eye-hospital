@@ -13,14 +13,20 @@
 				<div class="grid">
 					<div class="col-4 form-mr">
 						<ul class="list-detail" v-if="detail">
-							<li>Tanggal Pendaftaran<span><strong>{{ datename(detail.tanggal) }}</strong></span></li>
-							<li>No Rekam Medis<span><strong>{{ detail.rekam_medis }}</strong></span></li>
+							<Inputed :ref="form.tanggal.name" :form="form.tanggal"></Inputed>
+							<Inputed :ref="form.rekam_medis.name" :form="form.rekam_medis"></Inputed>
+							<Inputed :ref="form.no_kwitansi.name" :form="form.no_kwitansi"></Inputed>
+							<Inputed :ref="form.carabayar.name" :form="form.carabayar"></Inputed>
+							<Inputed :ref="form.namadokter.name" :form="form.namadokter"></Inputed>
+							
+							<!-- <li>Tanggal Pendaftaran<span><strong>{{ datename(detail.tanggal) }}</strong></span></li>
+							<li>No Rekam Medis<span><strong>{{ detail.rekam_medis }}</strong></span></li> -->
 							<li>Nama Lengkap<span><strong>{{ detail.nama_pasien }}</strong></span></li>
 							<li>Tanggal Lahir<span><strong>{{ datename(detail.tanggal_lahir) }}</strong></span></li>
 							<li>Jenis Kelamin<span><strong>{{ detail.jenis_kelamin }}</strong></span></li>
 							<li>Nomor Handphone<span><strong>{{ detail.no_handphone }}</strong></span></li>
-							<li>Cara Bayar<span><strong>{{ detail.carabayar_nama }}</strong></span></li>
-							<li>Dokter yang menangani<span><strong>{{ detail.nama_dokter }}</strong></span></li>
+							<!-- <li>Cara Bayar<span><strong>{{ detail.carabayar_nama }}</strong></span></li> -->
+							<!-- <li>Dokter yang menangani<span><strong>{{ detail.nama_dokter }}</strong></span></li> -->
 							<li>Triase<span><strong>{{ detail.berkebutuhan_khusus }}</strong></span></li>
 							<li v-if="detail.berkebutuhan_khusus!='Tidak'">Keterangan<span><strong>{{
 										detail.keterangan_berkebutuhan }}</strong></span></li>
@@ -35,7 +41,7 @@
 					</div>
 					<div class="col-8">
 
-						<div class="grid">
+						<!-- <div class="grid">
 							<div class="col-2"></div>
 							<div class="col-8">
 								<div class="cop-surat">
@@ -56,7 +62,7 @@
 								</div>
 							</div>
 							<div class="col-2"></div>
-						</div>
+						</div> -->
 
 						<div class="grid">
 							<div class="col-12">
@@ -294,7 +300,7 @@ export default {
 		listadministrasi: [], listrawatjalan: [], sementara: [], globalindex: 0, globalitem: null,
 		terminate: { show: false, display: 'display: none' },
 		form: null, btnlbl: '', arr: null,
-		green: 'Proses Pembayaran', red: 'Cancel', pendings: 'Ubah Menjadi Pending', test: null, cover: '', temporer: null,
+		green: 'Edit Data', red: 'Cancel', pendings: 'Ubah Menjadi Pending', test: null, cover: '', temporer: null,
 		pemeriksaanro: null,
 		detail : { uuid: '',
 			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
@@ -434,7 +440,7 @@ export default {
 			// this.totalbiaya;
 		},
 		greenbutton:function() {
-			if (vm.green == 'Proses Pembayaran') {
+			if (vm.green == 'Edit Data') {
 				vm.form.diskon_rp = this.globalDiscountNominal;
 				vm.form.diskon_persen = this.globalDiscountPercentage;
 				vm.form.edit_superadmin = true;
@@ -547,6 +553,11 @@ export default {
 			vm.listdata = [];
 			console.log(response);
 			vm.detail = response.data.data;
+			vm.form.tanggal.value = vm.detail.tanggal;
+			vm.form.rekam_medis.value = vm.detail.rekam_medis;
+			vm.form.no_kwitansi.value = vm.detail.no_kwitansi;
+			vm.form.carabayar.value = vm.detail.carabayar_nama;
+			vm.form.namadokter.value = vm.detail.nama_dokter;
 
 			if (vm.detail.carabayar_nama == 'Umum') {
 				vm.form.select.metodepembayaran.isrequired = true;

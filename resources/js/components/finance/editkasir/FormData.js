@@ -144,6 +144,31 @@ export const formkelurahan = () => {
 			name: 'diskon_persen', value: '', disabled: false, show: true, kinds: ''
 		},
 
+		tanggal:{
+			title: 'Tanggal', for_id: 'form_'+'tanggal', type: 'date', required: '', 
+			name: 'tanggal', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		rekam_medis:{
+			title: 'Rekam Medis', for_id: 'form_'+'rekam_medis', type: 'text', required: '',
+			name: 'rekam_medis', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		no_kwitansi:{
+			title: 'Nomor Kwitansi', for_id: 'form_'+'no_kwitansi', type: 'text', required: '',
+			name: 'no_kwitansi', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		carabayar: {
+			title: 'Cara Bayar', for_id: 'form_'+'carabayar_nama', type: 'text', required: '',
+			name: 'carabayar_nama', value: '', disabled: false, show: true, kinds: ''
+		},
+
+		namadokter: {
+			title: 'Nama Dokter', for_id: 'form_'+'nama_dokter', type: 'text', required: '',
+			name: 'nama_dokter', value: '', disabled: false, show: true, kinds: ''
+		},
+
 
 		select: {
 			metodepembayaran: {
@@ -185,7 +210,7 @@ export const formunit = () => {
 			metodepembayaran: {
 				key : 'metodepembayaran', for_id: 'form_'+'metodepembayaran', name: 'metodepembayaran', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: true,
-				class: 'metodepembayaran', isrequired: true, html: 'Metode Pembayaran', issearch: false, disabled: false,
+				class: 'metodepembayaran', isrequired: false, html: 'Metode Pembayaran', issearch: false, disabled: false,
 			},
 		}
 	}
