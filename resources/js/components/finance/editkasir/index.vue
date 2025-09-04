@@ -57,7 +57,7 @@ export default {
 				listsudahbayar: '/finance/kasir/editlistsudahbayar',
 				call: '/finance/kasir/call',
 				detail: '/finance/kasir/detail',
-				bayar: '/finance/kasir/bayar',
+				bayar: '/finance/kasir/editbayar',
 				cancelbayar: '/finance/kasir/cancelbayar',
 				terima: '/finance/kasir/terima',
 				kasir: '/print/kasir/',
@@ -129,7 +129,7 @@ export default {
 		tab: {
 			button: [
 				// { value: 'today', label: 'Tagihan (Aktif)', class: 'tab-active' },
-				{ value: 'bayar', label: 'Tagihan (Sudah Bayar)', class: 'tab-no-active' },
+				{ value: 'bayar', label: 'All Data Kasir', class: 'tab-no-active' },
 				// { value: 'beli', label: 'Pasien Bebas (Aktif)', class: 'tab-no-active' },
 				// { value: 'belibayar', label: 'Pasien Bebas (Sudah Bayar)', class: 'tab-no-active' },
 			],
