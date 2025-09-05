@@ -169,6 +169,13 @@ export const formkelurahan = () => {
 			name: 'nama_dokter', value: '', disabled: false, show: true, kinds: ''
 		},
 
+		namadokterspesialis: {
+			title: 'Nama Dokter Spesialis', for_id: 'form_'+'nama_dokter_spesialis', type: 'text', required: '',
+			name: 'nama_dokter_spesialis', value: '', disabled: false, show: true, kinds: ''
+		},
+
+
+
 
 		select: {
 			metodepembayaran: {

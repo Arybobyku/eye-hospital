@@ -73,8 +73,9 @@
 							</div>
 						</div>
 
-						<div class="grid">
+						<div class="grid">	
 							<div class="col-12">
+								<Inputed :ref="form.namadokterspesialis.name" :form="form.namadokterspesialis"></Inputed>
 								<table class="table">
 									<thead>
 										<tr>
@@ -592,7 +593,14 @@ export default {
 					diskon_persen: response.data.layanan[i].diskon_persen,
 					editharga: false,
 				}
-
+				if(_item.nama_layanan == 'Konsultasi Dokter Spesialis'){
+					console.log("FAUZAN ZAMAN",response.data.layanan[i] );
+					vm.form.namadokterspesialis.value = response.data.layanan[i].nama_dokter;
+				}	
+				if(_item.nama_layanan == 'Konsultasi Dokter Umum'){
+					console.log("DOKTER UMUM",response.data.layanan[i] );
+					// vm.form.namadokterspesialis.value = response.data.layanan[i].nama_dokter;
+				}
 				vm.listdata.push(_item);
 				vm.sementara.push(0);
 				// vm.tmplistdata.push(_item);
