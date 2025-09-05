@@ -21,8 +21,10 @@ export const initindexdb = (dbName, tableName) => {
 
 	if (tableName == 'supplierretur') { tableName = 'supplier'; }
 	if (tableName == 'dokterreg') { tableName = 'dokter'; }
+	if (tableName == 'obat2') { tableName = 'obat'; }
+	if (tableName == 'obat3') { tableName = 'obat'; }
 
-	console.log(tableName)
+	console.log("table", tableName)
 	return new Promise(function (resolve, reject) {
     var open = window.indexedDB.open(dbName, window.localStorage.getItem("version"));
     open.onsuccess = function() {
@@ -73,6 +75,12 @@ export const indexdbprocessing = (data, form, key) => {
 			form.select[key].filter.push(data[i]);
 		}
 		else if (key == 'obat') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'obat2') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'obat3') {
 			form.select[key].filter.push(data[i]);
 		}
 		else if (key == 'supplier') {
@@ -218,6 +226,16 @@ export const createdb = (dbName, version, response) => {
 				let obat = db.createObjectStore('obat', { keyPath: "id", autoIncrement: true });
 				let i = 0, data = response.data.obat;
 				while (i < data.length) { obat.put(obatfunction(data, i)); i++; }
+			}
+			if (response.data.obat2.length > 0) {
+				let obat2 = db.createObjectStore('obat', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.obat;
+				while (i < data.length) { obat2.put(obat2function(data, i)); i++; }
+			}
+			if (response.data.obat3.length > 0) {
+				let obat3 = db.createObjectStore('obat3', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.obat3;
+				while (i < data.length) { obat3.put(obat3function(data, i)); i++; }
 			}
 
 			if (response.data.obatgudang.length > 0) {
@@ -571,7 +589,50 @@ const obatfunction = (data, i) => {
 		min_stock: data[i].min_stock
 	}
 }
+const obat2function = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nama,
 
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nama: data[i].nama,
+		keterangan: data[i].keterangan,
+		satuan_uuid_besar: data[i].satuan_uuid_besar,
+		nama_satuan_besar: data[i].nama_satuan_besar,
+		satuan_uuid_kecil: data[i].satuan_uuid_kecil,
+		nama_satuan_kecil: data[i].nama_satuan_kecil,
+		hitung_besar: data[i].hitung_besar,
+		hitung_kecil: data[i].hitung_kecil,
+		kategori:data[i].kategori,
+		formularium: data[i].formularium,
+		golongan: data[i].golongan,
+		jenis: data[i].jenis,
+		min_stock: data[i].min_stock
+	}
+}
+const obat3function = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nama,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nama: data[i].nama,
+		keterangan: data[i].keterangan,
+		satuan_uuid_besar: data[i].satuan_uuid_besar,
+		nama_satuan_besar: data[i].nama_satuan_besar,
+		satuan_uuid_kecil: data[i].satuan_uuid_kecil,
+		nama_satuan_kecil: data[i].nama_satuan_kecil,
+		hitung_besar: data[i].hitung_besar,
+		hitung_kecil: data[i].hitung_kecil,
+		kategori:data[i].kategori,
+		formularium: data[i].formularium,
+		golongan: data[i].golongan,
+		jenis: data[i].jenis,
+		min_stock: data[i].min_stock
+	}
+}
 const obatgudangfunction = (data, i) => {
 	return {
 		value: data[i].uuid,

@@ -197,9 +197,9 @@
 						<h3 style="text-decoration: underline;">(Gudang) Kartu Stock</h3>
 					</div>
 					<div class="col-12">
-						<Selected v-on:click="selectbox($event, form.select.obatgudang.name, form.select.obatgudang.statics)" 
-									:ref="form.select.obatgudang.name" @selecteditem="selecteditem" @selectclear="selectclear"
-									:selection="form.select.obatgudang" v-on:keyup="selectfilter($event, form.select.obatgudang.name)"></Selected>
+						<Selected v-on:click="selectbox($event, form.select.obat2.name, form.select.obat2.statics)" 
+									:ref="form.select.obat2.name" @selecteditem="selecteditem" @selectclear="selectclear"
+									:selection="form.select.obat2" v-on:keyup="selectfilter($event, form.select.obat2.name)"></Selected>
 					</div>
 					<div class="col-12">
 						<Inputed :ref="form.darikartustockgudang.name" :form="form.darikartustockgudang"></Inputed>
@@ -222,9 +222,9 @@
 						<h3 style="text-decoration: underline;">(Apotek) Kartu Stock</h3>
 					</div>
 					<div class="col-12">
-						<Selected v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)" 
-											:ref="form.select.apotek.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.apotek" v-on:keyup="selectfilter($event, form.select.apotek.name)"></Selected>
+						<Selected v-on:click="selectbox($event, form.select.obat3.name, form.select.obat3.statics)" 
+											:ref="form.select.obat3.name" @selecteditem="selecteditem" @selectclear="selectclear"
+											:selection="form.select.obat3" v-on:keyup="selectfilter($event, form.select.obat3.name)"></Selected>
 					</div>
 					<div class="col-12">
 						<Inputed :ref="form.darikartustockapotek.name" :form="form.darikartustockapotek"></Inputed>
@@ -473,6 +473,30 @@ export default {
 				let tmp = 'empty';
 				if (vm.form.select.supplierretur.value != 'Silahkan Pilih' && vm.form.select.supplierretur.value != '') { tmp = vm.form.select.supplierretur.value; }
 				uri = '/laporan/excel/' + posisi + '/' + vm.form.dariretur.value + '/' + vm.form.keretur.value + '/' + tmp;
+			} else if (posisi == 'kartustockgudang') {
+				let tmp = 'empty';
+				let tmp2 = 'empty';
+				let tmp3 = 'empty';
+				console.log("kartustockgudang", vm.form.select.obat2.uuid);
+				if (vm.form.select.obat2.value != 'Silahkan Pilih' && vm.form.select.obat2.value != '') { tmp = vm.form.select.obat2.value; }
+				if (vm.form.kekartustockgudang.value  != '') { tmp2 = vm.form.select.kekartustockgudang.value; }
+				if (vm.form.darikartustockgudang.value  != '') { tmp3 = vm.form.select.darikartustockgudang.value; }
+				uri = '/laporan/excel/' + posisi + '/' + tmp2  + '/' + tmp3 + '/' + tmp;
+
+			}
+			else if (posisi == 'kartustockbedah') {
+				let tmp = 'empty';
+				if (vm.form.select.obatbedah.value != 'Silahkan Pilih' && vm.form.select.obatbedah.value != '') { tmp = vm.form.select.obatbedah.value; }
+				uri = '/laporan/excel/' + posisi + '/' + vm.form.darikartustockbedah.value + '/' + vm.form.kekartustockbedah.value + '/' + tmp;
+			}
+			else if (posisi == 'kartustockapotek') {
+				let tmp = 'empty';
+				let tmp2 = 'empty';
+				let tmp3 = 'empty';
+				if (vm.form.select.obat3.value != 'Silahkan Pilih' && vm.form.select.obat3.value != '') { tmp = vm.form.select.obat3.value; }
+				if (vm.form.kekartustockapotek.value  != '') { tmp2 = vm.form.select.kekartustockapotek.value; }
+				if (vm.form.darikartustockapotek.value  != '') { tmp3 = vm.form.select.darikartustockapotek.value; }
+				uri = '/laporan/excel/' + posisi + '/' + tmp2  + '/' + tmp3 + '/' + tmp;
 			}
 			window.open(uri);
 		},

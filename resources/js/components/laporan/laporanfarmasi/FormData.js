@@ -47,12 +47,20 @@ export const formpermintaan = () => {
 		},
 
 		darikartustockapotek: { 
-			title: 'Dari Tanggal', for_id: 'form_'+'darikartustockgudang', type: 'date', required: '', 
-			name: 'darikartustockgudang', value: '', disabled: false, show: true, kinds: ''
+			title: 'Dari Tanggal', for_id: 'form_'+'darikartustockapotek', type: 'date', required: '', 
+			name: 'darikartustockapotek', value: '', disabled: false, show: true, kinds: ''
 		},
 		kekartustockapotek: { 
-			title: 'Ke Tanggal', for_id: 'form_'+'kekartustockgudang', type: 'date', required: '', 
-			name: 'kekartustockgudang', value: '', disabled: false, show: true, kinds: ''
+			title: 'Ke Tanggal', for_id: 'form_'+'kekartustockapotek', type: 'date', required: '', 
+			name: 'kekartustockapotek', value: '', disabled: false, show: true, kinds: ''
+		},
+		darikartustockbedah: { 
+			title: 'Dari Tanggal', for_id: 'form_'+'darikartustockbedah', type: 'date', required: '', 
+			name: 'darikartustockbedah', value: '', disabled: false, show: true, kinds: ''
+		},
+		kekartustockbedah: { 
+			title: 'Ke Tanggal', for_id: 'form_'+'kekartustockbedah', type: 'date', required: '', 
+			name: 'kekartustockbedah', value: '', disabled: false, show: true, kinds: ''
 		},
 
 		stockopnameapotek: { 
@@ -79,10 +87,16 @@ export const formpermintaan = () => {
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'supplierretur', isrequired: false, html: 'Nama Supplier', issearch: false, disabled: false,
 			},
-			obatgudang: { 
-				key : 'obatgudang', for_id: 'form_'+'obatgudang', name: 'obatgudang', uuid:'', value: '', label: 'Silahkan Pilih', 
+			obat2: { 
+				key : 'obat2', for_id: 'form_'+'obat2', name: 'obat2', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
-				class: 'obatgudang', isrequired: true, html: 'Nama Obat', issearch: true, disabled: false,
+				class: 'obat2', isrequired: true, html: 'Nama Obat', issearch: true, disabled: false,
+			},
+
+			obat3: { 
+				key : 'obat3', for_id: 'form_'+'obat3', name: 'obat3', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'obat3', isrequired: true, html: 'Nama Obat', issearch: true, disabled: false,
 			},
 
 			obat: { 
@@ -95,6 +109,11 @@ export const formpermintaan = () => {
 				key : 'apotek', for_id: 'form_'+'apotek', name: 'apotek', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'apotek', isrequired: false, html: 'Nama Obat/Alkes', issearch: true, disabled: false,
+			},
+			bedah: {
+				key : 'bedah', for_id: 'form_'+'bedah', name: 'bedah', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'bedah', isrequired: false, html: 'Nama Obat/Alkes', issearch: true, disabled: false,
 			},
 		}
 	}
