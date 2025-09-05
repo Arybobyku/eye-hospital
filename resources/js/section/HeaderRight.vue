@@ -93,6 +93,7 @@ export default {
 				{ icon: 'arrow-right', value: 'obat', label: 'Master Obat' },
 				{ icon: 'arrow-right', value: 'obat2', label: 'Master Obat' },
 				{ icon: 'arrow-right', value: 'obat3', label: 'Master Obat' },
+				{ icon: 'arrow-right', value: 'obat4', label: 'Master Obat' },
 				{ icon: 'arrow-right', value: 'obatgudang', label: 'Obat Gudang Farmasi' },
 				{ icon: 'arrow-right', value: 'satuan', label: 'Satuan Obat' },
 				{ icon: 'arrow-right', value: 'apotek', label: 'Obat Apotek' },

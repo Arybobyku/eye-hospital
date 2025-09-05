@@ -72,6 +72,9 @@ class SearchingCtrl extends Controller
 		else if ($key == 'obat3') {
 			$data = $this->obat3($request);
 		}
+		else if ($key == 'obat4') {
+			$data = $this->obat($request);
+		}
 		else if ($key == 'obatgudang') {
 			$data = $this->obatgudang($request);
 		}

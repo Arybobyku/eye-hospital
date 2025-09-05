@@ -99,6 +99,12 @@ export const formpermintaan = () => {
 				class: 'obat3', isrequired: true, html: 'Nama Obat', issearch: true, disabled: false,
 			},
 
+			obat4: { 
+				key : 'obat4', for_id: 'form_'+'obat4', name: 'obat4', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'obat4', isrequired: true, html: 'Nama Obat', issearch: true, disabled: false,
+			},
+
 			obat: { 
 				key : 'obat', for_id: 'form_'+'obat', name: 'obat', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: false,

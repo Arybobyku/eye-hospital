@@ -247,18 +247,18 @@
 						<h3 style="text-decoration: underline;">(Bedah Central) Kartu Stock</h3>
 					</div>
 					<div class="col-12">
-						<Selected v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)" 
-											:ref="form.select.apotek.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.apotek" v-on:keyup="selectfilter($event, form.select.apotek.name)"></Selected>
+						<Selected v-on:click="selectbox($event, form.select.obat4.name, form.select.obat4.statics)" 
+									:ref="form.select.obat4.name" @selecteditem="selecteditem" @selectclear="selectclear"
+									:selection="form.select.obat4" v-on:keyup="selectfilter($event, form.select.obat4.name)"></Selected>
 					</div>
 					<div class="col-12">
-						<Inputed :ref="form.darikartustockapotek.name" :form="form.darikartustockapotek"></Inputed>
+						<Inputed :ref="form.darikartustockbedah.name" :form="form.darikartustockbedah"></Inputed>
 					</div>
 					<div class="col-12">
-						<Inputed :ref="form.kekartustockapotek.name" :form="form.kekartustockapotek"></Inputed>
+						<Inputed :ref="form.kekartustockbedah.name" :form="form.kekartustockbedah"></Inputed>
 					</div>
 					<div class="col-12">
-						<button v-on:click="excel('kartustockapotek')" class="excels">Cetak ke Excel</button>
+						<button v-on:click="excel('kartustockbedah')" class="excels">Cetak ke Excel</button>
 						<!-- <button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button> -->
 					</div>
 				</div>
@@ -486,8 +486,12 @@ export default {
 			}
 			else if (posisi == 'kartustockbedah') {
 				let tmp = 'empty';
-				if (vm.form.select.obatbedah.value != 'Silahkan Pilih' && vm.form.select.obatbedah.value != '') { tmp = vm.form.select.obatbedah.value; }
-				uri = '/laporan/excel/' + posisi + '/' + vm.form.darikartustockbedah.value + '/' + vm.form.kekartustockbedah.value + '/' + tmp;
+				let tmp2 = 'empty';
+				let tmp3 = 'empty';
+				if (vm.form.select.obat4.value != 'Silahkan Pilih' && vm.form.select.obat4.value != '') { tmp = vm.form.select.obat4.value; }
+				if (vm.form.kekartustockbedah.value  != '') { tmp2 = vm.form.select.kekartustockbedah.value; }
+				if (vm.form.darikartustockbedah.value  != '') { tmp3 = vm.form.select.darikartustockbedah.value; }
+				uri = '/laporan/excel/' + posisi + '/' + tmp2  + '/' + tmp3 + '/' + tmp;
 			}
 			else if (posisi == 'kartustockapotek') {
 				let tmp = 'empty';
