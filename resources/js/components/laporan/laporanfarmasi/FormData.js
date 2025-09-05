@@ -71,6 +71,10 @@ export const formpermintaan = () => {
 			title: 'Pilih Tanggal', for_id: 'form_'+'stockopnamegudang', type: 'month', required: '', 
 			name: 'stockopnamegudang', value: '', disabled: false, show: true, kinds: ''
 		},
+		stockopnamebedah: { 
+			title: 'Pilih Tanggal', for_id: 'form_'+'stockopnamebedah', type: 'month', required: '', 
+			name: 'stockopnamebedah', value: '', disabled: false, show: true, kinds: ''
+		},
 		select: {
 			dokter: { 
 				key : 'dokter', for_id: 'form_'+'dokter', name: 'dokter', uuid:'', value: '', label: 'Silahkan Pilih', 

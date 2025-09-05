@@ -120,7 +120,7 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-mt form-mt">
+		<div class="col-4 form-mt form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -137,7 +137,7 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<div class="col-4 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -147,24 +147,24 @@
 						<Inputed :ref="form.stockopnamegudang.name" :form="form.stockopnamegudang"></Inputed>
 					</div>
 					<div class="col-12">
-						<button v-on:click="excel('stockopnameapotek')" class="excels">Cetak ke Excel</button>
+						<button v-on:click="excel('stockopnamegudang')" class="excels">Cetak ke Excel</button>
 						<!-- <button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button> -->
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<div class="col-4 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
 						<h3 style="text-decoration: underline;">(Bedah Central) Stock Opname</h3>
 					</div>
 					<div class="col-12">
-						<Inputed :ref="form.stockopnamegudang.name" :form="form.stockopnamegudang"></Inputed>
+						<Inputed :ref="form.stockopnamebedah.name" :form="form.stockopnamebedah"></Inputed>
 					</div>
 					<div class="col-12">
-						<button v-on:click="excel('stockopnameapotek')" class="excels">Cetak ke Excel</button>
+						<button v-on:click="excel('stockopnamebedah')" class="excels">Cetak ke Excel</button>
 						<!-- <button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button> -->
 					</div>
 				</div>
@@ -172,7 +172,7 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<!-- <div class="col-3 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -183,14 +183,14 @@
 					</div>
 					<div class="col-12">
 						<button v-on:click="excel('stockopnameapotek')" class="excels">Cetak ke Excel</button>
-						<!-- <button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button> -->
+						<button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button>
 					</div>
 				</div>
 
 			</div>
-		</div>
+		</div> -->
 
-		<div class="col-3  form-mt">
+		<div class="col-4  form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -215,7 +215,7 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<div class="col-4 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -240,7 +240,7 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<div class="col-4 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -265,7 +265,7 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<!-- <div class="col-3 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -284,11 +284,11 @@
 					</div>
 					<div class="col-12">
 						<button v-on:click="excel('kartustockapotek')" class="excels">Cetak ke Excel</button>
-						<!-- <button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button> -->
+						<button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<!-- <div class="col-4 form-ml">
 			<div class="inner wrap-laporan" ref="roottable">
@@ -463,6 +463,9 @@ export default {
 			}
 			else if (posisi == 'stockopnamegudang') {
 				uri = '/laporan/excel/' + posisi + '/' + vm.form.stockopnamegudang.value;
+			}
+			else if (posisi == 'stockopnamebedah') {
+				uri = '/laporan/excel/' + posisi + '/' + vm.form.stockopnamebedah.value;
 			}
 			else if (posisi == 'returgudang') {
 				let tmp = 'empty';
