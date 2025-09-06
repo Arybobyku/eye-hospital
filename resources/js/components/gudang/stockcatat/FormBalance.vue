@@ -160,6 +160,7 @@ export default {
 					hitung_kecil: vm.tempobat.hitung_kecil,
 					unit_uuid: vm.tempobat.unit_uuid,
 					nama_unit: vm.tempobat.nama_unit,
+					
 					before_jumlah_kecil: vm.tempobat.jumlah_kecil,
 					before_jumlah_besar: vm.tempobat.jumlah_besar,
 					

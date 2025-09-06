@@ -52,6 +52,9 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('remove', [LabelStockOpnameCtrl::class, 'remove'])->name('stockcatatlabel-remove');
 		Route::post('api', [LabelStockOpnameCtrl::class, 'api'])->name('stockcatatlabel-api');
 
+		Route::post('uploadexcel', [LabelStockOpnameCtrl::class, 'uploadTemplate'])->name('stockcatatlabel-uploadexcel');
+		Route::get('downloadtemplate/{name}/{tanggal}/{waktu}', [LabelStockOpnameCtrl::class, 'downloadTemplate'])->name('stockcatatlabel-downloadtemplate');
+
 		Route::post('getbalance', [LabelStockOpnameCtrl::class, 'getbalance'])->name('stockcatatlabel-getbalance');
 		Route::post('addbalance', [LabelStockOpnameCtrl::class, 'addbalance'])->name('stockcatatlabel-addbalance');
 		Route::post('prosesbalance', [LabelStockOpnameCtrl::class, 'prosesbalance'])->name('stockcatatlabel-prosesbalance');

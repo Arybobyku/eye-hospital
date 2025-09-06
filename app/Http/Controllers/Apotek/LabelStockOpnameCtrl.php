@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Apotek;
 
+use App\Exports\TemplateInputStockOpname;
+use App\Exports\UploadInputStockOpname;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -13,66 +15,81 @@ use PenggunaHelp;
 use App\Models\LabelStockOpname;
 use App\Models\StockCatat;
 use App\Models\StockOpname;
+use Maatwebsite\Excel\Facades\Excel;
 
 class LabelStockOpnameCtrl extends Controller
 {
 
 	private $take = 15, $error = 'next';
 
-	public function __construct() {
+	public function __construct()
+	{
 		date_default_timezone_set("Asia/Jakarta");
-		$this->error = PenggunaHelp::acl(); 
+		$this->error = PenggunaHelp::acl();
 	}
 
-	public function list(Request $request) {
+	public function list(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		PenggunaHelp::log('Melihat data list table pada halaman data unit');
 
-		$list = ''; $total = '';
-		$page = $request->page - 1; $skip = $page * $this->take;
-		$search = $request->search; $column = $request->column;
+		$list = '';
+		$total = '';
+		$page = $request->page - 1;
+		$skip = $page * $this->take;
+		$search = $request->search;
+		$column = $request->column;
 
 		if ($request->search != "") {
 			$data = LabelStockOpname::where('delete_soft', '=', 1)
-								->where($column, 'ilike', '%'.$search.'%')
-								->orderBy('id', 'desc')
-								->where('unit_uuid', '=', 'd88a34c8-f377-4477-88bc-643a8e0e041b')
-								->skip($skip)->take($this->take)
-								->get();
+				->where($column, 'ilike', '%' . $search . '%')
+				->orderBy('id', 'desc')
+				->where('unit_uuid', '=', 'd88a34c8-f377-4477-88bc-643a8e0e041b')
+				->skip($skip)->take($this->take)
+				->get();
 			$total = LabelStockOpname::where('delete_soft', '=', 1)
-								->where($column, 'ilike', '%'.$search.'%')
-								->where('unit_uuid', '=', 'd88a34c8-f377-4477-88bc-643a8e0e041b')
-								->orderBy('id', 'desc')->count();
-		}
-		else {
+				->where($column, 'ilike', '%' . $search . '%')
+				->where('unit_uuid', '=', 'd88a34c8-f377-4477-88bc-643a8e0e041b')
+				->orderBy('id', 'desc')->count();
+		} else {
 			$data = LabelStockOpname::where('delete_soft', '=', 1)
-									->orderBy('id', 'desc')
-									->where('unit_uuid', '=', 'd88a34c8-f377-4477-88bc-643a8e0e041b')
-									->skip($skip)->take($this->take)
-									->get();
+				->orderBy('id', 'desc')
+				->where('unit_uuid', '=', 'd88a34c8-f377-4477-88bc-643a8e0e041b')
+				->skip($skip)->take($this->take)
+				->get();
 
 			$total = LabelStockOpname::where('delete_soft', '=', 1)
-									->where('unit_uuid', '=', 'd88a34c8-f377-4477-88bc-643a8e0e041b')	
-									->orderBy('id', 'desc')->count();
-
+				->where('unit_uuid', '=', 'd88a34c8-f377-4477-88bc-643a8e0e041b')
+				->orderBy('id', 'desc')->count();
 		}
-		
+
 		return response()->json(['data' => $data, 'total' => $total]);
-	
 	}
 
-	public function add(Request $request) { 
+	public function add(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
-		PenggunaHelp::log('Menambahkan data unit dengan nama "'.$request->nama.'".');
+		PenggunaHelp::log('Menambahkan data unit dengan nama "' . $request->nama . '".');
 
-		$uuid = ''; $loop = false;
-		do { $uuid = Uuid::uuid4(); $check = LabelStockOpname::where('uuid', '=', $uuid)->first(); if (!$check) { $loop = true; } }while($loop == false);
+		$uuid = '';
+		$loop = false;
+		do {
+			$uuid = Uuid::uuid4();
+			$check = LabelStockOpname::where('uuid', '=', $uuid)->first();
+			if (!$check) {
+				$loop = true;
+			}
+		} while ($loop == false);
 
-		try{
+		try {
 			DB::beginTransaction();
 
 			$item = new LabelStockOpname();
@@ -87,98 +104,109 @@ class LabelStockOpnameCtrl extends Controller
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
-	public function edit(Request $request) {
+	public function edit(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		$data = LabelStockOpname::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
-			PenggunaHelp::log('Mengambil data unit dengan nama "'.$data->nama.'" dan id "'.$data->id.'" untuk ditampilkan dihalaman edit unit');
+			PenggunaHelp::log('Mengambil data unit dengan nama "' . $data->nama . '" dan id "' . $data->id . '" untuk ditampilkan dihalaman edit unit');
 		}
-		
+
 		return response()->json(['data' => $data]);
 	}
 
-	public function update(Request $request) {
+	public function update(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
-		PenggunaHelp::log('Mengupdate data unit dengan nama "'.$request->nama.'".');
+		PenggunaHelp::log('Mengupdate data unit dengan nama "' . $request->nama . '".');
 
 		$arr = array(
-				'nama' => $request->nama,
-				'tanggal' => $request->tanggal,
-				'jam' => $request->jam,
+			'nama' => $request->nama,
+			'tanggal' => $request->tanggal,
+			'jam' => $request->jam,
 		);
 
-		try{
+		try {
 			DB::beginTransaction();
 
 			$update = LabelStockOpname::where('uuid', '=', $request->uuid)->update($arr);
-			
+
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
-	public function remove(Request $request) {
+	public function remove(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		$data = LabelStockOpname::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
-			PenggunaHelp::log('Menghapus data unit dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
+			PenggunaHelp::log('Menghapus data unit dengan nama "' . $data->nama . '" dan id "' . $data->id . '".');
 		}
 
 		$arr = array('delete_soft' => 0);
-		
-		try{
+
+		try {
 			DB::beginTransaction();
 
 			$remove = LabelStockOpname::where('uuid', '=', $request->uuid)->update($arr);
-			
+
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
-	public function api(Request $request) {
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
-		$data = LabelStockOpname::where('delete_soft', '=', '1')->where('nama', 'ilike', '%'.$request->keyword.'%')->select(['id', 'uuid', 'nama'])->limit(10)->get();
+	public function api(Request $request)
+	{
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
+		$data = LabelStockOpname::where('delete_soft', '=', '1')->where('nama', 'ilike', '%' . $request->keyword . '%')->select(['id', 'uuid', 'nama'])->limit(10)->get();
 		return response()->json(['data' => $data]);
 	}
 
-	public function getbalance(Request $request) {
+	public function getbalance(Request $request)
+	{
 
 		$data = StockCatat::where('label_stockopname_uuid', '=', $request->uuid)->get();
 
 		return response()->json(['data' => $data]);
 	}
 
-	public function addbalance(Request $request) {
-		
-		try{
+	public function addbalance(Request $request)
+	{
+
+		try {
 			DB::beginTransaction();
 
 			$data = StockCatat::where('label_stockopname_uuid', '=', $request->label_stockopname_uuid)->delete();
-			
+
 			$obat = json_decode($request->obat);
 
 			foreach ($obat as $row) {
@@ -214,15 +242,15 @@ class LabelStockOpnameCtrl extends Controller
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
-	public function prosesbalance(Request $request) {
-		try{
+	public function prosesbalance(Request $request)
+	{
+		try {
 			DB::beginTransaction();
 			$data = StockCatat::where('label_stockopname_uuid', '=', $request->label_stockopname_uuid)->get();
 
@@ -232,21 +260,37 @@ class LabelStockOpnameCtrl extends Controller
 					'jumlah_besar' => $row->after_jumlah_besar
 				);
 				$update = StockOpname::where('obat_uuid', '=', $row->obat_uuid)
-										->where('unit_uuid', '=', 'd88a34c8-f377-4477-88bc-643a8e0e041b')
-										->update($arr);
+					->where('unit_uuid', '=', 'd88a34c8-f377-4477-88bc-643a8e0e041b')
+					->update($arr);
 			}
 
 			$arr = array('status' => 'Selesai');
 			$update = LabelStockOpname::where('uuid', '=', $request->label_stockopname_uuid)->update($arr);
-			
+
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
+
+	public function downloadTemplate($name, $tanggal, $waktu)
+	{
+		$filename = 'template-input-stockopname.xlsx';
+		return \Excel::download(new TemplateInputStockOpname($name, $tanggal, $waktu, 'Apotek'), $filename);
+	}
+
+	public function uploadTemplate(Request $request)
+	{
+		$request->validate([
+			'file' => 'required|file|mimes:xlsx,csv,xls',
+		]);
+
+		Excel::import(new UploadInputStockOpname, $request->file('file'));
+
+		return response()->json(['data' => 'berhasil']);
+	}
 }

@@ -28,7 +28,8 @@ class UploadMetodePembayaran implements ToCollection, WithHeadingRow
             $caraBayar->save();
 
             foreach ($rows as $row) {
-                if ($row['harga'] > 0) {
+                $harga = (int) $row['harga'];
+                if ($harga> 0) {
 
                     $item = new CaraBayarTindakanRawatJalan();
 
