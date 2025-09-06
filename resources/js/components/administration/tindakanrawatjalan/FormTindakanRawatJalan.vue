@@ -10,6 +10,7 @@
 				<div class="grid">
 					<div class="col-12">
 						<Inputed :ref="form.nama.name" :form="form.nama" v-on:keyup="eachword($event)"></Inputed>
+						<Inputed :ref="form.jenis.name" :form="form.jenis" v-on:keyup="eachword($event)"></Inputed>
 					</div>
 				</div>
 			</div>
@@ -67,6 +68,7 @@ export default {
 		setdataform: function (response) {
 			vm.form.uuid = response.data.data.uuid;
 			vm.form.nama.value = response.data.data.nama;
+			vm.form.jenis.value = response.data.data.jenis;
 			vm.loaderprocess();
 		},
 

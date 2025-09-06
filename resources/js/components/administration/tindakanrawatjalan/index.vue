@@ -44,6 +44,7 @@ export default {
 		},
 		column: [
 			{ value: 'nama', label: 'Nama Tindakan', type: 'text', search: true, close: false, button: false },
+			{ value: 'jenis', label: 'Jenis', type: 'text', search: true, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
 		],
 		module: { data: [], column: [], total: 0, ispaging: true },

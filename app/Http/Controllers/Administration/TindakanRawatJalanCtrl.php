@@ -71,6 +71,7 @@ class TindakanRawatJalanCtrl extends Controller
 			$item = new TindakanRawatJalan();
 			$item->uuid = $uuid;
 			$item->nama = $request->nama;
+			$item->jenis = $request->jenis;
 			$item->save();
 
 			DB::commit();
@@ -102,7 +103,8 @@ class TindakanRawatJalanCtrl extends Controller
 		PenggunaHelp::log('Mengupdate data tindakan rawat jalan dengan nama "'.$request->nama.'".');
 
 		$arr = array(
-				'nama' => $request->nama
+				'nama' => $request->nama,
+				'jenis' => $request->jenis
 		);
 
 		try{

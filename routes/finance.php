@@ -71,6 +71,10 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('update', [CaraBayarCtrl::class, 'update'])->name('finance-carabayar-update');
 		Route::post('remove', [CaraBayarCtrl::class, 'remove'])->name('finance-carabayar-remove');
 
+		Route::get('downloadtemplate/{metode}', [CaraBayarCtrl::class, 'downloadTemplateUploadPembayaran'])->name('finance-carabayar-downloadtemplate');
+		Route::get('download', [CaraBayarCtrl::class, 'exportMetodePembayaran'])->name('finance-carabayar-download');
+		Route::post('uploadmetodepembayaran', [CaraBayarCtrl::class, 'uploadMetodePembayaran'])->name('finance-carabayar-upload');
+
 		Route::prefix('child')->group(function () {
 			Route::post('data', [ChildCtrl::class, 'data'])->name('finance-child-data');
 			Route::post('add', [ChildCtrl::class, 'add'])->name('finance-child-add');
