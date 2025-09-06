@@ -71,6 +71,10 @@ export const formpermintaan = () => {
 			title: 'Pilih Tanggal', for_id: 'form_'+'stockopnamegudang', type: 'month', required: '', 
 			name: 'stockopnamegudang', value: '', disabled: false, show: true, kinds: ''
 		},
+		stockopnamebedah: { 
+			title: 'Pilih Tanggal', for_id: 'form_'+'stockopnamebedah', type: 'month', required: '', 
+			name: 'stockopnamebedah', value: '', disabled: false, show: true, kinds: ''
+		},
 		select: {
 			dokter: { 
 				key : 'dokter', for_id: 'form_'+'dokter', name: 'dokter', uuid:'', value: '', label: 'Silahkan Pilih', 
@@ -97,6 +101,12 @@ export const formpermintaan = () => {
 				key : 'obat3', for_id: 'form_'+'obat3', name: 'obat3', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'obat3', isrequired: true, html: 'Nama Obat', issearch: true, disabled: false,
+			},
+
+			obat4: { 
+				key : 'obat4', for_id: 'form_'+'obat4', name: 'obat4', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'obat4', isrequired: true, html: 'Nama Obat', issearch: true, disabled: false,
 			},
 
 			obat: { 
