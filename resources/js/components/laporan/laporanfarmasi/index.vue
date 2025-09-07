@@ -482,8 +482,8 @@ export default {
 				let tmp3 = 'empty';
 				console.log("kartustockgudang", vm.form.select.obat2.uuid);
 				if (vm.form.select.obat2.value != 'Silahkan Pilih' && vm.form.select.obat2.value != '') { tmp = vm.form.select.obat2.value; }
-				if (vm.form.kekartustockgudang.value  != '') { tmp2 = vm.form.select.kekartustockgudang.value; }
-				if (vm.form.darikartustockgudang.value  != '') { tmp3 = vm.form.select.darikartustockgudang.value; }
+				if (vm.form.kekartustockgudang.value  != '') { tmp2 = vm.form.kekartustockgudang.value; }
+				if (vm.form.darikartustockgudang.value  != '') { tmp3 = vm.form.darikartustockgudang.value; }
 				uri = '/laporan/excel/' + posisi + '/' + tmp2  + '/' + tmp3 + '/' + tmp;
 
 			}
@@ -492,8 +492,8 @@ export default {
 				let tmp2 = 'empty';
 				let tmp3 = 'empty';
 				if (vm.form.select.obat4.value != 'Silahkan Pilih' && vm.form.select.obat4.value != '') { tmp = vm.form.select.obat4.value; }
-				if (vm.form.kekartustockbedah.value  != '') { tmp2 = vm.form.select.kekartustockbedah.value; }
-				if (vm.form.darikartustockbedah.value  != '') { tmp3 = vm.form.select.darikartustockbedah.value; }
+				if (vm.form.kekartustockbedah.value  != '') { tmp2 = vm.form.kekartustockbedah.value; }
+				if (vm.form.darikartustockbedah.value  != '') { tmp3 = vm.form.darikartustockbedah.value; }
 				uri = '/laporan/excel/' + posisi + '/' + tmp2  + '/' + tmp3 + '/' + tmp;
 			}
 			else if (posisi == 'kartustockapotek') {
@@ -501,8 +501,8 @@ export default {
 				let tmp2 = 'empty';
 				let tmp3 = 'empty';
 				if (vm.form.select.obat3.value != 'Silahkan Pilih' && vm.form.select.obat3.value != '') { tmp = vm.form.select.obat3.value; }
-				if (vm.form.kekartustockapotek.value  != '') { tmp2 = vm.form.select.kekartustockapotek.value; }
-				if (vm.form.darikartustockapotek.value  != '') { tmp3 = vm.form.select.darikartustockapotek.value; }
+				if (vm.form.kekartustockapotek.value  != '') { tmp2 = vm.form.kekartustockapotek.value; }
+				if (vm.form.darikartustockapotek.value  != '') { tmp3 = vm.form.darikartustockapotek.value; }
 				uri = '/laporan/excel/' + posisi + '/' + tmp2  + '/' + tmp3 + '/' + tmp;
 			}
 			window.open(uri);
