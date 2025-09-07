@@ -160,7 +160,7 @@
 					}
 					echo $msg;
 				}
-			?> dengan total biaya perawatan sebesar Rp. {{ number_format($grandtotal) }},- <i><b>({{ terbilang($grandtotal) }} Rupiah)</b></i> Rincian terlampir</span></td>
+			?> dengan total biaya perawatan sebesar Rp. {{ number_format($grandtotalCover) }},- <i><b>({{ terbilang($grandtotalCover) }} Rupiah)</b></i> Rincian terlampir</span></td>
 		</tr>
 	</table>
 	

@@ -286,14 +286,16 @@ class ClaimGabunganCtrl extends Controller
 									->first();
 
 		$grandtotal = 0;
+		$grandtotalCover = 0;
 		foreach ($data as $row) {
 			$layananpasien = LayananPasien::where('registrasi_uuid', '=', $row->uuid)->get();
 			foreach ($layananpasien as $value) {
 				$grandtotal += $value->total;
 			}
+				$grandtotalCover += $row->cover_asuransi;
 		}
 		
-		$pdf->loadView('print.printclaimgabungan', compact('grandtotal', 'registrasi'))->setPaper('a4', 'potrait');
+		$pdf->loadView('print.printclaimgabungan', compact('grandtotal', 'grandtotalCover',  'registrasi'))->setPaper('a4', 'potrait');
 
 		
     return $pdf->stream();
@@ -346,18 +348,20 @@ class ClaimGabunganCtrl extends Controller
 									->first();
 
 		$grandtotal = 0;
+		$grandtotalCover = 0;
 		foreach ($data as $row) {
 			$layananpasien = LayananPasien::where('registrasi_uuid', '=', $row->uuid)->get();
 			foreach ($layananpasien as $value) {
 				$grandtotal += $value->total;
 			}
+				$grandtotalCover += $row->cover_asuransi;
 		}
 
 		if ($posisi == 'pln') {
-			$pdf->loadView('print.printpengantargabunganspesial', compact('grandtotal', 'registrasi'))->setPaper('a4', 'potrait');
+			$pdf->loadView('print.printpengantargabunganspesial', compact('grandtotal','grandtotalCover', 'registrasi'))->setPaper('a4', 'potrait');
 		}
 		else {
-			$pdf->loadView('print.printpengantargabungan', compact('grandtotal', 'registrasi'))->setPaper('a4', 'potrait');
+			$pdf->loadView('print.printpengantargabungan', compact('grandtotal','grandtotalCover',  'registrasi'))->setPaper('a4', 'potrait');
 		}
 		
     return $pdf->stream();
