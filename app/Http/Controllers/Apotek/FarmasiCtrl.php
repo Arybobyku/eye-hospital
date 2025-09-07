@@ -13,6 +13,9 @@ use App\Models\ResepRacikan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
+use App\Models\AntrianKasir;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
+
 
 class FarmasiCtrl extends Controller
 {
@@ -42,58 +45,58 @@ class FarmasiCtrl extends Controller
 
         if ($request->search != '') {
             $data = Registrasi::where('delete_soft', '=', 1)
-                                ->where($column, 'ilike', '%'.$search.'%')
-                                ->orderBy('id', 'desc')
-                                ->where('ada_obat', '=', 'Ya')
-                                ->where('jenis', '=', 'Rawat Jalan')
-                                // ->whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where(function ($q) {
-                                    $q->where('status', 'Kunjungan');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->skip($skip)->take($this->take)
-                                ->get();
+                ->where($column, 'ilike', '%' . $search . '%')
+                ->orderBy('id', 'desc')
+                ->where('ada_obat', '=', 'Ya')
+                ->where('jenis', '=', 'Rawat Jalan')
+                // ->whereDate('tanggal', '=', date('Y-m-d'))
+                ->where(function ($q) {
+                    $q->where('status', 'Kunjungan');
+                })
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->skip($skip)->take($this->take)
+                ->get();
             $total = Registrasi::where('delete_soft', '=', 1)
-                                ->where('ada_obat', '=', 'Ya')
-                                // ->whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('jenis', '=', 'Rawat Jalan')->where('approvement_obat', 'no')
-                                ->where(function ($q) {
-                                    $q->where('status', 'Kunjungan');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->where($column, 'ilike', '%'.$search.'%')
-                                ->orderBy('id', 'desc')->count();
+                ->where('ada_obat', '=', 'Ya')
+                // ->whereDate('tanggal', '=', date('Y-m-d'))
+                ->where('jenis', '=', 'Rawat Jalan')->where('approvement_obat', 'no')
+                ->where(function ($q) {
+                    $q->where('status', 'Kunjungan');
+                })
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->where($column, 'ilike', '%' . $search . '%')
+                ->orderBy('id', 'desc')->count();
         } else {
             $data = Registrasi::where('delete_soft', '=', 1)
-                                    ->orderBy('id', 'desc')
-                                    ->where('ada_obat', '=', 'Ya')
-                                    // ->whereDate('tanggal', '=', date('Y-m-d'))
-                                    ->where('jenis', '=', 'Rawat Jalan')->where('approvement_obat', 'no')
+                ->orderBy('id', 'desc')
+                ->where('ada_obat', '=', 'Ya')
+                // ->whereDate('tanggal', '=', date('Y-m-d'))
+                ->where('jenis', '=', 'Rawat Jalan')->where('approvement_obat', 'no')
 
-                                    ->where(function ($q) {
-                                        $q->where('status', 'Kunjungan');
-                                    })
-                                    ->where(function ($q) {
-                                        $q->where('status_dokter', '=', 'Sudah Diperiksa');
-                                    })
-                                    ->skip($skip)->take($this->take)
-                                    ->get();
+                ->where(function ($q) {
+                    $q->where('status', 'Kunjungan');
+                })
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->skip($skip)->take($this->take)
+                ->get();
 
             $total = Registrasi::where('delete_soft', '=', 1)
-                                ->where('ada_obat', '=', 'Ya')
-                                // ->whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('jenis', '=', 'Rawat Jalan')
-                                ->where(function ($q) {
-                                    $q->where('status', 'Kunjungan');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->orderBy('tanggal', 'desc')->count();
+                ->where('ada_obat', '=', 'Ya')
+                // ->whereDate('tanggal', '=', date('Y-m-d'))
+                ->where('jenis', '=', 'Rawat Jalan')
+                ->where(function ($q) {
+                    $q->where('status', 'Kunjungan');
+                })
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->orderBy('tanggal', 'desc')->count();
         }
 
         return response()->json(['data' => $data, 'total' => $total]);
@@ -116,57 +119,57 @@ class FarmasiCtrl extends Controller
 
         if ($request->search != '') {
             $data = Registrasi::where('delete_soft', '=', 1)
-                                ->where($column, 'ilike', '%'.$search.'%')
-                                ->orderBy('tanggal', 'desc')
-                                ->where('ada_obat', '=', 'Ya')
-                                // ->whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('jenis', '=', 'Rawat Jalan')
-                                 ->where(function ($q) {
-                                     $q->where('status', 'Selesai');
-                                 })
-                                ->where(function ($q) {
-                                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->skip($skip)->take($this->take)
-                                ->get();
+                ->where($column, 'ilike', '%' . $search . '%')
+                ->orderBy('tanggal', 'desc')
+                ->where('ada_obat', '=', 'Ya')
+                // ->whereDate('tanggal', '=', date('Y-m-d'))
+                ->where('jenis', '=', 'Rawat Jalan')
+                ->where(function ($q) {
+                    $q->where('status', 'Selesai');
+                })
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->skip($skip)->take($this->take)
+                ->get();
             $total = Registrasi::where('delete_soft', '=', 1)
-                                ->where('ada_obat', '=', 'Ya')
-                                // ->whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('jenis', '=', 'Rawat Jalan')
-                                 ->where(function ($q) {
-                                     $q->where('status', 'Selesai');
-                                 })
-                                ->where(function ($q) {
-                                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->where($column, 'ilike', '%'.$search.'%')
-                                ->orderBy('tanggal', 'desc')->count();
+                ->where('ada_obat', '=', 'Ya')
+                // ->whereDate('tanggal', '=', date('Y-m-d'))
+                ->where('jenis', '=', 'Rawat Jalan')
+                ->where(function ($q) {
+                    $q->where('status', 'Selesai');
+                })
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->where($column, 'ilike', '%' . $search . '%')
+                ->orderBy('tanggal', 'desc')->count();
         } else {
             $data = Registrasi::where('delete_soft', '=', 1)
-                                    ->orderBy('tanggal', 'desc')
-                                    ->where('ada_obat', '=', 'Ya')
-                                    // ->whereDate('tanggal', '=', date('Y-m-d'))
-                                    ->where('jenis', '=', 'Rawat Jalan')
-                                     ->where(function ($q) {
-                                         $q->where('status', 'Selesai');
-                                     })
-                                    ->where(function ($q) {
-                                        $q->where('status_dokter', '=', 'Sudah Diperiksa');
-                                    })
-                                    ->skip($skip)->take($this->take)
-                                    ->get();
+                ->orderBy('tanggal', 'desc')
+                ->where('ada_obat', '=', 'Ya')
+                // ->whereDate('tanggal', '=', date('Y-m-d'))
+                ->where('jenis', '=', 'Rawat Jalan')
+                ->where(function ($q) {
+                    $q->where('status', 'Selesai');
+                })
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->skip($skip)->take($this->take)
+                ->get();
 
             $total = Registrasi::where('delete_soft', '=', 1)
-                                ->where('ada_obat', '=', 'Ya')
-                                // ->whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('jenis', '=', 'Rawat Jalan')
-                                ->where(function ($q) {
-                                    $q->where('status', 'Selesai');
-                                })
-                                ->where(function ($q) {
-                                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
-                                })
-                                ->orderBy('tanggal', 'desc')->count();
+                ->where('ada_obat', '=', 'Ya')
+                // ->whereDate('tanggal', '=', date('Y-m-d'))
+                ->where('jenis', '=', 'Rawat Jalan')
+                ->where(function ($q) {
+                    $q->where('status', 'Selesai');
+                })
+                ->where(function ($q) {
+                    $q->where('status_dokter', '=', 'Sudah Diperiksa');
+                })
+                ->orderBy('tanggal', 'desc')->count();
         }
 
         return response()->json(['data' => $data, 'total' => $total]);
@@ -180,7 +183,7 @@ class FarmasiCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Menerima tagihan atas nama pasien '.$data->nama_pasien.' pada tanggal '.date('Y-m-d'));
+            \PenggunaHelp::log('Menerima tagihan atas nama pasien ' . $data->nama_pasien . ' pada tanggal ' . date('Y-m-d'));
         }
 
         $arr = [
@@ -209,26 +212,26 @@ class FarmasiCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "'.$data->nama_pasien);
+            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "' . $data->nama_pasien);
         }
 
         $layanan = LayananPasien::where('registrasi_uuid', '=', $request->uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obat = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 0)->where('is_bedah', 0)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obatbedah = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 0)->where('is_bedah', 1)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obattambahan = Resep::where('registrasi_uuid', '=', $request->uuid)->where('is_tambahan', 1)->where('is_bedah', 1)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         $obatracikanbedah = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
-                        ->orderBy('id', 'desc')->get();
+            ->orderBy('id', 'desc')->get();
 
         return response()->json(['data' => $data, 'layanan' => $layanan, 'obat' => $obat, 'obatracikan' => $obatracikan, 'obatbedah' => $obatbedah, 'obatracikanbedah' => $obatracikanbedah, 'obattambahan' => $obattambahan]);
     }
@@ -528,14 +531,58 @@ class FarmasiCtrl extends Controller
 
     public function approvement(Request $request)
     {
+        // TODO: GENERATE NEXT ANTRIAN KASIR
         if ($this->error != 'next') {
             return response()->json(['data' => $this->error]);
         }
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "'.$data->nama_pasien);
+            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "' . $data->nama_pasien);
         }
+
+
+        // UPDATE TASK ID 7
+        $epochTime = time() * 1000;
+        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($data->nomor, 7, $epochTime, $data->uuid);
+        // START Antrian Kasir
+        // if ($data->no_antrian_kasir == null) {
+        //     $uuidKasir = '';
+        //     $loop = false;
+        //     do {
+        //         $uuidKasir = Uuid::uuid4();
+        //         $check = AntrianKasir::where('uuid', '=', $uuidKasir)->first();
+        //         if (!$check) {
+        //             $loop = true;
+        //         }
+        //     } while ($loop == false);
+
+        //     $latestAntrianKasir = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+        //     $latestNumber = $latestAntrianKasir->number ?? 0;
+        //     $latestNumber = $latestNumber + 1;
+        //     $kodeKasir = 'K-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+        //     $antrianKasir = new AntrianKasir();
+        //     $antrianKasir->uuid = $uuidKasir;
+        //     $antrianKasir->kode = 'K';
+        //     $antrianKasir->number = $latestNumber;
+        //     $antrianKasir->jenis = $data->jenis;
+        //     $antrianKasir->tanggal = date('Y-m-d');
+
+        //     // BPJS
+        //     $antrianKasir->kode_poli =  $data->kode_poli_bpjs;
+        //     $antrianKasir->poli =  $data->nama_poli_bpjs;
+        //     $antrianKasir->uuid_pasien =  $data->pasien_uuid;
+        //     $antrianKasir->kode_dokter =  $data->kode_dokter_bpjs;
+        //     $antrianKasir->uuid_registrasi =  $data->uuid;
+
+        //     $antrianKasir->save();
+
+        //     Registrasi::where('uuid', $request->uuid)
+        //         ->update(['no_antrian_kasir' => $kodeKasir]);
+        // }
+        // End Antrian Kasir
 
         $arr = ['approvement_obat' => 'yes'];
         $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
@@ -547,6 +594,14 @@ class FarmasiCtrl extends Controller
     {
         date_default_timezone_set('Asia/Jakarta');
 
+
+        $item = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
+            ->where('number', '=', $request->number)->first();
+        $kodeBooking = $item->nomor;
+        // dd($kodeBooking)
+        $taskId = 6;
+        
+
         $arr = ['status_antrian_farmasi' => '-', 'last_position' => 'Farmasi'];
         $cek = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->update($arr);
 
@@ -554,19 +609,33 @@ class FarmasiCtrl extends Controller
         $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 
         $get = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('number', '=', $request->number)
-                ->where('pemanggil', '=', '1')
-                                ->first();
+            ->where('number', '=', $request->number)
+            ->where('pemanggil', '=', '1')
+            ->first();
+        // echo ("kode book" . $kodeBooking);
 
-        if ($get) {
-            $str = 'Farmasi 1='.$request->number.'=kunjungan';
-            $this->jeda(1, $str);
 
-            return response()->json(['data' => 'success']);
-        }
+
+        // UPDATE TASK ID 6
+        $registrasi = Registrasi::where('uuid', '=', $item->uuid_registrasi)->first();
+
+        // dd($registrasi);
+        $epochTime = time() * 1000;
+        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking , 5);
+        // dd($response);
+
+        // if ($get) {
+        //     $str = 'Farmasi 1=' . $request->number . '=kunjungan';
+        //     $this->jeda(1, $str);
+
+        //     $response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking, $taskId);
+        //     // return response()->json(['data' => 'success']);
+        //     return response()->json(['data' => 'success', 'bpjs' => $response]);
+        // }
 
         $get = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
-                                ->where('number', '=', $request->number)->first();
+            ->where('number', '=', $request->number)->first();
+
         if ($get) {
             if ($get->pemanggil != '-') {
                 return response()->json(['data' => 'cannot']);
@@ -574,8 +643,8 @@ class FarmasiCtrl extends Controller
         }
 
         $get = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))
-                ->where('pemanggil', '=', '1')
-                                ->first();
+            ->where('pemanggil', '=', '1')
+            ->first();
 
         if ($get) {
             $arr = ['pemanggil' => '-'];
@@ -585,10 +654,11 @@ class FarmasiCtrl extends Controller
         $arr = ['pemanggil' => '1'];
         $panggil = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))->where('number', '=', $request->number)->update($arr);
 
-        $str = 'Farmasi 1='.$request->number.'=kunjungan';
+        $str = 'Farmasi 1=' . $request->number . '=kunjungan';
         $this->jeda(1, $str);
+        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking, $taskId);
 
-        return response()->json(['data' => 'success']);
+        return response()->json(['data' => 'success', 'bpjs' => $response]);
     }
 
     private function jeda($delay, $str)
@@ -605,7 +675,7 @@ class FarmasiCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "'.$data->nama_pasien);
+            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "' . $data->nama_pasien);
         }
 
         $arr = ['approve_panjar' => '1'];
@@ -631,32 +701,32 @@ class FarmasiCtrl extends Controller
 
         if ($request->search != '') {
             $data = Registrasi::where('delete_soft', '=', 1)
-                                ->where($column, 'ilike', '%'.$search.'%')
-                                ->orderBy('id', 'desc')
-                                ->where('panjar', '!=', '0')
-                                ->where('status', '=', 'Pending')
-                                ->where('status_dokter', '=', 'Sudah Diperiksa')
-                                ->skip($skip)->take($this->take)
-                                ->get();
+                ->where($column, 'ilike', '%' . $search . '%')
+                ->orderBy('id', 'desc')
+                ->where('panjar', '!=', '0')
+                ->where('status', '=', 'Pending')
+                ->where('status_dokter', '=', 'Sudah Diperiksa')
+                ->skip($skip)->take($this->take)
+                ->get();
             $total = Registrasi::where('delete_soft', '=', 1)
-                                ->where('status', '=', 'Pending')
-                                ->where('panjar', '!=', '0')
-                                ->where('status_dokter', '=', 'Sudah Diperiksa')
-                                ->where($column, 'ilike', '%'.$search.'%')
-                                ->orderBy('id', 'desc')->count();
+                ->where('status', '=', 'Pending')
+                ->where('panjar', '!=', '0')
+                ->where('status_dokter', '=', 'Sudah Diperiksa')
+                ->where($column, 'ilike', '%' . $search . '%')
+                ->orderBy('id', 'desc')->count();
         } else {
             $data = Registrasi::where('delete_soft', '=', 1)
-                                    ->orderBy('id', 'desc')
-                                    ->where('status', '=', 'Pending')
-                                    ->where('panjar', '!=', '0')
-                                    ->where('status_dokter', '=', 'Sudah Diperiksa')
-                                    ->skip($skip)->take($this->take)
-                                    ->get();
+                ->orderBy('id', 'desc')
+                ->where('status', '=', 'Pending')
+                ->where('panjar', '!=', '0')
+                ->where('status_dokter', '=', 'Sudah Diperiksa')
+                ->skip($skip)->take($this->take)
+                ->get();
 
             $total = Registrasi::where('delete_soft', '=', 1)
-                                ->where('status', '=', 'Pending')
-                                ->where('panjar', '!=', '0')
-                                ->where('status_dokter', '=', 'Sudah Diperiksa')->where('status', 'Kunjungan')->orderBy('id', 'desc')->count();
+                ->where('status', '=', 'Pending')
+                ->where('panjar', '!=', '0')
+                ->where('status_dokter', '=', 'Sudah Diperiksa')->where('status', 'Kunjungan')->orderBy('id', 'desc')->count();
         }
 
         return response()->json(['data' => $data, 'total' => $total]);

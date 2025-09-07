@@ -17,6 +17,7 @@ use App\Models\LayananPasien;
 use App\Models\ResepRacikanBebas;
 use App\Models\PasienBebas;
 use App\Jobs\SendAllJob;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
 use Carbon\Carbon;
 
 class BebasCtrl extends Controller
@@ -156,6 +157,7 @@ class BebasCtrl extends Controller
 								->where('number', '=', $request->number)
                 ->where('pemanggil_kasir', '=', '1')
 								->first();
+		
 
 		if ($get) { 
 			$str = 'Kasir 1'.'='.$request->number.'=bebask';
@@ -165,6 +167,8 @@ class BebasCtrl extends Controller
 
 		$get = PasienBebas::whereDate('tanggal', '=', date('Y-m-d'))
 								->where('number', '=', $request->number)->first();
+		$kodeBooking = $get->nomor;
+        $taskId = 6;
 		if ($get) {
 			if ($get->pemanggil_kasir != '-') { return response()->json(['data' => 'cannot']); }
 		}
@@ -183,8 +187,11 @@ class BebasCtrl extends Controller
 
 		$str = 'Kasir 1'.'='.$request->number.'=bebask';
 		$this->jeda(1, $str);
-		
-		return response()->json(['data' => 'success']);
+		$response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking, $taskId);
+	
+		// return response()->json(['data' => 'success']);
+		return response()->json(['data' => 'success', 'bpjs' => $response]);
+
 	}
 
 	private function jeda($delay, $str) {
@@ -217,6 +224,8 @@ class BebasCtrl extends Controller
 
 			$arr = array('pembayaran' => 'Sudah Bayar', 'tanggal_bayar' => date('Y-m-d'), 'metode_pembayaran' => $request->metode_pembayaran);
 			$update = PasienBebas::where('uuid', '=', $request->pasienbebas_uuid)->update($arr);
+			$item = PasienBebas::where('uuid', '=', $request->pasienbebas_uuid)->first();
+
 
 			// Pengurangan qty obat
 			$data = ResepBebas::where('pasienbebas_uuid', '=', $request->pasienbebas_uuid)->get();
@@ -248,10 +257,19 @@ class BebasCtrl extends Controller
 				$arr = array('posisi' => 'Bayar');
 				$update = LayananPasien::where('pasien_uuid', '=', $request->pasienbebas_uuid)->update($arr);
 			}
-
+			$response = '';
+			if ($item->is_bpjs == 1){
+				$kodeBooking = $item->nomor;
+				$taskId = 7;
+				$response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking, $taskId);
+			}
 			DB::commit();
 
-			return response()->json(['data' => 'berhasil']);
+			// return response()->json(['data' => 'berhasil']);
+					return response()->json([
+		    'status' => 'success',
+		    'bpjs_response' => $response // Kirim response dari BPJS ke frontend buat testing
+		]);
 		}
 		catch(Exception $e){ 
 			DB::rollback(); 

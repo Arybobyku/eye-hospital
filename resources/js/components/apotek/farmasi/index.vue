@@ -70,7 +70,8 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
-			{ value: 'no_pendaftaran', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_farmasi', label: 'No Farmasi', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_kasir', label: 'No Kasir', type: 'text', search: true, close: false, button: false },
 			{ value: 'tanggal', label: 'Tanggal', type: 'date', search: true, close: false, button: false },
 			{ value: 'no_kwitansi', label: 'No Kwitansi', type: 'text', search: true, close: false, button: false },
 			{ value: 'carabayar_nama', label: 'Metode Pembayaran', type: 'text', search: true, close: false, button: false },
@@ -82,7 +83,8 @@ export default {
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
 		],
 		columnbayar: [
-			{ value: 'no_pendaftaran', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_farmasi', label: 'No Farmasi', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_kasir', label: 'No Kasir', type: 'text', search: true, close: false, button: false },
 			{ value: 'tanggal', label: 'Tanggal', type: 'date', search: true, close: false, button: false },
 			{ value: 'no_kwitansi', label: 'No Kwitansi', type: 'text', search: true, close: false, button: false },
 			{ value: 'carabayar_nama', label: 'Metode Pembayaran', type: 'text', search: true, close: false, button: false },
@@ -96,6 +98,7 @@ export default {
 		columnbeli: [
 			{ value: 'tanggal', label: 'Tanggal', type: 'date', search: true, close: false, button: false },
 			{ value: 'no_invoice', label: 'No Invoice', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian', label: 'No Antrian', type: 'text', search: true, close: false, button: false },
 			{ value: 'kode', label: 'Kode Pendaftaran', type: 'text', search: true, close: false, button: false },
 			{ value: 'jenis', label: 'Jenis Obat', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pembeli', type: 'text', search: true, close: false, button: false },
@@ -190,6 +193,7 @@ export default {
 		btnhtmlbeli:function(_item, _index) {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detailbeli', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'bell', color: 'btn-info', posisi: 'panggil_bebas', tooltip: 'Panggil Pasien', item: _item, index: _index, show: true },
 				{ icon: 'bell', color: 'btn-info', posisi: 'batal', tooltip: 'Batalkan Pembelian', item: _item, index: _index, show: true },
 				{ icon: 'check-circle', color: 'btn-warning', posisi: 'selesaibeli', tooltip: 'Selesai', item: _item, index: _index, show: true }
 			]
@@ -209,11 +213,18 @@ export default {
 			if (data.approvement_obat == 'no') { return 'Belum diapprove'; }
 			return 'Sudah diapprove';
 		},
-
+		printAntrian:function(noAntrian, jenis){
+			if(noAntrian == null){
+				return "-"
+			}
+			return '<a href="/antrian/cetak-antrian-all/'+noAntrian+'/'+jenis+'" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">'+noAntrian+'</a>'
+		},
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_kasir') { _tmp = { value: vm.printAntrian(data.no_antrian_kasir, data.carabayar_nama), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_farmasi') { _tmp = { value: vm.printAntrian(data.no_antrian_farmasi, data.carabayar_nama), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
@@ -226,6 +237,9 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_kasir') { _tmp = { value: vm.printAntrian(data.no_antrian_kasir, data.carabayar_nama), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_farmasi') { _tmp = { value: vm.printAntrian(data.no_antrian_farmasi, data.carabayar_nama), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_farmasi') { _tmp = { value: data.no_antrian_farmasi ?? "-", ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
@@ -348,7 +362,22 @@ export default {
 				vm.attach.url = vm.attach.link.call;
 				console.log(data)
 				vm.attach.data = new FormData();
-				let number = data.no_pendaftaran.split("-");
+				let number = data.no_antrian_farmasi.split("-");
+				number = parseInt(number[1]);
+				vm.attach.data.append('number', number);
+				vm.attach.data.append('ruang_poliklinik', data.ruang_poliklinik);
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.data.append('pengguna_uuid', data.pengguna_uuid);
+				//if (data.ruang_poliklinik != 0) {
+					vm.dialog('Yakin ingin memanggil nomor antrian pasien ini.', 'Ya, panggil', 'call');
+				//}
+			}
+			else if (posisi == 'panggil_bebas') {
+				vm.position = 'call';
+				vm.attach.url = vm.attach.link.call;
+				console.log(data)
+				vm.attach.data = new FormData();
+				let number = data.no_antrian.split("-");
 				number = parseInt(number[1]);
 				vm.attach.data.append('number', number);
 				vm.attach.data.append('ruang_poliklinik', data.ruang_poliklinik);
@@ -363,7 +392,7 @@ export default {
 				vm.attach.url = vm.attach.link.approvement;
 				console.log(data)
 				vm.attach.data = new FormData();
-				let number = data.no_pendaftaran.split("-");
+				let number = data.no_antrian_farmasi.split("-");
 				number = parseInt(number[1]);
 				vm.attach.data.append('uuid', data.uuid);
 				//if (data.ruang_poliklinik != 0) {
@@ -554,7 +583,7 @@ export default {
 					vm.$refs.Datatable.backpage(); 
 				} 
 			}
-			else if (vm.position == 'call') { vm.$refs.Datatable.skeleton(); }
+			else if (vm.position == 'call') { vm.$refs.Datatable?.skeleton() ??  vm.$refs.DatatableBeli?.skeleton(); }
 			else if (vm.position == 'adddata') { vm.loadingModal('formpembeli'); }
 			else if (vm.position == 'approvement') { vm.$refs.Datatable.skeleton(); }
 			else if (vm.position == 'updatedata') { vm.loadingModal('formdetail'); }
@@ -737,7 +766,7 @@ export default {
 			else if (posisi == 'formpembeli') { vm.loadingModal('formpembeli'); }
 			else if (posisi == 'formobat') { vm.loadingModal('formobat'); }
 			else if (posisi == 'terimadata') { vm.$refs.Datatable.skeleton(); }
-			else if (posisi == 'call') { vm.$refs.Datatable.skeleton(); }
+			else if (posisi == 'call') { vm.$refs.Datatable?.skeleton() ??  vm.$refs.DatatableBeli?.skeleton();; }
 			else if (posisi == 'approvement') { vm.$refs.Datatable?.skeleton() ?? vm.$refs.DatatableBayar?.skeleton(); }
 			else if (posisi == 'batalbeli') { vm.$refs.DatatableBeli.skeleton(); }
 			else if (posisi == 'selesaibeli') { vm.$refs.DatatableBeli.skeleton(); }

@@ -42,7 +42,9 @@ export const parseunit = (form, obat, obatracikan, tindakan) => {
 export const parsepembeli = (form, obat) => {
 	let data = new FormData();
 	data.append('nama', form.nama.value);
-	data.append('jenis', form.jenis.value);
+	data.append('no_antrian', form.no_antrian.value);
+	data.append('jenis', form.select.jenisracikan.value);
+
 	for(var pair of data.entries()) {
 		console.log(pair[0]+ ', '+ pair[1]); 
  	}

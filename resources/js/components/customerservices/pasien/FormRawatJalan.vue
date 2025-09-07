@@ -1,115 +1,157 @@
 <template>
-<div class="grid" v-if="form" ref="rootdiv" style="position: relative;">
-	<div class="col-4">
-		<Inputed :ref="form.nopendaftaran.name" :form="form.nopendaftaran" v-on:keyup="hurufbesar($event)"></Inputed>
-		<Selected v-on:click="selectbox($event, form.select.caramasuk.name, form.select.caramasuk.statics)" 
-			:ref="form.select.caramasuk.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.caramasuk"></Selected>
+	<div class="grid" v-if="form" ref="rootdiv" style="position: relative;">
+		<div class="col-4">
+			<Inputed :ref="form.nopendaftaran.name" :form="form.nopendaftaran" v-on:keyup="hurufbesar($event)">
+			</Inputed>
+			<Selected v-on:click="selectbox($event, form.select.caramasuk.name, form.select.caramasuk.statics)"
+				:ref="form.select.caramasuk.name" @selecteditem="selecteditem" @selectclear="selectclear"
+				:selection="form.select.caramasuk"></Selected>
 
-		<Inputed :ref="form.rujukan.name" :form="form.rujukan"></Inputed>
+			<Inputed :ref="form.rujukan.name" :form="form.rujukan"></Inputed>
 
-		<Selected v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)" 
-			:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)"></Selected>
+			<Selected v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)"
+				:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
+				:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)">
+			</Selected>
+			<Inputed :ref="form.no_bpjs_kes.name" :form="form.no_bpjs_kes" v-if="form.no_bpjs_kes.show"></Inputed>
+			<Inputed :ref="form.nomorreferensi.name" :form="form.nomorreferensi" v-if="form.nomorreferensi.show">
+			</Inputed>
 
-		<Selected v-on:click="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)" 
-			:ref="form.select.asuransi.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.asuransi" v-on:keyup="selectfilter($event, form.select.asuransi.name)"></Selected>
+			<select style="width: 200px;" v-model="selectedPoli" @change="fetchJadwalDokter" v-if="showSelectPoli">
+				<option v-for="poli in poliBpjs" :key="poli.kdpoli" :value="poli.kdpoli">
+					{{ poli.nmpoli }} - {{ poli.nmsubspesialis }}
+				</option>
+			</select>
 
-		<Selected v-on:click="selectbox($event, form.select.dokter.name, form.select.dokter.statics)" 
-			:ref="form.select.dokter.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.dokter" v-on:keyup="selectfilter($event, form.select.dokter.name)"></Selected>
+
+			
+
+			<select v-model="selectedDokter" @change="updateJadwalDokter" v-if="showSelectDokter">
+				<option v-for="dokter in filteredDokter" :key="dokter.kodedokter" :value="dokter.kodedokter">
+					{{ dokter.namadokter }}
+				</option>
+			</select>
+
+			<p v-if="selectedDokter">
+				Jadwal Dokter: {{ dokterTerpilih ? dokterTerpilih.jadwal : 'Tidak ada jadwal tersedia' }}
+				({{ dokterTerpilih ? dokterTerpilih.kodesubspesialis : '-' }})
+			</p>
+			<p v-else>
+				Tidak ada jadwal tersedia.
+			</p>
+
+			<input type="hidden" :value="dokterTerpilih ? dokterTerpilih.jadwal : ''">
+			<input type="hidden" :value="dokterTerpilih ? dokterTerpilih.namadokter : ''">
+			<input type="hidden" v-model="selectedNmpoli">
+
+
+			<Selected v-on:click="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)"
+				:ref="form.select.asuransi.name" @selecteditem="selecteditem" @selectclear="selectclear"
+				:selection="form.select.asuransi" v-on:keyup="selectfilter($event, form.select.asuransi.name)">
+			</Selected>
+
+			<Selected v-on:click="selectbox($event, form.select.dokter.name, form.select.dokter.statics)"
+				:ref="form.select.dokter.name" @selecteditem="selecteditem" @selectclear="selectclear"
+				:selection="form.select.dokter" v-on:keyup="selectfilter($event, form.select.dokter.name)"
+				v-if="form.select.dokter.show"></Selected>
+
 
 		<Selected v-on:click="selectbox($event, form.select.dokterumum.name, form.select.dokterumum.statics)" 
 			:ref="form.select.dokterumum.name" @selecteditem="selecteditem" @selectclear="selectclear"
 			:selection="form.select.dokterumum" v-on:keyup="selectfilter($event, form.select.dokterumum.name)"></Selected>
-	</div>
-	<div class="col-4 form-ml" ref="camerainternal">
-		<div class="web-camera-container" v-if="isphotos">
-			<div class="camera-box" style="opacity: 1;">
-				<canvas id="photoTakenEdited" ref="canvasedited" :width="width_number" :height="height_number"></canvas>
-			</div>
 		</div>
-		<div class="web-camera-container" v-else>
-  		<!-- <div class="camera-button">
+		<div class="col-4 form-ml" ref="camerainternal">
+			<div class="web-camera-container" v-if="isphotos">
+				<div class="camera-box" style="opacity: 1;">
+					<canvas id="photoTakenEdited" ref="canvasedited" :width="width_number"
+						:height="height_number"></canvas>
+				</div>
+			</div>
+			<div class="web-camera-container" v-else>
+				<!-- <div class="camera-button">
       	<button type="button" class="button is-rounded" :class="{ 'is-primary' : !isCameraOpen, 'is-danger' : isCameraOpen}" @click="toggleCamera">
         	<span v-if="!isCameraOpen">Open Camera</span>
         	<span v-else>Close Camera</span>
     		</button>
   		</div> -->
-			<div class="camera-pra" :style="camera_height" v-if="!isCameraOpen">
-				<!-- <div class="lds-ellipsis" v-show="isLoading"><div></div><div></div><div></div><div></div></div> -->
-			</div>
-			<div v-if="isCameraOpen" v-show="!isLoading" class="camera-box" :class="{ 'flash' : isShotPhoto }">
-    		<div class="camera-shutter" :class="{'flash' : isShotPhoto}"></div>
-    		<video v-show="!isPhotoTaken" ref="camera" :width="width_number" :height="height_number" autoplay></video>
-    		<canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" :width="width_number" :height="height_number"></canvas>
-  		</div>
-  
-			<!--
+				<div class="camera-pra" :style="camera_height" v-if="!isCameraOpen">
+					<!-- <div class="lds-ellipsis" v-show="isLoading"><div></div><div></div><div></div><div></div></div> -->
+				</div>
+				<div v-if="isCameraOpen" v-show="!isLoading" class="camera-box" :class="{ 'flash' : isShotPhoto }">
+					<div class="camera-shutter" :class="{'flash' : isShotPhoto}"></div>
+					<video v-show="!isPhotoTaken" ref="camera" :width="width_number" :height="height_number"
+						autoplay></video>
+					<canvas v-show="isPhotoTaken" id="photoTaken" ref="canvas" :width="width_number"
+						:height="height_number"></canvas>
+				</div>
+
+				<!--
   		<div v-if="isPhotoTaken && isCameraOpen" class="camera-download">
     		<a id="downloadPhoto" download="my-photo.jpg" class="button" role="button" @click="downloadImage">
       		Download
     		</a>
   		</div> -->
 
-			<div class="bagian-bawah">
-				<table>
-					<tr>
-						<td>
-							<button class="openphoto" v-on:click="toggleCamera()" v-if="!isCameraOpen">Buka Kamera</button>
-							<button class="openphoto" v-on:click="toggleCamera()" v-else>Tutup Kamera</button>
-						</td>
-						<td align="center">
-							<button class="takephoto" v-on:click="takePhoto()">Ambil Photo</button>
-						</td>
-						<td align="right">
-							<button class="reloadphoto" v-on:click="reloadPhoto()">Ambil Ulang</button>
-						</td>
-					</tr>
-				</table>
+				<div class="bagian-bawah">
+					<table>
+						<tr>
+							<td>
+								<button class="openphoto" v-on:click="toggleCamera()" v-if="!isCameraOpen">Buka
+									Kamera</button>
+								<button class="openphoto" v-on:click="toggleCamera()" v-else>Tutup Kamera</button>
+							</td>
+							<td align="center">
+								<button class="takephoto" v-on:click="takePhoto()">Ambil Photo</button>
+							</td>
+							<td align="right">
+								<button class="reloadphoto" v-on:click="reloadPhoto()">Ambil Ulang</button>
+							</td>
+						</tr>
+					</table>
+				</div>
 			</div>
 		</div>
+		<div class="col-4 form-ml">
+			<Inputed :ref="form.pjnama.name" :form="form.pjnama"></Inputed>
+			<Selected
+				v-on:click="selectbox($event, form.select.jenisidentitas.name, form.select.jenisidentitas.statics)"
+				:ref="form.select.jenisidentitas.name" @selecteditem="selecteditem" @selectclear="selectclear"
+				:selection="form.select.jenisidentitas"></Selected>
+			<Inputed :ref="form.pjnoidentitas.name" :form="form.pjnoidentitas"></Inputed>
+			<Inputed :ref="form.pjhubungan.name" :form="form.pjhubungan"></Inputed>
+			<Inputed :ref="form.pjalamat.name" :form="form.pjalamat"></Inputed>
+			<Inputed :ref="form.pjnohandphone.name" :form="form.pjnohandphone"></Inputed>
+		</div>
+		<div class="col-4">
+			<Selected
+				v-on:click="selectbox($event, form.select.berkebutuhankhusus.name, form.select.berkebutuhankhusus.statics)"
+				:ref="form.select.berkebutuhankhusus.name" @selecteditem="selecteditem" @selectclear="selectclear"
+				:selection="form.select.berkebutuhankhusus"></Selected>
+
+
+		</div>
+		<div class="col-4 form-ml">
+			<Inputed :ref="form.keteranganberkebutuhan.name" :form="form.keteranganberkebutuhan"></Inputed>
+		</div>
+		<div class="col-4 form-ml">
+			<Selected v-on:click="selectbox($event, form.select.klinik.name, form.select.klinik.statics)"
+				:ref="form.select.klinik.name" @selecteditem="selecteditem" @selectclear="selectclear"
+				:selection="form.select.klinik"></Selected>
+		</div>
+		<div :style="cover" v-if="!ishide"></div>
 	</div>
-	<div class="col-4 form-ml">
-		<Inputed :ref="form.pjnama.name" :form="form.pjnama"></Inputed>
-		<Selected v-on:click="selectbox($event, form.select.jenisidentitas.name, form.select.jenisidentitas.statics)" 
-			:ref="form.select.jenisidentitas.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.jenisidentitas"></Selected>
-		<Inputed :ref="form.pjnoidentitas.name" :form="form.pjnoidentitas"></Inputed>
-		<Inputed :ref="form.pjhubungan.name" :form="form.pjhubungan"></Inputed>
-		<Inputed :ref="form.pjalamat.name" :form="form.pjalamat"></Inputed>
-		<Inputed :ref="form.pjnohandphone.name" :form="form.pjnohandphone"></Inputed>
+	<div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
+		<div class="col-8"></div>
+		<div class="col-4" style="text-align: right" v-if="ishide">
+			<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
+			<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+		</div>
+		<div class="col-4" style="text-align: right" v-else>
+			<button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan Kunjungan</button>
+			<button class="button-modal-page button-modal-green" v-on:click="edit()">Edit Data</button>
+			<!-- <button class="button-modal-page button-modal-green" v-on:click="printout()">Cetak Identitas</button> -->
+		</div>
 	</div>
-	<div class="col-4">
-		<Selected v-on:click="selectbox($event, form.select.berkebutuhankhusus.name, form.select.berkebutuhankhusus.statics)" 
-		:ref="form.select.berkebutuhankhusus.name" @selecteditem="selecteditem" @selectclear="selectclear"
-		:selection="form.select.berkebutuhankhusus"></Selected>
-		
-		
-	</div>
-	<div class="col-4 form-ml">
-		<Inputed :ref="form.keteranganberkebutuhan.name" :form="form.keteranganberkebutuhan"></Inputed>
-	</div>
-	<div class="col-4 form-ml">
-		<Selected v-on:click="selectbox($event, form.select.klinik.name, form.select.klinik.statics)" 
-			:ref="form.select.klinik.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.klinik"></Selected>
-	</div>
-	<div :style="cover" v-if="!ishide"></div>
-</div>
-<div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px;" v-if="form">
-	<div class="col-8"></div>
-	<div class="col-4" style="text-align: right"  v-if="ishide">
-		<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-		<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
-	</div>
-	<div class="col-4" style="text-align: right"  v-else>
-		<button class="button-modal-page button-modal-red" v-on:click="cancel()">Batalkan Kunjungan</button>
-		<button class="button-modal-page button-modal-green" v-on:click="edit()">Edit Data</button>
-		<!-- <button class="button-modal-page button-modal-green" v-on:click="printout()">Cetak Identitas</button> -->
-	</div>
-</div>
 </template>
 
 <script>
@@ -122,7 +164,7 @@ import { initindexdb, indexdbprocessing } from '../../../module/Indexdb.js';
 var vm, body;
 export default {
 	emits: ["dialog", "parsingForm", "edit", "cancel"],
-	props: ['detail', 'iskunjungan'],
+	props: ['detail', 'iskunjungan', 'poliBpjs'],
 	components: {
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
@@ -131,7 +173,7 @@ export default {
 		vm = this; body = document.body;
 		vm.form = vm.formrawatjalan();
 		vm.arr = vm.arrregistrasi();
-		
+		console.log("Data poliBpjs diterima di FormRawatJalan:", this.eng);
 		setTimeout(() => {
 			vm.test = vm.iskunjungan;
 			vm.coverblock();
@@ -160,14 +202,24 @@ export default {
 			if (vm.test) { vm.red = 'Cancel'; }
 			return vm.test ? false : true;
 		},
+		selectedNmpoli() {
+			const selected = this.poliBpjs?.find(poli => poli.kdpoli === this.selectedPoli);
+			console.log(selected?.nmpoli)
+			return selected?.nmpoli || ''; // Jika selected undefined, kembalikan string kosong
+		},
+		selectedNmdokter() {
+			const selected = this.filteredDokter?.find(dokter => dokter.kodedokter === this.selectedDokter);
+			console.log(selected?.namadokter)
+			return selected?.namadokter || ''; // Jika selected undefined, kembalikan string kosong
+		}
 	},
 	data: function() {
 		return {
 			isCameraOpen: false,
-      isPhotoTaken: false,
-      isShotPhoto: false,
-      isLoading: false,
-      link: '#',
+			isPhotoTaken: false,
+			isShotPhoto: false,
+			isLoading: false,
+			link: '#',
 			green: 'Save Data',
 			red: 'Clear Form', test: null,
 			form: null, arr: null, cover: '', temporer: null,
@@ -176,9 +228,46 @@ export default {
 			height_number: 0,
 			isphotos: false,
 			camerastatus: 'stop',
+			filteredDokter: [], // Harus ada di sini agar Vue bisa melacak perubahannya
+			selectedPoli: "", // Untuk menyimpan nilai yang dipilih
+			selectedPoliNama: "", // Untuk menyimpan nilai yang dipilih
+			jadwalDokter: [], // Simpan jadwal dokter dari AP
+			dokterTerpilih: null,
+			showSelectDokter: false, 
+			showSelectPoli: false, 
+			// jadwalDokterBpjs: null,
+			// poliBpjs: [] // Data poli_bpjs dari API
 		}
 	},
+
 	methods: {
+
+		async fetchJadwalDokter() {
+
+			//- TODO: Ganti Tanggal dengan hari ini
+			const today = "2025-03-03"; // Format: YYYY-MM-DD
+
+			try {
+				const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/${this.selectedPoli}/tanggal/${today}`);
+
+				this.jadwalDokter = responseJadwal.data.response || [];
+				this.filteredDokter = this.jadwalDokter;
+
+			} catch (error) {
+				console.error("Gagal mengambil jadwal dokter:", error.response ? error.response.data : error.message);
+			}
+		},
+		updateJadwalDokter() {
+			if (!this.jadwalDokter || this.jadwalDokter.length === 0) {
+				console.warn("Jadwal dokter belum tersedia.");
+				this.dokterTerpilih = null;
+				return;
+			}
+
+			this.dokterTerpilih = this.jadwalDokter.find(jadwal => jadwal.kodedokter === this.selectedDokter) || null;
+			console.log("Dokter Terpilih:", this.dokterTerpilih);
+		},
+
 
 		toggleCamera() {
       if(this.isCameraOpen) {
@@ -231,7 +320,7 @@ export default {
     },
     
     takePhoto() {
-
+		console.log("vm", vm)
 			if (vm.camerastatus == 'start') {
 				if(!this.isPhotoTaken) {
 					this.isShotPhoto = true;
@@ -313,13 +402,13 @@ export default {
 			str = str.replace("-", "");
 			str = str.split("");
 			if (str.length > 0) {
-				if (str.length < 5) {
-					if (str[0].length === 1 && str[0].match(/[a-z]/i)) { str[0] = str[0] + '-'; }
+				if (str.length < 6) {
+					if (str[1].length === 1 && str[1].match(/[a-z]/i)) { str[1] = str[1] + '-'; }
 					else { vm.form.nopendaftaran.value = ''; return ; }
 					for (let i = 0; i < str.length; i++) { tmp += str[i]; }
 					vm.form.nopendaftaran.value = tmp;
 				}
-				else { let str = vm.form.nopendaftaran.value; str = str.substring(0, str.length - (str.length - 5)); vm.form.nopendaftaran.value = str; }	
+				else { let str = vm.form.nopendaftaran.value; str = str.substring(0, str.length - (str.length - 6)); vm.form.nopendaftaran.value = str; }	
 			}
 		},
 
@@ -359,7 +448,7 @@ export default {
 		},
 
 		seteditedv2:function(response, pj, photosstatus) {
-			console.log(pj)
+			console.log("pj",pj)
 			vm.isphotos = photosstatus;
 			let base_image = new Image();
   		base_image.src = '/' + response.photos;
@@ -436,7 +525,8 @@ export default {
 				vm.form.select.klinik.value = '';
 				vm.form.select.klinik.label = 'Silahkan Pilih';
 			}
-			console.log(response);
+			console.log();
+			console.log("res",response);
 		},
 
 		setedited:function(response, photosstatus) {
@@ -449,7 +539,7 @@ export default {
       	context.drawImage(base_image, 0, 0, vm.width_number, vm.height_number);
 			}, 750);
 			
-			console.log(response);
+			console.log("res", response);
 			vm.temporer = vm.test;
 			vm.test = null;
 			vm.red = 'Back';
@@ -520,8 +610,9 @@ export default {
 		},
 
 		parsingForm:function() { 
+			console.log("selectedDokter", this.dokterTerpilih.namadokter);
 			vm.form.photos = vm.form.photos.replace("image/octet-stream", "image/jpeg");
-			vm.$emit('parsingForm', vm.parserawatjalan(vm.form, vm.detail), 'rawatjalan'); 
+			vm.$emit('parsingForm', vm.parserawatjalan(vm.form, vm.detail, vm.selectedPoli, vm.selectedDokter, this.dokterTerpilih.jadwal, this.selectedNmpoli, this.dokterTerpilih.namadokter), 'rawatjalan'); 
 		},
 
 		dialog:function(){
@@ -544,6 +635,44 @@ export default {
 				}
 			}
 			else if (key == 'carabayar') {
+				console.log(item,"item");
+			if (item.label != 'BPJS Kesehatan') {
+				vm.form.no_bpjs_kes.value = '';
+				vm.form.no_bpjs_kes.show = false;
+				vm.form.no_bpjs_kes.disabled = true;
+				vm.form.no_bpjs_kes.required = '';
+				vm.form.nomorreferensi.value = '';
+				vm.form.nomorreferensi.show = false;
+				vm.form.nomorreferensi.disabled = true;
+				vm.form.nomorreferensi.required = '';
+				vm.form.select.dokter.isrequired = true;
+				vm.form.select.dokter.value = '';
+				vm.form.select.dokter.label = 'Silahkan Pilih';
+				vm.form.select.dokter.show = true;
+				this.showSelectDokter = true; // Sembunyikan select biasa
+				this.showSelectPoli = true; // Sembunyikan select biasa
+			} else {
+				console.log("tes", vm.detail);
+				vm.form.no_bpjs_kes.value = vm.detail.no_bpjs; 
+				vm.form.no_bpjs_kes.show = true;
+				vm.form.no_bpjs_kes.disabled = false;
+				vm.form.no_bpjs_kes.required = 'required';
+				
+				vm.form.nomorreferensi.value = '';
+				vm.form.nomorreferensi.show = true;
+				vm.form.nomorreferensi.disabled = false;
+				vm.form.nomorreferensi.required = 'required';
+				vm.form.select.dokter.isrequired = false;
+				vm.form.select.dokter.value = '';
+				vm.form.select.dokter.label = '';
+				vm.form.select.dokter.show = false;
+
+
+				this.showSelectDokter = true;  // Tampilkan select biasa
+				this.showSelectPoli = true;  // Tampilkan select biasa
+
+				
+			}
 				if (active) {
 					
 					vm.getIndexDB('asuransi', false);
@@ -566,6 +695,8 @@ export default {
 					vm.form.select.klinik.disabled = true;
 				}
 			}
+			
+			
 		},
 
 		getIndexDB:function(key, statics) {

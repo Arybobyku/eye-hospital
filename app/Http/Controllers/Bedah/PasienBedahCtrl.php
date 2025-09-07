@@ -289,7 +289,7 @@ class PasienBedahCtrl extends Controller
             // PenggunaHelp::log('Menghapus data unit dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
         }
 
-        $arr = ['bedah_status' => 'Sedang Dioperasi', 'bedah_mulai' => date('Y-m-d H:i:s')];
+        $arr = ['bedah_status' => 'Sedang Dioperasi', 'bedah_mulai' => date('Y-m-d H:i:s'), 'updated_at' => now()];
 
         try {
             \DB::beginTransaction();
@@ -317,7 +317,7 @@ class PasienBedahCtrl extends Controller
             // PenggunaHelp::log('Menghapus data unit dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
         }
 
-        $arr = ['bedah_status' => 'Selesai Dioperasi', 'bedah_selesai' => date('Y-m-d H:i:s')];
+        $arr = ['bedah_status' => 'Selesai Dioperasi', 'bedah_selesai' => date('Y-m-d H:i:s'), 'updated_at' => now(),];
 
         try {
             \DB::beginTransaction();
@@ -406,6 +406,7 @@ class PasienBedahCtrl extends Controller
             $arr = [
                 'nama_dokter' => $request->nama_dokter,
                 'pengguna_uuid' => $request->uuid_dokter,
+                'updated_at'    => now(), // otomatis isi timestamp sekarang
             ];
             RegistrasiOperasi::where('registrasi_uuid', '=', $request->uuid)->update($arr);
             LayananPasien::where('registrasi_uuid', '=', $request->uuid)
@@ -440,6 +441,7 @@ class PasienBedahCtrl extends Controller
             $arrRegOp = [
                 'nama_layanan' => $request->paketbedah,
                 'layanan_uuid' => $request->layanan_uuid,
+                'updated_at'    => now(), // otomatis isi timestamp sekarang
             ];
             $arrReg = [
                 'nama_paket_bedah' => $request->paketbedah,

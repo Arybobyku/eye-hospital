@@ -29,16 +29,19 @@
             <h2 v-html=""></h2>
             <h3>Nomor Antrian</h3>
             <h1 v-html="display"></h1>
+            <h3 v-html="displayPasien"></h3>
           </span>
         </div>
       	<div class="bottom">
         	<div class="sides">
         		<h2 v-html="poliklinik[0].label"></h2>
             <h1><span v-html="poliklinik[0].nomor"></span></h1>
+            <h4><span v-html="poliklinik[0].pasien"></span></h4>
         	</div>
       		<div class="sides">
             <h2 v-on:click="bunyi()" v-html="poliklinik[1].label"></h2>
           	<h1><span v-html="poliklinik[1].nomor"></span></h1>
+			<h4><span v-html="poliklinik[1].pasien"></span></h4>
           </div>
         </div>
       </div>
@@ -50,16 +53,19 @@
             <h2 v-html=""></h2>
             <h3>Nomor Antrian</h3>
             <h1 v-html="displayright"></h1>
+            <h3 v-html="displayPasienRight"></h3>
           </span>
         </div>
       	<div class="bottom">
         	<div class="sides">
         		<h2 v-html="poliklinik[2].label"></h2>
             <h1><span v-html="poliklinik[2].nomor"></span></h1>
+            <h4><span v-html="poliklinik[2].pasien"></span></h4>
         	</div>
       		<div class="sides">
             <h2 v-html="poliklinik[3].label"></h2>
           	<h1><span v-html="poliklinik[3].nomor"></span></h1>
+			<h4><span v-html="poliklinik[2].pasien"></span></h4>
           </div>
         </div>
       </div>
@@ -112,13 +118,15 @@ new Vue({
   data:function() { return {
 		ngulang: 0,
 		hitung: 0,
-		display: 'A-000',
-		displayright: 'A-000',
+		display: 'P-000',
+		displayright: 'P-000',
+		displayPasien:'',
+		displayPasienRight:'',
 		poliklinik: [
-			{ nomor: 'A-000', label: 'Refraksi Optisi' },
-			{ nomor: 'A-000', label: 'Poli 1' },
-			{ nomor: 'A-000', label: 'Poli 2' },
-			{ nomor: 'A-000', label: 'Poli 3' },
+			{ nomor: 'R-000', label: 'Refraksi Optisi', pasien:'' },
+			{ nomor: 'P-000', label: 'Poli 1', pasien:'' },
+			{ nomor: 'P-000', label: 'Poli 2', pasien:'' },
+			{ nomor: 'P-000', label: 'Poli 3', pasien:''},
 		],
 		angka: 1,
     currentDateTime: null,
@@ -132,29 +140,43 @@ new Vue({
   }},
   methods: {
 		triggercall:function(data) {
+		console.log("TEST",data);
 			const vm = this, myArray = data.split("=");
-			let number = vm.calculate(parseInt(myArray[1]));
 			let tmp = myArray[0].split(" ");
+			let jenis = tmp[0] == 'Poliklinik' ? "P" : "R";
+			let number = vm.calculate(jenis, parseInt(myArray[1]));
+			let pasienName = myArray[2];
 			if (tmp[0] == 'Poliklinik') {
 				if (tmp[1] == '1') {
+					let number = vm.calculate("P1", parseInt(myArray[1]));
 					vm.poliklinik[1].nomor = number;
+					vm.poliklinik[1].pasien = pasienName;
 					vm.display = number;
+					vm.displayPasien = pasienName;
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 				else if (tmp[1] == '2') {
+					let number = vm.calculate("P2", parseInt(myArray[1]));
 					vm.poliklinik[2].nomor = number;
+					vm.poliklinik[2].pasien = pasienName;
 					vm.displayright = number;
+					vm.displayPasienRight = pasienName;
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 				else if (tmp[1] == '3') {
+					let number = vm.calculate("P3", parseInt(myArray[1]));
 					vm.poliklinik[3].nomor = number;
+					vm.poliklinik[2].pasien = pasienName;
 					vm.displayright = number;
+					vm.displayPasienRight = pasienName;
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 			}
 			else if (tmp[0] == 'Refraksi') {
 				vm.poliklinik[0].nomor = number;
+				vm.poliklinik[0].pasien = pasienName;
 				vm.display = number;
+				vm.displayPasien = pasienName;
 				vm.bunyi(number, tmp[1], 'refraksi optisi');
 			}
 		},
@@ -168,15 +190,24 @@ new Vue({
 			if (vm.timetime) { window.clearTimeout(vm.timetime); }
 				
 			vm.timetime = window.setTimeout(function() {
-				let  tmp = nomor.split("");
-							
-				let msg = 'Nomor antrian, '+ tmp[0] +', ';
-				let angka = tmp[2]+''+tmp[3]+''+tmp[4];
+				let tmp = nomor.split("");
+				let msg = 'Nomor antrian, ';
+
+				let angka = '';
+				if(jenis == 'poli'){
+					msg = msg + tmp[0] + ', ' + tmp[1] +', ';
+					angka = tmp[3]+''+tmp[4]+''+tmp[5]
+				}else{
+					msg = msg + tmp[0] +', ';
+					angka = tmp[2]+''+tmp[3]+''+tmp[4];
+				}
 				if (parseInt(angka) > 0 && parseInt(angka) < 10) { msg = msg + '0, 0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 9 && parseInt(angka) < 100) { msg = msg + '0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 99 && parseInt(angka) < 1000) { msg = msg + ' ' + parseInt(angka) + ', '; }
 
-				if (jenis == 'poli') { msg = msg + 'ke Poli, '+ posisi; }
+				if (jenis == 'poli') {
+					msg = msg + 'ke Poli, '+ posisi;
+				 }
 				else { msg = msg + 'ke ruangan ' + jenis; }
 
 				const parameters = {
@@ -204,8 +235,8 @@ new Vue({
       //dots[this.slideIndex-1].className += " active";
       this.slideIndex++;
     },
-		calculate:function(data) {
-			let msg = 'A-';
+		calculate:function(jenis, data) {
+			let msg = jenis+'-';
 			if (parseInt(data) > 0 && parseInt(data) < 10) { msg += '00' + data; }
 			else if (parseInt(data) > 9 && parseInt(data) < 100) { msg += '0' + data; }
 			else if (parseInt(data) > 99 && parseInt(data) < 1000) { msg += data; }
@@ -218,30 +249,33 @@ new Vue({
       axios.post('/antrian/display/poliklinik', form_data, { headers: { 'Content-Type': 'multipart/form-data' } })
 			.then(function (response) {
 				if (response.data.hasil.length > 0) {
+
+					// POLI
 					for (let i = 0; i < response.data.hasil.length; i++) {
 						let temp = response.data.hasil[i];
 						if (temp.pemanggil == '1') {
-							let number = vm.calculate(temp.number);
+							let number = vm.calculate("P",temp.number);
 							vm.poliklinik[1].nomor = number;
 							vm.display = number;
 						}
 						else if (temp.pemanggil == '2') {
-							let number = vm.calculate(temp.number);
+							let number = vm.calculate("P",temp.number);
 							vm.poliklinik[2].nomor = number;
 							vm.displayright = number;
 						}
 						else if (temp.pemanggil == '3') {
-							let number = vm.calculate(temp.number);
+							let number = vm.calculate("P",temp.number);
 							vm.poliklinik[3].nomor = number;
 							vm.displayright = number;
 						}
 					}			
 				}
 				
+				// RO
 				if (response.data.ro.length > 0) {
 					for (let i = 0; i < response.data.ro.length; i++) {
 						let temp = response.data.ro[i];
-						let number = vm.calculate(temp.number);
+						let number = vm.calculate("R",temp.number);
 						vm.poliklinik[0].nomor = number;
 						vm.display = number;
 					}

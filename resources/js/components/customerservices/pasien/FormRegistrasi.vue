@@ -1,6 +1,7 @@
 <template>
 	<div :style="terminate_detail.display" class="modal">
-		<div ref="rootdetail" class="modal-content modal-besar" :class="terminate_detail.show ? 'modal-opened' : 'modal-closed'">
+		<div ref="rootdetail" class="modal-content modal-besar"
+			:class="terminate_detail.show ? 'modal-opened' : 'modal-closed'">
 			<div class="modal-header">
 				<span class="close" v-on:click="hide()">&times;</span>
 				<h2>Halaman Registrasi</h2>
@@ -22,7 +23,8 @@
 								</tr>
 								<tr>
 									<td>Tempat, Tanggal Lahir</td>
-									<td><strong>{{ detail.tempat_lahir }}, {{ datename(detail.tanggal_lahir) }}</strong></td>
+									<td><strong>{{ detail.tempat_lahir }}, {{ datename(detail.tanggal_lahir) }}</strong>
+									</td>
 								</tr>
 								<tr>
 									<td>Jenis Kelamin</td>
@@ -40,7 +42,7 @@
 						<table class="table">
 							<tbody>
 								<tr>
-									<td>Jenis Identitas</td>
+									<td>Jenis Identitas Lainnya</td>
 									<td><strong>{{ detail.jenis_identitas }}</strong></td>
 								</tr>
 								<tr>
@@ -52,8 +54,8 @@
 									<td><strong>{{ detail.no_handphone }}</strong></td>
 								</tr>
 								<tr>
-									<td>Email</td>
-									<td><strong>{{ detail.email }}</strong></td>
+									<td>No KTP (NIK)</td>
+									<td><strong>{{ detail.no_ktp }}</strong></td>
 								</tr>
 								<tr>
 									<td>Pekerjaan</td>
@@ -73,31 +75,35 @@
 								<tr>
 									<td>Provinsi</td>
 									<td><strong>{{ detail.nama_provinsi }}</strong></td>
-								</tr><tr>
+								</tr>
+								<tr>
 									<td>Kabupaten/Kota</td>
 									<td><strong>{{ detail.nama_kab_kota }}</strong></td>
-								</tr><tr>
+								</tr>
+								<tr>
 									<td>Kecamatan</td>
 									<td><strong>{{ detail.nama_kecamatan }}</strong></td>
-								</tr><tr>
+								</tr>
+								<tr>
 									<td>Kelurahan</td>
 									<td><strong>{{ detail.nama_kelurahan }}</strong></td>
 								</tr>
 							</tbody>
 						</table>
 					</div>
-					
-					
+
+
 					<div class="col-12">
-						
+
 						<div class="tab-lines">
 							<div class="tab">
-								<button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">
+								<button v-for="(item, index) in tab.button" :class="item.class"
+									v-on:click="changesTab(item.value, index, item.class)">
 									{{ item.label }}
 								</button>
 							</div>
 						</div>
-					
+
 						<div class="tab-content">
 
 							<!-- Bagian tab content untuk data histori -->
@@ -106,9 +112,11 @@
 							</div>
 
 							<!-- Bagian tab content untuk data rawatjalan -->
-							<div class="content-tab-in" v-if="tab.content.rawatjalan" >
-								<FormRawatJalan ref="FormRawatJalan" @dialog="dialog" @cancel="cancel" @edit="edit" @parsingForm="parsingForm" :detail="detail" :iskunjungan="iskunjungan"></FormRawatJalan>
-								
+							<div class="content-tab-in" v-if="tab.content.rawatjalan">
+								<FormRawatJalan ref="FormRawatJalan" @dialog="dialog" @cancel="cancel" @edit="edit"
+									:poliBpjs="poliBpjs" @parsingForm="parsingForm" :detail="detail" :iskunjungan="iskunjungan">
+								</FormRawatJalan>
+
 							</div>
 
 						</div>
@@ -135,9 +143,14 @@ export default {
 		HistoriRegistrasi: defineAsyncComponent(() => import('./HistoriRegistrasi.vue')), 
 		FormRawatJalan: defineAsyncComponent(() => import('./FormRawatJalan.vue')), 
 	},
-	mounted:function() { vm = this; body = document.body; },
+	mounted:function() { vm = this; body = document.body;
+		// this.fetchPoliBpjs();
+		// this.fetchPoliBpjs(); // Pastikan data diambil saat komponen dimuat
+		// console.log("Data poliBpjs di main.vue sebelum dikirim:", this.poliBpjs);
+	 },
 	created:function() { this.item = this.modal },
 	data:function() { return { 
+
 		attach: {
 			link : {
 				rawatjalan: '/customerservices/pasien/registrasi/rawatjalan',
@@ -167,8 +180,12 @@ export default {
 				// pembelianobatkhusus: false 
 			}
 		},
+		
 		position: '',
+		selectedPoli: "", // Untuk menyimpan nilai yang dipilih
+		poliBpjs: [] // Data poli_bpjs dari API
 	}},
+
 	methods: {
 
 		datename, nullAndZero,
@@ -263,8 +280,8 @@ export default {
 		*************************************************************************************************************************/
 
 		gagal: function (error) {
-			if (vm.$debugs) { console.log(error.response); } let active = 0;
-			vm.message('error', 1);
+			if (vm.$debugs) { console.log("RESPONSE EROR", error.response); } let active = 0;
+			vm.message('error', error.response.data.data);
 			vm.loaderprocess();
 			if (vm.position == 'rawatjalan') { }
 			else if (vm.position == 'editrawatjalan') { }
@@ -291,12 +308,16 @@ export default {
 		},
 
 		message: function (position, active) {
+			console.log("posisi", position);
 			if (position == 'error') {
-				if (vm.position == 'rawatjalan') { vm.notification('Gagal memproses pasien rawat jalan.', 3000, position); }
-				else if (vm.position == 'editrawatjalan') { vm.notification('Gagal memproses pasien rawat jalan.', 3000, position); }
-				else if (vm.position == 'cancelrawatjalan') { vm.notification('Gagal memproses pasien rawat jalan.', 3000, position); }
-				else if (vm.position == 'rawatinap') { vm.notification('Gagal memproses pasien rawat inap.', 3000, position); }
-				else if (vm.position == 'bedah') { vm.notification('Gagal memproses pasien ke ruangan bedah.', 3000, position); }
+				if (active === null || active == '') {
+					active = 'Gagal memproses pasien ke ruangan bedah';
+				}
+				if (vm.position == 'rawatjalan') { vm.notification(active, 3000, position); }
+				else if (vm.position == 'editrawatjalan') { vm.notification(active, 3000, position); }
+				else if (vm.position == 'cancelrawatjalan') { vm.notification(active, 3000, position); }
+				else if (vm.position == 'rawatinap') { vm.notification(active, 3000, position); }
+				else if (vm.position == 'bedah') { vm.notification(active, 3000, position); }
 			}
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'rawatjalan') { vm.notification('Berhasil memproses pasien rawat jalan.', 3000, position); }
@@ -314,7 +335,12 @@ export default {
 		/*************************************************************************************************************************
 		* Bagian fungsi yang wajib disertakan disetiap index dan tidak perlu diubah-ubah
 		*************************************************************************************************************************/
-		executions: function () { axios.post(vm.attach.url, vm.attach.data, { headers: { 'Content-Type': 'multipart/form-data' } }).then(function (response) { if (response.data.data == '419') { window.location.href = '/masuk'; } setTimeout(function(){ vm.berhasil(response); }, 750, this); }).catch(function (error){ setTimeout(function(){ vm.gagal(error); }, 750, this); }); },
+		executions: function () { axios.post(vm.attach.url, vm.attach.data, { headers: { 'Content-Type': 'multipart/form-data' } }).then(function (response) 
+			{ if (response.data.data == '419') 
+			{ window.location.href = '/masuk'; } setTimeout(function()
+			{ vm.berhasil(response); }, 750, this); }).catch(function (error){ setTimeout(function()
+			{ console.log ("tes");
+				vm.gagal(error); }, 750, this); }); },
 		dialog: function (_text, _confirm, posisi) { Swal.fire({ title:"Apakah Anda Yakin?", text:_text, icon:"warning", showCancelButton:!0, confirmButtonColor:"#1c84ee", cancelButtonColor:"#fd625e", confirmButtonText: _confirm, cancelButtonText:"Tidak, batal!" }).then(function(e){ if (e.isConfirmed) { vm.runconfirm(posisi); } }); },
 		notification: function (message, timer, position) { if (position == 'error') { toast.error(message, { rtl: false, autoClose: timer }); } else { toast.success(message, { rtl: false, autoClose: timer }); } },
 
@@ -322,6 +348,9 @@ export default {
 			let data = response.data.data;
 			vm.histori = response.data.registrasi;
 			vm.iskunjungan = response.data.kunjungan;
+			vm.poliBpjs = response.data.poli_bpjs?.response?.filter(poli => poli.kdpoli === "MAT") || [];
+
+			console.log("vm.poliBpjs", vm.poliBpjs);
 
 			if (vm.iskunjungan) {
 				console.log(vm.iskunjungan.status, 'sfsddsfdddsfdf')
@@ -353,7 +382,7 @@ export default {
 			vm.detail.agama = data.agama; vm.detail.alamat = data.alamat; vm.detail.alias = vm.empty(data.alias);
 			vm.detail.email = vm.empty(data.email); vm.detail.golongan_darah = vm.empty(data.golongan_darah);
 			vm.detail.jenis_identitas = data.jenis_identitas; vm.detail.jenis_kelamin = data.jenis_kelamin;
-			vm.detail.kodepos = vm.empty(data.kodepos); vm.detail.nama = data.nama;
+			vm.detail.kodepos = vm.empty(data.kodepos); vm.detail.nama = data.nama; vm.detail.no_ktp = data.no_ktp; vm.detail.no_bpjs = data.no_bpjs;
 			vm.detail.nama_ayah = vm.empty(data.nama_ayah); vm.detail.nama_ibu = vm.empty(data.nama_ibu);
 			vm.detail.nama_kab_kota = data.nama_kab_kota; vm.detail.nama_kecamatan = data.nama_kecamatan;
 			vm.detail.nama_kelurahan = data.nama_kelurahan; vm.detail.nama_provinsi = data.nama_provinsi;

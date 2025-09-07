@@ -106,13 +106,13 @@ new Vue({
   data:function() { return {
 		ngulang: 0,
 		hitung: 0,
-		display: 'A-000',
-		displayright: 'A-000',
+		display: 'P-000',
+		displayright: 'P-000',
 		poliklinik: [
-			{ nomor: 'A-000', label: 'Poli 5' },
-			{ nomor: 'A-000', label: 'Poli 6' },
-			{ nomor: 'A-000', label: 'Farmasi 1' },
-			{ nomor: 'A-000', label: 'Kasir 1' },
+			{ nomor: 'P-000', label: 'Poli 5' },
+			{ nomor: 'P-000', label: 'Poli 6' },
+			{ nomor: 'F-000', label: 'Farmasi 1' },
+			{ nomor: 'K-000', label: 'Kasir 1' },
 		],
 		angka: 1,
     currentDateTime: null,
@@ -127,32 +127,35 @@ new Vue({
   methods: {	
 		triggercall:function(data) {
 			const vm = this, myArray = data.split("=");
-			let kode = 'A';
+			console.log(vm);
 			if (myArray.length > 2) {
 				if (myArray[2] == 'bebas') { kode = 'K'; }
 				else if (myArray[2] == 'bebask') { kode = 'K'; }
 				else { kode = 'A'; }
 			}
-			let number = vm.calculate(parseInt(myArray[1]), kode);
 			let tmp = myArray[0].split(" ");
 			if (tmp[0] == 'Poliklinik') {
 				if (tmp[1] == '5') {
+					let number = vm.calculate(parseInt(myArray[1]), `P5`);
 					vm.poliklinik[0].nomor = number;
 					vm.display = number;
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 				else if (tmp[1] == '6') {
+					let number = vm.calculate(parseInt(myArray[1]), `P6`);
 					vm.poliklinik[1].nomor = number;
 					vm.display = number;
 					vm.bunyi(number, tmp[1], 'poli');
 				}
 			}
 			else if (tmp[0] == 'Farmasi') {
+				let number = vm.calculate(parseInt(myArray[1]), "F");
 				vm.poliklinik[2].nomor = number;
 				vm.displayright = number;
 				vm.bunyi(number, tmp[1], 'farmasi');
 			}
 			else if (tmp[0] == 'Kasir') {
+				let number = vm.calculate(parseInt(myArray[1]), "K");
 				vm.poliklinik[3].nomor = number;
 				vm.displayright = number;
 				vm.bunyi(number, tmp[1], 'kasir');
@@ -168,13 +171,24 @@ new Vue({
 					
 			vm.timetime = window.setTimeout(function() {
 				let  tmp = nomor.split("");
-				let msg = 'Nomor antrian, '+ tmp[0] +', ';
-				let angka = tmp[2]+''+tmp[3]+''+tmp[4];
+				let msg = 'Nomor antrian, ';
+
+				let angka = '';
+				if(jenis == 'poli'){
+					msg = msg + tmp[0] + ', ' + tmp[1] +', ';
+					angka = tmp[3]+''+tmp[4]+''+tmp[5]
+				}else{
+					msg = msg + tmp[0] +', ';
+					angka = tmp[2]+''+tmp[3]+''+tmp[4];
+				}
+
 				if (parseInt(angka) > 0 && parseInt(angka) < 10) { msg = msg + '0, 0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 9 && parseInt(angka) < 100) { msg = msg + '0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 99 && parseInt(angka) < 1000) { msg = msg + ' ' + parseInt(angka) + ', '; }
 							
-				if (jenis == 'poli') { msg = msg + 'ke Poli, '+ posisi; }
+				if (jenis == 'poli') { 
+					msg = msg + 'ke Poli, '+ posisi;
+				}
 				else { msg = msg + 'ke ' + jenis +', '+ posisi; }
 
 				const parameters = {

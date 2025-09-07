@@ -687,7 +687,7 @@ import Timepicker from '../../../section/Timepicker.vue';
             dialog: function() {
                 let text = '',
                     button = '';
-                console.log("kontol");
+                console.log("posisi");
                 console.log(vm.form.posisi);
                 if (vm.form.posisi == 'inapdata') {
                     text = 'Yakin ingin menambah data pada halaman ini.';

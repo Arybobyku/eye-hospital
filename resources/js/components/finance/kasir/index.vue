@@ -79,8 +79,9 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
+			{ value: 'tanggal', label: 'Tanggal Registrasi', type: 'text', search: true, close: false, button: false },
 			{ value: 'no_kwitansi', label: 'No Kwitansi', type: 'text', search: true, close: false, button: false },
-			{ value: 'no_pendaftaran', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_kasir', label: 'No Antrian', type: 'text', search: true, close: false, button: false },
 			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
@@ -92,7 +93,7 @@ export default {
 		],
 		columnbayar: [
 			{ value: 'no_kwitansi', label: 'No Kwitansi', type: 'text', search: true, close: false, button: false },
-			{ value: 'no_pendaftaran', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian_kasir', label: 'No Antrian', type: 'text', search: true, close: false, button: false },
 			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
@@ -105,6 +106,7 @@ export default {
 		columnbeli: [
 			{ value: 'tanggal', label: 'Tanggal', type: 'text', search: true, close: false, button: false },
 			{ value: 'no_invoice', label: 'No Invoice', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian', label: 'Nomor Antrian', type: 'text', search: true, close: false, button: false },
 			{ value: 'kode', label: 'Kode Pendaftaran', type: 'text', search: true, close: false, button: false },
 			{ value: 'jenis', label: 'Jenis Obat', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pembeli', type: 'text', search: true, close: false, button: false },
@@ -115,9 +117,11 @@ export default {
 		columnbelibayar: [
 			{ value: 'tanggal', label: 'Tanggal', type: 'text', search: true, close: false, button: false },
 			{ value: 'no_invoice', label: 'No Invoice', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_antrian', label: 'Nomor Antrian', type: 'text', search: true, close: false, button: false },
 			{ value: 'kode', label: 'Kode Pendaftaran', type: 'text', search: true, close: false, button: false },
 			{ value: 'jenis', label: 'Jenis Obat', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pembeli', type: 'text', search: true, close: false, button: false },
+
 			{ value: 'ada_obat', label: 'Obat Sudah Ditambahkan?', type: 'text', search: false, close: false, button: false },
 			{ value: 'pembayaran', label: 'Pembayaran', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
@@ -279,12 +283,18 @@ export default {
 			return data.sebutan + ' ' + data.nama_pasien;
 		},
 
+		printAntrian:function(noAntrian, jenis){
+			if(noAntrian == null){
+				return "-"
+			}
+			return '<a href="/antrian/cetak-antrian-all/'+noAntrian+'/'+jenis+'" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">'+noAntrian+'</a>'
+		},
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
-			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_kasir') { _tmp = { value: vm.printAntrian(data.no_antrian_kasir, data.carabayar_nama), ishtml: 'html', style: '' }; }
 			else if (identity == 'nama_pasien') { _tmp = { value: vm.namapasien(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'approvement_obat') { _tmp = { value: vm.approvementobat(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'panjar') { _tmp = { value: vm.panajrs(data), ishtml: 'html', style: '' }; }
@@ -307,7 +317,7 @@ export default {
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
-			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_kasir') { _tmp = { value: vm.printAntrian(data.no_antrian_kasir, data.carabayar_nama), ishtml: 'html', style: '' }; }
 			else if (identity == 'nama_pasien') { _tmp = { value: vm.namapasien(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'approvement_obat') { _tmp = { value: vm.approvementobat(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'panjar') { _tmp = { value: vm.panajrs(data), ishtml: 'html', style: '' }; }
@@ -423,7 +433,7 @@ export default {
 				vm.attach.url = vm.attach.link.call;
 				console.log(data)
 				vm.attach.data = new FormData();
-				let number = data.no_pendaftaran.split("-");
+				let number = data.no_antrian_kasir.split("-");
 				number = parseInt(number[1]);
 				vm.attach.data.append('number', number);
 				vm.attach.data.append('ruang_poliklinik', data.ruang_poliklinik);
@@ -438,7 +448,7 @@ export default {
 				vm.attach.url = vm.attach.link.call;
 				console.log(data)
 				vm.attach.data = new FormData();
-				let number = data.no_pendaftaran.split("-");
+				let number = data.no_antrian_kasir.split("-");
 				number = parseInt(number[1]);
 				vm.attach.data.append('number', number);
 				vm.attach.data.append('ruang_poliklinik', data.ruang_poliklinik);

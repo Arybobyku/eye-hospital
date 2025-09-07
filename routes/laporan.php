@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 use App\Http\Controllers\Laporan\LaporanFarmasiCtrl;
 use App\Http\Controllers\Laporan\LaporanKeuanganCtrl;
+// use App\Http\Controllers\Laporan\LaporanPenjualanApotekCtrl; //gada ini kontrollernya
 use App\Http\Controllers\Laporan\LaporanFakturObatCtrl;
 
 Route::group(['middleware' => 'throttle: 250, 1'], function(){
@@ -34,7 +35,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 
 	Route::post('fakturobat', [LaporanFakturObatCtrl::class, 'datapage'])->name('laporan-fakturobat');
 	Route::get('excelfakturobat/{dari}', [LaporanFakturObatCtrl::class, 'dataexcel'])->name('laporan-excelfakturobat');
-	Route::post('amprahan', [LaporanPenjualanApotekCtrl::class, 'penjualanapotek'])->name('laporan-amprahan');
-	Route::post('tindakan', [LaporanPenjualanApotekCtrl::class, 'penjualanapotek'])->name('laporan-tindakan');
+	// Route::post('amprahan', [LaporanPenjualanApotekCtrl::class, 'penjualanapotek'])->name('laporan-amprahan');
+	// Route::post('tindakan', [LaporanPenjualanApotekCtrl::class, 'penjualanapotek'])->name('laporan-tindakan');
 
 });

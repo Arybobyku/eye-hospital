@@ -26,227 +26,256 @@ class PasienCtrl extends Controller
 
 	private $take = 15, $error = 'next';
 
-	public function __construct() {
+	public function __construct()
+	{
 		date_default_timezone_set("Asia/Jakarta");
-		$this->error = PenggunaHelp::acl(); 
+		$this->error = PenggunaHelp::acl();
 	}
 
-	public function list(Request $request) {
+	public function list(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		PenggunaHelp::log('Melihat data list table pada halaman data pasien');
 
-		$list = ''; $total = '';
-		$page = $request->page - 1; $skip = $page * $this->take;
-		$search = $request->search; $column = $request->column;
+		$list = '';
+		$total = '';
+		$page = $request->page - 1;
+		$skip = $page * $this->take;
+		$search = $request->search;
+		$column = $request->column;
 
 		if ($request->search != "") {
 			if ($column == 'usia') {
 				$tahun = date('Y');
 				$tahun = $tahun - $search;
 				$data = Pasien::where('delete_soft', '=', 1)
-								->whereYear('tanggal_lahir', '=', $tahun)
-								->where('rekam_medis', '!=', 'AP020739')
-								->where('rekam_medis', '!=', 'AP026418')
-								->where('status', '=', 'Aktif')
-								->orderBy('rekam_medis', 'desc')
-								->skip($skip)->take($this->take)
-								->get();
+					->whereYear('tanggal_lahir', '=', $tahun)
+					->where('rekam_medis', '!=', 'AP020739')
+					->where('rekam_medis', '!=', 'AP026418')
+					->where('status', '=', 'Aktif')
+					->orderBy('rekam_medis', 'desc')
+					->skip($skip)->take($this->take)
+					->get();
 				$total = Pasien::where('delete_soft', '=', 1)
-								->whereYear('tanggal_lahir', '=', $tahun)
-								->where('rekam_medis', '!=', 'AP020739')
-								->where('rekam_medis', '!=', 'AP026418')
-								->where('status', '=', 'Aktif')
-								->orderBy('rekam_medis', 'desc')->count();
-			}
-			else if ($column == 'tanggal_lahir') {
+					->whereYear('tanggal_lahir', '=', $tahun)
+					->where('rekam_medis', '!=', 'AP020739')
+					->where('rekam_medis', '!=', 'AP026418')
+					->where('status', '=', 'Aktif')
+					->orderBy('rekam_medis', 'desc')->count();
+			} else if ($column == 'tanggal_lahir') {
 				$data = Pasien::where('delete_soft', '=', 1)
-								->whereDate($column, '=', $search)
-								->where('rekam_medis', '!=', 'AP020739')
-								->where('rekam_medis', '!=', 'AP026418')
-								->where('status', '=', 'Aktif')
-								->orderBy('rekam_medis', 'desc')
-								->skip($skip)->take($this->take)
-								->get();
+					->whereDate($column, '=', $search)
+					->where('rekam_medis', '!=', 'AP020739')
+					->where('rekam_medis', '!=', 'AP026418')
+					->where('status', '=', 'Aktif')
+					->orderBy('rekam_medis', 'desc')
+					->skip($skip)->take($this->take)
+					->get();
 				$total = Pasien::where('delete_soft', '=', 1)
-								->whereDate($column, '=', $search)
-								->where('rekam_medis', '!=', 'AP020739')
-								->where('rekam_medis', '!=', 'AP026418')
-								->where('status', '=', 'Aktif')
-								->orderBy('rekam_medis', 'desc')->count();
-			}
-			else {
+					->whereDate($column, '=', $search)
+					->where('rekam_medis', '!=', 'AP020739')
+					->where('rekam_medis', '!=', 'AP026418')
+					->where('status', '=', 'Aktif')
+					->orderBy('rekam_medis', 'desc')->count();
+			} else {
 				$data = Pasien::where('delete_soft', '=', 1)
-								->where($column, 'ilike', '%'.$search.'%')
-								->where('rekam_medis', '!=', 'AP020739')
-								->where('rekam_medis', '!=', 'AP026418')
-								->where('status', '=', 'Aktif')
-								->orderBy('rekam_medis', 'desc')
-								->skip($skip)->take($this->take)
-								->get();
+					->where($column, 'ilike', '%' . $search . '%')
+					->where('rekam_medis', '!=', 'AP020739')
+					->where('rekam_medis', '!=', 'AP026418')
+					->where('status', '=', 'Aktif')
+					->orderBy('rekam_medis', 'desc')
+					->skip($skip)->take($this->take)
+					->get();
 				$total = Pasien::where('delete_soft', '=', 1)
-								->where($column, 'ilike', '%'.$search.'%')
-								->where('rekam_medis', '!=', 'AP020739')
-								->where('rekam_medis', '!=', 'AP026418')
-								->where('status', '=', 'Aktif')
-								->orderBy('rekam_medis', 'desc')->count();
+					->where($column, 'ilike', '%' . $search . '%')
+					->where('rekam_medis', '!=', 'AP020739')
+					->where('rekam_medis', '!=', 'AP026418')
+					->where('status', '=', 'Aktif')
+					->orderBy('rekam_medis', 'desc')->count();
 			}
-		}
-		else {
+		} else {
 			$data = Pasien::where('delete_soft', '=', 1)
-									->where('rekam_medis', '!=', 'AP020739')
-									->where('rekam_medis', '!=', 'AP026418')
-									->where('status', '=', 'Aktif')
-									->orderBy('rekam_medis', 'desc')
-									->skip($skip)->take($this->take)
-									->get();
+				->where('rekam_medis', '!=', 'AP020739')
+				->where('rekam_medis', '!=', 'AP026418')
+				->where('status', '=', 'Aktif')
+				->orderBy('rekam_medis', 'desc')
+				->skip($skip)->take($this->take)
+				->get();
 
 			$total = Pasien::where('delete_soft', '=', 1)
-									->where('rekam_medis', '!=', 'AP020739')
-									->where('rekam_medis', '!=', 'AP026418')
-									->where('status', '=', 'Aktif')
-									->orderBy('rekam_medis', 'desc')->count();
-
+				->where('rekam_medis', '!=', 'AP020739')
+				->where('rekam_medis', '!=', 'AP026418')
+				->where('status', '=', 'Aktif')
+				->orderBy('rekam_medis', 'desc')->count();
 		}
-		
+
 		return response()->json(['data' => $data, 'total' => $total]);
-	
 	}
 
-	public function listkunjungan(Request $request) {
+	public function listkunjungan(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		PenggunaHelp::log('Melihat data list table pada halaman data pasien');
 
-		$list = ''; $total = '';
-		$page = $request->page - 1; $skip = $page * $this->take;
-		$search = $request->search; $column = $request->column;
+		$list = '';
+		$total = '';
+		$page = $request->page - 1;
+		$skip = $page * $this->take;
+		$search = $request->search;
+		$column = $request->column;
 
 		if ($request->search != "") {
 			if ($column == 'usia') {
 				$tahun = date('Y');
 				$tahun = $tahun - $search;
 
-				$data = Pasien::leftJoin('registrasi', function($query) {
-									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
-										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
-								})
-								->where('pasien.delete_soft', '=', 1)
-								->whereYear('pasien.tanggal_lahir', '=', $tahun)
-								->where('pasien.rekam_medis', '!=', 'AP020739')
-								->where('pasien.rekam_medis', '!=', 'AP026418')
-								->where('pasien.status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
-								->orderBy('registrasi.nomor', 'desc')
-								->skip($skip)->take($this->take)
-								->get();
-				$total = Pasien::leftJoin('registrasi', function($query) {
-									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
-										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
-								})
-								->where('pasien.delete_soft', '=', 1)
-								->whereYear('pasien.tanggal_lahir', '=', $tahun)
-								->where('pasien.rekam_medis', '!=', 'AP020739')
-								->where('pasien.rekam_medis', '!=', 'AP026418')
-								->where('pasien.status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
-								->orderBy('registrasi.nomor', 'desc')
-								->count();
+				$data = Pasien::leftJoin('registrasi', function ($query) {
+					$query->on('registrasi.pasien_uuid', '=', 'pasien.uuid')
+						->whereRaw('registrasi.uuid = (
+						SELECT a2.uuid 
+						FROM registrasi as a2 
+						WHERE a2.pasien_uuid = pasien.uuid 
+						ORDER BY a2.created_at DESC 
+						LIMIT 1
+					)');
+				})
+					->where('pasien.delete_soft', '=', 1)
+					->whereYear('pasien.tanggal_lahir', '=', $tahun)
+					->where('pasien.rekam_medis', '!=', 'AP020739')
+					->where('pasien.rekam_medis', '!=', 'AP026418')
+					->where('pasien.status', '!=', 'Aktif')
+					->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro', 'registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
+					->orderBy('registrasi.nomor', 'desc')
+					->skip($skip)->take($this->take)
+					->get();
+				$total = Pasien::leftJoin('registrasi', function ($query) {
+					$query->on('registrasi.pasien_uuid', '=', 'pasien.uuid')
+						->whereRaw('registrasi.uuid = (
+						SELECT a2.uuid 
+						FROM registrasi as a2 
+						WHERE a2.pasien_uuid = pasien.uuid 
+						ORDER BY a2.created_at DESC 
+						LIMIT 1
+					)');
+				})
+					->where('pasien.delete_soft', '=', 1)
+					->whereYear('pasien.tanggal_lahir', '=', $tahun)
+					->where('pasien.rekam_medis', '!=', 'AP020739')
+					->where('pasien.rekam_medis', '!=', 'AP026418')
+					->where('pasien.status', '!=', 'Aktif')
+					->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro', 'registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
+					->orderBy('registrasi.nomor', 'desc')
+					->count();
+			} else if ($column == 'tanggal_lahir') {
+				$data = Pasien::leftJoin('registrasi', function ($query) {
+					$query->on('registrasi.pasien_uuid', '=', 'pasien.uuid')
+						->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+				})
+					->where('pasien.delete_soft', '=', 1)
+					->whereDate('pasien.' . $column, '=', $search)
+					->where('pasien.rekam_medis', '!=', 'AP020739')
+					->where('pasien.rekam_medis', '!=', 'AP026418')
+					->where('pasien.status', '!=', 'Aktif')
+					->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro', 'registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
+					->orderBy('registrasi.nomor', 'desc')
+					->skip($skip)->take($this->take)
+					->get();
+				$total = Pasien::leftJoin('registrasi', function ($query) {
+					$query->on('registrasi.pasien_uuid', '=', 'pasien.uuid')
+						->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+				})
+					->where('pasien.delete_soft', '=', 1)
+					->whereDate('pasien.' . $column, '=', $search)
+					->where('pasien.rekam_medis', '!=', 'AP020739')
+					->where('pasien.rekam_medis', '!=', 'AP026418')
+					->where('status', '!=', 'Aktif')
+					->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro', 'registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
+					->orderBy('registrasi.nomor', 'desc')
+					->count();
+			} else {
+				$data = Pasien::leftJoin('registrasi', function ($query) {
+					$query->on('registrasi.pasien_uuid', '=', 'pasien.uuid')
+						->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+				})
+					->where('pasien.delete_soft', '=', 1)
+					->where('pasien.' . $column, 'ilike', '%' . $search . '%')
+					->where('pasien.rekam_medis', '!=', 'AP020739')
+					->where('pasien.rekam_medis', '!=', 'AP026418')
+					->where('pasien.status', '!=', 'Aktif')
+					->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro', 'registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
+					->orderBy('registrasi.nomor', 'desc')
+					->skip($skip)->take($this->take)
+					->get();
+				$total = Pasien::leftJoin('registrasi', function ($query) {
+					$query->on('registrasi.pasien_uuid', '=', 'pasien.uuid')
+						->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+				})
+					->where('pasien.delete_soft', '=', 1)
+					->where('pasien.' . $column, 'ilike', '%' . $search . '%')
+					->where('pasien.rekam_medis', '!=', 'AP020739')
+					->where('pasien.rekam_medis', '!=', 'AP026418')
+					->where('pasien.status', '!=', 'Aktif')
+					->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro', 'registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
+					->orderBy('registrasi.nomor', 'desc')
+					->count();
 			}
-			else if ($column == 'tanggal_lahir') {
-				$data = Pasien::leftJoin('registrasi', function($query) {
-									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
-										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
-								})
-								->where('pasien.delete_soft', '=', 1)
-								->whereDate('pasien.'.$column, '=', $search)
-								->where('pasien.rekam_medis', '!=', 'AP020739')
-								->where('pasien.rekam_medis', '!=', 'AP026418')
-								->where('pasien.status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
-								->orderBy('registrasi.nomor', 'desc')
-								->skip($skip)->take($this->take)
-								->get();
-				$total = Pasien::leftJoin('registrasi', function($query) {
-									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
-										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
-								})
-								->where('pasien.delete_soft', '=', 1)
-								->whereDate('pasien.'.$column, '=', $search)
-								->where('pasien.rekam_medis', '!=', 'AP020739')
-								->where('pasien.rekam_medis', '!=', 'AP026418')
-								->where('status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
-								->orderBy('registrasi.nomor', 'desc')
-								->count();
-			}
-			else {
-				$data = Pasien::leftJoin('registrasi', function($query) {
-									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
-										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
-								})
-								->where('pasien.delete_soft', '=', 1)
-								->where('pasien.'.$column, 'ilike', '%'.$search.'%')
-								->where('pasien.rekam_medis', '!=', 'AP020739')
-								->where('pasien.rekam_medis', '!=', 'AP026418')
-								->where('pasien.status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
-								->orderBy('registrasi.nomor', 'desc')
-								->skip($skip)->take($this->take)
-								->get();
-				$total = Pasien::leftJoin('registrasi', function($query) {
-									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
-										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
-								})
-								->where('pasien.delete_soft', '=', 1)
-								->where('pasien.'.$column, 'ilike', '%'.$search.'%')
-								->where('pasien.rekam_medis', '!=', 'AP020739')
-								->where('pasien.rekam_medis', '!=', 'AP026418')
-								->where('pasien.status', '!=', 'Aktif')
-								->select('pasien.*', 'registrasi.nomor')
-								->orderBy('registrasi.nomor', 'desc')
-								->count();
-			}
-		}
-		else {
-			$data = Pasien::leftJoin('registrasi', function($query) {
-											$query->on('registrasi.pasien_uuid','=','pasien.uuid')
-												->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
-									})
-									->where('pasien.delete_soft', '=', 1)
-									->where('pasien.rekam_medis', '!=', 'AP020739')
-									->where('pasien.rekam_medis', '!=', 'AP026418')
-									->where('pasien.status', '!=', 'Aktif')
-									->skip($skip)->take($this->take)
-									->select('pasien.*', 'registrasi.nomor')
-									->orderBy('registrasi.nomor', 'desc')
-									->get();
+		} else {
+			$data = Pasien::leftJoin('registrasi', function ($query) {
+				// TODO CHECK	
+				$query->on('registrasi.pasien_uuid', '=', 'pasien.uuid')
+					->whereRaw('registrasi.uuid = (
+										SELECT a2.uuid 
+										FROM registrasi as a2 
+										WHERE a2.pasien_uuid = pasien.uuid 
+										ORDER BY a2.created_at DESC 
+										LIMIT 1
+									)');
+			})
+				->where('pasien.delete_soft', '=', 1)
+				->where('pasien.rekam_medis', '!=', 'AP020739')
+				->where('pasien.rekam_medis', '!=', 'AP026418')
+				->where('pasien.status', '!=', 'Aktif')
+				->skip($skip)->take($this->take)
+				->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro', 'registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
+				->orderBy('registrasi.nomor', 'desc')
+				->get();
 
-			$total = Pasien::leftJoin('registrasi', function($query) {
-										$query->on('registrasi.pasien_uuid','=','pasien.uuid')
-											->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
-									})
-									->where('pasien.delete_soft', '=', 1)
-									->where('pasien.rekam_medis', '!=', 'AP020739')
-									->where('pasien.rekam_medis', '!=', 'AP026418')
-									->where('pasien.status', '!=', 'Aktif')
-									->select('pasien.*', 'registrasi.nomor')
-									->orderBy('registrasi.nomor', 'desc')
-									->count();
-
+			$total = Pasien::leftJoin('registrasi', function ($query) {
+				$query->on('registrasi.pasien_uuid', '=', 'pasien.uuid')
+					->whereRaw('registrasi.uuid = (
+					SELECT a2.uuid 
+					FROM registrasi as a2 
+					WHERE a2.pasien_uuid = pasien.uuid 
+					ORDER BY a2.created_at DESC 
+					LIMIT 1
+				)');
+			})
+				->where('pasien.delete_soft', '=', 1)
+				->where('pasien.rekam_medis', '!=', 'AP020739')
+				->where('pasien.rekam_medis', '!=', 'AP026418')
+				->where('pasien.status', '!=', 'Aktif')
+				->select('pasien.*', 'registrasi.nomor', 'registrasi.no_antrian_ro', 'registrasi.no_antrian_poli', 'registrasi.no_antrian_farmasi', 'registrasi.no_antrian_kasir')
+				->orderBy('registrasi.nomor', 'desc')
+				->count();
 		}
-		
+
 		return response()->json(['data' => $data, 'total' => $total]);
-	
 	}
 
-	public function uploadfile(Request $request) {
+	public function uploadfile(Request $request)
+	{
 		$file = $request->file('datafile');
-    $file_extension = $file->getClientOriginalExtension(); //** get filename extension
-    $fileName = 'suratpersetujuan/'.$request->pasien_uuid.'_files.'. $file_extension;
-    $uploaded = Storage::put('public/'.$fileName, file_get_contents($file->getRealPath()));
+		$file_extension = $file->getClientOriginalExtension(); //** get filename extension
+		$fileName = 'suratpersetujuan/' . $request->pasien_uuid . '_files.' . $file_extension;
+		$uploaded = Storage::put('public/' . $fileName, file_get_contents($file->getRealPath()));
 
 		$pasien = Pasien::where('uuid', '=', $request->pasien_uuid)->select('uuid', 'nama', 'rekam_medis')->first();
 
@@ -257,7 +286,7 @@ class PasienCtrl extends Controller
 		$item->pasien_uuid = $pasien->uuid;
 		$item->rekam_medis = $pasien->rekam_medis;
 		$item->nama_pasien = $pasien->nama;
-		$item->filename = 'storage/'.$fileName;
+		$item->filename = 'storage/' . $fileName;
 		$item->tanggal = date('Y-m-d');
 		$item->jam = date('H:i');
 		$item->save();
@@ -265,21 +294,28 @@ class PasienCtrl extends Controller
 		return response()->json(['data' => 'berhasil']);
 	}
 
-	public function suratpersetujuan(Request $request) { 
+	public function suratpersetujuan(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
-		PenggunaHelp::log('Menambahkan data pasien dengan nama pasien "'.$request->nama_pasien.'".');
+		PenggunaHelp::log('Menambahkan data pasien dengan nama pasien "' . $request->nama_pasien . '".');
 
-		try{
+		try {
 			DB::beginTransaction();
 
 			// $remove = suratpersetujuan::where('pasien_uuid', '=', $request->pasien_uuid)->delete();
 			$surat_ke = 1;
-			$cek = SuratPersetujuan::select('surat_ke')->orderBy('id','desc')->first();
-			if ($cek) { $surat_ke = $surat_ke + (int) $cek->surat_ke; }
+			$cek = SuratPersetujuan::select('surat_ke')->orderBy('id', 'desc')->first();
+			if ($cek) {
+				$surat_ke = $surat_ke + (int) $cek->surat_ke;
+			}
 
-			if ($surat_ke > 9999) { $surat_ke = 1; }
+			if ($surat_ke > 9999) {
+				$surat_ke = 1;
+			}
 
 			$item = new SuratPersetujuan();
 			$item->uuid = Uuid::uuid4();;
@@ -304,47 +340,68 @@ class PasienCtrl extends Controller
 			$data = Pasien::where('uuid', '=', $request->pasien_uuid)->first();
 
 			return response()->json(['data' => $data]);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
 	public function printsuratpersetujuan($uuid)
-  {
-    $pdf = \App::make('dompdf.wrapper');
+	{
+		$pdf = \App::make('dompdf.wrapper');
 		$surat = suratpersetujuan::where('pasien_uuid', '=', $uuid)->orderBy('id', 'desc')->first();
-    
-    $pdf->loadView('print.printpersetujuan', compact('surat'))->setPaper('a4', 'potrait');
 
-		
-    return $pdf->stream();
-  }
+		$pdf->loadView('print.printpersetujuan', compact('surat'))->setPaper('a4', 'potrait');
 
-	public function add(Request $request) { 
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		return $pdf->stream();
+	}
 
-		PenggunaHelp::log('Menambahkan data pasien dengan nama pasien "'.$request->nama.'".');
+	public function add(Request $request)
+	{
 
-		$uuid = ''; $loop = false;
-		do { $uuid = Uuid::uuid4(); $check = Pasien::where('uuid', '=', $uuid)->first(); if (!$check) { $loop = true; } }while($loop == false);
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
-		try{
+		PenggunaHelp::log('Menambahkan data pasien dengan nama pasien "' . $request->nama . '".');
+
+		$uuid = '';
+		$loop = false;
+		do {
+			$uuid = Uuid::uuid4();
+			$check = Pasien::where('uuid', '=', $uuid)->first();
+			if (!$check) {
+				$loop = true;
+			}
+		} while ($loop == false);
+
+		try {
 			DB::beginTransaction();
 
 			$pasien = Pasien::where('tahun', '=', date('y'))->orderBy('nomor', 'desc')->first();
 			$nomor = 1;
-			if ($pasien) { $nomor += $pasien->nomor; }
-			$rekam_medis = date('y').''.date('m');
+			if ($pasien) {
+				$nomor += $pasien->nomor;
+			}
+			$rekam_medis = date('y') . '' . date('m');
 			$angka_nol = '-';
-			if ($nomor < 10) { $angka_nol = '0000'; $rekam_medis .= '0000'.$nomor; }
-			else if ($nomor > 9 && $nomor < 100) { $angka_nol = '000'; $rekam_medis .= '000'.$nomor; }
-			else if ($nomor > 99 && $nomor < 1000) { $angka_nol = '00'; $rekam_medis .= '00'.$nomor; }
-			else if ($nomor > 999 && $nomor < 10000) { $angka_nol = '0'; $rekam_medis .= '0'.$nomor; }
-			else if ($nomor > 9999 && $nomor < 100000) { $angka_nol = '-'; $rekam_medis .= $nomor; }
-
+			if ($nomor < 10) {
+				$angka_nol = '0000';
+				$rekam_medis .= '0000' . $nomor;
+			} else if ($nomor > 9 && $nomor < 100) {
+				$angka_nol = '000';
+				$rekam_medis .= '000' . $nomor;
+			} else if ($nomor > 99 && $nomor < 1000) {
+				$angka_nol = '00';
+				$rekam_medis .= '00' . $nomor;
+			} else if ($nomor > 999 && $nomor < 10000) {
+				$angka_nol = '0';
+				$rekam_medis .= '0' . $nomor;
+			} else if ($nomor > 9999 && $nomor < 100000) {
+				$angka_nol = '-';
+				$rekam_medis .= $nomor;
+			}
 			$item = new Pasien();
 			$item->uuid = $uuid;
 			$item->rekam_medis = $rekam_medis;
@@ -353,6 +410,8 @@ class PasienCtrl extends Controller
 			$item->angka_nol = $angka_nol;
 			$item->nomor = $nomor;
 			$item->nama = $request->nama;
+			$item->no_ktp = $request->no_ktp;
+			$item->no_bpjs = $request->no_bpjs;
 			$item->alias = $request->alias ? $request->alias : '-';
 			$item->tempat_lahir = $request->tempat_lahir;
 			$item->tanggal_lahir = $request->tanggal_lahir;
@@ -390,26 +449,22 @@ class PasienCtrl extends Controller
 				$kelompok_umur_posisi = '0-2 Tahun';
 				$kelompok_umur_minimal = 0;
 				$kelompok_umur_maksimal = 2;
-			}
-			else if ($umur > 2 && $umur <= 5) {
+			} else if ($umur > 2 && $umur <= 5) {
 				$kelompok_umur_nama = 'Balita';
 				$kelompok_umur_posisi = '3-5 Tahun';
 				$kelompok_umur_minimal = 3;
 				$kelompok_umur_maksimal = 5;
-			}
-			else if ($umur > 5 && $umur <= 18) {
+			} else if ($umur > 5 && $umur <= 18) {
 				$kelompok_umur_nama = 'Anak-Anak';
 				$kelompok_umur_posisi = '6-18 Tahun';
 				$kelompok_umur_minimal = 6;
 				$kelompok_umur_maksimal = 18;
-			}
-			else if ($umur > 18 && $umur <= 60) {
+			} else if ($umur > 18 && $umur <= 60) {
 				$kelompok_umur_nama = 'Dewasa';
 				$kelompok_umur_posisi = '19-60 Tahun';
 				$kelompok_umur_minimal = 19;
 				$kelompok_umur_maksimal = 60;
-			}
-			else if ($umur > 60) {
+			} else if ($umur > 60) {
 				$kelompok_umur_nama = 'Lansia';
 				$kelompok_umur_posisi = '>61 Tahun';
 				$kelompok_umur_minimal = 61;
@@ -425,18 +480,18 @@ class PasienCtrl extends Controller
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
-	private function hitung_umur($tanggal_lahir){
+	private function hitung_umur($tanggal_lahir)
+	{
 		$birthDate = new DateTime($tanggal_lahir);
 		$today = new DateTime("today");
-		if ($birthDate > $today) { 
-				exit("0 tahun 0 bulan 0 hari");
+		if ($birthDate > $today) {
+			exit("0 tahun 0 bulan 0 hari");
 		}
 		$y = $today->diff($birthDate)->y;
 		$m = $today->diff($birthDate)->m;
@@ -445,37 +500,46 @@ class PasienCtrl extends Controller
 		return $y;
 	}
 
-	public function edit(Request $request) {
+	public function edit(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		$data = Pasien::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
-			PenggunaHelp::log('Mengambil data pasien dengan nama pasien "'.$data->nama.'" dan id "'.$data->id.'" untuk ditampilkan dihalaman edit pasien');
+			PenggunaHelp::log('Mengambil data pasien dengan nama pasien "' . $data->nama . '" dan id "' . $data->id . '" untuk ditampilkan dihalaman edit pasien');
 		}
-		
+
 		return response()->json(['data' => $data]);
 	}
 
-	public function detail(Request $request) {
+	public function detail(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		$data = Pasien::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
-			PenggunaHelp::log('Mengambil data pasien dengan nama pasien "'.$data->nama.'" dan id "'.$data->id.'" untuk ditampilkan dihalaman detail pasien');
+			PenggunaHelp::log('Mengambil data pasien dengan nama pasien "' . $data->nama . '" dan id "' . $data->id . '" untuk ditampilkan dihalaman detail pasien');
 		}
 
 		$registrasi = Registrasi::where('pasien_uuid', '=', $request->uuid)->orderBy('id', 'desc')->limit(12)->get();
-		
+
 		return response()->json(['data' => $data, 'registrasi' => $registrasi]);
 	}
 
-	public function update(Request $request) {
+	public function update(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
-		PenggunaHelp::log('Mengupdate data icd 9 dengan nama "'.$request->nama.'".');
+		PenggunaHelp::log('Mengupdate data icd 9 dengan nama "' . $request->nama . '".');
 
 		$umur = $this->hitung_umur($request->tanggal_lahir);
 		$kelompok_umur_nama = '-';
@@ -487,26 +551,22 @@ class PasienCtrl extends Controller
 			$kelompok_umur_posisi = '0-2 Tahun';
 			$kelompok_umur_minimal = 0;
 			$kelompok_umur_maksimal = 2;
-		}
-		else if ($umur > 2 && $umur <= 5) {
+		} else if ($umur > 2 && $umur <= 5) {
 			$kelompok_umur_nama = 'Balita';
 			$kelompok_umur_posisi = '3-5 Tahun';
 			$kelompok_umur_minimal = 3;
 			$kelompok_umur_maksimal = 5;
-		}
-		else if ($umur > 5 && $umur <= 18) {
+		} else if ($umur > 5 && $umur <= 18) {
 			$kelompok_umur_nama = 'Anak-Anak';
 			$kelompok_umur_posisi = '6-18 Tahun';
 			$kelompok_umur_minimal = 6;
 			$kelompok_umur_maksimal = 18;
-		}
-		else if ($umur > 18 && $umur <= 60) {
+		} else if ($umur > 18 && $umur <= 60) {
 			$kelompok_umur_nama = 'Dewasa';
 			$kelompok_umur_posisi = '19-60 Tahun';
 			$kelompok_umur_minimal = 19;
 			$kelompok_umur_maksimal = 60;
-		}
-		else if ($umur > 60) {
+		} else if ($umur > 60) {
 			$kelompok_umur_nama = 'Lansia';
 			$kelompok_umur_posisi = '>61 Tahun';
 			$kelompok_umur_minimal = 61;
@@ -515,6 +575,8 @@ class PasienCtrl extends Controller
 
 		$arr = array(
 			'nama' => $request->nama,
+			'no_ktp' => $request->no_ktp,
+			'no_bpjs' => $request->no_bpjs,
 			'alias' => $request->alias ? $request->alias : '-',
 			'tempat_lahir' => $request->tempat_lahir,
 			'tanggal_lahir' => $request->tanggal_lahir,
@@ -548,82 +610,104 @@ class PasienCtrl extends Controller
 			'kelompok_umur_maksimal' => $kelompok_umur_maksimal,
 		);
 
-		try{
+		try {
 			DB::beginTransaction();
 
 			$update = Pasien::where('uuid', '=', $request->uuid)->update($arr);
-			
+
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
-	public function api(Request $request) {
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
-		$data = Pasien::where('delete_soft', '=', '1')->where('nama', 'ilike', '%'.$request->keyword.'%')->limit(15)->get();
+	public function api(Request $request)
+	{
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
+		$data = Pasien::where('delete_soft', '=', '1')->where('nama', 'ilike', '%' . $request->keyword . '%')->limit(15)->get();
 		return response()->json(['data' => $data]);
 	}
 
 	public function pdf($uuid)
-  {
-    $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+	{
+		$pdf = \App::make('dompdf.wrapper');
+		$pasien = Pasien::where('uuid', '=', $uuid)->first();
 		$arr = array('is_printer_card' => 'Sudah');
 		$update = Pasien::where('uuid', '=', $uuid)->update($arr);
-    $customPaper = array(0,0,260,425);
-    $pdf->loadView('print.cetakkartu', compact('pasien'))->setPaper($customPaper,'landscape');
+		$customPaper = array(0, 0, 260, 425);
+		$pdf->loadView('print.cetakkartu', compact('pasien'))->setPaper($customPaper, 'landscape');
 		return $pdf->stream();
-  }
+	}
 
 	public function label($uuid)
-  {
-    $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $customPaper = array(0,0,118,285);
-    $pdf->loadView('print.cetaklabel', compact('pasien'))->setPaper($customPaper,'landscape');
+	{
+		$pdf = \App::make('dompdf.wrapper');
+		$pasien = Pasien::where('uuid', '=', $uuid)->first();
+		$customPaper = array(0, 0, 118, 285);
+		$pdf->loadView('print.cetaklabel', compact('pasien'))->setPaper($customPaper, 'landscape');
 		return $pdf->stream();
-  }
+	}
 
 	public function identitaspasien($uuid)
-  {
-    $pdf = \App::make('dompdf.wrapper');
-    $registrasi = Registrasi::where('pasien_uuid', '=', $uuid)->orderBy('id', 'desc')->first();
-    $pasien = Pasien::where('uuid', '=', $uuid)->orderBy('id', 'desc')->first();
-    $penanggungjawab = PenanggungJawab::where('pasien_uuid', '=', $uuid)->orderBy('id', 'desc')->first();
-    $pdf->loadView('print.cetakidentitas', compact('pasien', 'registrasi', 'penanggungjawab'))->setPaper('a4', 'potrait');
+	{
+		$pdf = \App::make('dompdf.wrapper');
+		$registrasi = Registrasi::where('pasien_uuid', '=', $uuid)->orderBy('id', 'desc')->first();
+		$pasien = Pasien::where('uuid', '=', $uuid)->orderBy('id', 'desc')->first();
+		$penanggungjawab = PenanggungJawab::where('pasien_uuid', '=', $uuid)->orderBy('id', 'desc')->first();
+		$pdf->loadView('print.cetakidentitas', compact('pasien', 'registrasi', 'penanggungjawab'))->setPaper('a4', 'potrait');
 		return $pdf->stream();
-  }
+	}
 
-	public function listpemeriksaan($uuid){
+	public function listpemeriksaan($uuid)
+	{
 		$registrasi = Registrasi::select([
-			DB::raw("CONCAT(registrasi.kode, registrasi.nomor) as kode"), 'registrasi.tanggal', 'registrasi.uuid',
+			DB::raw("CONCAT(registrasi.kode, registrasi.nomor) as kode"),
+			'registrasi.tanggal',
+			'registrasi.uuid',
 			'registrasi.nama_dokter',
-			'p_ro.tekanan_darah', 'p_ro.berat_badan', 'p_ro.tinggi_badan', 'p_ro.suhu', 
-			'p_ro.ocular_dextra_autoref', 'p_ro.ocular_dextra_visus', 'p_ro.ocular_dextra_tonometri',
-			'p_ro.ocular_sinistra_autoref', 'p_ro.ocular_sinistra_visus', 'p_ro.ocular_sinistra_tonometri',
+			'p_ro.tekanan_darah',
+			'p_ro.berat_badan',
+			'p_ro.tinggi_badan',
+			'p_ro.suhu',
+			'p_ro.ocular_dextra_autoref',
+			'p_ro.ocular_dextra_visus',
+			'p_ro.ocular_dextra_tonometri',
+			'p_ro.ocular_sinistra_autoref',
+			'p_ro.ocular_sinistra_visus',
+			'p_ro.ocular_sinistra_tonometri',
 		])->where('registrasi.pasien_uuid', $uuid)
 			->leftJoin('pemeriksaan_dokter', 'pemeriksaan_dokter.registrasi_uuid', '=', 'registrasi.uuid')
 			// Entah kenapa, pemeriksaan_ro dapat diinput lebih dari sekali untuk satu registrasi
 			->leftJoinSub(
-					fn($q) => $q->from('pemeriksaan_ro')->select([
-							'registrasi_uuid', 'tekanan_darah', 'berat_badan', 'tinggi_badan', 'suhu', 'ocular_dextra_autoref',
-							'ocular_dextra_visus', 'ocular_dextra_tonometri', 'ocular_sinistra_autoref',
-							'ocular_sinistra_visus', 'ocular_sinistra_tonometri'
-						])->selectRaw('RANK() OVER (PARTITION BY pasien_uuid ORDER BY created_at DESC) as urutan')
-					, 'p_ro', fn($q) => $q->on('p_ro.registrasi_uuid', '=', 'registrasi.uuid')->where('p_ro.urutan', '=', 1)
+				fn($q) => $q->from('pemeriksaan_ro')->select([
+					'registrasi_uuid',
+					'tekanan_darah',
+					'berat_badan',
+					'tinggi_badan',
+					'suhu',
+					'ocular_dextra_autoref',
+					'ocular_dextra_visus',
+					'ocular_dextra_tonometri',
+					'ocular_sinistra_autoref',
+					'ocular_sinistra_visus',
+					'ocular_sinistra_tonometri'
+				])->selectRaw('RANK() OVER (PARTITION BY pasien_uuid ORDER BY created_at DESC) as urutan'),
+				'p_ro',
+				fn($q) => $q->on('p_ro.registrasi_uuid', '=', 'registrasi.uuid')->where('p_ro.urutan', '=', 1)
 			)
 			->orderBy('registrasi.created_at', 'DESC');
 
 		return response()->json($registrasi->get());
 	}
 
-	public function cetaksuratsakit($uuid){
-    $pasien = Pasien::where('uuid', '=', $uuid)->orderBy('id', 'desc')->first();
+	public function cetaksuratsakit($uuid)
+	{
+		$pasien = Pasien::where('uuid', '=', $uuid)->orderBy('id', 'desc')->first();
 
 		$values = [
 			'nama' => $pasien->nama,
@@ -640,21 +724,33 @@ class PasienCtrl extends Controller
 		$template->saveAs($storagePath);
 
 		return response()->download($storagePath, "Surat Sakit - {$pasien->rekam_medis} - {$pasien->nama}.docx")
-				->deleteFileAfterSend();
+			->deleteFileAfterSend();
 	}
 
-	public function cetaksuratsehat($uuid){
+	public function cetaksuratsehat($uuid)
+	{
 		$pasien = Registrasi::select([
-			'pasien.tanggal_lahir', 'pasien.alamat', 'pasien.nama', 'pasien.rekam_medis',
-			'p_ro.tekanan_darah', 'p_ro.berat_badan', 'p_ro.tinggi_badan', 'p_ro.suhu',
+			'pasien.tanggal_lahir',
+			'pasien.alamat',
+			'pasien.nama',
+			'pasien.rekam_medis',
+			'p_ro.tekanan_darah',
+			'p_ro.berat_badan',
+			'p_ro.tinggi_badan',
+			'p_ro.suhu',
 		])->where('registrasi.uuid', $uuid)
 			->join('pasien', 'pasien.uuid', '=', 'registrasi.pasien_uuid')
 			// Entah kenapa, pemeriksaan_ro dapat diinput lebih dari sekali untuk satu registrasi
 			->leftJoinSub(
-					fn($q) => $q->from('pemeriksaan_ro')->select([
-							'registrasi_uuid', 'tekanan_darah', 'berat_badan', 'tinggi_badan', 'suhu',
-						])->selectRaw('RANK() OVER (PARTITION BY pasien_uuid ORDER BY created_at DESC) as urutan')
-					, 'p_ro', fn($q) => $q->on('p_ro.registrasi_uuid', '=', 'registrasi.uuid')->where('p_ro.urutan', '=', 1)
+				fn($q) => $q->from('pemeriksaan_ro')->select([
+					'registrasi_uuid',
+					'tekanan_darah',
+					'berat_badan',
+					'tinggi_badan',
+					'suhu',
+				])->selectRaw('RANK() OVER (PARTITION BY pasien_uuid ORDER BY created_at DESC) as urutan'),
+				'p_ro',
+				fn($q) => $q->on('p_ro.registrasi_uuid', '=', 'registrasi.uuid')->where('p_ro.urutan', '=', 1)
 			)->first();
 
 		$values = [
@@ -677,26 +773,44 @@ class PasienCtrl extends Controller
 		$template->saveAs($storagePath);
 
 		return response()->download($storagePath, "Surat Sehat - {$pasien->rekam_medis} - {$pasien->nama}.docx")
-				->deleteFileAfterSend();
+			->deleteFileAfterSend();
 	}
 
-	public function cetaksuratro($uuid){
+	public function cetaksuratro($uuid)
+	{
 		$pasien = Registrasi::select([
-			'pasien.tanggal_lahir', 'pasien.alamat', 'pasien.nama', 'pasien.rekam_medis',
-			'registrasi.tanggal', DB::raw('pemeriksaan_dokter.tanggal as tanggal_periksa'),
-			'p_ro.ocular_dextra_autoref', 'p_ro.ocular_dextra_visus', 'p_ro.ocular_dextra_tonometri',
-			'p_ro.ocular_sinistra_autoref', 'p_ro.ocular_sinistra_visus', 'p_ro.ocular_sinistra_tonometri',
+			'pasien.tanggal_lahir',
+			'pasien.alamat',
+			'pasien.nama',
+			'pasien.rekam_medis',
+			'registrasi.tanggal',
+			DB::raw('pemeriksaan_dokter.tanggal as tanggal_periksa'),
+			'p_ro.ocular_dextra_autoref',
+			'p_ro.ocular_dextra_visus',
+			'p_ro.ocular_dextra_tonometri',
+			'p_ro.ocular_sinistra_autoref',
+			'p_ro.ocular_sinistra_visus',
+			'p_ro.ocular_sinistra_tonometri',
 		])->where('registrasi.uuid', $uuid)
 			->leftJoin('pemeriksaan_dokter', 'pemeriksaan_dokter.registrasi_uuid', '=', 'registrasi.uuid')
 			->join('pasien', 'pasien.uuid', '=', 'registrasi.pasien_uuid')
 			// Entah kenapa, pemeriksaan_ro dapat diinput lebih dari sekali untuk satu registrasi
 			->leftJoinSub(
-					fn($q) => $q->from('pemeriksaan_ro')->select([
-							'registrasi_uuid', 'tekanan_darah', 'berat_badan', 'tinggi_badan', 'suhu', 'ocular_dextra_autoref',
-							'ocular_dextra_visus', 'ocular_dextra_tonometri', 'ocular_sinistra_autoref',
-							'ocular_sinistra_visus', 'ocular_sinistra_tonometri'
-						])->selectRaw('RANK() OVER (PARTITION BY pasien_uuid ORDER BY created_at DESC) as urutan')
-					, 'p_ro', fn($q) => $q->on('p_ro.registrasi_uuid', '=', 'registrasi.uuid')->where('p_ro.urutan', '=', 1)
+				fn($q) => $q->from('pemeriksaan_ro')->select([
+					'registrasi_uuid',
+					'tekanan_darah',
+					'berat_badan',
+					'tinggi_badan',
+					'suhu',
+					'ocular_dextra_autoref',
+					'ocular_dextra_visus',
+					'ocular_dextra_tonometri',
+					'ocular_sinistra_autoref',
+					'ocular_sinistra_visus',
+					'ocular_sinistra_tonometri'
+				])->selectRaw('RANK() OVER (PARTITION BY pasien_uuid ORDER BY created_at DESC) as urutan'),
+				'p_ro',
+				fn($q) => $q->on('p_ro.registrasi_uuid', '=', 'registrasi.uuid')->where('p_ro.urutan', '=', 1)
 			)->first();
 
 		$values = [
@@ -725,6 +839,6 @@ class PasienCtrl extends Controller
 		$template->saveAs($storagePath);
 
 		return response()->download($storagePath, "Surat RO - {$pasien->rekam_medis} - {$pasien->nama}.docx")
-				->deleteFileAfterSend();
+			->deleteFileAfterSend();
 	}
 }

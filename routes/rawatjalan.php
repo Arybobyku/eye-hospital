@@ -32,6 +32,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('addperawat', [PemeriksaanCtrl::class, 'addperawat'])->name('pemeriksaan-addperawat');
 		Route::post('histori', [PemeriksaanCtrl::class, 'histori'])->name('pemeriksaan-histori');
 		Route::post('call', [PemeriksaanCtrl::class, 'call'])->name('pemeriksaan-call');
+		Route::post('finishcall', [PemeriksaanCtrl::class, 'finishcall'])->name('pemeriksaan-finish-call');
 	});
 
 	Route::prefix('historipemeriksaan')->group(function () {

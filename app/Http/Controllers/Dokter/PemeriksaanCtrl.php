@@ -23,6 +23,9 @@ use App\Models\ResepRacikan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
+use App\Models\AntrianKasir;
+use App\Models\AntrianFarmasi;
+use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
 
 class PemeriksaanCtrl extends Controller
 {
@@ -52,7 +55,7 @@ class PemeriksaanCtrl extends Controller
 
         if ($request->search != '') {
             $data = Registrasi::where('delete_soft', '=', 1)
-                ->where($column, 'ilike', '%'.$search.'%')
+                ->where($column, 'ilike', '%' . $search . '%')
                 ->where('ruang_poliklinik', '!=', '0')
                 // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
                 // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
@@ -74,10 +77,10 @@ class PemeriksaanCtrl extends Controller
                 // ->where('carabayar_nama', '!=', 'bpjs_sehat')
                 // ->where('berkebutuhan_khusus', '=', 'Tidak')
                 ->where('berkebutuhan_khusus', '!=', 'Ya');
-                // ->where('apakah_paket', '=', 'Tidak')
-                // ->whereDate('tanggal', '=', date('Y-m-d'));
-            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-                $data = $data->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+            // ->where('apakah_paket', '=', 'Tidak')
+            // ->whereDate('tanggal', '=', date('Y-m-d'));
+            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+                $data = $data->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
             }
             $data = $data->orderBy('status_dokter', 'asc')
                 ->orderBy('tanggal', 'desc')
@@ -119,12 +122,12 @@ class PemeriksaanCtrl extends Controller
                 // ->where('carabayar_nama', '!=', 'bpjs_sehat')
                 ->where('ruang_poliklinik', '!=', '0');
 
-            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-                $total = $total->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+                $total = $total->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
             }
 
             $total = $total->where('berkebutuhan_khusus', '=', 'Tidak')
-                ->where($column, 'ilike', '%'.$search.'%')
+                ->where($column, 'ilike', '%' . $search . '%')
                 ->whereDate('tanggal', '=', date('Y-m-d'))
                 ->orderBy('tanggal', 'desc')
                 ->orderBy('posisi_antrian_dokter', 'asc')
@@ -160,8 +163,8 @@ class PemeriksaanCtrl extends Controller
                 // });
                 ->where('status_dokter', 'Belum Diperiksa');
 
-            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-                $data = $data->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+                $data = $data->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
             }
 
             $data = $data->where('ruang_poliklinik', '!=', '0')
@@ -193,8 +196,8 @@ class PemeriksaanCtrl extends Controller
             // ->where('carabayar_nama', '!=', 'bpjs_sehat')
             // ->where('apakah_paket', '=', 'Tidak');
 
-            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-                $total = $total->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+                $total = $total->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
             }
 
             $total = $total->where('berkebutuhan_khusus', '=', 'Tidak')
@@ -230,13 +233,13 @@ class PemeriksaanCtrl extends Controller
 
         if ($request->search != '') {
             $data = Registrasi::where('delete_soft', '=', 1)
-                ->where($column, 'ilike', '%'.$search.'%')
+                ->where($column, 'ilike', '%' . $search . '%')
                 ->where('ruang_poliklinik', '!=', '0')
                 // ->where('berkebutuhan_khusus', '=', 'Tidak')
                 ->where('berkebutuhan_khusus', '!=', 'Ya');
             // ->where('apakah_paket', '=', 'Tidak');
-            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-                $data = $data->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+                $data = $data->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
             }
             $data = $data->orderBy('status_dokter', 'asc')
                 ->orderBy('posisi_antrian_dokter', 'asc')
@@ -259,14 +262,14 @@ class PemeriksaanCtrl extends Controller
                 ->where('status_dokter', 'Sudah Diperiksa')
                 ->where('ruang_poliklinik', '!=', '0');
 
-            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-                $total = $total->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+                $total = $total->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
             }
 
             $total = $total
                 // ->where('berkebutuhan_khusus', '=', 'Tidak')
                 ->where('berkebutuhan_khusus', '!=', 'Ya')
-                ->where($column, 'ilike', '%'.$search.'%')
+                ->where($column, 'ilike', '%' . $search . '%')
                 ->orderBy('posisi_antrian_dokter', 'asc')
                 ->orderBy('status_dokter', 'asc')->count();
         } else {
@@ -279,8 +282,8 @@ class PemeriksaanCtrl extends Controller
                 // });
                 ->where('status_dokter', 'Sudah Diperiksa');
 
-            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-                $data = $data->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+                $data = $data->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
             }
 
             $data = $data->skip($skip)->take($this->take)
@@ -288,8 +291,8 @@ class PemeriksaanCtrl extends Controller
 
             $total = Registrasi::where('delete_soft', '=', 1);
 
-            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-                $total = $total->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+            if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+                $total = $total->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
             }
 
             $total = $total
@@ -311,7 +314,7 @@ class PemeriksaanCtrl extends Controller
             return response()->json(['data' => $this->error]);
         }
 
-        \PenggunaHelp::log('Menambahkan data pemeriksaan ro dengan nama pasien "'.$request->nama_pasien.'".');
+        \PenggunaHelp::log('Menambahkan data pemeriksaan ro dengan nama pasien "' . $request->nama_pasien . '".');
 
         $uuid = '';
         $loop = false;
@@ -406,8 +409,8 @@ class PemeriksaanCtrl extends Controller
                 }
 
                 $remove = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid);
-                if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-                    $remove = $remove->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+                if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+                    $remove = $remove->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
                 }
                 $remove = $remove->delete();
                 $tindakan = json_decode($request->tindakan);
@@ -753,68 +756,68 @@ class PemeriksaanCtrl extends Controller
                         //START PANGKAS ALUR
                         $data = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
-                          $registrasi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->select('nomor')->first();
+                        $registrasi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->select('nomor')->first();
 
-                            $nomor = 1;
-                            if ($registrasi) {
-                                $potong_kalimat = substr($registrasi->nomor, -5);
-                                $potong_kalimat = (int) $potong_kalimat;
-                                $nomor += $potong_kalimat;
-                            }
+                        $nomor = 1;
+                        if ($registrasi) {
+                            $potong_kalimat = substr($registrasi->nomor, -5);
+                            $potong_kalimat = (int) $potong_kalimat;
+                            $nomor += $potong_kalimat;
+                        }
 
-                            if ($nomor < 9) {
-                                $nomor = '0000'.$nomor;
-                            } elseif ($nomor > 9 && $nomor < 100) {
-                                $nomor = '000'.$nomor;
-                            } elseif ($nomor > 99 && $nomor < 1000) {
-                                $nomor = '00'.$nomor;
-                            } elseif ($nomor > 999 && $nomor < 10000) {
-                                $nomor = '0'.$nomor;
-                            }
+                        if ($nomor < 9) {
+                            $nomor = '0000' . $nomor;
+                        } elseif ($nomor > 9 && $nomor < 100) {
+                            $nomor = '000' . $nomor;
+                        } elseif ($nomor > 99 && $nomor < 1000) {
+                            $nomor = '00' . $nomor;
+                        } elseif ($nomor > 999 && $nomor < 10000) {
+                            $nomor = '0' . $nomor;
+                        }
 
-                            $nomor = date('Y').date('m').date('d').$nomor;
-                            $nomor_bedah = $nomor;
-                            $uuid = Uuid::uuid4();
-                            $uuid_bedah = $uuid;
-                            $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+                        $nomor = date('Y') . date('m') . date('d') . $nomor;
+                        $nomor_bedah = $nomor;
+                        $uuid = Uuid::uuid4();
+                        $uuid_bedah = $uuid;
+                        $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
-                            $arr = [
-                                    'status_dokter' => 'Sudah Diperiksa',
-                                    'nama_paket_bedah' => $regOp->nama_layanan,
-                                    'paket_bedah_uuid' => $regOp->layanan_uuid,
-                                    'last_position' => 'Pendaftaran',
-                                ];
+                        $arr = [
+                            'status_dokter' => 'Sudah Diperiksa',
+                            'nama_paket_bedah' => $regOp->nama_layanan,
+                            'paket_bedah_uuid' => $regOp->layanan_uuid,
+                            'last_position' => 'Pendaftaran',
+                        ];
 
-                            Registrasi::where('uuid', '=', $regOp->registrasi_uuid)->update($arr);
-                            /* Bagian Data Bedah */
-                            $item = new Bedah();
-                            $item->uuid = Uuid::uuid4();
-                            $item->jenis = $data->jenis;
+                        Registrasi::where('uuid', '=', $regOp->registrasi_uuid)->update($arr);
+                        /* Bagian Data Bedah */
+                        $item = new Bedah();
+                        $item->uuid = Uuid::uuid4();
+                        $item->jenis = $data->jenis;
 
-                            $item->registrasi_uuid = $uuid_bedah;
-                            $item->no_pendaftaran = '-';
-                            $item->registrasi_kode = 'ODC';
-                            $item->registrasi_nomor = $nomor_bedah;
-                            $item->registrasi_jenis = 'One Day Care';
+                        $item->registrasi_uuid = $uuid_bedah;
+                        $item->no_pendaftaran = '-';
+                        $item->registrasi_kode = 'ODC';
+                        $item->registrasi_nomor = $nomor_bedah;
+                        $item->registrasi_jenis = 'One Day Care';
 
-                            $item->pasien_uuid = $data->pasien_uuid;
-                            $item->rekam_medis = $data->rekam_medis;
-                            $item->nama_pasien = $data->nama_pasien;
-                            $item->pengguna_uuid = $data->pengguna_uuid;
-                            $item->nama_dokter = $data->nama_dokter;
+                        $item->pasien_uuid = $data->pasien_uuid;
+                        $item->rekam_medis = $data->rekam_medis;
+                        $item->nama_pasien = $data->nama_pasien;
+                        $item->pengguna_uuid = $data->pengguna_uuid;
+                        $item->nama_dokter = $data->nama_dokter;
 
-                            $item->tanggal = $data->tanggal;
-                            $item->waktu = $data->waktu;
+                        $item->tanggal = $data->tanggal;
+                        $item->waktu = $data->waktu;
 
-                            $item->paket_uuid = $data->layanan_uuid;
-                            $item->nama_paket = $data->nama_layanan;
-                            $item->harga_paket = $data->tarif;
-                            $item->keterangan = $data->keterangan;
-                            $item->save();
+                        $item->paket_uuid = $data->layanan_uuid;
+                        $item->nama_paket = $data->nama_layanan;
+                        $item->harga_paket = $data->tarif;
+                        $item->keterangan = $data->keterangan;
+                        $item->save();
 
-                            $arr = ['status' => 'One Day Care'];
-                            Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
-                            //END PANGKAS ALUR
+                        $arr = ['status' => 'One Day Care'];
+                        Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
+                        //END PANGKAS ALUR
                     }
                 }
                 $listpaketbedah = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $request->paket_uuid_bedah)->get();
@@ -927,71 +930,71 @@ class PemeriksaanCtrl extends Controller
                         $item->save();
                     }
 
-                                            //START PANGKAS ALUR
-                        $data = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+                    //START PANGKAS ALUR
+                    $data = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
-                          $registrasi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->select('nomor')->first();
+                    $registrasi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->select('nomor')->first();
 
-                            $nomor = 1;
-                            if ($registrasi) {
-                                $potong_kalimat = substr($registrasi->nomor, -5);
-                                $potong_kalimat = (int) $potong_kalimat;
-                                $nomor += $potong_kalimat;
-                            }
+                    $nomor = 1;
+                    if ($registrasi) {
+                        $potong_kalimat = substr($registrasi->nomor, -5);
+                        $potong_kalimat = (int) $potong_kalimat;
+                        $nomor += $potong_kalimat;
+                    }
 
-                            if ($nomor < 9) {
-                                $nomor = '0000'.$nomor;
-                            } elseif ($nomor > 9 && $nomor < 100) {
-                                $nomor = '000'.$nomor;
-                            } elseif ($nomor > 99 && $nomor < 1000) {
-                                $nomor = '00'.$nomor;
-                            } elseif ($nomor > 999 && $nomor < 10000) {
-                                $nomor = '0'.$nomor;
-                            }
+                    if ($nomor < 9) {
+                        $nomor = '0000' . $nomor;
+                    } elseif ($nomor > 9 && $nomor < 100) {
+                        $nomor = '000' . $nomor;
+                    } elseif ($nomor > 99 && $nomor < 1000) {
+                        $nomor = '00' . $nomor;
+                    } elseif ($nomor > 999 && $nomor < 10000) {
+                        $nomor = '0' . $nomor;
+                    }
 
-                            $nomor = date('Y').date('m').date('d').$nomor;
-                            $nomor_bedah = $nomor;
-                            $uuid = Uuid::uuid4();
-                            $uuid_bedah = $uuid;
-                            $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+                    $nomor = date('Y') . date('m') . date('d') . $nomor;
+                    $nomor_bedah = $nomor;
+                    $uuid = Uuid::uuid4();
+                    $uuid_bedah = $uuid;
+                    $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
-                            $arr = [
-                                    'status_dokter' => 'Sudah Diperiksa',
-                                    'nama_paket_bedah' => $regOp->nama_layanan,
-                                    'paket_bedah_uuid' => $regOp->layanan_uuid,
-                                    'last_position' => 'Pendaftaran',
-                                ];
+                    $arr = [
+                        'status_dokter' => 'Sudah Diperiksa',
+                        'nama_paket_bedah' => $regOp->nama_layanan,
+                        'paket_bedah_uuid' => $regOp->layanan_uuid,
+                        'last_position' => 'Pendaftaran',
+                    ];
 
-                            Registrasi::where('uuid', '=', $regOp->registrasi_uuid)->update($arr);
-                            /* Bagian Data Bedah */
-                            $item = new Bedah();
-                            $item->uuid = Uuid::uuid4();
-                            $item->jenis = $data->jenis;
+                    Registrasi::where('uuid', '=', $regOp->registrasi_uuid)->update($arr);
+                    /* Bagian Data Bedah */
+                    $item = new Bedah();
+                    $item->uuid = Uuid::uuid4();
+                    $item->jenis = $data->jenis;
 
-                            $item->registrasi_uuid = $uuid_bedah;
-                            $item->no_pendaftaran = '-';
-                            $item->registrasi_kode = 'ODC';
-                            $item->registrasi_nomor = $nomor_bedah;
-                            $item->registrasi_jenis = 'One Day Care';
+                    $item->registrasi_uuid = $uuid_bedah;
+                    $item->no_pendaftaran = '-';
+                    $item->registrasi_kode = 'ODC';
+                    $item->registrasi_nomor = $nomor_bedah;
+                    $item->registrasi_jenis = 'One Day Care';
 
-                            $item->pasien_uuid = $data->pasien_uuid;
-                            $item->rekam_medis = $data->rekam_medis;
-                            $item->nama_pasien = $data->nama_pasien;
-                            $item->pengguna_uuid = $data->pengguna_uuid;
-                            $item->nama_dokter = $data->nama_dokter;
+                    $item->pasien_uuid = $data->pasien_uuid;
+                    $item->rekam_medis = $data->rekam_medis;
+                    $item->nama_pasien = $data->nama_pasien;
+                    $item->pengguna_uuid = $data->pengguna_uuid;
+                    $item->nama_dokter = $data->nama_dokter;
 
-                            $item->tanggal = $data->tanggal;
-                            $item->waktu = $data->waktu;
+                    $item->tanggal = $data->tanggal;
+                    $item->waktu = $data->waktu;
 
-                            $item->paket_uuid = $data->layanan_uuid;
-                            $item->nama_paket = $data->nama_layanan;
-                            $item->harga_paket = $data->tarif;
-                            $item->keterangan = $data->keterangan;
-                            $item->save();
+                    $item->paket_uuid = $data->layanan_uuid;
+                    $item->nama_paket = $data->nama_layanan;
+                    $item->harga_paket = $data->tarif;
+                    $item->keterangan = $data->keterangan;
+                    $item->save();
 
-                            $arr = ['status' => 'One Day Care'];
-                            Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
-                            //END PANGKAS ALUR
+                    $arr = ['status' => 'One Day Care'];
+                    Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
+                    //END PANGKAS ALUR
                 }
 
                 $remove = Resep::where('registrasi_uuid', '=', $request->registrasi_uuid)->where('is_tambahan', 0)->where('is_bedah', 0)->delete();
@@ -1166,6 +1169,88 @@ class PemeriksaanCtrl extends Controller
                     $arr = ['ada_obat' => 'Tidak', 'rke' => 0];
                     $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
                 }
+
+
+
+                $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+
+                // Start Antrian Farmasi
+                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0) && $registrasi->carabayar_nama != 'Umum') {
+                    // Create Antrian Farmasi
+                    $uuidFarmasi = '';
+                    $loop = false;
+                    do {
+                        $uuidFarmasi = Uuid::uuid4();
+                        $check = AntrianFarmasi::where('uuid', '=', $uuidFarmasi)->first();
+                        if (!$check) {
+                            $loop = true;
+                        }
+                    } while ($loop == false);
+
+                    $latestAntrianRO = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+                    $latestNumber = $latestAntrianRO->number ?? 0;
+                    $latestNumber = $latestNumber + 1;
+                    $kodeFarmasi = 'F-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+                    $antrianFarmasi = new AntrianFarmasi();
+                    $antrianFarmasi->uuid = $uuidFarmasi;
+                    $antrianFarmasi->kode = 'F';
+                    $antrianFarmasi->number = $latestNumber;
+                    $antrianFarmasi->jenis = $registrasi->jenis;
+                    $antrianFarmasi->tanggal = date('Y-m-d');
+
+                    // BPJS
+                    $antrianFarmasi->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianFarmasi->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianFarmasi->uuid_registrasi =  $registrasi->uuid;
+
+                    $antrianFarmasi->save();
+
+                    Registrasi::where('uuid', $request->registrasi_uuid)
+                        ->update(['no_antrian_farmasi' => $kodeFarmasi]);
+                }
+                // End Antrian Farmasi
+
+                // Start Antrian Kasir
+                if ($registrasi->no_antrian_kasir == null && $registrasi->carabayar_nama == 'Umum') {
+                    $uuidKasir = '';
+                    $loop = false;
+                    do {
+                        $uuidKasir = Uuid::uuid4();
+                        $check = AntrianKasir::where('uuid', '=', $uuidKasir)->first();
+                        if (!$check) {
+                            $loop = true;
+                        }
+                    } while ($loop == false);
+
+                    $latestAntrianKasir = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+                    $latestNumber = $latestAntrianKasir->number ?? 0;
+                    $latestNumber = $latestNumber + 1;
+                    $kodeKasir = 'K-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+                    $antrianKasir = new AntrianKasir();
+                    $antrianKasir->uuid = $uuidKasir;
+                    $antrianKasir->kode = 'K';
+                    $antrianKasir->number = $latestNumber;
+                    $antrianKasir->jenis = $registrasi->jenis;
+                    $antrianKasir->tanggal = date('Y-m-d');
+                    // BPJS
+                    $antrianKasir->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianKasir->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianKasir->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianKasir->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianKasir->uuid_registrasi =  $registrasi->uuid;
+
+                    $antrianKasir->save();
+
+                    Registrasi::where('uuid', $request->registrasi_uuid)
+                        ->update(['no_antrian_kasir' => $kodeKasir]);
+                }
+                // End Antrian Kasir
             } else {
                 $item = new PemeriksaanDokter();
                 $item->uuid = $uuid;
@@ -1352,8 +1437,8 @@ class PemeriksaanCtrl extends Controller
                 }
 
                 $remove = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid);
-                if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-                    $remove = $remove->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+                if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+                    $remove = $remove->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
                 }
                 $remove = $remove->delete();
 
@@ -1579,71 +1664,71 @@ class PemeriksaanCtrl extends Controller
                         $item->others = 1;
                         $item->save();
                     }
-                                            //START PANGKAS ALUR
-                        $data = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+                    //START PANGKAS ALUR
+                    $data = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
-                          $registrasi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->select('nomor')->first();
+                    $registrasi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))->select('nomor')->first();
 
-                            $nomor = 1;
-                            if ($registrasi) {
-                                $potong_kalimat = substr($registrasi->nomor, -5);
-                                $potong_kalimat = (int) $potong_kalimat;
-                                $nomor += $potong_kalimat;
-                            }
+                    $nomor = 1;
+                    if ($registrasi) {
+                        $potong_kalimat = substr($registrasi->nomor, -5);
+                        $potong_kalimat = (int) $potong_kalimat;
+                        $nomor += $potong_kalimat;
+                    }
 
-                            if ($nomor < 9) {
-                                $nomor = '0000'.$nomor;
-                            } elseif ($nomor > 9 && $nomor < 100) {
-                                $nomor = '000'.$nomor;
-                            } elseif ($nomor > 99 && $nomor < 1000) {
-                                $nomor = '00'.$nomor;
-                            } elseif ($nomor > 999 && $nomor < 10000) {
-                                $nomor = '0'.$nomor;
-                            }
+                    if ($nomor < 9) {
+                        $nomor = '0000' . $nomor;
+                    } elseif ($nomor > 9 && $nomor < 100) {
+                        $nomor = '000' . $nomor;
+                    } elseif ($nomor > 99 && $nomor < 1000) {
+                        $nomor = '00' . $nomor;
+                    } elseif ($nomor > 999 && $nomor < 10000) {
+                        $nomor = '0' . $nomor;
+                    }
 
-                            $nomor = date('Y').date('m').date('d').$nomor;
-                            $nomor_bedah = $nomor;
-                            $uuid = Uuid::uuid4();
-                            $uuid_bedah = $uuid;
-                            $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
+                    $nomor = date('Y') . date('m') . date('d') . $nomor;
+                    $nomor_bedah = $nomor;
+                    $uuid = Uuid::uuid4();
+                    $uuid_bedah = $uuid;
+                    $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
 
-                            $arr = [
-                                    'status_dokter' => 'Sudah Diperiksa',
-                                    'nama_paket_bedah' => $regOp->nama_layanan,
-                                    'paket_bedah_uuid' => $regOp->layanan_uuid,
-                                    'last_position' => 'Pendaftaran',
-                                ];
+                    $arr = [
+                        'status_dokter' => 'Sudah Diperiksa',
+                        'nama_paket_bedah' => $regOp->nama_layanan,
+                        'paket_bedah_uuid' => $regOp->layanan_uuid,
+                        'last_position' => 'Pendaftaran',
+                    ];
 
-                            Registrasi::where('uuid', '=', $regOp->registrasi_uuid)->update($arr);
-                            /* Bagian Data Bedah */
-                            $item = new Bedah();
-                            $item->uuid = Uuid::uuid4();
-                            $item->jenis = $data->jenis;
+                    Registrasi::where('uuid', '=', $regOp->registrasi_uuid)->update($arr);
+                    /* Bagian Data Bedah */
+                    $item = new Bedah();
+                    $item->uuid = Uuid::uuid4();
+                    $item->jenis = $data->jenis;
 
-                            $item->registrasi_uuid = $uuid_bedah;
-                            $item->no_pendaftaran = '-';
-                            $item->registrasi_kode = 'ODC';
-                            $item->registrasi_nomor = $nomor_bedah;
-                            $item->registrasi_jenis = 'One Day Care';
+                    $item->registrasi_uuid = $uuid_bedah;
+                    $item->no_pendaftaran = '-';
+                    $item->registrasi_kode = 'ODC';
+                    $item->registrasi_nomor = $nomor_bedah;
+                    $item->registrasi_jenis = 'One Day Care';
 
-                            $item->pasien_uuid = $data->pasien_uuid;
-                            $item->rekam_medis = $data->rekam_medis;
-                            $item->nama_pasien = $data->nama_pasien;
-                            $item->pengguna_uuid = $data->pengguna_uuid;
-                            $item->nama_dokter = $data->nama_dokter;
+                    $item->pasien_uuid = $data->pasien_uuid;
+                    $item->rekam_medis = $data->rekam_medis;
+                    $item->nama_pasien = $data->nama_pasien;
+                    $item->pengguna_uuid = $data->pengguna_uuid;
+                    $item->nama_dokter = $data->nama_dokter;
 
-                            $item->tanggal = $data->tanggal;
-                            $item->waktu = $data->waktu;
+                    $item->tanggal = $data->tanggal;
+                    $item->waktu = $data->waktu;
 
-                            $item->paket_uuid = $data->layanan_uuid;
-                            $item->nama_paket = $data->nama_layanan;
-                            $item->harga_paket = $data->tarif;
-                            $item->keterangan = $data->keterangan;
-                            $item->save();
+                    $item->paket_uuid = $data->layanan_uuid;
+                    $item->nama_paket = $data->nama_layanan;
+                    $item->harga_paket = $data->tarif;
+                    $item->keterangan = $data->keterangan;
+                    $item->save();
 
-                            $arr = ['status' => 'One Day Care'];
-                            Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
-                            //END PANGKAS ALUR
+                    $arr = ['status' => 'One Day Care'];
+                    Pasien::where('uuid', '=', $data->pasien_uuid)->update($arr);
+                    //END PANGKAS ALUR
                 }
 
                 if ($request->paket_uuid_bedah != '' && $request->paket_uuid_bedah != ' ' && $request->paket_uuid_bedah) {
@@ -1733,13 +1818,13 @@ class PemeriksaanCtrl extends Controller
                         ->where('jenis', '=', 'Rawat Inap')
                         ->where('no_kwitansi', '!=', '-')
                         ->orderBy('no_kwitansi', 'desc')->first();
-                    $no_kwitansi = 'RI/RSKMPV/8875/'.date('Ymd').'00001';
+                    $no_kwitansi = 'RI/RSKMPV/8875/' . date('Ymd') . '00001';
                 } else {
                     $kwitansi = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
                         ->where('no_kwitansi', '!=', '-')
                         ->where('jenis', '=', 'Rawat Jalan')
                         ->orderBy('no_kwitansi', 'desc')->first();
-                    $no_kwitansi = 'RJ/RSKMPV/8875/'.date('Ymd').'00001';
+                    $no_kwitansi = 'RJ/RSKMPV/8875/' . date('Ymd') . '00001';
                 }
 
                 $nomor_i = 1;
@@ -1749,19 +1834,19 @@ class PemeriksaanCtrl extends Controller
                     $nomor_i += $potong_kalimat;
                 }
                 if ($nomor_i < 10) {
-                    $nomor_i = '0000'.$nomor_i;
+                    $nomor_i = '0000' . $nomor_i;
                 } elseif ($nomor_i > 9 && $nomor_i < 100) {
-                    $nomor_i = '000'.$nomor_i;
+                    $nomor_i = '000' . $nomor_i;
                 } elseif ($nomor_i > 99 && $nomor_i < 1000) {
-                    $nomor_i = '00'.$nomor_i;
+                    $nomor_i = '00' . $nomor_i;
                 } elseif ($nomor_i > 999 && $nomor_i < 10000) {
-                    $nomor_i = '0'.$nomor_i;
+                    $nomor_i = '0' . $nomor_i;
                 }
 
                 if ($request->pilihan_plan == 'Rawat Inap') {
-                    $no_kwitansi = 'RI/RSKMPV/8875/'.date('Ymd').$nomor_i;
+                    $no_kwitansi = 'RI/RSKMPV/8875/' . date('Ymd') . $nomor_i;
                 } else {
-                    $no_kwitansi = 'RJ/RSKMPV/8875/'.date('Ymd').$nomor_i;
+                    $no_kwitansi = 'RJ/RSKMPV/8875/' . date('Ymd') . $nomor_i;
                 }
 
                 // if ($request->inap_jalan != '') {
@@ -1779,13 +1864,13 @@ class PemeriksaanCtrl extends Controller
                         ->where('jenis', '=', 'Rawat Inap')
                         ->where('no_invoice', '!=', '-')
                         ->orderBy('no_invoice', 'desc')->first();
-                    $no_invoice = date('Ymd').'00001';
+                    $no_invoice = date('Ymd') . '00001';
                 } else {
                     $invoice = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
                         ->where('no_invoice', '!=', '-')
                         ->where('jenis', '=', 'Rawat Jalan')
                         ->orderBy('no_invoice', 'desc')->first();
-                    $no_invoice = date('Ymd').'00001';
+                    $no_invoice = date('Ymd') . '00001';
                 }
 
                 $nomor_i = 1;
@@ -1795,15 +1880,15 @@ class PemeriksaanCtrl extends Controller
                     $nomor_i += $potong_kalimat;
                 }
                 if ($nomor_i < 10) {
-                    $nomor_i = '0000'.$nomor_i;
+                    $nomor_i = '0000' . $nomor_i;
                 } elseif ($nomor_i > 9 && $nomor_i < 100) {
-                    $nomor_i = '000'.$nomor_i;
+                    $nomor_i = '000' . $nomor_i;
                 } elseif ($nomor_i > 99 && $nomor_i < 1000) {
-                    $nomor_i = '00'.$nomor_i;
+                    $nomor_i = '00' . $nomor_i;
                 } elseif ($nomor_i > 999 && $nomor_i < 10000) {
-                    $nomor_i = '0'.$nomor_i;
+                    $nomor_i = '0' . $nomor_i;
                 }
-                $no_invoice = date('Ymd').$nomor_i;
+                $no_invoice = date('Ymd') . $nomor_i;
 
                 $resep = '';
                 $no_resep = '';
@@ -1813,13 +1898,13 @@ class PemeriksaanCtrl extends Controller
                         ->where('jenis', '=', 'Rawat Inap')
                         ->where('no_resep', '!=', '-')
                         ->orderBy('no_resep', 'desc')->first();
-                    $no_resep = date('Ymd').'00001';
+                    $no_resep = date('Ymd') . '00001';
                 } else {
                     $resep = Registrasi::whereDate('tanggal', '=', date('Y-m-d'))
                         ->where('no_resep', '!=', '-')
                         ->where('jenis', '=', 'Rawat Jalan')
                         ->orderBy('no_resep', 'desc')->first();
-                    $no_resep = date('Ymd').'00001';
+                    $no_resep = date('Ymd') . '00001';
                 }
 
                 $nomor_r = 1;
@@ -1829,15 +1914,15 @@ class PemeriksaanCtrl extends Controller
                     $nomor_r += $potong_kalimat;
                 }
                 if ($nomor_r < 10) {
-                    $nomor_r = '0000'.$nomor_r;
+                    $nomor_r = '0000' . $nomor_r;
                 } elseif ($nomor_r > 9 && $nomor_r < 100) {
-                    $nomor_r = '000'.$nomor_r;
+                    $nomor_r = '000' . $nomor_r;
                 } elseif ($nomor_r > 99 && $nomor_r < 1000) {
-                    $nomor_r = '00'.$nomor_r;
+                    $nomor_r = '00' . $nomor_r;
                 } elseif ($nomor_r > 999 && $nomor_r < 10000) {
-                    $nomor_r = '0'.$nomor_r;
+                    $nomor_r = '0' . $nomor_r;
                 }
-                $no_resep = date('Ymd').$nomor_r;
+                $no_resep = date('Ymd') . $nomor_r;
 
                 $arr = [
                     'ruang_poliklinik' => $request->ruang_poliklinik,
@@ -1924,12 +2009,98 @@ class PemeriksaanCtrl extends Controller
                     $arr = ['status' => 'Rawat Inap'];
                     $update = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
                 }
+
+                $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+
+                // Start Antrian Farmasi
+                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0) && $registrasi->carabayar_nama != 'Umum') {
+                    // Create Antrian Farmasi
+                    $uuidFarmasi = '';
+                    $loop = false;
+                    do {
+                        $uuidFarmasi = Uuid::uuid4();
+                        $check = AntrianFarmasi::where('uuid', '=', $uuidFarmasi)->first();
+                        if (!$check) {
+                            $loop = true;
+                        }
+                    } while ($loop == false);
+
+                    $latestAntrianRO = AntrianFarmasi::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+                    $latestNumber = $latestAntrianRO->number ?? 0;
+                    $latestNumber = $latestNumber + 1;
+                    $kodeFarmasi = 'F-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+                    $antrianFarmasi = new AntrianFarmasi();
+                    $antrianFarmasi->uuid = $uuidFarmasi;
+                    $antrianFarmasi->kode = 'F';
+                    $antrianFarmasi->number = $latestNumber;
+                    $antrianFarmasi->jenis = $request->jenis;
+                    $antrianFarmasi->tanggal = date('Y-m-d');
+
+                    // BPJS
+                    $antrianFarmasi->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianFarmasi->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianFarmasi->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianFarmasi->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianFarmasi->uuid_registrasi =  $registrasi->uuid;
+
+                    $antrianFarmasi->save();
+
+                    Registrasi::where('uuid', $request->registrasi_uuid)
+                        ->update(['no_antrian_farmasi' => $kodeFarmasi]);
+                }
+                // End Antrian Farmasi
+
+                // Start Antrian Kasir
+                if ($registrasi->no_antrian_kasir == null && $registrasi->carabayar_nama == 'Umum') {
+                    $uuidKasir = '';
+                    $loop = false;
+                    do {
+                        $uuidKasir = Uuid::uuid4();
+                        $check = AntrianKasir::where('uuid', '=', $uuidKasir)->first();
+                        if (!$check) {
+                            $loop = true;
+                        }
+                    } while ($loop == false);
+
+                    $latestAntrianKasir = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+
+                    $latestNumber = $latestAntrianKasir->number ?? 0;
+                    $latestNumber = $latestNumber + 1;
+                    $kodeKasir = 'K-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+
+                    $antrianKasir = new AntrianKasir();
+                    $antrianKasir->uuid = $uuidKasir;
+                    $antrianKasir->kode = 'K';
+                    $antrianKasir->number = $latestNumber;
+                    $antrianKasir->jenis = $registrasi->jenis;
+                    $antrianKasir->tanggal = date('Y-m-d');
+                    // BPJS
+                    $antrianKasir->kode_poli =  $registrasi->kode_poli_bpjs;
+                    $antrianKasir->poli =  $registrasi->nama_poli_bpjs;
+                    $antrianKasir->uuid_pasien =  $registrasi->pasien_uuid;
+                    $antrianKasir->kode_dokter =  $registrasi->kode_dokter_bpjs;
+                    $antrianKasir->uuid_registrasi =  $registrasi->uuid;
+
+                    $antrianKasir->save();
+
+                    Registrasi::where('uuid', $request->registrasi_uuid)
+                        ->update(['no_antrian_kasir' => $kodeKasir]);
+                }
+                // End Antrian Kasir
+
+
+                // UPDATE TASK ID 5
+                $epochTime = time() * 1000;
+                $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($registrasi->nomor, 5, $epochTime, $registrasi->uuid);    
+
             }
             $cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
                 ->where('sebagai', '=', 'DOKTER')
                 ->first();
 
-            $pengguna_uuid = \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_uuid = \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
             if ($cppt != null) {
                 $arr = [
                     'subjek' => $request->subject,
@@ -1980,7 +2151,7 @@ class PemeriksaanCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "'.$data->nama_pasien);
+            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "' . $data->nama_pasien);
         }
 
         if ($data->dokter_jam_periksa == '-') {
@@ -2009,8 +2180,8 @@ class PemeriksaanCtrl extends Controller
             ->orderBy('id', 'desc')->first();
 
         $layanan = LayananPasien::where('registrasi_uuid', '=', $request->uuid);
-        if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
-            $layanan = $layanan->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+        if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+            $layanan = $layanan->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'BioUuid')));
         }
         $layanan = $layanan->where('nama_layanan', '!=', 'Obat-obatan')
             ->where('nama_layanan', '!=', 'Obat Racikan')
@@ -2090,7 +2261,7 @@ class PemeriksaanCtrl extends Controller
 
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "'.$data->nama_pasien);
+            \PenggunaHelp::log('Mengambil data icd 9 dengan nama "' . $data->nama_pasien);
         }
 
         $histori = PemeriksaanDokter::where('pasien_uuid', '=', $data->pasien_uuid)
@@ -2105,7 +2276,7 @@ class PemeriksaanCtrl extends Controller
             return response()->json(['data' => $this->error]);
         }
 
-        \PenggunaHelp::log('Mengupdate data icd 9 dengan nama "'.$request->nama.'".');
+        \PenggunaHelp::log('Mengupdate data icd 9 dengan nama "' . $request->nama . '".');
 
         $arr = [
             'nama' => $request->nama,
@@ -2135,7 +2306,7 @@ class PemeriksaanCtrl extends Controller
 
         $data = Icd9::where('uuid', '=', $request->uuid)->first();
         if ($data) {
-            \PenggunaHelp::log('Menghapus data icd 9 dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
+            \PenggunaHelp::log('Menghapus data icd 9 dengan nama "' . $data->nama . '" dan id "' . $data->id . '".');
         }
 
         $arr = ['delete_soft' => 0];
@@ -2177,8 +2348,17 @@ class PemeriksaanCtrl extends Controller
             ->where('pemanggil', '=', $request->ruang_poliklinik)
             ->first();
 
+        $arr = array('panggil' => 1);
+        $update = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))
+            ->where('number', '=', $request->number)->update($arr);
+
+        // UPDATE TASK ID 4
+        $epochTime = time() * 1000;
+        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($cek->nomor, 4, $epochTime, $cek->uuid);    
+
+
         if ($get) {
-            $str = 'Poliklinik '.$request->ruang_poliklinik.'='.$request->number;
+            $str = 'Poliklinik ' . $request->ruang_poliklinik . '=' . $request->number;
             // after 14 Detik
             $on = Carbon::now()->addSeconds(1);
             if ($request->ruang_poliklinik == '1' || $request->ruang_poliklinik == '2' || $request->ruang_poliklinik == '3') {
@@ -2210,7 +2390,7 @@ class PemeriksaanCtrl extends Controller
         $arr = ['pemanggil' => $request->ruang_poliklinik];
         $panggil = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))->where('number', '=', $request->number)->update($arr);
 
-        $str = 'Poliklinik '.$request->ruang_poliklinik.'='.$request->number;
+        $str = 'Poliklinik ' . $request->ruang_poliklinik . '=' . $request->number;
         // after 14 Detik
         $on = Carbon::now()->addSeconds(1);
         if ($request->ruang_poliklinik == '1' || $request->ruang_poliklinik == '2' || $request->ruang_poliklinik == '3') {

@@ -24,7 +24,7 @@
 <FormPilihRoSuratRo ref="FormPilihRoSuratRo" @dialog="dialog" />
 <FormPasien ref="FormPasien" @dialog="dialog" @parsingForm="parsingForm"></FormPasien>
 <FormDetail ref="FormDetail" @dialog="dialog" @parsingForm="parsingForm"></FormDetail>
-<FormRegistrasi ref="FormRegistrasi" @mainreload="mainreload"></FormRegistrasi>
+<FormRegistrasi  ref="FormRegistrasi" @mainreload="mainreload"></FormRegistrasi>
 <FormRegistrasiInap ref="FormRegistrasiInap" @mainreload="mainreload"></FormRegistrasiInap>
 <FormRegistrasiOdc ref="FormRegistrasiOdc" @mainreload="mainreload"></FormRegistrasiOdc>
 <FormCetakan ref="FormCetakan" @dialog="dialog" @parsingForm="parsingForm"></FormCetakan>
@@ -116,6 +116,7 @@ export default {
 		],
 		columnkunjungan: [
 			{ value: 'is_printer_card', label: 'Cetak Kartu?', type: 'text', search: false, close: false, button: false },
+			{ value: 'no_antrian_ro', label: 'Antrian RO', type: 'text', search: false, close: false, button: false },
 			{ value: 'rekam_medis', label: 'No Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'tanggal_lahir', label: 'Tanggal Lahir', type: 'date', search: true, close: false, button: false },
@@ -255,7 +256,12 @@ export default {
 			let color = _item.is_printer_card == 'Sudah' ? 'badge-success' : 'badge-danger';
 			return '<div class="badge '+ color +'"><strong>'+ _item.is_printer_card +'</strong></div>';
 		},
-
+		printAntrian:function(noAntrian, jenis){
+			if(noAntrian == null){
+				return "-"
+			}
+			return '<a href="/antrian/cetak-antrian-all/'+noAntrian+'/'+jenis+'" target="_blank" rel="noopener noreferrer" style="color: blue; text-decoration: underline;">'+noAntrian+'</a>'
+		},
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
@@ -272,6 +278,7 @@ export default {
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column), ishtml: 'html', style: '' }; }
 			else if (identity == 'usia') { _tmp = { value: vm.usia(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'no_antrian_ro') { _tmp = { value: vm.printAntrian(data.no_antrian_ro, data.carabayar_nama), ishtml: 'html', style: '' }; }
 			else if (identity == 'status') { _tmp = { value: vm.status(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'is_printer_card') { _tmp = { value: vm.is_printer_card(data), ishtml: 'html', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
@@ -574,9 +581,9 @@ export default {
 		},
 
 		berhasil: function (response) {
-			if (vm.$debugs) { console.log(response.data); } let active = 1;
+			if (vm.$debugs) { console.log("masuk form",response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
-	
+			console.log(vm.position);
 			if (response.data.data == 'cannot') {
 				setTimeout(() => { vm.posisieksternal='antrian'; vm.tablereload(); }, 500, this);
 				vm.notification('Nomor yang anda panggil sudah berada di customer service.', 3000, 'warning'); 
@@ -669,7 +676,8 @@ export default {
 				}
 				else if (vm.position == 'registrasidata') {
 					vm.posisieksternal='pasien';
-					vm.$refs.FormRegistrasi.setdataform(response); 
+					vm.$refs.FormRegistrasi.setdataform(response);
+					vm.$refs.FormRegistrasi.fetchPoliBpjs(response); 
 					vm.position = "-"; 
 					active = 0; 
 				}
