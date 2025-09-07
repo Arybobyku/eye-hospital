@@ -21,14 +21,23 @@ import Pusher from 'pusher-js';
 window.Pusher = Pusher;
 
 import Echo from 'laravel-echo';
+// TODO: PUSHER LOKAL
+// window.Echo = new Echo({
+//     broadcaster: 'pusher',
+//     key: 'ABCDEFG',
+// 		cluster: 'mt1',
+//     wsHost: window.location.hostname,
+//     wsPort: 6001,
+//     forceTLS: false,
+//     disableStats: true,
+// });
+
+
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: 'ABCDEFG',
-		cluster: 'mt1',
-    wsHost: window.location.hostname,
-    wsPort: 6001,
-    forceTLS: false,
-    disableStats: true,
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
+    forceTLS: true, // pusher.com butuh TLS
 });
 
 app.component('data-component', Main);

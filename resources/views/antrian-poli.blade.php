@@ -90,15 +90,23 @@
 <script src="{{ asset('js/echo.min.js') }}"></script>
 
 <script>
+// TODO: PUSHER LOKAL
+// window.Echo = new Echo({
+// 	broadcaster: 'pusher',
+// 	key: 'ABCDEFG',
+// 	cluster: 'mt1',
+// 	wsHost: window.location.hostname,
+// 	wsPort: 6001,
+// 	forceTLS: false,
+// 	disableStats: true,
+// });
 window.Echo = new Echo({
 	broadcaster: 'pusher',
-	key: 'ABCDEFG',
-	cluster: 'mt1',
-	wsHost: window.location.hostname,
-	wsPort: 6001,
-	forceTLS: false,
-	disableStats: true,
+	key: "{{ env('PUSHER_APP_KEY') }}",
+	cluster: "{{ env('PUSHER_APP_CLUSTER', 'mt1') }}",
+	forceTLS: true,
 });
+
 new Vue({
   el: "#app",
   delimiters: ['{%', '%}'],
