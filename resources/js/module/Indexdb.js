@@ -192,6 +192,14 @@ export const indexdbprocessing = (data, form, key) => {
 
 export const createdb = (dbName, version, response) => {
 	return new Promise(function (resolve, reject) {
+		// 1️⃣ Hapus database lama dulu
+        const deleteRequest = indexedDB.deleteDatabase(dbName);
+
+        deleteRequest.onerror = (event) => {
+            console.error("Gagal hapus database:", event);
+            reject(event);
+        };
+
 		const tmp_ = window.indexedDB.open(dbName, version);
 		tmp_.onupgradeneeded = (event) => {
 			let db = tmp_.result;
