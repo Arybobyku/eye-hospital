@@ -1,5 +1,37 @@
 <template>
 <div class="inner" ref="roottable">
+<div class="grid">
+	<div class="col-1 form-mr">
+		<button class="tooltip btn-tambah" @click="download('/finance/carabayar/download')">Download All Data</button> 
+	</div>
+	<div class="col-5 form-mr">
+	</div>
+
+	<div class="col-2 form-mr">
+		<Inputed :ref="formDownload" :form="formDownload"></Inputed>
+	</div>
+	<div class="col-1 form-mr">
+		<button class="btn-tambah" @click="downloadTemplate()">Generate Template</button>
+	</div>
+	<div class="col-2 form-mr">
+		<div class="form-self-group">
+			<input 
+				:id="formUpload.for_id" 
+				:type="formUpload.type" 
+				:disabled="formUpload.disabled ? 'disabled' : false" 
+				@change="onFileChange" 
+			/>
+		</div>
+
+	</div>
+	<div class="col-1 form-mr">
+		<button class="btn-tambah" @click="uploadFile()">Upload</button>
+	</div>
+</div>
+
+<div class="grid">
+
+</div>
 	<div class="grid">
 		<div class="col-12">
 			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
@@ -27,6 +59,7 @@ export default {
 		FormChild: defineAsyncComponent(() => import('./FormChild.vue')),
 		FormTarif: defineAsyncComponent(() => import('./FormTarif.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 	},
 	created: function () {},
 	mounted: function () {
@@ -37,6 +70,27 @@ export default {
 	data: function () { return {
 		uri: 'carabayar',
 		position: '',
+		templateName: '',
+		formDownload: { 
+			title: 'Nama Metode Pembayaran', 
+			for_id: 'templateName',
+			type: 'text', 
+			required: '', 
+			key: 'templateName', 
+			model: 'templateName', 
+			disabled: false,
+			value: '',
+			},
+		formUpload: { 
+			title: 'Upload Metode Pembayaran', 
+			for_id: 'upload',
+			type: 'file', 
+			required: '', 
+			key: 'upload', 
+			model: 'upload', 
+			disabled: false,
+			value: null,
+			},
 		attach: {
 			link : {
 				list: '/finance/carabayar/list',
@@ -50,6 +104,8 @@ export default {
 		},
 		column: [
 			{ value: 'nama', label: 'Nama Metode Pembayaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'tindakan', label: 'Tindakan', type: 'text', search: false, close: true, button: false },
+			//- { value: 'kamar', label: 'Kamar', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
 		],
 		module: { data: [], column: [], total: 0, ispaging: true },
@@ -81,15 +137,100 @@ export default {
 			]
 			return str;
 		},
+		goToPage: function(link){
+			const _base = '/dashboard/';
+			window.open(_base + link, '_blank'); 
+		},
+		download: function(link){
+			window.open(link); 
+		},
+		downloadTemplate: function(){
+			let namaMetodePembayaran = vm.formDownload.value;
+			let link = '/finance/carabayar/downloadtemplate/'+ namaMetodePembayaran;						
+			window.open(link); 
+			vm.formDownload.value = '';
+		},
+		onFileChange(e) {
+			console.log("onfilechanges",e.target.files[0]);
+			vm.formUpload.value = e.target.files[0];
+		},
+		uploadFile: function(){
+			console.log("File upload", vm.formUpload.value);
 
+			vm.$refs.Datatable.skeleton();
+
+			let formData = new FormData();
+			formData.append('file', vm.formUpload.value); // sesuaikan dengan nama field di Laravel request
+
+			axios.post('/finance/carabayar/uploadmetodepembayaran', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+				.then(function (response) {
+					setTimeout(function () {
+						vm.berhasil(response);
+					}, 300);
+					window.location.reload();
+				})
+				.catch(function (error) {
+					console.error(error);
+					setTimeout(function () {
+						vm.gagal(error);
+					}, 300);
+					window.location.reload();
+				});
+		},
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'tindakan') { _tmp = { value: vm.renderTindakanRawatJalan(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'kamar') { _tmp = { value: vm.renderJenisKamar(data), ishtml: 'html', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';
 		},
+		renderTindakanRawatJalan: function(item) {
+			if(item.tindakanrawatjalan.length == 0) { 
+				return '<i>Tidak ada data</i>';
+			}
+			let html = '<table class="table-info">';
+			html += '<tr>'+
+			'<th>Tindakan</th>'+
+			'<th>Label</th>'+
+			'<th>Default</th>'+
+			'<th>Harga</th></tr>';
 
+			item.tindakanrawatjalan.forEach(trj => {
+				html += '<tr>' +
+							'<td style="text-align:left;">' + trj.nama_tindakan_rawat_jalan + '</td>' +
+							'<td style="text-align:left;">' + trj.jenis + '</td>' +
+							'<td style="text-align:left;">' + trj.default + '</td>' +
+							'<td style="text-align:left;"><strong>' + trj.harga.toLocaleString('id-ID')  + '</strong></td>' +
+						'</tr>';
+			});
+
+			html += '</table>';
+
+			return html;
+		},
+		renderJenisKamar: function(item) {
+			let html = '<table class="table-info">';
+			html += '<tr><th>Kamar</th><th>jenis</th><th>Harga</th></tr>';
+
+			item.jeniskamar.forEach(trj => {
+				html += '<tr>' +
+							'<td>' + trj.nama_jenis_kamar + '</td>' +
+							'<td>' + trj.jenis + '</td>' +
+							'<td><strong>' + trj.harga.toLocaleString('id-ID')  + '</strong></td>' +
+						'</tr>';
+			});
+
+			html += '</table>';
+
+	
+			return html;
+		},
 		tablebutton:function(posisi, data, index) {
 			if (posisi == 'add') {
 				vm.$refs.FormCarabayar.aturulang();

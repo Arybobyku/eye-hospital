@@ -76,6 +76,7 @@ class KartuStockApotek implements FromView, ShouldAutoSize
 		->join('registrasi', 'registrasi.uuid', '=', 'resep.registrasi_uuid')
 		->whereBetween('resep.created_at', [$this->dari, $this->ke])
 		->where('resep.delete_soft', 1)
+		->where('resep.is_bedah', 0)
 		->where('no_kwitansi', '!=', '-')
 		->where('registrasi.status', '=', 'Selesai');
 	
@@ -120,6 +121,6 @@ class KartuStockApotek implements FromView, ShouldAutoSize
 		else if ($bulan == '10') { $nama_bulan = 'Oktober'; }
 		else if ($bulan == '11') { $nama_bulan = 'November'; }
 		else if ($bulan == '12') { $nama_bulan = 'Desember'; }
-    return view('exports.kartustockgudang', [ 'data' => $allTransactions, 'dari' => $this->dari, 'ke' => $this->ke  ]);
+    return view('exports.kartustockapotek', [ 'data' => $allTransactions, 'dari' => $this->dari, 'ke' => $this->ke  ]);
   }
 }

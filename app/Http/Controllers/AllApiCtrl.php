@@ -46,7 +46,7 @@ class AllApiCtrl extends Controller
 		$tindakannonbedah = array();
 		$carabayartindakanbedah = array();
 		$tindakanbedah = array();
-		$jeniskamar = array(); $obat = array(); $obat2 = array(); $obat3 = array(); $obatgudang = array(); $hargagudang = array(); $apotek = array(); $supplier = array(); 
+		$jeniskamar = array(); $obat = array(); $obat2 = array(); $obat3 = array(); $obat4 = array();  $obatgudang = array(); $hargagudang = array(); $apotek = array(); $supplier = array(); 
 		$dokter = array();
 		$dokterumum = array();
 		$icd9 = array(); $icd10 = array(); $satuan = array(); $ruangans = array();
@@ -63,7 +63,7 @@ class AllApiCtrl extends Controller
 			$tindakannonbedah = $this->tindakannonbedah();
 			$carabayartindakanbedah = $this->carabayartindakanbedah();
 			$tindakanbedah = $this->tindakanbedah();
-			$jeniskamar = $this->jeniskamar(); $obat = $this->obat();$obat2 = $this->obat2(); $obat3 = $this->obat3();  $hargagudang = $this->hargagudang(); $obatgudang = $this->obatgudang(); $apotek = $this->apotek(); $apotekracikan = $this->apotekracikan(); $supplier = $this->supplier();
+			$jeniskamar = $this->jeniskamar(); $obat = $this->obat();$obat2 = $this->obat2(); $obat3 = $this->obat3(); $obat4 = $this->obat(); $hargagudang = $this->hargagudang(); $obatgudang = $this->obatgudang(); $apotek = $this->apotek(); $apotekracikan = $this->apotekracikan(); $supplier = $this->supplier();
 			$dokter = $this->dokter(); $dokterumum = $this->dokterumum();
 			$icd9 = $this->icd9(); $icd10 = $this->icd10();
 			$satuan = $this->satuan(); $ruangans = $this->ruangans(); $carabayar = $this->carabayar();
@@ -82,7 +82,8 @@ class AllApiCtrl extends Controller
 		else if ($request->position == 'tindakanbedah') { $tindakanbedah = $this->tindakanbedah(); }
 		else if ($request->position == 'obat') { $obat = $this->obat(); }
 		else if ($request->position == 'obat2') { $obat2 = $this->obat2(); }
-		else if ($request->position == 'obat2') { $obat3 = $this->obat3(); }
+		else if ($request->position == 'obat3') { $obat3 = $this->obat3(); }
+		else if ($request->position == 'obat4') { $obat3 = $this->obat(); }
 		else if ($request->position == 'jeniskamar') { $jeniskamar = $this->jeniskamar(); }
 		else if ($request->position == 'obatgudang') { $obatgudang = $this->obatgudang(); }
 		else if ($request->position == 'hargagudang') { $hargagudang = $this->hargagudang(); }
@@ -115,7 +116,7 @@ class AllApiCtrl extends Controller
 			'carabayartindakanbedah' => $carabayartindakanbedah,
 			'tindakanbedah' => $tindakanbedah,
 			'jeniskamar' => $jeniskamar,
-			'obat' => $obat, 'obat2' => $obat2,  'obat3' => $obat3,   'obatgudang' => $obatgudang, 'hargagudang' => $hargagudang, 'apotek' => $apotek, 'apotekracikan' => $apotekracikan, 'supplier' => $supplier, 'dokter' => $dokter, 
+			'obat' => $obat, 'obat2' => $obat2,  'obat3' => $obat3, 'obat4' => $obat4,   'obatgudang' => $obatgudang, 'hargagudang' => $hargagudang, 'apotek' => $apotek, 'apotekracikan' => $apotekracikan, 'supplier' => $supplier, 'dokter' => $dokter, 
 			'dokterumum' => $dokterumum,
 			'icd9' => $icd9, 'icd10' => $icd10, 'satuan' => $satuan, 'ruangans' => $ruangans,
 			'carabayar' => $carabayar, 'asuransi' => $asuransi, 'layanan' => $layanan,
@@ -424,6 +425,7 @@ class AllApiCtrl extends Controller
 		$obat = DB::table('obat')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 		$obat2 = DB::table('obat')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 		$obat3 = DB::table('obat')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
+		$obat4 = DB::table('obat')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 		$supplier = DB::table('supplier')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 		$dokter = DB::table('biodata')->orderBy('id','asc')->where('delete_soft', '=', '1')->where('posisi_pengguna', '=', '8808')->get();
 		$icd_nine = DB::table('icd_nine')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
@@ -459,6 +461,7 @@ class AllApiCtrl extends Controller
 			'obat' => $obat,
 			'obat2' => $obat2,
 			'obat3' => $obat3,
+			'obat4' => $obat4,
 			'supplier' => $supplier,
 			'icd_nine' => $icd_nine,
 			'icd_ten' => $icd_ten,

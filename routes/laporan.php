@@ -26,6 +26,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::get('excel/fakturgudang/{dari}/{ke}/{supplier_uuid}', [LaporanFarmasiCtrl::class, 'fakturgudang'])->name('laporan-fakturgudang');
 	Route::get('excel/stockopnameapotek/{dari}', [LaporanFarmasiCtrl::class, 'stockopnameapotek'])->name('laporan-stockopnameapotek');
 	Route::get('excel/stockopnamegudang/{dari}', [LaporanFarmasiCtrl::class, 'stockopnamegudang'])->name('laporan-stockopnamegudang');
+	Route::get('excel/stockopnamebedah/{dari}', [LaporanFarmasiCtrl::class, 'stockopnamebedah'])->name('laporan-stockopnamebedah');
 	Route::get('excel/returgudang/{dari}/{ke}/{supplier_uuid}', [LaporanFarmasiCtrl::class, 'returgudang'])->name('laporan-returgudang');
 
 	Route::get('excel/tindakan/{dari}/{ke}/{carabayar_uuid}/{asuransi_uuid}/{dokter_uuid}/{layanan_uuid}', [LaporanKeuanganCtrl::class, 'tindakan'])->name('laporan-tindakan');
