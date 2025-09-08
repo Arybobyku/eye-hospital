@@ -232,7 +232,7 @@ export const createdb = (dbName, version, response) => {
 				while (i < data.length) { obat.put(obatfunction(data, i)); i++; }
 			}
 			if (response.data.obat2.length > 0) {
-				let obat2 = db.createObjectStore('obat', { keyPath: "id", autoIncrement: true });
+				let obat2 = db.createObjectStore('obat2', { keyPath: "id", autoIncrement: true });
 				let i = 0, data = response.data.obat;
 				while (i < data.length) { obat2.put(obat2function(data, i)); i++; }
 			}
