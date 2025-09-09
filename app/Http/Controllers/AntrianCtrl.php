@@ -363,7 +363,7 @@ class AntrianCtrl extends Controller
 		try {
 
 			DB::beginTransaction();
-			$pasien = Pasien::where('no_ktp', '=', $request->nik)->first();
+			$pasien = Pasien::where('jenis_identitas','KTP')->where('no_identitas', '=', $request->nik)->first();
 			if (!$pasien) {
 				return response()->json([
 					'hasil' => 'gagal',
@@ -372,6 +372,7 @@ class AntrianCtrl extends Controller
 			}
 			//Start Insert Antrian CS
 			$latestAntrianCs = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+			$numberCs = 1;
 			if ($latestAntrianCs) {
 				$numberCs = $latestAntrianCs->number + 1;
 			}
@@ -390,7 +391,10 @@ class AntrianCtrl extends Controller
 			$item->uuid = $uuid;
 			$item->kode = 'CS';
 			$latestAntrian = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->where('kode', 'CS')->orderBy('id', 'desc')->first();
-			if ($latestAntrian->number >= $request->number){
+
+			$lastNumber = $latestAntrian ? $latestAntrian->number : 0;
+
+			if ($lastNumber >= $request->number){
 				$number = $latestAntrian->number + 1;
 				if ($number < 10) {
 					$number = '00'.$number;
@@ -400,7 +404,7 @@ class AntrianCtrl extends Controller
 					$number = $number;
 				}
 			}
-			$item->number = $numberCs;
+			$item->number = $number;
 			$item->jenis = $request->jenis;
 			$item->tanggal = date('Y-m-d');
 			$item->save();
