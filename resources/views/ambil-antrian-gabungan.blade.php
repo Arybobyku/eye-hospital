@@ -193,7 +193,7 @@
                     <h2>No. Antrian : CS - <span v-html="checknumber()"></span></h2>
                     <p>Antrian Kunjungan Pasien ke Poli Mata</p>
                     <div class="button">
-                        <button class="umum" v-on:click="add('Umum')">AMBIL ANTRIAN</button>
+                        <button class="umum" v-on:click="addcheckin()">AMBIL ANTRIAN</button>
                         {{-- <button class="umum" v-on:click="add('UMUM')">UMUM</button> --}}
                         {{-- <button class="asuransi" v-on:click="add('ASURANSI')">ASURANSI</button> --}}
                     </div>
@@ -401,6 +401,7 @@
                             add: '/antrian/tiketing/add',
                             addlamabpjs: '/antrian/tiketing/addlamabpjs',
                             addlamanonbpjs: '/antrian/tiketing/addlamanonbpjs',
+                            addcheckin: '/antrian/tiketing/addcheckin',
                             addbebas: '/antrian/tiketing/addbebas',
                             farmasi: '/antrian/tiketing/add',
                             listDokter: '/bpjs/antrol-bpjs/ref/dokter',
@@ -627,9 +628,9 @@
                     vm.loaders();
                     vm.executions();
                     this.resetFormLamaNonBpjs();
-                    window.location.reload();
+                    // window.location.reload();
                 },
-                addlamanonbpjs: function(selectedDokter) {
+                addlamabpjs: function(selectedDokter) {
                     const selectedPoliObj = vm.poliBpjs.find(poli => poli.kdpoli === selectedPoli);
                     const namaPoli = selectedPoliObj ? selectedPoliObj.nmpoli : '';
                     const selectedDokterObj = vm.jadwalDokter.find(dokter => dokter.kodedokter === selectedDokter);
@@ -651,6 +652,16 @@
                     vm.attach.data.append('jenis', 'Umum'); 
                     vm.attach.data.append('number', vm.numberRo);
                     vm.position = 'addlamabpjs';
+                    vm.loaders();
+                    vm.executions();
+                    this.resetFormLamaNonBpjs();
+                    // window.location.reload();
+                },
+                addcheckin: function(selectedDokter) {
+                    vm.attach.url = vm.attach.link.addcheckin;
+                    vm.attach.data = new FormData();
+                    vm.attach.data.append('kode_booking', vm.kodeBooking);
+                    vm.position = 'addcheckin';
                     vm.loaders();
                     vm.executions();
                     this.resetFormLamaNonBpjs();
