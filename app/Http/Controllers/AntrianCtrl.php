@@ -980,6 +980,39 @@ class AntrianCtrl extends Controller
 		}	
 	}
 
+	public function checkIn(Request $request)
+    {
+
+        try {
+            $uuid = Registrasi::where('nomor', $request->kodebooking)
+            ->value('uuid');
+
+            $data = AntrianPoli::where('uuid_registrasi', $uuid)
+            ->first();
+			$dataRo = AntrianRO::where('uuid_registrasi', $uuid)
+            ->first();
+            if ($data) {
+                $data->status = 'active';
+                $data->save();
+            } else if(!$data) {
+				return response()->json([
+					'hasil' => 'gagal',
+					'data' => 'Kode Booking Tidak Ditemukan'
+				], 500);
+            }
+			return response()->json([
+				'hasil' => 'berhasil',
+				'data' => 'Booking Ditemukan Silahkan'
+			], 500);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e
+            ], 401);
+        }
+        
+    }
+
 
 	public function cetakAntrianAll($noAntrian, $jenis)
 	{
