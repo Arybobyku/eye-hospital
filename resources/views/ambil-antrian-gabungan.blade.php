@@ -701,11 +701,10 @@
                         console.log('Cari peserta dengan NIK:', this.nikSect);
 
                     } else {
-                        if (this.noBpjs.length !== 13) {
+                        if (this.bpjsSect.length !== 13) {
                             alert('No Kartu BPJS harus 13 digit!');
                             return;
                         }
-                        this.bpjsSect = '';
                         vm.attach.url = vm.attach.link.searchNik;
                         vm.attach.data = new FormData();
                         vm.attach.data.append('nik', this.nikSect);
