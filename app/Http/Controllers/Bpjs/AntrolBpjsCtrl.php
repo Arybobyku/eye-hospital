@@ -312,6 +312,11 @@ class AntrolBpjsCtrl extends Controller
         }
         $antrolLogs->response = $result;
         $antrolLogs->update();
+        $resultRes = json_decode($result);
+        if ($resultRes->metadata->code != 200) { //TESTING YUDHA
+            $resultBatal =$this->batalAntrean($item, $pasien);
+            // dd($resultBatal);
+        }
 
         $number = (int) preg_replace('/[^0-9]/', '', $item->no_pendaftaran,);
 

@@ -412,13 +412,18 @@ class AntrianCtrl extends Controller
 			//END Insert Antrian CS
 
 			$latestAntrianRO = AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
-
+			
 			$latestNumber = $latestAntrianRO->number ?? 0;
 			$latestNumber = $latestNumber + 1;
 			$kodeRo = 'R-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
 			
 			$uuid = '';
 			$noPendaftaraan = 1;
+
+			$latestAntrianPoli = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+			$latestNumberPoli = $latestNumberPoli->number ?? 0;
+			$latestNumberPoli = $latestNumberPoli + 1;
+			$kodePoli = 'P-' . str_pad($latestNumberPoli, 3, '0', STR_PAD_LEFT);
 
 			
 			$loop = false;
@@ -612,6 +617,33 @@ class AntrianCtrl extends Controller
 
 				// End Antrian RO
 
+				// Start Antrian Poli
+				$uuidPoli = '';
+				$loop = false;
+				do {
+					$uuidPoli = Uuid::uuid4();
+					$check = AntrianPoli::where('uuid', '=', $uuidPoli)->first();
+					if (!$check) {
+						$loop = true;
+					}
+				} while ($loop == false);				
+				$uuidPoli = new AntrianPoli();
+				$uuidPoli->uuid = $uuidPoli;
+				$uuidPoli->kode = 'P';
+				$uuidPoli->is_jkn = $is_jkn;
+				// BPJS
+				$uuidPoli->kode_poli =  $request->kode_poli_bpjs;
+				$uuidPoli->poli = $request->nama_poli_bpjs;
+				$uuidPoli->uuid_pasien =  $pasien->uuid;
+				$uuidPoli->kode_dokter =  $request->kode_dokter_bpjs;
+				$uuidPoli->uuid_registrasi =  $registrasi_uuid;
+
+				$uuidPoli->number = $latestNumberPoli;
+				$uuidPoli->jenis = $request->jenis;
+				$uuidPoli->tanggal = date('Y-m-d');
+				$uuidPoli->save();
+				// End Antrian RO
+
 				$str = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Sebagai')) . '=' . 'Registrasi';
 				event(new NewTradeRo($str));
 
@@ -772,6 +804,11 @@ class AntrianCtrl extends Controller
 			$uuid = '';
 			$noPendaftaraan = 1;
 
+			$latestAntrianPoli = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+			$latestNumberPoli = $latestNumberPoli->number ?? 0;
+			$latestNumberPoli = $latestNumberPoli + 1;
+			$kodePoli = 'P-' . str_pad($latestNumberPoli, 3, '0', STR_PAD_LEFT);
+
 			
 			$loop = false;
 			do {
@@ -930,9 +967,7 @@ class AntrianCtrl extends Controller
 						$loop = true;
 					}
 				} while ($loop == false);
-
-
-				
+			
 				$antrianRO = new AntrianRo();
 				$antrianRO->uuid = $uuidRO;
 				$antrianRO->kode = 'R';
@@ -948,7 +983,32 @@ class AntrianCtrl extends Controller
 				$antrianRO->jenis = $request->jenis;
 				$antrianRO->tanggal = date('Y-m-d');
 				$antrianRO->save();
+				// End Antrian RO
+				// Start Antrian Poli
+				$uuidPoli = '';
+				$loop = false;
+				do {
+					$uuidPoli = Uuid::uuid4();
+					$check = AntrianPoli::where('uuid', '=', $uuidPoli)->first();
+					if (!$check) {
+						$loop = true;
+					}
+				} while ($loop == false);				
+				$uuidPoli = new AntrianPoli();
+				$uuidPoli->uuid = $uuidPoli;
+				$uuidPoli->kode = 'P';
+				$uuidPoli->is_jkn = $is_jkn;
+				// BPJS
+				$uuidPoli->kode_poli =  $request->kode_poli_bpjs;
+				$uuidPoli->poli = $request->nama_poli_bpjs;
+				$uuidPoli->uuid_pasien =  $pasien->uuid;
+				$uuidPoli->kode_dokter =  $request->kode_dokter_bpjs;
+				$uuidPoli->uuid_registrasi =  $registrasi_uuid;
 
+				$uuidPoli->number = $latestNumberPoli;
+				$uuidPoli->jenis = $request->jenis;
+				$uuidPoli->tanggal = date('Y-m-d');
+				$uuidPoli->save();
 				// End Antrian RO
 
 				$str = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Sebagai')) . '=' . 'Registrasi';
@@ -984,21 +1044,33 @@ class AntrianCtrl extends Controller
 		}	
 	}
 
-	public function checkIn(Request $request)
+			
+	public function addcheckin(Request $request)
     {
 
         try {
+			$uuid = '';
             $uuid = Registrasi::where('nomor', $request->kodebooking)
             ->value('uuid');
-
+			if ($uuid = null || $uuid = '') {
+				return response()->json([
+					'hasil' => 'gagal',
+					'data' => 'Kode Booking Tidak Ditemukan'
+				], 500);
+			}
             $data = AntrianPoli::where('uuid_registrasi', $uuid)
             ->first();
 			$dataRo = AntrianRO::where('uuid_registrasi', $uuid)
             ->first();
-            if ($data) {
+			if ($dataRo) {
+                $dataRo->status = 'active';
+                $dataRo->save();
+			}
+			if ($data) {
                 $data->status = 'active';
                 $data->save();
-            } else if(!$data) {
+			}
+			 if(!$data || !$dataRo) {
 				return response()->json([
 					'hasil' => 'gagal',
 					'data' => 'Kode Booking Tidak Ditemukan'
@@ -1007,7 +1079,7 @@ class AntrianCtrl extends Controller
 			return response()->json([
 				'hasil' => 'berhasil',
 				'data' => 'Booking Ditemukan Silahkan'
-			], 500);
+			], 200);
             
         } catch (\Exception $e) {
             return response()->json([
@@ -1016,7 +1088,7 @@ class AntrianCtrl extends Controller
         }
         
     }
-
+        
 
 	public function cetakAntrianAll($noAntrian, $jenis)
 	{
