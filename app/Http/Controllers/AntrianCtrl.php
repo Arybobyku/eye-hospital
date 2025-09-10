@@ -363,7 +363,7 @@ class AntrianCtrl extends Controller
 		try {
 
 			DB::beginTransaction();
-			$pasien = Pasien::where('jenis_identitas','KTP')->where('no_identitas', '=', $request->nik)->first();
+			$pasien = Pasien::where('no_ktp', '=', $request->nik)->first();
 			if (!$pasien) {
 				return response()->json([
 					'hasil' => 'gagal',
@@ -627,21 +627,21 @@ class AntrianCtrl extends Controller
 						$loop = true;
 					}
 				} while ($loop == false);				
-				$uuidPoli = new AntrianPoli();
-				$uuidPoli->uuid = $uuidPoli;
-				$uuidPoli->kode = 'P';
-				$uuidPoli->is_jkn = $is_jkn;
+				$antrianPoli = new AntrianPoli();
+				$antrianPoli->uuid = $uuidPoli;
+				$antrianPoli->kode = 'P';
+				$antrianPoli->is_jkn = $is_jkn;
 				// BPJS
-				$uuidPoli->kode_poli =  $request->kode_poli_bpjs;
-				$uuidPoli->poli = $request->nama_poli_bpjs;
-				$uuidPoli->uuid_pasien =  $pasien->uuid;
-				$uuidPoli->kode_dokter =  $request->kode_dokter_bpjs;
-				$uuidPoli->uuid_registrasi =  $registrasi_uuid;
+				$antrianPoli->kode_poli =  $request->kode_poli_bpjs;
+				$antrianPoli->poli = $request->nama_poli_bpjs;
+				$antrianPoli->uuid_pasien =  $pasien->uuid;
+				$antrianPoli->kode_dokter =  $request->kode_dokter_bpjs;
+				$antrianPoli->uuid_registrasi =  $registrasi_uuid;
 
-				$uuidPoli->number = $latestNumberPoli;
-				$uuidPoli->jenis = $request->jenis;
-				$uuidPoli->tanggal = date('Y-m-d');
-				$uuidPoli->save();
+				$antrianPoli->number = $latestNumberPoli;
+				$antrianPoli->jenis = $request->jenis;
+				$antrianPoli->tanggal = date('Y-m-d');
+				$antrianPoli->save();
 				// End Antrian RO
 
 				$str = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Sebagai')) . '=' . 'Registrasi';
@@ -994,21 +994,21 @@ class AntrianCtrl extends Controller
 						$loop = true;
 					}
 				} while ($loop == false);				
-				$uuidPoli = new AntrianPoli();
-				$uuidPoli->uuid = $uuidPoli;
-				$uuidPoli->kode = 'P';
-				$uuidPoli->is_jkn = $is_jkn;
+				$antrianPoli = new AntrianPoli();
+				$antrianPoli->uuid = $uuidPoli;
+				$antrianPoli->kode = 'P';
+				$antrianPoli->is_jkn = $is_jkn;
 				// BPJS
-				$uuidPoli->kode_poli =  $request->kode_poli_bpjs;
-				$uuidPoli->poli = $request->nama_poli_bpjs;
-				$uuidPoli->uuid_pasien =  $pasien->uuid;
-				$uuidPoli->kode_dokter =  $request->kode_dokter_bpjs;
-				$uuidPoli->uuid_registrasi =  $registrasi_uuid;
+				$antrianPoli->kode_poli =  $request->kode_poli_bpjs;
+				$antrianPoli->poli = $request->nama_poli_bpjs;
+				$antrianPoli->uuid_pasien =  $pasien->uuid;
+				$antrianPoli->kode_dokter =  $request->kode_dokter_bpjs;
+				$antrianPoli->uuid_registrasi =  $registrasi_uuid;
 
-				$uuidPoli->number = $latestNumberPoli;
-				$uuidPoli->jenis = $request->jenis;
-				$uuidPoli->tanggal = date('Y-m-d');
-				$uuidPoli->save();
+				$antrianPoli->number = $latestNumberPoli;
+				$antrianPoli->jenis = $request->jenis;
+				$antrianPoli->tanggal = date('Y-m-d');
+				$antrianPoli->save();
 				// End Antrian RO
 
 				$str = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Sebagai')) . '=' . 'Registrasi';
