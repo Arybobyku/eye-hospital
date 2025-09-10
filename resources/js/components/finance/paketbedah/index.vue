@@ -1,5 +1,32 @@
 <template>
 <div class="inner" ref="roottable">
+<div class="grid">
+		<div class="col-4 form-mr">
+			<Selected v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)" 
+					:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
+					:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)"></Selected>
+		</div>
+		<div class="col-3 form-mr">
+			<Inputed :ref="formDownload" :form="formDownload"></Inputed>
+		</div>
+		<div class="col-2 form-mr">
+			<button class="btn-tambah" @click="downloadTemplate()">Generate Template</button>
+		</div>
+		<div class="col-2 form-mr">
+			<div class="form-self-group">
+				<input 
+					:id="formUpload.for_id" 
+					:type="formUpload.type" 
+					:disabled="formUpload.disabled ? 'disabled' : false" 
+					@change="onFileChange" 
+				/>
+			</div>
+
+		</div>
+		<div class="col-1 form-mr">
+			<button class="btn-tambah" @click="uploadFile()">Upload</button>
+		</div>
+	</div>
 	<div class="grid">
 		<div class="col-12">
 			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
@@ -15,6 +42,8 @@
 var vm;
 import { defineAsyncComponent } from 'vue';
 import { nullAndZero, datename, formatrupiah } from '../../../module/Manipulation.js';
+import { filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected } from '../../../module/SelectedFilter.js';
+import { initindexdb, indexdbprocessing } from '../../../module/Indexdb.js';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
@@ -26,6 +55,8 @@ export default {
 		FormUnit: defineAsyncComponent(() => import('./FormUnit.vue')),
 		DetailData: defineAsyncComponent(() => import('./DetailData.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
+		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
 	},
 	created: function () {},
 	mounted: function () {
@@ -36,6 +67,35 @@ export default {
 	data: function () { return {
 		uri: 'unit',
 		position: '',
+		formDownload: { 
+			title: 'Nama Paket Bedah', 
+			for_id: 'templateName',
+			type: 'text', 
+			required: '', 
+			key: 'templateName', 
+			model: 'templateName', 
+			disabled: false,
+			value: '',
+			},
+		formUpload: { 
+			title: 'Upload Paket Bedah', 
+			for_id: 'upload',
+			type: 'file', 
+			required: '', 
+			key: 'upload', 
+			model: 'upload', 
+			disabled: false,
+			value: null,
+			},
+		form:{
+			select: {
+				carabayar: { 
+					key : 'carabayar', for_id: 'form_'+'carabayar', name: 'carabayar', uuid:'', value: '', label: 'Silahkan Pilih', 
+					filter: [], data: [], search: '', option: 'display: none', statics: false,
+					class: 'carabayar', isrequired: true, html: 'Cara Bayar', issearch: false, disabled: false,
+				},
+			},
+		},
 		attach: {
 			link : {
 				list: '/finance/paketbedah/list',
@@ -65,8 +125,71 @@ export default {
 		/*************************************************************************************************************************
 		* Bagian fungsi untuk pemrosesan table
 		*************************************************************************************************************************/
+		initindexdb, indexdbprocessing,
+		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected,
 
-		
+		selectfilter: function (event, key) { vm.form = vm.filterselected(vm.form, key); },
+		selecthide:function() { vm.form = vm.hideselected(vm.form); },
+		selecteditem:function(item, key) { 
+			//vm.form = vm.conditionselected(vm.form, item, key, 'address');
+			vm.form = vm.itemselected(vm.form, item, key); 
+		},
+		selectclear:function(key) { vm.form = vm.clearselected(vm.form, key); },
+		selectbox:function(event, key, statics) {
+			let result = vm.boxselected(event, vm.form, key);
+			if (result._position == 'stop') { return ; }
+			else if (result._position == 'nextstop') { vm.form = result._form; }
+			else { vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block'; }
+		},
+
+		getIndexDB:function(key, statics) {
+			vm.form.select[key].data = []; vm.form.select[key].filter = [];
+			if (statics) { vm.form.select[key].data = this.arr[key]; vm.form.select[key].filter = this.arr[key]; }
+			else {
+				vm.initindexdb(vm.$dbNameIndexDb, key)
+					.then(function(response){ vm.form = vm.indexdbprocessing(response, vm.form, key); })
+					.catch(function(error){ console.log(error); });
+			}
+		},
+
+		downloadTemplate: function(){
+			let carabayar = vm.form.select.carabayar.value;
+			let nama = vm.formDownload.value;
+			let link = `/finance/listpaketbedah/download/${carabayar}/${nama}`;						
+			window.open(link); 
+			vm.formDownload.value = '';
+		},
+		onFileChange(e) {
+			console.log("onfilechanges",e.target.files[0]);
+			vm.formUpload.value = e.target.files[0];
+		},
+		uploadFile: function(){
+			console.log("File upload", vm.formUpload.value);
+
+			vm.$refs.Datatable.skeleton();
+
+			let formData = new FormData();
+			formData.append('file', vm.formUpload.value); // sesuaikan dengan nama field di Laravel request
+
+			axios.post('/finance/listpaketbedah/upload', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+				.then(function (response) {
+					setTimeout(function () {
+						vm.berhasil(response);
+					}, 300);
+					window.location.reload();
+				})
+				.catch(function (error) {
+					console.error(error);
+					setTimeout(function () {
+						vm.gagal(error);
+					}, 300);
+					window.location.reload();
+				});
+		},		
 
 		btnhtml:function(_item, _index) {
 			let str = [

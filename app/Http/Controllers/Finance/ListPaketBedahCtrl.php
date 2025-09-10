@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers\Finance;
 
+use App\Exports\TemplateUploadPaketBedah;
+use App\Exports\UploadPaketBEdah;
 use App\Http\Controllers\Controller;
+use App\Models\CaraBayar;
+use App\Models\CaraBayarTindakanRawatJalan;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -11,6 +15,7 @@ use Crypt;
 use PenggunaHelp;
 
 use App\Models\ListPaketBedahBaru;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ListPaketBedahCtrl extends Controller
 {
@@ -117,5 +122,22 @@ class ListPaketBedahCtrl extends Controller
 		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
 		$data = ListPaketBedah::where('delete_soft', '=', '1')->where('nama', 'ilike', '%'.$request->keyword.'%')->select(['id', 'uuid', 'nama'])->limit(10)->get();
 		return response()->json(['data' => $data]);
+	}
+
+
+	public function downloadTemplatePaketBedah($metode, $name) {
+	
+		$filename = 'template-upload.xlsx';
+		return \Excel::download(new TemplateUploadPaketBedah($metode, $name), $filename);
+	}
+
+	public function uploadPaketBedah(Request $request) {
+		$request->validate([
+            'file' => 'required|file|mimes:xlsx,csv,xls',
+        ]);
+
+        Excel::import(new UploadPaketBEdah, $request->file('file'));
+
+        return back()->with('success', 'Upload & import berhasil!');
 	}
 }
