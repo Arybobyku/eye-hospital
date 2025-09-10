@@ -161,7 +161,7 @@
                     <h3 class="back" v-on:click="onChangeState('first')">Kembali</h3>
                 </div>
                 {{-- Ambil Antrian MBJKN --}}
-                <div class="ambil-antrian-inner" v-if="shouldShow('mbjkn')">
+                <div class="ambil-antrian-inner" ref="rootmodal"  v-if="shouldShow('mbjkn')">
                     <h2>CHECK IN</h2>
                     <p>* Masukkan Kode Booking.</p>
 
@@ -181,7 +181,7 @@
                         </button>
                         <button class="delete-btn" @click="deleteLast">Del</button>
                         <button class="numpad-btn" @click="appendToBooking(0)">0</button>
-                        <button class="ok-btn" @click="confirmBooking">OK</button>
+                        <button class="ok-btn" v-on:click="addcheckin()">OK</button>
                     </div>
 
                     <!-- Tombol Peserta -->
@@ -657,15 +657,16 @@
                     this.resetFormLamaNonBpjs();
                     // window.location.reload();
                 },
-                addcheckin: function(selectedDokter) {
+                addcheckin: function() {
+                    console.log("Add")
                     vm.attach.url = vm.attach.link.addcheckin;
                     vm.attach.data = new FormData();
                     vm.attach.data.append('kode_booking', vm.kodeBooking);
                     vm.position = 'addcheckin';
                     vm.loaders();
                     vm.executions();
-                    this.resetFormLamaNonBpjs();
-                    window.location.reload();
+                    // this.resetFormLamaNonBpjs();
+                    // window.location.reload();
                 },
 
                 addbebas: function(posisi) {
@@ -701,11 +702,10 @@
                         console.log('Cari peserta dengan NIK:', this.nikSect);
 
                     } else {
-                        if (this.noBpjs.length !== 13) {
+                        if (this.bpjsSect.length !== 13) {
                             alert('No Kartu BPJS harus 13 digit!');
                             return;
                         }
-                        this.bpjsSect = '';
                         vm.attach.url = vm.attach.link.searchNik;
                         vm.attach.data = new FormData();
                         vm.attach.data.append('nik', this.nikSect);
@@ -777,6 +777,10 @@
 
                             } else if (vm.position == 'addlamanonbpjs') {
                                 vm.printoutRo();
+                                vm.loads();
+                                window.location.reload();
+                             } else if (vm.position == 'addcheckin') {
+                               vm.printoutRo();
                                 vm.loads();
                                 window.location.reload();
 
