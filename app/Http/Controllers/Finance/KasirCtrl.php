@@ -477,6 +477,12 @@ class KasirCtrl extends Controller
                 'metode_pembayaran' => $metode_pembayaran,
                 'diskon_persen' => $request->diskon_persen,
                 'diskon_rp' => $request->diskon_rp,
+                'tanggal' => $request->tanggal,
+                'rekam_medis' => $request->rekam_medis,
+                'no_kwitansi' => $request->no_kwitansi,
+                'carabayar_nama' => $request->carabayar_nama,
+                'nama_dokter' => $request->nama_dokter,
+
             ];
 
            Registrasi::where('uuid', '=', $request->uuid)->update($arr);
@@ -491,6 +497,10 @@ class KasirCtrl extends Controller
                 $item->diskon_rp = $row->diskon_rp;
                 $item->diskon_persen = $row->diskon_persen;
                 $item->total = $row->total;
+
+                if($request->nama_dokter_spesialis!='' && isset($request->nama_dokter_spesialis)){
+                    $item->nama_dokter = $request->nama_dokter_spesialis;
+                }
                 $item->save();
             }
 

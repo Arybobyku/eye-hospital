@@ -20,6 +20,12 @@ export const parsekelurahan = (form, detail, listdata) => {
 	data.append('tindakan', JSON.stringify(listdata));
 
 	data.append('metode_pembayaran', form.select.metodepembayaran.value);
+	data.append('tanggal', form.tanggal.value);
+	data.append('rekam_medis', form.rekam_medis.value);
+	data.append('no_kwitansi', form.no_kwitansi.value);
+	data.append('carabayar_nama', form.carabayar.value);
+	data.append('nama_dokter', form.namadokter.value);
+	data.append('nama_dokter_spesialis', form.namadokterspesialis.value);
 	data.append('edit_superadmin', true);
 
 	for(var pair of data.entries()) {

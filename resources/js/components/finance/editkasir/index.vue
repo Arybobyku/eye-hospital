@@ -9,7 +9,7 @@
 		<div class="content-tab-in" v-if="tab.content.today">
 			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
 		</div>
-		<div class="content-tab-in" v-else-if="tab.content.bayar">
+		<div class="content-tab-in" v-else-if="tab.content.bayar"> <!--ini yng di pake -->
 			<Datatable ref="DatatableBayar" :module="modulebayar" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
 		</div>
 		<div class="content-tab-in" v-if="tab.content.beli">
@@ -33,6 +33,7 @@ import { nullAndZero, datename, formatrupiah } from '../../../module/Manipulatio
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import Swal from 'sweetalert2';
+import FormDetail from './FormDetail.vue';
 export default {
 	emits: ["titletrigger", "repatch"],
 	beforeUnmount:function() {},
@@ -378,6 +379,18 @@ export default {
 				vm.attach.url = vm.attach.link.detail;
 				vm.executions();
 			}
+
+			else if (posisi == 'edit') {
+				vm.$refs.FormDetail.aturulang();
+				vm.position = "editdata";
+				vm.$refs.FormDetail.show('editdata', 'Edit Data', data.uuid);
+				setTimeout(() => { vm.loadingModal('formdetail'); }, 250, this);
+				vm.attach.data = new FormDetail();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.edit;
+				vm.executions();
+			}
+
 			else if (posisi == 'openpanjar') {
 				vm.$refs.FormPanjar.aturulang();
 				vm.position = "panjardata";
@@ -479,6 +492,18 @@ export default {
 				vm.attach.url = vm.attach.link.detailbeli;
 				vm.executions();
 			}
+
+			else if (posisi == 'edit') {
+				vm.$refs.FormDetail.aturulang();
+				vm.position = "editdata";
+				vm.$refs.FormDetail.show('editdata', 'Edit Data', data.uuid);
+				setTimeout(() => { vm.loadingModal('formdetail'); }, 250, this);
+				vm.attach.data = new FormDetail();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.edit;
+				vm.executions();
+			}
+
 			else if (posisi == 'cancelbayar') {
 				vm.position = 'cancelbayar';
 				vm.attach.url = vm.attach.link.cancelbayar;
@@ -513,6 +538,7 @@ export default {
 		setDatatablebelibayar: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnbelibayar.length; j++) { col.push(vm.converterbelibayar(data[i], i, data[i][vm.columnbelibayar[j].value] ? data[i][vm.columnbelibayar[j].value] :vm.columnbelibayar[j].value, vm.columnbelibayar[j].value)); } temporer.push(col); } vm.modulebelibayar.data = temporer; vm.modulebelibayar.total = total; return temporer; },
 		
 		tableload:function(pos = 'main') { 
+			console.log("pos", pos);
 			if (pos == 'main') {
 				vm.attach.url = vm.attach.link.list; 
 				vm.attach.data = new FormData(); 
@@ -545,6 +571,7 @@ export default {
 			vm.executions(); 
 		},
 		tablereload:function(data = new FormData(), pos = 'main') { 
+			console.log("ngentod", vm.position);
 			if (vm.posisieksternal == 'bayar') {
 				if (pos == 'outer') {
 					vm.$refs.DatatableBayar.skeleton(); 
@@ -558,13 +585,16 @@ export default {
 				}
 				vm.attach.url = vm.attach.link.listbeli; 
 				vm.attach.data = data; 
+				
 			}
-			else if (vm.posisieksternal == 'belibayar') {
-				if (pos == 'outer') {
-					vm.$refs.DatatableBeliBayar.skeleton(); 
-				}
-				vm.attach.url = vm.attach.link.listbelibayar; 
-				vm.attach.data = data; 
+			else if (vm.position == 'updatedata') {
+			if (pos == 'main') {
+				vm.attach.url = vm.attach.link.list; 
+				vm.attach.data = new FormData(); 
+				vm.attach.data.append('search', ''); 
+				vm.attach.data.append('column', ''); 
+				vm.attach.data.append('page', 1); 
+			}
 			}
 			else {
 				if (pos == 'outer') {
@@ -572,6 +602,7 @@ export default {
 				}
 				vm.attach.url = vm.attach.link.list; 
 				vm.attach.data = data; 
+			
 			}
 			vm.position = 'externaltable'; 
 			vm.executions();
@@ -591,14 +622,15 @@ export default {
 
 		loadbeli:function() {
 			vm.position = 'loadbeli'; 
+			vm.posisieksternal= 'beli';
 			vm.firstloader(); 
 			vm.tableload('beli');
 		},
 
 		loadbelibayar:function() {
-			vm.position = 'loadbelibayar'; 
+			vm.position = 'main'; 
 			vm.firstloader(); 
-			vm.tableload('belibayar');
+			vm.tableload('main');
 		},
 
 		gagal: function (error) {
@@ -645,6 +677,7 @@ export default {
 		},
 
 		berhasil: function (response) {
+			console.log("pod",vm.position);
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
 	
@@ -676,6 +709,15 @@ export default {
 				vm.$refs.DatatableBeliBayar.paging(); 
 				active = 0;
 			}
+
+			else if (vm.position == 'updatedata') {
+				vm.loadingModal('formdetail');
+				vm.$refs.FormDetail.hide(); 
+				setTimeout(() => { vm.$refs.DatatableBayar.skeleton(); vm.tablereload(); }, 500, this);
+				// vm.$refs.DatatableBayar.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total); 
+
+			}
+
 			else if (vm.position == 'externaltable') { 
 
 				if (vm.posisieksternal=='bayar') {
@@ -746,10 +788,15 @@ export default {
 				//vm.position = "updatedata"; 
 				active = 0; 
 			}
+
+
 			else if (vm.position == 'updatedata') {
 				vm.loadingModal('formdetail');
 				vm.$refs.FormDetail.hide(); 
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); 
+					vm.tablereload();
+				 }, 500, this);
+				
 			}
 			else if (vm.position == 'updatepanjar') {
 				vm.loadingModal('formpanjar');
@@ -773,6 +820,14 @@ export default {
 				setTimeout(() => { vm.$refs.DatatableBeli.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			vm.message('success', active);
+		},
+
+		mainreload:function(pos) {
+			setTimeout(() => { 
+				if(pos == 'main') {
+					vm.$refs.Datatable.skeleton(); vm.posisieksternal='today'; vm.tablereload(); 
+				}
+			}, 500, this);
 		},
 
 		message: function (position, active) {
