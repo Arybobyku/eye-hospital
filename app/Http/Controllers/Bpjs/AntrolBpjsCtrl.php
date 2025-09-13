@@ -318,6 +318,115 @@ class AntrolBpjsCtrl extends Controller
             $resultBatal =$this->batalAntrean($item, $pasien);
         }
 
+        $number = (int) preg_replace('/[^0-9]/', '', $item->no_pendaftaran,);
+
+        $antrianCS =  Antrian::whereDate('tanggal', '=', date('Y-m-d'))
+            ->where('number', '=', $number)
+            ->first();
+
+        // Waktu Start Admisi
+        $admisiWaktu = Carbon::parse($antrianCS->created_at, 'Asia/Jakarta') // Stored as GMT+7
+        // ->setTimezone('America/Los_Angeles') // Convert to GMT-7
+        ->timestamp * 1000; 
+
+        $this->updateWaktuAntrean($item->nomor, 1, $admisiWaktu, $item->uuid);
+
+         $admisiCallTime = Carbon::parse($antrianCS->call_time, 'Asia/Jakarta') // Stored as GMT+7
+        // ->setTimezone('America/Los_Angeles') // Convert to GMT-7
+        ->timestamp * 1000; 
+
+        $this->updateWaktuAntrean($item->nomor, 2, $admisiCallTime, $item->uuid);
+
+        $epochTime = time() * 1000;
+        $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);     
+
+        return $result;
+    }
+
+
+    public function tambahAntreanPasienLama(Registrasi $item, Pasien $pasien)
+    {
+        $result = null;
+        $endpoint = "antrean/add";
+        $dokter = Pengguna::where('uuid', '=', $item->pengguna_uuid)->first();
+        if (!$dokter) {
+            return response()->json(['message' => 'Dokter tidak ditemukan'], 404);
+        }
+
+        // Ambil dokter dari API BPJS berdasarkan kode_dokter_bpjs_kes
+        // $dokterBpjs = $this->referensiDokterByKode($dokter->kode_dokter_bpjs_kes);
+        $nomorOnly = preg_replace('/\D/', '', $item->no_pendaftaran);
+        // if (!isset($dokterBpjs['kode'])) {
+        //     return response()->json(['message' => 'Dokter tidak ditemukan di BPJS'], 404);
+        // }
+
+        $jumlahRegistrasi = Registrasi::where("pasien_uuid", "=", $pasien->uuid)->count() > 1 ? "0" : "1";
+
+        $masterKuotaAntrian = MasterKuotaAntrian::first();
+
+        $sisaKuotaJKN =  AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))
+            ->where('is_jkn', '=', 1)
+            ->count();
+
+        $sisaKuotaNonJKN =  AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))
+            ->where('is_jkn', '=', 0)
+            ->count();
+
+        $estimasidilayani = (time() + 3600) * 1000;
+        // $estimasidilayani = (time() * 1000) + (3600 * 1000);
+        // dd($estimasidilayani);
+
+        $data = [
+            "kodebooking" => $item->nomor,
+            "jenispasien" => $item->carabayar_nama == 'BPJS Kesehatan' ? "JKN" : "NON JKN",
+            "nomorkartu" => $item->no_bpjs_kes ?? "",
+            "nik" => $pasien->no_ktp ?? "",
+            "nohp" => $item->no_handphone ?? "",
+            "kodepoli" => $item->kode_poli_bpjs ?? "",
+            "namapoli" => $item->nama_poli_bpjs ?? "",
+            "pasienbaru" => $jumlahRegistrasi ?? "",
+            "norm" => $pasien->rekam_medis ?? "",
+            "tanggalperiksa" => $item->tanggal ?? "",
+            // "tanggalperiksa" => "2025-02-09",
+            "kodedokter" => $item->kode_dokter_bpjs ?? "",
+            "namadokter" => $item->nama_dokter_bpjs ?? "",
+            "jampraktek" => $item->jadwal_dokter_bpjs ?? "",
+            "jeniskunjungan" => "1",
+            "nomorreferensi" => $item->nomorregistrasi,
+            "nomorantrean" => $item->no_pendaftaran,
+            "angkaantrean" => $nomorOnly,
+            "estimasidilayani" => $estimasidilayani,
+            "sisakuotajkn" => $sisaKuotaJKN,
+            // "kuotajkn" => $masterKuotaAntrian->kuota_non_jkn, //sementara remark dulu biar ga eror
+            "kuotajkn" => 10,
+            "sisakuotanonjkn" => $sisaKuotaNonJKN,
+            // "kuotanonjkn" => $masterKuotaAntrian->kuota_jkn, //sementara remark dulu ga eror
+            "kuotanonjkn" => 10,
+            "keterangan" => "Peserta harap 30 menit lebih awal guna pencatatan administrasi."
+        ];
+        $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+
+        $antrolLogs = new AntrolLogs();
+        $antrolLogs->url = $endpoint;
+        $antrolLogs->action = 'tambahAntrean';
+        $antrolLogs->uuid_register = $item->uuid;
+        $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $antrolLogs->save();
+        try {
+            $result = $this->bridging->postRequest($endpoint, $jsonData);
+        } catch (\Exception $e) {
+            $antrolLogs->response = json_encode($e, JSON_UNESCAPED_UNICODE);
+            $antrolLogs->update();
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+        $antrolLogs->response = $result;
+        $antrolLogs->update();
+        $resultRes = json_decode($result);
+
+        if ($resultRes->metadata->code != 200) { 
+            $resultBatal =$this->batalAntrean($item, $pasien);
+        }
+
         // $number = (int) preg_replace('/[^0-9]/', '', $item->no_pendaftaran,);
 
         // $antrianCS =  Antrian::whereDate('tanggal', '=', date('Y-m-d'))
@@ -337,11 +446,13 @@ class AntrolBpjsCtrl extends Controller
 
         // $this->updateWaktuAntrean($item->nomor, 2, $admisiCallTime, $item->uuid);
 
-        // $epochTime = time() * 1000;
-        // $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);     
+        $epochTime = time() * 1000;
+        $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);     
 
         return $result;
     }
+
+
     public function tambahAntreanFarmasi(AntrianFarmasi $item)
     {
         $result = null;

@@ -1003,6 +1003,11 @@ class PemeriksaanCtrl extends Controller
 		$get->status = 'selesai';
 		$get->save();
 
+
+		// // Update Task ID 3
+		// $epochTime = time() * 1000;
+		// $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($get->nomor, 3, $epochTime, $registrasi->uuid);;
+
 		// End Create Antrian POLI
 
 		// $registrasi = Registrasi::where('uuid', '=', $get->uuid_registrasi)->first();

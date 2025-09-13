@@ -342,24 +342,7 @@ class AntrianCtrl extends Controller
 
 	public function addlamanonbpjs(Request $request)
 	{
-
-		$uuid = '';
-		$loop = false;
-		do {
-			$uuid = Uuid::uuid4();
-			$check = AntrianRo::where('uuid', '=', $uuid)->first();
-			if (!$check) {
-				$loop = true;
-			}
-		} while ($loop == false);
-
-		if ($this->error != 'next') {
-			return response()->json(['data' => $this->error]);
-		}
-
-
 		try {
-
 			DB::beginTransaction();
 			$pasien = Pasien::where('no_ktp', '=', $request->nik)->first();
 			if (!$pasien) {
@@ -384,30 +367,6 @@ class AntrianCtrl extends Controller
 					$loop = true;
 				}
 			} while ($loop == false);
-	
-			// $item = new Antrian();
-			// $item->uuid = $uuid;
-			// $item->kode = 'CS';
-			// $latestAntrian = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->where('kode', 'CS')->orderBy('id', 'desc')->first();
-
-			// $lastNumber = $latestAntrian ? $latestAntrian->number : 0;
-
-			// if ($lastNumber >= $request->number){
-			// 	$number = $latestAntrian->number + 1;
-			// 	if ($number < 10) {
-			// 		$number = '00'.$number;
-			// 	} else if ($number  > 9 && $number < 100) {
-			// 		$number  = '0'.$number;
-			// 	} else if ($number  > 99 && $number  < 1000) {
-			// 		$number = $number;
-			// 	}
-			// }
-			// $item->number = $number;
-			// $item->jenis = $request->jenis;
-			// $item->tanggal = date('Y-m-d');
-			// $item->save();
-
-			//END Insert Antrian CS
 
 			$latestAntrianRO = AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
 			
@@ -416,23 +375,22 @@ class AntrianCtrl extends Controller
 			$kodeRo = 'RO-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
 			
 			$uuid = '';
-			$noPendaftaraan = 1;
 
 			$latestAntrianPoli = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
 			$latestNumberPoli = $latestAntrianPoli->number ?? 0;
-			$latestNumberPoli = $latestAntrianPoli + 1;
+			$latestNumberPoli = $latestNumberPoli + 1;
 
 			// TODO ngambil nomor poli dari master data ruangan poli BPJS
 			$kodePoli = 'P-' . str_pad($latestNumberPoli, 3, '0', STR_PAD_LEFT);
 
 			
 			$loop = false;
-			do {
-				$uuid = Uuid::uuid4();
-				$check = Registrasi::where('uuid', '=', $uuid)->first();
-				if (!$check) {
-					$loop = true;
-				}
+				do {
+					$uuid = Uuid::uuid4();
+					$check = Registrasi::where('uuid', '=', $uuid)->first();
+						if (!$check) {
+							$loop = true;
+						}
 				} while ($loop == false);
 
 				$is_jkn = 0;
@@ -453,8 +411,6 @@ class AntrianCtrl extends Controller
 						$posisi_antrian_dokter += $registrasi_poli->posisi_antrian_dokter;
 					}
 				}
-
-
 
 				$posisi_antrian_ro = 1;
 				if ($registrasi) {
@@ -568,17 +524,6 @@ class AntrianCtrl extends Controller
 
 				$rekammedis = $request->rekam_medis;
 				$result = substr($rekammedis, 0, 1);
-				// $registrasiCtrl = new RegistrasiCtrl();
-				// if ($result == '0') {
-				// 	$result = $registrasiCtrl->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
-				// } else {
-				// 	$check = Registrasi::where('status', '=', 'Selesai')->where('pasien_uuid', '=', $request->pasien_uuid)->first();
-				// 	if ($check) {
-				// 		$result = $registrasiCtrl->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
-				// 	} else {
-				// 		$result = $registrasiCtrl->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
-				// 	}
-				// }
 				$arr = array('status' => 'Kunjungan');
 				$pasienUpdate = Pasien::where('uuid', '=', $pasien->uuid)->update($arr);
 
@@ -592,8 +537,6 @@ class AntrianCtrl extends Controller
 						$loop = true;
 					}
 				} while ($loop == false);
-
-
 				
 				$antrianRO = new AntrianRo();
 				$antrianRO->uuid = $uuidRO;
@@ -644,24 +587,13 @@ class AntrianCtrl extends Controller
 				event(new NewTradeRo($str));
 
 				DB::commit();
-
-				// return response()->json(['data' => 'berhasil']);
-				$pdf = \App::make('dompdf.wrapper');
-				$jenis = $request->jenis;
-				$number = $request->number;
-				$kode = $antrianRO->kode;
-		
-				$customPaper = array(0, 0, 649, 1063);
-				$pdf->loadView('cetak-antrian', compact('kode', 'jenis', 'number'))->setPaper(array(0, 0, 220, 220), 'potrait');
-				$content = $pdf->download()->getOriginalContent();
-				Storage::put('public/antrian/number.pdf', $content);
 		
 		} catch (Exception $e) {
 			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}	
 
-		$response = app(AntrolBpjsCtrl::class)->tambahAntrean($item, $pasien);
+		$response = app(AntrolBpjsCtrl::class)->tambahAntreanPasienLama($item, $pasien);
 		$response = json_decode($response);
 
 		// if ($response->metadata->code !== 200) {
@@ -674,11 +606,22 @@ class AntrianCtrl extends Controller
 		// 	$response = app(AntrolBpjsCtrl::class)->batalAntrean($item, $pasien);
 		// }
 
+		$pdf = \App::make('dompdf.wrapper');
+		$jenis = $request->jenis;
+		$number = $request->number;
+		$kode = $antrianRO->kode;
+
+		$customPaper = array(0, 0, 649, 1063);
+		$pdf->loadView('cetak-antrian', compact('kode', 'jenis', 'number'))->setPaper(array(0, 0, 220, 220), 'potrait');
+		$content = $pdf->download()->getOriginalContent();
+		Storage::put('public/antrian/number.pdf', $content);
 		return response()->json(['data' => 'berhasil']);
 	}
+
 	public function searchnik(Request $request)
 	{ 
 		$bridging = new BridgeVclaim();
+		// $bridging = new BridgeVclaim();
 		$today = Carbon::now('Asia/Jakarta')->format('Y-m-d');
 		if ($request->section == 'nik_sect') {
 			$pasien = Pasien::where('no_ktp', '=', $request->nik)->first();
