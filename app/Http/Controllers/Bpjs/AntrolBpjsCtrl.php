@@ -313,32 +313,32 @@ class AntrolBpjsCtrl extends Controller
         $antrolLogs->response = $result;
         $antrolLogs->update();
         $resultRes = json_decode($result);
-        if ($resultRes->metadata->code != 200) { //TESTING YUDHA
+
+        if ($resultRes->metadata->code != 200) { 
             $resultBatal =$this->batalAntrean($item, $pasien);
-            // dd($resultBatal);
         }
 
-        $number = (int) preg_replace('/[^0-9]/', '', $item->no_pendaftaran,);
+        // $number = (int) preg_replace('/[^0-9]/', '', $item->no_pendaftaran,);
 
-        $antrianCS =  Antrian::whereDate('tanggal', '=', date('Y-m-d'))
-            ->where('number', '=', $number)
-            ->first();
+        // $antrianCS =  Antrian::whereDate('tanggal', '=', date('Y-m-d'))
+        //     ->where('number', '=', $number)
+        //     ->first();
 
-        // Waktu Start Admisi
-        $admisiWaktu = Carbon::parse($antrianCS->created_at, 'Asia/Jakarta') // Stored as GMT+7
-        // ->setTimezone('America/Los_Angeles') // Convert to GMT-7
-        ->timestamp * 1000; 
+        // // Waktu Start Admisi
+        // $admisiWaktu = Carbon::parse($antrianCS->created_at, 'Asia/Jakarta') // Stored as GMT+7
+        // // ->setTimezone('America/Los_Angeles') // Convert to GMT-7
+        // ->timestamp * 1000; 
 
-        $this->updateWaktuAntrean($item->nomor, 1, $admisiWaktu, $item->uuid);
+        // $this->updateWaktuAntrean($item->nomor, 1, $admisiWaktu, $item->uuid);
 
-         $admisiCallTime = Carbon::parse($antrianCS->call_time, 'Asia/Jakarta') // Stored as GMT+7
-        // ->setTimezone('America/Los_Angeles') // Convert to GMT-7
-        ->timestamp * 1000; 
+        //  $admisiCallTime = Carbon::parse($antrianCS->call_time, 'Asia/Jakarta') // Stored as GMT+7
+        // // ->setTimezone('America/Los_Angeles') // Convert to GMT-7
+        // ->timestamp * 1000; 
 
-        $this->updateWaktuAntrean($item->nomor, 2, $admisiCallTime, $item->uuid);
+        // $this->updateWaktuAntrean($item->nomor, 2, $admisiCallTime, $item->uuid);
 
-        $epochTime = time() * 1000;
-        $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);     
+        // $epochTime = time() * 1000;
+        // $this->updateWaktuAntrean($item->nomor, 3, $epochTime, $item->uuid);     
 
         return $result;
     }
