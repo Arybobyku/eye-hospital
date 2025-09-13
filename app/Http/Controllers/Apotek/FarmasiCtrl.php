@@ -545,43 +545,44 @@ class FarmasiCtrl extends Controller
         // UPDATE TASK ID 7
         $epochTime = time() * 1000;
         $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($data->nomor, 7, $epochTime, $data->uuid);
+        
         // START Antrian Kasir
-        // if ($data->no_antrian_kasir == null) {
-        //     $uuidKasir = '';
-        //     $loop = false;
-        //     do {
-        //         $uuidKasir = Uuid::uuid4();
-        //         $check = AntrianKasir::where('uuid', '=', $uuidKasir)->first();
-        //         if (!$check) {
-        //             $loop = true;
-        //         }
-        //     } while ($loop == false);
+        if ($data->no_antrian_kasir == null) {
+            $uuidKasir = '';
+            $loop = false;
+            do {
+                $uuidKasir = Uuid::uuid4();
+                $check = AntrianKasir::where('uuid', '=', $uuidKasir)->first();
+                if (!$check) {
+                    $loop = true;
+                }
+            } while ($loop == false);
 
-        //     $latestAntrianKasir = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+            $latestAntrianKasir = AntrianKasir::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
 
-        //     $latestNumber = $latestAntrianKasir->number ?? 0;
-        //     $latestNumber = $latestNumber + 1;
-        //     $kodeKasir = 'K-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+            $latestNumber = $latestAntrianKasir->number ?? 0;
+            $latestNumber = $latestNumber + 1;
+            $kodeKasir = 'K-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
 
-        //     $antrianKasir = new AntrianKasir();
-        //     $antrianKasir->uuid = $uuidKasir;
-        //     $antrianKasir->kode = 'K';
-        //     $antrianKasir->number = $latestNumber;
-        //     $antrianKasir->jenis = $data->jenis;
-        //     $antrianKasir->tanggal = date('Y-m-d');
+            $antrianKasir = new AntrianKasir();
+            $antrianKasir->uuid = $uuidKasir;
+            $antrianKasir->kode = 'K';
+            $antrianKasir->number = $latestNumber;
+            $antrianKasir->jenis = $data->jenis;
+            $antrianKasir->tanggal = date('Y-m-d');
 
-        //     // BPJS
-        //     $antrianKasir->kode_poli =  $data->kode_poli_bpjs;
-        //     $antrianKasir->poli =  $data->nama_poli_bpjs;
-        //     $antrianKasir->uuid_pasien =  $data->pasien_uuid;
-        //     $antrianKasir->kode_dokter =  $data->kode_dokter_bpjs;
-        //     $antrianKasir->uuid_registrasi =  $data->uuid;
+            // BPJS
+            $antrianKasir->kode_poli =  $data->kode_poli_bpjs;
+            $antrianKasir->poli =  $data->nama_poli_bpjs;
+            $antrianKasir->uuid_pasien =  $data->pasien_uuid;
+            $antrianKasir->kode_dokter =  $data->kode_dokter_bpjs;
+            $antrianKasir->uuid_registrasi =  $data->uuid;
 
-        //     $antrianKasir->save();
+            $antrianKasir->save();
 
-        //     Registrasi::where('uuid', $request->uuid)
-        //         ->update(['no_antrian_kasir' => $kodeKasir]);
-        // }
+            Registrasi::where('uuid', $request->uuid)
+                ->update(['no_antrian_kasir' => $kodeKasir]);
+        }
         // End Antrian Kasir
 
         $arr = ['approvement_obat' => 'yes'];
@@ -620,7 +621,7 @@ class FarmasiCtrl extends Controller
         $registrasi = Registrasi::where('uuid', '=', $item->uuid_registrasi)->first();
 
         $epochTime = time() * 1000;
-        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking , 6);
+        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntrean($kodeBooking , 6, $epochTime, $registrasi->uuid);
 
         // if ($get) {
         //     $str = 'Farmasi 1=' . $request->number . '=kunjungan';
