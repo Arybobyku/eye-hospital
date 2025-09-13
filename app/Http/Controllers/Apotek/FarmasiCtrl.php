@@ -75,8 +75,8 @@ class FarmasiCtrl extends Controller
                 ->orderBy('id', 'desc')
                 ->where('ada_obat', '=', 'Ya')
                 // ->whereDate('tanggal', '=', date('Y-m-d'))
-                ->where('jenis', '=', 'Rawat Jalan')->where('approvement_obat', 'no')
-
+                ->where('jenis', '=', 'Rawat Jalan')
+                // ->where('approvement_obat', 'no')
                 ->where(function ($q) {
                     $q->where('status', 'Kunjungan');
                 })
@@ -120,7 +120,7 @@ class FarmasiCtrl extends Controller
         if ($request->search != '') {
             $data = Registrasi::where('delete_soft', '=', 1)
                 ->where($column, 'ilike', '%' . $search . '%')
-                ->orderBy('tanggal', 'desc')
+                ->orderBy('id', 'desc')
                 ->where('ada_obat', '=', 'Ya')
                 // ->whereDate('tanggal', '=', date('Y-m-d'))
                 ->where('jenis', '=', 'Rawat Jalan')
@@ -146,7 +146,7 @@ class FarmasiCtrl extends Controller
                 ->orderBy('tanggal', 'desc')->count();
         } else {
             $data = Registrasi::where('delete_soft', '=', 1)
-                ->orderBy('tanggal', 'desc')
+                ->orderBy('id', 'desc')
                 ->where('ada_obat', '=', 'Ya')
                 // ->whereDate('tanggal', '=', date('Y-m-d'))
                 ->where('jenis', '=', 'Rawat Jalan')
