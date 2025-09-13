@@ -619,10 +619,8 @@ class FarmasiCtrl extends Controller
         // UPDATE TASK ID 6
         $registrasi = Registrasi::where('uuid', '=', $item->uuid_registrasi)->first();
 
-        // dd($registrasi);
         $epochTime = time() * 1000;
-        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking , 5);
-        // dd($response);
+        $response = app(AntrolBpjsCtrl::class)->updateWaktuAntreanFarmasi($kodeBooking , 6);
 
         // if ($get) {
         //     $str = 'Farmasi 1=' . $request->number . '=kunjungan';

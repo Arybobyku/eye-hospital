@@ -493,19 +493,26 @@ class AntrianCtrl extends Controller
 				$is_approve = '-';
 				$is_pay = '-';
 				$is_asuransi = '-';
-				if ($request->carabayar_nama != 'Umum' && $request->carabayar_nama != 'BPJS Kesehatan') {
-					$status_penjamin = 'tunda';
-					$is_approve = 'tidak';
-					$is_pay = 'tidak';
-					$is_asuransi = 'ya';
-				}
+				
+				// if ($request->carabayar_nama != 'Umum' && $request->carabayar_nama != 'BPJS Kesehatan') {
+				// 	$status_penjamin = 'tunda';
+				// 	$is_approve = 'tidak';
+				// 	$is_pay = 'tidak';
+				// 	$is_asuransi = 'ya';
+				// }
 
-				if ($request->carabayar_nama == 'Umum' || $request->carabayar_nama == 'BPJS Kesehatan') {
-					$status_penjamin = 'disetujui';
-					$is_approve = 'ya';
-					$is_pay = 'tidak';
-					$is_asuransi = 'tidak';
-				}
+				// if ($request->carabayar_nama == 'Umum' || $request->carabayar_nama == 'BPJS Kesehatan') {
+				// 	$status_penjamin = 'disetujui';
+				// 	$is_approve = 'ya';
+				// 	$is_pay = 'tidak';
+				// 	$is_asuransi = 'tidak';
+				// }
+
+				$status_penjamin = 'disetujui';
+				$is_approve = 'ya';
+				$is_pay = 'tidak';
+				$is_asuransi = 'tidak';
+
 				$item->status_penjamin = $status_penjamin;
 				$item->is_approve = $is_approve;
 				$item->is_pay = $is_pay;
@@ -524,6 +531,9 @@ class AntrianCtrl extends Controller
 
 				$rekammedis = $request->rekam_medis;
 				$result = substr($rekammedis, 0, 1);
+				
+				app(RegistrasiCtrl::class)->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
+
 				$arr = array('status' => 'Kunjungan');
 				$pasienUpdate = Pasien::where('uuid', '=', $pasien->uuid)->update($arr);
 

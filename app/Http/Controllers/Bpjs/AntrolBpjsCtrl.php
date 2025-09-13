@@ -512,6 +512,35 @@ class AntrolBpjsCtrl extends Controller
         return $result;
     }
 
+    public function updateWaktuAntreaSelesaiPoli($kodeBooking, $taskID, $waktu, $uuid_register, $jenisResep){
+
+        $result = null;
+        $endpoint = "antrean/updatewaktu";
+        $data = [
+            "kodebooking" => $kodeBooking,
+            "taskid" => $taskID,
+            "waktu" => $waktu,
+            // "Tidak ada/Racikan/Non racikan"
+            "jenisresep" => $jenisResep,
+        ];
+        $jsonData = json_encode($data, JSON_PRETTY_PRINT);
+        $antrolLogs = new AntrolLogs();
+        $antrolLogs->url = $endpoint;
+        $antrolLogs->uuid_register = $uuid_register;
+        $antrolLogs->action = 'updateWaktuAntrean';
+        $antrolLogs->payload = json_encode($data, JSON_UNESCAPED_UNICODE);
+        $antrolLogs->save();
+        try {
+            $result = $this->bridging->postRequest($endpoint, $jsonData);
+        } catch (\Exception $e) {
+            $antrolLogs->response = json_encode($e, JSON_UNESCAPED_UNICODE);
+            $antrolLogs->update();
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+        $antrolLogs->response = $result;
+        $antrolLogs->update();
+        return $result;
+    }
 
     public function updateWaktuAntreanFarmasi($kodeBooking, $taskID)
     {
