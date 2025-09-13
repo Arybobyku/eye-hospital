@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Administration;
 
+use App\Exports\UploadInputBukuTarif;
 use App\Http\Controllers\Controller;
+use App\Models\BukuTarif;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -11,6 +13,7 @@ use Crypt;
 use PenggunaHelp;
 
 use App\Models\TindakanRawatJalan;
+use Maatwebsite\Excel\Facades\Excel;
 
 class TindakanRawatJalanCtrl extends Controller
 {
@@ -31,6 +34,28 @@ class TindakanRawatJalanCtrl extends Controller
 		$list = ''; $total = '';
 		$page = $request->page - 1; $skip = $page * $this->take;
 		$search = $request->search; $column = $request->column;
+
+		if ($request->search != "") {
+			$data = BukuTarif::where('delete_soft', '=', 1)
+								->where($column, 'ilike', '%'.$search.'%')
+								->orderBy('sub_label', 'asc')
+								->skip($skip)->take($this->take)
+								->get();
+			$total = BukuTarif::where('delete_soft', '=', 1)
+								->where($column, 'ilike', '%'.$search.'%')
+								->orderBy('id', 'desc')->count();
+		}
+		else {
+			$data = BukuTarif::where('delete_soft', '=', 1)
+									->orderBy('sub_label', 'desc')
+									->skip($skip)->take($this->take)
+									->get();
+
+			$total = BukuTarif::where('delete_soft', '=', 1)->orderBy('id', 'desc')->count();
+
+		}
+
+		return response()->json(['data' => $data, 'total' => $total]);
 
 		if ($request->search != "") {
 			$data = TindakanRawatJalan::where('delete_soft', '=', 1)
@@ -152,6 +177,17 @@ class TindakanRawatJalanCtrl extends Controller
 		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
 		$data = TindakanRawatJalan::where('delete_soft', '=', '1')->where('nama', 'ilike', '%'.$request->keyword.'%')->select(['id', 'uuid', 'nama'])->limit(10)->get();
 		return response()->json(['data' => $data]);
+	}
+
+	public function uploadTemplate(Request $request)
+	{
+		$request->validate([
+			'file' => 'required|file|mimes:xlsx,csv,xls',
+		]);
+
+		Excel::import(new UploadInputBukuTarif, $request->file('file'));
+
+		return response()->json(['data' => 'berhasil']);
 	}
 
 }
