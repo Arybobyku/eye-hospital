@@ -419,8 +419,8 @@ class AntrianCtrl extends Controller
 			$noPendaftaraan = 1;
 
 			$latestAntrianPoli = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
-			$latestNumberPoli = $latestNumberPoli->number ?? 0;
-			$latestNumberPoli = $latestNumberPoli + 1;
+			$latestNumberPoli = $latestAntrianPoli->number ?? 0;
+			$latestNumberPoli = $latestAntrianPoli + 1;
 
 			// TODO ngambil nomor poli dari master data ruangan poli BPJS
 			$kodePoli = 'P-' . str_pad($latestNumberPoli, 3, '0', STR_PAD_LEFT);
