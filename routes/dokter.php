@@ -16,6 +16,7 @@ use App\Http\Controllers\Dokter\StockOpnameCtrl;
 use App\Http\Controllers\Dokter\PemeriksaanCtrl;
 use App\Http\Controllers\Dokter\PemeriksaanOdcCtrl;
 use App\Http\Controllers\Dokter\CetakanCtrl;
+use App\Http\Controllers\Bpjs\RuangPoliCtrl;
 use App\Http\Controllers\Dokter\PemeriksaanPendingCtrl;
 use App\Http\Controllers\Dokter\PemeriksaanTriaseCtrl;
 use App\Http\Controllers\Dokter\PemeriksaanTransferCtrl;
@@ -24,6 +25,12 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 
 	Route::prefix('stockopname')->group(function () {
 		Route::post('list', [StockOpnameCtrl::class, 'list'])->name('stockopname-list');
+	});
+	Route::prefix('bpjs')->group(function () {
+		Route::post('list', [RuangPoliCtrl::class, 'list'])->name('ruangpoli-list');
+		Route::post('detail', [RuangPoliCtrl::class, 'detail'])->name('ruangpoli-detail');
+		Route::post('update', [RuangPoliCtrl::class, 'update'])->name('ruangpoli-update');
+
 	});
 
 	Route::prefix('pemeriksaan')->group(function () {

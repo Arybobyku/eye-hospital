@@ -2,6 +2,7 @@
 
 
 use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
+use App\Http\Controllers\Bpjs\RuangPoliCtrl;
 use App\Http\Controllers\Bpjs\AntrolMbjknCtrl;
 use Illuminate\Support\Facades\Route;
 
@@ -39,6 +40,7 @@ Route::group([], function () {
         Route::get('ref/pasien/fp/identitas/{nik}/noidentitas/{noidentitas}', [AntrolBpjsCtrl::class, 'referensiPasienFingerPrint']);
         
         Route::get('jadwaldokter/kodepoli/{params1}/tanggal/{params2}', [AntrolBpjsCtrl::class, 'referensiJadwalDokter']);
+        Route::get('ruangpoli/{params1}', [RuangPoliCtrl::class, 'referensiRuangPoli']);
 
         Route::get('antrean/getlisttask', [AntrolBpjsCtrl::class, 'listTask']);
         
@@ -46,18 +48,19 @@ Route::group([], function () {
         Route::get('antrean/pendaftaran/tanggal/{param1}', [AntrolBpjsCtrl::class, 'getAntrianByTanggal']);
         Route::get('antrean/pendaftaran/kodebooking/{param1}', [AntrolBpjsCtrl::class, 'getAntrianByKodeBooking']);
         Route::get('antrean/pendaftaran/kodepoli/{param1}/kodedokter/{param2}/hari/{param3}/jampraktek/{param4}', [AntrolBpjsCtrl::class, 'getAntrianByAll']);
-
+        
         Route::post('jadwaldokter/updatejadwaldokter', [AntrolBpjsCtrl::class, 'updateJadwalDokter']);
         Route::post('antrean/add', [AntrolBpjsCtrl::class, 'tambahAntrean']);
         Route::post('antrean/farmasi/add', [AntrolBpjsCtrl::class, 'tambahAntreanFarmasi']);
         Route::post('antrean/updatewaktu', [AntrolBpjsCtrl::class, 'updateWaktuAntrean']);
         Route::post('antrean/batal', [AntrolBpjsCtrl::class, 'batalAntrean']);
         Route::post('antrean/getlisttask/{kodebooking}', [AntrolBpjsCtrl::class, 'listWaktuTaskId']);
-
+        
         Route::get('dashboard/waktutunggu/tanggal/{params1}/waktu/{params2}', [AntrolBpjsCtrl::class, 'dashboardPerTanggal']);
         Route::get('dashboard/waktutunggu/bulan/{params1}/tahun/{params2}/waktu/{params3}', [AntrolBpjsCtrl::class, 'dashboardPerBulan']);
 
     });
+    
 
     // API Endpoint Web Service
     Route::prefix('ws')->group(function () {

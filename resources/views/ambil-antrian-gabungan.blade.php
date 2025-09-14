@@ -469,7 +469,7 @@
                     }
                 },
                 async fetchJadwalDokter() {
-                    const today = "2025-03-03"; // Format: YYYY-MM-DD
+                    const today = "2025-09-10"; // Format: YYYY-MM-DD
 
                     try {
                         const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/${this.selectedPoli}/tanggal/${today}`);

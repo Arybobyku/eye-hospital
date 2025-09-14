@@ -183,6 +183,10 @@ export const formrawatjalan = () => {
 			title: 'No BPJS Kesehatan', for_id: 'form_'+'no_bpjs_kes', type: 'text', required: '', 
 			name: 'no_bpjs_kes', value: '', disabled: false, show: false, kinds: ''
 		},
+		ruang_poli: { 
+			title: 'Ruang Poliklinik', for_id: 'form_'+'ruang_poli', type: 'text', required: '', 
+			name: 'ruang_poli', value: '', disabled: true, show: false, kinds: ''
+		},
 		nomorreferensi: { 
 			title: 'No Referensi', for_id: 'form_'+'nomorreferensi', type: 'text', required: '', 
 			name: 'nomorreferensi', value: '', disabled: false, show: false, kinds: ''
@@ -209,11 +213,11 @@ export const formrawatjalan = () => {
 				class: 'berkebutuhankhusus', isrequired: true, html: 'Berkebutuhan Khusus/Triase/Disabilitas?', issearch: false, disabled: false,
 			},
 			
-			dokter: { 
-				key : 'dokter', for_id: 'form_'+'dokter', name: 'dokter', uuid:'', value: '', label: 'Silahkan Pilih', 
-				filter: [], data: [], search: '', option: 'display: none', statics: false,
-				class: 'dokter', isrequired: true, html: 'Dokter yang menangani', issearch: false, disabled: false,
-			},
+			// dokter: { 
+			// 	key : 'dokter', for_id: 'form_'+'dokter', name: 'dokter', uuid:'', value: '', label: 'Silahkan Pilih', 
+			// 	filter: [], data: [], search: '', option: 'display: none', statics: false,
+			// 	class: 'dokter', isrequired: true, html: 'Dokter yang menangani', issearch: false, disabled: false,
+			// },
 
 			carabayar: { 
 				key : 'carabayar', for_id: 'form_'+'carabayar', name: 'carabayar', uuid:'', value: '', label: 'Silahkan Pilih', 

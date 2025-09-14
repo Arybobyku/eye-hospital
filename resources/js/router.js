@@ -221,6 +221,13 @@ const routes = [
 		props: true 
 	},
 	{ 
+		path: _base + 'ruang-poli', 
+		name: 'Ruang Poli', 
+		component: () => import('./components/antrol/ruangpoli/index.vue'),
+		meta: { title: 'Ruang Poli' },
+		props: true 
+	},
+	{ 
 		path: _base + 'tracking', 
 		name: 'Tracking Rawat Jalan', 
 		component: () => import('./components/administration/tracking/index.vue'),

@@ -57,8 +57,8 @@ export const parserawatjalan = (form, detail, selectedPoli, selectedDokter, jadw
 	data.append('no_handphone', detail.no_handphone);
 	data.append('agama', detail.agama);
 
-	data.append('pengguna_uuid', form.select.dokter.value);
-	data.append('nama_dokter', form.select.dokter.label);
+	// data.append('pengguna_uuid', form.select.dokter.value);
+	// data.append('nama_dokter', form.select.dokter.label);
 	data.append('no_pendaftaran', form.nopendaftaran.value);
 	data.append('cara_masuk', form.select.caramasuk.value);
 	data.append('rujukan', form.rujukan.value);
@@ -75,6 +75,7 @@ export const parserawatjalan = (form, detail, selectedPoli, selectedDokter, jadw
 	data.append('kode_dokter_bpjs', selectedDokter);
 	data.append('nama_dokter_bpjs', namaDokter);
 	data.append('jadwal_dokter_bpjs', jadwalDokterBpjs);
+	data.append('ruang_poli', form.ruang_poli.value);
 
 	data.append('nama', form.pjnama.value);
 	data.append('hubungan', form.pjhubungan.value);
