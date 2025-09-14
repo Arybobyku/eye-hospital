@@ -38,7 +38,7 @@ class UploadMetodePembayaran implements ToCollection, WithHeadingRow
                     $item->carabayar_nama = $caraBayar->nama;
                     $item->tindakan_rawat_jalan_uuid = $row['uuid'];
                     $item->nama_tindakan_rawat_jalan = $row['nama'];
-                    $item->jenis = $row['label'];
+                    $item->jenis = $row['sub_label'];
                     $item->harga = $row['harga'];
                     $item->default = $row['default'];
 

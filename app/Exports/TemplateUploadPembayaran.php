@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use App\Models\BukuTarif;
 use DB;
 use App\Models\Registrasi;
 use App\Models\Resep;
@@ -33,8 +34,8 @@ class TemplateUploadPembayaran implements FromView, ShouldAutoSize
 
 	private function rdata()
 	{
-		$data = TindakanRawatJalan::where('delete_soft', '=', 1)
-			->orderBy('id', 'desc')
+		$data = BukuTarif::where('delete_soft', '=', 1)
+			->orderBy('label', 'ASC')
 			->get();
 		return $data;
 	}
