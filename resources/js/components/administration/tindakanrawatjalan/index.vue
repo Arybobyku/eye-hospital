@@ -11,7 +11,7 @@
 		<!-- <Inputed :ref="formDownload" :form="formDownload"></Inputed> -->
 	</div>
 	<div class="col-1 form-mr">
-		<button class="btn-tambah" @click="downloadTemplate()">Generate Template</button>
+		<!-- <button class="btn-tambah" @click="downloadTemplate()">Generate Template</button> -->
 	</div>
 	<div class="col-2 form-mr">
 		<div class="form-self-group">
@@ -43,7 +43,7 @@
 <script>
 var vm;
 import { defineAsyncComponent } from 'vue';
-import { nullAndZero, datename } from '../../../module/Manipulation.js';
+import { nullAndZero, datename, formatrupiah } from '../../../module/Manipulation.js';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import Swal from 'sweetalert2';
@@ -107,7 +107,7 @@ export default {
 		/*************************************************************************************************************************
 		* Bagian fungsi yang opsional untuk manipulasi data dan string
 		*************************************************************************************************************************/
-		nullAndZero, datename,
+		nullAndZero, datename,formatrupiah,
 
 		/*************************************************************************************************************************
 		* Bagian fungsi untuk pemrosesan table
@@ -161,10 +161,13 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'harga') { _tmp = { value: vm.convertHarga(data), ishtml: 'html', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';
 		},
-
+		convertHarga:function(_item) {
+			return 	`${vm.formatrupiah(Math.ceil (_item.harga).toString())}`;
+		},
 		tablebutton:function(posisi, data, index) {
 			if (posisi == 'add') {
 				vm.$refs.FormTindakanRawatJalan.aturulang();
