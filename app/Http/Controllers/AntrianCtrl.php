@@ -474,11 +474,10 @@ class AntrianCtrl extends Controller
 				$item->no_pendaftaran = $kodePoli;
 				$item->cara_masuk = 'Datang Sendiri';
 				$item->rujukan = $request->rujukan ? $request->rujukan : '-';
-				$item->carabayar_uuid = $request->carabayar_uuid ? $request->carabayar_uuid : '-';
-				$item->carabayar_nama = $request->carabayar_nama ? $request->carabayar_nama : '-';
+				$item->carabayar_uuid = '1bddd542-fd1e-4b6a-b629-53bd35428796';
+				$item->carabayar_nama = 'Umum';
 				$item->no_bpjs_kes = $pasien->no_bpjs;
-				$item->nomorreferensi = $request->nomorreferensi;
-				$item->carabayar_nama = $request->carabayar_nama ? $request->carabayar_nama : '-';
+				$item->nomorreferensi = "";
 				$item->asuransi_uuid = $request->asuransi_uuid ? $request->asuransi_uuid : '-';
 				$item->nama_asuransi = $request->nama_asuransi ? $request->nama_asuransi : '-';
 				$item->posisi_antrian_ro = $posisi_antrian_ro;
@@ -855,13 +854,12 @@ class AntrianCtrl extends Controller
 				$item->nama_poli_bpjs = $request->nama_poli_bpjs;
 
 				$item->no_pendaftaran = 'CS-'.$numberCs;
-				$item->cara_masuk = 'Datang Sendiri';
+				$item->cara_masuk = 'Rujukan dari';
 				$item->rujukan = $request->no_rujukan ? $request->no_rujukan : '-';
-				$item->carabayar_uuid = $request->carabayar_uuid ? $request->carabayar_uuid : '-';
-				$item->carabayar_nama = $request->carabayar_nama ? $request->carabayar_nama : '-';
+				$item->carabayar_uuid = 'e3ed042d-2b41-4672-bcc2-7a816a622667';
+				$item->carabayar_nama = 'BPJS Kesehatan';
 				$item->no_bpjs_kes = $pasien->no_bpjs;
-				$item->nomorreferensi = $request->nomorreferensi;
-				$item->carabayar_nama = $request->carabayar_nama ? $request->carabayar_nama : '-';
+				$item->nomorreferensi = $request->no_rujukan;
 				$item->asuransi_uuid = $request->asuransi_uuid ? $request->asuransi_uuid : '-';
 				$item->nama_asuransi = $request->nama_asuransi ? $request->nama_asuransi : '-';
 				$item->posisi_antrian_ro = $posisi_antrian_ro;
