@@ -351,6 +351,10 @@ class AntrolMbjknCtrl extends Controller
                 ], 201);
             }
             
+            $dataRO = AntrianRo::where('tanggal', $request->tanggalperiksa)
+            ->get();
+
+            $antreanRO = $dataRO->max('number') + 1;
             
             $poli = MasterPoliBpjs::where('kdsubspesialis', $request->kodepoli)
             ->value('nmpoli');
@@ -486,6 +490,30 @@ class AntrolMbjknCtrl extends Controller
             $item->uuid = $uuidPoli;
             $item->kode = 'P';
             $item->number = $angkaAntrean;
+            $item->jenis = 'Rawat Jalan';
+            $item->tanggal = $request->tanggalperiksa;
+            $item->pemanggil = '-';
+            $item->status = 'Pending';
+            $item->poli = $poli;
+            $item->is_jkn = 1;
+            $item->kode_poli = $request->kodepoli;
+            $item->uuid_pasien = $uuidpasien;
+            $item->kode_dokter = $request->kodedokter;
+            $item->uuid_registrasi = $uuidRegis;
+
+            $uuidRO = '';
+		    $loop = false;
+		    do {
+			    $uuidRO = Uuid::uuid4();
+			    $check = AntrianRo::where('uuid', '=', $uuidRO)->first();
+			    if (!$check) {
+				    $loop = true;
+			    }
+		    } while ($loop == false);
+            $item = new AntrianRo();
+            $item->uuid = $uuidPoli;
+            $item->kode = 'R';
+            $item->number = $antreanRO;
             $item->jenis = 'Rawat Jalan';
             $item->tanggal = $request->tanggalperiksa;
             $item->pemanggil = '-';
@@ -905,11 +933,6 @@ class AntrolMbjknCtrl extends Controller
             return response()->json([
                 'response' => [
                     "norm" => $rekam_medis,
-                    "uuidPasien" => $uuidPasien,
-                    "uuidRegis" => $uuidRegis,
-                    "nomor" => $nomor_,
-                    "rtrw" => $rtRw,
-                    
                 ],
                 "metadata" => [
                     "message" => "Harap datang ke admisi untuk melengkapi data rekam medis"
