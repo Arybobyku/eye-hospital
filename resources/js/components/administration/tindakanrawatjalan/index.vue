@@ -1,5 +1,35 @@
 <template>
 <div class="inner" ref="roottable">
+<div class="grid">
+	<div class="col-1 form-mr">
+		<!-- <button class="tooltip btn-tambah" @click="download('/finance/carabayar/download')">Download All Data</button>  -->
+	</div>
+	<div class="col-5 form-mr">
+	</div>
+
+	<div class="col-2 form-mr">
+		<!-- <Inputed :ref="formDownload" :form="formDownload"></Inputed> -->
+	</div>
+	<div class="col-1 form-mr">
+		<!-- <button class="btn-tambah" @click="downloadTemplate()">Generate Template</button> -->
+	</div>
+	<div class="col-2 form-mr">
+		<div class="form-self-group">
+			<input 
+				:id="formUpload.for_id" 
+				:type="formUpload.type" 
+				:disabled="formUpload.disabled ? 'disabled' : false" 
+				@change="onFileChange" 
+			/>
+		</div>
+
+	</div>
+	<div class="col-1 form-mr">
+		<button class="btn-tambah" @click="uploadFile()">Upload</button>
+	</div>
+</div>
+
+
 	<div class="grid">
 		<div class="col-12">
 			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
@@ -13,7 +43,7 @@
 <script>
 var vm;
 import { defineAsyncComponent } from 'vue';
-import { nullAndZero, datename } from '../../../module/Manipulation.js';
+import { nullAndZero, datename, formatrupiah } from '../../../module/Manipulation.js';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import Swal from 'sweetalert2';
@@ -23,6 +53,7 @@ export default {
 	components: { toast, Swal, 
 		FormTindakanRawatJalan: defineAsyncComponent(() => import('./FormTindakanRawatJalan.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 	},
 	created: function () {},
 	mounted: function () {
@@ -32,7 +63,27 @@ export default {
 	},
 	data: function () { return {
 		uri: 'unit',
-		position: '',
+		position: '',	
+		formDownload: { 
+			title: 'Nama Metode Pembayaran', 
+			for_id: 'templateName',
+			type: 'text', 
+			required: '', 
+			key: 'templateName', 
+			model: 'templateName', 
+			disabled: false,
+			value: '',
+		},
+		formUpload: { 
+			title: 'Upload Buku Tarif', 
+			for_id: 'upload',
+			type: 'file', 
+			required: '', 
+			key: 'upload', 
+			model: 'upload', 
+			disabled: false,
+			value: null,
+			},
 		attach: {
 			link : {
 				list: '/administration/tindakanrawatjalan/list',
@@ -43,8 +94,10 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
-			{ value: 'nama', label: 'Nama Tindakan', type: 'text', search: true, close: false, button: false },
-			{ value: 'jenis', label: 'Jenis', type: 'text', search: true, close: false, button: false },
+			{ value: 'label', label: 'Label', type: 'text', search: true, close: false, button: false },
+			{ value: 'sub_label', label: 'Sub Label', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama', label: 'nama', type: 'text', search: true, close: false, button: false },
+			{ value: 'harga', label: 'harga', type: 'text', search: true, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
 		],
 		module: { data: [], column: [], total: 0, ispaging: true },
@@ -54,12 +107,48 @@ export default {
 		/*************************************************************************************************************************
 		* Bagian fungsi yang opsional untuk manipulasi data dan string
 		*************************************************************************************************************************/
-		nullAndZero, datename,
+		nullAndZero, datename,formatrupiah,
 
 		/*************************************************************************************************************************
 		* Bagian fungsi untuk pemrosesan table
 		*************************************************************************************************************************/
 
+		downloadTemplate: function(){
+			let namaMetodePembayaran = vm.formDownload.value;
+			let link = '/finance/carabayar/downloadtemplate/'+ namaMetodePembayaran;						
+			window.open(link); 
+			vm.formDownload.value = '';
+		},
+		onFileChange(e) {
+			console.log("onfilechanges",e.target.files[0]);
+			vm.formUpload.value = e.target.files[0];
+		},
+		uploadFile: function(){
+
+			vm.$refs.Datatable.skeleton();
+
+			let formData = new FormData();
+			formData.append('file', vm.formUpload.value); // sesuaikan dengan nama field di Laravel request
+
+			axios.post('/administration/tindakanrawatjalan/upload', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+				.then(function (response) {
+					// setTimeout(function () {
+					// 	vm.berhasil(response);
+					// }, 300);
+					// window.location.reload();
+				})
+				.catch(function (error) {
+					// console.error(error);
+					// setTimeout(function () {
+					// 	vm.gagal(error);
+					// }, 300);
+					// window.location.reload();
+				});
+		},
 		btnhtml:function(_item, _index) {
 			let str = [
 				{ icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: true },
@@ -72,10 +161,13 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'harga') { _tmp = { value: vm.convertHarga(data), ishtml: 'html', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';
 		},
-
+		convertHarga:function(_item) {
+			return 	`${vm.formatrupiah(Math.ceil (_item.harga).toString())}`;
+		},
 		tablebutton:function(posisi, data, index) {
 			if (posisi == 'add') {
 				vm.$refs.FormTindakanRawatJalan.aturulang();

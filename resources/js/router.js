@@ -857,9 +857,9 @@ const routes = [
 
 	{ 
 		path: _base + 'tindakanrawatjalan', 
-		name: '(Master) Data Tindakan', 
+		name: 'Buku Tarif', 
 		component: () => import('./components/administration/tindakanrawatjalan/index.vue'),
-		meta: { title: '(Master) Data Tindakan' },
+		meta: { title: 'Buku Tarif' },
 		props: true 
 	},
 	// { 

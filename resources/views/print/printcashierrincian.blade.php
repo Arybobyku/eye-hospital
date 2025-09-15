@@ -188,6 +188,8 @@
                                 Biaya Pendaftaran + Adm Rawat Jalan (pl)
                             @elseif($item->nama_layanan == 'Administrasi Rawat Jalan (pb)')
                                 Biaya Pendaftaran + Adm Rawat Jalan (pb)
+                            @else
+                                Biaya {{ $item->nama_layanan }}    
                             @endif
                         </td>
                         <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
