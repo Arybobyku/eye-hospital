@@ -300,7 +300,7 @@
                                     <option v-for="item in jadwalDokter2" :value="item.kodedokter" v-text="`${item.namadokter}`"></option>
                                 </select>
                             </div>
-                            <button  v-on:click="addlamabpjs(selectedDokter)" class="submit-btn">Ambil Nomor Antrian</button>
+                            <button  v-on:click="addlamabpjs(selectedDokter2)" class="submit-btn">Ambil Nomor Antrian</button>
                         </div>
                         
                         <!-- Validation Messages -->
@@ -630,31 +630,33 @@
                     this.resetFormLamaNonBpjs();
                     // window.location.reload();
                 },
-                addlamabpjs: function(selectedDokter) {
-                    const selectedPoliObj = vm.poliBpjs.find(poli => poli.kdpoli === selectedPoli);
-                    const namaPoli = selectedPoliObj ? selectedPoliObj.nmpoli : '';
-                    const selectedDokterObj = vm.jadwalDokter.find(dokter => dokter.kodedokter === selectedDokter);
+                addlamabpjs: function(selectedDokter2) {
+                    const selectedDokterObj = vm.jadwalDokter.find(dokter => dokter.kodedokter === selectedDokter2);
                     const namaDokter = selectedDokterObj ? selectedDokterObj.namadokter : '';
                     const jamDokter = selectedDokterObj ? selectedDokterObj.jadwal : '';
-                    const nik = document.getElementById('nik').value;
+                    const nik = this.nikSect;
+                    const bpjs = this.bpjsSect;
+                    const pesertaType = this.pesertaType;
 
                     vm.attach.url = vm.attach.link.addlamanonbpjs;
                     vm.attach.data = new FormData();
                     console.log(selectedDokterObj);
                     console.log(namaDokter);
                     vm.attach.data.append('nik', nik);
-                    vm.attach.data.append('kode_dokter_bpjs', selectedDokter);
+                    vm.attach.data.append('bpjs', bpjs);
+                    vm.attach.data.append('kode_dokter_bpjs', selectedDokter2);
                     vm.attach.data.append('kode_poli_bpjs', 'MAT');
                     vm.attach.data.append('nama_poli_bpjs', 'MATA'); // Tambahkan nama poli
                     vm.attach.data.append('nama_dokter_bpjs', namaDokter); // Tambahkan nama poli
                     vm.attach.data.append('jadwal_dokter_bpjs', jamDokter);
                     vm.attach.data.append('no_rujukan', vm.noRujukan);
                     vm.attach.data.append('jenis', 'Umum'); 
+                    vm.attach.data.append('jenis_peserta', pesertaType); 
                     vm.attach.data.append('number', vm.numberRo);
                     vm.position = 'addlamabpjs';
                     vm.loaders();
                     vm.executions();
-                    this.resetFormLamaNonBpjs();
+                    // this.resetFormLamaNonBpjs();
                     // window.location.reload();
                 },
                 addcheckin: function() {
@@ -779,13 +781,19 @@
                                 vm.printoutRo();
                                 vm.loads();
                                 window.location.reload();
-                             } else if (vm.position == 'addcheckin') {
+                             } else if (vm.position == 'addlamabpjs') {
+                                vm.printoutRo();
+                                vm.loads();
+                                window.location.reload();
+                             } 
+                              else if (vm.position == 'addcheckin') {
                                vm.printoutRo();
                                 vm.loads();
                                 window.location.reload();
 
                             } else if (vm.position == 'searchnik') {
-                                vm.noRujukan = response.response.data;
+                                console.log('searchnik', response)
+                                vm.noRujukan = response.data.data;
                             }
                         }, 250, this);
                     })
