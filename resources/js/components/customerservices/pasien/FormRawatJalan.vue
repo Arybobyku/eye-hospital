@@ -39,6 +39,7 @@
 			<p v-else>
 				Tidak ada jadwal tersedia.
 			</p>
+			<Inputed :ref="form.ruang_poli.name" :form="form.ruang_poli" readonly></Inputed>
 
 			<input type="hidden" :value="dokterTerpilih ? dokterTerpilih.jadwal : ''">
 			<input type="hidden" :value="dokterTerpilih ? dokterTerpilih.namadokter : ''">
@@ -49,16 +50,11 @@
 				:ref="form.select.asuransi.name" @selecteditem="selecteditem" @selectclear="selectclear"
 				:selection="form.select.asuransi" v-on:keyup="selectfilter($event, form.select.asuransi.name)">
 			</Selected>
-
+<!-- 
 			<Selected v-on:click="selectbox($event, form.select.dokter.name, form.select.dokter.statics)"
 				:ref="form.select.dokter.name" @selecteditem="selecteditem" @selectclear="selectclear"
 				:selection="form.select.dokter" v-on:keyup="selectfilter($event, form.select.dokter.name)"
-				v-if="form.select.dokter.show"></Selected>
-
-
-		<Selected v-on:click="selectbox($event, form.select.dokterumum.name, form.select.dokterumum.statics)" 
-			:ref="form.select.dokterumum.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.dokterumum" v-on:keyup="selectfilter($event, form.select.dokterumum.name)"></Selected>
+				v-if="form.select.dokter.show"></Selected> -->
 		</div>
 		<div class="col-4 form-ml" ref="camerainternal">
 			<div class="web-camera-container" v-if="isphotos">
@@ -235,6 +231,7 @@ export default {
 			dokterTerpilih: null,
 			showSelectDokter: false, 
 			showSelectPoli: false, 
+			ruangPoli: "", 
 			// jadwalDokterBpjs: null,
 			// poliBpjs: [] // Data poli_bpjs dari API
 		}
@@ -245,7 +242,8 @@ export default {
 		async fetchJadwalDokter() {
 
 			//- TODO: Ganti Tanggal dengan hari ini
-			const today = "2025-03-03"; // Format: YYYY-MM-DD
+			const today = "2025-09-10"; // Format: YYYY-MM-DD
+			// const today = new Date().toISOString().split("T")[0];
 
 			try {
 				const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/${this.selectedPoli}/tanggal/${today}`);
@@ -266,6 +264,20 @@ export default {
 
 			this.dokterTerpilih = this.jadwalDokter.find(jadwal => jadwal.kodedokter === this.selectedDokter) || null;
 			console.log("Dokter Terpilih:", this.dokterTerpilih);
+			this.fetchMappingPoliDokter();
+		},
+
+		async fetchMappingPoliDokter() {
+
+			try {
+				const response = await axios.get(`/api/bpjs/antrol-bpjs/ruangpoli/${this.selectedDokter}/`);
+				console.log('SS',response);
+				vm.form.ruang_poli.value= response.data.ruang_poli;
+
+			} catch (error) {
+				console.error("Gagal mengambil jadwal dokter:", error.response ? error.response.data : error.message);
+			}
+			
 		},
 
 
@@ -562,8 +574,8 @@ export default {
 				vm.form.select.asuransi.label = 'Silahkan Pilih';
 			}
 
-			vm.form.select.dokter.value =  response.data.data.pengguna_uuid;
-			vm.form.select.dokter.label =  response.data.data.nama_dokter;
+			// vm.form.select.dokter.value =  response.data.data.pengguna_uuid;
+			// vm.form.select.dokter.label =  response.data.data.nama_dokter;
 			vm.form.nopendaftaran.value = response.data.data.no_pendaftaran;
 			
 			vm.form.select.berkebutuhankhusus.value = response.data.data.berkebutuhan_khusus;
@@ -645,10 +657,10 @@ export default {
 				vm.form.nomorreferensi.show = false;
 				vm.form.nomorreferensi.disabled = true;
 				vm.form.nomorreferensi.required = '';
-				vm.form.select.dokter.isrequired = true;
-				vm.form.select.dokter.value = '';
-				vm.form.select.dokter.label = 'Silahkan Pilih';
-				vm.form.select.dokter.show = true;
+				// vm.form.select.dokter.isrequired = true;
+				// vm.form.select.dokter.value = '';
+				// vm.form.select.dokter.label = 'Silahkan Pilih';
+				// vm.form.select.dokter.show = true;
 				this.showSelectDokter = true; // Sembunyikan select biasa
 				this.showSelectPoli = true; // Sembunyikan select biasa
 			} else {
@@ -662,10 +674,10 @@ export default {
 				vm.form.nomorreferensi.show = true;
 				vm.form.nomorreferensi.disabled = false;
 				vm.form.nomorreferensi.required = 'required';
-				vm.form.select.dokter.isrequired = false;
-				vm.form.select.dokter.value = '';
-				vm.form.select.dokter.label = '';
-				vm.form.select.dokter.show = false;
+				// vm.form.select.dokter.isrequired = false;
+				// vm.form.select.dokter.value = '';
+				// vm.form.select.dokter.label = '';
+				// vm.form.select.dokter.show = false;
 
 
 				this.showSelectDokter = true;  // Tampilkan select biasa

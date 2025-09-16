@@ -76,6 +76,7 @@ export const parserawatjalan = (form, detail, selectedPoli, selectedDokter, jadw
 	data.append('kode_dokter_bpjs', selectedDokter);
 	data.append('nama_dokter_bpjs', namaDokter);
 	data.append('jadwal_dokter_bpjs', jadwalDokterBpjs);
+	data.append('ruang_poli', form.ruang_poli.value);
 
 	data.append('nama', form.pjnama.value);
 	data.append('hubungan', form.pjhubungan.value);

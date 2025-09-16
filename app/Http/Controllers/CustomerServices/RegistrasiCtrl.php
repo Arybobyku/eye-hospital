@@ -71,7 +71,7 @@ class RegistrasiCtrl extends Controller
 			DB::beginTransaction();
 
 			if ($request->uuid != '') {
-
+				$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->dokter_bpjs)->first();
 				$posisi_antrian_dokter = 1;
 				$arr = array();
 				$registrasi = Registrasi::where('uuid', '=', $request->uuid)->first();
@@ -354,7 +354,9 @@ class RegistrasiCtrl extends Controller
 				// 	$item->pengguna_uuid = $request->pengguna_uuid ? $request->pengguna_uuid : '-';
 				// 	$item->nama_dokter = $request->nama_dokter ? $request->nama_dokter : '-';
 				// }
-
+				
+				$ruangPoli = preg_replace('/\D/', '', $request->ruang_poli); 
+				// dd($ruangPoli);
 				$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->dokter_bpjs)->first();
 				$item->pengguna_uuid = $dokterLocal->uuid;
 				$item->nama_dokter = $dokterLocal->nama;
@@ -376,7 +378,7 @@ class RegistrasiCtrl extends Controller
 				$item->nama_asuransi = $request->nama_asuransi ? $request->nama_asuransi : '-';
 				$item->posisi_antrian_ro = $posisi_antrian_ro;
 				$item->posisi_antrian_dokter = $posisi_antrian_dokter;
-				$item->ruang_poliklinik = $request->ruang_poliklinik ? $request->ruang_poliklinik : 0;
+				$item->ruang_poliklinik = $ruangPoli ? $ruangPoli : 0;
 				$item->berkebutuhan_khusus = $request->berkebutuhan_khusus ? $request->berkebutuhan_khusus : '-';
 				$item->keterangan_berkebutuhan = $request->keterangan_berkebutuhan ? $request->keterangan_berkebutuhan : '-';
 				$item->no_antrian_ro = $kodeRo;
@@ -431,7 +433,7 @@ class RegistrasiCtrl extends Controller
 				$data->pasien_uuid = $request->pasien_uuid;
 				$data->rekam_medis = $request->rekam_medis;
 				$data->nama_pasien = $request->nama_pasien;
-				$data->pengguna_uuid = $request->pengguna_uuid;
+				$data->pengguna_uuid = $dokterLocal->uuid;
 				$data->nama_dokter = $request->nama_dokter;
 
 				$data->nama = $request->nama;
@@ -513,6 +515,7 @@ class RegistrasiCtrl extends Controller
 
 	public function savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis)
 	{
+		$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->dokter_bpjs)->first();
 		$tindakan = CaraBayarTindakanRawatJalan::where('carabayar_uuid', '=', $request->carabayar_uuid)->where('default', '=', 'Ya')
 			->where('tindakan_rawat_jalan_uuid', '!=', '6808853b-2aad-4ebd-acee-ec9980a2407d')
 			->select(['tindakan_rawat_jalan_uuid', 'nama_tindakan_rawat_jalan', 'harga'])
@@ -529,8 +532,10 @@ class RegistrasiCtrl extends Controller
 			$item->pasien_uuid = $request->pasien_uuid;
 			$item->rekam_medis = $request->rekam_medis;
 			$item->nama_pasien = $request->nama_pasien;
-			$item->pengguna_uuid = $request->pengguna_uuid;
-			$item->nama_dokter = $request->nama_dokter;
+						// $item->pengguna_uuid = $request->pengguna_uuid;
+			// $item->nama_dokter = $request->nama_dokter;
+			$item->pengguna_uuid = $dokterLocal->uuid;
+			$item->nama_dokter = $dokterLocal->nama;
 
 			$item->tanggal = date('Y-m-d');
 			$item->waktu = date('H:i');
@@ -559,6 +564,7 @@ class RegistrasiCtrl extends Controller
 
 	private function savepasienbaru($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis)
 	{
+		$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->dokter_bpjs)->first();
 		$tindakan = CaraBayarTindakanRawatJalan::where('carabayar_uuid', '=', $request->carabayar_uuid)->where('default', '=', 'Ya')
 			->select(['tindakan_rawat_jalan_uuid', 'nama_tindakan_rawat_jalan', 'harga'])
 			->groupBy(['tindakan_rawat_jalan_uuid', 'nama_tindakan_rawat_jalan', 'harga'])
@@ -574,8 +580,10 @@ class RegistrasiCtrl extends Controller
 			$item->pasien_uuid = $request->pasien_uuid;
 			$item->rekam_medis = $request->rekam_medis;
 			$item->nama_pasien = $request->nama_pasien;
-			$item->pengguna_uuid = $request->pengguna_uuid;
-			$item->nama_dokter = $request->nama_dokter;
+			// $item->pengguna_uuid = $request->pengguna_uuid;
+			// $item->nama_dokter = $request->nama_dokter;
+			$item->pengguna_uuid = $dokterLocal->uuid;
+			$item->nama_dokter = $dokterLocal->uuid;
 
 			$item->tanggal = date('Y-m-d');
 			$item->waktu = date('H:i');

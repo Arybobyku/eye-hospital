@@ -677,7 +677,7 @@ export default {
 				else if (vm.position == 'registrasidata') {
 					vm.posisieksternal='pasien';
 					vm.$refs.FormRegistrasi.setdataform(response);
-					vm.$refs.FormRegistrasi.fetchPoliBpjs(response); 
+					// vm.$refs.FormRegistrasi.fetchPoliBpjs(response); 
 					vm.position = "-"; 
 					active = 0; 
 				}

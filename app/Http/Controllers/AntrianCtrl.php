@@ -380,8 +380,9 @@ class AntrianCtrl extends Controller
 			$latestNumberPoli = $latestAntrianPoli->number ?? 0;
 			$latestNumberPoli = $latestNumberPoli + 1;
 
-			// TODO ngambil nomor poli dari master data ruangan poli BPJS
-			$kodePoli = 'P-' . str_pad($latestNumberPoli, 3, '0', STR_PAD_LEFT);
+			$ruangPoli = RuangPoli::where('kode_dokter_bpjs', '=', $request->kode_dokter_bpjs)->first();
+			$ruangPoliAngka = preg_replace('/\D/', '', $ruangPoli->ruang_poli); 
+			$kodePoli = 'P'.$ruangPoliAngka.'-'. str_pad($latestNumberPoli, 3, '0', STR_PAD_LEFT);
 
 			
 			$loop = false;
@@ -469,8 +470,8 @@ class AntrianCtrl extends Controller
 				$item->nama_dokter_bpjs = $request->nama_dokter_bpjs;
 				$item->jadwal_dokter_bpjs = $request->jadwal_dokter_bpjs;
 				$item->kode_poli_bpjs = $request->kode_poli_bpjs;
-				$item->nama_poli_bpjs = $request->nama_poli_bpjs;
-
+				$item->nama_poli_bpjs = $request->nama_poli_bpjs;				
+				$item->ruang_poliklinik = $ruangPoliAngka ? $ruangPoliAngka : 0;
 				$item->no_pendaftaran = $kodePoli;
 				$item->cara_masuk = 'Datang Sendiri';
 				$item->rujukan = $request->rujukan ? $request->rujukan : '-';
@@ -684,23 +685,7 @@ class AntrianCtrl extends Controller
 
 	public function addlamabpjs(Request $request)
 	{
-
-		$uuid = '';
-		$loop = false;
-		do {
-			$uuid = Uuid::uuid4();
-			$check = AntrianRo::where('uuid', '=', $uuid)->first();
-			if (!$check) {
-				$loop = true;
-			}
-		} while ($loop == false);
-
-		if ($this->error != 'next') {
-			return response()->json(['data' => $this->error]);
-		}
-
 		try {
-
 			DB::beginTransaction();
 			$pasien = Pasien::where('no_ktp', '=', $request->nik)->first();
 			if (!$pasien) {
@@ -711,6 +696,7 @@ class AntrianCtrl extends Controller
 			}
 			//Start Insert Antrian CS
 			$latestAntrianCs = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
+			$numberCs = 1;
 			if ($latestAntrianCs) {
 				$numberCs = $latestAntrianCs->number + 1;
 			}
@@ -724,50 +710,31 @@ class AntrianCtrl extends Controller
 					$loop = true;
 				}
 			} while ($loop == false);
-	
-			$item = new Antrian();
-			$item->uuid = $uuid;
-			$item->kode = 'CS';
-			$latestAntrian = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->where('kode', 'CS')->orderBy('id', 'desc')->first();
-			if ($latestAntrian->number >= $request->number){
-				$number = $latestAntrian->number + 1;
-				if ($number < 10) {
-					$number = '00'.$number;
-				} else if ($number  > 9 && $number < 100) {
-					$number  = '0'.$number;
-				} else if ($number  > 99 && $number  < 1000) {
-					$number = $number;
-				}
-			}
-			$item->number = $numberCs;
-			$item->jenis = $request->jenis;
-			$item->tanggal = date('Y-m-d');
-			$item->save();
-
-			//END Insert Antrian CS
 
 			$latestAntrianRO = AntrianRo::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
-
+			
 			$latestNumber = $latestAntrianRO->number ?? 0;
 			$latestNumber = $latestNumber + 1;
-			$kodeRo = 'R-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
+			$kodeRo = 'RO-' . str_pad($latestNumber, 3, '0', STR_PAD_LEFT);
 			
 			$uuid = '';
-			$noPendaftaraan = 1;
 
 			$latestAntrianPoli = AntrianPoli::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
-			$latestNumberPoli = $latestNumberPoli->number ?? 0;
+			$latestNumberPoli = $latestAntrianPoli->number ?? 0;
 			$latestNumberPoli = $latestNumberPoli + 1;
-			$kodePoli = 'P-' . str_pad($latestNumberPoli, 3, '0', STR_PAD_LEFT);
+
+			$ruangPoli = RuangPoli::where('kode_dokter_bpjs', '=', $request->kode_dokter_bpjs)->first();
+			$ruangPoliAngka = preg_replace('/\D/', '', $ruangPoli->ruang_poli); 
+			$kodePoli = 'P'.$ruangPoliAngka.'-'. str_pad($latestNumberPoli, 3, '0', STR_PAD_LEFT);
 
 			
 			$loop = false;
-			do {
-				$uuid = Uuid::uuid4();
-				$check = Registrasi::where('uuid', '=', $uuid)->first();
-				if (!$check) {
-					$loop = true;
-				}
+				do {
+					$uuid = Uuid::uuid4();
+					$check = Registrasi::where('uuid', '=', $uuid)->first();
+						if (!$check) {
+							$loop = true;
+						}
 				} while ($loop == false);
 
 				$is_jkn = 0;
@@ -788,8 +755,6 @@ class AntrianCtrl extends Controller
 						$posisi_antrian_dokter += $registrasi_poli->posisi_antrian_dokter;
 					}
 				}
-
-
 
 				$posisi_antrian_ro = 1;
 				if ($registrasi) {
@@ -820,8 +785,6 @@ class AntrianCtrl extends Controller
 				}
 
 				$nomor_ = date('Y') . date('m') . date('d') . $nomor;
-				// dd($nomor_);
-
 				$registrasi_uuid = $uuid;
 
 				$item = new Registrasi();
@@ -843,7 +806,6 @@ class AntrianCtrl extends Controller
 
 				$item->tanggal = date('Y-m-d');
 				$item->waktu = date('H:i');
-				// dd($request->kode_dokter_bpjs);
 				$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->kode_dokter_bpjs)->first();
 				$item->pengguna_uuid = $dokterLocal->uuid;
 				$item->nama_dokter = $dokterLocal->nama;
@@ -851,15 +813,15 @@ class AntrianCtrl extends Controller
 				$item->nama_dokter_bpjs = $request->nama_dokter_bpjs;
 				$item->jadwal_dokter_bpjs = $request->jadwal_dokter_bpjs;
 				$item->kode_poli_bpjs = $request->kode_poli_bpjs;
-				$item->nama_poli_bpjs = $request->nama_poli_bpjs;
-
-				$item->no_pendaftaran = 'CS-'.$numberCs;
+				$item->nama_poli_bpjs = $request->nama_poli_bpjs;				
+				$item->ruang_poliklinik = $ruangPoliAngka ? $ruangPoliAngka : 0;
+				$item->no_pendaftaran = $kodePoli;
+				$item->rujukan = $request->rujukan ? $request->rujukan : '-';
 				$item->cara_masuk = 'Rujukan dari';
-				$item->rujukan = $request->no_rujukan ? $request->no_rujukan : '-';
 				$item->carabayar_uuid = 'e3ed042d-2b41-4672-bcc2-7a816a622667';
 				$item->carabayar_nama = 'BPJS Kesehatan';
 				$item->no_bpjs_kes = $pasien->no_bpjs;
-				$item->nomorreferensi = $request->no_rujukan;
+				$item->nomorreferensi = "";
 				$item->asuransi_uuid = $request->asuransi_uuid ? $request->asuransi_uuid : '-';
 				$item->nama_asuransi = $request->nama_asuransi ? $request->nama_asuransi : '-';
 				$item->posisi_antrian_ro = $posisi_antrian_ro;
@@ -868,11 +830,18 @@ class AntrianCtrl extends Controller
 				$item->berkebutuhan_khusus = $request->berkebutuhan_khusus ? $request->berkebutuhan_khusus : '-';
 				$item->keterangan_berkebutuhan = $request->keterangan_berkebutuhan ? $request->keterangan_berkebutuhan : '-';
 				$item->no_antrian_ro = $kodeRo;
+				$item->no_antrian_poli = $kodePoli;
 				$item->is_integrated_antrol = 1;
 				$status_penjamin = '-';
 				$is_approve = '-';
 				$is_pay = '-';
 				$is_asuransi = '-';
+
+				$status_penjamin = 'disetujui';
+				$is_approve = 'ya';
+				$is_pay = 'tidak';
+				$is_asuransi = 'tidak';
+
 				$item->status_penjamin = $status_penjamin;
 				$item->is_approve = $is_approve;
 				$item->is_pay = $is_pay;
@@ -883,29 +852,19 @@ class AntrianCtrl extends Controller
 				$item->save();
 
 				$arr = array('status' => 'Kunjungan');
-				$update = Pasien::where('uuid', '=', $pasien->uuid)->update($arr);
+				$update = Pasien::where('uuid', '=', $request->uuid)->update($arr);
 				$registrasi_uuid = $uuid;
 				$registrasi_kode = 'RJ';
 				$registrasi_nomor = $nomor;
 				$registrasi_jenis = 'Rawat Jalan';
 
-				$response = app(AntrolBpjsCtrl::class)->tambahAntrean($item, $pasien);
-				$response = json_decode($response);
-				$rekammedis = $pasien->rekam_medis;
+				$rekammedis = $request->rekam_medis;
 				$result = substr($rekammedis, 0, 1);
-				$registrasiCtrl = new RegistrasiCtrl();
-				if ($result == '0') {
-					$result = $registrasiCtrl->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
-				} else {
-					$check = Registrasi::where('status', '=', 'Selesai')->where('pasien_uuid', '=', $request->pasien_uuid)->first();
-					if ($check) {
-						$result = $registrasiCtrl->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
-					} else {
-						$result = $registrasiCtrl->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
-					}
-				}
+				
+				app(RegistrasiCtrl::class)->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
+
 				$arr = array('status' => 'Kunjungan');
-				$pasienUpdate = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
+				$pasienUpdate = Pasien::where('uuid', '=', $pasien->uuid)->update($arr);
 
 				// Start Antrian RO
 				$uuidRO = '';
@@ -917,10 +876,10 @@ class AntrianCtrl extends Controller
 						$loop = true;
 					}
 				} while ($loop == false);
-			
+				
 				$antrianRO = new AntrianRo();
 				$antrianRO->uuid = $uuidRO;
-				$antrianRO->kode = 'R';
+				$antrianRO->kode = 'RO';
 				$antrianRO->is_jkn = $is_jkn;
 				// BPJS
 				$antrianRO->kode_poli =  $request->kode_poli_bpjs;
@@ -933,7 +892,9 @@ class AntrianCtrl extends Controller
 				$antrianRO->jenis = $request->jenis;
 				$antrianRO->tanggal = date('Y-m-d');
 				$antrianRO->save();
+
 				// End Antrian RO
+
 				// Start Antrian Poli
 				$uuidPoli = '';
 				$loop = false;
@@ -964,34 +925,36 @@ class AntrianCtrl extends Controller
 				$str = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Sebagai')) . '=' . 'Registrasi';
 				event(new NewTradeRo($str));
 
-			if ($response->metadata->code !== 200) {
-				DB::rollBack();
-				return response()->json([
-					'hasil' => 'gagal',
-					'data' => $response->metadata->message ?? 'Terjadi kesalahan'
-				], 500);
-
-				$response = app(AntrolBpjsCtrl::class)->batalAntrean($item, $pasien);
-			}
-			// dd($response->metadata->code);
-			DB::commit();
-
-			// return response()->json(['data' => 'berhasil']);
-			$pdf = \App::make('dompdf.wrapper');
-			$jenis = $request->jenis;
-			$number = $request->number;
-			$kode = 'CS';
-	
-			$customPaper = array(0, 0, 649, 1063);
-			$pdf->loadView('cetak-antrian', compact('kode', 'jenis', 'number'))->setPaper(array(0, 0, 220, 220), 'potrait');
-			$content = $pdf->download()->getOriginalContent();
-			Storage::put('public/antrian/number.pdf', $content);
-	
-			return response()->json(['data' => 'berhasil']);
+				DB::commit();
+		
 		} catch (Exception $e) {
 			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}	
+
+		$response = app(AntrolBpjsCtrl::class)->tambahAntreanPasienLama($item, $pasien);
+		$response = json_decode($response);
+
+		// if ($response->metadata->code !== 200) {
+		// 	DB::rollBack();
+		// 	return response()->json([
+		// 		'hasil' => 'gagal',
+		// 		'data' => $response->metadata->message ?? 'Terjadi kesalahan'
+		// 	], 500);
+
+		// 	$response = app(AntrolBpjsCtrl::class)->batalAntrean($item, $pasien);
+		// }
+
+		$pdf = \App::make('dompdf.wrapper');
+		$jenis = $request->jenis;
+		$number = $request->number;
+		$kode = $antrianRO->kode;
+
+		$customPaper = array(0, 0, 649, 1063);
+		$pdf->loadView('cetak-antrian', compact('kode', 'jenis', 'number'))->setPaper(array(0, 0, 220, 220), 'potrait');
+		$content = $pdf->download()->getOriginalContent();
+		Storage::put('public/antrian/number.pdf', $content);
+		return response()->json(['data' => 'berhasil']);
 	}
 
 			

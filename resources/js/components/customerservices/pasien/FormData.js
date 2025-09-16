@@ -183,6 +183,10 @@ export const formrawatjalan = () => {
 			title: 'No BPJS Kesehatan', for_id: 'form_'+'no_bpjs_kes', type: 'text', required: '', 
 			name: 'no_bpjs_kes', value: '', disabled: false, show: false, kinds: ''
 		},
+		ruang_poli: { 
+			title: 'Ruang Poliklinik', for_id: 'form_'+'ruang_poli', type: 'text', required: '', 
+			name: 'ruang_poli', value: '', disabled: true, show: false, kinds: ''
+		},
 		nomorreferensi: { 
 			title: 'No Referensi', for_id: 'form_'+'nomorreferensi', type: 'text', required: '', 
 			name: 'nomorreferensi', value: '', disabled: false, show: false, kinds: ''
