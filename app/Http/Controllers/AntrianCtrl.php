@@ -17,6 +17,7 @@ use App\Models\Antrian;
 use App\Models\AntrianPoli;
 use App\Models\PasienBebas;
 use App\Models\AntrianRo;
+use App\Models\RuangPoli;
 use App\Models\AntrianKasir;
 use App\Models\AntrianFarmasi;
 use App\Models\DisplayAntrian;
@@ -624,7 +625,8 @@ class AntrianCtrl extends Controller
 		$customPaper = array(0, 0, 649, 1063);
 		$pdf->loadView('cetak-antrian', compact('kode', 'jenis', 'number'))->setPaper(array(0, 0, 220, 220), 'potrait');
 		$content = $pdf->download()->getOriginalContent();
-		Storage::put('public/antrian/number.pdf', $content);
+		// Storage::put('public/antrian/number.pdf', $content);
+		Storage::put('public/antrian/numberRo.pdf', $content);
 		return response()->json(['data' => 'berhasil']);
 	}
 
@@ -648,22 +650,19 @@ class AntrianCtrl extends Controller
 			$endpointRujukan = '/Rujukan/Peserta/'.$noKa;
 			$resultRujukan = $bridging->getRequestNew($endpointRujukan);
 			$resultRujukan = json_decode($resultRujukan);
-			if (!$resultRujukan->metaData->code != '200') {
+			if ($resultRujukan->metaData->code != 200) {
 				return response()->json([
 					'hasil' => 'gagal',
 					'data' => $resultRujukan->metaData->message
 				], 404);
 			} 
-			$pdf = \App::make('dompdf.wrapper');
-			$jenis = $request->jenis;
-			$number = $request->number;
-			$kode = 'CS';
 		}
 		else {
 			$endpointRujukan = '/Rujukan/Peserta/'.$request->noKa;
 			$resultRujukan = $bridging->getRequestNew($endpointRujukan);
 			$resultRujukan = json_decode($resultRujukan);
-			if (!$resultRujukan->metaData->code != '200') {
+			// dd($resultRujukan);
+			if ($resultRujukan->metaData->code != 200) {
 				return response()->json([
 					'hasil' => 'gagal',
 					'data' => $resultRujukan->metaData->message
@@ -679,7 +678,7 @@ class AntrianCtrl extends Controller
 		}
 		return response()->json([
 			'hasil' => 'berhasil',
-			'data' => $resultRujukan->response->noKunjungan
+			'data' => $resultRujukan->response->rujukan->noKunjungan
 		], 200);
 	}
 
@@ -687,12 +686,22 @@ class AntrianCtrl extends Controller
 	{
 		try {
 			DB::beginTransaction();
+			if ($request->jenis_peserta == "nik_sect") {
 			$pasien = Pasien::where('no_ktp', '=', $request->nik)->first();
 			if (!$pasien) {
 				return response()->json([
 					'hasil' => 'gagal',
 					'data' => 'NIK Tidak Ditemukan Silahkan Ambil Nomor Antrian Pasien Baru'
 				], 404); // Gunakan status code 404 untuk not found
+			}
+			} else {
+				$pasien = Pasien::where('no_bpjs', '=', $request->bpjs)->first();
+				if (!$pasien) {
+				return response()->json([
+					'hasil' => 'gagal',
+					'data' => 'No. BPJS Tidak Ditemukan Silahkan Ambil Nomor Antrian Pasien Baru'
+				], 404); // Gunakan status code 404 untuk not found
+			}
 			}
 			//Start Insert Antrian CS
 			$latestAntrianCs = Antrian::whereDate('tanggal', '=', date('Y-m-d'))->orderBy('id', 'desc')->first();
@@ -953,7 +962,7 @@ class AntrianCtrl extends Controller
 		$customPaper = array(0, 0, 649, 1063);
 		$pdf->loadView('cetak-antrian', compact('kode', 'jenis', 'number'))->setPaper(array(0, 0, 220, 220), 'potrait');
 		$content = $pdf->download()->getOriginalContent();
-		Storage::put('public/antrian/number.pdf', $content);
+		Storage::put('public/antrian/numberRo.pdf', $content);
 		return response()->json(['data' => 'berhasil']);
 	}
 
