@@ -25,11 +25,14 @@ use App\Models\LogPengguna;
 use App\Models\RunningText;
 use App\Models\Pasien;
 use App\Models\Registrasi;
+use App\Models\LayananPasien;
+use App\Models\CaraBayarTindakanRawatJalan;
 use App\Http\Controllers\Bpjs\AntrolBpjsCtrl;
 use App\Events\NewTradeRo;
 use App\Http\Controllers\CustomerServices\RegistrasiCtrl;
 use App\Services\Bpjs\Bridging\Vclaim\BridgeVclaim;
 use Carbon\Carbon;
+
 
 class AntrianCtrl extends Controller
 {
@@ -384,7 +387,7 @@ class AntrianCtrl extends Controller
 			$ruangPoli = RuangPoli::where('kode_dokter_bpjs', '=', $request->kode_dokter_bpjs)->first();
 			$ruangPoliAngka = preg_replace('/\D/', '', $ruangPoli->ruang_poli); 
 			$kodePoli = 'P'.$ruangPoliAngka.'-'. str_pad($latestNumberPoli, 3, '0', STR_PAD_LEFT);
-
+			
 			
 			$loop = false;
 				do {
@@ -484,7 +487,6 @@ class AntrianCtrl extends Controller
 				$item->nama_asuransi = $request->nama_asuransi ? $request->nama_asuransi : '-';
 				$item->posisi_antrian_ro = $posisi_antrian_ro;
 				$item->posisi_antrian_dokter = $posisi_antrian_dokter;
-				$item->ruang_poliklinik = $request->ruang_poliklinik ? $request->ruang_poliklinik : 0;
 				$item->berkebutuhan_khusus = $request->berkebutuhan_khusus ? $request->berkebutuhan_khusus : '-';
 				$item->keterangan_berkebutuhan = $request->keterangan_berkebutuhan ? $request->keterangan_berkebutuhan : '-';
 				$item->no_antrian_ro = $kodeRo;
@@ -533,7 +535,7 @@ class AntrianCtrl extends Controller
 				$rekammedis = $request->rekam_medis;
 				$result = substr($rekammedis, 0, 1);
 				
-				app(RegistrasiCtrl::class)->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
+				$this->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis, $pasien, $item);
 
 				$arr = array('status' => 'Kunjungan');
 				$pasienUpdate = Pasien::where('uuid', '=', $pasien->uuid)->update($arr);
@@ -835,7 +837,6 @@ class AntrianCtrl extends Controller
 				$item->nama_asuransi = $request->nama_asuransi ? $request->nama_asuransi : '-';
 				$item->posisi_antrian_ro = $posisi_antrian_ro;
 				$item->posisi_antrian_dokter = $posisi_antrian_dokter;
-				$item->ruang_poliklinik = $request->ruang_poliklinik ? $request->ruang_poliklinik : 0;
 				$item->berkebutuhan_khusus = $request->berkebutuhan_khusus ? $request->berkebutuhan_khusus : '-';
 				$item->keterangan_berkebutuhan = $request->keterangan_berkebutuhan ? $request->keterangan_berkebutuhan : '-';
 				$item->no_antrian_ro = $kodeRo;
@@ -870,7 +871,7 @@ class AntrianCtrl extends Controller
 				$rekammedis = $request->rekam_medis;
 				$result = substr($rekammedis, 0, 1);
 				
-				app(RegistrasiCtrl::class)->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis);
+				$this->savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis, $pasien, $item);
 
 				$arr = array('status' => 'Kunjungan');
 				$pasienUpdate = Pasien::where('uuid', '=', $pasien->uuid)->update($arr);
@@ -1077,4 +1078,55 @@ class AntrianCtrl extends Controller
 			->get();
 		return response()->json(['hasil' => $get, 'kasir' => $kasir, 'farmasi' => $farmasi]);
 	}
+
+	public function savepasienlama($request, $registrasi_uuid, $registrasi_kode, $registrasi_nomor, $registrasi_jenis, $pasien, $itemRegistrasi)
+	{
+		$dokterLocal = Pengguna::where('kode_dokter_bpjs_kes', '=', $request->dokter_bpjs)->first();
+		$tindakan = CaraBayarTindakanRawatJalan::where('carabayar_uuid', '=', $itemRegistrasi->carabayar_uuid)->where('default', '=', 'Ya')
+			->where('tindakan_rawat_jalan_uuid', '!=', '6808853b-2aad-4ebd-acee-ec9980a2407d')
+			->select(['tindakan_rawat_jalan_uuid', 'nama_tindakan_rawat_jalan', 'harga'])
+			->groupBy(['tindakan_rawat_jalan_uuid', 'nama_tindakan_rawat_jalan', 'harga'])
+			->get();
+		foreach ($tindakan as $row) {
+			$item = new LayananPasien();
+			$item->uuid = Uuid::uuid4();
+			$item->registrasi_uuid = $registrasi_uuid;
+			$item->no_pendaftaran = $itemRegistrasi->no_pendaftaran;
+			$item->registrasi_kode = $registrasi_kode;
+			$item->registrasi_nomor = $registrasi_nomor;
+			$item->registrasi_jenis = $registrasi_jenis;
+			$item->pasien_uuid = $pasien->uuid ? $pasien->uuid : '-';
+			$item->rekam_medis = $pasien->rekam_medis ? $pasien->rekam_medis : '-';
+			$item->nama_pasien = $pasien->nama ? $pasien->nama : '-';
+						// $item->pengguna_uuid = $request->pengguna_uuid;
+			// $item->nama_dokter = $request->nama_dokter;
+			$item->pengguna_uuid = $dokterLocal->uuid;
+			$item->nama_dokter = $dokterLocal->nama;
+
+			$item->tanggal = date('Y-m-d');
+			$item->waktu = date('H:i');
+
+			$item->carabayar_uuid = $itemRegistrasi->carabayar_uuid;
+			$item->carabayar_nama = $itemRegistrasi->carabayar_nama;
+
+			$item->layanan_uuid = $row->tindakan_rawat_jalan_uuid;
+			$item->nama_layanan = $row->nama_tindakan_rawat_jalan;
+			$item->tarif = $row->harga;
+			$item->total = $row->harga;
+			$item->default = 'Ya';
+			$cek = explode(" ", $row->nama_tindakan_rawat_jalan);
+			if (count($cek) > 0) {
+				if ($cek[0] == 'Honor' || $cek[0] == 'Konsul' || $cek[0] == 'Konsultasi' || $cek[0] == 'Gaji') {
+					$item->jenis = 'Honor';
+				} else {
+					$item->jenis = 'Administrasi';
+				}
+			} else {
+				$item->jenis = 'Administrasi';
+			}
+			$item->save();
+		}
+	}
 }
+
+

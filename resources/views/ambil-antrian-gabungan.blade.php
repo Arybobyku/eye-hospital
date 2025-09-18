@@ -277,13 +277,13 @@
                         <!-- Numeric Keypad -->
                         <div class="numpad">
                             <button v-for="num in numbers" :key="num" class="numpad-btn"
-                            @click="appendToBooking(num)">
+                            @click="appendToNoBpjs(num)">
                             {% num %}
                         </button>
                         
-                        <button class="delete-btn" @click="deleteLast">del</button>
-                        <button class="numpad-btn" @click="appendToBooking(0)">0</button>
-                        <button class="ok-btn" @click="confirmBooking">OK</button>
+                        <button class="delete-btn" @click="deleteLastNoBpjs">del</button>
+                        <button class="numpad-btn" @click="appendToNoBpjs(0)">0</button>
+                        {{-- <button class="ok-btn" @click="confirmBooking">OK</button> --}}
                     </div>
                         <div class="container">
                             <div class="form-group">
@@ -510,6 +510,15 @@
                     console.log("Menambahkan angka:", num); // Debugging
                     this.kodeBooking += num;
                 },
+                appendToNoBpjs: function(num) {
+                    console.log("Menambahkan angka:", num); // Debugging
+                    if (this.pesertaType == "nik_sect") {
+                    this.nikSect += num;
+                    } else {
+                        this.bpjsSect += num;
+
+                    }
+                },
                 appendToNik: function(num) {
                     console.log("Menambahkan angka:", num); // Debugging
                     this.nik += num;
@@ -521,6 +530,15 @@
                 deleteLastNik: function() {
                     console.log("Menghapus angka terakhir");
                     this.nik = this.nik.slice(0, -1);
+                },
+                deleteLastNoBpjs: function() {
+                    console.log("Menghapus angka terakhir");
+                    if (this.pesertaType == "nik_sect") {
+                    this.nikSect = this.nikSect.slice(0, -1);
+                } else {
+                        this.bpjsSect = this.bpjsSect.slice(0, -1);
+
+                    }
                 },
                 confirmBooking: function() {
                     alert(`Kode Booking: ${this.kodeBooking}`);
@@ -638,7 +656,7 @@
                     const bpjs = this.bpjsSect;
                     const pesertaType = this.pesertaType;
 
-                    vm.attach.url = vm.attach.link.addlamanonbpjs;
+                    vm.attach.url = vm.attach.link.addlamabpjs;
                     vm.attach.data = new FormData();
                     console.log(selectedDokterObj);
                     console.log(namaDokter);
