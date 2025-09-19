@@ -832,7 +832,7 @@ class AntrianCtrl extends Controller
 				$item->carabayar_uuid = 'e3ed042d-2b41-4672-bcc2-7a816a622667';
 				$item->carabayar_nama = 'BPJS Kesehatan';
 				$item->no_bpjs_kes = $pasien->no_bpjs;
-				$item->nomorreferensi = "";
+				$item->nomorreferensi = $request->no_rujukan;
 				$item->asuransi_uuid = $request->asuransi_uuid ? $request->asuransi_uuid : '-';
 				$item->nama_asuransi = $request->nama_asuransi ? $request->nama_asuransi : '-';
 				$item->posisi_antrian_ro = $posisi_antrian_ro;

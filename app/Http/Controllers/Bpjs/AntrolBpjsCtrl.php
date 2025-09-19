@@ -392,7 +392,7 @@ class AntrolBpjsCtrl extends Controller
             "namadokter" => $item->nama_dokter_bpjs ?? "",
             "jampraktek" => $item->jadwal_dokter_bpjs ?? "",
             "jeniskunjungan" => "1",
-            "nomorreferensi" => $item->nomorregistrasi,
+            "nomorreferensi" => $item->nomorreferensi,
             "nomorantrean" => $item->no_pendaftaran,
             "angkaantrean" => $nomorOnly,
             "estimasidilayani" => $estimasidilayani,
@@ -414,6 +414,7 @@ class AntrolBpjsCtrl extends Controller
         $antrolLogs->save();
         try {
             $result = $this->bridging->postRequest($endpoint, $jsonData);
+            // dd($result);
         } catch (\Exception $e) {
             $antrolLogs->response = json_encode($e, JSON_UNESCAPED_UNICODE);
             $antrolLogs->update();
