@@ -649,16 +649,17 @@
                     // window.location.reload();
                 },
                 addlamabpjs: function(selectedDokter2) {
-                    const selectedDokterObj = vm.jadwalDokter.find(dokter => dokter.kodedokter === selectedDokter2);
+                    const selectedDokterObj = vm.jadwalDokter2.find(dokter => dokter.kodedokter === selectedDokter2);
                     const namaDokter = selectedDokterObj ? selectedDokterObj.namadokter : '';
                     const jamDokter = selectedDokterObj ? selectedDokterObj.jadwal : '';
                     const nik = this.nikSect;
                     const bpjs = this.bpjsSect;
                     const pesertaType = this.pesertaType;
-
                     vm.attach.url = vm.attach.link.addlamabpjs;
                     vm.attach.data = new FormData();
-                    console.log(selectedDokterObj);
+                    console.log("BPJS");
+                    console.log(vm.jadwalDokter);
+                    console.log(selectedDokter2);
                     console.log(namaDokter);
                     vm.attach.data.append('nik', nik);
                     vm.attach.data.append('bpjs', bpjs);
