@@ -7,12 +7,19 @@
 			</div>
 			<div class="modal-body" v-if="form">
 				<div class="grid">
-					<div class="col-6">
+
+					<div class="col-12">
+						<Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)" 
+							:ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
+							:selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name)"
+							></Selected>
+					</div>
+					<!-- <div class="col-6">
 						<Inputed :ref="form.label.name" :form="form.label"></Inputed>
 					</div>
 					<div class="col-6 form-ml">
 						<Inputed :ref="form.sublabel.name" :form="form.sublabel"></Inputed>
-					</div>
+					</div> -->
 					<div class="col-5">
 						<Inputed :ref="form.nama.name" :form="form.nama"></Inputed>
 					</div>
@@ -36,8 +43,8 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<th>Label</th>
-									<th>Sub Label</th>
+									<!-- <th>Label</th> -->
+									<!-- <th>Sub Label</th> -->
 									<th>Nama</th>
 									<th>Quantity</th>
 									<th>Harga</th>
@@ -46,8 +53,8 @@
 							</thead>
 							<tbody>
 								<tr v-for="item in maindata" v-if="maindata.length > 0">
-									<td>{{ item.label }}</td>
-									<td>{{ item.sub_label }}</td>
+									<!-- <td>{{ item.label }}</td> -->
+									<!-- <td>{{ item.sub_label }}</td> -->
 									<td>{{ item.nama }}</td>
 									<td>{{ item.quantity }}</td>
 									<td>{{ formatrupiah(item.harga.toString()) }}</td>
@@ -62,10 +69,10 @@
 									</td>
 								</tr>
 								<tr v-else>
-									<td colspan="5">No Data For Result</td>
+									<td colspan="3">No Data For Result</td>
 								</tr>
 								<tr v-if="maindata.length > 0">
-									<td colspan="4">Grand Total</td>
+									<td colspan="2">Grand Total</td>
 									<td>{{ formatrupiah(totalfull.toString()) }}</td>
 								</tr>
 							</tbody>
@@ -82,6 +89,8 @@
 var vm, body;
 import { defineAsyncComponent } from 'vue';
 import { nullAndZero, datename, formatrupiah } from '../../../module/Manipulation.js';
+import { filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected } from '../../../module/SelectedFilter.js';
+import { initindexdb, indexdbprocessing } from '../../../module/Indexdb.js';
 import { listpaket } from './FormData.js';
 import { parseunit } from './Attachment.js';
 import { toast } from 'vue3-toastify';
@@ -91,6 +100,7 @@ export default {
 	beforeUnmount:function() {},
 	components: {
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
+		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
 	},
 	created: function () {},
 	mounted:function() { 
@@ -122,7 +132,90 @@ export default {
 		},
 	}},
 	methods: {
-		listpaket, parseunit, formatrupiah,
+		listpaket, parseunit, formatrupiah, indexdbprocessing,
+		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected,initindexdb,
+		selectfilter: function (event, jambu, key) { 
+			vm.form = vm.filterselected(vm.form, jambu); 
+		},
+		selecthide:function() { vm.form = vm.hideselected(vm.form); },
+		selecteditem:function(item, key) { 
+			vm.form = vm.itemselected(vm.form, item, key); 
+
+			if (key == 'carabayartindakanrawatjalan') {
+				vm.form.label.value = item.label
+				vm.form.sublabel.value = item.label
+				vm.form.quantity.value = 1
+				vm.form.nama.value = item.nama_tindakan_rawat_jalan
+				vm.form.harga.value = parseInt(item.harga)
+			}
+
+		},
+		selectclear:function(key) { 
+			
+			vm.form = vm.clearselected(vm.form, key);
+			if (key == 'apotek') {
+				vm.tempobat = null;
+			}
+			else if (key == 'apotekracikan') {
+				vm.tempobatracikan = null;
+			}
+			else if (key == 'paketbedah') {
+				vm.form.hargapaket = '';
+			}
+			else if (key == 'paketbedahbedah') {
+				vm.form.hargabedahpaket = '';
+			}
+			else if (key == 'kamarinap') {
+				vm.datakamar = null;
+			}
+			else if (key == 'kamarinapjalan') {
+				vm.datakamarjalan = null;
+			}
+			else if (key == 'carabayar') {
+				vm.form.select.asuransi.disabled = true;
+				vm.form.select.asuransi.isrequired = false;
+				vm.form.select.asuransi.value = '';
+				vm.form.select.asuransi.Label = 'Silahkan Pilih';
+			}
+			else if (key == 'carabayarbedah') {
+				vm.form.select.asuransibedah.disabled = true;
+				vm.form.select.asuransibedah.isrequired = false;
+				vm.form.select.asuransibedah.value = '';
+				vm.form.select.asuransibedah.Label = 'Silahkan Pilih';
+			}
+		},
+		selectbox:function(event, key, statics) {
+			let msg = 'select-close select-close-'+key;
+			if (event.target.className != msg) {
+				if (!vm.form.select[key].disabled) {
+
+					if(event.target.className == ''){
+						event.target.className = 'hospitals selected';
+						form.select[key].option = 'display: block';
+					}
+					console.log("SELECT BOX",event.target.className);
+					let result = vm.boxselected(event, vm.form, key);
+					
+					console.log("SELECT BOX", result._position);
+					if (result._position == 'stop') { return ; }
+					else if (result._position == 'nextstop') { vm.form = result._form; }
+					else { vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block'; }
+				}
+			}
+			
+		},
+
+		getIndexDB:function(key, statics) {
+			vm.form.select[key].data = []; vm.form.select[key].filter = [];
+			if (statics) { vm.form.select[key].data = this.arr[key]; vm.form.select[key].filter = this.arr[key]; }
+			else {
+				vm.initindexdb(vm.$dbNameIndexDb, key)
+					.then(function(response){ 
+						vm.form = vm.indexdbprocessing(response, vm.form, key);
+					})
+					.catch(function(error){ console.log(error); });
+			}
+		},
 		show:function(posisi, title, uuid, nama){ 
 			vm.btnlbl = posisi == 'adddata' ? 'Save Data' : 'Update Data'; 
 			vm.form.nama_paket_bedah = nama;
@@ -201,7 +294,6 @@ export default {
 		},
 
 		edititem:function(item) {
-			console.log(item);
 			vm.form.uuid = item.uuid;
 			vm.statusedit = true;
 			vm.form.label.value = item.label;
@@ -230,6 +322,7 @@ export default {
 				vm.maindata = response.data.data;
 				// vm.form.label.value = '';
 				// vm.form.sublabel.value = '';
+				vm.form.carabayar_nama = response.data.paket_bedah.nama_carabayar;
 				vm.form.nama.value = '';
 				vm.form.quantity.value = '1';
 				vm.form.harga.value = '';

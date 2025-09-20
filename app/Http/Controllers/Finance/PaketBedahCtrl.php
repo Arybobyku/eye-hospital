@@ -76,6 +76,7 @@ class PaketBedahCtrl extends Controller
 			$item->pengguna_uuid = $request->pengguna_uuid && $request->pengguna_uuid != '' ? $request->pengguna_uuid : '-';
 			$item->nama_dokter = $request->nama_dokter && $request->nama_dokter != '' && $request->nama_dokter != 'Silahkan Pilih' ? $request->nama_dokter : '-';
 			$item->keterangan = $request->keterangan;
+			$item->harga_sudah_ditentukan = $request->harga_sudah_ditentukan;
 			$item->save();
 
 			DB::commit();
@@ -112,6 +113,7 @@ class PaketBedahCtrl extends Controller
 				'pengguna_uuid' => $request->pengguna_uuid && $request->pengguna_uuid != '' ? $request->pengguna_uuid : '-',
 				'nama_dokter' => $request->nama_dokter && $request->nama_dokter != '' && $request->nama_dokter != 'Silahkan Pilih' ? $request->nama_dokter : '-',
 				'keterangan' => $request->keterangan,
+				'harga_sudah_ditentukan' => $request->harga_sudah_ditentukan,
 		);
 
 		try{
