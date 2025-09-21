@@ -58,7 +58,7 @@ export default {
 		FormCarabayar: defineAsyncComponent(() => import('./FormCarabayar.vue')),
 		FormChild: defineAsyncComponent(() => import('./FormChild.vue')),
 		FormTarif: defineAsyncComponent(() => import('./FormTarif.vue')),
-		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+		Datatable: defineAsyncComponent(() => import('../../../section/DatatableCustom.vue')),
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 	},
 	created: function () {},
