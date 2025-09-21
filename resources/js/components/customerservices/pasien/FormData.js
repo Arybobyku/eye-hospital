@@ -216,7 +216,7 @@ export const formrawatjalan = () => {
 			dokter: { 
 				key : 'dokter', for_id: 'form_'+'dokter', name: 'dokter', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
-				class: 'dokter', isrequired: true, html: 'Dokter yang menangani', issearch: false, disabled: false,
+				class: 'dokter', isrequired: false, html: 'Dokter yang menangani', issearch: false, disabled: false,
 			},
 			dokterumum: { 
 				key : 'dokterumum', for_id: 'form_'+'dokterumum', name: 'dokterumum', uuid:'', value: '', label: 'Silahkan Pilih', 
