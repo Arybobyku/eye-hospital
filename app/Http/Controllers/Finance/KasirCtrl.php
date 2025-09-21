@@ -246,6 +246,7 @@ class KasirCtrl extends Controller
                                 ->skip($skip)->take($this->take)
                                 ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
                                 ->get();
+
             $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
                                 ->where('registrasi.delete_soft', '=', 1)
                                 ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
@@ -260,7 +261,7 @@ class KasirCtrl extends Controller
                                 ->where(function ($q) {
                                     $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
                                 })
-                                ->where($column, 'ilike', '%'.$search.'%')
+                                ->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
                                 ->orderBy('registrasi.no_kwitansi', 'desc')->count();
         } else {
             $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
