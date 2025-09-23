@@ -474,7 +474,9 @@ class AntrianCtrl extends Controller
 				$item->nama_dokter_bpjs = $request->nama_dokter_bpjs;
 				$item->jadwal_dokter_bpjs = $request->jadwal_dokter_bpjs;
 				$item->kode_poli_bpjs = $request->kode_poli_bpjs;
+				$item->kode_sub_poli_bpjs = $request->kode_sub_poli_bpjs;
 				$item->nama_poli_bpjs = $request->nama_poli_bpjs;				
+				$item->nama_sub_poli_bpjs = $request->nama_sub_poli_bpjs;				
 				$item->ruang_poliklinik = $ruangPoliAngka ? $ruangPoliAngka : 0;
 				$item->no_pendaftaran = $kodePoli;
 				$item->cara_masuk = 'Datang Sendiri';
@@ -823,8 +825,10 @@ class AntrianCtrl extends Controller
 				$item->kode_dokter_bpjs = $request->kode_dokter_bpjs;
 				$item->nama_dokter_bpjs = $request->nama_dokter_bpjs;
 				$item->jadwal_dokter_bpjs = $request->jadwal_dokter_bpjs;
-				$item->kode_poli_bpjs = $request->kode_poli_bpjs;
-				$item->nama_poli_bpjs = $request->nama_poli_bpjs;				
+				$item->kode_poli_bpjs	  = $request->kode_poli_bpjs;
+				$item->kode_sub_poli_bpjs = $request->kode_poli_bpjs;
+				$item->nama_poli_bpjs 	  = $request->nama_poli_bpjs;				
+				$item->nama_sub_poli_bpjs = $request->nama_poli_bpjs;				
 				$item->ruang_poliklinik = $ruangPoliAngka ? $ruangPoliAngka : 0;
 				$item->no_pendaftaran = $kodePoli;
 				$item->rujukan = $request->rujukan ? $request->rujukan : '-';

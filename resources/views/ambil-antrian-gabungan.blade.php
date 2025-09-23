@@ -141,9 +141,9 @@
                             
                           <div class="form-group">
                             <label for="kode_poli_bpjs">PILIH POLI</label>
-                            <select id="kode_poli_bpjs" @change="fetchJadwalDokter"  name="kode_poli_bpjs" v-model="selectedPoli" required>
+                            <select id="kode_poli_bpjs" @change="fetchJadwalDokter"  name="kode_poli_bpjs" v-model="selectedSubPoli" required>
                                 <option value="" disabled selected>-- Pilih Poli --</option>
-                                <option v-for="item in poliBpjs" :value="item.kdpoli" v-text="`${item.nmpoli} - ${item.nmsubspesialis || ''}`"></option>
+                                <option v-for="item in poliBpjs" :value="item.kdsubspesialis" v-text="`${item.nmpoli} - ${item.nmsubspesialis || ''}`"></option>
                             </select>
                           </div>
                         
@@ -154,7 +154,7 @@
                             <option v-for="item in jadwalDokter" :value="item.kodedokter" v-text="`${item.namadokter}`"></option>
                         </select>
                         </div>
-                        <button  v-on:click="addlamanonbpjs(selectedPoli, selectedDokter)" class="submit-btn">Ambil Nomor Antrian</button>
+                        <button  v-on:click="addlamanonbpjs(selectedSubPoli, selectedDokter)" class="submit-btn">Ambil Nomor Antrian</button>
                       </div>
                       <script>
                       </script>
@@ -427,6 +427,7 @@
 		            jadwalDokter: [], // Buat Non BPJS Pasien LAma
 		            jadwalDokter2: [], // Buat BPJS pasien LAma
                     selectedPoli: "",
+                    selectedSubPoli: "",
                     selectedDokter: "",
                     selectedDokter2: "",
                     nikSect: '', // Untuk NIK
@@ -469,10 +470,10 @@
                     }
                 },
                 async fetchJadwalDokter() {
-                    const today = "2025-09-10"; // Format: YYYY-MM-DD
+                    const today = "2025-09-23"; // Format: YYYY-MM-DD
 
                     try {
-                        const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/${this.selectedPoli}/tanggal/${today}`);
+                        const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/${this.selectedSubPoli}/tanggal/${today}`);
 
                         this.jadwalDokter = responseJadwal.data.response || [];
 
@@ -622,9 +623,11 @@
                     vm.loaders();
                     vm.executions();
                 },
-                addlamanonbpjs: function(selectedPoli, selectedDokter) {
-                    const selectedPoliObj = vm.poliBpjs.find(poli => poli.kdpoli === selectedPoli);
+                addlamanonbpjs: function(selectedSubPoli, selectedDokter) {
+                    const selectedPoliObj = vm.poliBpjs.find(poli => poli.kdsubspesialis === selectedSubPoli);
+                    const namaSubPoli = selectedPoliObj ? selectedPoliObj.nmsubspesialis : '';
                     const namaPoli = selectedPoliObj ? selectedPoliObj.nmpoli : '';
+                    const kodePoli = selectedPoliObj ? selectedPoliObj.kdpoli : '';
                     const selectedDokterObj = vm.jadwalDokter.find(dokter => dokter.kodedokter === selectedDokter);
                     const namaDokter = selectedDokterObj ? selectedDokterObj.namadokter : '';
                     const jamDokter = selectedDokterObj ? selectedDokterObj.jadwal : '';
@@ -637,7 +640,9 @@
                     vm.attach.data.append('nik', nik);
                     vm.attach.data.append('kode_dokter_bpjs', selectedDokter);
                     vm.attach.data.append('kode_poli_bpjs', selectedPoli);
+                    vm.attach.data.append('kode_sub_poli_bpjs', selectedSubPoli);
                     vm.attach.data.append('nama_poli_bpjs', namaPoli); // Tambahkan nama poli
+                    vm.attach.data.append('nama_sub_poli_bpjs', namaSubPoli); // Tambahkan nama poli
                     vm.attach.data.append('nama_dokter_bpjs', namaDokter); // Tambahkan nama poli
                     vm.attach.data.append('jadwal_dokter_bpjs', jamDokter);
                     vm.attach.data.append('jenis', 'Umum'); 
@@ -862,9 +867,9 @@
             },
             computed: {
                 filteredDokters() {
-                    if (!this.selectedPoli) return this.doctors;
+                    if (!this.selectedSubPoli) return this.doctors;
                     // Sesuaikan dengan struktur data dokter Anda
-                    return this.doctors.filter(dokter => dokter.kdpoli === this.selectedPoli);
+                    return this.doctors.filter(dokter => dokter.kdpoli === this.selectedSubPoli);
                 }
                 },
         });
