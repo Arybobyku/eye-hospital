@@ -2016,7 +2016,7 @@ class PemeriksaanCtrl extends Controller
 
                 $jenisResep = 'Tidak ada';
                 // Start Antrian Farmasi
-                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0) && $registrasi->carabayar_nama != 'Umum') {
+                if ($registrasi->no_antrian_farmasi == null && (count($obat) > 0 || count($obatracikan) > 0)) {
                     if(count($obat) > 0){
                         $jenisResep = 'Non racikan';
                     }
@@ -2063,9 +2063,8 @@ class PemeriksaanCtrl extends Controller
                         ->update(['no_antrian_farmasi' => $kodeFarmasi]);
                 }
                 // End Antrian Farmasi
-
-                // Start Antrian Kasir
-                if ($registrasi->no_antrian_kasir == null && $registrasi->carabayar_nama == 'Umum') {
+                else{
+                  // Start Antrian Kasir
                     $uuidKasir = '';
                     $loop = false;
                     do {
