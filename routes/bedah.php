@@ -12,6 +12,7 @@ use App\Http\Controllers\Bedah\DataFormBedahCtrl;
 |
 */
 use App\Http\Controllers\Bedah\PasienBedahCtrl;
+use App\Http\Controllers\Bedah\LayananBedahCtrl;
 use App\Http\Controllers\Bedah\ReqOpnameCtrl;
 use App\Http\Controllers\Bedah\StockOpnameCtrl;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +57,12 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
         Route::post('adddokter', [PasienBedahCtrl::class, 'dokteradd'])->name('bedah-reqopname-adddokter');
         Route::post('editbedah', [PasienBedahCtrl::class, 'editbedah'])->name('bedah-reqopname-editbedah');
         Route::post('addbedah', [PasienBedahCtrl::class, 'bedahadd'])->name('bedah-reqopname-addbedah');
+    });
+    Route::prefix('layananbedah')->group(function () {
+        Route::post('list', [LayananBedahCtrl::class, 'list'])->name('layananbedah-list');
+        Route::post('edit', [LayananBedahCtrl::class, 'edit'])->name('layananbedah-edit');
+        Route::post('update', [LayananBedahCtrl::class, 'update'])->name('layananbedah-update');
+
     });
 
 	Route::prefix('dataform')->group(function () {
