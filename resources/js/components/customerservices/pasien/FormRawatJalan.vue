@@ -17,8 +17,8 @@
 			<Inputed :ref="form.nomorreferensi.name" :form="form.nomorreferensi" v-if="form.nomorreferensi.show">
 			</Inputed>
 
-			<select style="width: 200px;" v-model="selectedPoli" @change="fetchJadwalDokter" v-if="showSelectPoli">
-				<option v-for="poli in poliBpjs" :key="poli.kdpoli" :value="poli.kdpoli">
+			<select style="width: 200px;" v-model="selectedSubPoli" @change="fetchJadwalDokter" v-if="showSelectPoli">
+				<option v-for="poli in poliBpjs" :key="poli.kdsubspesialis" :value="poli.kdsubspesialis">
 					{{ poli.nmpoli }} - {{ poli.nmsubspesialis }}
 				</option>
 			</select>
@@ -41,6 +41,7 @@
 			<input type="hidden" :value="dokterTerpilih ? dokterTerpilih.jadwal : ''">
 			<input type="hidden" :value="dokterTerpilih ? dokterTerpilih.namadokter : ''">
 			<input type="hidden" v-model="selectedNmpoli">
+			<input type="hidden" v-model="selectedNmSubpoli">
 
 
 			<Selected v-on:click="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)"
@@ -200,6 +201,11 @@ export default {
 			console.log(selected?.nmpoli)
 			return selected?.nmpoli || ''; // Jika selected undefined, kembalikan string kosong
 		},
+		selectedNmSubpoli() {
+			const selected = this.poliBpjs?.find(poli => poli.kdsubspesialis === this.selectedSubPoli);
+			console.log(selected?.nmsubspesialis)
+			return selected?.nmsubspesialis || ''; // Jika selected undefined, kembalikan string kosong
+		},
 		selectedNmdokter() {
 			const selected = this.filteredDokter?.find(dokter => dokter.kodedokter === this.selectedDokter);
 			console.log(selected?.namadokter)
@@ -223,7 +229,9 @@ export default {
 			camerastatus: 'stop',
 			filteredDokter: [], // Harus ada di sini agar Vue bisa melacak perubahannya
 			selectedPoli: "", // Untuk menyimpan nilai yang dipilih
+			selectedSubPoli: "", // Untuk menyimpan nilai yang dipilih
 			selectedPoliNama: "", // Untuk menyimpan nilai yang dipilih
+			selectedSubPoliNama: "", // Untuk menyimpan nilai yang dipilih
 			jadwalDokter: [], // Simpan jadwal dokter dari AP
 			dokterTerpilih: null,
 			showSelectDokter: false, 
@@ -239,11 +247,11 @@ export default {
 		async fetchJadwalDokter() {
 
 			//- TODO: Ganti Tanggal dengan hari ini
-			const today = "2025-09-10"; // Format: YYYY-MM-DD
+			const today = "2025-09-19"; // Format: YYYY-MM-DD
 			// const today = new Date().toISOString().split("T")[0];
 
 			try {
-				const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/${this.selectedPoli}/tanggal/${today}`);
+				const responseJadwal = await axios.get(`/api/bpjs/antrol-bpjs/jadwaldokter/kodepoli/${this.selectedSubPoli}/tanggal/${today}`);
 
 				this.jadwalDokter = responseJadwal.data.response || [];
 				this.filteredDokter = this.jadwalDokter;
@@ -618,7 +626,9 @@ export default {
 		parsingForm:function() { 
 			console.log("selectedDokter", this.dokterTerpilih.namadokter);
 			vm.form.photos = vm.form.photos.replace("image/octet-stream", "image/jpeg");
-			vm.$emit('parsingForm', vm.parserawatjalan(vm.form, vm.detail, vm.selectedPoli, vm.selectedDokter, this.dokterTerpilih.jadwal, this.selectedNmpoli, this.dokterTerpilih.namadokter), 'rawatjalan'); 
+			vm.selectedPoli = "MAT";
+			vm.selectedNmpoli = "MATA";
+			vm.$emit('parsingForm', vm.parserawatjalan(vm.form, vm.detail, vm.selectedPoli,vm.selectedSubPoli, vm.selectedDokter, this.dokterTerpilih.jadwal, this.selectedNmpoli, this.selectedNmSubpoli, this.dokterTerpilih.namadokter), 'rawatjalan'); 
 		},
 
 		dialog:function(){

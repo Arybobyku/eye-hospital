@@ -358,7 +358,9 @@ class RegistrasiCtrl extends Controller
 				$item->nama_dokter_bpjs = $request->nama_dokter_bpjs;
 				$item->jadwal_dokter_bpjs = $request->jadwal_dokter_bpjs;
 				$item->kode_poli_bpjs = $request->kode_poli_bpjs;
+				$item->kode_sub_poli_bpjs = $request->kode_sub_poli_bpjs;
 				$item->nama_poli_bpjs = $request->nama_poli_bpjs;
+				$item->nama_sub_poli_bpjs = $request->nama_sub_poli_bpjs;
 
 				$item->no_pendaftaran = $request->no_pendaftaran ? $request->no_pendaftaran : '-';
 				$item->cara_masuk = $request->cara_masuk ? $request->cara_masuk : '-';
