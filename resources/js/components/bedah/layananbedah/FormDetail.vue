@@ -9,6 +9,33 @@
 			</div>
 			<div class="modal-body" v-if="form">
 				<div class="grid">
+                    <div class="col-6 form-mr">
+                        <ul class="list-detail">
+                            <li>
+                                Tanggal Pendaftaran<span><strong>{{ datename(detail.tanggal) }}</strong></span>
+                            </li>
+                            <li>
+                                No Rekam Medis<span><strong>{{ detail.rekam_medis }}</strong></span>
+                            </li>
+                            <li>
+                                Nama Lengkap<span><strong>{{ detail.nama_pasien }}</strong></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-6 form-mr">
+                        <ul class="list-detail">
+                            <li>
+                                Tanggal Lahir<span><strong>{{ datename(detail.tanggal_lahir) }}</strong></span>
+                            </li>
+                            <li>
+                                Jenis Kelamin<span><strong>{{ detail.jenis_kelamin }}</strong></span>
+                            </li>
+                        </ul>
+                    </div>
+
+
+                </div>
+				<div class="grid">
 					<div class="col-12">
 						<div class="tab-content">
 							<div style="position: relative;" class="content-tab-in">
@@ -248,7 +275,7 @@ export default {
 	
 
 		action:function() {
-			if (vm.listobat.length > 0 || vm.listobatracikan.length > 0) { vm.parsingForm(); vm.dialog(); }
+			if (vm.listdata.length > 0) { vm.parsingForm(); vm.dialog(); }
 		},
 
 		show:function(posisi, title, uuid, detail){ 
@@ -267,14 +294,14 @@ export default {
 		},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
 		parsingForm:function() { 
-
+			console.log('sss', vm.listdata);
 			vm.$emit('parsingForm', vm.parsedetail(vm.form, vm.listdata), 'update'); 
 		},
 
 		loaderprocess:function() { const left = this.$refs.rootmodal.getBoundingClientRect(); vm.$refs.Loader.running(left, 'modal', 250); },
 
 		setdataform: function (response) {
-			// vm.detail = response.data.detail;
+			vm.detail = response.data.data;
 			vm.form.uuid = response.data.data.uuid;
 			console.log('response');
 			console.log(response)
