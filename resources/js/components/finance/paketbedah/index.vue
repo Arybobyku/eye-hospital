@@ -109,6 +109,7 @@ export default {
 		column: [
 			{ value: 'nama', label: 'Nama Paket', type: 'text', search: true, close: false, button: false },
 			// { value: 'nama_dokter', label: 'Nama Dokter', type: 'text', search: true, close: false, button: false },
+			{ value: 'harga_sudah_ditentukan', label: 'Harga Sudah Ditentukan', type: 'text', search: false, close: false, button: false },
 			{ value: 'total', label: 'Biaya', type: 'text', search: false, close: false, button: false },
 			{ value: 'keterangan', label: 'Keterangan', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
@@ -209,6 +210,7 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'harga_sudah_ditentukan') { _tmp = { value: column == 1 ? 'iya' : 'tidak', ishtml: 'text', style: '' }; }
 			else if (identity == 'total') { _tmp = { value: vm.total(column, true), ishtml: 'text', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';

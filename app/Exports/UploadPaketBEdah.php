@@ -22,24 +22,26 @@ class UploadPaketBEdah implements ToCollection, WithHeadingRow
         try {
             DB::beginTransaction();
 
-			$paketBedah = new PaketBedah();
-			$paketBedah->uuid = Uuid::uuid4();
-			$paketBedah->nama = $rows[0]['name'];;
-			// $paketBedah->total = $request->total;
-			// $paketBedah->pengguna_uuid = $request->pengguna_uuid && $request->pengguna_uuid != '' ? $request->pengguna_uuid : '-';
-			// $paketBedah->nama_dokter = $request->nama_dokter && $request->nama_dokter != '' && $request->nama_dokter != 'Silahkan Pilih' ? $request->nama_dokter : '-';
-			// $paketBedah->keterangan = $request->keterangan;
-			$paketBedah->save();
+            $paketBedah = new PaketBedah();
+            $paketBedah->uuid = Uuid::uuid4();
+            $paketBedah->nama = $rows[0]['name'];
+            $paketBedah->uuid_carabayar = $rows[0]['carabayar_uuid'];
+            $paketBedah->nama_carabayar = $rows[0]['carabayar'];
+            // $paketBedah->total = $request->total;
+            // $paketBedah->pengguna_uuid = $request->pengguna_uuid && $request->pengguna_uuid != '' ? $request->pengguna_uuid : '-';
+            // $paketBedah->nama_dokter = $request->nama_dokter && $request->nama_dokter != '' && $request->nama_dokter != 'Silahkan Pilih' ? $request->nama_dokter : '-';
+            // $paketBedah->keterangan = $request->keterangan;
+            $paketBedah->save();
 
             foreach ($rows as $row) {
                 $quantity = (int) $row['quantity'];
-                if ($quantity> 0) {
+                if ($quantity > 0) {
 
                     $item = new ListPaketBedahBaru();
-
                     $item->uuid = Uuid::uuid4();
                     $item->paket_bedah_uuid = $paketBedah->uuid;
                     $item->nama_paket_bedah = $paketBedah->nama;
+                    $item->label = $row['label'];
                     $item->label = $row['label'];
                     $item->sub_label = $row['sublabel'];
                     $item->nama = $row['nama'];
