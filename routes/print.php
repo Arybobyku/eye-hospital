@@ -30,6 +30,22 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('kasirbeli/{uuid}', [PrintKasirCtrl::class, 'printbeli']);
     Route::get('panjar/{uuid}', [PrintKasirCtrl::class, 'panjar']);
 
+    //REKAM MEDIS GENERAL
+    Route::get('rekammedis/general/suratkonsul/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratKonsul']);
+    Route::get('rekammedis/general/formlaserbarrage/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserBarrage']);
+    Route::get('rekammedis/general/formlaserfokal/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserFokal']);
+    Route::get('rekammedis/general/formtindakanepilasi/{uuid}', [PrintRekamMedisCtrl::class, 'printFormTindakanEpilasi']);
+    Route::get('rekammedis/general/laporaninjeksi/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanInjeksi']);
+    Route::get('rekammedis/general/tindakanlaserlpi/{uuid}', [PrintRekamMedisCtrl::class, 'printTindakanLaserLPI']);
+    Route::get('rekammedis/general/formlaserprp/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserPRP']);
+    Route::get('rekammedis/general/formlasercapsulotomy/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserCapsulotomy']);
+    Route::get('rekammedis/general/suratbalasankonsul/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratBalasanKonsul']);    
+    Route::get('rekammedis/general/formpermintaanpulang/{uuid}', [PrintRekamMedisCtrl::class, 'printFormPermintaanPulang']);    
+    
+    
+
+
+
 	// REKAM MEDIS RAWAT JALAN
 	Route::get('rekammedis/{uuid}', [PrintRekamMedisCtrl::class, 'print']);
 	Route::get('persetujuan/{uuid}', [PrintBedahCtrl::class, 'print']);
