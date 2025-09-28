@@ -14,7 +14,7 @@
 	
 
 		.left { display: inline-block; float: left; }
-		.right { display: inline-block; float: right;}
+		.right { display: inline-block; float: right; margin-right: 65px;}
 
         .img-wrapper {
     position: relative;
@@ -76,7 +76,7 @@
         <div style="font-weight: bold; text-align:center"> 
         SURAT PERNYATAAN PENOLAKAN RUJUKAN
     </div>
-
+    <br>
         Persetujuan ini diberikan dengan penuh kesadaran dengan kemungkinan terjadinya akibat sampingan dari tindakan tersebut diluar dari tanggung jawab RSK Mata Prima Vision. <br>
         <br>
           Demikian surat persetujuan ini dibuat dengan rasa tanggung jawab dan tanpa paksaan.
@@ -86,8 +86,7 @@
       <div class="right">Medan, ............................... 2025 </div>
       <br>
       <br>
-      <br>
-      <div style="display: inline-block; margin-left:80px; margin-top:10px"> 
+      <div style="display: inline-block; margin-left:80px; margin-top:5px"> 
         Mengetahui Dokter
       </div>
        <div style="display: inline-block; float: right; margin-right:65px">Yang Membuat Pernyataan </div>
