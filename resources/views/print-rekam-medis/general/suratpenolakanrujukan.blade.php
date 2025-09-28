@@ -34,7 +34,6 @@
     margin-bottom: 5px;  
   }
 
-
     </style>
     
 </head>
@@ -57,44 +56,38 @@
 	
 	<table style="width: 100%; margin-top: 20px" cellpadding="0" cellspacing="0">
 		<tr>
-			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify"> Saya yang bertanda tangan dibawah ini : <br>
+			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px"> Saya yang bertanda tangan dibawah ini : <br>
 		</tr>
         <br>
-
-		<tr>
-            <td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
+    <td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
 				Nama Pasien :  <br>
-				Tempat/Tanggal Lahir : 	<br>
-				Nomor Rekam Medis :	<br>
-                Agama : <br>
-                Pekerjaan : <br>
-                Alamat : <br>
+				NIK : 	<br>
+				Alamat :	<br>
 				<br>
+        Selaku keluarga / pendamping telah mendapatkan penjelasan tentang keadaan pasien oleh dokter, menyatakan bahwa pasien :
 			</td>
-		</tr>
 		<tr>
 			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
-                Dengan ini menyatakan permintaan untuk menghentikan perawatan/pengobatan dan meminta pulang <br> atas permintaan sendiri dengan alasan : <br>
-                ………………………………………………………………………………………………………………………..<br> 
-                .…………………………………………………………………………………………………………………….. <br>
-                    Sebagai pasien/keluarga pasien,saya telah mendapatkan penjelasan dari rumah sakit tentang : <br>
-                    <br>
-                1.Hak saya menolak atau tidak melanjutkan pengobatan. <br>
-                2.Tentang konsekuensi dari Keputusan saya untuk pulang atas permintaan sendiri. <br>
-                3.Tentang tanggung jawab saya dengan Keputusan tersebut. <br>
-                4.Tersedianya alternatif pelayanan dan pengobatan untuk pengobatan lanjutan. <br>
-                Dan saya tidak akan menuntut pihka rumah sakit atau siapapun juga akibat dari Keputusan saya pulang atas permintaan sendiri.
-            <br>
-            <br>
+        Nama Pasien :  <br>
+				NIK : 	<br>
+				Alamat :	<br>
 
+        <div style="font-weight: bold; text-align:center"> 
+        SURAT PERNYATAAN PENOLAKAN RUJUKAN
+    </div>
+
+        Persetujuan ini diberikan dengan penuh kesadaran dengan kemungkinan terjadinya akibat sampingan dari tindakan tersebut diluar dari tanggung jawab RSK Mata Prima Vision. <br>
+        <br>
+          Demikian surat persetujuan ini dibuat dengan rasa tanggung jawab dan tanpa paksaan.
+    <br>
       <div class="right">Medan, ............................... 2025 </div>
       <br>
       <br>
       <br>
-      <div style="display: inline-block; margin-left:80px"> 
-        Keluarga/Pasien
+      <div style="display: inline-block; margin-left:80px; margin-top:10px"> 
+        Mengetahui Dokter
       </div>
-       <div style="display: inline-block; float: right; margin-right:130px">DPJP </div>
+       <div style="display: inline-block; float: right; margin-right:130px">Yang Membuat Pernyataan </div>
       <br> 
       <br>
       <br>
@@ -104,16 +97,9 @@
         (………………………………..)
       </div>
        <div style="display: inline-block; float: right; margin-right:50px">(………………………………..) </div>
-     
-       <div style="display: inline-block; margin-left:40px"> 
-        Nama Jelas & Tanda Tangan
-      </div>
-       <div style="display: inline-block; float: right; margin-left:30px">Nama Jelas & Tanda Tangan </div>
 
 		</tr>
-        
-		<br>
-		<br>
+
 
 	</table>
 </div>

@@ -40,7 +40,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/general/formlaserprp/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserPRP']);
     Route::get('rekammedis/general/formlasercapsulotomy/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserCapsulotomy']);
     Route::get('rekammedis/general/suratbalasankonsul/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratBalasanKonsul']);    
-    Route::get('rekammedis/general/formpermintaanpulang/{uuid}', [PrintRekamMedisCtrl::class, 'printFormPermintaanPulang']);    
+    Route::get('rekammedis/general/formpermintaanpulang/{uuid}', [PrintRekamMedisCtrl::class, 'printFormPermintaanPulang']);
+    Route::get('rekammedis/general/suratpenolakanrujukan/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratPenolakanRujukan']);    
     
     
 
