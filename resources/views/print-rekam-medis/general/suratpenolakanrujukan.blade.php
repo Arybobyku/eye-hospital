@@ -56,16 +56,17 @@
 	
 	<table style="width: 100%; margin-top: 20px" cellpadding="0" cellspacing="0">
 		<tr>
-			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px"> Saya yang bertanda tangan dibawah ini : <br>
-		</tr>
+			<td> Saya yang bertanda tangan dibawah ini : <br>
+
         <br>
-    <td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
 				Nama Pasien :  <br>
 				NIK : 	<br>
 				Alamat :	<br>
 				<br>
         Selaku keluarga / pendamping telah mendapatkan penjelasan tentang keadaan pasien oleh dokter, menyatakan bahwa pasien :
-			</td>
+        <br>
+      </td>
+      </tr>
 		<tr>
 			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
         Nama Pasien :  <br>
@@ -79,6 +80,8 @@
         Persetujuan ini diberikan dengan penuh kesadaran dengan kemungkinan terjadinya akibat sampingan dari tindakan tersebut diluar dari tanggung jawab RSK Mata Prima Vision. <br>
         <br>
           Demikian surat persetujuan ini dibuat dengan rasa tanggung jawab dan tanpa paksaan.
+          <br>
+          <br>
     <br>
       <div class="right">Medan, ............................... 2025 </div>
       <br>
@@ -87,7 +90,7 @@
       <div style="display: inline-block; margin-left:80px; margin-top:10px"> 
         Mengetahui Dokter
       </div>
-       <div style="display: inline-block; float: right; margin-right:130px">Yang Membuat Pernyataan </div>
+       <div style="display: inline-block; float: right; margin-right:65px">Yang Membuat Pernyataan </div>
       <br> 
       <br>
       <br>
