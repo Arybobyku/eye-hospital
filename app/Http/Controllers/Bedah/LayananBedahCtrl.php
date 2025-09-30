@@ -160,25 +160,25 @@ class LayananBedahCtrl extends Controller
             $remove = $remove->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
         }
         $remove = $remove->delete();
-        $tindakan = json_decode($request->tindakan);
+        $tindakan = json_decode($request->layanan);
         foreach ($tindakan as $row) {
             $item = new LayananPasien();
             $item->uuid = Uuid::uuid4();
-            $item->registrasi_uuid = $request->registrasi_uuid;
-            $item->no_pendaftaran = $request->no_pendaftaran;
-            $item->registrasi_kode = $request->kode;
-            $item->registrasi_nomor = $request->nomor;
-            $item->registrasi_jenis = $request->jenis;
-            $item->pasien_uuid = $request->pasien_uuid;
-            $item->rekam_medis = $request->rekam_medis;
-            $item->nama_pasien = $request->nama_pasien;
-            $item->pengguna_uuid = $request->pengguna_uuid;
+            $item->registrasi_uuid = $reg->uuid;
+            $item->no_pendaftaran = $reg->no_pendaftaran;
+            $item->registrasi_kode = $reg->kode;
+            $item->registrasi_nomor = $reg->nomor;
+            $item->registrasi_jenis = $reg->jenis;
+            $item->pasien_uuid = $reg->pasien_uuid;
+            $item->rekam_medis = $reg->rekam_medis;
+            $item->nama_pasien = $reg->nama_pasien;
+            $item->pengguna_uuid = $reg->pengguna_uuid;
 
             $item->tanggal = date('Y-m-d');
             $item->waktu = date('H:i');
 
-            $item->carabayar_uuid = $request->carabayar_uuid;
-            $item->carabayar_nama = $request->carabayar_nama;
+            $item->carabayar_uuid = $reg->carabayar_uuid;
+            $item->carabayar_nama = $reg->carabayar_nama;
 
             $item->is_paket_bedah = $row->is_paket_bedah;
             $item->layanan_uuid = $row->tindakan_rawat_jalan_uuid;
@@ -190,14 +190,14 @@ class LayananBedahCtrl extends Controller
                 if (count($cek) > 0) {
                     if ($cek[0] == 'Honor' || $cek[0] == 'Konsul' || $cek[0] == 'Konsultasi' || $cek[0] == 'Gaji') {
                         $item->jenis = 'Honor';
-                        $item->nama_dokter = $request->nama_dokter;
+                        $item->nama_dokter = $reg->nama_dokter;
                     } else {
                         $item->jenis = 'Administrasi';
-                        $item->nama_dokter = $request->nama_dokter;
+                        $item->nama_dokter = $reg->nama_dokter;
                     }
                 } else {
                     $item->jenis = 'Administrasi';
-                    $item->nama_dokter = $request->nama_dokter;
+                    $item->nama_dokter = $reg->nama_dokter;
                 }
             } else {
                 $cek = explode(' ', $row->nama_tindakan_rawat_jalan);
@@ -207,28 +207,28 @@ class LayananBedahCtrl extends Controller
                         if ($row->nama_tindakan_rawat_jalan == 'Konsultasi Dokter Umum') {
                             $item->nama_dokter = 'dr. Eric Jansen';
                         } else {
-                            $item->nama_dokter = $request->nama_dokter;
+                            $item->nama_dokter = $reg->nama_dokter;
                         }
                     } elseif ($cek[0] == 'Administrasi') {
                         $item->jenis = 'Administrasi';
-                        $item->nama_dokter = $request->nama_dokter;
+                        $item->nama_dokter = $reg->nama_dokter;
                     } elseif ($cek[0] == 'Operation' || $cek[0] == 'Room') {
                         $item->jenis = 'Room';
-                        $item->nama_dokter = $request->nama_dokter;
+                        $item->nama_dokter = $reg->nama_dokter;
                     } else {
                         $item->jenis = 'Rawat Jalan';
-                        $item->nama_dokter = $request->nama_dokter;
+                        $item->nama_dokter = $reg->nama_dokter;
                     }
                 } else {
                     $item->jenis = 'Rawat Jalan';
-                    $item->nama_dokter = $request->nama_dokter;
+                    $item->nama_dokter = $reg->nama_dokter;
                 }
             }
             $item->default = $row->default;
             $item->save();
         }
 
-        return response()->json(['data' => $data, 'layanan' => $layanan]);
+        return response()->json(['data' => $reg, 'layanan' => $tindakan]);
     }
 
 

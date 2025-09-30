@@ -484,7 +484,6 @@ class KasirCtrl extends Controller
                 'diskon_rp' => $request->diskon_rp,
                 'tanggal' => $request->tanggal,
                 'rekam_medis' => $request->rekam_medis,
-                'no_kwitansi' => $request->no_kwitansi,
                 'carabayar_nama' => $request->carabayar_nama,
                 'nama_dokter' => $request->nama_dokter,
 
