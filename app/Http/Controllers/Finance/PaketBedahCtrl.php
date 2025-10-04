@@ -186,6 +186,8 @@ class PaketBedahCtrl extends Controller
 			$paketBaru->pengguna_uuid = $paketLama->pengguna_uuid;
 			$paketBaru->nama_dokter = $paketLama->nama_dokter;
 			$paketBaru->keterangan = $paketLama->keterangan;
+			$paketBaru->uuid_carabayar = $paketLama->uuid_carabayar;
+			$paketBaru->nama_carabayar = $paketLama->nama_carabayar;
 			$paketBaru->save();
 	
 			// Duplikasi detail
