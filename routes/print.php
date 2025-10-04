@@ -29,6 +29,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('bedahkasirrincian/{uuid}', [PrintKasirCtrl::class, 'printrincian']);
     Route::get('kasirbeli/{uuid}', [PrintKasirCtrl::class, 'printbeli']);
     Route::get('panjar/{uuid}', [PrintKasirCtrl::class, 'panjar']);
+    // Kasir V2
+    Route::get('kasirrincian-v2/{uuid}', [PrintKasirCtrl::class, 'printrincianv2']);
 
 	// REKAM MEDIS RAWAT JALAN
 	Route::get('rekammedis/{uuid}', [PrintRekamMedisCtrl::class, 'print']);

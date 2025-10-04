@@ -571,6 +571,178 @@ class PrintKasirCtrl extends Controller
         return $pdf->stream();
     }
 
+
+    public function printrincianv2($uuid)
+    {
+        $pdf = \App::make('dompdf.wrapper');
+        $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
+        $rawatjalan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Rawat Jalan')
+                                ->where('nama_layanan', '!=', 'Obat Racikan Pasca Bedah')
+                                ->where('nama_layanan', '!=', 'Obat-obatan Pasca Bedah')
+                                ->select(
+                                    'nama_dokter',
+                                    'nama_layanan',
+                                    'tarif',
+                                    \DB::raw('count(nama_layanan) as jumlah_nama_layanan'),
+                                    \DB::raw('sum(diskon_rp) as total_diskon_rp'),
+                                    \DB::raw('sum(diskon_persen) as total_diskon_persen'),
+                                    \DB::raw('sum(total) as total_total'),
+                                    'created_at'
+                                )
+                ->groupBy('nama_dokter', 'nama_layanan', 'tarif', 'created_at')
+                                ->orderBy('nama_dokter', 'asc')
+                                ->get();
+        $administrasi = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Administrasi')->get();
+
+        $layananPasien = LayananPasien::where('registrasi_uuid', '=', $uuid)->get();
+
+        // $room = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Room')->get();
+        // $honor = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Honor')->get();
+        // $rawatinap = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Rawat Inap')->get();
+        // $bedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Operasi/Bedah')->get();
+
+        // $obatan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatan')->first();
+        // $obatanbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatanbedah')->first();
+        // $obatantambahan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatantambahan')->first();
+
+        // $obatracikan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatracikan')->first();
+        // $obatracikanbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatracikanbedah')->first();
+        // $bedah = Bedah::where('registrasi_uuid', '=', $uuid)->get();
+        // $pasien = Pasien::where('uuid', '=', $registrasi->pasien_uuid)->first();
+
+        // $layananpasien = LayananPasien::where('registrasi_uuid', '=', $uuid)->get();
+
+        // $honorbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Honor Dokter Bedah Mata')->get();
+
+        $resep_obat = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
+                            ->where('obat.jenis', '!=', 'Alkes')->where('is_tambahan', '=', 0)->where('is_bedah', '=', 0)
+                            ->where('resep.registrasi_uuid', '=', $uuid)
+                            ->select(['resep.*'])
+                            ->get();
+
+        $resep_obat_bedah = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
+                            ->where('obat.jenis', '!=', 'Alkes')->where('is_tambahan', '=', 0)->where('is_bedah', '=', 1)
+                            ->where('resep.registrasi_uuid', '=', $uuid)
+                            ->select(['resep.*'])
+                            ->get();
+
+        $resep_alkes = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
+                            ->where('obat.jenis', '=', 'Alkes')->where('is_tambahan', '=', 0)->where('is_bedah', '=', 0)
+                            ->where('resep.registrasi_uuid', '=', $uuid)
+                            ->select(['resep.*'])
+                            ->get();
+        $resep_alkes_bedah = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
+                            ->where('obat.jenis', '=', 'Alkes')->where('is_tambahan', '=', 0)->where('is_bedah', '=', 1)
+                            ->where('resep.registrasi_uuid', '=', $uuid)
+                            ->select(['resep.*'])
+                            ->get();
+
+        $resep_obat_tambahan = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
+                            ->where('obat.jenis', '!=', 'Alkes')->where('is_tambahan', '=', 1)
+                            ->where('resep.registrasi_uuid', '=', $uuid)
+                            ->select(['resep.*'])
+                            ->get();
+
+        $resep_alkes_tambahan = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
+                            ->where('obat.jenis', '=', 'Alkes')->where('is_tambahan', '=', 1)
+                            ->where('resep.registrasi_uuid', '=', $uuid)
+                            ->select(['resep.*'])
+                            ->get();
+
+        $resepracikan = ResepRacikan::where('registrasi_uuid', '=', $uuid)->where('is_bedah', '=', 0)->get();
+        $resepracikanbedah = ResepRacikan::where('registrasi_uuid', '=', $uuid)->where('is_bedah', '=', 1)->get();
+
+        $groupping = LayananPasien::where('registrasi_uuid', '=', $uuid)->select('jenis')
+                                            ->groupBy('jenis')
+                                            ->where('jenis', '!=', 'Rawat Jalan')
+                                            ->where('jenis', '!=', 'Administrasi')
+                                            ->where('jenis', '!=', 'Honor')
+                                            ->where('jenis', '!=', 'Honor Dokter Bedah Mata')
+                                            ->where('jenis', '!=', 'Obat-Obatan')
+                                            ->where('jenis', '!=', 'Obat-Obatan')
+                                            ->where('jenis', '!=', 'Obat-obatan Pasca Bedah')
+                                            ->where('jenis', '!=', 'Obat-Obatan Pasca Bedah')
+                                            ->where('layanan_uuid', '!=', 'obatanbedah')
+                                            ->where('layanan_uuid', '!=', 'obatracikanbedah')
+                                            ->where('jenis', '!=', 'Obat Racikan Pasca Bedah')
+                                            ->where('jenis', '!=', 'Obat/Vitamin Tambahan')
+                                            ->where('jenis', '!=', 'Obat Racikan')
+                                            ->get();
+        $collection = new Collection();
+
+        foreach ($groupping as $value) {
+            $tmp = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', $value->jenis)->get();
+
+            if (count($tmp) > 0) {
+                $collection->push((object) [
+                    'data' => $tmp,
+                ]);
+            }
+        }
+
+        $surat_ke = 1;
+        $cek = RincianTagihan::select('surat_ke')->orderBy('id', 'desc')->first();
+        if ($cek) {
+            $surat_ke += (int) $cek->surat_ke;
+        }
+
+        if ($surat_ke > 9999) {
+            $surat_ke = 1;
+        }
+
+        $diskon = 0;
+
+        $getdiskon = LayananPasien::where('registrasi_uuid', '=', $uuid)->get();
+
+        foreach ($getdiskon as $row) {
+            if ($row->diskon_rp > 0) {
+                $diskon += $row->diskon_rp;
+            }
+
+            if ($row->diskon_persen > 0) {
+                $diskon_persen = (int) ($row->tarif * ($row->diskon_persen / 100));
+                $diskon += $diskon_persen;
+            }
+        }
+
+        $diskon_rp = 0;
+        $diskon_persen = 0;
+        $diskonobat = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatan')->first();
+
+        if ($diskonobat) {
+            $diskon_rp = $diskonobat->diskon_rp;
+            $diskon_persen = $diskonobat->diskon_persen;
+        }
+
+        $item = new RincianTagihan();
+        $item->uuid = Uuid::uuid4();
+        $item->registrasi_uuid = $registrasi->uuid;
+        $item->no_pendaftaran = $registrasi->no_pendaftaran;
+        $item->registrasi_kode = $registrasi->kode;
+        $item->registrasi_nomor = $registrasi->nomor;
+        $item->registrasi_jenis = $registrasi->jenis;
+
+        $item->pasien_uuid = $registrasi->pasien_uuid;
+        $item->rekam_medis = $registrasi->rekam_medis;
+        $item->nama_pasien = $registrasi->nama_pasien;
+        $item->dokter_uuid = $registrasi->pengguna_uuid;
+        $item->nama_dokter = $registrasi->nama_dokter;
+
+        $item->tanggal = date('Y-m-d');
+        $item->waktu = date('H:i');
+
+        $item->surat_ke = $surat_ke;
+        $item->save();
+
+        $surat = RincianTagihan::select('surat_ke')->where('registrasi_uuid', '=', $registrasi->uuid)->orderBy('id', 'desc')->first();
+
+        $pdf->loadView('print.printcashierrincian-v2',
+            compact('layananpasien', 'registrasi', 'collection', 'pasien', 'surat', 'honor', 'rawatjalan', 'bedah', 'administrasi', 'diskon', 'diskon_rp', 'diskon_persen',
+                'resep_obat', 'resep_obat_bedah', 'resepracikanbedah', 'resep_obat_tambahan', 'room', 'resep_alkes', 'resep_alkes_bedah', 'resep_alkes_tambahan', 'honorbedah', 'resepracikan', 'rawatinap', 'bedah', 'obatan', 'obatantambahan', 'obatracikan', 'obatanbedah', 'obatracikanbedah'))->setPaper('a4', 'potrait');
+
+        return $pdf->stream();
+    }
+
     public function printbeli($uuid)
     {
         $pdf = \App::make('dompdf.wrapper');
