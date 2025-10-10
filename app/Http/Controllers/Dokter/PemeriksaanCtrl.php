@@ -1166,6 +1166,16 @@ class PemeriksaanCtrl extends Controller
                     $arr = ['ada_obat' => 'Tidak', 'rke' => 0];
                     $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
                 }
+
+                // Check Obat Pasca Bedah
+                $obatPascaBedah = Resep::where('registrasi_uuid', $request->registrasi_uuid)->where('is_bedah', 1)->get();
+                $obatRacikanPascaBedah = ResepRacikan::where('registrasi_uuid', $request->registrasi_uuid)->where('is_bedah', 1)->get();
+
+                if(count($obatPascaBedah) > 0 || count($obatRacikanPascaBedah) > 0){
+                    $arr = ['ada_obat' => 'Ya'];
+                    Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+                }
+
             } else {
                 $item = new PemeriksaanDokter();
                 $item->uuid = $uuid;

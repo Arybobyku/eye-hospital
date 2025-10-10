@@ -94,8 +94,8 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
-			{ value: 'label', label: 'Label', type: 'text', search: true, close: false, button: false },
-			{ value: 'sub_label', label: 'Sub Label', type: 'text', search: true, close: false, button: false },
+			// { value: 'label', label: 'Label', type: 'text', search: true, close: false, button: false },
+			{ value: 'sub_label', label: 'Label', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama', label: 'nama', type: 'text', search: true, close: false, button: false },
 			{ value: 'harga', label: 'harga', type: 'text', search: true, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }

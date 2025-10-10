@@ -27,7 +27,22 @@
 	<div class="col-1 form-mr">
 		<button class="btn-tambah" @click="uploadFile()">Upload</button>
 	</div>
+		<div class="col-2 form-mr">
+		<div class="form-self-group">
+			<input 
+				:id="formUpdateLabelUpload.for_id" 
+				:type="formUpdateLabelUpload.type" 
+				:disabled="formUpdateLabelUpload.disabled ? 'disabled' : false" 
+				@change="onFileChangeUpdateLabel" 
+			/>
+		</div>
+
+	</div>
+	<div class="col-1 form-mr">
+		<button class="btn-tambah" @click="uploadFileUpdateLabel()">Update Label</button>
+	</div>
 </div>
+
 
 <div class="grid">
 
@@ -82,6 +97,16 @@ export default {
 			value: '',
 			},
 		formUpload: { 
+			title: 'Upload Metode Pembayaran', 
+			for_id: 'upload',
+			type: 'file', 
+			required: '', 
+			key: 'upload', 
+			model: 'upload', 
+			disabled: false,
+			value: null,
+			},
+		formUpdateLabelUpload: { 
 			title: 'Upload Metode Pembayaran', 
 			for_id: 'upload',
 			type: 'file', 
@@ -154,6 +179,10 @@ export default {
 			console.log("onfilechanges",e.target.files[0]);
 			vm.formUpload.value = e.target.files[0];
 		},
+		onFileChangeUpdateLabel(e) {
+			console.log("onfilechanges",e.target.files[0]);
+			vm.formUpdateLabelUpload.value = e.target.files[0];
+		},
 		uploadFile: function(){
 			console.log("File upload", vm.formUpload.value);
 
@@ -163,6 +192,33 @@ export default {
 			formData.append('file', vm.formUpload.value); // sesuaikan dengan nama field di Laravel request
 
 			axios.post('/finance/carabayar/uploadmetodepembayaran', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+				.then(function (response) {
+					setTimeout(function () {
+						vm.berhasil(response);
+					}, 300);
+					window.location.reload();
+				})
+				.catch(function (error) {
+					console.error(error);
+					setTimeout(function () {
+						vm.gagal(error);
+					}, 300);
+					window.location.reload();
+				});
+		},
+		uploadFileUpdateLabel: function(){
+			console.log("File upload", vm.formUpdateLabelUpload.value);
+
+			vm.$refs.Datatable.skeleton();
+
+			let formData = new FormData();
+			formData.append('file', vm.formUpdateLabelUpload.value); // sesuaikan dengan nama field di Laravel request
+
+			axios.post('/finance/carabayar/uploadupdatelabelmetodepembayaran', formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}

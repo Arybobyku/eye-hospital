@@ -234,7 +234,7 @@
                             {{ $item->nama_dokter }}
                         </td>
                         <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
+                             {{ $item->tanggal ? ubahOnlyDate($item->tanggal) :  ubahDate($item->created_at) }}</td>
                         <td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}
                         </td>
                         <td align="center" style="padding: 10px 2px" valign="top">{{ $item->qty }}</td>
@@ -1437,6 +1437,31 @@
         }
         return $hasil;
     }
+
+    function ubahOnlyDate($created){
+    $bulan = [
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
+    ];
+
+    $date = new DateTime($created);
+    $tgl = $date->format('d');
+    $bln = $bulan[(int)$date->format('m')];
+    $thn = $date->format('Y');
+
+    return "$tgl $bln $thn";
+    }
+
     ?>
 </body>
 
