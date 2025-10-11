@@ -1,7 +1,11 @@
 <template>
 <div class="inner" ref="roottable">
 <div class="grid">
-		<div class="col-4 form-mr">
+
+		<div class="col-1 form-mr">
+			<button class="btn-tambah" @click="downloadData()">Download All Data</button>
+		</div>
+		<!-- <div class="col-4 form-mr">
 			<Selected v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)" 
 					:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
 					:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)"></Selected>
@@ -25,7 +29,7 @@
 		</div>
 		<div class="col-1 form-mr">
 			<button class="btn-tambah" @click="uploadFile()">Upload</button>
-		</div>
+		</div> -->
 	</div>
 	<div class="grid">
 		<div class="col-12">
@@ -158,6 +162,11 @@ export default {
 			let carabayar = vm.form.select.carabayar.value;
 			let nama = vm.formDownload.value;
 			let link = `/finance/listpaketbedah/download/${carabayar}/${nama}`;						
+			window.open(link); 
+			vm.formDownload.value = '';
+		},
+		downloadData: function(){
+			let link = `/finance/listpaketbedah/download/all`;						
 			window.open(link); 
 			vm.formDownload.value = '';
 		},

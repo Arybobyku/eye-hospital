@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Finance;
 
+use App\Exports\DownloadPaketBedah;
 use App\Exports\TemplateUploadPaketBedah;
 use App\Exports\UploadPaketBEdah;
 use App\Http\Controllers\Controller;
@@ -132,6 +133,12 @@ class ListPaketBedahCtrl extends Controller
 	
 		$filename = 'template-upload.xlsx';
 		return \Excel::download(new TemplateUploadPaketBedah($metode, $name), $filename);
+	}
+
+	public function downloadAll() {
+	
+		$filename = 'list-paket-bedah.xlsx';
+		return \Excel::download(new DownloadPaketBedah(), $filename);
 	}
 
 	public function uploadPaketBedah(Request $request) {

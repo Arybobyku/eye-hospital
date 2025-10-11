@@ -183,6 +183,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('add', [ListPaketBedahCtrl::class, 'add'])->name('listpaketbedah-add');
 		Route::post('remove', [ListPaketBedahCtrl::class, 'remove'])->name('listpaketbedah-remove');
 		Route::get('download/{metode}/{name}', [ListPaketBedahCtrl::class, 'downloadTemplatePaketBedah'])->name('listpaketbedah-download');
+		Route::get('download/all', [ListPaketBedahCtrl::class, 'downloadAll'])->name('listpaketbedah-download-all');
 		Route::post('upload', [ListPaketBedahCtrl::class, 'uploadPaketBedah'])->name('listpaketbedah-upload');
 	});
 
