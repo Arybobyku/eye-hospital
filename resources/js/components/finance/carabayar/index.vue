@@ -87,7 +87,7 @@ export default {
 		position: '',
 		templateName: '',
 		formDownload: { 
-			title: 'Nama Metode Pembayaran', 
+			title: 'Input Nama Penjamin', 
 			for_id: 'templateName',
 			type: 'text', 
 			required: '', 
@@ -128,7 +128,7 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
-			{ value: 'nama', label: 'Nama Metode Pembayaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama', label: 'Nama Penjamin', type: 'text', search: true, close: false, button: false },
 			{ value: 'tindakan', label: 'Tindakan', type: 'text', search: false, close: true, button: false },
 			//- { value: 'kamar', label: 'Kamar', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
@@ -252,7 +252,7 @@ export default {
 			}
 			let html = '<table class="table-info">';
 			html += '<tr>'+
-			'<th>Tindakan</th>'+
+			'<th>Deskripsi</th>'+
 			'<th>Label</th>'+
 			'<th>Default</th>'+
 			'<th>Harga</th></tr>';

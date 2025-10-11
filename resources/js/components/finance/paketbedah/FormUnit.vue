@@ -12,6 +12,12 @@
 						<Inputed :ref="form.nama.name" :form="form.nama"></Inputed>
 					</div>
 					<div class="col-12">
+						<Selected v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)" 
+						:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
+						:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)">
+						</Selected>
+					</div>
+					<div class="col-12">
 						<Inputed :ref="form.total.name" :form="form.total"></Inputed>
 					</div>
 					<div class="col-12">
@@ -54,7 +60,8 @@ export default {
 	created:function() {},
 	data:function() { return { 
 		terminate: { show: false, display: 'display: none' },
-		form: null, btnlbl: '',
+		form: null,
+		btnlbl: '',
 	}},
 	methods: {
 
@@ -122,6 +129,10 @@ export default {
 			if (response.data.data.pengguna_uuid) {
 				vm.form.select.dokter.value = response.data.data.pengguna_uuid;
 				vm.form.select.dokter.label = response.data.data.nama_dokter;
+			}
+			if (response.data.data.uuid_carabayar) {
+				vm.form.select.carabayar.value = response.data.data.uuid_carabayar;
+				vm.form.select.carabayar.label = response.data.data.nama_carabayar;
 			}
 			else {
 				vm.form.select.dokter.value = '';
