@@ -571,7 +571,6 @@ class PrintKasirCtrl extends Controller
         return $pdf->stream();
     }
 
-
     public function printrincianv2($uuid)
     {
         $pdf = \App::make('dompdf.wrapper');
@@ -593,26 +592,23 @@ class PrintKasirCtrl extends Controller
                                 ->orderBy('nama_dokter', 'asc')
                                 ->get();
         $administrasi = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Administrasi')->get();
+        $room = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Room')->get();
+        $honor = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Honor')->get();
+        $rawatinap = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Rawat Inap')->get();
+        $bedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Operasi/Bedah')->get();
 
-        $layananPasien = LayananPasien::where('registrasi_uuid', '=', $uuid)->get();
+        $obatan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatan')->first();
+        $obatanbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatanbedah')->first();
+        $obatantambahan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatantambahan')->first();
 
-        // $room = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Room')->get();
-        // $honor = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Honor')->get();
-        // $rawatinap = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Rawat Inap')->get();
-        // $bedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Operasi/Bedah')->get();
+        $obatracikan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatracikan')->first();
+        $obatracikanbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatracikanbedah')->first();
+        $bedah = Bedah::where('registrasi_uuid', '=', $uuid)->get();
+        $pasien = Pasien::where('uuid', '=', $registrasi->pasien_uuid)->first();
 
-        // $obatan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatan')->first();
-        // $obatanbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatanbedah')->first();
-        // $obatantambahan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatantambahan')->first();
+        $layananpasien = LayananPasien::where('registrasi_uuid', '=', $uuid)->get();
 
-        // $obatracikan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatracikan')->first();
-        // $obatracikanbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatracikanbedah')->first();
-        // $bedah = Bedah::where('registrasi_uuid', '=', $uuid)->get();
-        // $pasien = Pasien::where('uuid', '=', $registrasi->pasien_uuid)->first();
-
-        // $layananpasien = LayananPasien::where('registrasi_uuid', '=', $uuid)->get();
-
-        // $honorbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Honor Dokter Bedah Mata')->get();
+        $honorbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('jenis', '=', 'Honor Dokter Bedah Mata')->get();
 
         $resep_obat = Resep::join('obat', 'resep.obat_uuid', '=', 'obat.uuid')
                             ->where('obat.jenis', '!=', 'Alkes')->where('is_tambahan', '=', 0)->where('is_bedah', '=', 0)
@@ -654,10 +650,6 @@ class PrintKasirCtrl extends Controller
 
         $groupping = LayananPasien::where('registrasi_uuid', '=', $uuid)->select('jenis')
                                             ->groupBy('jenis')
-                                            ->where('jenis', '!=', 'Rawat Jalan')
-                                            ->where('jenis', '!=', 'Administrasi')
-                                            ->where('jenis', '!=', 'Honor')
-                                            ->where('jenis', '!=', 'Honor Dokter Bedah Mata')
                                             ->where('jenis', '!=', 'Obat-Obatan')
                                             ->where('jenis', '!=', 'Obat-Obatan')
                                             ->where('jenis', '!=', 'Obat-obatan Pasca Bedah')

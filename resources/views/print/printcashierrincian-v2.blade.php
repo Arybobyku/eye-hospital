@@ -8,11 +8,9 @@
         @page {
             margin: 5px;
         }
-
         body {
             margin: 10px
         }
-
         table.header-top tr td {
             padding: 5px 0;
         }
@@ -20,9 +18,7 @@
 </head>
 
 <body>
-
     <?php $fullpath = storage_path('app/public/header.png'); ?>
-
     <table style="width: 100%; font-size: 10.5pt; border-bottom: 1px solid #000; margin-bottom: 5px">
         <tr>
             <td style="width: 58%">
@@ -51,24 +47,19 @@
                             @foreach ($layananpasien as $item)
                                 <?php $grandtotaltop += $item->total; ?>
                             @endforeach
-                            {{-- @foreach ($resep_obat_bedah as $item)
 									<?php $grandtotaltop += $item->total; ?>
-							@endforeach --}}
                             @if ($registrasi->panjar != '0')
                                 <?php
                                 $grandtotaltop = $grandtotaltop - $registrasi->panjar;
                                 ?>
                             @endif
-                            {{-- @if ($registrasi->cover_asuransi != '0')
 								<?php
         $grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi;
         ?>
-							@endif --}}
                             @if ($registrasi->diskon_rp != 0)
                                 <?php
                                 $diskonGlobalTop = $registrasi->diskon_rp;
                                 $totalDiskonGlobalTop = $diskonGlobalTop;
-                                // $grandtotal2 = $grandtotal - $diskonGlobal;
                                 $grandtotaltop = $grandtotaltop - $totalDiskonGlobalTop;
                                 ?>
                             @endif
@@ -167,185 +158,8 @@
         </thead>
         <tbody>
 
-
             <?php $grandtotal = 0;
-            $totalTarif = 0; ?>
-
-            @if (count($administrasi) > 0)
-                <tr>
-                    <td colspan="8" style="padding: 13px 8px 11px"><b>Biaya Administrasi</b></td>
-                </tr>
-
-                <?php $nomor = 1;
-                $subtotal = 0; ?>
-
-                @foreach ($administrasi as $item)
-                    <tr>
-                        <td align="center" style="padding: 10px 2px; width: 5%" valign="center">{{ $nomor }}.
-                        </td>
-                        <td align="left" style="padding: 10px 2px;">
-                            @if ($item->nama_layanan == 'Administrasi Rawat Jalan (pl)')
-                                Biaya Pendaftaran + Adm Rawat Jalan (pl)
-                            @elseif($item->nama_layanan == 'Administrasi Rawat Jalan (pb)')
-                                Biaya Pendaftaran + Adm Rawat Jalan (pb)
-                            @else
-                                Biaya {{ $item->nama_layanan }}    
-                            @endif
-                        </td>
-                        <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}
-                        </td>
-                        <td align="center" style="padding: 10px 2px" valign="top">{{ $item->qty }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">
-                            {{ number_format($item->diskon_rp) }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">{{ $item->diskon_persen }}</td>
-                        <td align="right" style="padding: 10px 2px;" valign="top">{{ number_format($item->total) }}
-                        </td>
-                    </tr>
-                    <?php $nomor++; ?>
-
-                    <?php $subtotal += $item->total; ?>
-                    <?php $totalTarif += $item->tarif; ?>
-                @endforeach
-
-                <tr style="border-bottom: 1px solid #343224">
-                    <td style="padding: 12px 5px; font-weight: bold;" colspan="7">Sub Total</td>
-                    <td align="right" style="padding: 12px 5px; font-weight: bold;">{{ number_format($subtotal) }}
-                    </td>
-                </tr>
-                <?php $grandtotal += $subtotal; ?>
-            @endif
-
-            @if (count($honor) > 0)
-                <tr>
-                    <td colspan="8" style="padding: 13px 8px 11px"><b>Honor Konsultasi Rawat Jalan</b></td>
-                </tr>
-
-                <?php $nomor = 1;
-                $subtotal = 0; ?>
-
-                @foreach ($honor as $item)
-                    <tr>
-                        <td align="center" style="padding: 10px 2px; width: 5%" valign="center">{{ $nomor }}.
-                        </td>
-                        <td align="left" style="padding: 10px 2px;">
-                            {{ $item->nama_layanan }}<br />
-                            {{ $item->nama_dokter }}
-                        </td>
-                        <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}
-                        </td>
-                        <td align="center" style="padding: 10px 2px" valign="top">{{ $item->qty }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">
-                            {{ number_format($item->diskon_rp) }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">{{ $item->diskon_persen }}</td>
-                        <td align="right" style="padding: 10px 2px;" valign="top">{{ number_format($item->total) }}
-                        </td>
-                    </tr>
-                    <?php $nomor++; ?>
-
-                    <?php $subtotal += $item->total; ?>
-                    <?php $totalTarif += $item->tarif; ?>
-                @endforeach
-
-                <tr style="border-bottom: 1px solid #343224">
-                    <td style="padding: 12px 5px; font-weight: bold;" colspan="7">Sub Total</td>
-                    <td align="right" style="padding: 12px 5px; font-weight: bold;">{{ number_format($subtotal) }}
-                    </td>
-                </tr>
-                <?php $grandtotal += $subtotal; ?>
-            @endif
-
-            @if (count($rawatjalan) > 0)
-
-                <?php $nomor = 1;
-                $subtotal = 0;
-                $dokter = ''; ?>
-
-                @foreach ($rawatjalan as $item)
-                    @if ($dokter != $item->nama_dokter)
-                        <tr>
-                            <td colspan="8" style="padding: 13px 8px 11px"><b>Tindakan Rawat Jalan</b> :
-                                <b>{{ $item->nama_dokter }}</b></td>
-                        </tr>
-                        <?php $dokter = $item->nama_dokter;
-                        $nomor = 1; ?>
-                    @endif
-
-                    <tr>
-                        <td align="center" style="padding: 10px 2px; width: 3%">{{ $nomor }}.</td>
-                        <td align="left" style="padding: 10px 2px;">{{ $item->nama_layanan }}</td>
-                        <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">
-                            {{ number_format($item->tarif) }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">{{ $item->jumlah_nama_layanan }}
-                        </td>
-                        <td align="center" style="padding: 10px 2px" valign="top">
-                            {{ number_format($item->total_diskon_rp) }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">{{ $item->total_diskon_persen }}
-                        </td>
-                        <td align="right" style="padding: 10px 2px;" valign="top">
-                            {{ number_format($item->total_total) }}</td>
-                    </tr>
-                    <?php $nomor++; ?>
-
-                    <?php $subtotal += $item->total_total; ?>
-                    <?php $totalTarif += ($item->tarif * $item->jumlah_nama_layanan); ?>
-                @endforeach
-
-                <tr style="border-bottom: 1px solid #343224">
-                    <td style="padding: 12px 5px; font-weight: bold;" colspan="7">Sub Total</td>
-                    <td align="right" style="padding: 12px 5px; font-weight: bold;">{{ number_format($subtotal) }}
-                    </td>
-                </tr>
-
-                <?php $grandtotal += $subtotal; ?>
-            @endif
-
-            @if (count($honorbedah) > 0)
-
-                <?php $nomor = 1;
-                $subtotal = 0;
-                $dokter = ''; ?>
-
-                @foreach ($honorbedah as $item)
-                    @if ($nomor == 1)
-                        <tr>
-                            <td colspan="8" style="padding: 13px 8px 11px"><b>{{ $item->jenis }}</b></td>
-                        </tr>
-                    @endif
-
-                    <tr>
-                        <td align="center" style="padding: 10px 2px; width: 3%">{{ $nomor }}.</td>
-                        <td align="left" style="padding: 10px 2px;">{{ $item->nama_layanan }}</td>
-                        <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">
-                            {{ number_format($item->tarif) }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">{{ $item->qty }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">
-                            {{ number_format($item->diskon_rp) }}</td>
-                        <td align="center" style="padding: 10px 2px" valign="top">{{ $item->diskon_persen }}</td>
-                        <td align="right" style="padding: 10px 2px;" valign="top">
-                            {{ number_format($item->total) }}</td>
-                    </tr>
-                    <?php $nomor++; ?>
-
-                    <?php $subtotal += $item->total; ?>
-                    <?php $totalTarif += $item->tarif; ?>
-                @endforeach
-
-                <tr style="border-bottom: 1px solid #343224">
-                    <td style="padding: 12px 5px; font-weight: bold;" colspan="7">Sub Total</td>
-                    <td align="right" style="padding: 12px 5px; font-weight: bold;">{{ number_format($subtotal) }}
-                    </td>
-                </tr>
-
-                <?php $grandtotal += $subtotal; ?>
-            @endif
+            $totalTarif = 0; ?>     
 
             @if ($collection->count() > 0)
 
@@ -353,13 +167,13 @@
                 @foreach ($collection as $item)
                     <?php $nomor = 1;
                     $subtotal = 0; ?>
-
                     @foreach ($item->data as $row)
                         @if ($nomor == 1)
                             <tr>
                                 <td colspan="8" style="padding: 13px 8px 11px"><b>{{ $row->jenis }}</b></td>
                             </tr>
                         @endif
+                        
                         <tr>
                             <td align="center" style="padding: 10px 2px; width: 3%">{{ $nomor }}.</td>
                             <td align="left" style="padding: 10px 2px;">{{ $row->nama_layanan }}</td>
@@ -387,104 +201,12 @@
                     </tr>
 
                     <?php $grandtotal += $subtotal; ?>
+                    
                 @endforeach
 
             @endif
 
-            @if (count($room) > 0 && $collection->count() < 1)
-
-                <?php $nomor = 1;
-                $subtotal = 0; ?>
-
-                <tr>
-                    <td colspan="8" style="padding: 13px 8px 11px"><b>Room</b></td>
-                </tr>
-
-                @foreach ($room as $item)
-                    <tr>
-                        <td align="center" style="padding: 10px 3px; width: 5%">{{ $nomor }}.</td>
-                        <td align="left" style="padding: 10px 3px;">{{ $item->nama_layanan }}</td>
-                        <td align="center" style="padding: 10px 3px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
-                        <td align="center" style="padding: 10px 3px" valign="top">
-                            {{ number_format($item->tarif) }}</td>
-                        <td align="center" style="padding: 10px 3px" valign="top">{{ $row->qty }}</td>
-                        <td align="center" style="padding: 10px 3px" valign="top">
-                            {{ number_format($item->diskon_rp) }}</td>
-                        <td align="center" style="padding: 10px 3px" valign="top">{{ $item->diskon_persen }}</td>
-                        <td align="right" style="padding: 10px 3px;" valign="top">
-                            {{ number_format($item->total) }}</td>
-                    </tr>
-                    <?php $nomor++; ?>
-
-                    <?php $subtotal += $item->total; ?>
-                    <?php $totalTarif += $item->tarif; ?>
-                @endforeach
-
-                <tr style="border-bottom: 1px solid #343224">
-                    <td style="padding: 12px 5px; font-weight: bold;" colspan="7">Sub Total</td>
-                    <td align="right" style="padding: 12px 5px; font-weight: bold;">{{ number_format($subtotal) }}
-                    </td>
-                </tr>
-
-                <?php $grandtotal += $subtotal; ?>
-            @endif
-
-            {{-- @if (count($rawatinap) > 0)
-				<tr>
-					<td colspan="7" style="padding: 10px 8px"><b>Biaya Rawat Inap</b></td>
-				</tr>
-				
-				@foreach ($rawatinap as $item)
-					<tr>
-						<td align="center" style="padding: 5px 7px; width: 5%">{{ $nomor }}.</td>
-						<td align="left" style="padding: 5px 7px;">{{ $item->nama_layanan }}</td>
-						<td align="center" style="padding: 5px 7px">{{ number_format($item->tarif) }}</td>
-						<td align="center" style="padding: 5px 7px">1</td>
-						<td align="center" style="padding: 5px 7px">{{ number_format($item->diskon_rp) }}</td>
-						<td align="center" style="padding: 5px 7px">{{ $item->diskon_persen }}</td>
-						<td align="right" style="padding: 5px 7px;">{{ number_format($item->total) }}</td>
-					</tr>
-				<?php
-    //$nomor++;
-    ?>
-
-				<?php
-    //$grandtotal += $item->total;
-    ?>
-				@endforeach
-			@endif
-
-			@if (count($bedah) > 0)
-				<tr>
-					<td colspan="7" style="padding: 10px 8px"><b>Biaya Operasi/Bedah</b></td>
-				</tr>
-				
-				@foreach ($bedah as $item)
-					<tr>
-						<td align="center" style="padding: 5px 7px; width: 5%">{{ $nomor }}.</td>
-						<td align="left" style="padding: 5px 7px;">{{ $item->nama_layanan }}</td>
-						<td align="center" style="padding: 5px 7px">{{ number_format($item->tarif) }}</td>
-						<td align="center" style="padding: 5px 7px">1</td>
-						<td align="center" style="padding: 5px 7px">{{ number_format($item->diskon_rp) }}</td>
-						<td align="center" style="padding: 5px 7px">{{ $item->diskon_persen }}</td>
-						<td align="right" style="padding: 5px 7px;">{{ number_format($item->total) }}</td>
-					</tr>
-				<?php
-    //$nomor++;
-    ?>
-
-				<?php
-    //$grandtotal += $item->total;
-    ?>
-				@endforeach
-			@endif --}}
-
-            @if (count($resep_obat) > 0 || count($resep_alkes) > 0)
-                <tr>
-                    <td colspan="8" style="padding: 13px 8px 11px"><b>Farmasi Pelayanan</b></td>
-                </tr>
-            @endif
+           
             @if (count($resep_obat) > 0)
 
                 <?php $nomor = 1;
@@ -493,12 +215,7 @@
                 <tr>
                     <td colspan="8" style="padding: 13px 8px 11px">- <i>Obat-obatan</i></td>
                 </tr>
-                {{-- <tr>
-					<td align="left" colspan="4" style="padding: 10px 8px"><b>Farmasi Pelayanan</b></td>
-					<td align="center" style="padding: 10px 8px">{{ number_format($obatan->diskon_rp) }}</td>
-					<td align="center" style="padding: 10px 8px">{{ $obatan->diskon_persen }}</td>
-					<td align="right" style="padding: 10px 8px"><b style="color: #640404">{{ number_format($obatan->total) }}</b></td>
-				</tr> --}}
+
                 <?php $nomor = 1; ?>
                 @foreach ($resep_obat as $item)
                     <tr>
@@ -549,7 +266,7 @@
                             {{ number_format($sementara) }}
                             <?php $subtotal = $sementara; ?>
                             <?php
-                            //$grandtotal += $sementara;
+
                             ?>
                         </td>
                     </tr>
@@ -567,12 +284,7 @@
                 <tr>
                     <td colspan="8" style="padding: 13px 8px 11px">- <i>Alkes</i></td>
                 </tr>
-                {{-- <tr>
-					<td align="left" colspan="4" style="padding: 10px 8px"><b>Farmasi Pelayanan</b></td>
-					<td align="center" style="padding: 10px 8px">{{ number_format($obatan->diskon_rp) }}</td>
-					<td align="center" style="padding: 10px 8px">{{ $obatan->diskon_persen }}</td>
-					<td align="right" style="padding: 10px 8px"><b style="color: #640404">{{ number_format($obatan->total) }}</b></td>
-				</tr> --}}
+
                 <?php $nomor = 1; ?>
                 @foreach ($resep_alkes as $item)
                     <tr>
@@ -639,7 +351,6 @@
                         <td align="center" style="padding: 10px 2px; width: 17%" colspan="2" valign="top">
                             {{ ubahDate($item->created_at) }}</td>
                         <td align="center" style="padding: 10px 2px">{{ $item->jumlah }} {{ $item->kemasan }}</td>
-                        {{-- <td align="right" style="padding: 5px 7px;" colspan="3"><b>{{ number_format($item->total) }}</b></td> --}}
                         <td align="right" style="padding: 10px 2px;" colspan="3"></td>
                     </tr>
                     <?php $informasi = json_decode($item->informasi); ?>
@@ -652,7 +363,6 @@
                             <td align="center" style="padding: 10px 2px">{{ $itemin->jumlah_kecil }}</td>
                             <td align="right" style="padding: 10px 2px;" colspan="3">
                                 {{ number_format($itemin->total) }}</td>
-                            {{-- <td align="right" style="padding: 5px 7px;" colspan="3"></td> --}}
                         </tr>
                     @endforeach
                     <?php $nomor++; ?>
@@ -679,12 +389,7 @@
                 <tr>
                     <td colspan="8" style="padding: 13px 8px 11px">- <i>Obat-obatan Pasca Bedah</i></td>
                 </tr>
-                {{-- <tr>
-					<td align="left" colspan="4" style="padding: 10px 8px"><b>Farmasi Pelayanan</b></td>
-					<td align="center" style="padding: 10px 8px">{{ number_format($obatan->diskon_rp) }}</td>
-					<td align="center" style="padding: 10px 8px">{{ $obatan->diskon_persen }}</td>
-					<td align="right" style="padding: 10px 8px"><b style="color: #640404">{{ number_format($obatan->total) }}</b></td>
-				</tr> --}}
+
                 <?php $nomor = 1; ?>
                 @foreach ($resep_obat_bedah as $item)
                     <tr>
@@ -696,7 +401,6 @@
                         <td align="center" style="padding: 10px 2px">{{ $item->jumlah_kecil }}</td>
                         <td align="right" style="padding: 10px 2px;" colspan="3">
                             {{ number_format($item->total) }}</td>
-                        {{-- <td align="right" style="padding: 5px 7px;" colspan="3"></td> --}}
                     </tr>
                     <?php $nomor++; ?>
 
@@ -728,9 +432,7 @@
                             ?>
 
                             <?php
-                            // if ($obatan) {
-                            // 	$sementara = $obatan->total;
-                            // }
+
                             ?>
                             {{ number_format($sementara) }}
                             <?php $subtotal = $sementara; ?>
@@ -739,7 +441,6 @@
                     </tr>
                 @endif
                 <?php
-                //$grandtotal += $subtotal;
                 ?>
             @endif
 
@@ -751,12 +452,7 @@
                 <tr>
                     <td colspan="8" style="padding: 13px 8px 11px">- <i>Alkes Pasca Bedah</i></td>
                 </tr>
-                {{-- <tr>
-					<td align="left" colspan="4" style="padding: 10px 8px"><b>Farmasi Pelayanan</b></td>
-					<td align="center" style="padding: 10px 8px">{{ number_format($obatan->diskon_rp) }}</td>
-					<td align="center" style="padding: 10px 8px">{{ $obatan->diskon_persen }}</td>
-					<td align="right" style="padding: 10px 8px"><b style="color: #640404">{{ number_format($obatan->total) }}</b></td>
-				</tr> --}}
+
                 <?php $nomor = 1; ?>
                 @foreach ($resep_alkes_bedah as $item)
                     <tr>
@@ -768,7 +464,6 @@
                         <td align="center" style="padding: 10px 2px">{{ $item->jumlah_kecil }}</td>
                         <td align="right" style="padding: 10px 2px;" colspan="3">
                             {{ number_format($item->total) }}</td>
-                        {{-- <td align="right" style="padding: 5px 7px;" colspan="3"></td> --}}
                     </tr>
                     <?php $nomor++; ?>
 
@@ -803,7 +498,6 @@
                     </td>
                 </tr>
                 <?php
-                // $grandtotal += $subtotal;
                 ?>
             @endif
 
@@ -935,12 +629,7 @@
                 <tr>
                     <td colspan="8" style="padding: 13px 8px 11px">- <i>Alkes</i></td>
                 </tr>
-                {{-- <tr>
-					<td align="left" colspan="4" style="padding: 10px 8px"><b>Farmasi Pelayanan</b></td>
-					<td align="center" style="padding: 10px 8px">{{ number_format($obatan->diskon_rp) }}</td>
-					<td align="center" style="padding: 10px 8px">{{ $obatan->diskon_persen }}</td>
-					<td align="right" style="padding: 10px 8px"><b style="color: #640404">{{ number_format($obatan->total) }}</b></td>
-				</tr> --}}
+
                 <?php $nomor = 1; ?>
                 @foreach ($resep_alkes_tambahan as $item)
                     <tr>
@@ -987,7 +676,6 @@
                     </td>
                 </tr>
                 <?php
-                // $grandtotal += $subtotal;
                 ?>
             @endif
             <tr>
@@ -1057,22 +745,7 @@
                 $grandtotal2 = $grandtotal - $diskonGlobal;
                 $totalTarif = $totalTarif - $totalDiskonGlobal;
                 ?>
-                {{-- @if ($diskon != 0)
-                    <tr>
-                        <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Item</b>
-                        </td>
-                        <td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp.
-                                {{ number_format($diskon) }}</b></td>
-                    </tr>
-                @endif
-                @if ($diskonGlobal != 0)
-                    <tr>
-                        <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Global</b>
-                        </td>
-                        <td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp.
-                                {{ number_format($diskonGlobal) }}</b></td>
-                    </tr>
-                @endif --}}
+
                 <tr>
 
 
@@ -1096,14 +769,7 @@
                     $registrasi->carabayar_uuid != 'bca360e3-aadc-4b7c-8308-0f0ba85876e1' &&
                     $registrasi->carabayar_uuid != 'f93e2aeb-0f76-4f16-8bc0-b291eb16e740' &&
                     $registrasi->carabayar_uuid != '50f0abb5-2a71-4e86-bd36-a238ef3fa118')
-                {{-- <tr>
-					<td colspan="2" align="left" style="padding: 4px 7px; width: 65%"><b>Total Pembayaran</b></td>
-					<td align="right" style="padding: 4px 7px"><b>Rp. {{ number_format($grandtotal) }}</b></td>
-				</tr> --}}
-                {{-- <tr>
-					<td colspan="6" align="left" style="padding: 4px 7px; width: 65%"><b>Dibayarkan pasien</b></td>
-					<td colspan="2" align="right" style="padding: 4px 7px"><b>Rp. {{ number_format($grandtotal) }}</b></td>
-				</tr> --}}
+
                 @if (($registrasi->apakah_paket == 'Ya' || $registrasi->apakah_paket == 'ya') && $registrasi->cover_asuransi != 0)
                     <tr>
                         <td colspan="6" align="left" style="padding: 4px 7px; width: 65%"><b>Dibayarkan
@@ -1178,32 +844,7 @@
         </tbody>
     </table>
 
-    {{-- <div style="position: absolute; left: 16px; bottom: 15px">
-	@if ($registrasi->tanggal_bayar != '1990-01-01')
-		<?php
-  // $tglbayar = $registrasi->tanggal_bayar;
-  // $data = explode('-',$tglbayar);
-  // $thn = $data[0]; $bln = $data[1]; $tgl = $data[2];
-  // if ($bln == '01') { $bln = 'Januari'; }
-  // else if ($bln == '02') { $bln = 'Februari'; }
-  // else if ($bln == '03') { $bln = 'Maret'; }
-  // else if ($bln == '04') { $bln = 'April'; }
-  // else if ($bln == '05') { $bln = 'Mei'; }
-  // else if ($bln == '06') { $bln = 'Juni'; }
-  // else if ($bln == '07') { $bln = 'Juli'; }
-  // else if ($bln == '08') { $bln = 'Agustus'; }
-  // else if ($bln == '09') { $bln = 'September'; }
-  // else if ($bln == '10') { $bln = 'Oktober'; }
-  // else if ($bln == '11') { $bln = 'November'; }
-  // else { $bln = 'Desember'; }
-  ?>
-		{{ $tgl }} {{ $bln }} {{ $thn }}
-	@else
-		-
-	@endif
-	:
-	{{ date('H') }}:{{ date('i') }}
-</div> --}}
+
     <?php
     function bulans($bln)
     {
