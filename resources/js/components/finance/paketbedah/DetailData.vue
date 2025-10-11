@@ -9,10 +9,31 @@
 				<div class="grid">
 
 					<div class="col-12">
-						<Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)" 
-							:ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
-							:selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name)"
-							></Selected>
+						<div class="flex items-center gap-4">
+						<label>
+							<input type="radio" value="tindakan" v-model="selectedMode" />
+							Tindakan / Layanan
+						</label>
+						<label>
+							<input type="radio" value="obat" v-model="selectedMode" />
+							Obat / BHP
+						</label>
+						</div>
+					</div>
+					<br>
+					<div class="col-12">
+						<div v-if="selectedMode === 'tindakan'">
+							<Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)" 
+								:ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
+								:selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name)"
+								></Selected>
+						</div>
+						<div v-if="selectedMode === 'obat'">
+							<Selected v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)" 
+								:ref="form.select.apotek.name" @selecteditem="selecteditem" @selectclear="selectclear"
+								:selection="form.select.apotek" v-on:keyup="selectfilter($event, form.select.apotek.name)"
+								></Selected>
+						</div>
 					</div>
 					<div class="col-2">
 						<Inputed :ref="form.label.name" :form="form.label"></Inputed>
@@ -121,6 +142,7 @@ export default {
 	},
 	data: function () { return {
 		statusedit: false,
+		selectedMode: 'tindakan',
 		terminate: { show: false, display: 'display: none' },
 		btnlbl: '',
 		form: null,
@@ -137,6 +159,17 @@ export default {
 	methods: {
 		listpaket, parseunit, formatrupiah, indexdbprocessing,
 		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected,initindexdb,
+		onToggleChange(event) {
+			const checked = event.target.checked;
+			console.log("Switch changed:", checked ? "ON" : "OFF");
+
+			// contoh logika
+			if (checked) {
+				vm.isActive = true;
+			} else {
+				vm.isActive = false;
+			}
+		},
 		selectfilter: function (event, jambu, key) { 
 			vm.form = vm.filterselected(vm.form, jambu); 
 		},
@@ -145,11 +178,19 @@ export default {
 			vm.form = vm.itemselected(vm.form, item, key); 
 
 			if (key == 'carabayartindakanrawatjalan') {
-				vm.form.label.value = item.label
-				vm.form.sublabel.value = item.label
+				vm.form.label.value = item.jenis
+				vm.form.sublabel.value = item.jenis
 				vm.form.quantity.value = 1
 				vm.form.nama.value = item.nama_tindakan_rawat_jalan
 				vm.form.harga.value = parseInt(item.harga)
+			}
+
+			if (key == 'apotek') {
+				vm.form.label.value = item.jenis;
+				vm.form.sublabel.value = item.jenis;
+				vm.form.quantity.value = 1
+				vm.form.nama.value = item.nama
+				vm.form.harga.value = parseInt(item.hja_resep)
 			}
 
 		},
@@ -214,7 +255,24 @@ export default {
 			else {
 				vm.initindexdb(vm.$dbNameIndexDb, key)
 					.then(function(response){ 
-						vm.form = vm.indexdbprocessing(response, vm.form, key);
+						let form;
+						for (let i = 0; i < response.length; i++) {
+							if(key == 'carabayartindakanrawatjalan'){
+								console.log("DATA INDEX DB carabayartindakanrawatjalan", response[i]);
+								response[i].label = `(${response[i].jenis}) - ${response[i].label}`
+
+								vm.form.select[key].filter.push(response[i]);
+								vm.form.select[key].data.push(response[i]);
+							}	
+							else if (key == 'apotek') {
+								vm.form.select[key].filter.push(response[i]);
+								vm.form.select[key].data.push(response[i]);
+							}
+						}
+						
+						// 🔽 Sort keduanya berdasarkan label (ascending)
+						vm.form.select['carabayartindakanrawatjalan'].filter.sort((a, b) => a.label.localeCompare(b.label));
+						vm.form.select['carabayartindakanrawatjalan'].data.sort((a, b) => a.label.localeCompare(b.label));
 					})
 					.catch(function(error){ console.log(error); });
 			}
@@ -272,7 +330,8 @@ export default {
 				vm.attach.url = vm.attach.link.add;
 
 				vm.position = "adddata";
-				vm.dialog('Yakin ingin menambahkan data paket bedah.', 'Ya, Tambahkan data', 'adddata');
+				vm.runconfirm(vm.position)
+				// vm.dialog('Yakin ingin menambahkan data paket bedah.', 'Ya, Tambahkan data', 'adddata');
 			}
 			
 		},
@@ -327,6 +386,11 @@ export default {
 				vm.form.sublabel.value = '';
 				vm.form.carabayar_nama = response.data.paket_bedah.nama_carabayar;
 				vm.form.nama.value = '';
+				vm.form.select.carabayartindakanrawatjalan.value = '';
+				vm.form.select.carabayartindakanrawatjalan.label = 'Silahkan Pilih';
+
+				vm.form.select.apotek.label = '';
+				vm.form.select.apotek.label = 'Silahkan Pilih';
 				vm.form.quantity.value = '1';
 				vm.form.harga.value = '';
 			}
@@ -361,3 +425,43 @@ export default {
 	}
 }
 </script>
+
+
+<style scoped>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #4caf50;
+}
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+</style>

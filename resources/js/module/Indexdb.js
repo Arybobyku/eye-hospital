@@ -934,6 +934,7 @@ const carabayartindakanrawatjalanfunction = (data, i) => {
 		tindakan_rawat_jalan_uuid: data[i].tindakan_rawat_jalan_uuid,
 		nama_tindakan_rawat_jalan: data[i].nama_tindakan_rawat_jalan,
 		harga: data[i].harga,
+		jenis: data[i].jenis,
 		default: data[i].default,
 	}
 }
