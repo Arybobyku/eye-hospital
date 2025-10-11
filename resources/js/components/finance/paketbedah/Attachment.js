@@ -7,5 +7,6 @@ export const parseunit = (form) => {
 	data.append('harga_sudah_ditentukan', form.harga_sudah_ditentukan.value);
 	data.append('pengguna_uuid', form.select.dokter.value);
 	data.append('nama_dokter', form.select.dokter.label);
+	data.append('uuid_carabayar', form.select.carabayar.uuid);
 	return data;
 }

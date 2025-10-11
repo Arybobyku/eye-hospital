@@ -19,6 +19,11 @@ export const formunit = () => {
 			name: 'harga_sudah_ditentukan', value: 0, disabled: false, show: true, kinds: ''
 		},
 		select: {
+			carabayar: { 
+				key : 'carabayar', for_id: 'form_'+'carabayar', name: 'carabayar', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'carabayar', isrequired: true, html: 'Penjamin', issearch: false, disabled: false,
+			},
 			dokter: { 
 				key : 'dokter', for_id: 'form_'+'dokter', name: 'dokter', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: false,

@@ -859,7 +859,7 @@ const routes = [
 		path: _base + 'carabayar', 
 		name: 'Metode Pembayaran', 
 		component: () => import('./components/finance/carabayar/index.vue'),
-		meta: { title: 'Metode Pembayaran' },
+		meta: { title: 'Penjamin' },
 		props: true 
 	},
 

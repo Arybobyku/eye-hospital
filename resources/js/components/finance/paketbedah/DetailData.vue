@@ -14,6 +14,9 @@
 							:selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name)"
 							></Selected>
 					</div>
+					<div class="col-2">
+						<Inputed :ref="form.label.name" :form="form.label"></Inputed>
+					</div>
 					<!-- <div class="col-6">
 						<Inputed :ref="form.label.name" :form="form.label"></Inputed>
 					</div>
@@ -43,7 +46,7 @@
 						<table class="table">
 							<thead>
 								<tr>
-									<!-- <th>Label</th> -->
+									<th>Label</th>
 									<!-- <th>Sub Label</th> -->
 									<th>Nama</th>
 									<th>Quantity</th>
@@ -53,7 +56,7 @@
 							</thead>
 							<tbody>
 								<tr v-for="item in maindata" v-if="maindata.length > 0">
-									<!-- <td>{{ item.label }}</td> -->
+									<td>{{ item.label }}</td>
 									<!-- <td>{{ item.sub_label }}</td> -->
 									<td>{{ item.nama }}</td>
 									<td>{{ item.quantity }}</td>
@@ -72,7 +75,7 @@
 									<td colspan="3">No Data For Result</td>
 								</tr>
 								<tr v-if="maindata.length > 0">
-									<td colspan="2">Grand Total</td>
+									<td colspan="3">Grand Total</td>
 									<td>{{ formatrupiah(totalfull.toString()) }}</td>
 								</tr>
 							</tbody>
@@ -320,8 +323,8 @@ export default {
 			if (vm.position == 'firstload') {
 				vm.loaderprocess();
 				vm.maindata = response.data.data;
-				// vm.form.label.value = '';
-				// vm.form.sublabel.value = '';
+				vm.form.label.value = '';
+				vm.form.sublabel.value = '';
 				vm.form.carabayar_nama = response.data.paket_bedah.nama_carabayar;
 				vm.form.nama.value = '';
 				vm.form.quantity.value = '1';
