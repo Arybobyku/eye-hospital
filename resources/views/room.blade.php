@@ -85,7 +85,7 @@
 		<div class="grid-container">
 			<div class="item1">
 				<div class="headers">
-					<span class="titleheader">Kamar Bedah</span>
+					<span class="titleheader">Kamar HCU</span>
 				</div>
 				<div class="nomor">
 					<div class="numbers">
@@ -274,7 +274,7 @@ new Vue({
 						vm.display[4].dipakai = response.data.data[i].dipakai;
 						vm.display[4].sisa = response.data.data[i].sisa;
 					}
-					else if (response.data.data[i].nama_jenis_kamar == 'Kamar Bedah') { 
+					else if (response.data.data[i].nama_jenis_kamar == 'Kamar HCU') { 
 						vm.display[5].jumlah = response.data.data[i].jumlah;
 						vm.display[5].dipakai = response.data.data[i].dipakai;
 						vm.display[5].sisa = response.data.data[i].sisa;
