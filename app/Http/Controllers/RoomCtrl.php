@@ -44,6 +44,7 @@ class RoomCtrl extends Controller
 				DB::raw('COUNT(r.id) AS dipakai'),
 				DB::raw('(SUM(ki.jumlah_bed) - COUNT(r.id)) AS sisa')
 			)
+			->where('ki.delete_soft', '=', '1')
 			->groupBy('ki.nama_jenis_kamar')
 			->get();
 
