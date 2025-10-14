@@ -121,7 +121,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="item3">
+			{{-- <div class="item3">
 				<div class="headers">
 					<span class="titleheader">Kamar Kelas VVIP</span>
 				</div>
@@ -139,7 +139,7 @@
 						<span class="labels" style="position: relative; right: -100px">Sisa</span>
 					</div>
 				</div>
-			</div>  
+			</div>   --}}
 			<div class="item4">
 				<div class="headers">
 					<span class="titleheader">Kamar Kelas I</span>
