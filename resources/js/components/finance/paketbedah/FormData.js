@@ -29,10 +29,10 @@ export const formunit = () => {
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'dokter', isrequired: false, html: 'Nama Dokter', issearch: false, disabled: false,
 			},
-			apotek: { 
-				key : 'apotek', for_id: 'form_'+'apotek', name: 'apotek', uuid:'', value: '', label: 'Silahkan Pilih', 
+			hargagudang: { 
+				key : 'hargagudang', for_id: 'form_'+'hargagudang', name: 'hargagudang', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
-				class: 'apotek', isrequired: false, html: 'Obat / Alkes', issearch: false, disabled: false,
+				class: 'hargagudang', isrequired: false, html: 'Obat / Alkes', issearch: false, disabled: false,
 			},
 			carabayartindakanrawatjalan: {
 				key : 'carabayartindakanrawatjalan', for_id: 'form_'+'carabayartindakanrawatjalan', name: 'carabayartindakanrawatjalan', uuid:'', value: '', label: 'Silahkan Pilih', 
@@ -75,10 +75,10 @@ export const listpaket = () => {
 				db_table: 'carabayar_tindakan_rawat_jalan', dosearch: false,
 				class: 'carabayartindakanrawatjalan', isrequired: true, html: 'Tindakan/Layanan', issearch: true, disabled: false,
 			},
-			apotek: { 
-				key : 'apotek', for_id: 'form_'+'apotek', name: 'apotek', uuid:'', value: '', label: 'Silahkan Pilih', 
+			hargagudang: { 
+				key : 'hargagudang', for_id: 'form_'+'hargagudang', name: 'hargagudang', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
-				class: 'apotek', isrequired: false, html: 'Obat / Alkes', issearch: true, disabled: false,
+				class: 'hargagudang', isrequired: false, html: 'Obat / Alkes', issearch: true, disabled: false,
 			},
 		}		
 	}

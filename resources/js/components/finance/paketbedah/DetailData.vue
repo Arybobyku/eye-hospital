@@ -29,9 +29,9 @@
 								></Selected>
 						</div>
 						<div v-if="selectedMode === 'obat'">
-							<Selected v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)" 
-								:ref="form.select.apotek.name" @selecteditem="selecteditem" @selectclear="selectclear"
-								:selection="form.select.apotek" v-on:keyup="selectfilter($event, form.select.apotek.name)"
+							<Selected v-on:click="selectbox($event, form.select.hargagudang.name, form.select.hargagudang.statics)" 
+								:ref="form.select.hargagudang.name" @selecteditem="selecteditem" @selectclear="selectclear"
+								:selection="form.select.hargagudang" v-on:keyup="selectfilter($event, form.select.hargagudang.name)"
 								></Selected>
 						</div>
 					</div>
@@ -185,7 +185,7 @@ export default {
 				vm.form.harga.value = parseInt(item.harga)
 			}
 
-			if (key == 'apotek') {
+			if (key == 'hargagudang') {
 				vm.form.label.value = item.jenis;
 				vm.form.sublabel.value = item.jenis;
 				vm.form.quantity.value = 1
@@ -197,7 +197,7 @@ export default {
 		selectclear:function(key) { 
 			
 			vm.form = vm.clearselected(vm.form, key);
-			if (key == 'apotek') {
+			if (key == 'hargagudang') {
 				vm.tempobat = null;
 			}
 			else if (key == 'apotekracikan') {
@@ -264,7 +264,7 @@ export default {
 								vm.form.select[key].filter.push(response[i]);
 								vm.form.select[key].data.push(response[i]);
 							}	
-							else if (key == 'apotek') {
+							else if (key == 'hargagudang') {
 								vm.form.select[key].filter.push(response[i]);
 								vm.form.select[key].data.push(response[i]);
 							}
@@ -389,8 +389,8 @@ export default {
 				vm.form.select.carabayartindakanrawatjalan.value = '';
 				vm.form.select.carabayartindakanrawatjalan.label = 'Silahkan Pilih';
 
-				vm.form.select.apotek.label = '';
-				vm.form.select.apotek.label = 'Silahkan Pilih';
+				vm.form.select.hargagudang.label = '';
+				vm.form.select.hargagudang.label = 'Silahkan Pilih';
 				vm.form.quantity.value = '1';
 				vm.form.harga.value = '';
 			}
