@@ -68,6 +68,8 @@ export const parseaddobat = (form) => {
 	data.append('hja_non_resep_besar', form.hja_non_resep_besar);
 	data.append('jumlah_kecil', form.jumlah_kecil);
 	data.append('jumlah_besar', form.jumlah_besar);
+	data.append('tanggal', form.tanggal);
+	data.append('waktu', form.waktu);
 	data.append('signa', form.signa);
 	data.append('total', form.total);
 

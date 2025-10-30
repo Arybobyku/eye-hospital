@@ -691,7 +691,7 @@
                         <td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
                         <td align="left" style="padding: 10px 2px;">{{ $item->nama_obat }}</td>
                         <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
+                            {{ ubahDate2($item->tanggal) }} </td>
                         <td align="center" style="padding: 10px 2px">{{ number_format($item->hja_resep) }}</td>
                         <td align="center" style="padding: 10px 2px">{{ $item->jumlah_kecil }}</td>
                         <td align="right" style="padding: 10px 2px;" colspan="3">
@@ -821,7 +821,7 @@
                         <td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
                         <td align="left" style="padding: 10px 2px;">{{ $item->label }}</td>
                         <td align="center" style="padding: 10px 2px; width: 17%" colspan="2" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
+                            {{ ubahDate2($item->tanggal) }}</td>
                         <td align="center" style="padding: 10px 2px">{{ $item->jumlah }} {{ $item->kemasan }}</td>
                         {{-- <td align="right" style="padding: 5px 7px;" colspan="3"><b>{{ number_format($item->total) }}</b></td> --}}
                         <td align="right" style="padding: 10px 2px;" colspan="3"></td>
@@ -1288,6 +1288,32 @@
     
         return $tgl . ' ' . $bln . ' ' . $thn . ' ' . $jam . ':' . $menit . ':' . $detik;
     }
+
+    function ubahDate2($created)
+    {
+        $bulan = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+
+        // Ambil hanya tanggal (tanpa jam)
+        $tanggal = explode(' ', $created)[0];
+
+        [$tahun, $bln, $tgl] = explode('-', $tanggal);
+
+        return (int)$tgl . ' ' . $bulan[$bln] . ' ' . $tahun;
+    }
+
     
     function ubahDate($created)
     {
