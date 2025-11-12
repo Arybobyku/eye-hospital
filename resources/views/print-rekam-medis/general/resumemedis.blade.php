@@ -33,11 +33,14 @@
     padding: 5px;
   }
 
-   .text-above {
+  .page_break {
+      page-break-before: always;
+  }
+
+  .text-above {
     text-align: center;   
     margin-bottom: 5px;  
   }
-
     </style>
     
 </head>
@@ -57,7 +60,12 @@
         </td>
     </tr>
 </table>
-    <table style="width: 100%;  border: 1px solid black; cellpadding="0" cellspacing="0" >
+      <table style="width: 100%;  border-collapse:collapse; table-layout:fixed; border: 1px solid black; cellpadding="0" cellspacing="0"  >
+        <colgroup>
+          <col style="width:30%;">
+          <col style="width:50%;">
+          <col style="width:20%;">
+        </colgroup>
       <tr>
         <td class="tablee" colspan="2">Tanggal Masuk : </td>
         <td class="tablee">Tanggal Keluar / Tanggal Meninggal : </td>
@@ -103,22 +111,22 @@
       </tr>
       <tr>
         <td class="tablee">Diagnosis Sekunder</td>
-        <td class="tablee">1. …………………………………………</td>
+        <td class="tablee">1. ................................................
         <td class="tablee"></td>
       </tr>
       <tr>
         <td class="tablee"></td>
-        <td class="tablee">2. …………………………………………… </td>
+        <td class="tablee">2. ................................................
         <td class="tablee"></td>
       </tr>
       <tr>
         <td class="tablee"></td>
-        <td class="tablee">3. …………………………………………… </td>
+        <td class="tablee">3. ................................................
         <td class="tablee"></td>
       </tr>
       <tr>
         <td class="tablee"></td>
-        <td class="tablee">4. …………………………………………</td>
+        <td class="tablee">4. ................................................
         <td class="tablee"></td>
       </tr>
       <tr>
@@ -131,12 +139,23 @@
         <td class="tablee"></td>
         <td class="tablee"></td>
       </tr>
-      <tr>
+      <tr >
         <td class="tablee">Laboratorium Yang Penting </td>
         <td class="tablee"></td>
         <td class="tablee"></td>
       </tr>
-      <tr>
+      </table>             
+      <div class="page_break"></div>
+        <div style="width:100%; text-align:right; margin-bottom:5px">
+		       RM 3.5/RM/22
+	      </div>
+      <table style="width: 100%;  border-collapse:collapse; table-layout:fixed; border: 1px solid black; cellpadding="0" cellspacing="0"  >
+        <colgroup>
+          <col style="width:30%;">
+          <col style="width:40%;">
+          <col style="width:30%;">
+        </colgroup>
+      <tr >
         <td class="tablee" colspan="2">Radiologi </td>
         <td class="tablee"></td>
       </tr>
@@ -154,14 +173,14 @@
         <td class="tablee"></td>
       </tr>
       <tr>
-        <td class="tablee" colspan>
+        <td class="tablee" colspan="2">
             <table>
                 <tr>
                     <td colspan="2">Kondisi Pulang </td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" ></td>
-                    <td>sembuh</td>
+                    <td>Sembuh</td>
                 </tr>
                 <tr>
                     <td><input type="checkbox" ></td>
@@ -181,23 +200,22 @@
                 </tr>
             </table>
         </td>
-        <td class="tablee"></td>
-        <td class="tablee">
-            <table>
-                <tr>
-                    <td class="tablee">Instruksi dan Edukais Lanjutan (follow up)</td>
+        <td >
+            <table style="width: 100%;" cellpadding="0" cellspacing="0">
+                <tr >
+                    <td style="border-bottom: 1px solid #000;">Instruksi dan Edukasi Lanjutan (follow up)</td>
                 </tr>
                 <tr>
-                    <td class="tablee">Kontrol Tanggal  :  </td>
+                    <td style="border-bottom: 1px solid #000;">Kontrol Tanggal  :  </td>
                 </tr>
                 <tr>    
-                    <td class="tablee">Diet   : </td>
+                    <td style="border-bottom: 1px solid #000;">Diet   : </td>
                 </tr>
                 <tr>
-                    <td class="tablee">Latihan   :</td>
+                    <td style="border-bottom: 1px solid #000;">Latihan   :</td>
                 </tr>
                 <tr>
-                    <td class="tablee">Segera kembali ke rumah Sakit, langsung ke Gawat Darurat, bila terjadi :</td>
+                    <td>Segera kembali ke rumah Sakit, langsung ke Gawat Darurat, bila terjadi :</td>
                 </tr>
             </table>
         </td>
@@ -207,30 +225,30 @@
       </tr>
       <tr>
         <td colspan="3">
-            <Table>
-                <tr>
-                    <td class="tablee">Nama Obat </td>
-                    <td class="tablee">Jumlah</td>
-                    <td class="tablee">Dosis</td>
-                    <td class="tablee">Frekuensi</td>
-                    <td class="tablee">Cara Pemberian</td>
-                    <td class="tablee">Nama Obat</td>
-                    <td class="tablee">Jumlah</td>
-                    <td class="tablee">Dosis</td>
-                    <td class="tablee">Frekuensi</td>
-                    <td class="tablee">Cara Pemberian</td>
+            <Table style="width: 100%;"   cellpadding="0" cellspacing="0">
+                <tr style="border-bottom: ">
+                    <td style="border-right: 1px solid #000; border-bottom: 1px solid #000;  text-align: center;">Nama Obat </td>
+                    <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; text-align: center;">Jumlah</td>
+                    <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; text-align: center;">Dosis</td>
+                    <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; text-align: center;">Frekuensi</td>
+                    <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; text-align: center;">Cara Pemberian</td>
+                    <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; text-align: center;">Nama Obat</td>
+                    <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; text-align: center;">Jumlah</td>
+                    <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; text-align: center;">Dosis</td>
+                    <td style="border-right: 1px solid #000; border-bottom: 1px solid #000; text-align: center;">Frekuensi</td>
+                    <td style=" text-align: center; border-bottom: 1px solid #000;">Cara Pemberian</td>
                 </tr>
-                <tr>
-                    <td class="tablee"><br></td>
-                    <td class="tablee"><br></td>
-                    <td class="tablee"><br></td>
-                    <td class="tablee"><br></td>
-                    <td class="tablee"><br></td>
-                    <td class="tablee"><br></td>
-                    <td class="tablee"><br></td>
-                    <td class="tablee"><br></td>
-                    <td class="tablee"><br></td>
-                    <td class="tablee"><br></td>
+                <tr style="border-bottom: 1px solid #000;">
+                    <td style="border-right: 1px solid #000; padding: 15px 0;"><br></td>
+                    <td style="border-right: 1px solid #000; padding: 15px 0;"><br></td>
+                    <td style="border-right: 1px solid #000; padding: 15px 0;"><br></td>
+                    <td style="border-right: 1px solid #000; padding: 15px 0;"><br></td>
+                    <td style="border-right: 1px solid #000; padding: 15px 0;"><br></td>
+                    <td style="border-right: 1px solid #000; padding: 15px 0;"><br></td>
+                    <td style="border-right: 1px solid #000; padding: 15px 0;"><br></td>
+                    <td style="border-right: 1px solid #000; padding: 15px 0;"><br></td>
+                    <td style="border-right: 1px solid #000; padding: 15px 0;"><br></td>
+                    <td style=" text-align: center;"><br></td>
                 </tr>
             </Table>
         </td>
