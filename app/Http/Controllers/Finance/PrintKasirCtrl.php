@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Bedah;
 use App\Models\KwitansiTagihan;
 use App\Models\LayananPasien;
+use App\Models\PaketBedah;
 use App\Models\Pasien;
 use App\Models\PasienBebas;
 use App\Models\Registrasi;
@@ -436,6 +437,7 @@ class PrintKasirCtrl extends Controller
         $obatracikan = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatracikan')->first();
         $obatracikanbedah = LayananPasien::where('registrasi_uuid', '=', $uuid)->where('layanan_uuid', '=', 'obatracikanbedah')->first();
         $bedah = Bedah::where('registrasi_uuid', '=', $uuid)->get();
+        $paketBedah = PaketBedah::where('nama', '=', $registrasi->nama_paket_bedah)->where('delete_soft','=',1)->first();
         $pasien = Pasien::where('uuid', '=', $registrasi->pasien_uuid)->first();
 
         $layananpasien = LayananPasien::where('registrasi_uuid', '=', $uuid)->get();
@@ -566,7 +568,7 @@ class PrintKasirCtrl extends Controller
 
         $pdf->loadView('print.printcashierrincian',
             compact('layananpasien', 'registrasi', 'collection', 'pasien', 'surat', 'honor', 'rawatjalan', 'bedah', 'administrasi', 'diskon', 'diskon_rp', 'diskon_persen',
-                'resep_obat', 'resep_obat_bedah', 'resepracikanbedah', 'resep_obat_tambahan', 'room', 'resep_alkes', 'resep_alkes_bedah', 'resep_alkes_tambahan', 'honorbedah', 'resepracikan', 'rawatinap', 'bedah', 'obatan', 'obatantambahan', 'obatracikan', 'obatanbedah', 'obatracikanbedah'))->setPaper('a4', 'potrait');
+                'resep_obat', 'resep_obat_bedah', 'resepracikanbedah', 'resep_obat_tambahan', 'room', 'resep_alkes', 'resep_alkes_bedah', 'resep_alkes_tambahan', 'honorbedah', 'resepracikan', 'rawatinap', 'bedah', 'obatan', 'obatantambahan', 'obatracikan', 'obatanbedah', 'obatracikanbedah','paketBedah'))->setPaper('a4', 'potrait');
 
         return $pdf->stream();
     }
