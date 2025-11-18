@@ -1101,6 +1101,13 @@
 
             @if ($registrasi->apakah_paket == 'Ya' && $paketBedah->harga_sudah_ditentukan == 1)
                 <tr>
+                    <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Paket</b>
+                    </td>
+                    <td colspan="2" align="right" style="padding: 4px 7px;"><b>
+                            {{ number_format((($last- $paketBedah->total)/ $last) * 100, 2) }} %
+                    </b></td>
+                </tr>
+                <tr>
                     <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Pembayaran</b>
                     </td>
                     <td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp.
