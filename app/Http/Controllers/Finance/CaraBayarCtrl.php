@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Finance;
 use App\Exports\MetodePembayaran;
 use App\Exports\TemplateUploadPembayaran;
 use App\Exports\UploadMetodePembayaran;
+use App\Exports\UploadUpdateLabelMetodePembayaran;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -23,21 +24,26 @@ class CaraBayarCtrl extends Controller
 
 	private $take = 15, $error = 'next';
 
-	public function __construct() {
+	public function __construct()
+	{
 		date_default_timezone_set("Asia/Jakarta");
-		$this->error = PenggunaHelp::acl(); 
+		$this->error = PenggunaHelp::acl();
 	}
 
-	public function list(Request $request) {
+	public function list(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		PenggunaHelp::log('Melihat data list table pada halaman metode pembayaran');
 
-		$list = ''; $total = '';
+		$list = '';
+		$total = '';
 		$page = $request->page - 1;
 		$skip = $page * $this->take;
-		$search = $request->search; 
+		$search = $request->search;
 		$column = $request->column;
 
 		$data = DB::table('carabayar as cb')
@@ -46,7 +52,7 @@ class CaraBayarCtrl extends Controller
 			->leftJoin('carabayar_tindakan_bedah as tb', 'tb.carabayar_uuid', '=', 'cb.uuid')
 			->leftJoin('carabayar_kamar as ck', 'ck.carabayar_uuid', '=', 'cb.uuid')
 			->where('cb.delete_soft', 1)
-			->when($search, function($q) use ($column, $search) {
+			->when($search, function ($q) use ($column, $search) {
 				if (!empty($column)) {
 					$q->where("cb.$column", 'ilike', "%$search%");
 				}
@@ -135,42 +141,49 @@ class CaraBayarCtrl extends Controller
 			'data' => $data,
 			'total' => $data->count(),
 		]);
-		
+
 
 		if ($request->search != "") {
 			$data = CaraBayar::where('delete_soft', '=', 1)
-								->where($column, 'ilike', '%'.$search.'%')
-								->orderBy('id', 'desc')
-								->skip($skip)->take($this->take)
-								->get();
+				->where($column, 'ilike', '%' . $search . '%')
+				->orderBy('id', 'desc')
+				->skip($skip)->take($this->take)
+				->get();
 			$total = CaraBayar::where('delete_soft', '=', 1)
-								->where($column, 'ilike', '%'.$search.'%')
-								->orderBy('id', 'desc')->count();
-		}
-		else {
+				->where($column, 'ilike', '%' . $search . '%')
+				->orderBy('id', 'desc')->count();
+		} else {
 			$data = CaraBayar::where('delete_soft', '=', 1)
-									->orderBy('id', 'desc')
-									->skip($skip)->take($this->take)
-									->get();
+				->orderBy('id', 'desc')
+				->skip($skip)->take($this->take)
+				->get();
 
 			$total = CaraBayar::where('delete_soft', '=', 1)->orderBy('id', 'desc')->count();
-
 		}
-		
+
 		return response()->json(['data' => $data, 'total' => $total]);
-	
 	}
 
-	public function add(Request $request) { 
+	public function add(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
-		PenggunaHelp::log('Menambahkan satu metode pembayaran dengan nama "'.$request->nama.'".');
+		PenggunaHelp::log('Menambahkan satu metode pembayaran dengan nama "' . $request->nama . '".');
 
-		$uuid = ''; $loop = false;
-		do { $uuid = Uuid::uuid4(); $check = CaraBayar::where('uuid', '=', $uuid)->first(); if (!$check) { $loop = true; } }while($loop == false);
+		$uuid = '';
+		$loop = false;
+		do {
+			$uuid = Uuid::uuid4();
+			$check = CaraBayar::where('uuid', '=', $uuid)->first();
+			if (!$check) {
+				$loop = true;
+			}
+		} while ($loop == false);
 
-		try{
+		try {
 			DB::beginTransaction();
 
 			$item = new CaraBayar();
@@ -181,105 +194,127 @@ class CaraBayarCtrl extends Controller
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
-	public function edit(Request $request) {
+	public function edit(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		$data = CaraBayar::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
-			PenggunaHelp::log('Mengambil infomasi tentang metode pembayaran dengan nama "'.$data->nama.'" dan id "'.$data->id.'" untuk ditampilkan dihalaman edit metode pembayaran');
+			PenggunaHelp::log('Mengambil infomasi tentang metode pembayaran dengan nama "' . $data->nama . '" dan id "' . $data->id . '" untuk ditampilkan dihalaman edit metode pembayaran');
 		}
-		
+
 		return response()->json(['data' => $data]);
 	}
 
-	public function update(Request $request) {
+	public function update(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		$get = CaraBayar::where('uuid', '=', $request->uuid)->first();
-		PenggunaHelp::log('Mengupdate metode pembayaran dengan nama "'.$get->nama.'" menjadi nama "'.$request->nama.'"');
+		PenggunaHelp::log('Mengupdate metode pembayaran dengan nama "' . $get->nama . '" menjadi nama "' . $request->nama . '"');
 
 		$arr = array(
 			'nama' => $request->nama
 		);
 
-		try{
+		try {
 			DB::beginTransaction();
 
 			$update = CaraBayar::where('uuid', '=', $request->uuid)->update($arr);
-			
+
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
-	public function remove(Request $request) {
+	public function remove(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
 		$data = CaraBayar::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
-			PenggunaHelp::log('Menghapus metode pembayaran dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
+			PenggunaHelp::log('Menghapus metode pembayaran dengan nama "' . $data->nama . '" dan id "' . $data->id . '".');
 		}
 
 		$arr = array('delete_soft' => 0);
-		
-		try{
+
+		try {
 			DB::beginTransaction();
 
 			$remove = CaraBayar::where('uuid', '=', $request->uuid)->update($arr);
-			
+
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
-		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		} catch (Exception $e) {
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
 
-	public function api(Request $request) {
+	public function api(Request $request)
+	{
 
-		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
 
-		$data = CaraBayar::where('delete_soft', '=', '1')->where('nama', 'ilike', '%'.$request->keyword.'%')->limit(10)->get();
+		$data = CaraBayar::where('delete_soft', '=', '1')->where('nama', 'ilike', '%' . $request->keyword . '%')->limit(10)->get();
 		return response()->json(['data' => $data]);
 	}
 
 
-	public function exportMetodePembayaran() {
-		$filename = date('Y-m-d').'-metode-pembayaran.xlsx';
+	public function exportMetodePembayaran()
+	{
+		$filename = date('Y-m-d') . '-metode-pembayaran.xlsx';
 		return \Excel::download(new MetodePembayaran(), $filename);
 	}
 
 
-	public function downloadTemplateUploadPembayaran($metode) {
+	public function downloadTemplateUploadPembayaran($metode)
+	{
 		$filename = 'template-upload.xlsx';
 		return \Excel::download(new TemplateUploadPembayaran($metode), $filename);
 	}
 
-	public function uploadMetodePembayaran(Request $request) {
+	public function uploadMetodePembayaran(Request $request)
+	{
 		$request->validate([
-            'file' => 'required|file|mimes:xlsx,csv,xls',
-        ]);
+			'file' => 'required|file|mimes:xlsx,csv,xls',
+		]);
 
-        Excel::import(new UploadMetodePembayaran, $request->file('file'));
+		Excel::import(new UploadMetodePembayaran, $request->file('file'));
 
-        return back()->with('success', 'Upload & import berhasil!');
+		return back()->with('success', 'Upload & import berhasil!');
 	}
 
+	public function uploadUpdateLabelMetodePembayaran(Request $request)
+	{
+		$request->validate([
+			'file' => 'required|file|mimes:xlsx,csv,xls',
+		]);
+
+		Excel::import(new UploadUpdateLabelMetodePembayaran, $request->file('file'));
+
+		return back()->with('success', 'Upload & import berhasil!');
+	}
 }

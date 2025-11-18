@@ -2,7 +2,8 @@
 
 namespace App\Exports;
 
-use App\Models\BukuTarif;
+use App\Models\CaraBayarTindakanRawatJalan;
+use App\Models\ListPaketBedahBaru;
 use DB;
 use App\Models\Registrasi;
 use App\Models\Resep;
@@ -15,27 +16,21 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeSheet;
 
-class TemplateUploadPembayaran implements FromView, ShouldAutoSize
+class DownloadPaketBedah implements FromView, ShouldAutoSize
 {
-	private $metode = '';
-
-	public function __construct($metode)
-	{
-		$this->metode = $metode;
-	}
+	public function __construct() {}
 
 	public function view(): View
 	{
 		set_time_limit(3000);
 		$data = $this->rdata();
-
-		return view('exports.templateuploadmetodepembayaran', ['data' => $data, 'metode' => $this->metode]);
+		return view('exports.templatepaketbedah', ['data' => $data]);
 	}
 
 	private function rdata()
 	{
-		$data = BukuTarif::where('delete_soft', '=', 1)
-			->orderBy('label', 'ASC')
+		$data = ListPaketBedahBaru::where('delete_soft', '=', 1)
+			->orderBy('nama_paket_bedah', 'ASC')
 			->get();
 		return $data;
 	}

@@ -9,8 +9,10 @@
 			<div class="modal-body" v-if="form">
 				<div class="grid">
 					<div class="col-12">
+						<Inputed :ref="form.label.name" :form="form.label" v-on:keyup="eachword($event)"></Inputed>
+						<Inputed :ref="form.sub_label.name" :form="form.sub_label" v-on:keyup="eachword($event)"></Inputed>
 						<Inputed :ref="form.nama.name" :form="form.nama" v-on:keyup="eachword($event)"></Inputed>
-						<Inputed :ref="form.jenis.name" :form="form.jenis" v-on:keyup="eachword($event)"></Inputed>
+						<Inputed :ref="form.harga.name" :form="form.harga" v-on:keyup="eachword($event)"></Inputed>
 					</div>
 				</div>
 			</div>
@@ -67,8 +69,10 @@ export default {
 
 		setdataform: function (response) {
 			vm.form.uuid = response.data.data.uuid;
+			vm.form.label.value = response.data.data.label;
+			vm.form.sub_label.value = response.data.data.sub_label;
 			vm.form.nama.value = response.data.data.nama;
-			vm.form.jenis.value = response.data.data.jenis;
+			vm.form.harga.value = response.data.data.harga;
 			vm.loaderprocess();
 		},
 

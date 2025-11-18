@@ -145,6 +145,14 @@ export const formobat = () => {
 			title: 'Quantity', for_id: 'form_'+'quantity', type: 'number', required: '', 
 			name: 'quantity', value: '', disabled: false, show: true, kinds: ''
 		},
+		tanggal:{
+			title: 'tanggal', for_id: 'form_'+'tanggal', type: 'text', required: '', 
+			name: 'tanggal', value: '', disabled: false, show: true, kinds: ''
+		},
+		waktu:{
+			title: 'waktu', for_id: 'form_'+'waktu', type: 'text', required: '', 
+			name: 'waktu', value: '', disabled: false, show: true, kinds: ''
+		},
 
 
 		select: {

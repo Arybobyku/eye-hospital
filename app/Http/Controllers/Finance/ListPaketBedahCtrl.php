@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Finance;
 
+use App\Exports\DownloadPaketBedah;
 use App\Exports\TemplateUploadPaketBedah;
 use App\Exports\UploadPaketBEdah;
 use App\Http\Controllers\Controller;
@@ -15,6 +16,7 @@ use Crypt;
 use PenggunaHelp;
 
 use App\Models\ListPaketBedahBaru;
+use App\Models\PaketBedah;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ListPaketBedahCtrl extends Controller
@@ -40,8 +42,10 @@ class ListPaketBedahCtrl extends Controller
 
 		$total = ListPaketBedahBaru::where('delete_soft', '=', 1)->orderBy('id', 'desc')
 							->where('paket_bedah_uuid', '=', $request->paket_bedah_uuid)->count();
+
+		$paketBedah = PaketBedah::where('uuid',$request->paket_bedah_uuid)->first();					
 		
-		return response()->json(['data' => $data, 'total' => $total]);
+		return response()->json(['data' => $data, 'total' => $total, 'paket_bedah'=>$paketBedah]);
 	
 	}
 
@@ -129,6 +133,12 @@ class ListPaketBedahCtrl extends Controller
 	
 		$filename = 'template-upload.xlsx';
 		return \Excel::download(new TemplateUploadPaketBedah($metode, $name), $filename);
+	}
+
+	public function downloadAll() {
+	
+		$filename = 'list-paket-bedah.xlsx';
+		return \Excel::download(new DownloadPaketBedah(), $filename);
 	}
 
 	public function uploadPaketBedah(Request $request) {

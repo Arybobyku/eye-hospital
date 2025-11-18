@@ -230,35 +230,38 @@ class KasirCtrl extends Controller
             $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
                                 ->where('registrasi.delete_soft', '=', 1)
                                 ->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
-                                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
+                                // ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
                                 ->where(function ($q) {
                                     $q->where('registrasi.jenis', '=', 'Rawat Jalan');
                                     $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
                                 })
                                 ->orderBy('registrasi.no_kwitansi', 'desc')
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status', 'Selesai');
-                                })
+                                // ->where(function ($q) {
+                                //     $q->where('registrasi.status', 'Selesai');
+                                // })
                                 ->where(function ($q) {
                                     $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
                                 })
                                 ->skip($skip)->take($this->take)
                                 ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
                                 ->get();
+
             $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
                                 ->where('registrasi.delete_soft', '=', 1)
                                 ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
                                 ->where(function ($q) {
                                     $q->where('registrasi.jenis', '=', 'Rawat Jalan');
                                     $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
                                 })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status', 'Selesai');
-                                })
+                                // ->where(function ($q) {
+                                //     $q->where('registrasi.status', 'Selesai');
+                                // })
                                 ->where(function ($q) {
                                     $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
                                 })
-                                ->where($column, 'ilike', '%'.$search.'%')
+                                ->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
                                 ->orderBy('registrasi.no_kwitansi', 'desc')->count();
         } else {
             $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
@@ -267,10 +270,11 @@ class KasirCtrl extends Controller
                                     ->where(function ($q) {
                                         $q->where('registrasi.jenis', '=', 'Rawat Jalan');
                                         $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                        $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
                                     })
-                                    ->where(function ($q) {
-                                        $q->where('registrasi.status', 'Selesai');
-                                    })
+                                    // ->where(function ($q) {
+                                    //     $q->where('registrasi.status', 'Selesai');
+                                    // })
                                     ->where(function ($q) {
                                         $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
                                     })
@@ -283,10 +287,11 @@ class KasirCtrl extends Controller
                                 ->where(function ($q) {
                                     $q->where('registrasi.jenis', '=', 'Rawat Jalan');
                                     $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
                                 })
-                                ->where(function ($q) {
-                                    $q->where('registrasi.status', 'Selesai');
-                                })
+                                // ->where(function ($q) {
+                                //     $q->where('registrasi.status', 'Selesai');
+                                // })
                                 ->where(function ($q) {
                                     $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
                                 })
@@ -479,7 +484,6 @@ class KasirCtrl extends Controller
                 'diskon_rp' => $request->diskon_rp,
                 'tanggal' => $request->tanggal,
                 'rekam_medis' => $request->rekam_medis,
-                'no_kwitansi' => $request->no_kwitansi,
                 'carabayar_nama' => $request->carabayar_nama,
                 'nama_dokter' => $request->nama_dokter,
 

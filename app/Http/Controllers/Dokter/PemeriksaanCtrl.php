@@ -1166,6 +1166,16 @@ class PemeriksaanCtrl extends Controller
                     $arr = ['ada_obat' => 'Tidak', 'rke' => 0];
                     $update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
                 }
+
+                // Check Obat Pasca Bedah
+                $obatPascaBedah = Resep::where('registrasi_uuid', $request->registrasi_uuid)->where('is_bedah', 1)->get();
+                $obatRacikanPascaBedah = ResepRacikan::where('registrasi_uuid', $request->registrasi_uuid)->where('is_bedah', 1)->get();
+
+                if(count($obatPascaBedah) > 0 || count($obatRacikanPascaBedah) > 0){
+                    $arr = ['ada_obat' => 'Ya'];
+                    Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
+                }
+
             } else {
                 $item = new PemeriksaanDokter();
                 $item->uuid = $uuid;
@@ -2283,7 +2293,26 @@ class PemeriksaanCtrl extends Controller
 
     private function carabayartindakanrawatjalan()
     {
-        return \DB::table('carabayar_tindakan_rawat_jalan')->orderBy('id', 'asc')->where('delete_soft', '=', '1')->get();
+        return \DB::table('carabayar_tindakan_rawat_jalan')
+				->join('carabayar', 'carabayar.uuid', '=', 'carabayar_tindakan_rawat_jalan.carabayar_uuid')
+				->orderBy('id','asc')
+				->where('carabayar_tindakan_rawat_jalan.delete_soft', '=', '1')
+				->where('carabayar.delete_soft', '=', '1')
+			->select([
+						'carabayar_tindakan_rawat_jalan.id as id',
+						'carabayar_tindakan_rawat_jalan.uuid as uuid',
+						'carabayar_tindakan_rawat_jalan.carabayar_uuid as carabayar_uuid',
+						'carabayar_tindakan_rawat_jalan.carabayar_nama as carabayar_nama',
+						'carabayar_tindakan_rawat_jalan.tindakan_rawat_jalan_uuid as tindakan_rawat_jalan_uuid',
+						'carabayar_tindakan_rawat_jalan.nama_tindakan_rawat_jalan as nama_tindakan_rawat_jalan',
+						'carabayar_tindakan_rawat_jalan.harga as harga',
+						'carabayar_tindakan_rawat_jalan.status as status',
+						'carabayar_tindakan_rawat_jalan.delete_soft as delete_soft',
+						'carabayar_tindakan_rawat_jalan.created_at as created_at',
+						'carabayar_tindakan_rawat_jalan.default as default',
+						'carabayar_tindakan_rawat_jalan.jenis as jenis'
+					])
+				->get();;
     }
 
     private function tindakanrawatjalan()

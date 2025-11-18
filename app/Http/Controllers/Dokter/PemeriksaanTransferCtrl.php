@@ -308,7 +308,7 @@ class PemeriksaanTransferCtrl extends Controller
 
 		$apotek = $this->apotek();
 		$apotekracikan = $this->apotek();
-		$carabayartindakanrawatjalan = $this->carabayartindakanrawatjalan();
+		$carabayartindakanrawatjalan = $this->carabayartindakanrawatjalanPasienTransfer($data->carabayar_uuid);
 		$tindakanrawatjalan = $this->tindakanrawatjalan();
 		$paketbedah = $this->paketbedah();
 		$carabayar = $this->carabayar();
@@ -379,6 +379,10 @@ class PemeriksaanTransferCtrl extends Controller
 
 	private function carabayartindakanrawatjalan() {
 		return DB::table('carabayar_tindakan_rawat_jalan')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
+	}
+
+	private function carabayartindakanrawatjalanPasienTransfer($carabayar_uuid) {
+		return DB::table('carabayar_tindakan_rawat_jalan')->where('carabayar_uuid','=',$carabayar_uuid)->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 	}
 
 	private function tindakanrawatjalan() {

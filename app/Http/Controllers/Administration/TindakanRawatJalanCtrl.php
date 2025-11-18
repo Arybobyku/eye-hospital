@@ -88,15 +88,27 @@ class TindakanRawatJalanCtrl extends Controller
 		PenggunaHelp::log('Menambahkan data tindakan rawat jalan dengan nama "'.$request->nama.'".');
 
 		$uuid = ''; $loop = false;
-		do { $uuid = Uuid::uuid4(); $check = TindakanRawatJalan::where('uuid', '=', $uuid)->first(); if (!$check) { $loop = true; } }while($loop == false);
+		do { $uuid = Uuid::uuid4(); $check = BukuTarif::where('uuid', '=', $uuid)->first(); if (!$check) { $loop = true; } }while($loop == false);
 
 		try{
+			// DB::beginTransaction();
+
+			// $item = new TindakanRawatJalan();
+			// $item->uuid = $uuid;
+			// $item->nama = $request->nama;
+			// $item->jenis = $request->jenis;
+			// $item->save();
+
+			// DB::commit();
+
 			DB::beginTransaction();
 
-			$item = new TindakanRawatJalan();
+			$item = new BukuTarif();
 			$item->uuid = $uuid;
+			$item->label = $request->label;
+			$item->sub_label = $request->sub_label;
 			$item->nama = $request->nama;
-			$item->jenis = $request->jenis;
+			$item->harga = $request->harga;
 			$item->save();
 
 			DB::commit();
@@ -113,7 +125,8 @@ class TindakanRawatJalanCtrl extends Controller
 
 		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
 
-		$data = TindakanRawatJalan::where('uuid', '=', $request->uuid)->first();
+		// $data = TindakanRawatJalan::where('uuid', '=', $request->uuid)->first();
+		$data = BukuTarif::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
 			PenggunaHelp::log('Mengambil data tindakan rawat jalan dengan nama "'.$data->nama.'" dan id "'.$data->id.'" untuk ditampilkan dihalaman edit tindakan rawat jalan');
 		}
@@ -128,14 +141,17 @@ class TindakanRawatJalanCtrl extends Controller
 		PenggunaHelp::log('Mengupdate data tindakan rawat jalan dengan nama "'.$request->nama.'".');
 
 		$arr = array(
+				'label' => $request->label,
+				'sub_label' => $request->sub_label,
 				'nama' => $request->nama,
-				'jenis' => $request->jenis
+				'harga' => $request->harga
 		);
 
 		try{
 			DB::beginTransaction();
 
-			$update = TindakanRawatJalan::where('uuid', '=', $request->uuid)->update($arr);
+			// $update = TindakanRawatJalan::where('uuid', '=', $request->uuid)->update($arr);
+			$update = BukuTarif::where('uuid', '=', $request->uuid)->update($arr);
 			
 			DB::commit();
 
@@ -151,7 +167,8 @@ class TindakanRawatJalanCtrl extends Controller
 
 		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
 
-		$data = TindakanRawatJalan::where('uuid', '=', $request->uuid)->first();
+		// $data = TindakanRawatJalan::where('uuid', '=', $request->uuid)->first();
+		$data = BukuTarif::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
 			PenggunaHelp::log('Menghapus data tindakan rawat jalan dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
 		}
@@ -161,7 +178,8 @@ class TindakanRawatJalanCtrl extends Controller
 		try{
 			DB::beginTransaction();
 
-			$remove = TindakanRawatJalan::where('uuid', '=', $request->uuid)->update($arr);
+			// $remove = TindakanRawatJalan::where('uuid', '=', $request->uuid)->update($arr);
+			$remove = BukuTarif::where('uuid', '=', $request->uuid)->update($arr);
 			
 			DB::commit();
 

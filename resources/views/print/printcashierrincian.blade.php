@@ -188,6 +188,8 @@
                                 Biaya Pendaftaran + Adm Rawat Jalan (pl)
                             @elseif($item->nama_layanan == 'Administrasi Rawat Jalan (pb)')
                                 Biaya Pendaftaran + Adm Rawat Jalan (pb)
+                            @else
+                                Biaya {{ $item->nama_layanan }}    
                             @endif
                         </td>
                         <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
@@ -232,7 +234,7 @@
                             {{ $item->nama_dokter }}
                         </td>
                         <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
+                             {{ $item->tanggal ? ubahOnlyDate($item->tanggal) :  ubahDate($item->created_at) }}</td>
                         <td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}
                         </td>
                         <td align="center" style="padding: 10px 2px" valign="top">{{ $item->qty }}</td>
@@ -689,7 +691,7 @@
                         <td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
                         <td align="left" style="padding: 10px 2px;">{{ $item->nama_obat }}</td>
                         <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
+                            {{ ubahDate2($item->tanggal) }} </td>
                         <td align="center" style="padding: 10px 2px">{{ number_format($item->hja_resep) }}</td>
                         <td align="center" style="padding: 10px 2px">{{ $item->jumlah_kecil }}</td>
                         <td align="right" style="padding: 10px 2px;" colspan="3">
@@ -819,7 +821,7 @@
                         <td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
                         <td align="left" style="padding: 10px 2px;">{{ $item->label }}</td>
                         <td align="center" style="padding: 10px 2px; width: 17%" colspan="2" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
+                            {{ ubahDate2($item->tanggal) }}</td>
                         <td align="center" style="padding: 10px 2px">{{ $item->jumlah }} {{ $item->kemasan }}</td>
                         {{-- <td align="right" style="padding: 5px 7px;" colspan="3"><b>{{ number_format($item->total) }}</b></td> --}}
                         <td align="right" style="padding: 10px 2px;" colspan="3"></td>
@@ -1286,6 +1288,32 @@
     
         return $tgl . ' ' . $bln . ' ' . $thn . ' ' . $jam . ':' . $menit . ':' . $detik;
     }
+
+    function ubahDate2($created)
+    {
+        $bulan = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+
+        // Ambil hanya tanggal (tanpa jam)
+        $tanggal = explode(' ', $created)[0];
+
+        [$tahun, $bln, $tgl] = explode('-', $tanggal);
+
+        return (int)$tgl . ' ' . $bulan[$bln] . ' ' . $tahun;
+    }
+
     
     function ubahDate($created)
     {
@@ -1435,6 +1463,31 @@
         }
         return $hasil;
     }
+
+    function ubahOnlyDate($created){
+    $bulan = [
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
+    ];
+
+    $date = new DateTime($created);
+    $tgl = $date->format('d');
+    $bln = $bulan[(int)$date->format('m')];
+    $thn = $date->format('Y');
+
+    return "$tgl $bln $thn";
+    }
+
     ?>
 </body>
 
