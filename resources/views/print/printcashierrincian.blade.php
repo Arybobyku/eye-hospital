@@ -1008,11 +1008,20 @@
                     $last = $grandtotaltop + $totalDiskonGlobalTop + $diskon;
                     ?>
                 @endif
-                <tr>
+
+                @if ($registrasi->apakah_paket == 'Ya' && $paketBedah->harga_sudah_ditentukan == 1)
+                    <tr>
                     <td colspan="6" align="left" style="padding: 6px 5px; width: 65%;"><b>Grand Total</b></td>
                     <td colspan="2" align="right" style="padding: 6px 5px;"><b>Rp.
-                            {{ number_format($last) }}</b></td>
-                </tr>
+                            {{ number_format($paketBedah->total) }}</b></td>
+                 </tr>  
+                @else
+                    <tr>
+                        <td colspan="6" align="left" style="padding: 6px 5px; width: 65%;"><b>Grand Total</b></td>
+                        <td colspan="2" align="right" style="padding: 6px 5px;"><b>Rp.
+                                {{ number_format($last) }}</b></td>
+                    </tr> 
+                @endif
             @endif
 
 
