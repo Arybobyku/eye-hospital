@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\SendAllJob;
 use App\Models\AntrianKasir;
 use App\Models\LayananPasien;
+use App\Models\PaketBedah;
 use App\Models\Pasien;
 use App\Models\Registrasi;
 use App\Models\Resep;
@@ -593,7 +594,9 @@ class KasirCtrl extends Controller
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
                         ->orderBy('id', 'desc')->get();
 
-        return response()->json(['data' => $data, 'obatracikan' => $obatracikan, 'layanan' => $layanan, 'obat' => $obat]);
+        $bedah = PaketBedah::where('nama', '=', $data->nama_paket_bedah)->first();
+
+        return response()->json(['data' => $data, 'obatracikan' => $obatracikan, 'layanan' => $layanan, 'obat' => $obat, 'bedah' => $bedah]);
     }
 
     public function call(Request $request)
