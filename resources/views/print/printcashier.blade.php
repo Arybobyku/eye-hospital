@@ -471,13 +471,22 @@
                                 {{ number_format($grandtotal) }}</b></td>
                     </tr>
                 @endif
+                {{-- Harga paket beda yang sudah ditentukan --}}
                 @if ($registrasi->apakah_paket == 'Ya' && $paketBedah->harga_sudah_ditentukan == 1)
                         <tr>
-                        <td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total
-                                Pembayaran</b></td>
-                        <td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp.
-                                {{ number_format($paketBedah->total) }}</b></td>
-                    </tr>
+                            <td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>
+                                Diskon Paket
+                            </b></td>
+                            <td colspan="1" align="right" style="padding: 4px 7px;"><b>
+                                    {{ number_format((($grandtotal- $paketBedah->total)/ $grandtotal) * 100, 2) }} %
+                            </b></td>
+                      </tr>
+                        <tr>
+                            <td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total
+                                    Pembayaran</b></td>
+                            <td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp.
+                                    {{ number_format($paketBedah->total) }}</b></td>
+                        </tr>
                 @endif
 
                 @if (
