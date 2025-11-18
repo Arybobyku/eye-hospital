@@ -137,6 +137,8 @@ class PrintKasirCtrl extends Controller
             $surat_ke = 1;
         }
 
+        $paketBedah = PaketBedah::where('nama', '=', $registrasi->nama_paket_bedah)->where('delete_soft','=',1)->first();
+
         $item = new KwitansiTagihan();
         $item->uuid = Uuid::uuid4();
         $item->registrasi_uuid = $registrasi->uuid;
@@ -160,7 +162,7 @@ class PrintKasirCtrl extends Controller
         $surat = KwitansiTagihan::select('surat_ke')->where('registrasi_uuid', '=', $registrasi->uuid)->orderBy('id', 'desc')->first();
 
         $pdf->loadView('print.printcashier', compact('collection', 'registrasi', 'pasien', 'surat', 'layananpasien',
-            'rawatjalan', 'administrasi', 'room', 'honor', 'honorbedah', 'total_obat', 'diskon', 'resep_obat_bedah'))->setPaper('a4', 'potrait');
+            'rawatjalan', 'administrasi', 'room', 'honor', 'honorbedah', 'total_obat', 'diskon', 'resep_obat_bedah', 'paketBedah'))->setPaper('a4', 'potrait');
 
         return $pdf->stream();
     }

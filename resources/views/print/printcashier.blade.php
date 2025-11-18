@@ -150,14 +150,24 @@
                         $grandtotaltop = $grandtotaltop - $totalDiskonGlobalTop;
                         ?>
                     @endif
+                     @if ($registrasi->apakah_paket == 'Ya' && $paketBedah->harga_sudah_ditentukan == 1)
+                    Rp. {{ number_format($paketBedah->total) }}
+                     @else
                     Rp. {{ number_format($grandtotaltop) }}
+                     @endif
                 </td>
             </tr>
             <tr>
                 <td style="border: none; padding: 2px 5px">Terbilang</td>
+                 @if ($registrasi->apakah_paket == 'Ya' && $paketBedah->harga_sudah_ditentukan == 1)
+                <td style="border: none; padding: 2px 5px">:
+                    <i>"{{ terbilang($paketBedah->total) }} Rupiah"</i>
+                </td>
+                 @else
                 <td style="border: none; padding: 2px 5px">:
                     <i>"{{ terbilang($grandtotaltop) }} Rupiah"</i>
                 </td>
+                 @endif
             </tr>
             <tr>
                 <td style="border: none; padding: 2px 5px">Untuk Pembayaran</td>
@@ -459,6 +469,14 @@
                                 Pembayaran</b></td>
                         <td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp.
                                 {{ number_format($grandtotal) }}</b></td>
+                    </tr>
+                @endif
+                @if ($registrasi->apakah_paket == 'Ya' && $paketBedah->harga_sudah_ditentukan == 1)
+                        <tr>
+                        <td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total
+                                Pembayaran</b></td>
+                        <td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp.
+                                {{ number_format($paketBedah->total) }}</b></td>
                     </tr>
                 @endif
 
