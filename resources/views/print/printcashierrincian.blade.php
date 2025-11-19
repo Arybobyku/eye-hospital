@@ -47,7 +47,7 @@
                     <tr>
                         <td>Banyaknya</td>
                         <td>:
-                            <?php $grandtotaltop = 0; ?>
+                            <?php $grandtotaltop = 0; $totalDiskonGlobalTop=0?>
                             @foreach ($layananpasien as $item)
                                 <?php $grandtotaltop += $item->total; ?>
                             @endforeach

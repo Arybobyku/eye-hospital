@@ -125,7 +125,7 @@
             <tr>
                 <td style="border: none; padding: 2px 5px">Banyak Uang</td>
                 <td style="border: none; padding: 2px 5px">:
-                    <?php $grandtotaltop = 0; ?>
+                    <?php $grandtotaltop = 0; $totalDiskonGlobalTop=0?>
                     @foreach ($layananpasien as $item)
                         <?php $grandtotaltop += $item->total; ?>
                     @endforeach
