@@ -73,7 +73,7 @@
                                 ?>
                             @endif
 
-                            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah->harga_sudah_ditentukan == 1)
+                            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
                               Rp. {{ number_format($paketBedah->total) }}
                             @else
                               Rp. {{ number_format($grandtotaltop) }}
@@ -82,7 +82,7 @@
                     </tr>
                     <tr>
                         <td>Terbilang</td>
-                            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah->harga_sudah_ditentukan == 1)
+                            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
                             <td>:
                                 <i style="text-transform: uppercase">"# {{ terbilang($paketBedah->total) }} Rupiah #"</i>
                             </td>
@@ -1099,7 +1099,7 @@
                 </tr>
             @endif
 
-            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah->harga_sudah_ditentukan == 1)
+            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
                 <tr>
                     <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Paket</b>
                     </td>
