@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cppt;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -148,6 +149,30 @@ class PasienCtrl extends Controller
 				$total = Registrasi::where('delete_soft', '=', 1)
 								->where('pasien_uuid', '=', $search)
 								->orderBy('tanggal', 'desc')->count();
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+	
+	}
+
+	public function soap(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data pasien');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; 
+
+		if ($request->search != "") {
+				$data = Cppt::with('registrasi')
+				                ->where('pasien_uuid', '=', $search)
+								->orderBy('created_at', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+				$total = Cppt::where('pasien_uuid', '=', $search)
+								->orderBy('created_at', 'desc')->count();
 		}
 		
 		return response()->json(['data' => $data, 'total' => $total]);

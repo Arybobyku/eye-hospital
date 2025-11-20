@@ -16,4 +16,9 @@ class Cppt extends Model
   {
     return $this->belongsTo(Pengguna::class, 'pengguna_uuid', 'uuid');
   }
+
+  public function registrasi()
+{
+    return $this->belongsTo(Registrasi::class, 'registrasi_uuid', 'uuid');
+}
 }
