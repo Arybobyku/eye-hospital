@@ -129,6 +129,31 @@ class PasienCtrl extends Controller
 	
 	}
 
+	public function history(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data pasien');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; 
+
+		if ($request->search != "") {
+				$data = Registrasi::where('delete_soft', '=', 1)
+								->where('pasien_uuid', '=', $search)
+								->orderBy('tanggal', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+				$total = Registrasi::where('delete_soft', '=', 1)
+								->where('pasien_uuid', '=', $search)
+								->orderBy('tanggal', 'desc')->count();
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+	
+	}
+
 
 	public function obat(Request $request) {
 

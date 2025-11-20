@@ -114,58 +114,8 @@
 
     <!-- CONTENT -->
     <main class="content">
-      <component :is="currentComponent"></component>
+      <component :is="currentComponent" :selectedPatient="selectedPatient"></component>
     </main>
-
-    <!-- CONTENT -->
-    <!-- <main class="content">
-
-        <div class="panel">
-            <h2>Ringkasan Klinik</h2>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col">
-                        <p><strong>Dokter Saat Ini</strong> : dr Nisa</p>
-                        <p><strong>Konsul dokter terakhir</strong> : dr Nisa</p>
-                        <p><strong>Diagnosis</strong> : Acne</p>
-                    </div>
-                    <div class="col">
-                        <p><strong>Konsumsi Obat</strong> :</p>
-                        <p>1. CREAM ACNE, 1×1 Oleskan</p>
-                        <p>2. CREAM MALAM, 3×1 Oleskan</p>
-                        <p><strong>Alergi</strong> : Aclidinium, ACARBOSE</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <br>
-
-        <div class="panel">
-            <h2>History Kunjungan</h2>
-            <table class="table">
-                <thead class="thead2">
-                    <tr>
-                        <th>No</th>
-                        <th>Registrasi</th>
-                        <th>Tanggal</th>
-                        <th>Jam</th>
-                        <th>Layanan</th>
-                        <th>Dokter</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td><td>006969</td><td>06-11-2025</td><td>16:27</td><td>AESTHETIC</td><td>dr Nisa</td>
-                    </tr>
-                    <tr>
-                        <td>2</td><td>006889</td><td>10-10-2025</td><td>20:32</td><td>POLI PSIKOLOGI</td><td>dr Yoga</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-    </main> -->
 
 </div>
 
@@ -642,23 +592,23 @@ export default {
 }
 
 /* ======== TABLE ======== */
-.table {
+.table-rme {
     width: 100%;
     border-collapse: collapse;
 }
 
-.table thead2 {
+.table-rme thead2 {
     background: #004c92;
     color: white;
 }
 
-.table th, .table td {
+.table-rme th, .table-rme td {
     padding: 10px;
     border: 1px solid #d0d0d0;
     font-size: 14px;
 }
 
-.table tbody tr:nth-child(even) {
+.table-rme tbody tr:nth-child(even) {
     background: #eef4ff;
 }
 
