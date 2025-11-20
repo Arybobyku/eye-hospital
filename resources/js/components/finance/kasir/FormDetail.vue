@@ -178,6 +178,13 @@
 											</td>
 											<td>{{ formatrupiah(supergrandtotal.toString()) }}</td>
 										</tr>
+											<tr
+											v-if="(detail.apakah_paket == 'Ya' && bedah?.harga_sudah_ditentukan == 1)">
+											<td colspan="5">
+												Harga Paket Sudah Ditentukan
+											</td>
+											<td>{{ formatrupiah(bedah?.total.toString()) }}</td>
+										</tr>
 									</tbody>
 								</table>
 							</div>
@@ -305,6 +312,12 @@ export default {
 			kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
 			nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
 			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', catatan: '', diskon_rp: '', diskon_global: '',
+		},
+		bedah: {
+			id: null,
+			nama: null,
+			harga_sudah_ditentukan: null,
+			total:null,
 		},
 		temphitung: [],
 				globalDiscountNominal: 0, // For nominal discount
@@ -526,6 +539,12 @@ export default {
 				rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: ''
 				, diskon_rp: '', diskon_persen: ''
 			};
+			vm.bedah = {
+				id: null,
+				nama: null,
+				harga_sudah_ditentukan: null,
+				total:null,
+			};
 			vm.globalDiscountNominal = 0;
 				vm.globalDiscountPercentage = 0;
 		},
@@ -549,6 +568,12 @@ export default {
 
 			vm.listdata = [];
 			vm.detail = response.data.data;
+
+			if(response.data.bedah){
+				vm.bedah = response.data.bedah;
+
+				console.log("response.data.bedah", vm.bedah);
+			}
 
 
 			if (vm.detail.carabayar_nama == 'Umum') {

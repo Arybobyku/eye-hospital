@@ -47,7 +47,7 @@
                     <tr>
                         <td>Banyaknya</td>
                         <td>:
-                            <?php $grandtotaltop = 0; ?>
+                            <?php $grandtotaltop = 0; $totalDiskonGlobalTop=0?>
                             @foreach ($layananpasien as $item)
                                 <?php $grandtotaltop += $item->total; ?>
                             @endforeach
@@ -61,8 +61,8 @@
                             @endif
                             {{-- @if ($registrasi->cover_asuransi != '0')
 								<?php
-        $grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi;
-        ?>
+                                 $grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi;
+                                ?>
 							@endif --}}
                             @if ($registrasi->diskon_rp != 0)
                                 <?php
@@ -72,14 +72,25 @@
                                 $grandtotaltop = $grandtotaltop - $totalDiskonGlobalTop;
                                 ?>
                             @endif
-                            Rp. {{ number_format($grandtotaltop) }}
+
+                            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
+                              Rp. {{ number_format($paketBedah->total - $totalDiskonGlobalTop) }}
+                            @else
+                              Rp. {{ number_format($grandtotaltop) }}
+                            @endif
                         </td>
                     </tr>
                     <tr>
                         <td>Terbilang</td>
-                        <td>:
-                            <i style="text-transform: uppercase">"# {{ terbilang($grandtotaltop) }} Rupiah #"</i>
-                        </td>
+                            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
+                            <td>:
+                                <i style="text-transform: uppercase">"# {{ terbilang($paketBedah->total) }} Rupiah #"</i>
+                            </td>
+                            @else
+                            <td>:
+                                <i style="text-transform: uppercase">"# {{ terbilang($grandtotaltop) }} Rupiah #"</i>
+                            </td>
+                            @endif
                     </tr>
                 </table>
             </td>
@@ -1012,7 +1023,7 @@
                     <td colspan="6" align="left" style="padding: 6px 5px; width: 65%;"><b>Grand Total</b></td>
                     <td colspan="2" align="right" style="padding: 6px 5px;"><b>Rp.
                             {{ number_format($last) }}</b></td>
-                </tr>
+                </tr> 
             @endif
 
 
@@ -1050,7 +1061,7 @@
 
             @endif
 
-            @if ($diskon != 0 || $registrasi->diskon_rp != 0)
+            @if (($diskon != 0 || $registrasi->diskon_rp != 0) && (!$paketBedah || $paketBedah?->harga_sudah_ditentukan == 0))
                 <?php
                 $diskonGlobal = $registrasi->diskon_rp;
                 $totalDiskonGlobal = $diskonGlobal + $diskon;
@@ -1074,8 +1085,6 @@
                     </tr>
                 @endif --}}
                 <tr>
-
-
                     <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Diskon</b></td>
                     <td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp.
                             {{ number_format($totalDiskonGlobal) }}</b></td>
@@ -1087,6 +1096,39 @@
                             {{ number_format($totalTarif) }}</b></td>
                 </tr>
             @endif
+
+            {{-- Harga Paket Bedah yang sudah ditentukan --}}
+            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
+                <?php
+                    $totalTarifPaket = $paketBedah->total;
+                ?>
+                @if ($diskon != 0 || $registrasi->diskon_rp != 0)
+                    <?php
+                        $diskonGlobal = $registrasi->diskon_rp;
+                        $totalDiskonGlobalItem = $diskonGlobal + $diskon;
+                        $totalTarifPaket -= $totalDiskonGlobalItem;
+                    ?>
+                <tr>
+                    <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Item</b></td>
+                    <td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp.
+                            {{ number_format($totalDiskonGlobalItem) }}</b></td>
+                </tr>
+                @endif
+                <tr>
+                    <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Paket</b>
+                    </td>
+                    <td colspan="2" align="right" style="padding: 4px 7px;"><b>
+                            {{ number_format((($last- $paketBedah->total)/ $last) * 100, 2) }} %
+                    </b></td>
+                </tr>
+                <tr>
+                    <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Pembayaran</b>
+                    </td>
+                    <td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp.
+                            {{ number_format($totalTarifPaket) }}</b></td>
+                </tr>
+            @endif
+
 
             @if (
                 $registrasi->carabayar_uuid != '1bddd542-fd1e-4b6a-b629-53bd35428796' &&
