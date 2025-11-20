@@ -20,52 +20,105 @@
 			:key="i"
 			@click="selectPatient(item)"
 			>
-			<strong>{{ item.name }}</strong> ({{ item.rm }}) <br>
-			<span class="address">{{ item.address }}</span>
+			<strong>{{ item.nama }}</strong> ({{ item.rekam_medis }}) <br>
+			<span class="address">{{ item.alamat }}</span>
 			</div>
 		</div>
+	</div>
+ <br>
+<!-- DETAIL PASIEN -->
+<div v-if="selectedPatient" class="patient-detail-card">
 
-		<!-- DETAIL PASIEN -->
-		<div 
-			v-if="selectedPatient"
-			class="detail-box"
-		>
-			<h3>{{ selectedPatient.name }}</h3>
-			<p><b>Nomor RM:</b> {{ selectedPatient.rm }}</p>
-			<p><b>Alamat:</b> {{ selectedPatient.address }}</p>
+	<!-- LEFT FOTO + INFO SINGKAT -->
+	<div class="left-box">
+    <div class="photo-wrapper">
+      <img
+        class="avatar"
+        :src="selectedPatient.foto || '/default-avatar.png'"
+        alt="Foto Pasien"
+      />
+    </div>
+
+		<div class="badge badge-rm">
+			MR : {{ selectedPatient.rekam_medis }}
+		</div>
+
+		<div class="badge badge-name">
+			{{ selectedPatient.nama }}
+		</div>
+
+		<div class="badge badge-extra">
+			{{ selectedPatient.kota || '-' }}, 
+			{{ selectedPatient.tanggal_lahir || '-' }}
 		</div>
 	</div>
 
-<div class="layout-container">
+	<!-- RIGHT TABEL IDENTITAS -->
+	<div class="right-box">
+		<table class="identity-table">
+			<tr>
+				<td class="label">NIK / ID SatuSehat</td>
+				<td>{{ selectedPatient.no_identitas || '-' }}</td>
+			</tr>
+			<tr>
+				<td class="label">Jenis Kelamin</td>
+				<td>{{ selectedPatient.jenis_kelamin || '-' }}</td>
+			</tr>
+			<tr>
+				<td class="label">Nomor BPJS</td>
+				<td>{{ selectedPatient.no_bpjs || '-' }}</td>
+			</tr>
+			<tr>
+				<td class="label">Agama</td>
+				<td>{{ selectedPatient.agama || '-' }}</td>
+			</tr>
+			<tr>
+				<td class="label">Kabupaten / Kota</td>
+				<td>{{ selectedPatient.nama_kab_kota || '-' }}</td>
+			</tr>
+			<tr>
+				<td class="label">Alamat</td>
+				<td>{{ selectedPatient.alamat || '-' }}</td>
+			</tr>
+			<tr>
+				<td class="label">Nomor Telepon</td>
+				<td>{{ selectedPatient.no_handphone || '-' }}</td>
+			</tr>
+			<tr>
+				<td class="label">Email</td>
+				<td>{{ selectedPatient.email || '-' }}</td>
+			</tr>
+		</table>
+	</div>
+</div>
+ 
+<br>
+<div  v-if="selectedPatient" class="layout-container">
 
     <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="sidebar-title">Data Pasien</div>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Data Pasien</div>
 
-        <ul class="sidebar-menu">
-            <li class="active">
-                <i class="icon">&#128100;</i> History Kunjungan
-            </li>
-            <li><i class="icon">&#9881;</i> Pengkajian Data Umum</li>
-            <li><i class="icon">&#128221;</i> Persetujuan Umum</li>
-            <li><i class="icon">&#9888;</i> Pengkajian Risiko Jatuh</li>
-            <li><i class="icon">&#9993;</i> Informed Consent</li>
-            <li><i class="icon">&#128200;</i> Tanda-Tanda Umum</li>
-            <li><i class="icon">&#9997;</i> Tindakan</li>
-            <li><i class="icon">&#128196;</i> SOAP</li>
-            <li><i class="icon">&#128462;</i> CPPT</li>
-            <li><i class="icon">&#128101;</i> Status Pasien</li>
-            <li><i class="icon">&#128300;</i> Pengkajian Prabedah</li>
-            <li><i class="icon">&#128295;</i> Surgical Safety Checklist</li>
-            <li><i class="icon">&#128137;</i> Penunjang Medis</li>
-            <li><i class="icon">&#128657;</i> MCU</li>
-            <li><i class="icon">&#128138;</i> Resep dan Obat</li>
-            <li><i class="icon">&#128179;</i> Bill Pembayaran</li>
-        </ul>
-    </aside>
+    <ul class="sidebar-menu">
+      <li
+        v-for="item in sidebarMenus"
+        :key="item.name"
+        :class="{ active: activeMenu === item.name }"
+        @click="selectMenu(item.name)"
+      >
+        <i class="icon">{{ item.icon }}</i> {{ item.name }}
+      </li>
+    </ul>
+  </aside>
 
     <!-- CONTENT -->
     <main class="content">
+      <component :is="currentComponent"></component>
+    </main>
+
+    <!-- CONTENT -->
+    <!-- <main class="content">
 
         <div class="panel">
             <h2>Ringkasan Klinik</h2>
@@ -91,7 +144,7 @@
         <div class="panel">
             <h2>History Kunjungan</h2>
             <table class="table">
-                <thead>
+                <thead class="thead2">
                     <tr>
                         <th>No</th>
                         <th>Registrasi</th>
@@ -112,7 +165,7 @@
             </table>
         </div>
 
-    </main>
+    </main> -->
 
 </div>
 
@@ -172,12 +225,55 @@ export default {
 		selectedPatient: null,
 		showDropdown: false,
 		typingTimer: null,
+
+    // Handling Sidebar
+    activeMenu: "",
+		sidebarMenus: [
+			{ name: "History Kunjungan", icon: "👤" },
+			{ name: "Pengkajian Data Umum", icon: "⚙️" },
+			{ name: "Persetujuan Umum", icon: "📝" },
+			{ name: "Pengkajian Risiko Jatuh", icon: "⚠️" },
+			{ name: "Informed Consent", icon: "✉️" },
+			{ name: "Tanda-Tanda Umum", icon: "📊" },
+			{ name: "Tindakan", icon: "✍️" },
+			{ name: "SOAP", icon: "📄" },
+			{ name: "CPPT", icon: "📑" },
+			{ name: "Status Pasien", icon: "👥" },
+			{ name: "Pengkajian Prabedah", icon: "🔬" },
+			{ name: "Surgical Safety Checklist", icon: "🛠️" },
+			{ name: "Penunjang Medis", icon: "💉" },
+			{ name: "MCU", icon: "🚑" },
+			{ name: "Resep dan Obat", icon: "💊" },
+			{ name: "Bill Pembayaran", icon: "💳" },
+		],
 	}},
+  computed: {
+    currentComponent() {
+      switch (this.activeMenu) {
+        case "History Kunjungan":
+          return defineAsyncComponent(() =>
+            import("./historykunjungan/HistoryKunjungan.vue")
+          );
+
+        case "Persetujuan Umum":
+          return defineAsyncComponent(() =>
+            import("./persetujuanUmum/PersetujuanUmum.vue")
+          );
+
+        default:
+          return defineAsyncComponent(() =>
+            import("./historykunjungan/HistoryKunjungan.vue")
+          );
+      }
+    },
+  },
 	methods: {
+    selectMenu(menuName) {
+      this.activeMenu = menuName;
+    },
 		formpermintaan,
 		
 		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected, initindexdb, indexdbprocessing,
-
 		selectfilter: function (event, key) { vm.form = vm.filterselected(vm.form, key); },
 		selecthide:function() { vm.form = vm.hideselected(vm.form); },
 		selecteditem:function(item, key) { 
@@ -212,22 +308,47 @@ export default {
 		// 👇 FITUR REALTIME SEARCH PASIEN
 		// -------------------------------------
 
-		searchPatient() {
-			clearTimeout(this.typingTimer);
+    searchPatient() {
+      clearTimeout(this.typingTimer);
 
-			// debounce 300ms
-			this.typingTimer = setTimeout(() => {
-			if (this.searchQuery.trim() === "") {
-				this.patientResults = [];
-				this.showDropdown = false;
-				return;
-			}
+      // debounce 300ms
+      this.typingTimer = setTimeout(async () => {
+        const q = this.searchQuery.trim();
 
-			// TODO: Ganti dengan API kamu
-			this.patientResults = this.fakePatientAPI(this.searchQuery);
-			this.showDropdown = true;
-			}, 300);
-		},
+        if (q === "") {
+          this.patientResults = [];
+          this.showDropdown = false;
+          return;
+        }
+
+        try {
+          this.isLoading = true; // opsional: buat animated spinner
+
+          const formData = new FormData();
+          formData.append("search", q);
+          formData.append("limit", 5);
+          formData.append("page", 1);
+
+          const res = await axios.post("/master/pasien/search", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+          });
+
+          // sesuaikan dengan struktur backend kamu
+          this.patientResults = res.data?.data ?? [];
+
+          this.showDropdown = this.patientResults.length > 0;
+        } catch (err) {
+          console.error("Error searching patient:", err);
+          this.patientResults = [];
+          this.showDropdown = false;
+        } finally {
+          this.isLoading = false; // opsional
+        }
+      }, 300);
+    },
+
 
 		// Mock API — kamu ganti sendiri dengan axios / fetch
 		fakePatientAPI(keyword) {
@@ -278,6 +399,77 @@ export default {
 
 </script>
 <style>
+.patient-detail-card {
+	display: flex;
+	padding: 25px;
+	border: 1px solid #dcdcdc;
+	border-radius: 6px;
+	background: white;
+	margin-top: 15px;
+}
+
+.left-box {
+	width: 260px;
+	text-align: center;
+	padding-right: 20px;
+	border-right: 1px solid #e8e8e8;
+}
+
+.avatar {
+	width: 160px;
+	height: 160px;
+	border-radius: 6px;
+	border: 1px solid #ccc;
+	margin-bottom: 10px;
+	object-fit: cover;
+}
+
+.badge {
+	display: inline-block;
+	padding: 6px 16px;
+	border-radius: 4px;
+	color: white;
+	font-weight: bold;
+	margin-bottom: 6px;
+	font-size: 14px;
+}
+
+.badge-rm {
+	background: #d9534f;
+}
+
+.badge-name {
+	background: #0275d8;
+}
+
+.badge-extra {
+	background: #5cb85c;
+}
+
+.right-box {
+	flex: 1;
+	padding-left: 25px;
+}
+
+.identity-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 14px;
+}
+
+.identity-table td {
+	border: 1px solid #e2e2e2;
+	padding: 10px 12px;
+}
+
+.identity-table .label {
+	background: #1c75bc;
+	color: white;
+	width: 200px;
+	font-weight: bold;
+}
+
+
 .search-container {
   position: relative;
   max-width: 480px;
@@ -372,7 +564,7 @@ export default {
 /* ======== SIDEBAR ======== */
 .sidebar {
     width: 240px;
-    background: #8b0022;          /* Merah maroon */
+    background: #1c75bc;          /* Merah maroon */
     color: white;
     padding-top: 20px;
     flex-shrink: 0;
@@ -397,27 +589,26 @@ export default {
 }
 
 .sidebar-menu li {
-    padding: 12px 20px;
-    font-size: 14px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    transition: 0.25s;
+	padding: 10px 14px;
+	cursor: pointer;
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 14px;
 }
-
 .sidebar-menu li:hover {
-    background: rgba(255,255,255,0.15);
+	background: #ccc;
 }
 
 .sidebar-menu li.active {
-    background: #9acd32;       /* Hijau active seperti screenshot */
-    color: #000;
-    font-weight: 600;
+	background: white;
+	color: black;
+	font-weight: bold;
 }
-
 .icon {
-    width: 18px;
+	font-size: 16px;
+	width: 20px;
 }
 
 /* ======== CONTENT ======== */
@@ -456,7 +647,7 @@ export default {
     border-collapse: collapse;
 }
 
-.table thead {
+.table thead2 {
     background: #004c92;
     color: white;
 }

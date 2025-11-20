@@ -97,6 +97,38 @@ class PasienCtrl extends Controller
 	
 	}
 
+	public function search(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data pasien');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; $column = $request->column;
+
+		if ($request->search != "") {
+				$data = Pasien::where('delete_soft', '=', 1)
+								->where(function ($q) use ($search) {
+									$q->where('nama', 'ilike', '%' . $search . '%')
+									->orWhere('no_identitas', 'ilike', '%' . $search . '%')
+									->orWhere('rekam_medis', 'ilike', '%' . $search . '%');
+								})
+								->skip($skip)->take($this->take)
+								->get();
+				$total = Pasien::where('delete_soft', '=', 1)
+								->where(function ($q) use ($search) {
+									$q->where('nama', 'ilike', '%' . $search . '%')
+									->orWhere('no_identitas', 'ilike', '%' . $search . '%')
+									->orWhere('rekam_medis', 'ilike', '%' . $search . '%');
+								})
+								->orderBy('status', 'desc')->count();
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+	
+	}
+
 
 	public function obat(Request $request) {
 

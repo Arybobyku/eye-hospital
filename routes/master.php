@@ -18,6 +18,7 @@ use App\Http\Controllers\Master\PasienCtrl;
 Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::prefix('pasien')->group(function () {
 		Route::post('list', [PasienCtrl::class, 'list'])->name('master-pasien-list');
+		Route::post('search', [PasienCtrl::class, 'search'])->name('master-pasien-search');
 		Route::get('listexcel', [PasienCtrl::class, 'listexcel'])->name('master-pasien-listexcel');
 		Route::post('obat', [PasienCtrl::class, 'obat'])->name('master-pasien-obat');
 		Route::post('tindakan', [PasienCtrl::class, 'tindakan'])->name('master-pasien-tindakan');
