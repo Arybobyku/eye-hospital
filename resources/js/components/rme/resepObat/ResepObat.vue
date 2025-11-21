@@ -9,9 +9,8 @@
     <!-- HEADER -->
     
 
-    <div class="header-component-rme">Persetujuan Umum (General Consent)</div>
+    <div class="header-component-rme">Daftar Resep</div>
 
-    <ButtonTambah @click="goToAdd" />
     
     <!-- FILTER BAR -->
     <div class="filter-bar">
@@ -35,12 +34,10 @@
       <thead>
         <tr>
           <th>NO</th>
+          <th>RESEP</th>
           <th>TANGGAL</th>
-          <th>JAM</th>
-          <th>NAMA PASIEN</th>
-          <th>JENIS KELAMIN</th>
-          <th>NIK</th>
-          <th>USER</th>
+          <th>DARI</th>
+          <th>DOKTER</th>
           <th>ACTION</th>
         </tr>
       </thead>
@@ -48,17 +45,96 @@
       <tbody>
         <tr v-for="(item, index) in paginatedData" :key="item.id">
           <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
+          <td>{{ item.no }}</td>
           <td>{{ item.tanggal }}</td>
-          <td>{{ item.jam }}</td>
-          <td>{{ item.nama_pasien }}</td>
-          <td>{{ item.jenis_kelamin }}</td>
           <td>{{ item.nik }}</td>
-          <td>{{ item.nama_user }}</td>
+          <td>{{ item.nama_dokter }}</td>
           <td class="action-buttons">
-            <i class="fa fa-bookmark action-icon icon-edit" @click="editItem(item)"></i>
-            <i class="fa fa-times action-icon icon-delete" @click="deleteItem(item)"></i>
             <i class="fa fa-print action-icon icon-print" @click="printItem(item)"></i>
           </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- FOOTER INFO -->
+    <div class="table-info">
+      Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="pagination-rme">
+      <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
+
+      <button
+        v-for="page in totalPages"
+        :key="page"
+        :class="['page-btn', { active: currentPage === page }]"
+        @click="currentPage = page"
+      >
+        {{ page }}
+      </button>
+
+      <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
+    </div>
+  </div>
+  <div class="history-container">
+    <!-- LOADING OVERLAY -->
+    <div v-if="loading" class="loading-overlay">
+      <div class="spinner-rme"></div>
+      Loading...
+    </div>
+
+    <!-- HEADER -->
+    
+
+    <div class="header-component-rme">Daftar Penjualan</div>
+
+    
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="filter-left">
+        Tampil
+        <select v-model="perPage">
+          <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
+        </select>
+        data
+      </div>
+
+      <div class="filter-right">
+        Cari:
+        <input type="text" v-model="searchQuery" class="search-input" />
+      </div>
+    </div>
+
+    <!-- TABLE -->
+     
+    <table class="custom-table-rme">
+      <thead>
+        <tr>
+          <th>NO</th>
+          <th>KODE</th>
+          <th>TANGGAL</th>
+          <th>JAM</th>
+          <th>LOKASI</th>
+          <th>DOKTER</th>
+          <th>BARANG</th>
+          <th>JUMLAH</th>
+          <th>KWITANSI</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr v-for="(item, index) in paginatedData" :key="item.id">
+          <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
+          <td>{{ item.no }}</td>
+          <td>{{ item.tanggal }}</td>
+          <td>{{ item.jam }}</td>
+          <td>Apotek</td>
+          <td>{{ item.nama_dokter }}</td>
+          <td>{{ item.nama_obat }}</td>
+          <td>{{ item.jumlah }}</td>
+          <td>{{ item.no_kwitansi }}</td>
+
         </tr>
       </tbody>
     </table>
