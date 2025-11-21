@@ -16,6 +16,7 @@ use DateTime;
 use App\Models\Pasien;
 use App\Models\Resep;
 use App\Models\LayananPasien;
+use App\Models\PemeriksaanDokter;
 use App\Models\UploadSuratPersetujuan;
 use App\Models\Registrasi;
 use App\Models\SuratPersetujuan;
@@ -210,6 +211,23 @@ class PasienCtrl extends Controller
 							->select('layanan_pasien.*')
 							->where('layanan_pasien.pasien_uuid', '=', $request->search)
 							->where('layanan_pasien.jenis', '!=', 'Obat-Obatan')
+							->count();
+	
+		return response()->json(['data' => $data, 'total' => $total]);
+	}
+
+	public function tandaUmumPasien(Request $request) {
+
+		$data = PemeriksaanDokter::join('registrasi', 'pemeriksaan_dokter.registrasi_uuid', '=', 'registrasi.uuid')
+							->where('registrasi.status', '=', 'Selesai')
+							->select('pemeriksaan_dokter.*')
+							->where('pemeriksaan_dokter.pasien_uuid', '=', $request->search)
+							->get();
+
+		$total = PemeriksaanDokter::join('registrasi', 'pemeriksaan_dokter.registrasi_uuid', '=', 'registrasi.uuid')
+							->where('registrasi.status', '=', 'Selesai')
+							->select('pemeriksaan_dokter.*')
+							->where('pemeriksaan_dokter.pasien_uuid', '=', $request->search)
 							->count();
 	
 		return response()->json(['data' => $data, 'total' => $total]);

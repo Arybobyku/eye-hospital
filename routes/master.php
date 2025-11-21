@@ -25,6 +25,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 
 		// RME
 		Route::post('tindakan-pasien', [PasienCtrl::class, 'tindakanPasien'])->name('master-pasien-tindakan');
+		Route::post('tanda-umum-pasien', [PasienCtrl::class, 'tandaUmumPasien'])->name('master-pasien-tanda-umum-pasien');
 		Route::post('history', [PasienCtrl::class, 'history'])->name('master-pasien-history');
 		Route::post('search', [PasienCtrl::class, 'search'])->name('master-pasien-search');
 		Route::post('soap', [PasienCtrl::class, 'soap'])->name('master-pasien-soap');

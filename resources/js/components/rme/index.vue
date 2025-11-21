@@ -213,6 +213,10 @@ export default {
           return defineAsyncComponent(() =>
             import("./tindakan/Tindakan.vue")
           );
+        case "Tanda-Tanda Umum":
+          return defineAsyncComponent(() =>
+            import("./tandaTandaUmum/TandaTandaUmum.vue")
+          );
         case "SOAP":
           return defineAsyncComponent(() =>
             import("./soap/Soap.vue")
