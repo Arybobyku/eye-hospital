@@ -89,7 +89,7 @@
         <tbody>
           <tr>
             <td>1</td>
-            <td>Diagnosa dan keadaan kesehatan pasien</td>
+            <td>Diagnosis (WD&DD)</td>
             <td>
               <textarea v-model="form.isiInformasi" class="textarea-rme"></textarea>
             </td>
@@ -105,7 +105,7 @@
 
           <tr>
             <td>2</td>
-            <td>Nama dan tujuan tindakan</td>
+            <td>Dasar Diagnosis</td>
             <td>
               <textarea v-model="form.tujuan" class="textarea-rme"></textarea>
             </td>
@@ -121,9 +121,143 @@
 
           <tr>
             <td>3</td>
-            <td>Alternatif tindakan lain dan masing-masing risikonya</td>
+            <td>Tindakan Kedokteran</td>
             <td>
               <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+            </td>
+            <td class="text-center">
+              <vue-signature
+                ref="sign3"
+                :sigOption="sigOption"
+                class="signature-box-rme"
+              />
+              <button class="btn-rme mt-2">Simpan ✔</button>
+            </td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Indikasi Tindakan</td>
+            <td>
+              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+            </td>
+            <td class="text-center">
+              <vue-signature
+                ref="sign3"
+                :sigOption="sigOption"
+                class="signature-box-rme"
+              />
+              <button class="btn-rme mt-2">Simpan ✔</button>
+            </td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Tata Cara</td>
+            <td>
+              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+            </td>
+            <td class="text-center">
+              <vue-signature
+                ref="sign3"
+                :sigOption="sigOption"
+                class="signature-box-rme"
+              />
+              <button class="btn-rme mt-2">Simpan ✔</button>
+            </td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Tujuan</td>
+            <td>
+              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+            </td>
+            <td class="text-center">
+              <vue-signature
+                ref="sign3"
+                :sigOption="sigOption"
+                class="signature-box-rme"
+              />
+              <button class="btn-rme mt-2">Simpan ✔</button>
+            </td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Risiko</td>
+            <td>
+              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+            </td>
+            <td class="text-center">
+              <vue-signature
+                ref="sign3"
+                :sigOption="sigOption"
+                class="signature-box-rme"
+              />
+              <button class="btn-rme mt-2">Simpan ✔</button>
+            </td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Komplikasi</td>
+            <td>
+              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+            </td>
+            <td class="text-center">
+              <vue-signature
+                ref="sign3"
+                :sigOption="sigOption"
+                class="signature-box-rme"
+              />
+              <button class="btn-rme mt-2">Simpan ✔</button>
+            </td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Prognosis</td>
+            <td>
+              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+            </td>
+            <td class="text-center">
+              <vue-signature
+                ref="sign3"
+                :sigOption="sigOption"
+                class="signature-box-rme"
+              />
+              <button class="btn-rme mt-2">Simpan ✔</button>
+            </td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Alternatif & Resiko</td>
+            <td>
+              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+            </td>
+            <td class="text-center">
+              <vue-signature
+                ref="sign3"
+                :sigOption="sigOption"
+                class="signature-box-rme"
+              />
+              <button class="btn-rme mt-2">Simpan ✔</button>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              Dengan ini menyatakan bahwa saya telah menerangkan hal-hal di atas secara
+              benar dan jelas dan memberikan kesempatan untuk bertanya dan atau berdiskusi
+              (dokter yang memberikan informasi / tindakan).
+            </td>
+            <td class="text-center">
+              <vue-signature
+                ref="sign3"
+                :sigOption="sigOption"
+                class="signature-box-rme"
+              />
+              <button class="btn-rme mt-2">Simpan ✔</button>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              Dengan ini menyatakan bahwa saya telah menerima informasi sebagaimana di
+              atas yang saya beri paraf di kolom kanannya dan telah memahaminya.
             </td>
             <td class="text-center">
               <vue-signature
@@ -137,6 +271,104 @@
         </tbody>
       </table>
     </div>
+
+    <!-- ================= Persetujuan tindakan dokter ================= -->
+    <div class="consent-container">
+      <h3>Persetujuan / Penolakan Tindakan Kedokteran</h3>
+
+      <div>
+        Yang bertanda tangan di bawah ini, saya
+        <input v-model="form.nama" class="input-rme" />, berumur
+        <input v-model="form.usia" class="input-rme small" /> tahun, berjenis kelamin
+        <select v-model="form.jenis_kelamin" class="input-rme">
+          <option value="L">Laki - laki</option>
+          <option value="P">Perempuan</option></select
+        >, yang beralamatkan di
+        <input v-model="form.alamat" class="input-rme" />
+      </div>
+
+      <div style="margin-top: 10px">
+        Dengan ini menyatakan
+        <select v-model="form.status_persetujuan" class="input-rme">
+          <option value="setuju">Setuju</option>
+          <option value="tidak_setuju">Tidak Setuju</option>
+        </select>
+        untuk dilakukan tindakan
+        <input v-model="form.tindakan" class="input-rme large" />
+        terhadap saya / anak saya yang bernama
+        <input v-model="form.nama_anak" class="input-rme" />
+      </div>
+
+      <br />
+
+      <div>
+        Saya memahami perlunya dan manfaat tindakan tersebut sebagaimana telah dijelaskan
+        seperti di atas kepada saya, termasuk risiko dan komplikasi yang timbul.
+      </div>
+
+      <div>
+        Saya juga menyadari bahwa oleh karena Ilmu kedokteran bukanlah ilmu pasti, maka
+        saya tidak akan menuntut hasil dan kemungkinan risiko yang timbul seperti telah
+        dijelaskan di atas.
+      </div>
+
+      <div class="tanggal-tempat">BEKASI, {{ currentDate }} WIB</div>
+
+      <!-- ================= SIGNATURE AREA ================= -->
+
+      <div class="signature-section">
+        <!-- Yang Menyatakan -->
+        <div class="sign-box">
+          <label>Yang Menyatakan</label>
+
+          <vue-signature ref="sign1" :sigOption="sigOption" class="signature-box-rme" />
+
+          <button @click="saveSign('sign1')" class="btn-save">Simpan ✔</button>
+
+          <input
+            v-model="form.nama"
+            class="input-rme"
+            placeholder="Tanda Tangan dan Nama Terang"
+          />
+        </div>
+
+        <!-- Saksi 1 -->
+        <div class="sign-box">
+          <label>Saksi 1</label>
+
+          <vue-signature ref="sign2" :sigOption="sigOption" class="signature-box-rme" />
+
+          <button @click="saveSign('sign2')" class="btn-save">Simpan ✔</button>
+
+          <input
+            v-model="form.saksi1"
+            class="input-rme"
+            placeholder="Tanda Tangan dan Nama Terang"
+          />
+        </div>
+
+        <!-- Saksi 2 -->
+        <div class="sign-box">
+          <label>Saksi 2</label>
+
+          <vue-signature ref="sign3" :sigOption="sigOption" class="signature-box-rme" />
+
+          <button @click="saveSign('sign3')" class="btn-save">Simpan ✔</button>
+
+          <input
+            v-model="form.saksi2"
+            class="input-rme"
+            placeholder="Tanda Tangan dan Nama Terang"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ================= BUTTON BOTTOM ================= -->
+
+  <div class="action-footer">
+    <button class="btn-save-form" @click="submitForm">Save</button>
+    <button class="btn-back" @click="$emit('back')">Back</button>
   </div>
 </template>
 
@@ -312,6 +544,79 @@ export default {
   border-radius: 50%;
   animation: spin-rme 0.8s linear infinite;
   margin-bottom: 10px;
+}
+
+.consent-container {
+  padding: 20px;
+  background: white;
+}
+
+.input-rme {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+}
+
+.input-rme.small {
+  width: 80px;
+}
+
+.input-rme.large {
+  width: 250px;
+}
+
+.signature-section {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
+
+.sign-box {
+  width: 30%;
+  text-align: center;
+}
+
+.signature-box-rme {
+  width: 100%;
+  height: 160px;
+  border: 1px solid #999;
+  margin-bottom: 10px;
+}
+
+.btn-save {
+  background: #1e88e5;
+  color: white;
+  padding: 5px 12px;
+  border: none;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.action-footer {
+
+  margin-top: 90px;
+  display: flex;
+  justify-content: flex-end; /* tombol ke kanan */
+  gap: 12px; /* jarak antar tombol */
+}
+
+.btn-save-form {
+  background: #0288d1;
+  color: white;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-back {
+  background: #ff9800;
+  color: white;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 @keyframes spin-rme {
