@@ -33,23 +33,23 @@
         <thead>
           <tr>
             <th>NO</th>
-            <th>REGISTRASI</th>
             <th>TANGGAL</th>
             <th>JAM</th>
-            <th>STATUS</th>
-            <th>DOKTER</th>
-            <th>JAMINAN</th>
+            <th>NAMA PASIEN</th>
+            <th>JENIS KELAMIN</th>
+            <th>NIK</th>
+            <th>USER</th>
           </tr>
         </thead>
 
         <tbody>
           <tr v-for="(item, index) in paginatedData" :key="item.id">
             <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-            <td>{{ item.nomor }}</td>
             <td>{{ item.tanggal }}</td>
             <td>{{ item.waktu }}</td>
-            <td>{{ mappedStatus(item) }}</td>
-            <td>{{ item.nama_dokter }}</td>
+            <td>{{ item.nama_pasien }}</td>
+            <td>{{ item.jenis_kelamin }}</td>
+            <td>{{ item.no_identitas }}</td>
             <td>{{ item.carabayar_nama }}</td>
           </tr>
         </tbody>
