@@ -177,12 +177,11 @@ export default {
 		typingTimer: null,
 
     // Handling Sidebar
-    activeMenu: "",
+    activeMenu: "History Kunjungan",
 		sidebarMenus: [
 			{ name: "History Kunjungan", icon: "👤" },
 			{ name: "Pengkajian Data Umum", icon: "⚙️" },
 			{ name: "Persetujuan Umum", icon: "📝" },
-			{ name: "Pengkajian Risiko Jatuh", icon: "⚠️" },
 			{ name: "Informed Consent", icon: "✉️" },
 			{ name: "Tanda-Tanda Umum", icon: "📊" },
 			{ name: "Tindakan", icon: "✍️" },
@@ -190,7 +189,6 @@ export default {
 			{ name: "CPPT", icon: "📑" },
 			{ name: "Status Pasien", icon: "👥" },
 			{ name: "Pengkajian Prabedah", icon: "🔬" },
-			{ name: "Surgical Safety Checklist", icon: "🛠️" },
 			{ name: "Penunjang Medis", icon: "💉" },
 			{ name: "MCU", icon: "🚑" },
 			{ name: "Resep dan Obat", icon: "💊" },
@@ -234,7 +232,7 @@ export default {
 
         default:
           return defineAsyncComponent(() =>
-            import("./historykunjungan/HistoryKunjungan.vue")
+            import("./commingsoon/CommingSoon.vue")
           );
       }
     },
@@ -397,13 +395,13 @@ export default {
 }
 
 .badge {
-	display: inline-block;
 	padding: 6px 16px;
 	border-radius: 4px;
 	color: white;
 	font-weight: bold;
 	margin-bottom: 6px;
 	font-size: 14px;
+	width: 100%;
 }
 
 .badge-rm {
@@ -603,15 +601,7 @@ export default {
     color: #004c92;
 }
 
-/* ======== GRID ======== */
-.row {
-    display: flex;
-    gap: 50px;
-}
 
-.col {
-    flex: 1;
-}
 
 /* ======== TABLE ======== */
 .table-rme {
