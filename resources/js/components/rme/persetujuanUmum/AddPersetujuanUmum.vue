@@ -9,7 +9,7 @@
     <!-- HEADER -->
     
 
-    <div class="header-component-rme">Persetujuan Umum (General Consent)</div>
+    <div class="header-component-rme">Tambah</div>
 
     <ButtonTambah @click="goToAdd" />
     

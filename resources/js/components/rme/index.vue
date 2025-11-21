@@ -217,6 +217,12 @@ export default {
           return defineAsyncComponent(() =>
             import("./tandaTandaUmum/TandaTandaUmum.vue")
           );
+
+		case "Resep dan Obat":
+          return defineAsyncComponent(() =>
+            import("./resepObat/ResepObat.vue")
+          );
+		  
         case "SOAP":
           return defineAsyncComponent(() =>
             import("./soap/Soap.vue")
