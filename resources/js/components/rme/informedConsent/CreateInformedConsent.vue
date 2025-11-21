@@ -1,5 +1,5 @@
 <template>
-<button @click="$emit('back')" class="btn-back">Kembali</button>
+  <button @click="$emit('back')" class="btn-back">Kembali</button>
 
   <div class="container py-4">
     <!-- ================= HEADER ================= -->
@@ -142,8 +142,12 @@
 
 <script>
 import axios from "axios";
+import vueSignature from "vue-signature";
 export default {
   name: "HistoryKunjungan",
+  components: {
+    vueSignature,
+  },
 
   data() {
     return {
@@ -153,6 +157,7 @@ export default {
       loading: false,
       sigOption: {
         penColor: "black",
+        backgroundColor: "white",
       },
       data: [],
       form: {
