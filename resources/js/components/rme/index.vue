@@ -213,6 +213,10 @@ export default {
           return defineAsyncComponent(() =>
             import("./soap/Soap.vue")
           );
+        case "Informed Consent":
+          return defineAsyncComponent(() =>
+            import("./informedConsent/InformedConsent.vue")
+          );
 
         default:
           return defineAsyncComponent(() =>
