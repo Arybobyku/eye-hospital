@@ -624,6 +624,16 @@ export default {
     background: #eef4ff;
 }
 
+/* ======== GRID ======== */
+.row {
+    display: flex;
+    gap: 50px;
+}
+
+.col {
+    flex: 1;
+}
+
 
 /* ANIMASI */
 @keyframes fadeDown {
