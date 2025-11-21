@@ -209,6 +209,10 @@ export default {
           return defineAsyncComponent(() =>
             import("./persetujuanUmum/PersetujuanUmum.vue")
           );
+        case "Tindakan":
+          return defineAsyncComponent(() =>
+            import("./tindakan/Tindakan.vue")
+          );
         case "SOAP":
           return defineAsyncComponent(() =>
             import("./soap/Soap.vue")

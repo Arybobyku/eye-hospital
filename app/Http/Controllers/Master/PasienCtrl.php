@@ -195,6 +195,26 @@ class PasienCtrl extends Controller
 		return response()->json(['data' => $data]);
 	}
 
+
+	public function tindakanPasien(Request $request) {
+
+		$data = LayananPasien::join('registrasi', 'layanan_pasien.registrasi_uuid', '=', 'registrasi.uuid')
+							->where('registrasi.status', '=', 'Selesai')
+							->select('layanan_pasien.*')
+							->where('layanan_pasien.pasien_uuid', '=', $request->search)
+							->where('layanan_pasien.jenis', '!=', 'Obat-Obatan')
+							->get();
+
+		$total = LayananPasien::join('registrasi', 'layanan_pasien.registrasi_uuid', '=', 'registrasi.uuid')
+							->where('registrasi.status', '=', 'Selesai')
+							->select('layanan_pasien.*')
+							->where('layanan_pasien.pasien_uuid', '=', $request->search)
+							->where('layanan_pasien.jenis', '!=', 'Obat-Obatan')
+							->count();
+	
+		return response()->json(['data' => $data, 'total' => $total]);
+	}
+
 	public function tindakan(Request $request) {
 
 		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
