@@ -186,8 +186,8 @@ export default {
 			{ name: "Informed Consent", icon: "✉️" },
 			{ name: "Tanda-Tanda Umum", icon: "📊" },
 			{ name: "Tindakan", icon: "✍️" },
-			{ name: "SOAP", icon: "📄" },
-			{ name: "CPPT", icon: "📑" },
+			{ name: "CPPT & SOAP", icon: "📄" },
+			// { name: "CPPT", icon: "📑" },
 			{ name: "Oftalmologis Rawat Jalan", icon: "📑" },
 			{ name: "Status Pasien", icon: "👥" },
 			{ name: "Pengkajian Prabedah", icon: "🔬" },
@@ -226,7 +226,7 @@ export default {
             import("./resepObat/ResepObat.vue")
           );
 		  
-        case "SOAP":
+        case "CPPT & SOAP":
           return defineAsyncComponent(() =>
             import("./soap/Soap.vue")
           );
@@ -720,7 +720,21 @@ export default {
   background: #f4f4f4;
 }
 
+.action-icon {
+  cursor: pointer;
+  font-size: 18px;
+  margin: 0 6px;
+  color: #356ead;
+}
 
+.action-icon:hover {
+  color: #094a9c;
+}
+
+.action-icon {
+  font-size: 20px;
+  cursor: pointer;
+}
 
 /* ANIMASI */
 @keyframes fadeDown {

@@ -57,7 +57,7 @@
           <td class="action-buttons">
             <i class="fa fa-bookmark action-icon icon-edit" @click="editItem(item)"></i>
             <i class="fa fa-times action-icon icon-delete" @click="deleteItem(item)"></i>
-            <i class="fa fa-print action-icon icon-print" @click="printItem(item)"></i>
+            <i class="fa fa-print action-icon icon-print" @click="print(item)"></i>
           </td>
         </tr>
       </tbody>
@@ -221,6 +221,13 @@ export default {
         }
 
         return 'Selesai'
+    },
+
+    print() {
+      window.open(
+        `/print/rekammedis/rawat-jalan/rm1dot1/${this.selectedPatient.uuid}`,
+        "_blank"
+      );
     },
   },
 };

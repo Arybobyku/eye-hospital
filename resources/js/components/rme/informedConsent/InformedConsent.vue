@@ -39,6 +39,7 @@
             <th>JENIS KELAMIN</th>
             <th>NIK</th>
             <th>USER</th>
+            <th>ACTION</th>
           </tr>
         </thead>
 
@@ -51,6 +52,11 @@
             <td>{{ item.jenis_kelamin }}</td>
             <td>{{ item.no_identitas }}</td>
             <td>{{ item.carabayar_nama }}</td>
+            <!-- ACTION -->
+            <td class="text-center">
+              <!-- icon print -->
+              <i class="fas fa-print action-icon" @click="print()"></i>
+            </td>
           </tr>
         </tbody>
       </table>
@@ -81,14 +87,14 @@
 
     <!-- Create Data -->
     <div v-if="state == 'create'">
-      <CreateInformedConsent @back="state = 'list'" :selectedPatient="selectedPatient"/>
+      <CreateInformedConsent @back="state = 'list'" :selectedPatient="selectedPatient" />
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
-import { defineAsyncComponent } from 'vue';
+import { defineAsyncComponent } from "vue";
 export default {
   name: "InformedConsent",
   components: {
@@ -202,6 +208,12 @@ export default {
       }
 
       return "Selesai";
+    },
+    print() {
+      window.open(
+        `/print/rekammedis/rawat-jalan/rm1dot1/${this.selectedPatient.uuid}`,
+        "_blank"
+      );
     },
   },
 };
