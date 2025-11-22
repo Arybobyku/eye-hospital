@@ -33,7 +33,7 @@
           <th>KODE</th>
           <th>TANGGAL</th>
           <th>JAM</th>
-          <th>LAYANAN</th>
+          <!-- <th>LAYANAN</th> -->
           <th>DOKTER</th>
           <th>TINDAKAN</th>
           <th>TOTAL</th>
@@ -46,7 +46,7 @@
           <td>{{ item.registrasi_nomor }}</td>
           <td>{{ item.tanggal }}</td>
           <td>{{ item.waktu }}</td>
-          <td>{{ mappedStatus(item) }}</td>
+          <!-- <td>{{ mappedStatus(item) }}</td> -->
           <td>{{ item.nama_dokter }}</td>
           <td>{{ item.nama_layanan }}</td>
           <td>{{ formatRupiah(item.total) }}</td>

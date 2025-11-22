@@ -185,10 +185,10 @@ export default {
 			{ name: "Persetujuan Umum", icon: "📝" },
 			{ name: "Informed Consent", icon: "✉️" },
 			{ name: "Tanda-Tanda Umum", icon: "📊" },
+			{ name: "Pemeriksaan RO", icon: "📑" },
 			{ name: "Tindakan", icon: "✍️" },
 			{ name: "CPPT & SOAP", icon: "📄" },
 			// { name: "CPPT", icon: "📑" },
-			{ name: "Oftalmologis Rawat Jalan", icon: "📑" },
 			{ name: "Status Pasien", icon: "👥" },
 			{ name: "Pengkajian Prabedah", icon: "🔬" },
 			{ name: "Penunjang Medis", icon: "💉" },
@@ -219,6 +219,10 @@ export default {
         case "Tanda-Tanda Umum":
           return defineAsyncComponent(() =>
             import("./tandaTandaUmum/TandaTandaUmum.vue")
+          );
+		case "Pemeriksaan RO":
+          return defineAsyncComponent(() =>
+            import("./pemeriksaanRO/PemeriksaanRO.vue")
           );
 
 		case "Resep dan Obat":
@@ -735,6 +739,18 @@ export default {
   font-size: 20px;
   cursor: pointer;
 }
+
+.inner-od-table th {
+  background: #f1f1f1;
+  font-weight: bold;
+  width: 120px;
+}
+
+.inner-od-table td, .inner-od-table th {
+  padding: 1px 1px;
+  font-size: 12px;
+}
+
 
 /* ANIMASI */
 @keyframes fadeDown {
