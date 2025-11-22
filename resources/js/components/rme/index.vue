@@ -57,7 +57,7 @@
 	<div class="right-box">
 		<table class="identity-table">
 			<tr>
-				<td class="label">NIK / ID SatuSehat</td>
+				<td class="label">Nomor Identitas</td>
 				<td>{{ selectedPatient.no_identitas || '-' }}</td>
 			</tr>
 			<tr>
@@ -177,8 +177,9 @@ export default {
 		typingTimer: null,
 
     // Handling Sidebar
-    activeMenu: "History Kunjungan",
+    activeMenu: "Riwayat Kesehatan",
 		sidebarMenus: [
+			{ name: "Riwayat Kesehatan", icon: "💉" },
 			{ name: "History Kunjungan", icon: "👤" },
 			{ name: "Pengkajian Data Umum", icon: "⚙️" },
 			{ name: "Persetujuan Umum", icon: "📝" },
@@ -199,11 +200,14 @@ export default {
   computed: {
     currentComponent() {
       switch (this.activeMenu) {
+        case "Riwayat Kesehatan":
+          return defineAsyncComponent(() =>
+            import("./riwayatKesehatan/RiwayatKesehatan.vue")
+          );
         case "History Kunjungan":
           return defineAsyncComponent(() =>
             import("./historykunjungan/HistoryKunjungan.vue")
           );
-
         case "Persetujuan Umum":
           return defineAsyncComponent(() =>
             import("./persetujuanUmum/PersetujuanUmum.vue")
