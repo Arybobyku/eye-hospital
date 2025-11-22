@@ -59,14 +59,14 @@
 
         <div class="col-md-6">
           <label>Pemberi Informasi :</label>
-          <input type="text" v-model="form.pemberiInfo" class="input-rme" />
+          <input type="text" v-model="form.pemberi_info" class="input-rme" />
         </div>
       </div>
 
       <div class="row mb-2">
         <div class="col-md-12">
           <label>Penerima Informasi :</label>
-          <input type="text" v-model="form.penerimaInfo" class="input-rme" />
+          <input type="text" v-model="form.penerima_info" class="input-rme" />
         </div>
       </div>
 
@@ -91,12 +91,12 @@
             <td>1</td>
             <td>Diagnosis (WD&DD)</td>
             <td>
-              <textarea v-model="form.isiInformasi" class="textarea-rme"></textarea>
+              <textarea v-model="form.diagnosis" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign1"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="diagnosis_ttd"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -107,12 +107,12 @@
             <td>2</td>
             <td>Dasar Diagnosis</td>
             <td>
-              <textarea v-model="form.tujuan" class="textarea-rme"></textarea>
+              <textarea v-model="form.dasar_diagnosis" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign2"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="dasar_diagnosis_ttd"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -123,12 +123,15 @@
             <td>3</td>
             <td>Tindakan Kedokteran</td>
             <td>
-              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+              <textarea
+                v-model="form.tindakan_kedokteran"
+                class="textarea-rme"
+              ></textarea>
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign3"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="tindakan_kedokteran_ttd"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -138,12 +141,12 @@
             <td>4</td>
             <td>Indikasi Tindakan</td>
             <td>
-              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+              <textarea v-model="form.indikasi_tindakan" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign3"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="indikasi_tindakan_ttd"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -153,12 +156,12 @@
             <td>5</td>
             <td>Tata Cara</td>
             <td>
-              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+              <textarea v-model="form.tata_cara" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign3"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="tata_cara_ttd"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -168,12 +171,12 @@
             <td>6</td>
             <td>Tujuan</td>
             <td>
-              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+              <textarea v-model="form.tujuan" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign3"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="tujuan_ttd"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -183,12 +186,12 @@
             <td>7</td>
             <td>Risiko</td>
             <td>
-              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+              <textarea v-model="form.risiko" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign3"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="risiko_ttd"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -198,12 +201,12 @@
             <td>8</td>
             <td>Komplikasi</td>
             <td>
-              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+              <textarea v-model="form.komplikasi" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign3"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="komplikasi_ttd"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -213,12 +216,12 @@
             <td>9</td>
             <td>Prognosis</td>
             <td>
-              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+              <textarea v-model="form.prognosis" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign3"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="prognosis_ttd"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -228,12 +231,15 @@
             <td>10</td>
             <td>Alternatif & Resiko</td>
             <td>
-              <textarea v-model="form.alternatif" class="textarea-rme"></textarea>
+              <textarea
+                v-model="form.alternatif_dan_risiko"
+                class="textarea-rme"
+              ></textarea>
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign3"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="alternatif_dan_risiko_ttd"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -246,9 +252,9 @@
               (dokter yang memberikan informasi / tindakan).
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign3"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="sign4"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -260,9 +266,9 @@
               atas yang saya beri paraf di kolom kanannya dan telah memahaminya.
             </td>
             <td class="text-center">
-              <vue-signature
-                ref="sign3"
-                :sigOption="sigOption"
+              <VueSignaturePad
+                ref="sign5"
+                :options="sigOption"
                 class="signature-box-rme"
               />
               <button class="btn-rme mt-2">Simpan ✔</button>
@@ -278,8 +284,8 @@
 
       <div>
         Yang bertanda tangan di bawah ini, saya
-        <input v-model="form.nama" class="input-rme" />, berumur
-        <input v-model="form.usia" class="input-rme small" /> tahun, berjenis kelamin
+        <input v-model="form.yang_bertanda_tangan" class="input-rme" />, berumur
+        <input v-model="form.berumur" class="input-rme small" /> tahun, berjenis kelamin
         <select v-model="form.jenis_kelamin" class="input-rme">
           <option value="L">Laki - laki</option>
           <option value="P">Perempuan</option></select
@@ -289,12 +295,12 @@
 
       <div style="margin-top: 10px">
         Dengan ini menyatakan
-        <select v-model="form.status_persetujuan" class="input-rme">
+        <select v-model="form.menyatakan" class="input-rme">
           <option value="setuju">Setuju</option>
           <option value="tidak_setuju">Tidak Setuju</option>
         </select>
         untuk dilakukan tindakan
-        <input v-model="form.tindakan" class="input-rme large" />
+        <input v-model="form.dilakukan_tindakan" class="input-rme large" />
         terhadap saya / anak saya yang bernama
         <input v-model="form.nama_anak" class="input-rme" />
       </div>
@@ -321,12 +327,18 @@
         <div class="sign-box">
           <label>Yang Menyatakan</label>
 
-          <vue-signature ref="sign1" :sigOption="sigOption" class="signature-box-rme" />
+          <VueSignaturePad
+            ref="yang_menyatakan_ttd"
+            :options="sigOption"
+            class="signature-box-rme"
+          />
 
-          <button @click="saveSign('sign1')" class="btn-save">Simpan ✔</button>
+          <button @click="saveSign('yang_menyatakan_ttd')" class="btn-save">
+            Simpan ✔
+          </button>
 
           <input
-            v-model="form.nama"
+            v-model="form.yang_menyatakan"
             class="input-rme"
             placeholder="Tanda Tangan dan Nama Terang"
           />
@@ -336,12 +348,16 @@
         <div class="sign-box">
           <label>Saksi 1</label>
 
-          <vue-signature ref="sign2" :sigOption="sigOption" class="signature-box-rme" />
+          <VueSignaturePad
+            ref="saksi_1_ttd"
+            :options="sigOption"
+            class="signature-box-rme"
+          />
 
-          <button @click="saveSign('sign2')" class="btn-save">Simpan ✔</button>
+          <button @click="saveSign('saksi_1_ttd')" class="btn-save">Simpan ✔</button>
 
           <input
-            v-model="form.saksi1"
+            v-model="form.saksi_1"
             class="input-rme"
             placeholder="Tanda Tangan dan Nama Terang"
           />
@@ -351,12 +367,16 @@
         <div class="sign-box">
           <label>Saksi 2</label>
 
-          <vue-signature ref="sign3" :sigOption="sigOption" class="signature-box-rme" />
+          <VueSignaturePad
+            ref="saksi_2_ttd"
+            :options="sigOption"
+            class="signature-box-rme"
+          />
 
-          <button @click="saveSign('sign3')" class="btn-save">Simpan ✔</button>
+          <button @click="saveSign('saksi_2_ttd')" class="btn-save">Simpan ✔</button>
 
           <input
-            v-model="form.saksi2"
+            v-model="form.saksi_2"
             class="input-rme"
             placeholder="Tanda Tangan dan Nama Terang"
           />
@@ -374,13 +394,8 @@
 
 <script>
 import axios from "axios";
-import vueSignature from "vue-signature";
 export default {
   name: "HistoryKunjungan",
-  components: {
-    vueSignature,
-  },
-
   data() {
     return {
       perPage: 10,
@@ -401,9 +416,41 @@ export default {
         usia: "",
         alamat: "",
         petugas: "",
-        pemberiInfo: "",
-        penerimaInfo: "",
-        isiInformasi: "",
+        pemberi_info: "",
+        penerima_info: "",
+        diagnosis: "",
+        diagnosis_ttd: "",
+        dasar_diagnosis: "",
+        dasar_diagnosis_ttd: "",
+        tindakan_kedokteran: "",
+        tindakan_kedokteran_ttd: "",
+        indikasi_tindakan: "",
+        indikasi_tindakan_ttd: "",
+        tata_cara: "",
+        tata_cara_ttd: "",
+        tujuan: "",
+        tujuan_ttd: "",
+        risiko: "",
+        risiko_ttd: "",
+        komplikasi: "",
+        komplikasi_ttd: "",
+        prognosis: "",
+        prognosis_ttd: "",
+        alternatif_dan_risiko: "",
+        alternatif_dan_risiko_ttd: "",
+        menyatakan_menerangkan_ttd: "",
+        menyatakan_memahami_ttd: "",
+        yang_bertanda_tangan: "",
+        berumur: "",
+        jenis_kelamin: "",
+        menyatakan: "",
+        dilakukan_tindakan: "",
+        yang_menyatakan: "",
+        yang_menyatakan_ttd: "",
+        saksi_1: "",
+        saksi_1_ttd: "",
+        saksi_2: "",
+        saksi_2_ttd: "",
       },
     };
   },
@@ -470,6 +517,21 @@ export default {
       this.form.nama = this.selectedPatient?.nama;
       this.form.usia = this.selectedPatient?.tanggal_lahir;
       this.form.alamat = this.selectedPatient?.alamat;
+    },
+    saveSign(refName) {
+      const pad = this.$refs[refName];
+
+      if (!pad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
+
+      const base64 = pad.save(); // hasil tanda tangan
+
+      // simpan otomatis sesuai field
+      this.form[refName] = base64;
+
+      console.log("TTD saved:", refName, base64);
     },
   },
 };
@@ -592,7 +654,6 @@ export default {
 }
 
 .action-footer {
-
   margin-top: 90px;
   display: flex;
   justify-content: flex-end; /* tombol ke kanan */
