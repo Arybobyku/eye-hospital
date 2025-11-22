@@ -62,6 +62,8 @@
             <i class="fas fa-book action-icon" @click="openModal('detail', item)"></i>
 
             <!-- icon print -->
+            <!-- icon print -->
+            <i class="fas fa-print action-icon" @click="print('print')"></i>
           </td>
         </tr>
       </tbody>
@@ -113,24 +115,23 @@
         </table>
 
 
-        <h4 class="mb-2"><strong>Tanda Tanda Umum</strong></h4>
+        <h4 class="mb-2"><strong>Pemeriksaan Fisik</strong></h4>
         <table class="modal-table">
-          <tr><td><strong>Status Fungsional</strong></td><td>{{ selectedItem?.status_fungsional }}</td></tr>
           <tr><td><strong>Keluhan Utama</strong></td><td>{{ selectedItem?.keluhan_utama }}</td></tr>
+          <tr><td><strong>Penyakit Pernah Diderita</strong></td><td>{{ selectedItem?.penyakit_pernah_diderita }}</td></tr>
           <tr><td><strong>Kasus Urgent</strong></td><td>{{ selectedItem?.kasus_urgent }}</td></tr>
-          <tr><td><strong>Kasus Urgent (Show)</strong></td><td>{{ selectedItem?.kasus_urgent_show }}</td></tr>
-          <tr><td><strong>Kasus Urgent Lainnya</strong></td><td>{{ selectedItem?.kasus_urgent_lainnya }}</td></tr>
-
-          <tr><td><strong>Riwayat Penyakit</strong></td><td>{{ selectedItem?.riwayat_penyakit }}</td></tr>
+          <tr><td><strong>Status Fungsional</strong></td><td>{{ selectedItem?.status_fungsional }}</td></tr>
           <tr><td><strong>Status Psikologi</strong></td><td>{{ selectedItem?.status_psikologi }}</td></tr>
-
           <tr><td><strong>Tekanan Darah</strong></td><td>{{ selectedItem?.tekanan_darah }}</td></tr>
           <tr><td><strong>Nadi</strong></td><td>{{ selectedItem?.nadi }}</td></tr>
           <tr><td><strong>Respiratory Rate</strong></td><td>{{ selectedItem?.respiratory_rate }}</td></tr>
           <tr><td><strong>Suhu</strong></td><td>{{ selectedItem?.suhu }}</td></tr>
           <tr><td><strong>Berat Badan</strong></td><td>{{ selectedItem?.berat_badan }}</td></tr>
           <tr><td><strong>Tinggi Badan</strong></td><td>{{ selectedItem?.tinggi_badan }}</td></tr>
+        </table>
 
+        <h4 class="mb-2"><strong>Skrinning</strong></h4>
+        <table class="modal-table">
           <tr><td><strong>Nyeri</strong></td><td>{{ selectedItem?.nyeri }}</td></tr>
           <tr><td><strong>Nyeri Hilang Bila</strong></td><td>{{ selectedItem?.nyeri_hilang_bila }}</td></tr>
           <tr><td><strong>Nyeri Hilang Bila (Show)</strong></td><td>{{ selectedItem?.nyeri_hilang_bila_show }}</td></tr>
@@ -141,31 +142,16 @@
           <tr><td><strong>Durasi Nyeri</strong></td><td>{{ selectedItem?.durasi_nyeri }}</td></tr>
           <tr><td><strong>Keterangan Nyeri</strong></td><td>{{ selectedItem?.keterangan_nyeri }}</td></tr>
           <tr><td><strong>Masalah Kesehatan Terkait Nyeri</strong></td><td>{{ selectedItem?.masalah_kesehatan_nyeri }}</td></tr>
+        </table>
 
-          <tr><td><strong>Penyakit Pernah Diderita</strong></td><td>{{ selectedItem?.penyakit_pernah_diderita }}</td></tr>
-          <tr><td><strong>Penyakit Pernah Diderita (Show)</strong></td><td>{{ selectedItem?.penyakit_pernah_diderita_show }}</td></tr>
-          <tr><td><strong>Penyakit Pernah Diderita Lainnya</strong></td><td>{{ selectedItem?.penyakit_pernah_diderita_lainnya }}</td></tr>
-
+        <h4 class="mb-2"><strong>Riwayat Kesehatan</strong></h4>
+        <table class="modal-table">
           <tr><td><strong>Pernah Dioperasi</strong></td><td>{{ selectedItem?.pernah_dioperasi }}</td></tr>
-          <tr><td><strong>Pernah Dioperasi (Show)</strong></td><td>{{ selectedItem?.pernah_dioperasi_show }}</td></tr>
-          <tr><td><strong>Pernah Dioperasi Lainnya</strong></td><td>{{ selectedItem?.pernah_dioperasi_lainnya }}</td></tr>
-
+          <tr><td><strong>Riwayat Penyakit</strong></td><td>{{ selectedItem?.riwayat_penyakit }}</td></tr>
           <tr><td><strong>Riwayat Alergi Makanan</strong></td><td>{{ selectedItem?.riwayat_alergi_makanan }}</td></tr>
-          <tr><td><strong>Riwayat Alergi Makanan (Show)</strong></td><td>{{ selectedItem?.riwayat_alergi_makanan_show }}</td></tr>
-          <tr><td><strong>Riwayat Alergi Makanan Lainnya</strong></td><td>{{ selectedItem?.riwayat_alergi_makanan_lainnya }}</td></tr>
-
           <tr><td><strong>Riwayat Alergi Obatan</strong></td><td>{{ selectedItem?.riwayat_alergi_obatan }}</td></tr>
-          <tr><td><strong>Riwayat Alergi Obatan (Show)</strong></td><td>{{ selectedItem?.riwayat_alergi_obatan_show }}</td></tr>
-          <tr><td><strong>Riwayat Alergi Obatan Lainnya</strong></td><td>{{ selectedItem?.riwayat_alergi_obatan_lainnya }}</td></tr>
-
           <tr><td><strong>Obat Digunakan Saat Ini</strong></td><td>{{ selectedItem?.obat_digunakan_saat_ini }}</td></tr>
-          <tr><td><strong>Obat Digunakan Saat Ini (Show)</strong></td><td>{{ selectedItem?.obat_digunakan_saat_ini_show }}</td></tr>
-          <tr><td><strong>Obat Digunakan Saat Ini Lainnya</strong></td><td>{{ selectedItem?.obat_digunakan_saat_ini_lainnya }}</td></tr>
-
           <tr><td><strong>Penilaian Resiko Jatuh</strong></td><td>{{ selectedItem?.penilaian_resiko_jatuh }}</td></tr>
-
-          <tr><td><strong>Diagnosa Keperawatan</strong></td><td>{{ selectedItem?.diagnosa_keperawatan }}</td></tr>
-          <tr><td><strong>Intervensi Keperawatan</strong></td><td>{{ selectedItem?.intervensi_keperawatan }}</td></tr>
         </table>
 
         
@@ -292,6 +278,9 @@ export default {
       }
 
       this.showModal = true;
+    },
+    print(){
+        window.open(`/print/rekammedis/rawat-jalan/rm1dot3/${this.selectedPatient.uuid}`, "_blank");
     },
     closeModal() {
       this.showModal = false;

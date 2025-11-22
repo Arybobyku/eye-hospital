@@ -187,6 +187,7 @@ export default {
 			{ name: "Tindakan", icon: "✍️" },
 			{ name: "SOAP", icon: "📄" },
 			{ name: "CPPT", icon: "📑" },
+			{ name: "Oftalmologis Rawat Jalan", icon: "📑" },
 			{ name: "Status Pasien", icon: "👥" },
 			{ name: "Pengkajian Prabedah", icon: "🔬" },
 			{ name: "Penunjang Medis", icon: "💉" },

@@ -51,7 +51,7 @@
             <i class="fas fa-book action-icon" @click="openModal('detail', item)"></i>
 
             <!-- icon print -->
-            <i class="fas fa-print action-icon" @click="openModal('print', item)"></i>
+            <i class="fas fa-print action-icon" @click="print('print', item)"></i>
           </td>
         </tr>
       </tbody>
@@ -344,6 +344,9 @@ export default {
     },
     closeModal() {
       this.showModal = false;
+    },
+    print(){
+        window.open(`/print/rekammedis/rawat-jalan/rm1dot5/${this.selectedPatient.uuid}`, "_blank");
     },
     onReady(editor) {
       // Cara resmi CKEditor 5 untuk read-only
