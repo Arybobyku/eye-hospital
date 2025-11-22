@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>REKAM MEDIS GENERAL - SURAT KONSUL</title>
+    <title>REKAM MEDIS GENERAL - FORM LASER BARRAGE</title>
     <style>
     @page { margin: 18px; }
     body { margin: 18px; }

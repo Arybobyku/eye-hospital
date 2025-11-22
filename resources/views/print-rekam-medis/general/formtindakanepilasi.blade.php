@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>REKAM MEDIS GENERAL - SURAT KONSUL</title>
+    <title>REKAM MEDIS GENERAL - FORM TINDAKAN EPILASI</title>
     <style>
     @page { margin: 18px; }
     body { margin: 18px; }
@@ -43,21 +43,34 @@
 	</div>
 
 	<br>
+    <br>
 
 	<table style="width: 100%;" cellpadding="0" cellspacing="0">
 		<tr>
-			<td style="width: 100%; font-size: 12pt; line-height: 22px;   text-align: justify">Diagnosa:  
-                <br>
-                <br>
-                Mata :  OD  <input type="checkbox">     OS  <input type="checkbox"> 
-                <br>
-		</tr>   
+			<td style="width: 180px; font-size: 12pt; line-height: 22px; padding-top: 5px">Diagnosa</td>
+        <td> : </td>
+        </tr>
+        <tr>
+            <td style="width: 180px; font-size: 12pt; line-height: 22px; padding-top: 5px">Mata</td>
+        <td> : </td>
+                            <td> OD </td>        
+                            <td>
+                <input type="checkbox">
+                            </td> 
+                              <td>OS</td>
+                                              
+                            <td>
+                                <input type="checkbox" style="padding-left: 5px; padding-right:5px">
+                            </td> 
+                <br>   
  
-        <br>
-
+               <br>
+        </tr>
+    </table>
+    <table style="width: 100%;" cellpadding="0" cellspacing="0">
 		<tr>
 			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify">
-			Langkah-langkah Tindakan Laser Fokal :
+			Langkah-langkah Tindakan Epilasi :
 			<br>
 			</td>
 			<br>

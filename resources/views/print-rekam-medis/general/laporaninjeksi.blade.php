@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>RM1.3</title>
+    <title>REKAM MEDIS GENERAL - LAPORAN INJEKSI</title>
     <style>
         @page {
             margin: 18px;
@@ -55,18 +55,32 @@
                 <tr style="border: 1px solid black; width:100%">
                     <table style="border-collapse: collapse; width:100%">
                         <tr>
-                            <td style="border-right: 1px solid black; width:100%">
-                                Mata:  OD <input type="checkbox" style="padding-left: 10px; padding-right:10px">   OS <input type="checkbox" style="padding-left: 10px; padding-right:10px">
-                                
+                            <td>
+                                Mata
                             </td>
-                            <td style="border-right: 1px solid black; width:100%; ">
+                            <td>
+                                :
+                            </td>
+                            <td>
+                                <input type="checkbox" style="padding-left: 5px; padding-right:5px">
+                            </td>
+                            <td>
+                                OD
+                            </td> 
+                            <td>
+                                <input type="checkbox" style="padding-left: 5px; padding-right:5px">
+                            </td>
+                              <td style="border-right: 1px solid black; padding-right:5px"> 
+                                 OS 
+                              </td>
+                            <td style="border-right: 1px solid black; width:100%; padding-left:5px ">
                                 Operator:       
                                 <br> 
                             </td>
-                            <td style="border-right: 1px solid black; width:100%">
+                            <td style="border-right: 1px solid black; width:100%; padding-left:5px">
                                 Jam Operasi: 
                             </td>
-                            <td style="width:100%">
+                            <td style="width:100%; padding-left:5px">
                                 Lama Operasi: 
                             </td>
 
@@ -76,10 +90,10 @@
                     <tr style="border: 1px solid black; width:100%">
                     <table style="border-collapse: collapse; width:100%">
                         <tr>
-                            <td style="border-right: 1px solid black; width:100%">
+                            <td style="border-right: 1px solid black; width:50%">
                                 Diagnosa: 
                             </td>
-                            <td style="width:100%">
+                            <td style="width:50%">
                                 Asisten: 
                             </td>
 

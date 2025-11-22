@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>REKAM MEDIS GENERAL - SURAT KONSUL</title>
+    <title>REKAM MEDIS GENERAL - FORM PERMINTAAN PULANG ATAS PERMINTAAN SENDIRI</title>
     <style>
     @page { margin: 18px; }
     body { margin: 18px; }
@@ -54,41 +54,74 @@
     <div style="font-weight: bold; text-align:center"> 
         FORMULIR PULANG ATAS PERMINTAAN SENDIRI
     </div>
-	
-	<table style="width: 100%; margin-top: 20px" cellpadding="0" cellspacing="0">
-		<tr>
-			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify"> Yang Bertanda tangan di bawah ini : <br>
-		</tr>
-        <br>
 
-		<tr>
-            <td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
-				Nama Pasien :  <br>
-				Tempat/Tanggal Lahir : 	<br>
-				Nomor Rekam Medis :	<br>
-                Agama : <br>
-                Pekerjaan : <br>
-                Alamat : <br>
-				<br>
-			</td>
-		</tr>
-		<tr>
-			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
-                Dengan ini menyatakan permintaan untuk menghentikan perawatan/pengobatan dan meminta pulang <br> atas permintaan sendiri dengan alasan : <br>
+      <br>
+	
+        <div>Yang bertanda tangan dibawah ini :</div>
+
+        <table style="width: 100%; margin-top: 20px" cellpadding="0" cellspacing="0">
+              <tr>
+    <td style="width: 180px; font-size: 12pt; line-height: 22px; padding-top: 5px">Nama Pasien</td>
+        <td> : </td>
+        <td> ..................... </td>
+        <br>
+    </tr>
+        <tr>
+			<td style="width: 180px; font-size: 12pt; line-height: 22px; padding-top: 5px">
+        Tempat/Tanggal Lahir </td>
+        <td style="width: 10px"> : </td>
+        <td> ..................... </td>
+        <br>
+        </tr>
+
+        <tr>
+			<td style="width: 180px; font-size: 12pt; line-height: 22px; padding-top: 5px">
+        Nomor Rekam Medis </td>
+        <td style="width: 10px"> : </td>
+        <td> ..................... </td>
+        <br>
+        </tr>
+        <tr>
+        <td style="width: 180px; font-size: 12pt; line-height: 22px; padding-top: 5px">
+        Agama </td>
+        <td style="width: 10px"> : </td>
+        <td> ..................... </td>
+        <br>
+        </tr>
+        <tr>
+        <td style="width: 180px; font-size: 12pt; line-height: 22px; padding-top: 5px">
+        Pekerjaan </td>
+        <td style="width: 10px"> : </td>
+        <td> ..................... </td>
+        <br>
+        </tr>
+        <tr>
+        <td style="width: 180px; font-size: 12pt; line-height: 22px; padding-top: 5px">
+        Alamat </td>
+        <td style="width: 10px"> : </td>
+        <td> ..................... </td>
+        <br>
+        </tr>
+        </table>
+        <br>
+                <div>
+			           Dengan ini menyatakan permintaan untuk menghentikan perawatan/pengobatan dan meminta pulang <br> atas permintaan sendiri dengan alasan : <br>
                 ………………………………………………………………………………………………………………………..<br> 
                 .…………………………………………………………………………………………………………………….. <br>
+                <br>
                     Sebagai pasien/keluarga pasien,saya telah mendapatkan penjelasan dari rumah sakit tentang : <br>
                     <br>
                 1.Hak saya menolak atau tidak melanjutkan pengobatan. <br>
                 2.Tentang konsekuensi dari Keputusan saya untuk pulang atas permintaan sendiri. <br>
                 3.Tentang tanggung jawab saya dengan Keputusan tersebut. <br>
                 4.Tersedianya alternatif pelayanan dan pengobatan untuk pengobatan lanjutan. <br>
+                <br>
                 Dan saya tidak akan menuntut pihka rumah sakit atau siapapun juga akibat dari Keputusan saya pulang atas permintaan sendiri.
             <br>
             <br>
+                </div>
 
-      <div class="right">Medan, ............................... 2025 </div>
-      <br>
+      <div style="display: inline-block; float: right; margin-right:35px">Medan, ............................... 2025 </div>
       <br>
       <br>
       <div style="display: inline-block; margin-left:80px"> 
@@ -101,14 +134,13 @@
       <br>
       <br>
       <div style="display: inline-block; margin-left:35px"> 
-        (………………………………..)
+        (………………………………..)<br>
+        <div style="text-align: center">Nama Jelas & Tanda Tangan </div>
       </div>
-       <div style="display: inline-block; float: right; margin-right:50px">(………………………………..) </div>
-     
-       <div style="display: inline-block; margin-left:40px"> 
-        Nama Jelas & Tanda Tangan
-      </div>
-       <div style="display: inline-block; float: right; margin-left:30px">Nama Jelas & Tanda Tangan </div>
+       <div style="display: inline-block; float: right; margin-right:45px">(………………………………..) <br>
+        <div style="text-align: center">Nama Jelas & Tanda Tangan </div>
+
+       </div>
 
 		</tr>
         

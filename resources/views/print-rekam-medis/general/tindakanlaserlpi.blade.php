@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>RM1.3</title>
+    <title>REKAM MEDIS GENERAL - TINDAKAN LASER LPI</title>
     <style>
         @page {
             margin: 18px;

@@ -34,67 +34,79 @@
 
 	<br>
 	<div class="">
-		<span class="left" style="font-weight: bold"> <u>SURAT KONSUL</u>	</span>
-		<span class="right"> ....................... </span>
+		<span class="left" style="font-weight: bold"> <u>SURAT KONSUL</u>
+		<br>
+		REFFRAL LETTER	
+		</span>
+		<span class="right"> ....................... <br>
+		Tanggal/Date
+		</span>
 
 	</div>
-
-	<br>
 	<br>
 
-	<div class="">
-		<span class="left" style="font-weight: bold">REFEAL LETTER</span>
-		<span class="right">     Tanggal/Date </span>
-	</div>
-
+	<br>
 	<br>
 	
-	<table style="width: 100%; margin-top: 20px" cellpadding="0" cellspacing="0">
-		<tr>
-			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify">Kepada Yang Terhormat/Dear Collegue <br>
+			<div>
+			Kepada Yang Terhormat/Dear Collegue <br>
 			TS. PROF/DR………………………………………. 
 			<br>
-			Di/In…………………………………………………</td>
-		</tr>
-		<br>
-		<br>
-		<tr>
-			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify">
+			Di/In…………………………………………………
+			<br>
+			</div>
+
+			<br>
+			
+			<div>
 			Bersama ini kami konsulkan pasien : <br>
 			Herewith, we would like to refer following patient : <br>
 			<br>
-			</td>
 			<br>
-			<br>
-			<br>
-		</tr>
-		<tr>
-			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
-				Nama/Name : ………………………………………….……………… <br>
-				Umur/Age : ………………………………………………………….	<br>
-				Keluhan Utama/Chief Complaint :…………………………………………………………..	<br>
-				Diagnosa Sementara/Differential Diagnosis : …………………………………………………………. <br>
-				Pengobatan & Tindakan yang telah diberikan / Medication & Treatments Given : 
-				……………………………………………………………………………………………………………
-				……………………………………………………………………………………………………………
-				<br>
-			</td>
-		</tr>
-		<tr>
-			<td style="width: 100%; padding-top: 15px">
-				
-			</td>
-		</tr>
-		<tr>
-			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 10px; text-align: justify"> Atas bantuannya, kami ucapkan banyak terima kasih/ <br>
+			</div>
+
+		 <table style="width: 100%; margin-top: 20px" cellpadding="0" cellspacing="0">
+              <tr>
+    <td style="width: 525px; font-size: 12pt; line-height: 22px; padding-top: 5px">Nama/Name</td>
+        <td> : </td>
+        <td> ..................... </td>
+        <br>
+    </tr>
+	<tr>
+    <td style="width: 525px; font-size: 12pt; line-height: 22px; padding-top: 5px">Umur/Age</td>
+        <td> : </td>
+        <td> ..................... </td>
+        <br>
+    </tr>
+	<tr>
+    <td style="width: 525px; font-size: 12pt; line-height: 22px; padding-top: 5px">Keluhan Utama/Chief Complaint</td>
+        <td> : </td>
+        <td> ..................... </td>
+        <br>
+    </tr>
+	<tr>
+    <td style="width: 525px; font-size: 12pt; line-height: 22px; padding-top: 5px">Diagnosa Sementara/Differential Diagnosis</td>
+        <td> : </td>
+        <td> ..................... </td>
+        <br>
+    </tr>
+	<tr>
+    <td style="width: 525px; font-size: 12pt;line-height: 22px; padding-top: 5px">Pengobatan & Tindakan yang telah diberikan / Medication & Treatments Given</td>
+        <td> : </td>
+        <td> ..........................</td>
+        <br>
+    </tr>
+		 </table>
+
+		 <br>
+
+			<div> Atas bantuannya, kami ucapkan banyak terima kasih <br>
 			Really appreciate to your assistance. Thank you in advanced and we are looking forward to receiving 
 			your report.
-			</td>
-		</tr>
+			</div>
 		<br>
 		<br>
-		<tr>
-			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 10px">
+			<div>
 				Hormat kami/ With Regards, <br>
 				Dokter Penanggung Jawab / Attending Doctor	<br>
 				<br>
@@ -102,9 +114,7 @@
 				<br>
 				……………………………<br>
 				Tanda tangan Dr & Stempel & Doctor’s Stamp
-			</td>
-		</tr>
-	</table>
+			</div>
 </div>
 </body>
 </html>
