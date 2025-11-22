@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cppt;
+use App\Models\DokumenLaporanPembedahan;
 use App\Models\DokumenPersetujuanPenolakanTindakanDokter;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -295,5 +296,53 @@ class PasienCtrl extends Controller
 		return response()->json(['data' => $data, 'total' => $total]);
 
 	}
+
+	public function storeLaporanPembedahan(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Konversi checkbox boolean dari string
+            $booleanFields = [
+                'anestesi_umum', 
+                'anestesi_spiral', 
+                'anestesi_epidural',
+                'anestesi_bsp', 
+                'anestesi_csp', 
+                'anestesi_lokal'
+            ];
+
+            $data = $request->all();
+            
+            foreach ($booleanFields as $field) {
+                if (isset($data[$field])) {
+                    $data[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
+                }
+            }
+
+            // Tambahkan user yang membuat
+            $data['created_by'] = Auth::user()->name ?? 'System';
+
+            // Simpan data
+            $laporan = DokumenLaporanPembedahan::create($data);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Laporan Pembedahan berhasil disimpan',
+                'data' => $laporan
+            ], 201);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Laporan Pembedahan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
 }

@@ -195,6 +195,7 @@ export default {
 			{ name: "MCU", icon: "🚑" },
 			{ name: "Resep dan Obat", icon: "💊" },
 			{ name: "Bill Pembayaran", icon: "💳" },
+			{ name: "Laporan Pembedahan", icon: "💳" },
 		],
 	}},
   computed: {
@@ -237,6 +238,10 @@ export default {
         case "Informed Consent":
           return defineAsyncComponent(() =>
             import("./informedConsent/InformedConsent.vue")
+          );
+        case "Laporan Pembedahan":
+          return defineAsyncComponent(() =>
+            import("./laporanPembedahan/LaporanPembedahan.vue")
           );
 
         default:
