@@ -21,4 +21,9 @@ class Cppt extends Model
 {
     return $this->belongsTo(Registrasi::class, 'registrasi_uuid', 'uuid');
 }
+
+  public function pemeriksaanDokter()
+{
+    return $this->belongsTo(PemeriksaanDokter::class, 'registrasi_uuid', 'registrasi_uuid');
+}
 }

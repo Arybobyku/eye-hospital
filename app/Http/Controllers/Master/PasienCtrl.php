@@ -17,6 +17,7 @@ use App\Models\Pasien;
 use App\Models\Resep;
 use App\Models\LayananPasien;
 use App\Models\PemeriksaanDokter;
+use App\Models\PemeriksaanRo;
 use App\Models\UploadSuratPersetujuan;
 use App\Models\Registrasi;
 use App\Models\SuratPersetujuan;
@@ -167,12 +168,14 @@ class PasienCtrl extends Controller
 		$search = $request->search; 
 
 		if ($request->search != "") {
-				$data = Cppt::with('registrasi')
+				$data = Cppt::with('registrasi','pemeriksaanDokter')
 				                ->where('pasien_uuid', '=', $search)
+				                // ->where('sebagai', '=', 'DOKTER')
 								->orderBy('created_at', 'desc')
 								->skip($skip)->take($this->take)
 								->get();
 				$total = Cppt::where('pasien_uuid', '=', $search)
+				                // ->where('sebagai', '=', 'DOKTER')
 								->orderBy('created_at', 'desc')->count();
 		}
 		
@@ -218,16 +221,16 @@ class PasienCtrl extends Controller
 
 	public function tandaUmumPasien(Request $request) {
 
-		$data = PemeriksaanDokter::join('registrasi', 'pemeriksaan_dokter.registrasi_uuid', '=', 'registrasi.uuid')
+		$data = PemeriksaanRo::join('registrasi', 'pemeriksaan_ro.registrasi_uuid', '=', 'registrasi.uuid')
 							->where('registrasi.status', '=', 'Selesai')
-							->select('pemeriksaan_dokter.*')
-							->where('pemeriksaan_dokter.pasien_uuid', '=', $request->search)
+							->select('pemeriksaan_ro.*')
+							->where('pemeriksaan_ro.pasien_uuid', '=', $request->search)
 							->get();
 
-		$total = PemeriksaanDokter::join('registrasi', 'pemeriksaan_dokter.registrasi_uuid', '=', 'registrasi.uuid')
+		$total = PemeriksaanRo::join('registrasi', 'pemeriksaan_ro.registrasi_uuid', '=', 'registrasi.uuid')
 							->where('registrasi.status', '=', 'Selesai')
-							->select('pemeriksaan_dokter.*')
-							->where('pemeriksaan_dokter.pasien_uuid', '=', $request->search)
+							->select('pemeriksaan_ro.*')
+							->where('pemeriksaan_ro.pasien_uuid', '=', $request->search)
 							->count();
 	
 		return response()->json(['data' => $data, 'total' => $total]);

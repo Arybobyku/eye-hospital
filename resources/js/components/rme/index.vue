@@ -634,6 +634,88 @@ export default {
     flex: 1;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: white;
+  width: 90%;
+  max-height: 80vh; /* 🔥 batas tinggi modal */
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header-rme {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  background: #2b6cb0;
+  color: white;
+}
+
+.close-btn {
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.modal-content-rme {
+  padding: 15px 18px;
+  overflow-y: auto; /* 🔥 scroll jika content tinggi */
+  flex: 1;
+}
+
+.modal-footer-rme {
+  padding: 12px 18px;
+  text-align: right;
+  background: #f1f1f1;
+}
+
+.btn-close-rme {
+  padding: 8px 14px;
+  background: #2b6cb0;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-close-rme:hover {
+  background: #1a4f80;
+}
+
+.modal-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+.modal-table td,
+.modal-table th {
+  border: 1px solid #ccc;
+  padding: 6px 10px;
+}
+
+.modal-table th {
+  background: #f4f4f4;
+}
+
+
 
 /* ANIMASI */
 @keyframes fadeDown {

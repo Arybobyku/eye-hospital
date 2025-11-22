@@ -31,9 +31,9 @@
         <tr>
           <th>NO</th>
           <th>REG</th>
+          <th>REKAM MEDIS</th>
           <th>TGL MASUK</th>
           <th>DOKTER</th>
-          <th>LAYANAN</th>
           <th>ACTION</th>
         </tr>
       </thead>
@@ -42,9 +42,9 @@
         <tr v-for="(item, index) in paginatedData" :key="item.id">
           <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
           <td>{{ item?.registrasi?.nomor }}</td>
+          <td>{{ item?.rekam_medis }}</td>
           <td>{{ item?.registrasi?.tanggal }}</td>
           <td>{{ item?.nama_dokter }}</td>
-          <td>{{ item?.carabayar_nama }}</td>
           <!-- ACTION -->
           <td class="text-center">
             <!-- icon lihat -->
@@ -89,17 +89,123 @@
       </div>
 
       <div class="modal-content-rme">
+        <h4>Detail</h4>
+        <table class="modal-table">
+          <tr>
+            <td><strong>Tanggal</strong></td>
+            <td>{{ formatDate(selectedItem?.created_at) }}</td>
+          </tr>
+          <tr>
+            <td><strong>Nama Dokter</strong></td>
+            <td>{{ selectedItem?.nama_dokter }}</td>
+          </tr>
+        </table>
+
+        <h4 class="mb-2"><strong>Pemeriksaan Mata</strong></h4>
+        <table class="modal-table">
+          <tr>
+            <th colspan="2" class="text-center">Ocular Dextra (OD) – Mata Kanan</th>
+          </tr>
+          <tr>
+            <td>Palpebra</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_dextra_palpebra }}</td>
+          </tr>
+          <tr>
+            <td>Conjunctiva</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_dextra_conjunctiva }}</td>
+          </tr>
+          <tr>
+            <td>Cornea</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_dextra_cornea }}</td>
+          </tr>
+          <tr>
+            <td>Bilik Mata Depan</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_dextra_bilik_mata_depan }}</td>
+          </tr>
+          <tr>
+            <td>Pupil dan Iris</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_dextra_pupil_dan_iris }}</td>
+          </tr>
+          <tr>
+            <td>Lensa</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_dextra_lensa }}</td>
+          </tr>
+          <tr>
+            <td>Vitreous</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_dextra_vitreous }}</td>
+          </tr>
+          <tr>
+            <td>Funduscopy</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_dextra_funduscopy }}</td>
+          </tr>
+        </table>
+
+        <br />
+
+        <table class="modal-table">
+          <tr>
+            <th colspan="2" class="text-center">Ocular Sinistra (OS) – Mata Kiri</th>
+          </tr>
+          <tr>
+            <td>Palpebra</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_sinistra_palpebra }}</td>
+          </tr>
+          <tr>
+            <td>Conjunctiva</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_sinistra_conjunctiva }}</td>
+          </tr>
+          <tr>
+            <td>Cornea</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_sinistra_cornea }}</td>
+          </tr>
+          <tr>
+            <td>Bilik Mata Depan</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_sinistra_bilik_mata_depan }}</td>
+          </tr>
+          <tr>
+            <td>Pupil dan Iris</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_sinistra_pupil_dan_iris }}</td>
+          </tr>
+          <tr>
+            <td>Lensa</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_sinistra_lensa }}</td>
+          </tr>
+          <tr>
+            <td>Vitreous</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_sinistra_vitreous }}</td>
+          </tr>
+          <tr>
+            <td>Funduscopy</td>
+            <td>{{ selectedItem?.pemeriksaan_dokter?.ocular_sinistra_funduscopy }}</td>
+          </tr>
+        </table>
         <h4>Subject</h4>
-        <ckeditor v-model="selectedItem.subjek" :editor="ClassicEditor" @ready="onReady"></ckeditor>
+        <ckeditor
+          v-model="selectedItem.subjek"
+          :editor="ClassicEditor"
+          @ready="onReady"
+        ></ckeditor>
 
         <h4>Object</h4>
-        <ckeditor v-model="selectedItem.objek" :editor="ClassicEditor" @ready="onReady"></ckeditor>
+        <ckeditor
+          v-model="selectedItem.objek"
+          :editor="ClassicEditor"
+          @ready="onReady"
+        ></ckeditor>
 
         <h4>Assessment</h4>
-        <ckeditor v-model="selectedItem.asesmen" :editor="ClassicEditor" @ready="onReady"></ckeditor>
+        <ckeditor
+          v-model="selectedItem.asesmen"
+          :editor="ClassicEditor"
+          @ready="onReady"
+        ></ckeditor>
 
         <h4>Plan</h4>
-        <ckeditor v-model="selectedItem.plan" :editor="ClassicEditor" @ready="onReady"></ckeditor>
+        <ckeditor
+          v-model="selectedItem.plan"
+          :editor="ClassicEditor"
+          @ready="onReady"
+        ></ckeditor>
       </div>
 
       <div class="modal-footer-rme">
@@ -242,6 +348,18 @@ export default {
     onReady(editor) {
       // Cara resmi CKEditor 5 untuk read-only
       editor.enableReadOnlyMode("soap-view-mode");
+    },
+    formatDate(dateString) {
+      const d = new Date(dateString);
+
+      const day = String(d.getDate()).padStart(2, "0");
+      const month = String(d.getMonth() + 1).padStart(2, "0");
+      const year = d.getFullYear();
+
+      const hours = String(d.getHours()).padStart(2, "0");
+      const minutes = String(d.getMinutes()).padStart(2, "0");
+
+      return `${day}-${month}-${year} ${hours}:${minutes}`;
     },
   },
 };

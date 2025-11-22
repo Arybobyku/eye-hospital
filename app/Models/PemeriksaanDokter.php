@@ -19,6 +19,10 @@ class PemeriksaanDokter extends Model
   {
       return $this->hasMany(PemeriksaanDokterIcd10::class, 'registrasi_uuid', 'registrasi_uuid');
   }
+public function pemeriksaanDokter()
+  {
+      return $this->hasMany(PemeriksaanDokter::class, 'registrasi_uuid', 'registrasi_uuid');
+  }
   public function resep()
   {
       return $this->hasMany(Resep::class, 'registrasi_uuid', 'registrasi_uuid');

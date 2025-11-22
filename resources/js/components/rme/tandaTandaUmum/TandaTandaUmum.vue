@@ -35,8 +35,11 @@
           <th>TANGGAL</th>
           <th>WAKTU</th>
           <th>ANAMNESE</th>
-          <th>POSISI BOLA MATA</th>
-          <th>PERGERAKAN BOLA MATA</th>
+          <th>SUHU</th>
+          <th>TINGGI BADAN</th>
+          <th>BERAT BADAN</th>
+          <th>NADI</th>
+          <th>TEKANAN DARAH</th>
           <th>ACTION</th>
         </tr>
       </thead>
@@ -48,9 +51,12 @@
           <td>{{ item.rekam_medis }}</td>
           <td>{{ item.tanggal }}</td>
           <td>{{ item.waktu }}</td>
-          <td>{{ item.anamnese }}</td>
-          <td>{{ item.posisi_bola_mata }}</td>
-          <td>{{ item.pergerakan_bola_mata }}</td>
+          <td>{{ item.keluhan_utama }}</td>
+          <td>{{ item.suhu }}</td>
+          <td>{{ item.tinggi_badan }}</td>
+          <td>{{ item.berat_badan }}</td>
+          <td>{{ item.nadi }}</td>
+          <td>{{ item.tekanan_darah }}</td>
           <td class="text-center">
             <!-- icon lihat -->
             <i class="fas fa-book action-icon" @click="openModal('detail', item)"></i>
@@ -106,114 +112,63 @@
           </tr>
         </table>
 
-        <!-- Dokter -->
-        <h4 class="mb-2"><strong>Dokter</strong></h4>
+
+        <h4 class="mb-2"><strong>Tanda Tanda Umum</strong></h4>
         <table class="modal-table">
-          <tr>
-            <td><strong>Nama Dokter</strong></td>
-            <td>{{ selectedItem?.nama_dokter }}</td>
-          </tr>
-          <tr>
-            <td><strong>Tanggal</strong></td>
-            <td>{{ selectedItem?.tanggal }}</td>
-          </tr>
-          <tr>
-            <td><strong>Waktu</strong></td>
-            <td>{{ selectedItem?.waktu }}</td>
-          </tr>
+          <tr><td><strong>Status Fungsional</strong></td><td>{{ selectedItem?.status_fungsional }}</td></tr>
+          <tr><td><strong>Keluhan Utama</strong></td><td>{{ selectedItem?.keluhan_utama }}</td></tr>
+          <tr><td><strong>Kasus Urgent</strong></td><td>{{ selectedItem?.kasus_urgent }}</td></tr>
+          <tr><td><strong>Kasus Urgent (Show)</strong></td><td>{{ selectedItem?.kasus_urgent_show }}</td></tr>
+          <tr><td><strong>Kasus Urgent Lainnya</strong></td><td>{{ selectedItem?.kasus_urgent_lainnya }}</td></tr>
+
+          <tr><td><strong>Riwayat Penyakit</strong></td><td>{{ selectedItem?.riwayat_penyakit }}</td></tr>
+          <tr><td><strong>Status Psikologi</strong></td><td>{{ selectedItem?.status_psikologi }}</td></tr>
+
+          <tr><td><strong>Tekanan Darah</strong></td><td>{{ selectedItem?.tekanan_darah }}</td></tr>
+          <tr><td><strong>Nadi</strong></td><td>{{ selectedItem?.nadi }}</td></tr>
+          <tr><td><strong>Respiratory Rate</strong></td><td>{{ selectedItem?.respiratory_rate }}</td></tr>
+          <tr><td><strong>Suhu</strong></td><td>{{ selectedItem?.suhu }}</td></tr>
+          <tr><td><strong>Berat Badan</strong></td><td>{{ selectedItem?.berat_badan }}</td></tr>
+          <tr><td><strong>Tinggi Badan</strong></td><td>{{ selectedItem?.tinggi_badan }}</td></tr>
+
+          <tr><td><strong>Nyeri</strong></td><td>{{ selectedItem?.nyeri }}</td></tr>
+          <tr><td><strong>Nyeri Hilang Bila</strong></td><td>{{ selectedItem?.nyeri_hilang_bila }}</td></tr>
+          <tr><td><strong>Nyeri Hilang Bila (Show)</strong></td><td>{{ selectedItem?.nyeri_hilang_bila_show }}</td></tr>
+          <tr><td><strong>Nyeri Hilang Bila Lainnya</strong></td><td>{{ selectedItem?.nyeri_hilang_bila_lainnya }}</td></tr>
+          <tr><td><strong>Skala Nyeri</strong></td><td>{{ selectedItem?.skala_nyeri }}</td></tr>
+          <tr><td><strong>Lokasi Nyeri</strong></td><td>{{ selectedItem?.lokasi_nyeri }}</td></tr>
+          <tr><td><strong>Karakteristik Nyeri</strong></td><td>{{ selectedItem?.karakteristik_nyeri }}</td></tr>
+          <tr><td><strong>Durasi Nyeri</strong></td><td>{{ selectedItem?.durasi_nyeri }}</td></tr>
+          <tr><td><strong>Keterangan Nyeri</strong></td><td>{{ selectedItem?.keterangan_nyeri }}</td></tr>
+          <tr><td><strong>Masalah Kesehatan Terkait Nyeri</strong></td><td>{{ selectedItem?.masalah_kesehatan_nyeri }}</td></tr>
+
+          <tr><td><strong>Penyakit Pernah Diderita</strong></td><td>{{ selectedItem?.penyakit_pernah_diderita }}</td></tr>
+          <tr><td><strong>Penyakit Pernah Diderita (Show)</strong></td><td>{{ selectedItem?.penyakit_pernah_diderita_show }}</td></tr>
+          <tr><td><strong>Penyakit Pernah Diderita Lainnya</strong></td><td>{{ selectedItem?.penyakit_pernah_diderita_lainnya }}</td></tr>
+
+          <tr><td><strong>Pernah Dioperasi</strong></td><td>{{ selectedItem?.pernah_dioperasi }}</td></tr>
+          <tr><td><strong>Pernah Dioperasi (Show)</strong></td><td>{{ selectedItem?.pernah_dioperasi_show }}</td></tr>
+          <tr><td><strong>Pernah Dioperasi Lainnya</strong></td><td>{{ selectedItem?.pernah_dioperasi_lainnya }}</td></tr>
+
+          <tr><td><strong>Riwayat Alergi Makanan</strong></td><td>{{ selectedItem?.riwayat_alergi_makanan }}</td></tr>
+          <tr><td><strong>Riwayat Alergi Makanan (Show)</strong></td><td>{{ selectedItem?.riwayat_alergi_makanan_show }}</td></tr>
+          <tr><td><strong>Riwayat Alergi Makanan Lainnya</strong></td><td>{{ selectedItem?.riwayat_alergi_makanan_lainnya }}</td></tr>
+
+          <tr><td><strong>Riwayat Alergi Obatan</strong></td><td>{{ selectedItem?.riwayat_alergi_obatan }}</td></tr>
+          <tr><td><strong>Riwayat Alergi Obatan (Show)</strong></td><td>{{ selectedItem?.riwayat_alergi_obatan_show }}</td></tr>
+          <tr><td><strong>Riwayat Alergi Obatan Lainnya</strong></td><td>{{ selectedItem?.riwayat_alergi_obatan_lainnya }}</td></tr>
+
+          <tr><td><strong>Obat Digunakan Saat Ini</strong></td><td>{{ selectedItem?.obat_digunakan_saat_ini }}</td></tr>
+          <tr><td><strong>Obat Digunakan Saat Ini (Show)</strong></td><td>{{ selectedItem?.obat_digunakan_saat_ini_show }}</td></tr>
+          <tr><td><strong>Obat Digunakan Saat Ini Lainnya</strong></td><td>{{ selectedItem?.obat_digunakan_saat_ini_lainnya }}</td></tr>
+
+          <tr><td><strong>Penilaian Resiko Jatuh</strong></td><td>{{ selectedItem?.penilaian_resiko_jatuh }}</td></tr>
+
+          <tr><td><strong>Diagnosa Keperawatan</strong></td><td>{{ selectedItem?.diagnosa_keperawatan }}</td></tr>
+          <tr><td><strong>Intervensi Keperawatan</strong></td><td>{{ selectedItem?.intervensi_keperawatan }}</td></tr>
         </table>
 
-        <!-- Anamnese -->
-        <h4 class="mb-2"><strong>Anamnese</strong></h4>
-        <table class="modal-table">
-          <tr>
-            <td><strong>Anamnese</strong></td>
-            <td>{{ selectedItem?.anamnese }}</td>
-          </tr>
-        </table>
-
-        <br />
-
-        <!-- OBJECT -->
-        <h4 class="mb-2"><strong>Pemeriksaan Mata</strong></h4>
-
-        <table class="modal-table">
-          <tr>
-            <th colspan="2" class="text-center">Ocular Dextra (OD) – Mata Kanan</th>
-          </tr>
-          <tr>
-            <td>Palpebra</td>
-            <td>{{ selectedItem?.ocular_dextra_palpebra }}</td>
-          </tr>
-          <tr>
-            <td>Conjunctiva</td>
-            <td>{{ selectedItem?.ocular_dextra_conjunctiva }}</td>
-          </tr>
-          <tr>
-            <td>Cornea</td>
-            <td>{{ selectedItem?.ocular_dextra_cornea }}</td>
-          </tr>
-          <tr>
-            <td>Bilik Mata Depan</td>
-            <td>{{ selectedItem?.ocular_dextra_bilik_mata_depan }}</td>
-          </tr>
-          <tr>
-            <td>Pupil dan Iris</td>
-            <td>{{ selectedItem?.ocular_dextra_pupil_dan_iris }}</td>
-          </tr>
-          <tr>
-            <td>Lensa</td>
-            <td>{{ selectedItem?.ocular_dextra_lensa }}</td>
-          </tr>
-          <tr>
-            <td>Vitreous</td>
-            <td>{{ selectedItem?.ocular_dextra_vitreous }}</td>
-          </tr>
-          <tr>
-            <td>Funduscopy</td>
-            <td>{{ selectedItem?.ocular_dextra_funduscopy }}</td>
-          </tr>
-        </table>
-
-        <br />
-
-        <table class="modal-table">
-          <tr>
-            <th colspan="2" class="text-center">Ocular Sinistra (OS) – Mata Kiri</th>
-          </tr>
-          <tr>
-            <td>Palpebra</td>
-            <td>{{ selectedItem?.ocular_sinistra_palpebra }}</td>
-          </tr>
-          <tr>
-            <td>Conjunctiva</td>
-            <td>{{ selectedItem?.ocular_sinistra_conjunctiva }}</td>
-          </tr>
-          <tr>
-            <td>Cornea</td>
-            <td>{{ selectedItem?.ocular_sinistra_cornea }}</td>
-          </tr>
-          <tr>
-            <td>Bilik Mata Depan</td>
-            <td>{{ selectedItem?.ocular_sinistra_bilik_mata_depan }}</td>
-          </tr>
-          <tr>
-            <td>Pupil dan Iris</td>
-            <td>{{ selectedItem?.ocular_sinistra_pupil_dan_iris }}</td>
-          </tr>
-          <tr>
-            <td>Lensa</td>
-            <td>{{ selectedItem?.ocular_sinistra_lensa }}</td>
-          </tr>
-          <tr>
-            <td>Vitreous</td>
-            <td>{{ selectedItem?.ocular_sinistra_vitreous }}</td>
-          </tr>
-          <tr>
-            <td>Funduscopy</td>
-            <td>{{ selectedItem?.ocular_sinistra_funduscopy }}</td>
-          </tr>
-        </table>
+        
       </div>
 
       <div class="modal-footer-rme">
