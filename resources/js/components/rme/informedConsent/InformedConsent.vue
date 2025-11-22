@@ -46,9 +46,9 @@
         <tbody>
           <tr v-for="(item, index) in paginatedData" :key="item.id">
             <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-            <td>{{ item.tanggal }}</td>
-            <td>{{ item.waktu }}</td>
-            <td>{{ item.nama_pasien }}</td>
+            <td>{{ item.date }}</td>
+            <td>{{ item.time }}</td>
+            <td>{{ item.nama }}</td>
             <td>{{ item.jenis_kelamin }}</td>
             <td>{{ item.no_identitas }}</td>
             <td>{{ item.carabayar_nama }}</td>
@@ -174,7 +174,7 @@ export default {
         formData.append("limit", 10);
         formData.append("page", 1);
 
-        const res = await axios.post("/master/pasien/history", formData, {
+        const res = await axios.post("/master/pasien/list-dokumen-persetujuan-penolkan", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

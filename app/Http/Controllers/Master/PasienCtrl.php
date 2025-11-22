@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cppt;
+use App\Models\DokumenPersetujuanPenolakanTindakanDokter;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -262,6 +263,37 @@ class PasienCtrl extends Controller
 		// }
 		
 		return response()->json(['data' => $data]);
+	}
+
+
+	public function dokumenPersetujuanPenolakan(Request $request){
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
+
+		$data = DokumenPersetujuanPenolakanTindakanDokter::store($request);
+
+		return response()->json(['data' => $data]);
+
+	}
+	public function listDokumenPersetujuanPenolakan(Request $request){
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; 
+
+		if ($request->search != "") {
+				$data = DokumenPersetujuanPenolakanTindakanDokter::join('pasien', 'dokumen_persetujuan_penolakan_tindakan_dokter.uuid_pasien', '=', 'pasien.uuid')
+				  ->where('uuid_pasien', '=', $search)
+								->orderBy('date', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+				$total = DokumenPersetujuanPenolakanTindakanDokter::join('pasien', 'dokumen_persetujuan_penolakan_tindakan_dokter.uuid_pasien', '=', 'pasien.uuid')
+				  ->where('uuid_pasien', '=', $search)
+								->orderBy('date', 'desc')
+								->orderBy('date', 'desc')->count();
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+
 	}
 
 }

@@ -29,6 +29,9 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('history', [PasienCtrl::class, 'history'])->name('master-pasien-history');
 		Route::post('search', [PasienCtrl::class, 'search'])->name('master-pasien-search');
 		Route::post('soap', [PasienCtrl::class, 'soap'])->name('master-pasien-soap');
+
+		Route::post('dokumen-pertujuan-penolakan-tindakan-dokter', [PasienCtrl::class, 'dokumenPersetujuanPenolakan'])->name('master-pasien-persetujuan-penolkan-tindakan-dokter');
+		Route::post('list-dokumen-persetujuan-penolkan', [PasienCtrl::class, 'listDokumenPersetujuanPenolakan'])->name('master-pasien-list-persetujuan-penolkan-tindakan-dokter');
 	});
 
 	Route::prefix('rekammedis')->group(function () {

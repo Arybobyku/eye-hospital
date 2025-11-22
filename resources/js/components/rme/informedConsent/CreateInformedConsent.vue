@@ -25,7 +25,7 @@
       <div class="row mb-3">
         <div class="col-md-6">
           <label>Kode MR :</label>
-          <input type="text" v-model="form.kodeMR" class="input-rme" readonly />
+          <input type="text" v-model="form.kodemr" class="input-rme" readonly />
         </div>
 
         <div class="col-md-6">
@@ -99,7 +99,9 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('diagnosis_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
             </td>
           </tr>
 
@@ -115,7 +117,9 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('dasar_diagnosis_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
             </td>
           </tr>
 
@@ -134,7 +138,9 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('tindakan_kedokteran_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
             </td>
           </tr>
           <tr>
@@ -149,7 +155,9 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('indikasi_tindakan_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
             </td>
           </tr>
           <tr>
@@ -164,7 +172,9 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('tata_cara_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
             </td>
           </tr>
           <tr>
@@ -179,7 +189,7 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('tujuan_ttd')" class="btn-save">Simpan ✔</button>
             </td>
           </tr>
           <tr>
@@ -194,7 +204,7 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('risiko_ttd')" class="btn-save">Simpan ✔</button>
             </td>
           </tr>
           <tr>
@@ -209,7 +219,9 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('komplikasi_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
             </td>
           </tr>
           <tr>
@@ -224,7 +236,9 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('prognosis_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
             </td>
           </tr>
           <tr>
@@ -242,7 +256,9 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('alternatif_dan_risiko_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
             </td>
           </tr>
           <tr>
@@ -253,11 +269,13 @@
             </td>
             <td class="text-center">
               <VueSignaturePad
-                ref="sign4"
+                ref="menyatakan_menerangkan_ttd"
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('menyatakan_menerangkan_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
             </td>
           </tr>
           <tr>
@@ -267,11 +285,13 @@
             </td>
             <td class="text-center">
               <VueSignaturePad
-                ref="sign5"
+                ref="menyatakan_memahami_ttd"
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button class="btn-rme mt-2">Simpan ✔</button>
+              <button @click="saveSign('menyatakan_memahami_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
             </td>
           </tr>
         </tbody>
@@ -324,7 +344,7 @@
 
       <div class="signature-section">
         <!-- Yang Menyatakan -->
-        <div class="sign-box">
+        <div class="sign-box" style="height: 200px">
           <label>Yang Menyatakan</label>
 
           <VueSignaturePad
@@ -345,7 +365,7 @@
         </div>
 
         <!-- Saksi 1 -->
-        <div class="sign-box">
+        <div class="sign-box" style="height: 200px">
           <label>Saksi 1</label>
 
           <VueSignaturePad
@@ -364,7 +384,7 @@
         </div>
 
         <!-- Saksi 2 -->
-        <div class="sign-box">
+        <div class="sign-box" style="height: 200px">
           <label>Saksi 2</label>
 
           <VueSignaturePad
@@ -387,8 +407,16 @@
   <!-- ================= BUTTON BOTTOM ================= -->
 
   <div class="action-footer">
-    <button class="btn-save-form" @click="submitForm">Save</button>
-    <button class="btn-back" @click="$emit('back')">Back</button>
+    <!-- TOMBOL SUBMIT -->
+    <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
+      <span v-if="loadingSubmit">Menyimpan...</span>
+      <span v-else>Save</span>
+    </button>
+
+    <!-- TOMBOL BACK -->
+    <button class="btn-back" @click="$emit('back')" :disabled="loadingSubmit">
+      Back
+    </button>
   </div>
 </template>
 
@@ -398,6 +426,7 @@ export default {
   name: "HistoryKunjungan",
   data() {
     return {
+      loadingSubmit: false,
       perPage: 10,
       currentPage: 1,
       searchQuery: "",
@@ -411,7 +440,7 @@ export default {
         uuid_pasien: "",
         date: "",
         time: "",
-        kodeMR: "",
+        kodemr: "",
         nama: "",
         usia: "",
         alamat: "",
@@ -513,7 +542,7 @@ export default {
       this.form.date = this.formatDate(new Date());
       this.form.time = this.formatTime(new Date());
       this.form.uuid_pasien = this.selectedPatient?.uuid;
-      this.form.kodeMR = this.selectedPatient?.rekam_medis;
+      this.form.kodemr = this.selectedPatient?.rekam_medis;
       this.form.nama = this.selectedPatient?.nama;
       this.form.usia = this.selectedPatient?.tanggal_lahir;
       this.form.alamat = this.selectedPatient?.alamat;
@@ -526,12 +555,45 @@ export default {
         return;
       }
 
-      const base64 = pad.save(); // hasil tanda tangan
+      pad.readOnly = true;
 
-      // simpan otomatis sesuai field
-      this.form[refName] = base64;
+      // fungsi yang benar untuk vue-signature-pad
+      const { data } = pad.saveSignature();
 
-      console.log("TTD saved:", refName, base64);
+      this.form[refName] = data; // base64 string
+
+      console.log("TTD saved:", refName, data);
+    },
+
+    async submitForm() {
+      this.loadingSubmit = true;
+
+      try {
+        const fd = new FormData();
+
+        Object.keys(this.form).forEach((key) => {
+          fd.append(key, this.form[key]);
+        });
+
+        const response = await axios.post(
+          "/master/pasien/dokumen-pertujuan-penolakan-tindakan-dokter",
+          fd,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+
+        console.log("BERHASIL:", response.data);
+
+        // tampilkan notif
+        alert("Data berhasil disimpan!");
+
+        // kembali ke parent component
+        this.$emit("back");
+      } catch (error) {
+        console.error("ERROR:", error.response?.data || error);
+        alert("Gagal menyimpan data!");
+      } finally {
+        this.loadingSubmit = false;
+      }
     },
   },
 };
