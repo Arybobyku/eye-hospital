@@ -27,7 +27,22 @@
 	<div class="col-1 form-mr">
 		<button class="btn-tambah" @click="uploadFile()">Upload</button>
 	</div>
+		<div class="col-2 form-mr">
+		<div class="form-self-group">
+			<input 
+				:id="formUpdateLabelUpload.for_id" 
+				:type="formUpdateLabelUpload.type" 
+				:disabled="formUpdateLabelUpload.disabled ? 'disabled' : false" 
+				@change="onFileChangeUpdateLabel" 
+			/>
+		</div>
+
+	</div>
+	<div class="col-1 form-mr">
+		<button class="btn-tambah" @click="uploadFileUpdateLabel()">Update Label</button>
+	</div>
 </div>
+
 
 <div class="grid">
 
@@ -58,7 +73,7 @@ export default {
 		FormCarabayar: defineAsyncComponent(() => import('./FormCarabayar.vue')),
 		FormChild: defineAsyncComponent(() => import('./FormChild.vue')),
 		FormTarif: defineAsyncComponent(() => import('./FormTarif.vue')),
-		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+		Datatable: defineAsyncComponent(() => import('../../../section/DatatableCustom.vue')),
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 	},
 	created: function () {},
@@ -72,7 +87,7 @@ export default {
 		position: '',
 		templateName: '',
 		formDownload: { 
-			title: 'Nama Metode Pembayaran', 
+			title: 'Input Nama Penjamin', 
 			for_id: 'templateName',
 			type: 'text', 
 			required: '', 
@@ -82,6 +97,16 @@ export default {
 			value: '',
 			},
 		formUpload: { 
+			title: 'Upload Metode Pembayaran', 
+			for_id: 'upload',
+			type: 'file', 
+			required: '', 
+			key: 'upload', 
+			model: 'upload', 
+			disabled: false,
+			value: null,
+			},
+		formUpdateLabelUpload: { 
 			title: 'Upload Metode Pembayaran', 
 			for_id: 'upload',
 			type: 'file', 
@@ -103,7 +128,7 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
-			{ value: 'nama', label: 'Nama Metode Pembayaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama', label: 'Nama Penjamin', type: 'text', search: true, close: false, button: false },
 			{ value: 'tindakan', label: 'Tindakan', type: 'text', search: false, close: true, button: false },
 			//- { value: 'kamar', label: 'Kamar', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
@@ -154,6 +179,10 @@ export default {
 			console.log("onfilechanges",e.target.files[0]);
 			vm.formUpload.value = e.target.files[0];
 		},
+		onFileChangeUpdateLabel(e) {
+			console.log("onfilechanges",e.target.files[0]);
+			vm.formUpdateLabelUpload.value = e.target.files[0];
+		},
 		uploadFile: function(){
 			console.log("File upload", vm.formUpload.value);
 
@@ -163,6 +192,33 @@ export default {
 			formData.append('file', vm.formUpload.value); // sesuaikan dengan nama field di Laravel request
 
 			axios.post('/finance/carabayar/uploadmetodepembayaran', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+				.then(function (response) {
+					setTimeout(function () {
+						vm.berhasil(response);
+					}, 300);
+					window.location.reload();
+				})
+				.catch(function (error) {
+					console.error(error);
+					setTimeout(function () {
+						vm.gagal(error);
+					}, 300);
+					window.location.reload();
+				});
+		},
+		uploadFileUpdateLabel: function(){
+			console.log("File upload", vm.formUpdateLabelUpload.value);
+
+			vm.$refs.Datatable.skeleton();
+
+			let formData = new FormData();
+			formData.append('file', vm.formUpdateLabelUpload.value); // sesuaikan dengan nama field di Laravel request
+
+			axios.post('/finance/carabayar/uploadupdatelabelmetodepembayaran', formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}
@@ -196,7 +252,7 @@ export default {
 			}
 			let html = '<table class="table-info">';
 			html += '<tr>'+
-			'<th>Tindakan</th>'+
+			'<th>Deskripsi</th>'+
 			'<th>Label</th>'+
 			'<th>Default</th>'+
 			'<th>Harga</th></tr>';
@@ -252,7 +308,7 @@ export default {
 				vm.attach.data = new FormData();
 				vm.attach.data.append('uuid', data.uuid);
 				vm.attach.url = vm.attach.link.remove;
-				vm.dialog('Yakin ingin menghapus data yang terpilih dihalaman ini.', 'Ya, hapus data', 'removedata');
+				vm.dialog('Yakin ingin menghapus data ' + data.nama, 'Ya, hapus data', 'removedata');
 			}
 			else if (posisi == 'child') {
 				vm.$refs.FormChild.aturulang();

@@ -125,7 +125,7 @@
             <tr>
                 <td style="border: none; padding: 2px 5px">Banyak Uang</td>
                 <td style="border: none; padding: 2px 5px">:
-                    <?php $grandtotaltop = 0; ?>
+                    <?php $grandtotaltop = 0; $totalDiskonGlobalTop=0?>
                     @foreach ($layananpasien as $item)
                         <?php $grandtotaltop += $item->total; ?>
                     @endforeach
@@ -150,14 +150,24 @@
                         $grandtotaltop = $grandtotaltop - $totalDiskonGlobalTop;
                         ?>
                     @endif
+                     @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
+                    Rp. {{ number_format($paketBedah->total - $totalDiskonGlobalTop) }}
+                     @else
                     Rp. {{ number_format($grandtotaltop) }}
+                     @endif
                 </td>
             </tr>
             <tr>
                 <td style="border: none; padding: 2px 5px">Terbilang</td>
+                 @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
+                <td style="border: none; padding: 2px 5px">:
+                    <i>"{{ terbilang($paketBedah->total - $totalDiskonGlobalTop) }} Rupiah"</i>
+                </td>
+                 @else
                 <td style="border: none; padding: 2px 5px">:
                     <i>"{{ terbilang($grandtotaltop) }} Rupiah"</i>
                 </td>
+                 @endif
             </tr>
             <tr>
                 <td style="border: none; padding: 2px 5px">Untuk Pembayaran</td>
@@ -424,7 +434,7 @@
 					<td align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($grandtotal) }}</b></td>
 				</tr>
 			@endif --}}
-                @if ($diskon != 0 || $registrasi->diskon_rp != 0)
+                @if (($diskon != 0 || $registrasi->diskon_rp != 0) && (!$paketBedah || $paketBedah?->harga_sudah_ditentukan == 0))
                     <?php
                     $diskonGlobal = $registrasi->diskon_rp;
                     $totalDiskonGlobal = $diskonGlobal + $diskon;
@@ -460,6 +470,38 @@
                         <td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp.
                                 {{ number_format($grandtotal) }}</b></td>
                     </tr>
+                @endif
+                {{-- Harga paket beda yang sudah ditentukan --}}
+                @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
+                    <?php
+                        $totalTarifPaket = $paketBedah->total;
+                    ?>
+                        @if ($diskon != 0 || $registrasi->diskon_rp != 0)
+                            <?php
+                                $diskonGlobal = $registrasi->diskon_rp;
+                                $totalDiskonGlobalItem = $diskonGlobal + $diskon;
+                                $totalTarifPaket -= $totalDiskonGlobalItem;
+                            ?>
+                        <tr>
+                            <td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Item</b></td>
+                            <td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp.
+                                    {{ number_format($totalDiskonGlobalItem) }}</b></td>
+                        </tr>
+                        @endif
+                        <tr>
+                            <td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>
+                                Diskon Paket
+                            </b></td>
+                            <td colspan="1" align="right" style="padding: 4px 7px;"><b>
+                                    {{ number_format((($grandtotal- $paketBedah->total)/ $grandtotal) * 100, 2) }} %
+                            </b></td>
+                      </tr>
+                        <tr>
+                            <td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total
+                                    Pembayaran</b></td>
+                            <td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp.
+                                    {{ number_format($totalTarifPaket) }}</b></td>
+                        </tr>
                 @endif
 
                 @if (

@@ -1045,8 +1045,8 @@ class PasienBedahCtrl extends Controller
                 $item->dokter_uuid = $dataOp->pengguna_uuid;
                 $item->nama_dokter = $dataOp->nama_dokter;
 
-                $item->tanggal = date('Y-m-d');
-                $item->waktu = date('H:i');
+                $item->tanggal =  $row->tanggal ??  date('Y-m-d');
+                $item->waktu =  $row->waktu ?? date('H:i');
 
                 $item->obat_uuid = $row->obat_uuid;
                 $item->nama_obat = $row->nama;
@@ -1138,8 +1138,8 @@ class PasienBedahCtrl extends Controller
                 $item->dokter_uuid = $dataOp->pengguna_uuid;
                 $item->nama_dokter = $dataOp->nama_dokter;
 
-                $item->tanggal = date('Y-m-d');
-                $item->waktu = date('H:i');
+                $item->tanggal =  $row->tanggal ??  date('Y-m-d');
+                $item->waktu =  $row->waktu ?? date('H:i');
 
                 $item->label = $row->label;
                 $item->kemasan = $row->kemasan;

@@ -1,7 +1,11 @@
 <template>
 <div class="inner" ref="roottable">
 <div class="grid">
-		<div class="col-4 form-mr">
+
+		<div class="col-1 form-mr">
+			<button class="btn-tambah" @click="downloadData()">Download All Data</button>
+		</div>
+		<!-- <div class="col-4 form-mr">
 			<Selected v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)" 
 					:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
 					:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)"></Selected>
@@ -25,7 +29,7 @@
 		</div>
 		<div class="col-1 form-mr">
 			<button class="btn-tambah" @click="uploadFile()">Upload</button>
-		</div>
+		</div> -->
 	</div>
 	<div class="grid">
 		<div class="col-12">
@@ -68,7 +72,7 @@ export default {
 		uri: 'unit',
 		position: '',
 		formDownload: { 
-			title: 'Nama Paket Bedah', 
+			title: 'Input Nama Paket Bedah', 
 			for_id: 'templateName',
 			type: 'text', 
 			required: '', 
@@ -92,7 +96,7 @@ export default {
 				carabayar: { 
 					key : 'carabayar', for_id: 'form_'+'carabayar', name: 'carabayar', uuid:'', value: '', label: 'Silahkan Pilih', 
 					filter: [], data: [], search: '', option: 'display: none', statics: false,
-					class: 'carabayar', isrequired: true, html: 'Cara Bayar', issearch: false, disabled: false,
+					class: 'carabayar', isrequired: true, html: 'Penjamin', issearch: false, disabled: false,
 				},
 			},
 		},
@@ -109,6 +113,8 @@ export default {
 		column: [
 			{ value: 'nama', label: 'Nama Paket', type: 'text', search: true, close: false, button: false },
 			// { value: 'nama_dokter', label: 'Nama Dokter', type: 'text', search: true, close: false, button: false },
+			{ value: 'harga_sudah_ditentukan', label: 'Harga Sudah Ditentukan', type: 'text', search: false, close: false, button: false },
+			{ value: 'nama_carabayar', label: 'Penjamin', type: 'text', search: false, close: false, button: false },
 			{ value: 'total', label: 'Biaya', type: 'text', search: false, close: false, button: false },
 			{ value: 'keterangan', label: 'Keterangan', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
@@ -156,6 +162,11 @@ export default {
 			let carabayar = vm.form.select.carabayar.value;
 			let nama = vm.formDownload.value;
 			let link = `/finance/listpaketbedah/download/${carabayar}/${nama}`;						
+			window.open(link); 
+			vm.formDownload.value = '';
+		},
+		downloadData: function(){
+			let link = `/finance/listpaketbedah/download/all`;						
 			window.open(link); 
 			vm.formDownload.value = '';
 		},
@@ -209,7 +220,9 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'harga_sudah_ditentukan') { _tmp = { value: column == 1 ? 'iya' : 'tidak', ishtml: 'text', style: '' }; }
 			else if (identity == 'total') { _tmp = { value: vm.total(column, true), ishtml: 'text', style: '' }; }
+			else if (identity == 'nama_carabayar') { _tmp = { value: data?.nama_carabayar ?? "-", ishtml: 'text', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';
 		},
@@ -235,7 +248,7 @@ export default {
 				vm.attach.data = new FormData();
 				vm.attach.data.append('uuid', data.uuid);
 				vm.attach.url = vm.attach.link.remove;
-				vm.dialog('Yakin ingin menghapus data yang terpilih dihalaman ini.', 'Ya, hapus data', 'removedata');
+				vm.dialog('Yakin ingin menghapus data ' + data.nama, 'Ya, hapus data', 'removedata');
 			}
 			else if (posisi == 'duplicate') {
 				vm.position = "duplicatedata";

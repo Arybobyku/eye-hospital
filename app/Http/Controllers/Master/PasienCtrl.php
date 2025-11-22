@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cppt;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -15,6 +16,8 @@ use DateTime;
 use App\Models\Pasien;
 use App\Models\Resep;
 use App\Models\LayananPasien;
+use App\Models\PemeriksaanDokter;
+use App\Models\PemeriksaanRo;
 use App\Models\UploadSuratPersetujuan;
 use App\Models\Registrasi;
 use App\Models\SuratPersetujuan;
@@ -97,6 +100,89 @@ class PasienCtrl extends Controller
 	
 	}
 
+	public function search(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data pasien');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; $column = $request->column;
+
+		if ($request->search != "") {
+				$data = Pasien::where('delete_soft', '=', 1)
+								->where(function ($q) use ($search) {
+									$q->where('nama', 'ilike', '%' . $search . '%')
+									->orWhere('no_identitas', 'ilike', '%' . $search . '%')
+									->orWhere('rekam_medis', 'ilike', '%' . $search . '%');
+								})
+								->skip($skip)->take($this->take)
+								->get();
+				$total = Pasien::where('delete_soft', '=', 1)
+								->where(function ($q) use ($search) {
+									$q->where('nama', 'ilike', '%' . $search . '%')
+									->orWhere('no_identitas', 'ilike', '%' . $search . '%')
+									->orWhere('rekam_medis', 'ilike', '%' . $search . '%');
+								})
+								->orderBy('status', 'desc')->count();
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+	
+	}
+
+	public function history(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data pasien');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; 
+
+		if ($request->search != "") {
+				$data = Registrasi::where('delete_soft', '=', 1)
+								->where('pasien_uuid', '=', $search)
+								->orderBy('tanggal', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+				$total = Registrasi::where('delete_soft', '=', 1)
+								->where('pasien_uuid', '=', $search)
+								->orderBy('tanggal', 'desc')->count();
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+	
+	}
+
+	public function soap(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data pasien');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; 
+
+		if ($request->search != "") {
+				$data = Cppt::with('registrasi','pemeriksaanDokter')
+				                ->where('pasien_uuid', '=', $search)
+				                // ->where('sebagai', '=', 'DOKTER')
+								->orderBy('created_at', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+				$total = Cppt::where('pasien_uuid', '=', $search)
+				                // ->where('sebagai', '=', 'DOKTER')
+								->orderBy('created_at', 'desc')->count();
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+	
+	}
+
 
 	public function obat(Request $request) {
 
@@ -111,6 +197,43 @@ class PasienCtrl extends Controller
 		// }
 		
 		return response()->json(['data' => $data]);
+	}
+
+
+	public function tindakanPasien(Request $request) {
+
+		$data = LayananPasien::join('registrasi', 'layanan_pasien.registrasi_uuid', '=', 'registrasi.uuid')
+							->where('registrasi.status', '=', 'Selesai')
+							->select('layanan_pasien.*')
+							->where('layanan_pasien.pasien_uuid', '=', $request->search)
+							->where('layanan_pasien.jenis', '!=', 'Obat-Obatan')
+							->get();
+
+		$total = LayananPasien::join('registrasi', 'layanan_pasien.registrasi_uuid', '=', 'registrasi.uuid')
+							->where('registrasi.status', '=', 'Selesai')
+							->select('layanan_pasien.*')
+							->where('layanan_pasien.pasien_uuid', '=', $request->search)
+							->where('layanan_pasien.jenis', '!=', 'Obat-Obatan')
+							->count();
+	
+		return response()->json(['data' => $data, 'total' => $total]);
+	}
+
+	public function tandaUmumPasien(Request $request) {
+
+		$data = PemeriksaanRo::join('registrasi', 'pemeriksaan_ro.registrasi_uuid', '=', 'registrasi.uuid')
+							->where('registrasi.status', '=', 'Selesai')
+							->select('pemeriksaan_ro.*')
+							->where('pemeriksaan_ro.pasien_uuid', '=', $request->search)
+							->get();
+
+		$total = PemeriksaanRo::join('registrasi', 'pemeriksaan_ro.registrasi_uuid', '=', 'registrasi.uuid')
+							->where('registrasi.status', '=', 'Selesai')
+							->select('pemeriksaan_ro.*')
+							->where('pemeriksaan_ro.pasien_uuid', '=', $request->search)
+							->count();
+	
+		return response()->json(['data' => $data, 'total' => $total]);
 	}
 
 	public function tindakan(Request $request) {

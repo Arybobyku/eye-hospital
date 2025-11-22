@@ -418,6 +418,14 @@ const routes = [
 	},
 
 	{ 
+		path: _base + 'edit-paket-bedah-pasien', 
+		name: 'Edit Layanan Pasien Bedah', 
+		component: () => import('./components/bedah/layananbedah/index.vue'),
+		meta: { title: 'Edit Layanan Pasien Bedah' },
+		props: true 
+	},
+
+	{ 
 		path: _base + 'histori-bedah-pasien', 
 		name: 'Histori Pasien Bedah', 
 		component: () => import('./components/bedah/historipasien/index.vue'),
@@ -513,6 +521,17 @@ const routes = [
 		props: true 
 	},
 
+
+	/**********************************************************************************
+	 * RME
+	 ***********************************************************************************/
+	{ 
+		path: _base + 'rme-pasien', 
+		name: 'RME (Data Pasien)', 
+		component: () => import('./components/rme/index.vue'),
+		meta: { title: 'RME (Data Pasien)' },
+		props: true 
+	},
 
 	/**********************************************************************************
 	 * Laporan
@@ -851,7 +870,7 @@ const routes = [
 		path: _base + 'carabayar', 
 		name: 'Metode Pembayaran', 
 		component: () => import('./components/finance/carabayar/index.vue'),
-		meta: { title: 'Metode Pembayaran' },
+		meta: { title: 'Penjamin' },
 		props: true 
 	},
 

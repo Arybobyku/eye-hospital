@@ -47,7 +47,7 @@
                     <tr>
                         <td>Banyaknya</td>
                         <td>:
-                            <?php $grandtotaltop = 0; ?>
+                            <?php $grandtotaltop = 0; $totalDiskonGlobalTop=0?>
                             @foreach ($layananpasien as $item)
                                 <?php $grandtotaltop += $item->total; ?>
                             @endforeach
@@ -61,8 +61,8 @@
                             @endif
                             {{-- @if ($registrasi->cover_asuransi != '0')
 								<?php
-        $grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi;
-        ?>
+                                 $grandtotaltop = $grandtotaltop - $registrasi->cover_asuransi;
+                                ?>
 							@endif --}}
                             @if ($registrasi->diskon_rp != 0)
                                 <?php
@@ -72,14 +72,25 @@
                                 $grandtotaltop = $grandtotaltop - $totalDiskonGlobalTop;
                                 ?>
                             @endif
-                            Rp. {{ number_format($grandtotaltop) }}
+
+                            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
+                              Rp. {{ number_format($paketBedah->total - $totalDiskonGlobalTop) }}
+                            @else
+                              Rp. {{ number_format($grandtotaltop) }}
+                            @endif
                         </td>
                     </tr>
                     <tr>
                         <td>Terbilang</td>
-                        <td>:
-                            <i style="text-transform: uppercase">"# {{ terbilang($grandtotaltop) }} Rupiah #"</i>
-                        </td>
+                            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
+                            <td>:
+                                <i style="text-transform: uppercase">"# {{ terbilang($paketBedah->total) }} Rupiah #"</i>
+                            </td>
+                            @else
+                            <td>:
+                                <i style="text-transform: uppercase">"# {{ terbilang($grandtotaltop) }} Rupiah #"</i>
+                            </td>
+                            @endif
                     </tr>
                 </table>
             </td>
@@ -188,6 +199,8 @@
                                 Biaya Pendaftaran + Adm Rawat Jalan (pl)
                             @elseif($item->nama_layanan == 'Administrasi Rawat Jalan (pb)')
                                 Biaya Pendaftaran + Adm Rawat Jalan (pb)
+                            @else
+                                Biaya {{ $item->nama_layanan }}    
                             @endif
                         </td>
                         <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
@@ -232,7 +245,7 @@
                             {{ $item->nama_dokter }}
                         </td>
                         <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
+                             {{ $item->tanggal ? ubahOnlyDate($item->tanggal) :  ubahDate($item->created_at) }}</td>
                         <td align="center" style="padding: 10px 2px" valign="top">{{ number_format($item->tarif) }}
                         </td>
                         <td align="center" style="padding: 10px 2px" valign="top">{{ $item->qty }}</td>
@@ -689,7 +702,7 @@
                         <td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
                         <td align="left" style="padding: 10px 2px;">{{ $item->nama_obat }}</td>
                         <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
+                            {{ ubahDate2($item->tanggal) }} </td>
                         <td align="center" style="padding: 10px 2px">{{ number_format($item->hja_resep) }}</td>
                         <td align="center" style="padding: 10px 2px">{{ $item->jumlah_kecil }}</td>
                         <td align="right" style="padding: 10px 2px;" colspan="3">
@@ -819,7 +832,7 @@
                         <td align="center" style="padding: 10px 2px; width: 5%">{{ $nomor }}.</td>
                         <td align="left" style="padding: 10px 2px;">{{ $item->label }}</td>
                         <td align="center" style="padding: 10px 2px; width: 17%" colspan="2" valign="top">
-                            {{ ubahDate($item->created_at) }}</td>
+                            {{ ubahDate2($item->tanggal) }}</td>
                         <td align="center" style="padding: 10px 2px">{{ $item->jumlah }} {{ $item->kemasan }}</td>
                         {{-- <td align="right" style="padding: 5px 7px;" colspan="3"><b>{{ number_format($item->total) }}</b></td> --}}
                         <td align="right" style="padding: 10px 2px;" colspan="3"></td>
@@ -1010,7 +1023,7 @@
                     <td colspan="6" align="left" style="padding: 6px 5px; width: 65%;"><b>Grand Total</b></td>
                     <td colspan="2" align="right" style="padding: 6px 5px;"><b>Rp.
                             {{ number_format($last) }}</b></td>
-                </tr>
+                </tr> 
             @endif
 
 
@@ -1048,7 +1061,7 @@
 
             @endif
 
-            @if ($diskon != 0 || $registrasi->diskon_rp != 0)
+            @if (($diskon != 0 || $registrasi->diskon_rp != 0) && (!$paketBedah || $paketBedah?->harga_sudah_ditentukan == 0))
                 <?php
                 $diskonGlobal = $registrasi->diskon_rp;
                 $totalDiskonGlobal = $diskonGlobal + $diskon;
@@ -1072,8 +1085,6 @@
                     </tr>
                 @endif --}}
                 <tr>
-
-
                     <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Diskon</b></td>
                     <td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp.
                             {{ number_format($totalDiskonGlobal) }}</b></td>
@@ -1085,6 +1096,39 @@
                             {{ number_format($totalTarif) }}</b></td>
                 </tr>
             @endif
+
+            {{-- Harga Paket Bedah yang sudah ditentukan --}}
+            @if ($registrasi->apakah_paket == 'Ya' && $paketBedah && $paketBedah->harga_sudah_ditentukan == 1)
+                <?php
+                    $totalTarifPaket = $paketBedah->total;
+                ?>
+                @if ($diskon != 0 || $registrasi->diskon_rp != 0)
+                    <?php
+                        $diskonGlobal = $registrasi->diskon_rp;
+                        $totalDiskonGlobalItem = $diskonGlobal + $diskon;
+                        $totalTarifPaket -= $totalDiskonGlobalItem;
+                    ?>
+                <tr>
+                    <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Item</b></td>
+                    <td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp.
+                            {{ number_format($totalDiskonGlobalItem) }}</b></td>
+                </tr>
+                @endif
+                <tr>
+                    <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Diskon Paket</b>
+                    </td>
+                    <td colspan="2" align="right" style="padding: 4px 7px;"><b>
+                            {{ number_format((($last- $paketBedah->total)/ $last) * 100, 2) }} %
+                    </b></td>
+                </tr>
+                <tr>
+                    <td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Pembayaran</b>
+                    </td>
+                    <td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp.
+                            {{ number_format($totalTarifPaket) }}</b></td>
+                </tr>
+            @endif
+
 
             @if (
                 $registrasi->carabayar_uuid != '1bddd542-fd1e-4b6a-b629-53bd35428796' &&
@@ -1286,6 +1330,32 @@
     
         return $tgl . ' ' . $bln . ' ' . $thn . ' ' . $jam . ':' . $menit . ':' . $detik;
     }
+
+    function ubahDate2($created)
+    {
+        $bulan = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+
+        // Ambil hanya tanggal (tanpa jam)
+        $tanggal = explode(' ', $created)[0];
+
+        [$tahun, $bln, $tgl] = explode('-', $tanggal);
+
+        return (int)$tgl . ' ' . $bulan[$bln] . ' ' . $tahun;
+    }
+
     
     function ubahDate($created)
     {
@@ -1435,6 +1505,31 @@
         }
         return $hasil;
     }
+
+    function ubahOnlyDate($created){
+    $bulan = [
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
+    ];
+
+    $date = new DateTime($created);
+    $tgl = $date->format('d');
+    $bln = $bulan[(int)$date->format('m')];
+    $thn = $date->format('Y');
+
+    return "$tgl $bln $thn";
+    }
+
     ?>
 </body>
 

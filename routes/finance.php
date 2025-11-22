@@ -74,6 +74,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::get('downloadtemplate/{metode}', [CaraBayarCtrl::class, 'downloadTemplateUploadPembayaran'])->name('finance-carabayar-downloadtemplate');
 		Route::get('download', [CaraBayarCtrl::class, 'exportMetodePembayaran'])->name('finance-carabayar-download');
 		Route::post('uploadmetodepembayaran', [CaraBayarCtrl::class, 'uploadMetodePembayaran'])->name('finance-carabayar-upload');
+		Route::post('uploadupdatelabelmetodepembayaran', [CaraBayarCtrl::class, 'uploadUpdateLabelMetodePembayaran'])->name('finance-carabayar-upload-update-label');
 
 		Route::prefix('child')->group(function () {
 			Route::post('data', [ChildCtrl::class, 'data'])->name('finance-child-data');
@@ -182,6 +183,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('add', [ListPaketBedahCtrl::class, 'add'])->name('listpaketbedah-add');
 		Route::post('remove', [ListPaketBedahCtrl::class, 'remove'])->name('listpaketbedah-remove');
 		Route::get('download/{metode}/{name}', [ListPaketBedahCtrl::class, 'downloadTemplatePaketBedah'])->name('listpaketbedah-download');
+		Route::get('download/all', [ListPaketBedahCtrl::class, 'downloadAll'])->name('listpaketbedah-download-all');
 		Route::post('upload', [ListPaketBedahCtrl::class, 'uploadPaketBedah'])->name('listpaketbedah-upload');
 	});
 

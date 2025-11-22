@@ -51,6 +51,7 @@ export default {
 			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
 			{ value: 'metodebayar', label: 'Asuransi', type: 'text', search: true, close: false, button: false },
 			{ value: 'layanan', label: 'Total Tagihan Pasien', type: 'text', search: false, close: false, button: false },
+			{ value: 'diskon', label: 'Diskon', type: 'text', search: false, close: false, button: false },
 			{ value: 'is_approve', label: 'Pihak Asuransi telah menyetujui', type: 'text', search: false, close: false, button: false },
 			{ value: 'is_pay', label: 'Cover asuransi telah keluar', type: 'text', search: false, close: false, button: false },
 			{ value: 'cover_asuransi', label: 'Jumlah Cover', type: 'text', search: false, close: false, button: false },
@@ -110,6 +111,20 @@ export default {
 			}
 			return formatrupiah(harga.toString());
 		},
+		diskon:function(data) {
+			let diskon = 0;
+			if(data.diskon_rp){
+				diskon +=  Number(data.diskon_rp);
+			}
+			if(data.layanan){
+				let temp = data.layanan;
+				for (let i = 0; i < temp.length; i++) {
+					diskon += Number(temp[i].diskon_rp);
+				}
+
+			}
+			return formatrupiah(diskon.toString());
+		},
 
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
@@ -119,6 +134,7 @@ export default {
 			else if (identity == 'metodebayar') { _tmp = { value: vm.metodebayar(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'is_pay') { _tmp = { value: vm.ispay(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'layanan') { _tmp = { value: vm.tagihanpasien(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'diskon') { _tmp = { value: vm.diskon(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'is_approve') { _tmp = { value: vm.isapprove(data), ishtml: 'html', style: '' }; }
 			else if (identity == 'cover_asuransi') { _tmp = { value: vm.coverasuransi(data), ishtml: 'html', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }

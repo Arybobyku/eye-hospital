@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Finance;
 
 use App\Http\Controllers\Controller;
+use App\Models\CaraBayar;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -69,6 +70,8 @@ class PaketBedahCtrl extends Controller
 		try{
 			DB::beginTransaction();
 
+			$carabayar = CaraBayar::where('uuid', $request->uuid_carabayar)->first();
+
 			$item = new PaketBedah();
 			$item->uuid = $uuid;
 			$item->nama = $request->nama;
@@ -76,6 +79,11 @@ class PaketBedahCtrl extends Controller
 			$item->pengguna_uuid = $request->pengguna_uuid && $request->pengguna_uuid != '' ? $request->pengguna_uuid : '-';
 			$item->nama_dokter = $request->nama_dokter && $request->nama_dokter != '' && $request->nama_dokter != 'Silahkan Pilih' ? $request->nama_dokter : '-';
 			$item->keterangan = $request->keterangan;
+			if($carabayar){
+				$item->uuid_carabayar = $carabayar->uuid;
+				$item->nama_carabayar = $carabayar->nama;
+			}
+			$item->harga_sudah_ditentukan = $request->harga_sudah_ditentukan;
 			$item->save();
 
 			DB::commit();
@@ -112,7 +120,14 @@ class PaketBedahCtrl extends Controller
 				'pengguna_uuid' => $request->pengguna_uuid && $request->pengguna_uuid != '' ? $request->pengguna_uuid : '-',
 				'nama_dokter' => $request->nama_dokter && $request->nama_dokter != '' && $request->nama_dokter != 'Silahkan Pilih' ? $request->nama_dokter : '-',
 				'keterangan' => $request->keterangan,
+				'harga_sudah_ditentukan' => $request->harga_sudah_ditentukan,
 		);
+
+		$carabayar = CaraBayar::where('uuid', $request->uuid_carabayar)->first();
+		if($carabayar){
+				$arr['uuid_carabayar'] = $carabayar->uuid;
+				$arr['nama_carabayar']= $carabayar->nama;
+		}
 
 		try{
 			DB::beginTransaction();
@@ -184,6 +199,8 @@ class PaketBedahCtrl extends Controller
 			$paketBaru->pengguna_uuid = $paketLama->pengguna_uuid;
 			$paketBaru->nama_dokter = $paketLama->nama_dokter;
 			$paketBaru->keterangan = $paketLama->keterangan;
+			$paketBaru->uuid_carabayar = $paketLama->uuid_carabayar;
+			$paketBaru->nama_carabayar = $paketLama->nama_carabayar;
 			$paketBaru->save();
 	
 			// Duplikasi detail

@@ -89,15 +89,15 @@
 				</div>
 				<div class="nomor">
 					<div class="numbers">
-						<span class="angkas" style="position: relative; left: -100px">1</span><br />
+						<span class="angkas" style="position: relative; left: -100px" v-html="display[5].jumlah">0</span><br />
 						<span class="labels" style="position: relative; left: -100px">Jumlah</span>
 					</div>
 					<div class="numbers">
-						<span class="angkas">0</span><br />
+						<span class="angkas" v-html="display[5].dipakai">0</span><br />
 						<span class="labels">Dipakai</span>
 					</div>
 					<div class="numbers">
-						<span class="angkas" style="position: relative; right: -100px">1</span><br />
+						<span class="angkas" v-html="display[5].sisa" style="position: relative; right: -100px" >0</span><br />
 						<span class="labels" style="position: relative; right: -100px">Sisa</span>
 					</div>
 				</div>
@@ -108,95 +108,95 @@
 				</div>
 				<div class="nomor">
 					<div class="numbers">
-						<span class="angkas" style="position: relative; left: -100px">1</span><br />
+						<span class="angkas"  v-html="display[1].jumlah" style="position: relative; left: -100px">0</span><br />
 						<span class="labels" style="position: relative; left: -100px">Jumlah</span>
 					</div>
 					<div class="numbers">
-						<span class="angkas">0</span><br />
+						<span class="angkas"  v-html="display[1].dipakai">0</span><br />
 						<span class="labels">Dipakai</span>
 					</div>
 					<div class="numbers">
-						<span class="angkas" style="position: relative; right: -100px">1</span><br />
+						<span class="angkas"  v-html="display[1].sisa" style="position: relative; right: -100px">0</span><br />
 						<span class="labels" style="position: relative; right: -100px">Sisa</span>
 					</div>
 				</div>
 			</div>
-			<div class="item3">
+			{{-- <div class="item3">
+				<div class="headers">
+					<span class="titleheader">Kamar Kelas VVIP</span>
+				</div>
+				<div class="nomor">
+					<div class="numbers">
+						<span class="angkas" style="position: relative; left: -100px" v-html="display[0].jumlah">0</span><br />
+						<span class="labels" style="position: relative; left: -100px">Jumlah</span>
+					</div>
+					<div class="numbers">
+						<span class="angkas" v-html="display[0].dipakai">0</span><br />
+						<span class="labels">Dipakai</span>
+					</div>
+					<div class="numbers">
+						<span class="angkas" style="position: relative; right: -100px" v-html="display[0].sisa">0</span><br />
+						<span class="labels" style="position: relative; right: -100px">Sisa</span>
+					</div>
+				</div>
+			</div>   --}}
+			<div class="item4">
 				<div class="headers">
 					<span class="titleheader">Kamar Kelas I</span>
 				</div>
 				<div class="nomor">
 					<div class="numbers">
-						<span class="angkas" style="position: relative; left: -100px">1</span><br />
+						<span class="angkas" style="position: relative; left: -100px" v-html="display[2].jumlah">0</span><br />
 						<span class="labels" style="position: relative; left: -100px">Jumlah</span>
 					</div>
 					<div class="numbers">
-						<span class="angkas">0</span><br />
+						<span class="angkas" v-html="display[2].dipakai">0</span><br />
 						<span class="labels">Dipakai</span>
 					</div>
 					<div class="numbers">
-						<span class="angkas" style="position: relative; right: -100px">1</span><br />
-						<span class="labels" style="position: relative; right: -100px">Sisa</span>
-					</div>
-				</div>
-			</div>  
-			<div class="item4">
-				<div class="headers">
-					<span class="titleheader">Kamar Kelas II</span>
-				</div>
-				<div class="nomor">
-					<div class="numbers">
-						<span class="angkas" style="position: relative; left: -100px">2</span><br />
-						<span class="labels" style="position: relative; left: -100px">Jumlah</span>
-					</div>
-					<div class="numbers">
-						<span class="angkas">0</span><br />
-						<span class="labels">Dipakai</span>
-					</div>
-					<div class="numbers">
-						<span class="angkas" style="position: relative; right: -100px">2</span><br />
+						<span class="angkas" style="position: relative; right: -100px" v-html="display[2].sisa">2</span><br />
 						<span class="labels" style="position: relative; right: -100px">Sisa</span>
 					</div>
 				</div>
 			</div>
 			<div class="item5">
 				<div class="headers">
-					<span class="titleheader">Kamar Kelas III</span>
+					<span class="titleheader">Kamar Kelas II</span>
 				</div>
 				<div class="nomor">
 					<div class="numbers">
-						<span class="angkas" style="position: relative; left: -100px">11</span><br />
+						<span class="angkas" style="position: relative; left: -100px" v-html="display[3].jumlah">0</span><br />
 						<span class="labels" style="position: relative; left: -100px">Jumlah</span>
 					</div>
 					<div class="numbers">
-						<span class="angkas">0</span><br />
+						<span class="angkas" v-html="display[3].dipakai">0</span><br />
 						<span class="labels">Dipakai</span>
 					</div>
 					<div class="numbers">
-						<span class="angkas" style="position: relative; right: -100px">11</span><br />
+						<span class="angkas" style="position: relative; right: -100px" v-html="display[3].sisa">0</span><br />
 						<span class="labels" style="position: relative; right: -100px">Sisa</span>
 					</div>
 				</div>
 			</div>
-			{{-- <div class="item6">
+			<div class="item6">
 				<div class="headers">
-					<span class="titleheader">Kamar Kelas IV</span>
+					<span class="titleheader">Kamar Kelas III</span>
 				</div>
 				<div class="nomor">
 					<div class="numbers">
-						<span class="angkas" style="position: relative; left: -100px">0</span><br />
+						<span class="angkas" style="position: relative; left: -100px" v-html="display[4].jumlah">0</span><br />
 						<span class="labels" style="position: relative; left: -100px">Jumlah</span>
 					</div>
 					<div class="numbers">
-						<span class="angkas">0</span><br />
+						<span class="angkas" v-html="display[4].dipakai">0</span><br />
 						<span class="labels">Dipakai</span>
 					</div>
 					<div class="numbers">
-						<span class="angkas" style="position: relative; right: -100px">0</span><br />
+						<span class="angkas" style="position: relative; right: -100px" v-html="display[4].sisa">0</span><br />
 						<span class="labels" style="position: relative; right: -100px">Sisa</span>
 					</div>
 				</div>
-			</div> --}}
+			</div>
 		</div>
     
 	</div>
@@ -226,12 +226,12 @@ new Vue({
 		ngulang: 0,
 		hitung: 0,
 		display: [
-			{ jumlah: '0' },
-			{ jumlah: '0' },
-			{ jumlah: '0' },
-			{ jumlah: '0' },
-			{ jumlah: '0' },
-			{ jumlah: '0' },
+			{ jumlah: '0', sisa: "0", dipakai: "0" },
+			{ jumlah: '0', sisa: "0", dipakai: "0" },
+			{ jumlah: '0', sisa: "0", dipakai: "0" },
+			{ jumlah: '0', sisa: "0", dipakai: "0" },
+			{ jumlah: '0', sisa: "0", dipakai: "0" },
+			{ jumlah: '0', sisa: "0", dipakai: "0" },
 		],
 		angka: 1,
     currentDateTime: null,
@@ -242,8 +242,6 @@ new Vue({
 		timetime: null,
   }},
   methods: {
-		
-			
     get_data:function() {
       const vm = this;
       let form_data = new FormData();
@@ -252,52 +250,34 @@ new Vue({
 			.then(function (response) {
 				for (let i = 0; i < response.data.data.length; i++) {
 					if (response.data.data[i].nama_jenis_kamar == 'Kamar VVIP') { 
-						if (response.data.data[i].jumlah > 0) {
-							vm.display[0].jumlah = response.data.data[i].jumlah;
-						}
-						else {
-							vm.display[0].jumlah = 'Full';
-						}
+						vm.display[0].jumlah = response.data.data[i].jumlah;
+						vm.display[0].dipakai = response.data.data[i].dipakai;
+						vm.display[0].sisa = response.data.data[i].sisa;
 					}
 					else if (response.data.data[i].nama_jenis_kamar == 'Kamar VIP') { 
-						if (response.data.data[i].jumlah > 0) {
-							vm.display[1].jumlah = response.data.data[i].jumlah;
-						}
-						else {
-							vm.display[1].jumlah = 'Full';
-						}
+						vm.display[1].jumlah = response.data.data[i].jumlah;
+						vm.display[1].dipakai = response.data.data[i].dipakai;
+						vm.display[1].sisa = response.data.data[i].sisa;
 					}
 					else if (response.data.data[i].nama_jenis_kamar == 'Kamar Kelas I') { 
-						if (response.data.data[i].jumlah > 0) {
-							vm.display[2].jumlah = response.data.data[i].jumlah;
-						}
-						else {
-							vm.display[2].jumlah = 'Full';
-						}
+						vm.display[2].jumlah = response.data.data[i].jumlah;
+						vm.display[2].dipakai = response.data.data[i].dipakai;
+						vm.display[2].sisa = response.data.data[i].sisa;
 					}
 					else if (response.data.data[i].nama_jenis_kamar == 'Kamar Kelas II') { 
-						if (response.data.data[i].jumlah > 0) {
-							vm.display[3].jumlah = response.data.data[i].jumlah;
-						}
-						else {
-							vm.display[3].jumlah = 'Full';
-						}
+						vm.display[3].jumlah = response.data.data[i].jumlah;
+						vm.display[3].dipakai = response.data.data[i].dipakai;
+						vm.display[3].sisa = response.data.data[i].sisa;
 					}
 					else if (response.data.data[i].nama_jenis_kamar == 'Kamar Kelas III') { 
-						if (response.data.data[i].jumlah > 0) {
-							vm.display[4].jumlah = response.data.data[i].jumlah;
-						}
-						else {
-							vm.display[4].jumlah = 'Full';
-						}
+						vm.display[4].jumlah = response.data.data[i].jumlah;
+						vm.display[4].dipakai = response.data.data[i].dipakai;
+						vm.display[4].sisa = response.data.data[i].sisa;
 					}
-					else if (response.data.data[i].nama_jenis_kamar == 'Kamar Bedah') { 
-						if (response.data.data[i].jumlah > 0) {
-							vm.display[5].jumlah = response.data.data[i].jumlah;
-						}
-						else {
-							vm.display[5].jumlah = 'Full';
-						}
+					else if (response.data.data[i].nama_jenis_kamar == 'Kamar HCU') { 
+						vm.display[5].jumlah = response.data.data[i].jumlah;
+						vm.display[5].dipakai = response.data.data[i].dipakai;
+						vm.display[5].sisa = response.data.data[i].sisa;
 					}
 				}
 				console.log(response)

@@ -33,15 +33,21 @@ class RoomCtrl extends Controller
 	public function load(Request $request) {
 		date_default_timezone_set("Asia/Jakarta");
 		$number = 1;
-		$data = DB::table('kamar_inap')
-							->select(
-								'nama_jenis_kamar', 
-								DB::raw("sum(sisa) as jumlah")
-							)
-							->groupBy([
-								'nama_jenis_kamar', 
-							])
-							->get();
+		$data = DB::table('kamar_inap as ki')
+			->leftJoin('registrasi as r', function ($join) {
+				$join->on('ki.uuid', '=', 'r.kamar_inap_uuid')
+					->where('r.status', '=', 'Rawat Inap');
+			})
+			->select(
+				'ki.nama_jenis_kamar',
+				DB::raw('SUM(ki.jumlah_bed) AS jumlah'),
+				DB::raw('COUNT(r.id) AS dipakai'),
+				DB::raw('(SUM(ki.jumlah_bed) - COUNT(r.id)) AS sisa')
+			)
+			->where('ki.delete_soft', '=', '1')
+			->groupBy('ki.nama_jenis_kamar')
+			->get();
+
 		return response()->json(['data' => $data]);
 	}
 

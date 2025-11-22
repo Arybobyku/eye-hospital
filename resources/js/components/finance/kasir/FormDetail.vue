@@ -24,6 +24,7 @@
 							<li>Triase<span><strong>{{ detail.berkebutuhan_khusus }}</strong></span></li>
 							<li v-if="detail.berkebutuhan_khusus!='Tidak'">Keterangan<span><strong>{{
 										detail.keterangan_berkebutuhan }}</strong></span></li>
+
 							<li v-if="detail.carabayar_nama == 'Umum'">
 								<Selected
 									v-on:click="selectbox($event, form.select.metodepembayaran.name, form.select.metodepembayaran.statics)"
@@ -68,6 +69,9 @@
 						</div>
 
 						<div class="grid">
+							<div class="col-12" v-if="detail.apakah_paket =='Ya'">
+								<div class="message"> Paket Bedah <strong class="">{{detail.nama_paket_bedah}}</strong> </div>
+							</div>
 							<div class="col-12">
 								<table class="table">
 									<thead>
@@ -173,6 +177,13 @@
 												Grand Total
 											</td>
 											<td>{{ formatrupiah(supergrandtotal.toString()) }}</td>
+										</tr>
+											<tr
+											v-if="(detail.apakah_paket == 'Ya' && bedah?.harga_sudah_ditentukan == 1)">
+											<td colspan="5">
+												Harga Paket Sudah Ditentukan
+											</td>
+											<td>{{ formatrupiah(bedah?.total.toString()) }}</td>
 										</tr>
 									</tbody>
 								</table>
@@ -297,10 +308,16 @@ export default {
 		green: 'Proses Pembayaran', red: 'Cancel', pendings: 'Ubah Menjadi Pending', test: null, cover: '', temporer: null,
 		pemeriksaanro: null,
 		detail : { uuid: '',
-			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
+			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', apakah_paket: '', nama_paket_bedah: '',  
 			kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
 			nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
 			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', catatan: '', diskon_rp: '', diskon_global: '',
+		},
+		bedah: {
+			id: null,
+			nama: null,
+			harga_sudah_ditentukan: null,
+			total:null,
 		},
 		temphitung: [],
 				globalDiscountNominal: 0, // For nominal discount
@@ -522,6 +539,12 @@ export default {
 				rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: ''
 				, diskon_rp: '', diskon_persen: ''
 			};
+			vm.bedah = {
+				id: null,
+				nama: null,
+				harga_sudah_ditentukan: null,
+				total:null,
+			};
 			vm.globalDiscountNominal = 0;
 				vm.globalDiscountPercentage = 0;
 		},
@@ -544,8 +567,14 @@ export default {
 
 
 			vm.listdata = [];
-			console.log(response);
 			vm.detail = response.data.data;
+
+			if(response.data.bedah){
+				vm.bedah = response.data.bedah;
+
+				console.log("response.data.bedah", vm.bedah);
+			}
+
 
 			if (vm.detail.carabayar_nama == 'Umum') {
 				vm.form.select.metodepembayaran.isrequired = true;
@@ -586,7 +615,6 @@ export default {
 				// vm.tmplistdata.push(_item);
 			}
 
-			console.log(vm.sementara)
 			vm.tmplistdata = vm.listdata;
 			vm.globalDiscountNominal = parseInt(vm.detail.diskon_rp);
 			vm.globalDiscountPercentage = vm.detail.diskon_persen;
