@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cppt;
+use App\Models\DokumenFormLaserBargage;
 use App\Models\DokumenLaporanPembedahan;
 use App\Models\DokumenPersetujuanPenolakanTindakanDokter;
 use Illuminate\Http\Request;
@@ -340,6 +341,36 @@ class PasienCtrl extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Gagal menyimpan Laporan Pembedahan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+	public function storeFormLaseBarage(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+            $data['created_by'] = Auth::user()->name ?? 'System';
+
+            // Simpan data
+            $dokumen = DokumenFormLaserBargage::create($data);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Form Laser Bargage berhasil disimpan',
+                'data' => $dokumen
+            ], 201);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Form Laser Bargage',
                 'error' => $e->getMessage()
             ], 500);
         }
