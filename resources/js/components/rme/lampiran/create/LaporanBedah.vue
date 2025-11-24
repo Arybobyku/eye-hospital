@@ -32,7 +32,13 @@
           <div class="col-md-6">
             <label>Tanggal Lahir :</label>
             <div class="d-flex gap-2">
-              <input type="date" v-model="form.tanggal_lahir" class="input-rme" readonly style="flex: 1" />
+              <input
+                type="date"
+                v-model="form.tanggal_lahir"
+                class="input-rme"
+                readonly
+                style="flex: 1"
+              />
               <select v-model="form.jenis_kelamin" class="input-rme" style="width: 100px">
                 <option value="L">L</option>
                 <option value="P">P</option>
@@ -69,7 +75,8 @@
                 <input type="radio" v-model="form.jenis_operasi" value="akut" /> Akut
               </label>
               <label class="radio-label">
-                <input type="radio" v-model="form.jenis_operasi" value="terencana" /> Terencana
+                <input type="radio" v-model="form.jenis_operasi" value="terencana" />
+                Terencana
               </label>
             </div>
           </div>
@@ -144,22 +151,38 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <label>Diagnosa Pra-Bedah :</label>
-            <textarea v-model="form.diagnosa_pra_bedah" class="textarea-rme" rows="3"></textarea>
+            <textarea
+              v-model="form.diagnosa_pra_bedah"
+              class="textarea-rme"
+              rows="3"
+            ></textarea>
           </div>
           <div class="col-md-6">
             <label>Indikasi Operasi :</label>
-            <textarea v-model="form.indikasi_operasi" class="textarea-rme" rows="3"></textarea>
+            <textarea
+              v-model="form.indikasi_operasi"
+              class="textarea-rme"
+              rows="3"
+            ></textarea>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label>Diagnosa Pasca-Bedah :</label>
-            <textarea v-model="form.diagnosa_pasca_bedah" class="textarea-rme" rows="3"></textarea>
+            <textarea
+              v-model="form.diagnosa_pasca_bedah"
+              class="textarea-rme"
+              rows="3"
+            ></textarea>
           </div>
           <div class="col-md-6">
             <label>Jenis Operasi :</label>
-            <textarea v-model="form.jenis_operasi_detail" class="textarea-rme" rows="3"></textarea>
+            <textarea
+              v-model="form.jenis_operasi_detail"
+              class="textarea-rme"
+              rows="3"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -186,25 +209,42 @@
           </div>
           <div class="col-md-4">
             <label>Lama Operasi (menit) :</label>
-            <input type="number" v-model="form.lama_operasi" class="input-rme" placeholder="Menit" />
+            <input
+              type="number"
+              v-model="form.lama_operasi"
+              class="input-rme"
+              placeholder="Menit"
+            />
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label>Macam Sayatan (bila perlu dengan gambar) :</label>
-            <textarea v-model="form.macam_sayatan" class="textarea-rme" rows="4"></textarea>
+            <textarea
+              v-model="form.macam_sayatan"
+              class="textarea-rme"
+              rows="4"
+            ></textarea>
           </div>
           <div class="col-md-6">
             <label>Posisi Penderita (bila perlu dengan gambar) :</label>
-            <textarea v-model="form.posisi_penderita" class="textarea-rme" rows="4"></textarea>
+            <textarea
+              v-model="form.posisi_penderita"
+              class="textarea-rme"
+              rows="4"
+            ></textarea>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-12">
             <label>Teknik Operasi dan Temuan Intra-Operasi :</label>
-            <textarea v-model="form.teknik_operasi" class="textarea-rme" rows="6"></textarea>
+            <textarea
+              v-model="form.teknik_operasi"
+              class="textarea-rme"
+              rows="6"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -264,14 +304,23 @@
         <div class="row mb-3" v-if="form.komplikasi === 'ya'">
           <div class="col-md-12">
             <label>Penjabaran Komplikasi Intra-Operasi :</label>
-            <textarea v-model="form.penjabaran_komplikasi" class="textarea-rme" rows="4"></textarea>
+            <textarea
+              v-model="form.penjabaran_komplikasi"
+              class="textarea-rme"
+              rows="4"
+            ></textarea>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label>Perdarahan (cc) :</label>
-            <input type="number" v-model="form.perdarahan" class="input-rme" placeholder="cc" />
+            <input
+              type="number"
+              v-model="form.perdarahan"
+              class="input-rme"
+              placeholder="cc"
+            />
           </div>
         </div>
       </div>
@@ -283,7 +332,11 @@
         <div class="row mb-3">
           <div class="col-md-12">
             <label>Instruksi Anestesi :</label>
-            <textarea v-model="form.instruksi_anestesi" class="textarea-rme" rows="3"></textarea>
+            <textarea
+              v-model="form.instruksi_anestesi"
+              class="textarea-rme"
+              rows="3"
+            ></textarea>
           </div>
         </div>
 
@@ -318,7 +371,11 @@
         <div class="row mb-2">
           <div class="col-md-6">
             <label>5. Obat-obatan :</label>
-            <textarea v-model="form.instruksi_obat" class="textarea-rme" rows="2"></textarea>
+            <textarea
+              v-model="form.instruksi_obat"
+              class="textarea-rme"
+              rows="2"
+            ></textarea>
           </div>
           <div class="col-md-6">
             <label>6. Ganti Balut :</label>
@@ -329,7 +386,11 @@
         <div class="row mb-3">
           <div class="col-md-12">
             <label>7. Lain-lain :</label>
-            <textarea v-model="form.instruksi_lainnya" class="textarea-rme" rows="2"></textarea>
+            <textarea
+              v-model="form.instruksi_lainnya"
+              class="textarea-rme"
+              rows="2"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -391,6 +452,16 @@ export default {
       type: Object,
       required: true,
     },
+    editData: {
+      // ✨ Props untuk data edit
+      type: Object,
+      default: null,
+    },
+    isEditMode: {
+      // ✨ Props flag edit mode
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -400,6 +471,7 @@ export default {
         backgroundColor: "white",
       },
       form: {
+        uuid: "", // ✨ Tambahkan field uuid
         uuid_pasien: "",
         no_rm: "",
         nik: "",
@@ -454,14 +526,59 @@ export default {
     };
   },
   mounted() {
-    this.setDataForm();
+    if (this.isEditMode && this.editData) {
+      // ✨ LOAD DATA UNTUK EDIT
+      this.loadDataForEdit();
+    } else {
+      // CREATE MODE
+      this.setDataForm();
+    }
   },
   methods: {
+    async loadDataForEdit() {
+      try {
+        // Option 1: Jika data lengkap sudah ada di editData props
+        if (this.editData.uuid) {
+          // Fetch detail dari server untuk data lengkap
+          const response = await axios.get(
+            `/master/pasien/dokumen-form-laser-barbage/${this.editData.uuid}`
+          );
+
+          if (response.data.status) {
+            // Populate form dengan data dari server
+            Object.keys(this.form).forEach((key) => {
+              if (response.data.data[key] !== undefined) {
+                this.form[key] = response.data.data[key];
+              }
+            });
+
+            // ✨ Load signature jika ada
+            if (response.data.data.ttd_dokter) {
+              this.$nextTick(() => {
+                // Set signature dari base64
+                // Note: vue-signature-pad biasanya perlu di-load manual
+              });
+            }
+          }
+        }
+
+        // Option 2: Atau langsung gunakan editData jika sudah lengkap
+        // Object.keys(this.form).forEach(key => {
+        //   if (this.editData[key] !== undefined) {
+        //     this.form[key] = this.editData[key];
+        //   }
+        // });
+      } catch (error) {
+        console.error("Error loading data:", error);
+        alert("Gagal memuat data untuk edit!");
+        this.$emit("back");
+      }
+    },
     setDataForm() {
       const today = new Date();
       this.form.tanggal_operasi = today.toISOString().split("T")[0];
       this.form.tanggal_ttd = today.toISOString().split("T")[0];
-      
+
       if (this.selectedPatient) {
         this.form.uuid_pasien = this.selectedPatient.uuid;
         this.form.no_rm = this.selectedPatient.rekam_medis;
@@ -494,7 +611,7 @@ export default {
         });
 
         const response = await axios.post(
-          "/master/pasien/laporan-pembedahan",
+          "/master/pasien/dokumen-laporan-pembedahan",
           fd,
           { headers: { "Content-Type": "multipart/form-data" } }
         );

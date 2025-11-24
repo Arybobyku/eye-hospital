@@ -321,8 +321,12 @@ class PasienCtrl extends Controller
                 }
             }
 
+			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+			$pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+  			$pengguna_sername = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
             // Tambahkan user yang membuat
-            $data['created_by'] = Auth::user()->name ?? 'System';
+            $data['created_by'] = $pengguna_nama;
 
             // Simpan data
             $laporan = DokumenLaporanPembedahan::create($data);
@@ -347,33 +351,63 @@ class PasienCtrl extends Controller
     }
 
 	public function storeFormLaseBarage(Request $request)
-    {
-        try {
-            DB::beginTransaction();
+	{
+		try {
+			DB::beginTransaction();
 
-            $data = $request->all();
-            $data['created_by'] = Auth::user()->name ?? 'System';
+			$data = $request->all();
 
-            // Simpan data
-            $dokumen = DokumenFormLaserBargage::create($data);
+			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+			$pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+			$pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+			
+			$uuid = $request->input('uuid');
+			
+			// Hapus uuid dari data untuk avoid mass assignment issue
+			unset($data['uuid']);
+			
+			if ($uuid) {
+				// UPDATE: cari berdasarkan UUID
+				$dokumen = DokumenFormLaserBargage::where('uuid', $uuid)->first();
+				
+				if (!$dokumen) {
+					return response()->json([
+						'status' => false,
+						'message' => 'Data tidak ditemukan'
+					], 404);
+				}
+				
+				$data['updated_by'] = $pengguna_nama;
+				$dokumen->update($data);
+				$action = 'update';
+				$message = 'Form Laser Bargage berhasil diupdate';
+				
+			} else {
+				// CREATE: buat baru
+				$data['created_by'] = $pengguna_nama;
+				$dokumen = DokumenFormLaserBargage::create($data);
+				$action = 'create';
+				$message = 'Form Laser Bargage berhasil disimpan';
+			}
 
-            DB::commit();
+			DB::commit();
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Form Laser Bargage berhasil disimpan',
-                'data' => $dokumen
-            ], 201);
+			return response()->json([
+				'status' => true,
+				'message' => $message,
+				'data' => $dokumen,
+				'action' => $action
+			], $action === 'create' ? 201 : 200);
 
-        } catch (Exception $e) {
-            DB::rollBack();
-            
-            return response()->json([
-                'status' => false,
-                'message' => 'Gagal menyimpan Form Laser Bargage',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
+		} catch (Exception $e) {
+			DB::rollBack();
+			
+			return response()->json([
+				'status' => false,
+				'message' => 'Gagal menyimpan Form Laser Bargage',
+				'error' => $e->getMessage()
+			], 500);
+		}
+	}
 
 }

@@ -96,14 +96,22 @@
         <div class="row mb-3">
           <div class="col-md-12">
             <label>Diagnosa Pra-Tindakan :</label>
-            <textarea v-model="form.diagnosa_pra_tindakan" class="textarea-rme" rows="3"></textarea>
+            <textarea
+              v-model="form.diagnosa_pra_tindakan"
+              class="textarea-rme"
+              rows="3"
+            ></textarea>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-12">
             <label>Indikasi Tindakan Laser :</label>
-            <textarea v-model="form.indikasi_tindakan" class="textarea-rme" rows="3"></textarea>
+            <textarea
+              v-model="form.indikasi_tindakan"
+              class="textarea-rme"
+              rows="3"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -115,18 +123,33 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <label>Lokasi Anatomis :</label>
-            <input type="text" v-model="form.lokasi_anatomis" class="input-rme" placeholder="Contoh: Wajah, Tangan, Kaki, dll" />
+            <input
+              type="text"
+              v-model="form.lokasi_anatomis"
+              class="input-rme"
+              placeholder="Contoh: Wajah, Tangan, Kaki, dll"
+            />
           </div>
           <div class="col-md-6">
             <label>Area Spesifik :</label>
-            <input type="text" v-model="form.area_spesifik" class="input-rme" placeholder="Contoh: Pipi kanan, Lengan atas kiri, dll" />
+            <input
+              type="text"
+              v-model="form.area_spesifik"
+              class="input-rme"
+              placeholder="Contoh: Pipi kanan, Lengan atas kiri, dll"
+            />
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-12">
             <label>Deskripsi Lesi/Kelainan :</label>
-            <textarea v-model="form.deskripsi_lesi" class="textarea-rme" rows="3" placeholder="Ukuran, warna, tekstur, jumlah lesi, dll"></textarea>
+            <textarea
+              v-model="form.deskripsi_lesi"
+              class="textarea-rme"
+              rows="3"
+              placeholder="Ukuran, warna, tekstur, jumlah lesi, dll"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -157,15 +180,30 @@
         <div class="row mb-3">
           <div class="col-md-4">
             <label>Wavelength (nm) :</label>
-            <input type="text" v-model="form.wavelength" class="input-rme" placeholder="Contoh: 1064" />
+            <input
+              type="text"
+              v-model="form.wavelength"
+              class="input-rme"
+              placeholder="Contoh: 1064"
+            />
           </div>
           <div class="col-md-4">
             <label>Power/Energy (Watt/Joule) :</label>
-            <input type="text" v-model="form.power_energy" class="input-rme" placeholder="Contoh: 10W" />
+            <input
+              type="text"
+              v-model="form.power_energy"
+              class="input-rme"
+              placeholder="Contoh: 10W"
+            />
           </div>
           <div class="col-md-4">
             <label>Pulse Duration :</label>
-            <input type="text" v-model="form.pulse_duration" class="input-rme" placeholder="Contoh: 10ms" />
+            <input
+              type="text"
+              v-model="form.pulse_duration"
+              class="input-rme"
+              placeholder="Contoh: 10ms"
+            />
           </div>
         </div>
 
@@ -201,9 +239,17 @@
               <option value="Sedasi">Sedasi</option>
             </select>
           </div>
-          <div class="col-md-6" v-if="form.jenis_anestesi && form.jenis_anestesi !== 'Tanpa Anestesi'">
+          <div
+            class="col-md-6"
+            v-if="form.jenis_anestesi && form.jenis_anestesi !== 'Tanpa Anestesi'"
+          >
             <label>Obat Anestesi yang Digunakan :</label>
-            <input type="text" v-model="form.obat_anestesi" class="input-rme" placeholder="Contoh: Lidocaine 2%" />
+            <input
+              type="text"
+              v-model="form.obat_anestesi"
+              class="input-rme"
+              placeholder="Contoh: Lidocaine 2%"
+            />
           </div>
         </div>
       </div>
@@ -215,21 +261,35 @@
         <div class="row mb-3">
           <div class="col-md-12">
             <label>Persiapan Pasien :</label>
-            <textarea v-model="form.persiapan_pasien" class="textarea-rme" rows="3" placeholder="Pembersihan area, desinfeksi, dll"></textarea>
+            <textarea
+              v-model="form.persiapan_pasien"
+              class="textarea-rme"
+              rows="3"
+              placeholder="Pembersihan area, desinfeksi, dll"
+            ></textarea>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-12">
             <label>Teknik Tindakan :</label>
-            <textarea v-model="form.teknik_tindakan" class="textarea-rme" rows="4" placeholder="Deskripsi detail teknik yang digunakan"></textarea>
+            <textarea
+              v-model="form.teknik_tindakan"
+              class="textarea-rme"
+              rows="4"
+              placeholder="Deskripsi detail teknik yang digunakan"
+            ></textarea>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-12">
             <label>Temuan Selama Tindakan :</label>
-            <textarea v-model="form.temuan_tindakan" class="textarea-rme" rows="3"></textarea>
+            <textarea
+              v-model="form.temuan_tindakan"
+              class="textarea-rme"
+              rows="3"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -262,7 +322,8 @@
             <label>Komplikasi :</label>
             <div class="d-flex gap-3">
               <label class="radio-label">
-                <input type="radio" v-model="form.ada_komplikasi" value="tidak" /> Tidak Ada
+                <input type="radio" v-model="form.ada_komplikasi" value="tidak" /> Tidak
+                Ada
               </label>
               <label class="radio-label">
                 <input type="radio" v-model="form.ada_komplikasi" value="ya" /> Ada
@@ -274,14 +335,22 @@
         <div class="row mb-3" v-if="form.ada_komplikasi === 'ya'">
           <div class="col-md-12">
             <label>Deskripsi Komplikasi :</label>
-            <textarea v-model="form.deskripsi_komplikasi" class="textarea-rme" rows="3"></textarea>
+            <textarea
+              v-model="form.deskripsi_komplikasi"
+              class="textarea-rme"
+              rows="3"
+            ></textarea>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-12">
             <label>Catatan Tambahan :</label>
-            <textarea v-model="form.catatan_tambahan" class="textarea-rme" rows="3"></textarea>
+            <textarea
+              v-model="form.catatan_tambahan"
+              class="textarea-rme"
+              rows="3"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -293,18 +362,30 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <label>1. Perawatan Luka :</label>
-            <textarea v-model="form.instruksi_perawatan_luka" class="textarea-rme" rows="2"></textarea>
+            <textarea
+              v-model="form.instruksi_perawatan_luka"
+              class="textarea-rme"
+              rows="2"
+            ></textarea>
           </div>
           <div class="col-md-6">
             <label>2. Obat-obatan :</label>
-            <textarea v-model="form.instruksi_obat" class="textarea-rme" rows="2"></textarea>
+            <textarea
+              v-model="form.instruksi_obat"
+              class="textarea-rme"
+              rows="2"
+            ></textarea>
           </div>
         </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
             <label>3. Aktivitas yang Dihindari :</label>
-            <textarea v-model="form.instruksi_aktivitas" class="textarea-rme" rows="2"></textarea>
+            <textarea
+              v-model="form.instruksi_aktivitas"
+              class="textarea-rme"
+              rows="2"
+            ></textarea>
           </div>
           <div class="col-md-6">
             <label>4. Kontrol Ulang :</label>
@@ -315,7 +396,11 @@
         <div class="row mb-3">
           <div class="col-md-12">
             <label>5. Tanda Bahaya yang Perlu Diwaspadai :</label>
-            <textarea v-model="form.instruksi_tanda_bahaya" class="textarea-rme" rows="2"></textarea>
+            <textarea
+              v-model="form.instruksi_tanda_bahaya"
+              class="textarea-rme"
+              rows="2"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -388,6 +473,16 @@ export default {
       type: Object,
       required: true,
     },
+    editData: {
+      // ✨ Props untuk data edit
+      type: Object,
+      default: null,
+    },
+    isEditMode: {
+      // ✨ Props flag edit mode
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -397,6 +492,7 @@ export default {
         backgroundColor: "white",
       },
       form: {
+        uuid: "", // ✨ Tambahkan field uuid
         uuid_pasien: "",
         tanggal: "",
         waktu: "",
@@ -446,9 +542,54 @@ export default {
     };
   },
   mounted() {
-    this.setDataForm();
+    if (this.isEditMode && this.editData) {
+      // ✨ LOAD DATA UNTUK EDIT
+      this.loadDataForEdit();
+    } else {
+      // CREATE MODE
+      this.setDataForm();
+    }
   },
   methods: {
+    async loadDataForEdit() {
+      try {
+        // Option 1: Jika data lengkap sudah ada di editData props
+        if (this.editData.uuid) {
+          // Fetch detail dari server untuk data lengkap
+          const response = await axios.get(
+            `/master/pasien/dokumen-form-laser-barbage/${this.editData.uuid}`
+          );
+
+          if (response.data.status) {
+            // Populate form dengan data dari server
+            Object.keys(this.form).forEach((key) => {
+              if (response.data.data[key] !== undefined) {
+                this.form[key] = response.data.data[key];
+              }
+            });
+
+            // ✨ Load signature jika ada
+            if (response.data.data.ttd_dokter) {
+              this.$nextTick(() => {
+                // Set signature dari base64
+                // Note: vue-signature-pad biasanya perlu di-load manual
+              });
+            }
+          }
+        }
+
+        // Option 2: Atau langsung gunakan editData jika sudah lengkap
+        // Object.keys(this.form).forEach(key => {
+        //   if (this.editData[key] !== undefined) {
+        //     this.form[key] = this.editData[key];
+        //   }
+        // });
+      } catch (error) {
+        console.error("Error loading data:", error);
+        alert("Gagal memuat data untuk edit!");
+        this.$emit("back");
+      }
+    },
     setDataForm() {
       const today = new Date();
       this.form.tanggal = today.toISOString().split("T")[0];
@@ -478,23 +619,16 @@ export default {
     },
 
     async submitForm() {
-      // Validasi sederhana
-      if (!this.form.dokter_pelaksana) {
-        alert("Dokter pelaksana harus diisi!");
-        return;
-      }
-
-      if (!this.form.jenis_laser) {
-        alert("Jenis laser harus dipilih!");
-        return;
-      }
-
       this.loadingSubmit = true;
 
       try {
         const fd = new FormData();
 
         Object.keys(this.form).forEach((key) => {
+          // Jangan kirim uuid jika kosong (mode create)
+          if (key === "uuid" && !this.form[key]) {
+            return;
+          }
           fd.append(key, this.form[key]);
         });
 
@@ -504,14 +638,31 @@ export default {
           { headers: { "Content-Type": "multipart/form-data" } }
         );
 
-        console.log("BERHASIL:", response.data);
-        alert("Form Laser Bargage berhasil disimpan!");
-        this.$emit("back");
+        if (response.data.status) {
+          alert(response.data.message);
+          this.$emit("back");
+        }
       } catch (error) {
         console.error("ERROR:", error.response?.data || error);
-        alert("Gagal menyimpan form laser bargage!");
+        alert("Gagal menyimpan form!");
       } finally {
         this.loadingSubmit = false;
+      }
+    },
+    // Saat load data untuk edit
+    async loadDataForEdit(uuid) {
+      try {
+        const response = await axios.get(
+          `/master/pasien/dokumen-form-laser-bargage/${uuid}`
+        );
+
+        if (response.data.status) {
+          // Isi form dengan data yang ada
+          this.form = { ...this.form, ...response.data.data };
+          // UUID akan otomatis terisi di form
+        }
+      } catch (error) {
+        console.error("ERROR:", error);
       }
     },
   },

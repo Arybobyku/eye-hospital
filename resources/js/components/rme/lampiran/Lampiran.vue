@@ -9,23 +9,49 @@
     <!-- ================= LIST STATE ================= -->
     <div v-if="state == 'list'">
       <!-- HEADER -->
-      <div class="header-component-rme">Laporan Pembedahan</div>
+      <div class="header-component-rme">Daftar Lampiran Dokumen</div>
+
+      <!-- PATIENT INFO CARD -->
+      <div class="patient-info-card mb-3">
+        <div class="row">
+          <div class="col-md-3">
+            <strong>No. RM:</strong> {{ selectedPatient?.rekam_medis }}
+          </div>
+          <div class="col-md-4">
+            <strong>Nama:</strong> {{ selectedPatient?.nama }}
+          </div>
+          <div class="col-md-3">
+            <strong>NIK:</strong> {{ selectedPatient?.nik }}
+          </div>
+          <div class="col-md-2">
+            <strong>JK:</strong> {{ selectedPatient?.jenis_kelamin }}
+          </div>
+        </div>
+      </div>
 
       <!-- FILTER BAR -->
       <div class="filter-bar">
         <div class="filter-left">
           Tampil
-          <select v-model="perPage">
+          <select v-model="perPage" @change="fetchLampiran">
             <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
           </select>
           data
         </div>
 
         <div class="filter-right">
-          <button class="btn-add" @click="onAdd">+ Tambah</button>
+          <button class="btn-add" @click="onAdd">
+            <i class="fas fa-plus"></i> Tambah Dokumen
+          </button>
 
           Cari:
-          <input type="text" v-model="searchQuery" class="search-input" />
+          <input 
+            type="text" 
+            v-model="searchQuery" 
+            @input="onSearch"
+            class="search-input" 
+            placeholder="Cari nama, no RM..."
+          />
         </div>
       </div>
 
@@ -33,30 +59,87 @@
       <table class="custom-table-rme">
         <thead>
           <tr>
-            <th>NO</th>
-            <th>TANGGAL</th>
-            <th>JAM</th>
+            <th style="width: 50px">NO</th>
+            <th style="width: 180px">JENIS DOKUMEN</th>
+            <th style="width: 100px">TANGGAL</th>
+            <th style="width: 80px">JAM</th>
+            <th style="width: 120px">NO. RM</th>
             <th>NAMA PASIEN</th>
-            <th>JENIS KELAMIN</th>
-            <th>NIK</th>
-            <th>USER</th>
-            <th>ACTION</th>
+            <th style="width: 80px">JK</th>
+            <th style="width: 150px">PELAKSANA</th>
+            <th>DETAIL INFO</th>
+            <th style="width: 120px" class="text-center">ACTION</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr v-for="(item, index) in paginatedData" :key="item.id">
-            <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-            <td>{{ item.date }}</td>
-            <td>{{ item.time }}</td>
+          <tr v-if="data.length === 0">
+            <td colspan="10" class="text-center">
+              {{ loading ? 'Memuat data...' : 'Tidak ada data' }}
+            </td>
+          </tr>
+          
+          <tr v-for="(item, index) in data" :key="item.uuid">
+            <td>{{ pagination.from + index }}</td>
+            
+            <!-- JENIS DOKUMEN dengan Badge -->
+            <td>
+              <span 
+                class="document-badge" 
+                :style="{ backgroundColor: item.document_color }"
+              >
+                <i :class="['fas', item.document_icon]"></i>
+                {{ item.document_label }}
+              </span>
+            </td>
+            
+            <td>{{ formatDate(item.tanggal) }}</td>
+            <td>{{ formatTime(item.waktu) }}</td>
+            <td>{{ item.no_rm }}</td>
             <td>{{ item.nama }}</td>
             <td>{{ item.jenis_kelamin }}</td>
-            <td>{{ item.no_identitas }}</td>
-            <td>{{ item.carabayar_nama }}</td>
-            <!-- ACTION -->
+            <td>{{ item.user_pelaksana || '-' }}</td>
+            <td>
+              <div class="detail-info">
+                {{ truncate(item.detail_info, 50) }}
+              </div>
+            </td>
+            
+            <!-- ACTION BUTTONS -->
             <td class="text-center">
-              <!-- icon print -->
-              <i class="fas fa-print action-icon" @click="print()"></i>
+              <div class="action-buttons">
+                <button 
+                  class="btn-action btn-view" 
+                  @click="onView(item)"
+                  title="Lihat"
+                >
+                  <i class="fas fa-eye"></i>
+                </button>
+                
+                <button 
+                  class="btn-action btn-edit" 
+                  @click="onEdit(item)"
+                  title="Edit"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+                
+                <button 
+                  class="btn-action btn-print" 
+                  @click="onPrint(item)"
+                  title="Print"
+                >
+                  <i class="fas fa-print"></i>
+                </button>
+                
+                <button 
+                  class="btn-action btn-delete" 
+                  @click="onDelete(item)"
+                  title="Hapus"
+                >
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -64,24 +147,32 @@
 
       <!-- FOOTER INFO -->
       <div class="table-info">
-        Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
+        Menampilkan {{ pagination.from }} s/d {{ pagination.to }} dari {{ pagination.total }} data
       </div>
 
       <!-- PAGINATION -->
       <div class="pagination-rme">
-        <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
+        <button 
+          :disabled="pagination.current_page === 1" 
+          @click="changePage(pagination.current_page - 1)"
+        >
+          <i class="fas fa-chevron-left"></i> Previous
+        </button>
 
         <button
-          v-for="page in totalPages"
+          v-for="page in visiblePages"
           :key="page"
-          :class="['page-btn', { active: currentPage === page }]"
-          @click="currentPage = page"
+          :class="['page-btn', { active: pagination.current_page === page }]"
+          @click="changePage(page)"
         >
           {{ page }}
         </button>
 
-        <button :disabled="currentPage === totalPages" @click="currentPage++">
-          Next
+        <button 
+          :disabled="pagination.current_page === pagination.total_pages" 
+          @click="changePage(pagination.current_page + 1)"
+        >
+          Next <i class="fas fa-chevron-right"></i>
         </button>
       </div>
     </div>
@@ -122,10 +213,10 @@
             @click="onProceedToCreate" 
             :disabled="!selectedDocumentType"
           >
-            Lanjutkan
+            <i class="fas fa-arrow-right"></i> Lanjutkan
           </button>
           <button class="btn-secondary" @click="onCancelSelection">
-            Batal
+            <i class="fas fa-times"></i> Batal
           </button>
         </div>
       </div>
@@ -136,7 +227,9 @@
       <component 
         :is="currentDocumentComponent" 
         @back="onBackToList" 
-        :selectedPatient="selectedPatient" 
+        :selectedPatient="selectedPatient"
+        :editUuid="editUuid"
+        :documentType="selectedDocumentType"
       />
     </div>
   </div>
@@ -147,7 +240,7 @@ import axios from "axios";
 import { defineAsyncComponent } from "vue";
 
 export default {
-  name: "Lampiran",
+  name: "ListLampiran",
   components: {
     // Lazy load components
     CreateLaporanBedah: defineAsyncComponent(() =>
@@ -159,46 +252,52 @@ export default {
     // FormInformedConsent: defineAsyncComponent(() =>
     //   import("./create/FormInformedConsent.vue")
     // ),
-    // Tambahkan component baru di sini jika ada
+    // Tambahkan component baru di sini
   },
 
   data() {
     return {
       perPage: 10,
-      currentPage: 1,
       searchQuery: "",
       state: "list", // list | select-document | create
       selectedDocumentType: "",
+      editUuid: null,
       loading: false,
       data: [],
+      pagination: {
+        total: 0,
+        per_page: 10,
+        current_page: 1,
+        total_pages: 0,
+        from: 0,
+        to: 0
+      },
+      searchTimeout: null,
 
-      // ✨ DAFTAR DOKUMEN YANG TERSEDIA (MUDAH DITAMBAH/EDIT)
+      // ✨ KONFIGURASI DOKUMEN (HARUS SINKRON DENGAN BACKEND)
       availableDocuments: [
         {
           value: "laporan-bedah",
           label: "Laporan Pembedahan",
           component: "CreateLaporanBedah",
-          description: "Form untuk mencatat laporan operasi dan pembedahan pasien"
+          description: "Form untuk mencatat laporan operasi dan pembedahan pasien",
+          backendType: "laporan_bedah"
         },
         {
           value: "laser-bargage",
           label: "Form Laser Bargage",
           component: "FormLaserBargage",
-          description: "Form tindakan laser bargage medis"
+          description: "Form tindakan laser bargage medis",
+          backendType: "laser_bargage"
         },
         // {
         //   value: "informed-consent",
         //   label: "Informed Consent",
         //   component: "FormInformedConsent",
-        //   description: "Surat persetujuan/penolakan tindakan medis"
+        //   description: "Surat persetujuan/penolakan tindakan medis",
+        //   backendType: "informed_consent"
         // },
         // ✨ TAMBAHKAN DOKUMEN BARU DI SINI
-        // {
-        //   value: "nama-dokumen",
-        //   label: "Label Dokumen",
-        //   component: "NamaComponent",
-        //   description: "Deskripsi dokumen"
-        // },
       ],
     };
   },
@@ -214,87 +313,106 @@ export default {
     selectedPatient: {
       immediate: true,
       handler(newVal) {
-        if (newVal?.id) {
-          this.fetchHistory();
+        if (newVal?.uuid) {
+          this.fetchLampiran();
         }
       },
     },
+    perPage() {
+      this.pagination.current_page = 1;
+      this.fetchLampiran();
+    }
   },
 
   computed: {
-    filteredData() {
-      if (!this.searchQuery) return this.data;
-
-      return this.data.filter((row) =>
-        Object.values(row).some((val) =>
-          String(val).toLowerCase().includes(this.searchQuery.toLowerCase())
-        )
-      );
-    },
-
-    totalPages() {
-      return Math.ceil(this.filteredData.length / this.perPage);
-    },
-
-    paginatedData() {
-      const start = (this.currentPage - 1) * this.perPage;
-      return this.filteredData.slice(start, start + this.perPage);
-    },
-
-    startRow() {
-      return (this.currentPage - 1) * this.perPage + 1;
-    },
-
-    endRow() {
-      const end = this.currentPage * this.perPage;
-      return end > this.data.length ? this.data.length : end;
-    },
-
-    // ✨ COMPUTED UNTUK MENDAPATKAN COMPONENT YANG DIPILIH
     currentDocumentComponent() {
       const doc = this.availableDocuments.find(
         d => d.value === this.selectedDocumentType
       );
       return doc ? doc.component : null;
+    },
+
+    visiblePages() {
+      const total = this.pagination.total_pages;
+      const current = this.pagination.current_page;
+      const delta = 2;
+      
+      let pages = [];
+      
+      // Always show first page
+      pages.push(1);
+      
+      // Pages around current
+      for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
+        pages.push(i);
+      }
+      
+      // Always show last page
+      if (total > 1) {
+        pages.push(total);
+      }
+      
+      // Remove duplicates and sort
+      return [...new Set(pages)].sort((a, b) => a - b);
     }
   },
 
   methods: {
-    async fetchHistory() {
+    async fetchLampiran() {
+      if (!this.selectedPatient?.uuid) return;
+
       this.loading = true;
 
       try {
         const formData = new FormData();
-        formData.append("search", this.selectedPatient.uuid);
-        formData.append("limit", 10);
-        formData.append("page", 1);
+        formData.append("uuid_pasien", this.selectedPatient.uuid);
+        formData.append("search", this.searchQuery);
+        formData.append("limit", this.perPage);
+        formData.append("page", this.pagination.current_page);
 
-        const res = await axios.post(
-          "/master/pasien/list-dokumen-persetujuan-penolkan",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const res = await axios.post("/master/rekammedis/list-lampiran", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
-        this.data = res.data?.data ?? [];
+        if (res.data.status) {
+          this.data = res.data.data || [];
+          this.pagination = res.data.pagination || this.pagination;
+        }
       } catch (err) {
-        console.error("Gagal memuat history:", err);
-        alert("Gagal memuat data history.");
+        console.error("Gagal memuat lampiran:", err);
+        this.$swal({
+          icon: 'error',
+          title: 'Error',
+          text: 'Gagal memuat data lampiran'
+        });
       } finally {
         this.loading = false;
       }
     },
 
-    // ✨ HANDLER UNTUK TOMBOL TAMBAH
+    onSearch() {
+      // Debounce search
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = setTimeout(() => {
+        this.pagination.current_page = 1;
+        this.fetchLampiran();
+      }, 500);
+    },
+
+    changePage(page) {
+      if (page < 1 || page > this.pagination.total_pages) return;
+      this.pagination.current_page = page;
+      this.fetchLampiran();
+    },
+
     onAdd() {
       this.state = "select-document";
       this.selectedDocumentType = "";
+      this.editUuid = null;
     },
 
-    // ✨ HANDLER LANJUT KE CREATE SETELAH PILIH DOKUMEN
     onProceedToCreate() {
       if (!this.selectedDocumentType) {
         alert("Silakan pilih jenis dokumen terlebih dahulu!");
@@ -303,20 +421,18 @@ export default {
       this.state = "create";
     },
 
-    // ✨ HANDLER BATAL PILIH DOKUMEN
     onCancelSelection() {
       this.state = "list";
       this.selectedDocumentType = "";
     },
 
-    // ✨ HANDLER KEMBALI KE LIST DARI CREATE
     onBackToList() {
       this.state = "list";
       this.selectedDocumentType = "";
-      this.fetchHistory(); // Refresh data setelah create
+      this.editUuid = null;
+      this.fetchLampiran();
     },
 
-    // ✨ HELPER UNTUK MENDAPATKAN INFO DOKUMEN
     getSelectedDocumentInfo() {
       const doc = this.availableDocuments.find(
         d => d.value === this.selectedDocumentType
@@ -324,12 +440,106 @@ export default {
       return doc ? doc.description : "";
     },
 
-    print() {
-      window.open(
-        `/print/rekammedis/rawat-jalan/rm1dot1/${this.selectedPatient.uuid}`,
-        "_blank"
-      );
+    onView(item) {
+      // Implement view modal atau redirect ke detail page
+      console.log("View:", item);
+      // TODO: Implement detail view
     },
+
+    onEdit(item) {
+      // Map backend type to frontend type
+      const doc = this.availableDocuments.find(
+        d => d.backendType === item.document_type
+      );
+      
+      if (!doc) {
+        alert("Dokumen tidak ditemukan!");
+        return;
+      }
+
+      this.selectedDocumentType = doc.value;
+      this.editUuid = item.uuid;
+      this.state = "create";
+    },
+
+    onPrint(item) {
+      // Generate print URL based on document type
+      const printUrls = {
+        'laser_bargage': `/print/laser-bargage/${item.uuid}`,
+        'laporan_bedah': `/print/laporan-pembedahan/${item.uuid}`,
+        'informed_consent': `/print/informed-consent/${item.uuid}`,
+      };
+
+      const url = printUrls[item.document_type];
+      if (url) {
+        window.open(url, "_blank");
+      } else {
+        alert("Print belum tersedia untuk dokumen ini");
+      }
+    },
+
+    async onDelete(item) {
+      const confirm = await this.$swal({
+        icon: 'warning',
+        title: 'Konfirmasi Hapus',
+        text: `Apakah Anda yakin ingin menghapus ${item.document_label}?`,
+        showCancelButton: true,
+        confirmButtonText: 'Ya, Hapus',
+        cancelButtonText: 'Batal',
+        confirmButtonColor: '#d33',
+      });
+
+      if (!confirm.isConfirmed) return;
+
+      try {
+        const response = await axios.delete(
+          `/master/rekammedis/lampiran/${item.uuid}?type=${item.document_type}`
+        );
+
+        if (response.data.status) {
+          this.$swal({
+            icon: 'success',
+            title: 'Berhasil',
+            text: 'Dokumen berhasil dihapus',
+            timer: 2000
+          });
+          this.fetchLampiran();
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        this.$swal({
+          icon: 'error',
+          title: 'Error',
+          text: 'Gagal menghapus dokumen'
+        });
+      }
+    },
+
+    // Helper methods
+    formatDate(date) {
+      if (!date) return '-';
+      const d = new Date(date);
+      return d.toLocaleDateString('id-ID', { 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric' 
+      });
+    },
+
+    formatTime(time) {
+      if (!time) return '-';
+      // Handle both time string and datetime
+      if (typeof time === 'string') {
+        return time.substring(0, 5);
+      }
+      return '-';
+    },
+
+    truncate(text, length) {
+      if (!text) return '-';
+      if (text.length <= length) return text;
+      return text.substring(0, length) + '...';
+    }
   },
 };
 </script>
@@ -341,6 +551,7 @@ export default {
   border-radius: 5px;
   border: 1px solid #ddd;
   position: relative;
+  min-height: 500px;
 }
 
 .header-component-rme {
@@ -354,10 +565,37 @@ export default {
   border-radius: 4px;
 }
 
+/* PATIENT INFO CARD */
+.patient-info-card {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+}
+
+.patient-info-card .row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -8px;
+}
+
+.patient-info-card .col-md-2,
+.patient-info-card .col-md-3,
+.patient-info-card .col-md-4 {
+  padding: 0 8px;
+  font-size: 14px;
+}
+
+.patient-info-card strong {
+  color: #495057;
+}
+
+/* FILTER BAR */
 .filter-bar {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-size: 14px;
   align-items: center;
 }
@@ -376,9 +614,44 @@ export default {
 }
 
 .search-input {
-  padding: 5px 8px;
+  padding: 6px 10px;
   border: 1px solid #aaa;
-  border-radius: 3px;
+  border-radius: 4px;
+  width: 200px;
+}
+
+.btn-add {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 7px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-add:hover {
+  background: #218838;
+}
+
+/* DOCUMENT BADGE */
+.document-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 4px;
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.document-badge i {
+  margin-right: 5px;
 }
 
 /* TABLE */
@@ -386,23 +659,28 @@ export default {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 10px;
+  font-size: 13px;
 }
 
 .custom-table-rme th {
   background: #1d72c9;
   color: white;
-  padding: 8px;
+  padding: 10px 8px;
   text-align: left;
-  font-size: 13px;
+  font-weight: 600;
 }
 
 .custom-table-rme td {
   border: 1px solid #ddd;
   padding: 8px;
-  font-size: 13px;
+  vertical-align: middle;
 }
 
 .custom-table-rme tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+.custom-table-rme tbody tr:hover {
   background: #e9f2ff;
 }
 
@@ -410,35 +688,79 @@ export default {
   text-align: center;
 }
 
-.action-icon {
+.detail-info {
+  font-size: 12px;
+  color: #666;
+}
+
+/* ACTION BUTTONS */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.btn-action {
+  padding: 5px 8px;
+  border: none;
+  border-radius: 3px;
   cursor: pointer;
-  color: #1d72c9;
-  font-size: 16px;
+  font-size: 12px;
+  transition: all 0.2s;
+  color: white;
 }
 
-.action-icon:hover {
-  color: #0f62a8;
+.btn-view {
+  background: #17a2b8;
 }
 
-/* INFO */
-.table-info {
-  margin-top: 5px;
-  font-size: 13px;
+.btn-view:hover {
+  background: #138496;
+}
+
+.btn-edit {
+  background: #ffc107;
+}
+
+.btn-edit:hover {
+  background: #e0a800;
+}
+
+.btn-print {
+  background: #6c757d;
+}
+
+.btn-print:hover {
+  background: #5a6268;
+}
+
+.btn-delete {
+  background: #dc3545;
+}
+
+.btn-delete:hover {
+  background: #c82333;
 }
 
 /* PAGINATION */
 .pagination-rme {
   display: flex;
   gap: 5px;
+  align-items: center;
 }
 
 .pagination-rme button {
-  padding: 5px 10px;
+  padding: 6px 12px;
   border: 1px solid #1d72c9;
   background: white;
   cursor: pointer;
   border-radius: 3px;
   font-size: 13px;
+  transition: all 0.2s;
+}
+
+.pagination-rme button:hover:not(:disabled) {
+  background: #e9f2ff;
 }
 
 .pagination-rme button:disabled {
@@ -449,9 +771,18 @@ export default {
 .page-btn.active {
   background: #1d72c9;
   color: white;
+  font-weight: bold;
 }
 
-/* LOADING OVERLAY */
+/* TABLE INFO */
+.table-info {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #666;
+}
+
+/* LOADING */
 .loading-overlay {
   position: absolute;
   inset: 0;
@@ -466,16 +797,16 @@ export default {
 }
 
 .spinner-rme {
-  width: 32px;
-  height: 32px;
-  border: 4px solid #ddd;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
   border-top-color: #1d72c9;
   border-radius: 50%;
   animation: spin-rme 0.8s linear infinite;
   margin-bottom: 10px;
 }
 
-/* ================= DOCUMENT SELECTOR STYLES ================= */
+/* SELECT DOCUMENT STYLES */
 .select-document-container {
   padding: 20px;
 }
@@ -549,6 +880,9 @@ export default {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .btn-primary {
@@ -575,25 +909,9 @@ export default {
 .btn-secondary:hover {
   background: #5a6268;
   transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
 }
 
-.btn-add {
-  background: #28a745;
-  color: white;
-  border: none;
-  padding: 6px 14px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: background 0.3s;
-}
-
-.btn-add:hover {
-  background: #218838;
-}
-
+/* UTILITY */
 .mb-3 {
   margin-bottom: 16px;
 }
@@ -614,6 +932,26 @@ export default {
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
+  .filter-bar {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .filter-right {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .action-buttons {
+    flex-wrap: wrap;
+  }
+
   .document-selector-card {
     padding: 20px;
     margin: 10px;
@@ -626,6 +964,7 @@ export default {
   .btn-primary,
   .btn-secondary {
     width: 100%;
+    justify-content: center;
   }
 }
 </style>
