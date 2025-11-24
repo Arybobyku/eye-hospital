@@ -17,12 +17,8 @@
           <div class="col-md-3">
             <strong>No. RM:</strong> {{ selectedPatient?.rekam_medis }}
           </div>
-          <div class="col-md-4">
-            <strong>Nama:</strong> {{ selectedPatient?.nama }}
-          </div>
-          <div class="col-md-3">
-            <strong>NIK:</strong> {{ selectedPatient?.nik }}
-          </div>
+          <div class="col-md-4"><strong>Nama:</strong> {{ selectedPatient?.nama }}</div>
+          <div class="col-md-3"><strong>NIK:</strong> {{ selectedPatient?.nik }}</div>
           <div class="col-md-2">
             <strong>JK:</strong> {{ selectedPatient?.jenis_kelamin }}
           </div>
@@ -45,11 +41,11 @@
           </button>
 
           Cari:
-          <input 
-            type="text" 
-            v-model="searchQuery" 
+          <input
+            type="text"
+            v-model="searchQuery"
             @input="onSearch"
-            class="search-input" 
+            class="search-input"
             placeholder="Cari nama, no RM..."
           />
         </div>
@@ -75,65 +71,53 @@
         <tbody>
           <tr v-if="data.length === 0">
             <td colspan="10" class="text-center">
-              {{ loading ? 'Memuat data...' : 'Tidak ada data' }}
+              {{ loading ? "Memuat data..." : "Tidak ada data" }}
             </td>
           </tr>
-          
+
           <tr v-for="(item, index) in data" :key="item.uuid">
             <td>{{ pagination.from + index }}</td>
-            
+
             <!-- JENIS DOKUMEN dengan Badge -->
             <td>
-              <span 
-                class="document-badge" 
+              <span
+                class="document-badge"
                 :style="{ backgroundColor: item.document_color }"
               >
                 <i :class="['fas', item.document_icon]"></i>
                 {{ item.document_label }}
               </span>
             </td>
-            
+
             <td>{{ formatDate(item.tanggal) }}</td>
             <td>{{ formatTime(item.waktu) }}</td>
             <td>{{ item.no_rm }}</td>
             <td>{{ item.nama }}</td>
             <td>{{ item.jenis_kelamin }}</td>
-            <td>{{ item.user_pelaksana || '-' }}</td>
+            <td>{{ item.user_pelaksana || "-" }}</td>
             <td>
               <div class="detail-info">
                 {{ truncate(item.detail_info, 50) }}
               </div>
             </td>
-            
+
             <!-- ACTION BUTTONS -->
             <td class="text-center">
               <div class="action-buttons">
-                <button 
-                  class="btn-action btn-view" 
-                  @click="onView(item)"
-                  title="Lihat"
-                >
+                <button class="btn-action btn-view" @click="onView(item)" title="Lihat">
                   <i class="fas fa-eye"></i>
                 </button>
-                
-                <button 
-                  class="btn-action btn-edit" 
-                  @click="onEdit(item)"
-                  title="Edit"
-                >
+
+                <button class="btn-action btn-edit" @click="onEdit(item)" title="Edit">
                   <i class="fas fa-edit"></i>
                 </button>
-                
-                <button 
-                  class="btn-action btn-print" 
-                  @click="onPrint(item)"
-                  title="Print"
-                >
+
+                <button class="btn-action btn-print" @click="onPrint(item)" title="Print">
                   <i class="fas fa-print"></i>
                 </button>
-                
-                <button 
-                  class="btn-action btn-delete" 
+
+                <button
+                  class="btn-action btn-delete"
                   @click="onDelete(item)"
                   title="Hapus"
                 >
@@ -147,13 +131,14 @@
 
       <!-- FOOTER INFO -->
       <div class="table-info">
-        Menampilkan {{ pagination.from }} s/d {{ pagination.to }} dari {{ pagination.total }} data
+        Menampilkan {{ pagination.from }} s/d {{ pagination.to }} dari
+        {{ pagination.total }} data
       </div>
 
       <!-- PAGINATION -->
       <div class="pagination-rme">
-        <button 
-          :disabled="pagination.current_page === 1" 
+        <button
+          :disabled="pagination.current_page === 1"
           @click="changePage(pagination.current_page - 1)"
         >
           <i class="fas fa-chevron-left"></i> Previous
@@ -168,8 +153,8 @@
           {{ page }}
         </button>
 
-        <button 
-          :disabled="pagination.current_page === pagination.total_pages" 
+        <button
+          :disabled="pagination.current_page === pagination.total_pages"
           @click="changePage(pagination.current_page + 1)"
         >
           Next <i class="fas fa-chevron-right"></i>
@@ -186,17 +171,9 @@
 
         <div class="form-group">
           <label for="documentType" class="form-label">Jenis Dokumen:</label>
-          <select 
-            id="documentType" 
-            v-model="selectedDocumentType" 
-            class="form-select"
-          >
+          <select id="documentType" v-model="selectedDocumentType" class="form-select">
             <option value="">-- Pilih Dokumen --</option>
-            <option 
-              v-for="doc in availableDocuments" 
-              :key="doc.value" 
-              :value="doc.value"
-            >
+            <option v-for="doc in availableDocuments" :key="doc.value" :value="doc.value">
               {{ doc.label }}
             </option>
           </select>
@@ -208,9 +185,9 @@
         </div>
 
         <div class="button-group mt-4">
-          <button 
-            class="btn-primary" 
-            @click="onProceedToCreate" 
+          <button
+            class="btn-primary"
+            @click="onProceedToCreate"
             :disabled="!selectedDocumentType"
           >
             <i class="fas fa-arrow-right"></i> Lanjutkan
@@ -224,9 +201,9 @@
 
     <!-- ================= CREATE STATE (DYNAMIC) ================= -->
     <div v-if="state == 'create'">
-      <component 
-        :is="currentDocumentComponent" 
-        @back="onBackToList" 
+      <component
+        :is="currentDocumentComponent"
+        @back="onBackToList"
         :selectedPatient="selectedPatient"
         :editUuid="editUuid"
         :documentType="selectedDocumentType"
@@ -243,15 +220,13 @@ export default {
   name: "ListLampiran",
   components: {
     // Lazy load components
-    CreateLaporanBedah: defineAsyncComponent(() =>
-      import("./create/LaporanBedah.vue")
+    CreateLaporanBedah: defineAsyncComponent(() => import("./create/LaporanBedah.vue")),
+    FormLaserBargage: defineAsyncComponent(() => import("./create/FormLaserBarage.vue")),
+    FormLaserFokal: defineAsyncComponent(() => import("./create/FormLaserFokal.vue")),
+    FormResumePerawatanRawatJalan: defineAsyncComponent(() => import("./create/FormResumePerawatanRawatJalan.vue")),
+    FormBalanceCairanHarian: defineAsyncComponent(() =>
+      import("./create/FormBalanceCairanHarian.vue")
     ),
-    FormLaserBargage: defineAsyncComponent(() =>
-      import("./create/FormLaserBarage.vue")
-    ),
-    // FormInformedConsent: defineAsyncComponent(() =>
-    //   import("./create/FormInformedConsent.vue")
-    // ),
     // Tambahkan component baru di sini
   },
 
@@ -270,7 +245,7 @@ export default {
         current_page: 1,
         total_pages: 0,
         from: 0,
-        to: 0
+        to: 0,
       },
       searchTimeout: null,
 
@@ -281,14 +256,35 @@ export default {
           label: "Laporan Pembedahan",
           component: "CreateLaporanBedah",
           description: "Form untuk mencatat laporan operasi dan pembedahan pasien",
-          backendType: "laporan_bedah"
+          backendType: "laporan_bedah",
         },
         {
           value: "laser-bargage",
           label: "Form Laser Bargage",
           component: "FormLaserBargage",
           description: "Form tindakan laser bargage medis",
-          backendType: "laser_bargage"
+          backendType: "laser_bargage",
+        },
+        {
+          value: "laser-fokal",
+          label: "Form Laser Fokal",
+          component: "FormLaserFokal",
+          description: "Form tindakan laser Fokal medis",
+          backendType: "laser_fokal",
+        },
+        {
+          value: "resume-perawatan-rawat-jalan",
+          label: "Form Resume Perawatan Rawat Jalan",
+          component: "FormResumePerawatanRawatJalan",
+          description: "Form Resume Perawatan Rawat Jalan",
+          backendType: "resume_perawatan_rawat_jalan",
+        },
+        {
+          value: "balance-cairan-harian",
+          label: "Balance Cairan Harian",
+          component: "FormBalanceCairanHarian",
+          description: "Form monitoring intake dan output cairan pasien per hari",
+          backendType: "balance_cairan_harian",
         },
         // {
         //   value: "informed-consent",
@@ -321,13 +317,13 @@ export default {
     perPage() {
       this.pagination.current_page = 1;
       this.fetchLampiran();
-    }
+    },
   },
 
   computed: {
     currentDocumentComponent() {
       const doc = this.availableDocuments.find(
-        d => d.value === this.selectedDocumentType
+        (d) => d.value === this.selectedDocumentType
       );
       return doc ? doc.component : null;
     },
@@ -336,25 +332,29 @@ export default {
       const total = this.pagination.total_pages;
       const current = this.pagination.current_page;
       const delta = 2;
-      
+
       let pages = [];
-      
+
       // Always show first page
       pages.push(1);
-      
+
       // Pages around current
-      for (let i = Math.max(2, current - delta); i <= Math.min(total - 1, current + delta); i++) {
+      for (
+        let i = Math.max(2, current - delta);
+        i <= Math.min(total - 1, current + delta);
+        i++
+      ) {
         pages.push(i);
       }
-      
+
       // Always show last page
       if (total > 1) {
         pages.push(total);
       }
-      
+
       // Remove duplicates and sort
       return [...new Set(pages)].sort((a, b) => a - b);
-    }
+    },
   },
 
   methods: {
@@ -383,9 +383,9 @@ export default {
       } catch (err) {
         console.error("Gagal memuat lampiran:", err);
         this.$swal({
-          icon: 'error',
-          title: 'Error',
-          text: 'Gagal memuat data lampiran'
+          icon: "error",
+          title: "Error",
+          text: "Gagal memuat data lampiran",
         });
       } finally {
         this.loading = false;
@@ -435,7 +435,7 @@ export default {
 
     getSelectedDocumentInfo() {
       const doc = this.availableDocuments.find(
-        d => d.value === this.selectedDocumentType
+        (d) => d.value === this.selectedDocumentType
       );
       return doc ? doc.description : "";
     },
@@ -449,9 +449,9 @@ export default {
     onEdit(item) {
       // Map backend type to frontend type
       const doc = this.availableDocuments.find(
-        d => d.backendType === item.document_type
+        (d) => d.backendType === item.document_type
       );
-      
+
       if (!doc) {
         alert("Dokumen tidak ditemukan!");
         return;
@@ -465,9 +465,9 @@ export default {
     onPrint(item) {
       // Generate print URL based on document type
       const printUrls = {
-        'laser_bargage': `/print/laser-bargage/${item.uuid}`,
-        'laporan_bedah': `/print/laporan-pembedahan/${item.uuid}`,
-        'informed_consent': `/print/informed-consent/${item.uuid}`,
+        laser_bargage: `/print/laser-bargage/${item.uuid}`,
+        laporan_bedah: `/print/laporan-pembedahan/${item.uuid}`,
+        informed_consent: `/print/informed-consent/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];
@@ -480,13 +480,13 @@ export default {
 
     async onDelete(item) {
       const confirm = await this.$swal({
-        icon: 'warning',
-        title: 'Konfirmasi Hapus',
+        icon: "warning",
+        title: "Konfirmasi Hapus",
         text: `Apakah Anda yakin ingin menghapus ${item.document_label}?`,
         showCancelButton: true,
-        confirmButtonText: 'Ya, Hapus',
-        cancelButtonText: 'Batal',
-        confirmButtonColor: '#d33',
+        confirmButtonText: "Ya, Hapus",
+        cancelButtonText: "Batal",
+        confirmButtonColor: "#d33",
       });
 
       if (!confirm.isConfirmed) return;
@@ -498,48 +498,48 @@ export default {
 
         if (response.data.status) {
           this.$swal({
-            icon: 'success',
-            title: 'Berhasil',
-            text: 'Dokumen berhasil dihapus',
-            timer: 2000
+            icon: "success",
+            title: "Berhasil",
+            text: "Dokumen berhasil dihapus",
+            timer: 2000,
           });
           this.fetchLampiran();
         }
       } catch (error) {
         console.error("Error:", error);
         this.$swal({
-          icon: 'error',
-          title: 'Error',
-          text: 'Gagal menghapus dokumen'
+          icon: "error",
+          title: "Error",
+          text: "Gagal menghapus dokumen",
         });
       }
     },
 
     // Helper methods
     formatDate(date) {
-      if (!date) return '-';
+      if (!date) return "-";
       const d = new Date(date);
-      return d.toLocaleDateString('id-ID', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric' 
+      return d.toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
       });
     },
 
     formatTime(time) {
-      if (!time) return '-';
+      if (!time) return "-";
       // Handle both time string and datetime
-      if (typeof time === 'string') {
+      if (typeof time === "string") {
         return time.substring(0, 5);
       }
-      return '-';
+      return "-";
     },
 
     truncate(text, length) {
-      if (!text) return '-';
+      if (!text) return "-";
       if (text.length <= length) return text;
-      return text.substring(0, length) + '...';
-    }
+      return text.substring(0, length) + "...";
+    },
   },
 };
 </script>

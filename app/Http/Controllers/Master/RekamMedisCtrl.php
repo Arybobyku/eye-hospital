@@ -212,6 +212,20 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-procedures',
                     'color' => '#007bff',
                 ],
+                [
+                    'table' => 'dokumen_balance_cairan_harian',
+                    'type' => 'balance_cairan_harian',
+                    'label' => 'Balance Cairan Harian',
+                    'icon' => 'fa-tint',
+                    'color' => '#6f42c1',
+                ],
+                [
+                    'table' => 'dokumen_resume_perawatan_rawat_jalan',
+                    'type' => 'resume_perawatan_rawat_jalan',
+                    'label' => 'Resume Perawatan Rawat Jalan',
+                    'icon' => 'fa-file-medical',
+                    'color' => '#17a2b8',
+                ],
                 // Tambahkan dokumen baru di sini
             ];
 
@@ -318,6 +332,18 @@ class RekamMedisCtrl extends Controller
             'dokumen_laporan_pembedahan' => [
                 'tanggal' => 'tanggal_operasi',
                 'waktu' => 'jam_mulai',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_balance_cairan_harian' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_resume_perawatan_rawat_jalan' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],

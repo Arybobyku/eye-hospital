@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cppt;
+use App\Models\DokumenBalanceCairanHarian;
 use App\Models\DokumenFormLaserBargage;
 use App\Models\DokumenLaporanPembedahan;
 use App\Models\DokumenPersetujuanPenolakanTindakanDokter;
+use App\Models\DokumenResumePerawatanRawatJalan;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -409,5 +411,125 @@ class PasienCtrl extends Controller
 			], 500);
 		}
 	}
+
+	public function storeBalanceCairanHarian(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $uuid = $request->input('uuid');
+            
+            // Decode JSON balance_rows jika dalam bentuk string
+            if (isset($data['balance_rows']) && is_string($data['balance_rows'])) {
+                $data['balance_rows'] = json_decode($data['balance_rows'], true);
+            }
+            
+            if ($uuid) {
+                // UPDATE MODE
+                $dokumen = DokumenBalanceCairanHarian::where('uuid', $uuid)->first();
+                
+                if (!$dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan'
+                    ], 404);
+                }
+                
+                $data['updated_by'] = $pengguna_nama;
+                unset($data['uuid']);
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Balance Cairan Harian berhasil diupdate';
+                
+            } else {
+                // CREATE MODE
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenBalanceCairanHarian::create($data);
+                $action = 'create';
+                $message = 'Balance Cairan Harian berhasil disimpan';
+            }
+
+            \DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            \DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Balance Cairan Harian',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+	public function storeResumePerawatanRawatJalan(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $uuid = $request->input('uuid');
+            
+            // Decode JSON resume_rows jika dalam bentuk string
+            if (isset($data['resume_rows']) && is_string($data['resume_rows'])) {
+                $data['resume_rows'] = json_decode($data['resume_rows'], true);
+            }
+            
+            if ($uuid) {
+                // UPDATE MODE
+                $dokumen = DokumenResumePerawatanRawatJalan::where('uuid', $uuid)->first();
+                
+                if (!$dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan'
+                    ], 404);
+                }
+                
+                $data['updated_by'] = $pengguna_nama;
+                unset($data['uuid']);
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Resume Perawatan Rawat Jalan berhasil diupdate';
+                
+            } else {
+                // CREATE MODE
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenResumePerawatanRawatJalan::create($data);
+                $action = 'create';
+                $message = 'Resume Perawatan Rawat Jalan berhasil disimpan';
+            }
+
+            \DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            \DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Resume Perawatan Rawat Jalan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
 }
