@@ -8,7 +8,7 @@
 
     <div v-if="state == 'list'">
       <!-- HEADER -->
-      <div class="header-component-rme">Surat Persetujuan / Penolakan Medis</div>
+      <div class="header-component-rme">Laporan Pembedahan</div>
 
       <!-- FILTER BAR -->
       <div class="filter-bar">
@@ -87,7 +87,7 @@
 
     <!-- Create Data -->
     <div v-if="state == 'create'">
-      <CreateInformedConsent @back="state = 'list'" :selectedPatient="selectedPatient" />
+      <CreateLaporanBedah @back="state = 'list'" :selectedPatient="selectedPatient" />
     </div>
   </div>
 </template>
@@ -98,8 +98,8 @@ import { defineAsyncComponent } from "vue";
 export default {
   name: "InformedConsent",
   components: {
-    CreateInformedConsent: defineAsyncComponent(() =>
-      import("./CreateInformedConsent.vue")
+    CreateLaporanBedah: defineAsyncComponent(() =>
+      import("./CreateLaporanBedah.vue")
     ),
   },
 

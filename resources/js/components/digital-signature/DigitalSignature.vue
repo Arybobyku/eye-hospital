@@ -22,11 +22,11 @@
   </div>
 </template>
 <script>
-import vueSignature from "vue-signature";
+// import vueSignature from "vue-signature";
 export default {
   name: "DigitalSignature",
   components: {
-    vueSignature,
+    // vueSignature,
   },
   data() {
     return {

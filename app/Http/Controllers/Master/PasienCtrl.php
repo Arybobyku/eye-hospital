@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cppt;
+use App\Models\DokumenBalanceCairanHarian;
+use App\Models\DokumenFormLaserBargage;
+use App\Models\DokumenLaporanPembedahan;
+use App\Models\DokumenPersetujuanPenolakanTindakanDokter;
+use App\Models\DokumenResumePerawatanRawatJalan;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -263,5 +268,268 @@ class PasienCtrl extends Controller
 		
 		return response()->json(['data' => $data]);
 	}
+
+
+	public function dokumenPersetujuanPenolakan(Request $request){
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
+
+		$data = DokumenPersetujuanPenolakanTindakanDokter::store($request);
+
+		return response()->json(['data' => $data]);
+
+	}
+	public function listDokumenPersetujuanPenolakan(Request $request){
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; 
+
+		if ($request->search != "") {
+				$data = DokumenPersetujuanPenolakanTindakanDokter::join('pasien', 'dokumen_persetujuan_penolakan_tindakan_dokter.uuid_pasien', '=', 'pasien.uuid')
+				  ->where('uuid_pasien', '=', $search)
+								->orderBy('date', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+				$total = DokumenPersetujuanPenolakanTindakanDokter::join('pasien', 'dokumen_persetujuan_penolakan_tindakan_dokter.uuid_pasien', '=', 'pasien.uuid')
+				  ->where('uuid_pasien', '=', $search)
+								->orderBy('date', 'desc')
+								->orderBy('date', 'desc')->count();
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+
+	}
+
+	public function storeLaporanPembedahan(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            // Konversi checkbox boolean dari string
+            $booleanFields = [
+                'anestesi_umum', 
+                'anestesi_spiral', 
+                'anestesi_epidural',
+                'anestesi_bsp', 
+                'anestesi_csp', 
+                'anestesi_lokal'
+            ];
+
+            $data = $request->all();
+            
+            foreach ($booleanFields as $field) {
+                if (isset($data[$field])) {
+                    $data[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
+                }
+            }
+
+			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+			$pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+  			$pengguna_sername = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            // Tambahkan user yang membuat
+            $data['created_by'] = $pengguna_nama;
+
+            // Simpan data
+            $laporan = DokumenLaporanPembedahan::create($data);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Laporan Pembedahan berhasil disimpan',
+                'data' => $laporan
+            ], 201);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Laporan Pembedahan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+	public function storeFormLaseBarage(Request $request)
+	{
+		try {
+			DB::beginTransaction();
+
+			$data = $request->all();
+
+			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+			$pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+			$pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+			
+			$uuid = $request->input('uuid');
+			
+			// Hapus uuid dari data untuk avoid mass assignment issue
+			unset($data['uuid']);
+			
+			if ($uuid) {
+				// UPDATE: cari berdasarkan UUID
+				$dokumen = DokumenFormLaserBargage::where('uuid', $uuid)->first();
+				
+				if (!$dokumen) {
+					return response()->json([
+						'status' => false,
+						'message' => 'Data tidak ditemukan'
+					], 404);
+				}
+				
+				$data['updated_by'] = $pengguna_nama;
+				$dokumen->update($data);
+				$action = 'update';
+				$message = 'Form Laser Bargage berhasil diupdate';
+				
+			} else {
+				// CREATE: buat baru
+				$data['created_by'] = $pengguna_nama;
+				$dokumen = DokumenFormLaserBargage::create($data);
+				$action = 'create';
+				$message = 'Form Laser Bargage berhasil disimpan';
+			}
+
+			DB::commit();
+
+			return response()->json([
+				'status' => true,
+				'message' => $message,
+				'data' => $dokumen,
+				'action' => $action
+			], $action === 'create' ? 201 : 200);
+
+		} catch (Exception $e) {
+			DB::rollBack();
+			
+			return response()->json([
+				'status' => false,
+				'message' => 'Gagal menyimpan Form Laser Bargage',
+				'error' => $e->getMessage()
+			], 500);
+		}
+	}
+
+	public function storeBalanceCairanHarian(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $uuid = $request->input('uuid');
+            
+            // Decode JSON balance_rows jika dalam bentuk string
+            if (isset($data['balance_rows']) && is_string($data['balance_rows'])) {
+                $data['balance_rows'] = json_decode($data['balance_rows'], true);
+            }
+            
+            if ($uuid) {
+                // UPDATE MODE
+                $dokumen = DokumenBalanceCairanHarian::where('uuid', $uuid)->first();
+                
+                if (!$dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan'
+                    ], 404);
+                }
+                
+                $data['updated_by'] = $pengguna_nama;
+                unset($data['uuid']);
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Balance Cairan Harian berhasil diupdate';
+                
+            } else {
+                // CREATE MODE
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenBalanceCairanHarian::create($data);
+                $action = 'create';
+                $message = 'Balance Cairan Harian berhasil disimpan';
+            }
+
+            \DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            \DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Balance Cairan Harian',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+	public function storeResumePerawatanRawatJalan(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $uuid = $request->input('uuid');
+            
+            // Decode JSON resume_rows jika dalam bentuk string
+            if (isset($data['resume_rows']) && is_string($data['resume_rows'])) {
+                $data['resume_rows'] = json_decode($data['resume_rows'], true);
+            }
+            
+            if ($uuid) {
+                // UPDATE MODE
+                $dokumen = DokumenResumePerawatanRawatJalan::where('uuid', $uuid)->first();
+                
+                if (!$dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan'
+                    ], 404);
+                }
+                
+                $data['updated_by'] = $pengguna_nama;
+                unset($data['uuid']);
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Resume Perawatan Rawat Jalan berhasil diupdate';
+                
+            } else {
+                // CREATE MODE
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenResumePerawatanRawatJalan::create($data);
+                $action = 'create';
+                $message = 'Resume Perawatan Rawat Jalan berhasil disimpan';
+            }
+
+            \DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            \DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Resume Perawatan Rawat Jalan',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 
 }
