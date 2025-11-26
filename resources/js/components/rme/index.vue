@@ -239,6 +239,13 @@ export default {
             import("./informedConsent/InformedConsent.vue")
           );
 
+        case "Pengkajian Data Umum":
+          return defineAsyncComponent(() =>
+            import("./pengkajianDataUmum/pengkajianData.vue")
+          );
+
+
+
         default:
           return defineAsyncComponent(() =>
             import("./commingsoon/CommingSoon.vue")
