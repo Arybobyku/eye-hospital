@@ -7,167 +7,171 @@
     </div>
 
     <!-- HEADER -->
-    
 
-    <div class="header-component-rme">Daftar Resep</div>
+    <div v-if="state == 'list'">
+      <div class="header-component-rme">Daftar Resep</div>
 
-    
-    <!-- FILTER BAR -->
-    <div class="filter-bar">
-      <div class="filter-left">
-        Tampil
-        <select v-model="perPage">
-          <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
-        </select>
-        data
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <div class="filter-left">
+          Tampil
+          <select v-model="perPage">
+            <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
+          </select>
+          data
+        </div>
+
+        <div class="filter-right">
+          Cari:
+          <input type="text" v-model="searchQueryRacikan" class="search-input" />
+        </div>
       </div>
 
-      <div class="filter-right">
-        Cari:
-        <input type="text" v-model="searchQueryRacikan" class="search-input" />
+      <!-- TABLE -->
+
+      <table class="custom-table-rme">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>RESEP</th>
+            <th>TANGGAL</th>
+            <th>DARI</th>
+            <th>DOKTER</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="(item, index) in paginatedDataRacikan" :key="item.id">
+            <td>{{ index + 1 + (currentPageRacikan - 1) * perPageRacikan }}</td>
+            <td>{{ item.nomor }}</td>
+            <td>{{ item.tanggal }}</td>
+            <td>{{ item.jenis }}</td>
+            <td>{{ item.nama_dokter }}</td>
+            <td class="action-buttons">
+              <i class="fa fa-print action-icon icon-print" @click="printItem(item)"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- FOOTER INFO -->
+      <div class="table-info">
+        Menampilkan {{ startRowRacikan }} s/d {{ endRowRacikan }} dari {{ dataRacikan.length }} data
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination-rme">
+        <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
+
+        <button v-for="page in totalPagesRacikan" :key="page" :class="['page-btn', { active: currentPage === page }]"
+          @click="currentPage = page">
+          {{ page }}
+        </button>
+
+        <button :disabled="currentPageRacikan === totalPagesRacikan" @click="currentPageRacikan++">Next</button>
+      </div>
+      <div class="history-container">
+        <!-- LOADING OVERLAY -->
+        <div v-if="loading" class="loading-overlay">
+          <div class="spinner-rme"></div>
+          Loading...
+        </div>
+
+        <!-- HEADER -->
+
+
+        <div class="header-component-rme">Daftar Penjualan</div>
+
+
+        <!-- FILTER BAR -->
+        <div class="filter-bar">
+          <div class="filter-left">
+            Tampil
+            <select v-model="perPage">
+              <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
+            </select>
+            data
+          </div>
+
+          <div class="filter-right">
+            Cari:
+            <input type="text" v-model="searchQuery" class="search-input" />
+          </div>
+        </div>
+
+        <!-- TABLE -->
+
+        <table class="custom-table-rme">
+          <thead>
+            <tr>
+              <th>NO</th>
+              <th>KODE</th>
+              <th>TANGGAL</th>
+              <th>JAM</th>
+              <th>LOKASI</th>
+              <th>DOKTER</th>
+              <th>KWITANSI</th>
+              <th>DETAIL OBAT</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="(item, index) in paginatedData" :key="item.id">
+              <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
+              <td>{{ item.nomor }}</td>
+              <td>{{ item.tanggal }}</td>
+              <td>{{ item.waktu }}</td>
+              <td>Apotek</td>
+              <td>{{ item.nama_dokter }}</td>
+              <td>{{ item.no_kwitansi }}</td>
+              <td class="action-buttons">
+                <i class="fa fa-eye action-icon icon-detail" @click="detailItem(item)"></i>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- FOOTER INFO -->
+        <div class="table-info">
+          Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="pagination-rme">
+          <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
+
+          <button v-for="page in totalPages" :key="page" :class="['page-btn', { active: currentPage === page }]"
+            @click="currentPage = page">
+            {{ page }}
+          </button>
+
+          <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
+        </div>
       </div>
     </div>
 
-    <!-- TABLE -->
-     
-    <table class="custom-table-rme">
-      <thead>
-        <tr>
-          <th>NO</th>
-          <th>RESEP</th>
-          <th>TANGGAL</th>
-          <th>DARI</th>
-          <th>DOKTER</th>
-          <th>ACTION</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(item, index) in paginatedDataRacikan" :key="item.id">
-          <td>{{ index + 1 + (currentPageRacikan - 1) * perPageRacikan }}</td>
-          <td>{{ item.nomor }}</td>
-          <td>{{ item.tanggal }}</td>
-          <td>{{ item.jenis }}</td>
-          <td>{{ item.nama_dokter }}</td>
-          <td class="action-buttons">
-            <i class="fa fa-print action-icon icon-print" @click="printItem(item)"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- FOOTER INFO -->
-    <div class="table-info">
-      Menampilkan {{ startRowRacikan }} s/d {{ endRowRacikan }} dari {{ dataRacikan.length }} data
-    </div>
-
-    <!-- PAGINATION -->
-    <div class="pagination-rme">
-      <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
-
-      <button
-        v-for="page in totalPagesRacikan"
-        :key="page"
-        :class="['page-btn', { active: currentPage === page }]"
-        @click="currentPage = page"
-      >
-        {{ page }}
-      </button>
-
-      <button :disabled="currentPageRacikan === totalPagesRacikan" @click="currentPageRacikan++">Next</button>
-    </div>
   </div>
-  <div class="history-container">
-    <!-- LOADING OVERLAY -->
-    <div v-if="loading" class="loading-overlay">
-      <div class="spinner-rme"></div>
-      Loading...
-    </div>
 
-    <!-- HEADER -->
-    
-
-    <div class="header-component-rme">Daftar Penjualan</div>
-
-    
-    <!-- FILTER BAR -->
-    <div class="filter-bar">
-      <div class="filter-left">
-        Tampil
-        <select v-model="perPage">
-          <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
-        </select>
-        data
-      </div>
-
-      <div class="filter-right">
-        Cari:
-        <input type="text" v-model="searchQuery" class="search-input" />
-      </div>
-    </div>
-
-    <!-- TABLE -->
-     
-    <table class="custom-table-rme">
-      <thead>
-        <tr>
-          <th>NO</th>
-          <th>KODE</th>
-          <th>TANGGAL</th>
-          <th>JAM</th>
-          <th>LOKASI</th>
-          <th>DOKTER</th>
-          <th>KWITANSI</th>
-          <th>DETAIL OBAT</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(item, index) in paginatedData" :key="item.id">
-          <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-          <td>{{ item.nomor }}</td>
-          <td>{{ item.tanggal }}</td>
-          <td>{{ item.waktu }}</td>
-          <td>Apotek</td>
-          <td>{{ item.nama_dokter }}</td>
-          <td>{{ item.no_kwitansi }}</td>
-          <td class="action-buttons">
-            <i class="fa fa-eye action-icon icon-detail" @click="editItem(item)"></i>
-          </td>
-
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- FOOTER INFO -->
-    <div class="table-info">
-      Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
-    </div>
-
-    <!-- PAGINATION -->
-    <div class="pagination-rme">
-      <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
-
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        :class="['page-btn', { active: currentPage === page }]"
-        @click="currentPage = page"
-      >
-        {{ page }}
-      </button>
-
-      <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
-    </div>
+  <div v-if="state == 'detail'">
+    <DetailResepObat @back="state = 'list'" :selectedPatient="selectedPatient" :registrasi="registrasi" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import ButtonTambah from '../components/ButtonTambah.vue'
+import { defineAsyncComponent } from "vue";
 export default {
   name: "HistoryKunjungan",
-  components: { ButtonTambah },
+  components: {
+    ButtonTambah,
+    DetailResepObat: defineAsyncComponent(() =>
+      import("./DetailResepObat.vue")
+    ),
+  },
 
   data() {
     return {
@@ -178,10 +182,14 @@ export default {
       searchQuery: "",
       searchQueryRacikan: "",
       loading: false, // Loading indicator
+      state: "list",
       data: [
       ],
       dataRacikan: [
       ],
+      registrasi:[
+
+      ]
     };
   },
   props: {
@@ -189,6 +197,7 @@ export default {
       type: Object,
       required: true,
     },
+    
   },
 
   watch: {
@@ -294,32 +303,33 @@ export default {
     editItem(item) {
       console.log("Edit:", item)
       // buka modal atau pindah halaman
-      },
-      deleteItem(item) {
-        console.log("Delete:", item)
-        // konfirmasi hapus
-      },
-      printItem(item) {
-        console.log("Print:", item)
-        // buka print atau cetakan PDF
-      },
+    },
+    detailItem(item) {
+      console.log("Detail:", item)
+      this.registrasi = item;
+      this.state = "detail";
+    },
+    printItem(item) {
+      console.log("Print:", item)
+      // buka print atau cetakan PDF
+    },
 
 
-    mappedStatus(data){
-        if(data?.status_ro != 'Sudah Diperiksa'){
-            return 'Pemriksasan Refraksi Optisi'
-        }
-        if(data?.status_dokter != 'Sudah Diperiksa'){
-            return 'Pemriksasan Dokter'
-        }
-        if(data?.status_dokter != 'Sudah Bayar'){
-            return 'Farmasi'
-        }
-        if(data?.status_dokter != 'Sudah Bayar'){
-            return 'Kasir'
-        }
+    mappedStatus(data) {
+      if (data?.status_ro != 'Sudah Diperiksa') {
+        return 'Pemriksasan Refraksi Optisi'
+      }
+      if (data?.status_dokter != 'Sudah Diperiksa') {
+        return 'Pemriksasan Dokter'
+      }
+      if (data?.status_dokter != 'Sudah Bayar') {
+        return 'Farmasi'
+      }
+      if (data?.status_dokter != 'Sudah Bayar') {
+        return 'Kasir'
+      }
 
-        return 'Selesai'
+      return 'Selesai'
     },
   },
 };
@@ -438,6 +448,7 @@ export default {
     transform: rotate(360deg);
   }
 }
+
 .action-buttons {
   display: flex;
   align-items: center;
@@ -452,19 +463,21 @@ export default {
 
 /* warna sesuai gambar */
 .icon-edit {
-  color: #5cb85c;   /* hijau */
+  color: #5cb85c;
+  /* hijau */
 }
 
 .icon-delete {
-  color: #d9534f;   /* merah */
+  color: #d9534f;
+  /* merah */
 }
 
 .icon-print {
-  color: #0275d8;   /* biru */
+  color: #0275d8;
+  /* biru */
 }
 
 .action-icon:hover {
   opacity: 0.7;
 }
-
 </style>
