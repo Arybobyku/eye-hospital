@@ -531,5 +531,45 @@ class PasienCtrl extends Controller
             ], 500);
         }
     }
+	public function listobat(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data pasien');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; 
+
+		if ($request->search != "") {
+				$dataObat = Registrasi::where('delete_soft', '=', 1)->where('ada_obat', 'Ya')
+								->where('pasien_uuid', '=', $search)
+								->orderBy('tanggal', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+				$totalObat = Registrasi::where('delete_soft', '=', 1)->where('ada_obat', 'Ya')
+								->where('pasien_uuid', '=', $search)
+								->orderBy('tanggal', 'desc')->count();
+
+				$dataRacikan = Registrasi::where('delete_soft', 1)
+								->where('pasien_uuid', $search)
+								->whereHas('resepracikan') // hanya registrasi yang punya resepracikan
+								->orderBy('tanggal', 'desc')
+								->skip($skip)
+								->take($this->take)
+								->get();
+							
+				$totalRacikan = Registrasi::where('delete_soft', 1)
+								->where('pasien_uuid', $search)
+								->whereHas('resepracikan') // hanya registrasi yang punya resepracikan
+								->orderBy('tanggal', 'desc')
+								->skip($skip)
+								->take($this->take)
+								->count();
+		}
+		
+		return response()->json(['dataobat' => $dataObat, 'totalobat' => $totalObat, 'dataracikan' => $dataRacikan, 'totalracikan' => $totalRacikan]);
+	
+	}
 
 }
