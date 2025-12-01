@@ -215,6 +215,7 @@
 <script>
 import axios from "axios";
 import { defineAsyncComponent } from "vue";
+import FormPersetujuanTindakanKedokteran from "./create/FormPersetujuanTindakanKedokteran.vue";
 
 export default {
   name: "ListLampiran",
@@ -222,6 +223,7 @@ export default {
     // Lazy load components
     CreateLaporanBedah: defineAsyncComponent(() => import("./create/LaporanBedah.vue")),
     FormLaserBargage: defineAsyncComponent(() => import("./create/FormLaserBarage.vue")),
+    FormPersetujuanTindakanKedokteran: defineAsyncComponent(() => import("./create/FormPersetujuanTindakanKedokteran.vue")),
     FormLaserFokal: defineAsyncComponent(() => import("./create/FormLaserFokal.vue")),
     FormResumePerawatanRawatJalan: defineAsyncComponent(() => import("./create/FormResumePerawatanRawatJalan.vue")),
     FormBalanceCairanHarian: defineAsyncComponent(() =>
@@ -271,6 +273,13 @@ export default {
           component: "FormLaserFokal",
           description: "Form tindakan laser Fokal medis",
           backendType: "laser_fokal",
+        },
+        {
+          value: "persetujuan_tindakan_kedokteran",
+          label: "Form Persetujuan Tindakan Kedokteran",
+          component: "FormPersetujuanTindakanKedokteran",
+          description: "Form Persetujuan Tindakan Kedokteran",
+          backendType: "persetujuan_tindakan_kedokteran",
         },
         {
           value: "resume-perawatan-rawat-jalan",
