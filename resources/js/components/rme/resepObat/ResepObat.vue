@@ -311,8 +311,14 @@ export default {
     },
     printItem(item) {
       console.log("Print:", item)
+      window.open(
+        `/print/rekammedis/obat/print/`+item.uuid,
+        "_blank"
+      );
       // buka print atau cetakan PDF
     },
+    
+    
 
 
     mappedStatus(data) {

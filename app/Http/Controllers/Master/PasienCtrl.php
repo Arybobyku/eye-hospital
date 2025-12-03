@@ -629,4 +629,6 @@ class PasienCtrl extends Controller
         return response()->json(['data' => $detailObat]);
 
     }
+
+
 }

@@ -22,6 +22,7 @@ use App\Models\Cppt;
 use App\Models\PemeriksaanDokterIcd9;
 use App\Models\Pengguna;
 use App\Models\Resep;
+use App\Models\ResepRacikan;
 use Ramsey\Uuid\Uuid;
 use DB;
 use Cookie;
@@ -1310,6 +1311,24 @@ function printFormLaserBarrage($uuid)
       'print-rekam-medis.general.penolakantindakananestesi',
       compact('pasien', 'ro', 'roperasi', 'ptk',)
     )->setPaper('a4', 'potrait');
+
+    return $pdf->stream();
+  }
+  function printRacikanObat($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
+    $racikans = ResepRacikan::where('registrasi_uuid', $uuid)->get();
+    $pasien = Pasien::where('uuid', '=', $registrasi->pasien_uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.obat.printRacikanResepObat',
+      compact(
+        'pasien',
+        'racikans',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
 
     return $pdf->stream();
   }
