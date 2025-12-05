@@ -5,13 +5,15 @@
       <div class="spinner-rme"></div>
       Loading...
     </div>
-
+    <div v-if="state == 'list'">
     <!-- HEADER -->
     
 
     <div class="header-component-rme">Persetujuan Umum (General Consent)</div>
 
-    <ButtonTambah @click="goToAdd" />
+    <ButtonTambah  @click="onAdd" />
+    <!-- <button class="btn-add" @click="onAdd">+ s</button> -->
+
     
     <!-- FILTER BAR -->
     <div class="filter-bar">
@@ -84,20 +86,33 @@
       <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
     </div>
   </div>
+    <!-- Create Data -->
+  <div v-if="state == 'create'">
+    <CreatePersetujuanUmum @back="state = 'list'" :selectedPatient="selectedPatient" />
+  </div>
+  </div>
+
 </template>
 
 <script>
 import axios from "axios";
+import { defineAsyncComponent } from "vue";
 import ButtonTambah from '../components/ButtonTambah.vue'
+// import CreatePersetujuanUmum from "./CreatePersetujuanUmum.vue";
 export default {
   name: "HistoryKunjungan",
-  components: { ButtonTambah },
+  components: { ButtonTambah,
+    CreatePersetujuanUmum: defineAsyncComponent(() =>
+      import("./CreatePersetujuanUmum.vue")
+    ),
+   },
 
   data() {
     return {
       perPage: 10,
       currentPage: 1,
       searchQuery: "",
+      state: "list",
       loading: false, // Loading indicator
       // Sample data (nanti ganti dengan API)
       data: [
@@ -204,7 +219,10 @@ export default {
         console.log("Print:", item)
         // buka print atau cetakan PDF
       },
-
+      onAdd() {
+        this.state = "create";
+        console.log("TAMBAH");
+      },
 
     mappedStatus(data){
         if(data?.status_ro != 'Sudah Diperiksa'){

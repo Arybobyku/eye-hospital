@@ -7,187 +7,189 @@
     </div>
 
     <!-- HEADER -->
-    
 
-    <div class="header-component-rme">Daftar Resep</div>
+    <div v-if="state == 'list'">
+      <div class="header-component-rme">Daftar Resep</div>
 
-    
-    <!-- FILTER BAR -->
-    <div class="filter-bar">
-      <div class="filter-left">
-        Tampil
-        <select v-model="perPage">
-          <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
-        </select>
-        data
+
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <div class="filter-left">
+          Tampil
+          <select v-model="perPage">
+            <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
+          </select>
+          data
+        </div>
+
+        <div class="filter-right">
+          Cari:
+          <input type="text" v-model="searchQueryRacikan" class="search-input" />
+        </div>
       </div>
 
-      <div class="filter-right">
-        Cari:
-        <input type="text" v-model="searchQuery" class="search-input" />
+      <!-- TABLE -->
+
+      <table class="custom-table-rme">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>RESEP</th>
+            <th>TANGGAL</th>
+            <th>DARI</th>
+            <th>DOKTER</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-for="(item, index) in paginatedDataRacikan" :key="item.id">
+            <td>{{ index + 1 + (currentPageRacikan - 1) * perPageRacikan }}</td>
+            <td>{{ item.nomor }}</td>
+            <td>{{ item.tanggal }}</td>
+            <td>{{ item.jenis }}</td>
+            <td>{{ item.nama_dokter }}</td>
+            <td class="action-buttons">
+              <i class="fa fa-print action-icon icon-print" @click="printItem(item)"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- FOOTER INFO -->
+      <div class="table-info">
+        Menampilkan {{ startRowRacikan }} s/d {{ endRowRacikan }} dari {{ dataRacikan.length }} data
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination-rme">
+        <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
+
+        <button v-for="page in totalPagesRacikan" :key="page" :class="['page-btn', { active: currentPage === page }]"
+          @click="currentPage = page">
+          {{ page }}
+        </button>
+
+        <button :disabled="currentPageRacikan === totalPagesRacikan" @click="currentPageRacikan++">Next</button>
+      </div>
+      <div class="history-container">
+        <!-- LOADING OVERLAY -->
+        <div v-if="loading" class="loading-overlay">
+          <div class="spinner-rme"></div>
+          Loading...
+        </div>
+
+        <!-- HEADER -->
+
+
+        <div class="header-component-rme">Daftar Penjualan</div>
+
+
+        <!-- FILTER BAR -->
+        <div class="filter-bar">
+          <div class="filter-left">
+            Tampil
+            <select v-model="perPage">
+              <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
+            </select>
+            data
+          </div>
+
+          <div class="filter-right">
+            Cari:
+            <input type="text" v-model="searchQuery" class="search-input" />
+          </div>
+        </div>
+
+        <!-- TABLE -->
+
+        <table class="custom-table-rme">
+          <thead>
+            <tr>
+              <th>NO</th>
+              <th>KODE</th>
+              <th>TANGGAL</th>
+              <th>JAM</th>
+              <th>LOKASI</th>
+              <th>DOKTER</th>
+              <th>KWITANSI</th>
+              <th>DETAIL OBAT</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="(item, index) in paginatedData" :key="item.id">
+              <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
+              <td>{{ item.nomor }}</td>
+              <td>{{ item.tanggal }}</td>
+              <td>{{ item.waktu }}</td>
+              <td>Apotek</td>
+              <td>{{ item.nama_dokter }}</td>
+              <td>{{ item.no_kwitansi }}</td>
+              <td class="action-buttons">
+                <i class="fa fa-eye action-icon icon-detail" @click="detailItem(item)"></i>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- FOOTER INFO -->
+        <div class="table-info">
+          Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
+        </div>
+
+        <!-- PAGINATION -->
+        <div class="pagination-rme">
+          <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
+
+          <button v-for="page in totalPages" :key="page" :class="['page-btn', { active: currentPage === page }]"
+            @click="currentPage = page">
+            {{ page }}
+          </button>
+
+          <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
+        </div>
       </div>
     </div>
 
-    <!-- TABLE -->
-     
-    <table class="custom-table-rme">
-      <thead>
-        <tr>
-          <th>NO</th>
-          <th>RESEP</th>
-          <th>TANGGAL</th>
-          <th>DARI</th>
-          <th>DOKTER</th>
-          <th>ACTION</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(item, index) in paginatedData" :key="item.id">
-          <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-          <td>{{ item.no }}</td>
-          <td>{{ item.tanggal }}</td>
-          <td>{{ item.nik }}</td>
-          <td>{{ item.nama_dokter }}</td>
-          <td class="action-buttons">
-            <i class="fa fa-print action-icon icon-print" @click="printItem(item)"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- FOOTER INFO -->
-    <div class="table-info">
-      Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
-    </div>
-
-    <!-- PAGINATION -->
-    <div class="pagination-rme">
-      <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
-
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        :class="['page-btn', { active: currentPage === page }]"
-        @click="currentPage = page"
-      >
-        {{ page }}
-      </button>
-
-      <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
-    </div>
   </div>
-  <div class="history-container">
-    <!-- LOADING OVERLAY -->
-    <div v-if="loading" class="loading-overlay">
-      <div class="spinner-rme"></div>
-      Loading...
-    </div>
 
-    <!-- HEADER -->
-    
-
-    <div class="header-component-rme">Daftar Penjualan</div>
-
-    
-    <!-- FILTER BAR -->
-    <div class="filter-bar">
-      <div class="filter-left">
-        Tampil
-        <select v-model="perPage">
-          <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
-        </select>
-        data
-      </div>
-
-      <div class="filter-right">
-        Cari:
-        <input type="text" v-model="searchQuery" class="search-input" />
-      </div>
-    </div>
-
-    <!-- TABLE -->
-     
-    <table class="custom-table-rme">
-      <thead>
-        <tr>
-          <th>NO</th>
-          <th>KODE</th>
-          <th>TANGGAL</th>
-          <th>JAM</th>
-          <th>LOKASI</th>
-          <th>DOKTER</th>
-          <th>BARANG</th>
-          <th>JUMLAH</th>
-          <th>KWITANSI</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(item, index) in paginatedData" :key="item.id">
-          <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-          <td>{{ item.no }}</td>
-          <td>{{ item.tanggal }}</td>
-          <td>{{ item.jam }}</td>
-          <td>Apotek</td>
-          <td>{{ item.nama_dokter }}</td>
-          <td>{{ item.nama_obat }}</td>
-          <td>{{ item.jumlah }}</td>
-          <td>{{ item.no_kwitansi }}</td>
-
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- FOOTER INFO -->
-    <div class="table-info">
-      Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
-    </div>
-
-    <!-- PAGINATION -->
-    <div class="pagination-rme">
-      <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
-
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        :class="['page-btn', { active: currentPage === page }]"
-        @click="currentPage = page"
-      >
-        {{ page }}
-      </button>
-
-      <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
-    </div>
+  <div v-if="state == 'detail'">
+    <DetailResepObat @back="state = 'list'" :selectedPatient="selectedPatient" :registrasi="registrasi" />
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import ButtonTambah from '../components/ButtonTambah.vue'
+import { defineAsyncComponent } from "vue";
 export default {
   name: "HistoryKunjungan",
-  components: { ButtonTambah },
+  components: {
+    ButtonTambah,
+    DetailResepObat: defineAsyncComponent(() =>
+      import("./DetailResepObat.vue")
+    ),
+  },
 
   data() {
     return {
       perPage: 10,
+      perPageRacikan: 10,
       currentPage: 1,
+      currentPageRacikan: 1,
       searchQuery: "",
+      searchQueryRacikan: "",
       loading: false, // Loading indicator
-      // Sample data (nanti ganti dengan API)
+      state: "list",
       data: [
-        // { id: 1, reg: "006969", tanggal: "06-11-2025", jam: "16:27", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "UMUM" },
-        // { id: 2, reg: "006889", tanggal: "10-10-2025", jam: "20:32", layanan: "POLI PSIKOLOGI", dokter: "dr. Yoga Yandika, Sp.A", jaminan: "UMUM" },
-        // { id: 3, reg: "006825", tanggal: "17-09-2025", jam: "22:19", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "APOTEK SUMBER WARAS" },
-        // { id: 4, reg: "006720", tanggal: "04-08-2025", jam: "12:27", layanan: "POLI GIGI", dokter: "drg. ALFI, Sp. KGA", jaminan: "TRANSFER" },
-        // { id: 5, reg: "006726", tanggal: "04-08-2025", jam: "14:55", layanan: "POLI GIGI", dokter: "drg. ALFI, Sp. KGA", jaminan: "PRIBADI" },
-        // { id: 6, reg: "006711", tanggal: "31-07-2025", jam: "15:20", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "PRIBADI" },
-        // { id: 7, reg: "006486", tanggal: "25-04-2025", jam: "17:25", layanan: "BIDAN", dokter: "Dr Dessy", jaminan: "PRIBADI" },
-        // { id: 8, reg: "006415", tanggal: "18-03-2025", jam: "16:37", layanan: "POLI UMUM", dokter: "DOKTER UMUM", jaminan: "UMUM" },
-        // { id: 9, reg: "006385", tanggal: "10-03-2025", jam: "10:15", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "UMUM" },
-        // { id: 10, reg: "006315", tanggal: "07-02-2025", jam: "21:17", layanan: "LABORATORIUM", dokter: "dr. Ali indri", jaminan: "UMUM" },
       ],
+      dataRacikan: [
+      ],
+      registrasi:[
+
+      ]
     };
   },
   props: {
@@ -195,6 +197,7 @@ export default {
       type: Object,
       required: true,
     },
+    
   },
 
   watch: {
@@ -236,6 +239,33 @@ export default {
       const end = this.currentPage * this.perPage;
       return end > this.data.length ? this.data.length : end;
     },
+    filteredDataRacikan() {
+      if (!this.searchQueryRacikan) return this.dataRacikan;
+
+      return this.dataRacikan.filter((row) =>
+        Object.values(row).some((val) =>
+          String(val).toLowerCase().includes(this.searchQueryRacikan.toLowerCase())
+        )
+      );
+    },
+
+    totalPagesRacikan() {
+      return Math.ceil(this.filteredDataRacikan.length / this.perPageRacikan);
+    },
+
+    paginatedDataRacikan() {
+      const start = (this.currentPageRacikan - 1) * this.perPageRacikan;
+      return this.filteredDataRacikan.slice(start, start + this.perPageRacikan);
+    },
+
+    startRowRacikan() {
+      return (this.currentPageRacikan - 1) * this.perPageRacikan + 1;
+    },
+
+    endRowRacikan() {
+      const end = this.currentPageRacikan * this.perPageRacikan;
+      return end > this.dataRacikan.length ? this.dataRacikan.length : end;
+    },
   },
   mounted() {
     // this.fetchHistory();
@@ -252,14 +282,16 @@ export default {
         formData.append("limit", 10);
         formData.append("page", 1);
 
-        const res = await axios.post("/master/pasien/history", formData, {
+        const res = await axios.post("/rme/pasien/listobat", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
 
         // 👇 pastikan data backend berupa array
-        this.data = res.data?.data ?? [];
+        this.data = res.data?.dataobat ?? [];
+        this.dataRacikan = res.data?.dataracikan ?? [];
+        console.log("respons", res);
       } catch (err) {
         console.error("Gagal memuat history:", err);
         alert("Gagal memuat data history.");
@@ -271,32 +303,39 @@ export default {
     editItem(item) {
       console.log("Edit:", item)
       // buka modal atau pindah halaman
-      },
-      deleteItem(item) {
-        console.log("Delete:", item)
-        // konfirmasi hapus
-      },
-      printItem(item) {
-        console.log("Print:", item)
-        // buka print atau cetakan PDF
-      },
+    },
+    detailItem(item) {
+      console.log("Detail:", item)
+      this.registrasi = item;
+      this.state = "detail";
+    },
+    printItem(item) {
+      console.log("Print:", item)
+      window.open(
+        `/print/rekammedis/obat/print/`+item.uuid,
+        "_blank"
+      );
+      // buka print atau cetakan PDF
+    },
+    
+    
 
 
-    mappedStatus(data){
-        if(data?.status_ro != 'Sudah Diperiksa'){
-            return 'Pemriksasan Refraksi Optisi'
-        }
-        if(data?.status_dokter != 'Sudah Diperiksa'){
-            return 'Pemriksasan Dokter'
-        }
-        if(data?.status_dokter != 'Sudah Bayar'){
-            return 'Farmasi'
-        }
-        if(data?.status_dokter != 'Sudah Bayar'){
-            return 'Kasir'
-        }
+    mappedStatus(data) {
+      if (data?.status_ro != 'Sudah Diperiksa') {
+        return 'Pemriksasan Refraksi Optisi'
+      }
+      if (data?.status_dokter != 'Sudah Diperiksa') {
+        return 'Pemriksasan Dokter'
+      }
+      if (data?.status_dokter != 'Sudah Bayar') {
+        return 'Farmasi'
+      }
+      if (data?.status_dokter != 'Sudah Bayar') {
+        return 'Kasir'
+      }
 
-        return 'Selesai'
+      return 'Selesai'
     },
   },
 };
@@ -415,6 +454,7 @@ export default {
     transform: rotate(360deg);
   }
 }
+
 .action-buttons {
   display: flex;
   align-items: center;
@@ -429,19 +469,21 @@ export default {
 
 /* warna sesuai gambar */
 .icon-edit {
-  color: #5cb85c;   /* hijau */
+  color: #5cb85c;
+  /* hijau */
 }
 
 .icon-delete {
-  color: #d9534f;   /* merah */
+  color: #d9534f;
+  /* merah */
 }
 
 .icon-print {
-  color: #0275d8;   /* biru */
+  color: #0275d8;
+  /* biru */
 }
 
 .action-icon:hover {
   opacity: 0.7;
 }
-
 </style>
