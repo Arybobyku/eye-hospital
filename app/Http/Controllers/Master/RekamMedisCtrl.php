@@ -240,6 +240,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-file-medical',
                     'color' => '#17a2b8',
                 ],
+                [
+                    'table' => 'dokumen_surat_balasan_konsul',
+                    'type' => 'surat_balasan_konsul',
+                    'label' => 'Surat Balasan Konsultasi',
+                    'icon' => 'fa-file-medical',
+                    'color' => '#17a2b8',
+                ],
                 // Tambahkan dokumen baru di sini
             ];
 
@@ -368,6 +375,12 @@ class RekamMedisCtrl extends Controller
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_surat_kontrol' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_surat_balasan_konsul' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
                 // 'user_pelaksana' => 'pembedahan',

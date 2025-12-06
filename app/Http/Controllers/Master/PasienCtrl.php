@@ -9,6 +9,7 @@ use App\Models\DokumenFormLaserBargage;
 use App\Models\DokumenLaporanPembedahan;
 use App\Models\DokumenPersetujuanPenolakanTindakanDokter;
 use App\Models\DokumenResumePerawatanRawatJalan;
+use App\Models\DokumenSuratBalasanKonsul;
 use App\Models\DokumenSuratKonsul;
 use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
@@ -815,6 +816,67 @@ public function storeSuratKonsul(Request $request)
         return response()->json([
             'status' => false,
             'message' => 'Gagal menyimpan Surat Konsul',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+public function storeSuratBalasanKonsul(Request $request)
+{
+    try {
+        DB::beginTransaction();
+
+        $data = $request->all();
+
+        // Ambil user info dari encrypted cookie
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+        $uuid = $request->input('uuid');
+
+        // Hapus uuid dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $dokumen = DokumenSuratBalasanKonsul::where('uuid', $uuid)->first();
+
+            if (! $dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Surat Balasan Konsul berhasil diupdate';
+
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            $dokumen = DokumenSuratBalasanKonsul::create($data);
+            $action = 'create';
+            $message = 'Surat Balasan Konsul berhasil disimpan';
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+
+    } catch (Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Surat Balasan Konsul',
             'error' => $e->getMessage(),
         ], 500);
     }

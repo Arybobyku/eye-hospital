@@ -230,6 +230,7 @@ export default {
     FormPenolakanRujukan: defineAsyncComponent(() =>import("./create/FormPenolakanRujukan.vue")),
     FormSuratKontrol: defineAsyncComponent(() =>import("./create/FormSuratKontrol.vue")),
     FormSuratKonsul: defineAsyncComponent(() =>import("./create/FormSuratKonsul.vue")),
+    FormSuratBalasanKonsul: defineAsyncComponent(() =>import("./create/FormSuratBalasanKonsul.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -315,7 +316,14 @@ export default {
           label: "Surat Konsultasi",
           component: "FormSuratKonsul",
           description: "Form Surat Konsultasi Pasien",
-          backendType: "surat_kontrol_ulang",
+          backendType: "surat_konsul",
+        },
+        {
+          value: "surat-balasan-kosultasi",
+          label: "Surat Balasan Konsultasi",
+          component: "FormSuratBalasanKonsul",
+          description: "Form Surat Balasan Konsultasi Pasien",
+          backendType: "surat_balasan_konsul",
         },
         // {
         //   value: "informed-consent",
