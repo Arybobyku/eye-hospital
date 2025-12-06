@@ -229,6 +229,7 @@ export default {
     FormBalanceCairanHarian: defineAsyncComponent(() =>import("./create/FormBalanceCairanHarian.vue")),
     FormPenolakanRujukan: defineAsyncComponent(() =>import("./create/FormPenolakanRujukan.vue")),
     FormSuratKontrol: defineAsyncComponent(() =>import("./create/FormSuratKontrol.vue")),
+    FormSuratKonsul: defineAsyncComponent(() =>import("./create/FormSuratKonsul.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -307,6 +308,13 @@ export default {
           label: "Surat Kontrol Ulang",
           component: "FormSuratKontrol",
           description: "Form Surat Kontrol Ulang Pasien",
+          backendType: "surat_kontrol_ulang",
+        },
+        {
+          value: "surat-kosultasi",
+          label: "Surat Konsultasi",
+          component: "FormSuratKonsul",
+          description: "Form Surat Konsultasi Pasien",
           backendType: "surat_kontrol_ulang",
         },
         // {
@@ -491,6 +499,7 @@ export default {
         laser_bargage: `/print/laser-bargage/${item.uuid}`,
         laporan_bedah: `/print/laporan-pembedahan/${item.uuid}`,
         informed_consent: `/print/informed-consent/${item.uuid}`,
+        surat_kontrol_ulang: `/print/rekammedis/general/suratkontrolulang/${this.selectedPatient.uuid}`,
       };
 
       const url = printUrls[item.document_type];

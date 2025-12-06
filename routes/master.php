@@ -40,6 +40,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('dokumen-resume-perawatan-rawat-jalan', [PasienCtrl::class, 'storeResumePerawatanRawatJalan'])->name('master-pasien-storeResumePerawatanRawatJalan');
 		Route::post('dokumen-surat-penolakan-rujukan', [PasienCtrl::class, 'storeSuratPenolakanRujukan'])->name('master-pasien-storeSuratPenolakanRujukan');
 		Route::post('dokumen-surat-kontrol', [PasienCtrl::class, 'storeSuratKontrol'])->name('master-pasien-storeSuratKontrol');
+		Route::post('dokumen-surat-konsul', [PasienCtrl::class, 'storeSuratKonsul'])->name('master-pasien-storeSuratKonsul');
 	});
 
 	Route::prefix('rekammedis')->group(function () {
