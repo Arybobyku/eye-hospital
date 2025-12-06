@@ -206,6 +206,7 @@
         @back="onBackToList"
         :selectedPatient="selectedPatient"
         :editUuid="editUuid"
+        :editData="editData"
         :documentType="selectedDocumentType"
       />
     </div>
@@ -241,6 +242,7 @@ export default {
       searchQuery: "",
       state: "list", // list | select-document | create
       selectedDocumentType: "",
+      editData: null,
       editUuid: null,
       loading: false,
       data: [],
@@ -500,20 +502,52 @@ export default {
       // TODO: Implement detail view
     },
 
-    onEdit(item) {
-      // Map backend type to frontend type
-      const doc = this.availableDocuments.find(
-        (d) => d.backendType === item.document_type
-      );
+    async onEdit(item) {
+      try {
+        // Loading state
+        this.isLoading = true;
 
-      if (!doc) {
-        alert("Dokumen tidak ditemukan!");
-        return;
+        // Map backend type to frontend type
+        const doc = this.availableDocuments.find(
+          (d) => d.backendType === item.document_type
+        );
+
+        if (!doc) {
+          alert("Dokumen tidak ditemukan!");
+          return;
+        }
+
+        // 1. Get detail lampiran terlebih dahulu
+        const response = await axios.get(
+          `/master/rekammedis/lampiran/${item.uuid}`,
+          {
+            params: {
+              type: item.document_type,
+            },
+          }
+        );
+
+        if (!response.data.status) {
+          alert(response.data.message || "Gagal mengambil detail dokumen");
+          return;
+        }
+
+        // 2. Set data untuk dikirim ke component
+        this.editData = response.data.data;
+        this.selectedDocumentType = doc.value;
+        this.editUuid = item.uuid;
+
+        // 3. Navigate ke component create/edit
+        this.state = "create";
+
+      } catch (error) {
+        console.error("Error saat edit:", error);
+        alert(
+          error.response?.data?.message || "Terjadi kesalahan saat mengambil data"
+        );
+      } finally {
+        this.isLoading = false;
       }
-
-      this.selectedDocumentType = doc.value;
-      this.editUuid = item.uuid;
-      this.state = "create";
     },
 
     onPrint(item) {

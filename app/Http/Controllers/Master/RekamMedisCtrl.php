@@ -443,6 +443,15 @@ class RekamMedisCtrl extends Controller
                 'laser_bargage' => 'dokumen_form_laser_bargage',
                 'laporan_bedah' => 'laporan_pembedahan',
                 'informed_consent' => 'dokumen_informed_consent',
+                'surat_pernyataan_pasien_umum' => 'dokumen_surat_pernyataan_pasien_umum',
+                'surat_balasan_konsul' => 'dokumen_surat_balasan_konsul',
+                'surat_pernyataan_batal_operasi' => 'dokumen_surat_pernyataan_batal_operasi',
+                'surat_balasan_konsul' => 'dokumen_surat_balasan_konsul',
+                'surat_kontrol_ulang' => 'dokumen_surat_kontrol',
+                'surat_penolakan_rujukan' => 'dokumen_surat_penolakan_rujukan',
+                'resume_perawatan_rawat_jalan' => 'dokumen_resume_perawatan_rawat_jalan',
+                'balance_cairan_harian' => 'dokumen_balance_cairan_harian',
+                'balance_cairan_harian' => 'dokumen_balance_cairan_harian',
                 // Tambahkan mapping baru di sini
             ];
 
