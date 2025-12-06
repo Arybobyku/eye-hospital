@@ -58,7 +58,7 @@
             <th style="width: 50px">NO</th>
             <th style="width: 180px">JENIS DOKUMEN</th>
             <th style="width: 100px">TANGGAL</th>
-            <th style="width: 80px">JAM</th>
+            <!-- <th style="width: 80px">JAM</th> -->
             <th style="width: 120px">NO. RM</th>
             <th>NAMA PASIEN</th>
             <th style="width: 80px">JK</th>
@@ -90,7 +90,7 @@
             </td>
 
             <td>{{ formatDate(item.tanggal) }}</td>
-            <td>{{ formatTime(item.waktu) }}</td>
+            <!-- <td>{{ formatTime(item.waktu) }}</td> -->
             <td>{{ item.no_rm }}</td>
             <td>{{ item.nama }}</td>
             <td>{{ item.jenis_kelamin }}</td>
@@ -215,6 +215,7 @@
 <script>
 import axios from "axios";
 import { defineAsyncComponent } from "vue";
+import FormPersetujuanTindakanKedokteran from "./create/FormPersetujuanTindakanKedokteran.vue";
 
 export default {
   name: "ListLampiran",
@@ -222,11 +223,12 @@ export default {
     // Lazy load components
     CreateLaporanBedah: defineAsyncComponent(() => import("./create/LaporanBedah.vue")),
     FormLaserBargage: defineAsyncComponent(() => import("./create/FormLaserBarage.vue")),
+    FormPersetujuanTindakanKedokteran: defineAsyncComponent(() => import("./create/FormPersetujuanTindakanKedokteran.vue")),
     FormLaserFokal: defineAsyncComponent(() => import("./create/FormLaserFokal.vue")),
     FormResumePerawatanRawatJalan: defineAsyncComponent(() => import("./create/FormResumePerawatanRawatJalan.vue")),
-    FormBalanceCairanHarian: defineAsyncComponent(() =>
-      import("./create/FormBalanceCairanHarian.vue")
-    ),
+    FormBalanceCairanHarian: defineAsyncComponent(() =>import("./create/FormBalanceCairanHarian.vue")),
+    FormPenolakanRujukan: defineAsyncComponent(() =>import("./create/FormPenolakanRujukan.vue")),
+    FormSuratKontrol: defineAsyncComponent(() =>import("./create/FormSuratKontrol.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -273,6 +275,13 @@ export default {
           backendType: "laser_fokal",
         },
         {
+          value: "persetujuan_tindakan_kedokteran",
+          label: "Form Persetujuan Tindakan Kedokteran",
+          component: "FormPersetujuanTindakanKedokteran",
+          description: "Form Persetujuan Tindakan Kedokteran",
+          backendType: "persetujuan_tindakan_kedokteran",
+        },
+        {
           value: "resume-perawatan-rawat-jalan",
           label: "Form Resume Perawatan Rawat Jalan",
           component: "FormResumePerawatanRawatJalan",
@@ -285,6 +294,20 @@ export default {
           component: "FormBalanceCairanHarian",
           description: "Form monitoring intake dan output cairan pasien per hari",
           backendType: "balance_cairan_harian",
+        },
+        {
+          value: "surat-penolakan-rujukan",
+          label: "Surat Penolakan Rujukan",
+          component: "FormPenolakanRujukan",
+          description: "Form Surat penolakan rujukan pasien",
+          backendType: "surat_penolakan_rujukan",
+        },
+        {
+          value: "surat-kontrol-ulang",
+          label: "Surat Kontrol Ulang",
+          component: "FormSuratKontrol",
+          description: "Form Surat Kontrol Ulang Pasien",
+          backendType: "surat_kontrol_ulang",
         },
         // {
         //   value: "informed-consent",
