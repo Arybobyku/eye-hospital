@@ -32,7 +32,7 @@
           </div>
           <div class="col-md-6">
             <label>NIK :</label>
-            <input type="text" v-model="form.nik" class="input-rme" readonly />
+            <input type="text" v-model="form.nik" class="input-rme" />
           </div>
         </div>
 
