@@ -214,8 +214,7 @@
 
 <script>
 import axios from "axios";
-import { defineAsyncComponent } from "vue";
-import FormPersetujuanTindakanKedokteran from "./create/FormPersetujuanTindakanKedokteran.vue";
+import { defineAsyncComponent } from "vue";;
 
 export default {
   name: "ListLampiran",
@@ -231,6 +230,7 @@ export default {
     FormSuratKontrol: defineAsyncComponent(() =>import("./create/FormSuratKontrol.vue")),
     FormSuratKonsul: defineAsyncComponent(() =>import("./create/FormSuratKonsul.vue")),
     FormSuratBalasanKonsul: defineAsyncComponent(() =>import("./create/FormSuratBalasanKonsul.vue")),
+    FormPernyataanBatalOperasi: defineAsyncComponent(() =>import("./create/FormPernyataanBatalOperasi.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -324,6 +324,13 @@ export default {
           component: "FormSuratBalasanKonsul",
           description: "Form Surat Balasan Konsultasi Pasien",
           backendType: "surat_balasan_konsul",
+        },
+        {
+          value: "surat-pernyataan-batal-operasi",
+          label: "Surat Pernyataan Batal Operasi",
+          component: "FormPernyataanBatalOperasi",
+          description: "Form Surat Balasan Konsultasi Pasien",
+          backendType: "surat_pernyataan_batal_operasi",
         },
         // {
         //   value: "informed-consent",

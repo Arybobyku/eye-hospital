@@ -13,6 +13,7 @@ use App\Models\DokumenSuratBalasanKonsul;
 use App\Models\DokumenSuratKonsul;
 use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
+use App\Models\DokumenSuratPernyataanBatalOperasi;
 use App\Models\LayananPasien;
 use App\Models\Pasien;
 use App\Models\PemeriksaanRo;
@@ -881,4 +882,67 @@ public function storeSuratBalasanKonsul(Request $request)
         ], 500);
     }
 }
+
+
+public function storeSuratPernyataanBatalOperasi(Request $request)
+{
+    try {
+        DB::beginTransaction();
+
+        $data = $request->all();
+
+        // Ambil user info dari encrypted cookie
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+        $uuid = $request->input('uuid');
+
+        // Hapus uuid dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $dokumen = DokumenSuratPernyataanBatalOperasi::where('uuid', $uuid)->first();
+
+            if (! $dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Surat Pernyataan Batal Operasi berhasil diupdate';
+
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            $dokumen = DokumenSuratPernyataanBatalOperasi::create($data);
+            $action = 'create';
+            $message = 'Surat Pernyataan Batal Operasi berhasil disimpan';
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+
+    } catch (Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Surat Pernyataan Batal Operasi',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 }
