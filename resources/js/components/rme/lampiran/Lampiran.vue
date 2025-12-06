@@ -58,7 +58,7 @@
             <th style="width: 50px">NO</th>
             <th style="width: 180px">JENIS DOKUMEN</th>
             <th style="width: 100px">TANGGAL</th>
-            <th style="width: 80px">JAM</th>
+            <!-- <th style="width: 80px">JAM</th> -->
             <th style="width: 120px">NO. RM</th>
             <th>NAMA PASIEN</th>
             <th style="width: 80px">JK</th>
@@ -90,7 +90,7 @@
             </td>
 
             <td>{{ formatDate(item.tanggal) }}</td>
-            <td>{{ formatTime(item.waktu) }}</td>
+            <!-- <td>{{ formatTime(item.waktu) }}</td> -->
             <td>{{ item.no_rm }}</td>
             <td>{{ item.nama }}</td>
             <td>{{ item.jenis_kelamin }}</td>
@@ -228,6 +228,7 @@ export default {
     FormResumePerawatanRawatJalan: defineAsyncComponent(() => import("./create/FormResumePerawatanRawatJalan.vue")),
     FormBalanceCairanHarian: defineAsyncComponent(() =>import("./create/FormBalanceCairanHarian.vue")),
     FormPenolakanRujukan: defineAsyncComponent(() =>import("./create/FormPenolakanRujukan.vue")),
+    FormSuratKontrol: defineAsyncComponent(() =>import("./create/FormSuratKontrol.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -300,6 +301,13 @@ export default {
           component: "FormPenolakanRujukan",
           description: "Form Surat penolakan rujukan pasien",
           backendType: "surat_penolakan_rujukan",
+        },
+        {
+          value: "surat-kontrol-ulang",
+          label: "Surat Kontrol Ulang",
+          component: "FormSuratKontrol",
+          description: "Form Surat Kontrol Ulang Pasien",
+          backendType: "surat_kontrol_ulang",
         },
         // {
         //   value: "informed-consent",

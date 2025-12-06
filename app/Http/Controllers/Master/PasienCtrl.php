@@ -9,6 +9,7 @@ use App\Models\DokumenFormLaserBargage;
 use App\Models\DokumenLaporanPembedahan;
 use App\Models\DokumenPersetujuanPenolakanTindakanDokter;
 use App\Models\DokumenResumePerawatanRawatJalan;
+use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
 use App\Models\LayananPasien;
 use App\Models\Pasien;
@@ -692,4 +693,68 @@ class PasienCtrl extends Controller
         }
     }
 
+    public function storeSuratKontrol(Request $request){
+    try {
+        DB::beginTransaction();
+
+        $data = $request->all();
+
+        // Ambil user info dari encrypted cookie
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+        $uuid = $request->input('uuid');
+
+        // Convert status_sembuh dari string ke boolean
+        if (isset($data['status_sembuh'])) {
+            $data['status_sembuh'] = filter_var($data['status_sembuh'], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        // Hapus uuid dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $dokumen = DokumenSuratKontrol::where('uuid', $uuid)->first();
+
+            if (! $dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Surat Kontrol berhasil diupdate';
+
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            $dokumen = DokumenSuratKontrol::create($data);
+            $action = 'create';
+            $message = 'Surat Kontrol berhasil disimpan';
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+
+    } catch (Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Surat Kontrol',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 }
