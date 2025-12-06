@@ -226,9 +226,8 @@ export default {
     FormPersetujuanTindakanKedokteran: defineAsyncComponent(() => import("./create/FormPersetujuanTindakanKedokteran.vue")),
     FormLaserFokal: defineAsyncComponent(() => import("./create/FormLaserFokal.vue")),
     FormResumePerawatanRawatJalan: defineAsyncComponent(() => import("./create/FormResumePerawatanRawatJalan.vue")),
-    FormBalanceCairanHarian: defineAsyncComponent(() =>
-      import("./create/FormBalanceCairanHarian.vue")
-    ),
+    FormBalanceCairanHarian: defineAsyncComponent(() =>import("./create/FormBalanceCairanHarian.vue")),
+    FormPenolakanRujukan: defineAsyncComponent(() =>import("./create/FormPenolakanRujukan.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -294,6 +293,13 @@ export default {
           component: "FormBalanceCairanHarian",
           description: "Form monitoring intake dan output cairan pasien per hari",
           backendType: "balance_cairan_harian",
+        },
+        {
+          value: "surat-penolakan-rujukan",
+          label: "Surat Penolakan Rujukan",
+          component: "FormPenolakanRujukan",
+          description: "Form Surat penolakan rujukan pasien",
+          backendType: "surat_penolakan_rujukan",
         },
         // {
         //   value: "informed-consent",
