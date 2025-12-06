@@ -202,59 +202,58 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_form_laser_bargage',
                     'type' => 'laser_barbage',
                     'label' => 'Form Laser Bargage',
-                    'icon' => 'fa-laser',
-                    'color' => '#28a745',
+                    'icon' => 'fa-laser-pointer',
+                    'color' => '#FF6B35', // Orange terang
                 ],
                 [
                     'table' => 'dokumen_laporan_pembedahan',
                     'type' => 'laporan_bedah',
                     'label' => 'Laporan Pembedahan',
-                    'icon' => 'fa-procedures',
-                    'color' => '#007bff',
+                    'icon' => 'fa-scalpel',
+                    'color' => '#E63946', // Merah bedah
                 ],
                 [
                     'table' => 'dokumen_balance_cairan_harian',
                     'type' => 'balance_cairan_harian',
                     'label' => 'Balance Cairan Harian',
-                    'icon' => 'fa-tint',
-                    'color' => '#6f42c1',
+                    'icon' => 'fa-droplet',
+                    'color' => '#4FC3F7', // Biru air
                 ],
                 [
                     'table' => 'dokumen_resume_perawatan_rawat_jalan',
                     'type' => 'resume_perawatan_rawat_jalan',
                     'label' => 'Resume Perawatan Rawat Jalan',
-                    'icon' => 'fa-file-medical',
-                    'color' => '#17a2b8',
+                    'icon' => 'fa-clipboard-check',
+                    'color' => '#26A69A', // Teal
                 ],
                 [
                     'table' => 'dokumen_surat_penolakan_rujukan',
                     'type' => 'surat_penolakan_rujukan',
                     'label' => 'Surat Penolakan Rujukan',
-                    'icon' => 'fa-file-medical',
-                    'color' => '#17a2b8',
+                    'icon' => 'fa-ban',
+                    'color' => '#EF5350', // Merah penolakan
                 ],
                 [
                     'table' => 'dokumen_surat_kontrol',
                     'type' => 'surat_kontrol_ulang',
                     'label' => 'Surat Kontrol Ulang',
-                    'icon' => 'fa-file-medical',
-                    'color' => '#17a2b8',
+                    'icon' => 'fa-calendar-check',
+                    'color' => '#AB47BC', // Ungu
                 ],
                 [
                     'table' => 'dokumen_surat_balasan_konsul',
                     'type' => 'surat_balasan_konsul',
                     'label' => 'Surat Balasan Konsultasi',
-                    'icon' => 'fa-file-medical',
-                    'color' => '#17a2b8',
+                    'icon' => 'fa-reply',
+                    'color' => '#FFA726', // Orange konsultasi
                 ],
                 [
                     'table' => 'dokumen_surat_pernyataan_batal_operasi',
                     'type' => 'surat_pernyataan_batal_operasi',
                     'label' => 'Surat Pernyataan Batal Operasi',
-                    'icon' => 'fa-file-medical',
-                    'color' => '#17a2b8',
+                    'icon' => 'fa-circle-xmark',
+                    'color' => '#D32F2F', // Merah tua
                 ],
-                // Tambahkan dokumen baru di sini
             ];
 
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
