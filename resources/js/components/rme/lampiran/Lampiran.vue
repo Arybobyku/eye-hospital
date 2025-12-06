@@ -557,6 +557,7 @@ export default {
         laporan_bedah: `/print/laporan-pembedahan/${item.uuid}`,
         informed_consent: `/print/informed-consent/${item.uuid}`,
         surat_kontrol_ulang: `/print/rekammedis/general/suratkontrolulang/${item.uuid}`,
+        surat_penolakan_rujukan: `/print/rekammedis/general/suratpenolakanrujukan/${item.uuid}`,
         surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
       };
 
