@@ -254,6 +254,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-circle-xmark',
                     'color' => '#D32F2F', // Merah tua
                 ],
+                [
+                    'table' => 'dokumen_surat_pernyataan_pasien_umum',
+                    'type' => 'surat_pernyataan_pasien_umum',
+                    'label' => 'Surat Pernyataan Pasien Umum',
+                    'icon' => 'fa-circle-xmark',
+                    'color' => '#D32F2F', // Merah tua
+                ],
             ];
 
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
@@ -393,6 +400,12 @@ class RekamMedisCtrl extends Controller
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_surat_pernyataan_batal_operasi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_surat_pernyataan_pasien_umum' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
                 // 'user_pelaksana' => 'pembedahan',
