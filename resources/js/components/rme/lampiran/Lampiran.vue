@@ -556,7 +556,8 @@ export default {
         laser_bargage: `/print/laser-bargage/${item.uuid}`,
         laporan_bedah: `/print/laporan-pembedahan/${item.uuid}`,
         informed_consent: `/print/informed-consent/${item.uuid}`,
-        surat_kontrol_ulang: `/print/rekammedis/general/suratkontrolulang/${this.selectedPatient.uuid}`,
+        surat_kontrol_ulang: `/print/rekammedis/general/suratkontrolulang/${item.uuid}`,
+        surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];
