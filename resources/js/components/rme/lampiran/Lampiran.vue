@@ -59,11 +59,11 @@
             <th style="width: 180px">JENIS DOKUMEN</th>
             <th style="width: 100px">TANGGAL</th>
             <!-- <th style="width: 80px">JAM</th> -->
-            <th style="width: 120px">NO. RM</th>
-            <th>NAMA PASIEN</th>
-            <th style="width: 80px">JK</th>
-            <th style="width: 150px">PELAKSANA</th>
-            <th>DETAIL INFO</th>
+            <!-- <th style="width: 120px">NO. RM</th> -->
+            <!-- <th>NAMA PASIEN</th> -->
+            <!-- <th style="width: 80px">JK</th> -->
+            <th style="width: 150px">Creator</th>
+            <!-- <th>DETAIL INFO</th> -->
             <th style="width: 120px" class="text-center">ACTION</th>
           </tr>
         </thead>
@@ -91,15 +91,11 @@
 
             <td>{{ formatDate(item.tanggal) }}</td>
             <!-- <td>{{ formatTime(item.waktu) }}</td> -->
-            <td>{{ item.no_rm }}</td>
-            <td>{{ item.nama }}</td>
-            <td>{{ item.jenis_kelamin }}</td>
-            <td>{{ item.user_pelaksana || "-" }}</td>
-            <td>
-              <div class="detail-info">
-                {{ truncate(item.detail_info, 50) }}
-              </div>
-            </td>
+            <!-- <td>{{ item.no_rm }}</td> -->
+            <!-- <td>{{ item.nama }}</td> -->
+            <!-- <td>{{ item.jenis_kelamin }}</td> -->
+            <td>{{ item.created_by || "-" }}</td>
+            <!-- <td> <div class="detail-info">{{ truncate(item.detail_info, 50) }} </div></td> -->
 
             <!-- ACTION BUTTONS -->
             <td class="text-center">

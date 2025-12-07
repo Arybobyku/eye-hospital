@@ -209,7 +209,7 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_laporan_pembedahan',
                     'type' => 'laporan_bedah',
                     'label' => 'Laporan Pembedahan',
-                    'icon' => 'fa-scalpel',
+                    'icon' => 'fa-user-doctor',
                     'color' => '#E63946', // Merah bedah
                 ],
                 [
@@ -251,39 +251,38 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_surat_pernyataan_batal_operasi',
                     'type' => 'surat_pernyataan_batal_operasi',
                     'label' => 'Surat Pernyataan Batal Operasi',
-                    'icon' => 'fa-circle-xmark',
+                    'icon' => 'fa-file-circle-xmark',
                     'color' => '#D32F2F', // Merah tua
                 ],
                 [
                     'table' => 'dokumen_surat_pernyataan_pasien_umum',
                     'type' => 'surat_pernyataan_pasien_umum',
                     'label' => 'Surat Pernyataan Pasien Umum',
-                    'icon' => 'fa-circle-xmark',
-                    'color' => '#D32F2F', // Merah tua
+                    'icon' => 'fa-file-signature',
+                    'color' => '#5C6BC0', // Indigo
                 ],
                 [
                     'table' => 'dokumen_dietitian_pasien_baru',
                     'type' => 'dokumen_dietitian_pasien_baru',
                     'label' => 'Dietitian Pasien Baru',
-                    'icon' => 'fa-circle-xmark',
-                    'color' => '#D32F2F', // Merah tua
+                    'icon' => 'fa-apple-whole',
+                    'color' => '#66BB6A', // Hijau segar
                 ],
                 [
                     'table' => 'dokumen_asuhan_gizi',
                     'type' => 'dokumen_asuhan_gizi',
-                    'label' => 'Dokumen Asuhann Gizi',
-                    'icon' => 'fa-circle-xmark',
-                    'color' => '#D32F2F', // Merah tua
+                    'label' => 'Dokumen Asuhan Gizi',
+                    'icon' => 'fa-utensils',
+                    'color' => '#8BC34A', // Hijau lime
                 ],
                 [
                     'table' => 'dokumen_tindakan_laser_lpi',
                     'type' => 'dokumen_tindakan_laser_lpi',
                     'label' => 'Dokumen Tindakan Laser LPI',
-                    'icon' => 'fa-circle-xmark',
-                    'color' => '#D32F2F', // Merah tua
+                    'icon' => 'fa-eye',
+                    'color' => '#00BCD4', // Cyan (untuk mata/laser)
                 ],
             ];
-
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
             foreach ($documentConfigs as $config) {
@@ -318,7 +317,9 @@ class RekamMedisCtrl extends Controller
                         // \DB::raw($this->mapField($config['table'], 'user_pelaksana') . ' as user_pelaksana'),
                         // \DB::raw($this->mapField($config['table'], 'detail_info') . ' as detail_info'),
                         'created_at',
+                        'created_by',
                         'updated_at',
+                        'updated_by',
                         \DB::raw("'{$config['type']}' as document_type"),
                         \DB::raw("'{$config['label']}' as document_label"),
                         \DB::raw("'{$config['icon']}' as document_icon"),
