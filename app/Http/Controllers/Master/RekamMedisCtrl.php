@@ -261,6 +261,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-circle-xmark',
                     'color' => '#D32F2F', // Merah tua
                 ],
+                [
+                    'table' => 'dokumen_dietitian_pasien_baru',
+                    'type' => 'dokumen_dietitian_pasien_baru',
+                    'label' => 'Dietitian Pasien Baru',
+                    'icon' => 'fa-circle-xmark',
+                    'color' => '#D32F2F', // Merah tua
+                ],
             ];
 
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
@@ -411,6 +418,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_dietitian_pasien_baru' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -452,6 +465,7 @@ class RekamMedisCtrl extends Controller
                 'resume_perawatan_rawat_jalan' => 'dokumen_resume_perawatan_rawat_jalan',
                 'balance_cairan_harian' => 'dokumen_balance_cairan_harian',
                 'balance_cairan_harian' => 'dokumen_balance_cairan_harian',
+                'dokumen_dietitian_pasien_baru' => 'dokumen_dietitian_pasien_baru',
                 // Tambahkan mapping baru di sini
             ];
 
