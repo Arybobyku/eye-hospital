@@ -241,6 +241,13 @@ class RekamMedisCtrl extends Controller
                     'color' => '#AB47BC', // Ungu
                 ],
                 [
+                    'table' => 'dokumen_surat_konsul',
+                    'type' => 'surat_konsul',
+                    'label' => 'Surat Konsultasi',
+                    'icon' => 'fa-reply',
+                    'color' => '#FFA726', // Orange konsultasi
+                ],
+                [
                     'table' => 'dokumen_surat_balasan_konsul',
                     'type' => 'surat_balasan_konsul',
                     'label' => 'Surat Balasan Konsultasi',
@@ -421,6 +428,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_surat_konsul' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             'dokumen_surat_pernyataan_batal_operasi' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
@@ -485,8 +498,8 @@ class RekamMedisCtrl extends Controller
                 'informed_consent' => 'dokumen_informed_consent',
                 'surat_pernyataan_pasien_umum' => 'dokumen_surat_pernyataan_pasien_umum',
                 'surat_balasan_konsul' => 'dokumen_surat_balasan_konsul',
+                'surat_konsul' => 'dokumen_surat_konsul',
                 'surat_pernyataan_batal_operasi' => 'dokumen_surat_pernyataan_batal_operasi',
-                'surat_balasan_konsul' => 'dokumen_surat_balasan_konsul',
                 'surat_kontrol_ulang' => 'dokumen_surat_kontrol',
                 'surat_penolakan_rujukan' => 'dokumen_surat_penolakan_rujukan',
                 'resume_perawatan_rawat_jalan' => 'dokumen_resume_perawatan_rawat_jalan',

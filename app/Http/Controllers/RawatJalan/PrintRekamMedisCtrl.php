@@ -19,6 +19,7 @@ use App\Models\PencegahanPasienJatuh;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\Registrasi;
 use App\Models\Cppt;
+use App\Models\DokumenSuratBalasanKonsul;
 use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
 use App\Models\DokumenSuratPernyataanPasienUmum;
@@ -920,17 +921,12 @@ function printFormLaserBarrage($uuid)
  
   function printSuratBalasanKonsul ($uuid) 
   {
-                  $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenSuratBalasanKonsul::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
     $pdf->loadView(
       'print-rekam-medis.general.suratbalasankonsul',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
+      compact('pasien', 'data')
     )->setPaper('a4', 'potrait');
 
 

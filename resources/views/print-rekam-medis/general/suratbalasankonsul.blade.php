@@ -35,7 +35,7 @@
 	<br>
 	<div class="">
 		<span class="left" style="font-weight: bold"> <u>SURAT BALASAN KONSUL</u>	</span>
-		<span class="right"> ....................... </span>
+		<span class="right">        {{ \Carbon\Carbon::parse($data->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }} </span>
 
 	</div>
 
@@ -52,9 +52,9 @@
 	<table style="width: 100%; margin-top: 20px" cellpadding="0" cellspacing="0">
 		<tr>
 			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify">Kepada Yang Terhormat/Dear Collegue <br>
-			TS. PROF/DR………………………………………. 
+			TS. PROF/DR {{ $data->tujuan_nama_dokter }} <br>
 			<br>
-			Di/In…………………………………………………</td>
+			Di/In {{$data->tujuan_lokasi}}</td>
 		</tr>
 		<br>
 		<br>
@@ -70,13 +70,12 @@
 		</tr>
 		<tr>
 			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
-				Nama/Name : ………………………………………….……………… <br>
-				Umur/Age : ………………………………………………………….	<br>
-				Keluhan Utama/Chief Complaint :…………………………………………………………..	<br>
-				Diagnosa Sementara/Differential Diagnosis : …………………………………………………………. <br>
+				Nama/Name : {{$data->pasien_nama}}<br>
+				Umur/Age : {{$data->pasien_umur}}.	<br>
+				Keluhan Utama/Chief Complaint :{{$data->keluhan_utama}}	<br>
+				Diagnosa Sementara/Differential Diagnosis : {{$data->diagnosa}}. <br>
 				Pengobatan & Tindakan yang telah diberikan / Medication & Treatments Given : 
-				……………………………………………………………………………………………………………
-				……………………………………………………………………………………………………………
+				{{$data->hasil_konsul_tindakan}}
 				<br>
 			</td>
 		</tr>
@@ -98,10 +97,9 @@
 				Hormat kami/ With Regards, <br>
 				Dokter Penanggung Jawab / Attending Doctor	<br>
 				<br>
+				  <img src="{{ $data->ttd_dokter }}" alt="Base64 Image" width="200px">
 				<br>
-				<br>
-				……………………………<br>
-				Tanda tangan Dr & Stempel & Doctor’s Stamp
+				({{$data->nama_dokter_konsultan}})
 			</td>
 		</tr>
 	</table>

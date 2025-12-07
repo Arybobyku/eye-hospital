@@ -580,6 +580,7 @@ export default {
         surat_kontrol_ulang: `/print/rekammedis/general/suratkontrolulang/${item.uuid}`,
         surat_penolakan_rujukan: `/print/rekammedis/general/suratpenolakanrujukan/${item.uuid}`,
         surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
+        surat_balasan_konsul: `/print/rekammedis/general/suratbalasankonsul/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];
