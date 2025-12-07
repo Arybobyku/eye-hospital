@@ -275,6 +275,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-circle-xmark',
                     'color' => '#D32F2F', // Merah tua
                 ],
+                [
+                    'table' => 'dokumen_tindakan_laser_lpi',
+                    'type' => 'dokumen_tindakan_laser_lpi',
+                    'label' => 'Dokumen Tindakan Laser LPI',
+                    'icon' => 'fa-circle-xmark',
+                    'color' => '#D32F2F', // Merah tua
+                ],
             ];
 
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
@@ -437,6 +444,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_tindakan_laser_lpi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -480,6 +493,7 @@ class RekamMedisCtrl extends Controller
                 'balance_cairan_harian' => 'dokumen_balance_cairan_harian',
                 'dokumen_dietitian_pasien_baru' => 'dokumen_dietitian_pasien_baru',
                 'dokumen_asuhan_gizi' => 'dokumen_asuhan_gizi',
+                'dokumen_tindakan_laser_lpi' => 'dokumen_tindakan_laser_lpi',
                 // Tambahkan mapping baru di sini
             ];
 

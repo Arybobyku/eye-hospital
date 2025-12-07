@@ -17,6 +17,7 @@ use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
 use App\Models\DokumenSuratPernyataanBatalOperasi;
 use App\Models\DokumenSuratPernyataanPasienUmum;
+use App\Models\DokumenTindakanLaserLPI;
 use App\Models\LayananPasien;
 use App\Models\Pasien;
 use App\Models\PemeriksaanRo;
@@ -1137,6 +1138,67 @@ class PasienCtrl extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Gagal menyimpan Dokumen Asuhan Gizi',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeDokumenLaserLPI(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenTindakanLaserLPI::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Dokumen Tindakan Laser LPI berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenTindakanLaserLPI::create($data);
+                $action = 'create';
+                $message = 'Dokumen Tindakan Laser LPI berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Dokumen Tindakan Laser LPI',
                 'error' => $e->getMessage(),
             ], 500);
         }
