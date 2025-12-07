@@ -19,6 +19,7 @@ use App\Models\PencegahanPasienJatuh;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\Registrasi;
 use App\Models\Cppt;
+use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
 use App\Models\DokumenSuratPernyataanPasienUmum;
 use App\Models\PemeriksaanDokterIcd9;
@@ -1190,16 +1191,11 @@ function printFormLaserBarrage($uuid)
       function printSuratKontrolUlang ($uuid)
   {
         $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $data = DokumenSuratKontrol::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
     $pdf->loadView(
       'print-rekam-medis.general.suratkontrolulang',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
+      compact('pasien', 'data')
     )->setPaper('a4', 'landscape');
 
     return $pdf->stream();
