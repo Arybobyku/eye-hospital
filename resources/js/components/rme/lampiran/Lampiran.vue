@@ -234,6 +234,7 @@ export default {
     FormPernyataanBatalOperasi: defineAsyncComponent(() =>import("./create/FormPernyataanBatalOperasi.vue")),
     FormPernyataanPasienUmum: defineAsyncComponent(() =>import("./create/FormPernyataanPasienUmum.vue")),
     FormDietitianPasienBaru: defineAsyncComponent(() =>import("./create/FormDietitianPasienBaru.vue")),
+    FormAsuhanGizi: defineAsyncComponent(() =>import("./create/FormAsuhanGizi.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -349,6 +350,13 @@ export default {
           component: "FormDietitianPasienBaru",
           description: "Form Surat Balasan Konsultasi Pasien",
           backendType: "dokumen_dietitian_pasien_baru",
+        },
+        {
+          value: "dokumen_asuhan_gizi",
+          label: "Form Dokumen Asuhan Gizi",
+          component: "FormAsuhanGizi",
+          description: "Form Asuhan Gizi Pasien",
+          backendType: "dokumen_asuhan_gizi",
         },
         // {
         //   value: "informed-consent",

@@ -268,6 +268,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-circle-xmark',
                     'color' => '#D32F2F', // Merah tua
                 ],
+                [
+                    'table' => 'dokumen_asuhan_gizi',
+                    'type' => 'dokumen_asuhan_gizi',
+                    'label' => 'Dokumen Asuhann Gizi',
+                    'icon' => 'fa-circle-xmark',
+                    'color' => '#D32F2F', // Merah tua
+                ],
             ];
 
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
@@ -424,6 +431,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_asuhan_gizi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -466,6 +479,7 @@ class RekamMedisCtrl extends Controller
                 'balance_cairan_harian' => 'dokumen_balance_cairan_harian',
                 'balance_cairan_harian' => 'dokumen_balance_cairan_harian',
                 'dokumen_dietitian_pasien_baru' => 'dokumen_dietitian_pasien_baru',
+                'dokumen_asuhan_gizi' => 'dokumen_asuhan_gizi',
                 // Tambahkan mapping baru di sini
             ];
 
