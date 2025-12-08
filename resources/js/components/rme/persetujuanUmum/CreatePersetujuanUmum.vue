@@ -61,14 +61,14 @@
 
                 <div class="col-md-6">
                     <label>Pemberi Informasi :</label>
-                    <input type="text" v-model="form.pemberiInfo" class="input-rme" />
+                    <input type="text" v-model="form.nama_pemberi_informasi" class="input-rme" />
                 </div>
             </div>
 
             <div class="row mb-2">
                 <div class="col-md-12">
                     <label>Penerima Informasi :</label>
-                    <input type="text" v-model="form.penerimaInfo" class="input-rme" />
+                    <input type="text" v-model="form.nama_penerima_informasi" class="input-rme" />
                 </div>
             </div>
 
@@ -374,56 +374,84 @@
         </div>
 
         <!-- ================= Persetujuan tindakan dokter ================= -->
+      <div class="tanggal-tempat">MEDAN, {{ currentDate }} WIB</div>
           
 
-        <table style="width: 100%; margin-top: 50px" cellpadding="0" cellspacing="0">
-		<tr>
-			<td style="width: 35%"><b>Medan,  WIB</b></td>
-			<td rowspan="6" style="width: 35%"></td>
-			<td style="width: 30%"></td>
-		</tr>
-		<tr>
-			<td style="width: 35%; padding-top: 3px">Pemberi Informasi dari</td>
-			<td style="width: 30%; padding-top: 3px">Penerima Informasi</td>
-		</tr>
-		<tr>
-			<td style="width: 35%; padding-top: 3px">RS Khusus Mata Prima Vision</td>
-			<td style="width: 30%; padding-top: 3px">(Pasien/Keluarga Pasien)</td>
-		</tr>
-		<tr>
-			<td style="width: 35%; height: 90px"></td>
-			<td style="width: 30%; height: 90px"></td>
-		</tr>
-		<tr>
-			<td style="width: 35%"><span style="text-decoration: underline"><b></b></span></td>
-		
-		</tr>
-		<tr>
-			<td style="width: 35%">Nama dan Tanda Tangan</td>
-			<td style="width: 30%">Nama dan Tanda Tangan</td>
-		</tr>
-	</table>
+        <div class="signature-section">
+        <!-- Yang Menyatakan -->
+        <div class="sign-box" style="height: 200px">
+          <label>Pemberi Informasi</label>
+          <br>
+          <label>RS Khusus Mata Prima Vision</label>
+
+          <VueSignaturePad
+            ref="pemberi_inf_ttd"
+            :options="sigOption"
+            class="signature-box-rme"
+          />
+
+          <button @click="saveSign('pemberi_inf_ttd')" class="btn-save">
+            Simpan ✔
+          </button>
+
+          <input
+            v-model="form.nama_terang_pemberi_inf"
+            class="input-rme"
+            placeholder="Tanda Tangan dan Nama Terang"
+          />
+        </div>
+
+        <!-- Saksi 1 -->
+        <div class="sign-box" style="height: 200px">
+          <label>Penerima Informasi</label>
+          <br>
+          <label>(Pasien/Keluarga Pasien)</label>
+
+          <VueSignaturePad
+            ref="pasien_ttd"
+            :options="sigOption"
+            class="signature-box-rme"
+          />
+
+          <button @click="saveSign('pasien_ttd')" class="btn-save">Simpan ✔</button>
+
+          <input
+            v-model="form.nama_terang_pasien"
+            class="input-rme"
+            placeholder="Tanda Tangan dan Nama Terang"
+          />
+        </div>
+
+      </div>
         </div>
     <!-- ================= BUTTON BOTTOM ================= -->
-
+    <br>
+    <br>
+    <br>
     <div class="action-footer">
-        <button class="btn-save-form" @click="submitForm">Save</button>
+        <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
+      <span v-if="loadingSubmit">Menyimpan...</span>
+      <span v-else>Save</span>
+    </button>
         <button class="btn-back" @click="$emit('back')">Back</button>
     </div>
 </template>
 
 <script>
 import axios from "axios";
-import vueSignature from "vue-signature";
 export default {
     name: "HistoryKunjungan",
     components: {
-        vueSignature,
     },
 
     data() {
+        const now = new Date();
         return {
+            currentDate:
+            now.toLocaleDateString('en-GB') + ' ' +
+            now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }),
             perPage: 10,
+            loadingSubmit: false,
             currentPage: 1,
             searchQuery: "",
             loading: false,
@@ -434,16 +462,18 @@ export default {
             data: [],
             form: {
                 uuid_pasien: "",
-                date: "",
-                time: "",
+                nama_pemberi_informasi: "",
+                nama_penerima_informasi: "",
+                nama_terang_pasien: "",
+                nama_terang_pemberi_inf: "",
+                nama_terang_pasien: "",
+                pasien_ttd: "",
+                pemberi_inf_ttd: "",
                 kodeMR: "",
                 nama: "",
-                usia: "",
-                alamat: "",
-                petugas: "",
-                pemberiInfo: "",
-                penerimaInfo: "",
-                isiInformasi: "",
+                nik: "",
+                tanggal_lahir: "",
+                jenis_kelamin: ""
             },
         };
     },
@@ -514,6 +544,36 @@ export default {
             this.form.nama = this.selectedPatient?.nama;
             this.form.usia = this.selectedPatient?.tanggal_lahir;
             this.form.alamat = this.selectedPatient?.alamat;
+        },
+        async submitForm() {
+            this.loadingSubmit = true;
+
+            try {
+                const fd = new FormData();
+
+                Object.keys(this.form).forEach((key) => {
+                fd.append(key, this.form[key]);
+                });
+
+                const response = await axios.post(
+                "/master/pasien/dokumen-persetujuan-umum",
+                fd,
+                { headers: { "Content-Type": "multipart/form-data" } }
+                );
+
+                console.log("BERHASIL:", response.data);
+
+                // tampilkan notif
+                alert("Data berhasil disimpan!");
+
+                // kembali ke parent component
+                this.$emit("back");
+            } catch (error) {
+                console.error("ERROR:", error.response?.data || error);
+                alert("Gagal menyimpan data!");
+            } finally {
+                this.loadingSubmit = false;
+            }
         },
     },
 };

@@ -23,6 +23,7 @@ use App\Models\DokumenSuratBalasanKonsul;
 use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
 use App\Models\DokumenSuratPernyataanPasienUmum;
+use App\Models\DokumenPersetujuanUmum;
 use App\Models\PemeriksaanDokterIcd9;
 use App\Models\Pengguna;
 use App\Models\Resep;
@@ -63,11 +64,13 @@ class PrintRekamMedisCtrl extends Controller
     // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
     // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    // dd($uuid);
+    $item = DokumenPersetujuanUmum::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $item->uuid_pasien)->first();
     $pdf->loadView(
       'print-rekam-medis.rawat-jalan.rm1dot1',
-      compact('pasien')
+      compact('pasien', 
+              'item')
     )->setPaper('a4', 'potrait');
 
 

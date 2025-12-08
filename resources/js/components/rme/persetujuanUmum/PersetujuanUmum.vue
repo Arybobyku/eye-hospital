@@ -37,8 +37,7 @@
       <thead>
         <tr>
           <th>NO</th>
-          <th>TANGGAL</th>
-          <th>JAM</th>
+          <th>TANGGAL & JAM</th>
           <th>NAMA PASIEN</th>
           <th>JENIS KELAMIN</th>
           <th>NIK</th>
@@ -50,12 +49,11 @@
       <tbody>
         <tr v-for="(item, index) in paginatedData" :key="item.id">
           <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-          <td>{{ item.tanggal }}</td>
-          <td>{{ item.jam }}</td>
+          <td>{{ item.created_at }}</td>
           <td>{{ item.nama_pasien }}</td>
           <td>{{ item.jenis_kelamin }}</td>
           <td>{{ item.nik }}</td>
-          <td>{{ item.nama_user }}</td>
+          <td>{{ item.nama_pemberi_informasi }}</td>
           <td class="action-buttons">
             <i class="fa fa-bookmark action-icon icon-edit" @click="editItem(item)"></i>
             <i class="fa fa-times action-icon icon-delete" @click="deleteItem(item)"></i>
@@ -114,18 +112,7 @@ export default {
       searchQuery: "",
       state: "list",
       loading: false, // Loading indicator
-      // Sample data (nanti ganti dengan API)
       data: [
-        // { id: 1, reg: "006969", tanggal: "06-11-2025", jam: "16:27", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "UMUM" },
-        // { id: 2, reg: "006889", tanggal: "10-10-2025", jam: "20:32", layanan: "POLI PSIKOLOGI", dokter: "dr. Yoga Yandika, Sp.A", jaminan: "UMUM" },
-        // { id: 3, reg: "006825", tanggal: "17-09-2025", jam: "22:19", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "APOTEK SUMBER WARAS" },
-        // { id: 4, reg: "006720", tanggal: "04-08-2025", jam: "12:27", layanan: "POLI GIGI", dokter: "drg. ALFI, Sp. KGA", jaminan: "TRANSFER" },
-        // { id: 5, reg: "006726", tanggal: "04-08-2025", jam: "14:55", layanan: "POLI GIGI", dokter: "drg. ALFI, Sp. KGA", jaminan: "PRIBADI" },
-        // { id: 6, reg: "006711", tanggal: "31-07-2025", jam: "15:20", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "PRIBADI" },
-        // { id: 7, reg: "006486", tanggal: "25-04-2025", jam: "17:25", layanan: "BIDAN", dokter: "Dr Dessy", jaminan: "PRIBADI" },
-        // { id: 8, reg: "006415", tanggal: "18-03-2025", jam: "16:37", layanan: "POLI UMUM", dokter: "DOKTER UMUM", jaminan: "UMUM" },
-        // { id: 9, reg: "006385", tanggal: "10-03-2025", jam: "10:15", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "UMUM" },
-        // { id: 10, reg: "006315", tanggal: "07-02-2025", jam: "21:17", layanan: "LABORATORIUM", dokter: "dr. Ali indri", jaminan: "UMUM" },
       ],
     };
   },
@@ -191,7 +178,7 @@ export default {
         formData.append("limit", 10);
         formData.append("page", 1);
 
-        const res = await axios.post("/master/pasien/history", formData, {
+        const res = await axios.post("/master/pasien/list-dokumen-persetujuan-umum", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -241,9 +228,9 @@ export default {
         return 'Selesai'
     },
 
-    print() {
+    print(item) {
       window.open(
-        `/print/rekammedis/rawat-jalan/rm1dot1/${this.selectedPatient.uuid}`,
+        `/print/rekammedis/rawat-jalan/rm1dot1/`+item.uuid,
         "_blank"
       );
     },

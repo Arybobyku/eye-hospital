@@ -17,6 +17,7 @@ use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
 use App\Models\DokumenSuratPernyataanBatalOperasi;
 use App\Models\DokumenSuratPernyataanPasienUmum;
+use App\Models\DokumenPersetujuanUmum;
 use App\Models\DokumenTindakanLaserLPI;
 use App\Models\LayananPasien;
 use App\Models\Pasien;
@@ -1203,4 +1204,56 @@ class PasienCtrl extends Controller
             ], 500);
         }
     }
+    public function dokumenPersetujuanUmum(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        $pasien = Pasien::where('uuid', $request->uuid_pasien)->first();
+        $data = DokumenPersetujuanUmum::create([
+            'uuid_pasien' => $request->uuid_pasien,
+            'no_rm' => $request->kodeMR,
+            'nik' => $pasien->no_ktp,
+            'nama_pasien' => $request->nama,
+            'nama_pemberi_informasi' => $request->nama_pemberi_informasi,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'jenis_kelamin' => $pasien->jenis_kelamin,
+            'resume_rows' => $request->resume_rows ?: null,
+            'catatan' => '',
+            'pasien_ttd' => $request->pasien_ttd,
+            'nama_terang_pasien' => $request->nama_terang_pasien,
+            'pemberi_inf_ttd' => $request->pemberi_inf_ttd,
+            'nama_terang_pemberi_inf' => $request->nama_terang_pemberi_inf,
+            'created_by' => auth()->id(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        // $data = DokumenPersetujuanPenolakanTindakanDokter::store($request);
+
+        return response()->json(['data' => $data]);
+
+    }
+
+    public function listDokumenPersetujuanUmum(Request $request)
+    {
+        $page = $request->page - 1;
+        $skip = $page * $this->take;
+        $search = $request->search;
+
+        if ($request->search != '') {
+            $data = DokumenPersetujuanUmum::where('uuid_pasien', '=', $search)
+                ->orderBy('created_at', 'desc')
+                ->skip($skip)->take($this->take)
+                ->get();
+            $total = DokumenPersetujuanUmum::where('uuid_pasien', '=', $search)
+                ->orderBy('created_at', 'desc')
+                ->orderBy('created_at', 'desc')->count();
+        }
+
+        return response()->json(['data' => $data, 'total' => $total]);
+
+    }
+
+
 }
