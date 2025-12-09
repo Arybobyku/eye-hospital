@@ -259,6 +259,11 @@ export default {
             import("./pengkajianDataUmum/pengkajianData.vue")
           );
 
+          case "Penunjang Medis":
+          return defineAsyncComponent(() =>
+            import("./penunjangMedis/penunjangMedis.vue")
+          );
+
 
 
         default:

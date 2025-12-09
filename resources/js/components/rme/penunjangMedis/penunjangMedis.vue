@@ -8,7 +8,7 @@
 
     <div v-if="state == 'list'">
       <!-- HEADER -->
-      <div class="header-component-rme">Pengkajian Data Umum</div>
+      <div class="header-component-rme">Penunjang Medis</div>
 
       <!-- FILTER BAR -->
       <div class="filter-bar">
@@ -87,7 +87,7 @@
 
     <!-- Create Data -->
     <div v-if="state == 'create'">
-      <CreatePengkajianData @back="state = 'list'" :selectedPatient="selectedPatient" />
+      <CreatePenunjangMedis @back="state = 'list'" :selectedPatient="selectedPatient" />
     </div>
   </div>
 </template>
@@ -95,12 +95,12 @@
 <script>
 import axios from "axios";
 import { defineAsyncComponent } from "vue";
-import CreatePengkajianData from "./CreatePengkajianData.vue";
+import CreatePenunjangMedis from "./CreatePenunjangMedis.vue";
 export default {
-  name: "pengkajianData",
+  name: "penunjangMedis",
   components: {
-    CreatePengkajianData: defineAsyncComponent(() =>
-      import("./CreatePengkajianData.vue")
+    CreatePenunjangMedis: defineAsyncComponent(() =>
+      import("./CreatePenunjangMedis.vue")
     ),
   },
 
