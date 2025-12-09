@@ -202,33 +202,94 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_form_laser_bargage',
                     'type' => 'laser_barbage',
                     'label' => 'Form Laser Bargage',
-                    'icon' => 'fa-laser',
-                    'color' => '#28a745',
+                    'icon' => 'fa-laser-pointer',
+                    'color' => '#FF6B35', // Orange terang
                 ],
                 [
                     'table' => 'dokumen_laporan_pembedahan',
                     'type' => 'laporan_bedah',
                     'label' => 'Laporan Pembedahan',
-                    'icon' => 'fa-procedures',
-                    'color' => '#007bff',
+                    'icon' => 'fa-user-doctor',
+                    'color' => '#E63946', // Merah bedah
                 ],
                 [
                     'table' => 'dokumen_balance_cairan_harian',
                     'type' => 'balance_cairan_harian',
                     'label' => 'Balance Cairan Harian',
-                    'icon' => 'fa-tint',
-                    'color' => '#6f42c1',
+                    'icon' => 'fa-droplet',
+                    'color' => '#4FC3F7', // Biru air
                 ],
                 [
                     'table' => 'dokumen_resume_perawatan_rawat_jalan',
                     'type' => 'resume_perawatan_rawat_jalan',
                     'label' => 'Resume Perawatan Rawat Jalan',
-                    'icon' => 'fa-file-medical',
-                    'color' => '#17a2b8',
+                    'icon' => 'fa-clipboard-check',
+                    'color' => '#26A69A', // Teal
                 ],
-                // Tambahkan dokumen baru di sini
+                [
+                    'table' => 'dokumen_surat_penolakan_rujukan',
+                    'type' => 'surat_penolakan_rujukan',
+                    'label' => 'Surat Penolakan Rujukan',
+                    'icon' => 'fa-ban',
+                    'color' => '#EF5350', // Merah penolakan
+                ],
+                [
+                    'table' => 'dokumen_surat_kontrol',
+                    'type' => 'surat_kontrol_ulang',
+                    'label' => 'Surat Kontrol Ulang',
+                    'icon' => 'fa-calendar-check',
+                    'color' => '#AB47BC', // Ungu
+                ],
+                [
+                    'table' => 'dokumen_surat_konsul',
+                    'type' => 'surat_konsul',
+                    'label' => 'Surat Konsultasi',
+                    'icon' => 'fa-reply',
+                    'color' => '#FFA726', // Orange konsultasi
+                ],
+                [
+                    'table' => 'dokumen_surat_balasan_konsul',
+                    'type' => 'surat_balasan_konsul',
+                    'label' => 'Surat Balasan Konsultasi',
+                    'icon' => 'fa-reply',
+                    'color' => '#FFA726', // Orange konsultasi
+                ],
+                [
+                    'table' => 'dokumen_surat_pernyataan_batal_operasi',
+                    'type' => 'surat_pernyataan_batal_operasi',
+                    'label' => 'Surat Pernyataan Batal Operasi',
+                    'icon' => 'fa-file-circle-xmark',
+                    'color' => '#D32F2F', // Merah tua
+                ],
+                [
+                    'table' => 'dokumen_surat_pernyataan_pasien_umum',
+                    'type' => 'surat_pernyataan_pasien_umum',
+                    'label' => 'Surat Pernyataan Pasien Umum',
+                    'icon' => 'fa-file-signature',
+                    'color' => '#5C6BC0', // Indigo
+                ],
+                [
+                    'table' => 'dokumen_dietitian_pasien_baru',
+                    'type' => 'dokumen_dietitian_pasien_baru',
+                    'label' => 'Dietitian Pasien Baru',
+                    'icon' => 'fa-apple-whole',
+                    'color' => '#66BB6A', // Hijau segar
+                ],
+                [
+                    'table' => 'dokumen_asuhan_gizi',
+                    'type' => 'dokumen_asuhan_gizi',
+                    'label' => 'Dokumen Asuhan Gizi',
+                    'icon' => 'fa-utensils',
+                    'color' => '#8BC34A', // Hijau lime
+                ],
+                [
+                    'table' => 'dokumen_tindakan_laser_lpi',
+                    'type' => 'dokumen_tindakan_laser_lpi',
+                    'label' => 'Dokumen Tindakan Laser LPI',
+                    'icon' => 'fa-eye',
+                    'color' => '#00BCD4', // Cyan (untuk mata/laser)
+                ],
             ];
-
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
             foreach ($documentConfigs as $config) {
@@ -263,7 +324,9 @@ class RekamMedisCtrl extends Controller
                         // \DB::raw($this->mapField($config['table'], 'user_pelaksana') . ' as user_pelaksana'),
                         // \DB::raw($this->mapField($config['table'], 'detail_info') . ' as detail_info'),
                         'created_at',
+                        'created_by',
                         'updated_at',
+                        'updated_by',
                         \DB::raw("'{$config['type']}' as document_type"),
                         \DB::raw("'{$config['label']}' as document_label"),
                         \DB::raw("'{$config['icon']}' as document_icon"),
@@ -347,6 +410,60 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_surat_penolakan_rujukan' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_surat_kontrol' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_surat_balasan_konsul' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_surat_konsul' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_surat_pernyataan_batal_operasi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_surat_pernyataan_pasien_umum' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_dietitian_pasien_baru' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_asuhan_gizi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_tindakan_laser_lpi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -379,6 +496,18 @@ class RekamMedisCtrl extends Controller
                 'laser_bargage' => 'dokumen_form_laser_bargage',
                 'laporan_bedah' => 'laporan_pembedahan',
                 'informed_consent' => 'dokumen_informed_consent',
+                'surat_pernyataan_pasien_umum' => 'dokumen_surat_pernyataan_pasien_umum',
+                'surat_balasan_konsul' => 'dokumen_surat_balasan_konsul',
+                'surat_konsul' => 'dokumen_surat_konsul',
+                'surat_pernyataan_batal_operasi' => 'dokumen_surat_pernyataan_batal_operasi',
+                'surat_kontrol_ulang' => 'dokumen_surat_kontrol',
+                'surat_penolakan_rujukan' => 'dokumen_surat_penolakan_rujukan',
+                'resume_perawatan_rawat_jalan' => 'dokumen_resume_perawatan_rawat_jalan',
+                'balance_cairan_harian' => 'dokumen_balance_cairan_harian',
+                'balance_cairan_harian' => 'dokumen_balance_cairan_harian',
+                'dokumen_dietitian_pasien_baru' => 'dokumen_dietitian_pasien_baru',
+                'dokumen_asuhan_gizi' => 'dokumen_asuhan_gizi',
+                'dokumen_tindakan_laser_lpi' => 'dokumen_tindakan_laser_lpi',
                 // Tambahkan mapping baru di sini
             ];
 

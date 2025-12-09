@@ -19,6 +19,11 @@ use App\Models\PencegahanPasienJatuh;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\Registrasi;
 use App\Models\Cppt;
+use App\Models\DokumenSuratBalasanKonsul;
+use App\Models\DokumenSuratKontrol;
+use App\Models\DokumenSuratPenolakanRujukan;
+use App\Models\DokumenSuratPernyataanPasienUmum;
+use App\Models\DokumenPersetujuanUmum;
 use App\Models\PemeriksaanDokterIcd9;
 use App\Models\Pengguna;
 use App\Models\Resep;
@@ -59,11 +64,13 @@ class PrintRekamMedisCtrl extends Controller
     // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
     // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
     // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    // dd($uuid);
+    $item = DokumenPersetujuanUmum::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $item->uuid_pasien)->first();
     $pdf->loadView(
       'print-rekam-medis.rawat-jalan.rm1dot1',
-      compact('pasien')
+      compact('pasien', 
+              'item')
     )->setPaper('a4', 'potrait');
 
 
@@ -917,17 +924,12 @@ function printFormLaserBarrage($uuid)
  
   function printSuratBalasanKonsul ($uuid) 
   {
-                  $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenSuratBalasanKonsul::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
     $pdf->loadView(
       'print-rekam-medis.general.suratbalasankonsul',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
+      compact('pasien', 'data')
     )->setPaper('a4', 'potrait');
 
 
@@ -955,17 +957,12 @@ function printFormLaserBarrage($uuid)
 
   function printSuratPenolakanRujukan ($uuid)
   {
-        $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenSuratPenolakanRujukan::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
     $pdf->loadView(
       'print-rekam-medis.general.suratpenolakanrujukan',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
+      compact('pasien', 'data')
     )->setPaper('a4', 'potrait');
 
     return $pdf->stream();
@@ -1011,17 +1008,12 @@ function printFormLaserBarrage($uuid)
   }
     function printSuratPernyataanPasienUmum ($uuid)
   {
-        $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenSuratPernyataanPasienUmum::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
     $pdf->loadView(
       'print-rekam-medis.general.suratpernyataanpasienumum',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
+      compact('pasien', 'data')
     )->setPaper('a4', 'potrait');
 
     return $pdf->stream();
@@ -1029,16 +1021,11 @@ function printFormLaserBarrage($uuid)
       function printSuratKontrolUlang ($uuid)
   {
         $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $data = DokumenSuratKontrol::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
     $pdf->loadView(
       'print-rekam-medis.general.suratkontrolulang',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
+      compact('pasien', 'data')
     )->setPaper('a4', 'landscape');
 
     return $pdf->stream();

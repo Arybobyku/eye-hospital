@@ -154,7 +154,14 @@
 
 	<table style="width: 100%; margin-top: 50px" cellpadding="0" cellspacing="0">
 		<tr>
-			<td style="width: 35%"><b>Medan, {{ date('d')}} {{ formatBulan(date('m')) }} {{ date('Y') }} {{ date('H') }}:{{ date('i') }} WIB</b></td>
+			<td style="width: 35%"><b>Medan, @php
+				$dt = \Carbon\Carbon::parse($item->created_at);
+			@endphp
+			
+			{{ $dt->format('d') }}
+			{{ formatBulan($dt->format('m')) }}
+			{{ $dt->format('Y') }}
+			{{ $dt->format('H') }}:{{ $dt->format('i') }}WIB</b></td>
 			<td rowspan="6" style="width: 35%"></td>
 			<td style="width: 30%"></td>
 		</tr>
@@ -180,8 +187,8 @@
 			<td style="width: 30%"><span style="text-decoration: underline"><b></b></span></td>
 		</tr>
 		<tr>
-			<td style="width: 35%">Nama dan Tanda Tangan</td>
-			<td style="width: 30%">Nama dan Tanda Tangan</td>
+			<td style="width: 35%">{{ $item->nama_terang_pemberi_inf }}</td>
+			<td style="width: 30%">{{ $item->nama_terang_pasien }}</td>
 		</tr>
 	</table>
 

@@ -4,11 +4,21 @@ namespace App\Http\Controllers\Master;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cppt;
+use App\Models\DokumenAsuhanGizi;
 use App\Models\DokumenBalanceCairanHarian;
+use App\Models\DokumenDietitianPasienBaru;
 use App\Models\DokumenFormLaserBargage;
 use App\Models\DokumenLaporanPembedahan;
 use App\Models\DokumenPersetujuanPenolakanTindakanDokter;
 use App\Models\DokumenResumePerawatanRawatJalan;
+use App\Models\DokumenSuratBalasanKonsul;
+use App\Models\DokumenSuratKonsul;
+use App\Models\DokumenSuratKontrol;
+use App\Models\DokumenSuratPenolakanRujukan;
+use App\Models\DokumenSuratPernyataanBatalOperasi;
+use App\Models\DokumenSuratPernyataanPasienUmum;
+use App\Models\DokumenPersetujuanUmum;
+use App\Models\DokumenTindakanLaserLPI;
 use App\Models\LayananPasien;
 use App\Models\Pasien;
 use App\Models\PemeriksaanRo;
@@ -627,6 +637,621 @@ class PasienCtrl extends Controller
         }
 
         return response()->json(['data' => $detailObat]);
+
+    }
+
+    public function storeSuratPenolakanRujukan(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenSuratPenolakanRujukan::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Surat Penolakan Rujukan berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenSuratPenolakanRujukan::create($data);
+                $action = 'create';
+                $message = 'Surat Penolakan Rujukan berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Surat Penolakan Rujukan',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeSuratKontrol(Request $request){
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Convert status_sembuh dari string ke boolean
+            if (isset($data['status_sembuh'])) {
+                $data['status_sembuh'] = filter_var($data['status_sembuh'], FILTER_VALIDATE_BOOLEAN);
+            }
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenSuratKontrol::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Surat Kontrol berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenSuratKontrol::create($data);
+                $action = 'create';
+                $message = 'Surat Kontrol berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Surat Kontrol',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeSuratKonsul(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenSuratKonsul::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Surat Konsul berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenSuratKonsul::create($data);
+                $action = 'create';
+                $message = 'Surat Konsul berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Surat Konsul',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeSuratBalasanKonsul(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenSuratBalasanKonsul::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Surat Balasan Konsul berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenSuratBalasanKonsul::create($data);
+                $action = 'create';
+                $message = 'Surat Balasan Konsul berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Surat Balasan Konsul',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    public function storeSuratPernyataanBatalOperasi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenSuratPernyataanBatalOperasi::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Surat Pernyataan Batal Operasi berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenSuratPernyataanBatalOperasi::create($data);
+                $action = 'create';
+                $message = 'Surat Pernyataan Batal Operasi berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Surat Pernyataan Batal Operasi',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeSuratPernyataanPasienUmum(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenSuratPernyataanPasienUmum::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Surat Pernyataan Pasien Umum berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenSuratPernyataanPasienUmum::create($data);
+                $action = 'create';
+                $message = 'Surat Pernyataan Pasien Umum berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Surat Pernyataan Pasien Umum',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeDokumenDietitianPasienBaru(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            // Convert checkbox string values to boolean
+            $checkboxFields = [
+                'alergi_telur', 'alergi_susu', 'alergi_kacang', 'alergi_gluten',
+                'alergi_udang', 'alergi_ikan', 'alergi_hazelnut'
+            ];
+            
+            foreach ($checkboxFields as $field) {
+                $data[$field] = filter_var($data[$field] ?? false, FILTER_VALIDATE_BOOLEAN);
+            }
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenDietitianPasienBaru::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Dokumen Dietitian Pasien Baru berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenDietitianPasienBaru::create($data);
+                $action = 'create';
+                $message = 'Dokumen Dietitian Pasien Baru berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Dokumen Dietitian Pasien Baru',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+    public function storeDokumenAsuhanGizi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenAsuhanGizi::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Dokumen Asuhan Gizi berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenAsuhanGizi::create($data);
+                $action = 'create';
+                $message = 'Dokumen Asuhan Gizi berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Dokumen Asuhan Gizi',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeDokumenLaserLPI(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenTindakanLaserLPI::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Dokumen Tindakan Laser LPI berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenTindakanLaserLPI::create($data);
+                $action = 'create';
+                $message = 'Dokumen Tindakan Laser LPI berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Dokumen Tindakan Laser LPI',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function dokumenPersetujuanUmum(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        $pasien = Pasien::where('uuid', $request->uuid_pasien)->first();
+        $data = DokumenPersetujuanUmum::create([
+            'uuid_pasien' => $request->uuid_pasien,
+            'no_rm' => $request->kodeMR,
+            'nik' => $pasien->no_ktp,
+            'nama_pasien' => $request->nama,
+            'nama_pemberi_informasi' => $request->nama_pemberi_informasi,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'jenis_kelamin' => $pasien->jenis_kelamin,
+            'resume_rows' => $request->resume_rows ?: null,
+            'catatan' => '',
+            'pasien_ttd' => $request->pasien_ttd,
+            'nama_terang_pasien' => $request->nama_terang_pasien,
+            'pemberi_inf_ttd' => $request->pemberi_inf_ttd,
+            'nama_terang_pemberi_inf' => $request->nama_terang_pemberi_inf,
+            'created_by' => auth()->id(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        // $data = DokumenPersetujuanPenolakanTindakanDokter::store($request);
+
+        return response()->json(['data' => $data]);
+
+    }
+
+    public function listDokumenPersetujuanUmum(Request $request)
+    {
+        $page = $request->page - 1;
+        $skip = $page * $this->take;
+        $search = $request->search;
+
+        if ($request->search != '') {
+            $data = DokumenPersetujuanUmum::where('uuid_pasien', '=', $search)
+                ->orderBy('created_at', 'desc')
+                ->skip($skip)->take($this->take)
+                ->get();
+            $total = DokumenPersetujuanUmum::where('uuid_pasien', '=', $search)
+                ->orderBy('created_at', 'desc')
+                ->orderBy('created_at', 'desc')->count();
+        }
+
+        return response()->json(['data' => $data, 'total' => $total]);
 
     }
 

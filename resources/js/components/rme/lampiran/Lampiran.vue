@@ -58,12 +58,12 @@
             <th style="width: 50px">NO</th>
             <th style="width: 180px">JENIS DOKUMEN</th>
             <th style="width: 100px">TANGGAL</th>
-            <th style="width: 80px">JAM</th>
-            <th style="width: 120px">NO. RM</th>
-            <th>NAMA PASIEN</th>
-            <th style="width: 80px">JK</th>
-            <th style="width: 150px">PELAKSANA</th>
-            <th>DETAIL INFO</th>
+            <!-- <th style="width: 80px">JAM</th> -->
+            <!-- <th style="width: 120px">NO. RM</th> -->
+            <!-- <th>NAMA PASIEN</th> -->
+            <!-- <th style="width: 80px">JK</th> -->
+            <th style="width: 150px">Creator</th>
+            <!-- <th>DETAIL INFO</th> -->
             <th style="width: 120px" class="text-center">ACTION</th>
           </tr>
         </thead>
@@ -90,16 +90,12 @@
             </td>
 
             <td>{{ formatDate(item.tanggal) }}</td>
-            <td>{{ formatTime(item.waktu) }}</td>
-            <td>{{ item.no_rm }}</td>
-            <td>{{ item.nama }}</td>
-            <td>{{ item.jenis_kelamin }}</td>
-            <td>{{ item.user_pelaksana || "-" }}</td>
-            <td>
-              <div class="detail-info">
-                {{ truncate(item.detail_info, 50) }}
-              </div>
-            </td>
+            <!-- <td>{{ formatTime(item.waktu) }}</td> -->
+            <!-- <td>{{ item.no_rm }}</td> -->
+            <!-- <td>{{ item.nama }}</td> -->
+            <!-- <td>{{ item.jenis_kelamin }}</td> -->
+            <td>{{ item.created_by || "-" }}</td>
+            <!-- <td> <div class="detail-info">{{ truncate(item.detail_info, 50) }} </div></td> -->
 
             <!-- ACTION BUTTONS -->
             <td class="text-center">
@@ -206,6 +202,7 @@
         @back="onBackToList"
         :selectedPatient="selectedPatient"
         :editUuid="editUuid"
+        :editData="editData"
         :documentType="selectedDocumentType"
       />
     </div>
@@ -214,8 +211,8 @@
 
 <script>
 import axios from "axios";
-import { defineAsyncComponent } from "vue";
-import FormPersetujuanTindakanKedokteran from "./create/FormPersetujuanTindakanKedokteran.vue";
+import { defineAsyncComponent } from "vue";import FormLaseLPI from "./create/FormLaserLPI.vue";
+;
 
 export default {
   name: "ListLampiran",
@@ -226,9 +223,16 @@ export default {
     FormPersetujuanTindakanKedokteran: defineAsyncComponent(() => import("./create/FormPersetujuanTindakanKedokteran.vue")),
     FormLaserFokal: defineAsyncComponent(() => import("./create/FormLaserFokal.vue")),
     FormResumePerawatanRawatJalan: defineAsyncComponent(() => import("./create/FormResumePerawatanRawatJalan.vue")),
-    FormBalanceCairanHarian: defineAsyncComponent(() =>
-      import("./create/FormBalanceCairanHarian.vue")
-    ),
+    FormBalanceCairanHarian: defineAsyncComponent(() =>import("./create/FormBalanceCairanHarian.vue")),
+    FormPenolakanRujukan: defineAsyncComponent(() =>import("./create/FormPenolakanRujukan.vue")),
+    FormSuratKontrol: defineAsyncComponent(() =>import("./create/FormSuratKontrol.vue")),
+    FormSuratKonsul: defineAsyncComponent(() =>import("./create/FormSuratKonsul.vue")),
+    FormSuratBalasanKonsul: defineAsyncComponent(() =>import("./create/FormSuratBalasanKonsul.vue")),
+    FormPernyataanBatalOperasi: defineAsyncComponent(() =>import("./create/FormPernyataanBatalOperasi.vue")),
+    FormPernyataanPasienUmum: defineAsyncComponent(() =>import("./create/FormPernyataanPasienUmum.vue")),
+    FormDietitianPasienBaru: defineAsyncComponent(() =>import("./create/FormDietitianPasienBaru.vue")),
+    FormAsuhanGizi: defineAsyncComponent(() =>import("./create/FormAsuhanGizi.vue")),
+    FormLaserLPI: defineAsyncComponent(() =>import("./create/FormLaserLPI.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -238,6 +242,7 @@ export default {
       searchQuery: "",
       state: "list", // list | select-document | create
       selectedDocumentType: "",
+      editData: null,
       editUuid: null,
       loading: false,
       data: [],
@@ -294,6 +299,69 @@ export default {
           component: "FormBalanceCairanHarian",
           description: "Form monitoring intake dan output cairan pasien per hari",
           backendType: "balance_cairan_harian",
+        },
+        {
+          value: "surat-penolakan-rujukan",
+          label: "Surat Penolakan Rujukan",
+          component: "FormPenolakanRujukan",
+          description: "Form Surat penolakan rujukan pasien",
+          backendType: "surat_penolakan_rujukan",
+        },
+        {
+          value: "surat-kontrol-ulang",
+          label: "Surat Kontrol Ulang",
+          component: "FormSuratKontrol",
+          description: "Form Surat Kontrol Ulang Pasien",
+          backendType: "surat_kontrol_ulang",
+        },
+        {
+          value: "surat-kosultasi",
+          label: "Surat Konsultasi",
+          component: "FormSuratKonsul",
+          description: "Form Surat Konsultasi Pasien",
+          backendType: "surat_konsul",
+        },
+        {
+          value: "surat-balasan-kosultasi",
+          label: "Surat Balasan Konsultasi",
+          component: "FormSuratBalasanKonsul",
+          description: "Form Surat Balasan Konsultasi Pasien",
+          backendType: "surat_balasan_konsul",
+        },
+        {
+          value: "surat-pernyataan-batal-operasi",
+          label: "Surat Pernyataan Batal Operasi",
+          component: "FormPernyataanBatalOperasi",
+          description: "Form Surat Balasan Konsultasi Pasien",
+          backendType: "surat_pernyataan_batal_operasi",
+        },
+        {
+          value: "surat-pernyataan-pasien-umum",
+          label: "Surat Pernyataan Pasien Umum",
+          component: "FormPernyataanPasienUmum",
+          description: "Form Surat Balasan Konsultasi Pasien",
+          backendType: "surat_pernyataan_pasien_umum",
+        },
+        {
+          value: "dietitian-pasien-baru",
+          label: "Form Dokumen Dietitian Pasien Baru",
+          component: "FormDietitianPasienBaru",
+          description: "Form Surat Balasan Konsultasi Pasien",
+          backendType: "dokumen_dietitian_pasien_baru",
+        },
+        {
+          value: "dokumen_asuhan_gizi",
+          label: "Form Dokumen Asuhan Gizi",
+          component: "FormAsuhanGizi",
+          description: "Form Asuhan Gizi Pasien",
+          backendType: "dokumen_asuhan_gizi",
+        },
+        {
+          value: "dokumen_tindakan_laser_lpi",
+          label: "Form Dokumen Laser LPI",
+          component: "FormLaserLPI",
+          description: "Form Laser LPI Pasien",
+          backendType: "dokumen_tindakan_laser_lpi",
         },
         // {
         //   value: "informed-consent",
@@ -455,20 +523,52 @@ export default {
       // TODO: Implement detail view
     },
 
-    onEdit(item) {
-      // Map backend type to frontend type
-      const doc = this.availableDocuments.find(
-        (d) => d.backendType === item.document_type
-      );
+    async onEdit(item) {
+      try {
+        // Loading state
+        this.isLoading = true;
 
-      if (!doc) {
-        alert("Dokumen tidak ditemukan!");
-        return;
+        // Map backend type to frontend type
+        const doc = this.availableDocuments.find(
+          (d) => d.backendType === item.document_type
+        );
+
+        if (!doc) {
+          alert("Dokumen tidak ditemukan!");
+          return;
+        }
+
+        // 1. Get detail lampiran terlebih dahulu
+        const response = await axios.get(
+          `/master/rekammedis/lampiran/${item.uuid}`,
+          {
+            params: {
+              type: item.document_type,
+            },
+          }
+        );
+
+        if (!response.data.status) {
+          alert(response.data.message || "Gagal mengambil detail dokumen");
+          return;
+        }
+
+        // 2. Set data untuk dikirim ke component
+        this.editData = response.data.data;
+        this.selectedDocumentType = doc.value;
+        this.editUuid = item.uuid;
+
+        // 3. Navigate ke component create/edit
+        this.state = "create";
+
+      } catch (error) {
+        console.error("Error saat edit:", error);
+        alert(
+          error.response?.data?.message || "Terjadi kesalahan saat mengambil data"
+        );
+      } finally {
+        this.isLoading = false;
       }
-
-      this.selectedDocumentType = doc.value;
-      this.editUuid = item.uuid;
-      this.state = "create";
     },
 
     onPrint(item) {
@@ -477,6 +577,10 @@ export default {
         laser_bargage: `/print/laser-bargage/${item.uuid}`,
         laporan_bedah: `/print/laporan-pembedahan/${item.uuid}`,
         informed_consent: `/print/informed-consent/${item.uuid}`,
+        surat_kontrol_ulang: `/print/rekammedis/general/suratkontrolulang/${item.uuid}`,
+        surat_penolakan_rujukan: `/print/rekammedis/general/suratpenolakanrujukan/${item.uuid}`,
+        surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
+        surat_balasan_konsul: `/print/rekammedis/general/suratbalasankonsul/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];
