@@ -56,7 +56,7 @@
       item.layanan_sum_total
       - item.layanan_sum_diskon_rp
       - item.diskon_rp
-      - (item.layanan_sum_total * (item.diskon_persen ?? 0) / 100)
+      // - (item.layanan_sum_total * (item.diskon_persen ?? 0) / 100)
     )
   }}</td>
 
@@ -219,7 +219,7 @@ export default {
     printItem(item) {
       console.log("Print:", item)
       window.open(
-        `/print/rekammedis/obat/print/`+item.uuid,
+        `/print/kasir/`+item.uuid,
         "_blank"
       );
       // buka print atau cetakan PDF
