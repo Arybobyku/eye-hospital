@@ -244,15 +244,15 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_surat_konsul',
                     'type' => 'surat_konsul',
                     'label' => 'Surat Konsultasi',
-                    'icon' => 'fa-reply',
-                    'color' => '#FFA726', // Orange konsultasi
+                    'icon' => 'fa-comments-medical',
+                    'color' => '#FF9800', // Orange gelap
                 ],
                 [
                     'table' => 'dokumen_surat_balasan_konsul',
                     'type' => 'surat_balasan_konsul',
                     'label' => 'Surat Balasan Konsultasi',
-                    'icon' => 'fa-reply',
-                    'color' => '#FFA726', // Orange konsultasi
+                    'icon' => 'fa-reply-all',
+                    'color' => '#FFA726', // Orange terang
                 ],
                 [
                     'table' => 'dokumen_surat_pernyataan_batal_operasi',
@@ -286,36 +286,36 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_tindakan_laser_lpi',
                     'type' => 'dokumen_tindakan_laser_lpi',
                     'label' => 'Dokumen Tindakan Laser LPI',
-                    'icon' => 'fa-eye',
-                    'color' => '#00BCD4', // Cyan (untuk mata/laser)
+                    'icon' => 'fa-circle-radiation',
+                    'color' => '#00BCD4', // Cyan
                 ],
                 [
                     'table' => 'dokumen_tindakan_laser_prp',
                     'type' => 'dokumen_tindakan_laser_prp',
                     'label' => 'Dokumen Tindakan Laser PRP',
-                    'icon' => 'fa-eye',
-                    'color' => '#00BCD4', // Cyan (untuk mata/laser)
+                    'icon' => 'fa-bolt',
+                    'color' => '#0097A7', // Cyan gelap
                 ],
                 [
                     'table' => 'dokumen_laporan_operasi_trabekulektomi',
                     'type' => 'dokumen_laporan_operasi_trabekulektomi',
                     'label' => 'Dokumen Laporan Operasi Trabekulektomi',
-                    'icon' => 'fa-eye',
-                    'color' => '#00BCD4', // Cyan (untuk mata/laser)
+                    'icon' => 'fa-eye-dropper',
+                    'color' => '#7B1FA2', // Ungu tua
                 ],
                 [
                     'table' => 'dokumen_laporan_operasi_pterygium',
                     'type' => 'dokumen_laporan_operasi_pterygium',
                     'label' => 'Dokumen Laporan Operasi Pterygium',
-                    'icon' => 'fa-eye',
-                    'color' => '#00BCD4', // Cyan (untuk mata/laser)
+                    'icon' => 'fa-eye-low-vision',
+                    'color' => '#C2185B', // Pink tua
                 ],
                 [
                     'table' => 'dokumen_laporan_eksisi_palpebra',
                     'type' => 'dokumen_laporan_eksisi_palpebra',
                     'label' => 'Dokumen Laporan Eksisi Palbebra',
-                    'icon' => 'fa-eye',
-                    'color' => '#00BCD4', // Cyan (untuk mata/laser)
+                    'icon' => 'fa-eye-slash',
+                    'color' => '#F57C00', // Orange tua
                 ],
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
