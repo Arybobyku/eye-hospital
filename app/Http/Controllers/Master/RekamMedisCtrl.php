@@ -289,6 +289,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-eye',
                     'color' => '#00BCD4', // Cyan (untuk mata/laser)
                 ],
+                [
+                    'table' => 'dokumen_tindakan_laser_prp',
+                    'type' => 'dokumen_tindakan_laser_prp',
+                    'label' => 'Dokumen Tindakan Laser PRP',
+                    'icon' => 'fa-eye',
+                    'color' => '#00BCD4', // Cyan (untuk mata/laser)
+                ],
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -464,6 +471,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_tindakan_laser_prp' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -508,6 +521,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_dietitian_pasien_baru' => 'dokumen_dietitian_pasien_baru',
                 'dokumen_asuhan_gizi' => 'dokumen_asuhan_gizi',
                 'dokumen_tindakan_laser_lpi' => 'dokumen_tindakan_laser_lpi',
+                'dokumen_tindakan_laser_prp' => 'dokumen_tindakan_laser_prp',
                 // Tambahkan mapping baru di sini
             ];
 

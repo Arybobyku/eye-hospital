@@ -233,6 +233,7 @@ export default {
     FormDietitianPasienBaru: defineAsyncComponent(() =>import("./create/FormDietitianPasienBaru.vue")),
     FormAsuhanGizi: defineAsyncComponent(() =>import("./create/FormAsuhanGizi.vue")),
     FormLaserLPI: defineAsyncComponent(() =>import("./create/FormLaserLPI.vue")),
+    FormLaserPRP: defineAsyncComponent(() =>import("./create/FormLaserPRP.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -362,6 +363,13 @@ export default {
           component: "FormLaserLPI",
           description: "Form Laser LPI Pasien",
           backendType: "dokumen_tindakan_laser_lpi",
+        },
+        {
+          value: "dokumen_tindakan_laser_prp",
+          label: "Form Dokumen Laser PRP",
+          component: "FormLaserPRP",
+          description: "Form Laser PRP Pasien",
+          backendType: "dokumen_tindakan_laser_prp",
         },
         // {
         //   value: "informed-consent",
