@@ -234,6 +234,7 @@ export default {
     FormLaserLPI: defineAsyncComponent(() =>import("./create/FormLaserLPI.vue")),
     FormLaserPRP: defineAsyncComponent(() =>import("./create/FormLaserPRP.vue")),
     FormLaporanOperasiPterygium: defineAsyncComponent(() =>import("./create/FormLaporanOperasiPterygium.vue")),
+    FormLaporanEksisiPalebra: defineAsyncComponent(() =>import("./create/FormLaporanEksisiPalebra.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -384,6 +385,13 @@ export default {
           component: "FormLaporanOperasiPterygium",
           description: "Form Laporan Operasi Pterygrium",
           backendType: "dokumen_laporan_operasi_pterygium",
+        },
+        {
+          value: "dokumen_laporan_eksisi_palpebra",
+          label: "Form Laporan Eksisi Palebra",
+          component: "FormLaporanEksisiPalebra",
+          description: "Form Laporan Eksisi Palebra",
+          backendType: "dokumen_laporan_eksisi_palpebra",
         },
         // {
         //   value: "informed-consent",

@@ -310,6 +310,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-eye',
                     'color' => '#00BCD4', // Cyan (untuk mata/laser)
                 ],
+                [
+                    'table' => 'dokumen_laporan_eksisi_palpebra',
+                    'type' => 'dokumen_laporan_eksisi_palpebra',
+                    'label' => 'Dokumen Laporan Eksisi Palbebra',
+                    'icon' => 'fa-eye',
+                    'color' => '#00BCD4', // Cyan (untuk mata/laser)
+                ],
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -503,6 +510,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_laporan_eksisi_palpebra' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -550,6 +563,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_tindakan_laser_prp' => 'dokumen_tindakan_laser_prp',
                 'dokumen_laporan_operasi_trabekulektomi' => 'dokumen_laporan_operasi_trabekulektomi',
                 'dokumen_laporan_operasi_pterygium' => 'dokumen_laporan_operasi_pterygium',
+                'dokumen_laporan_eksisi_palpebra' => 'dokumen_laporan_eksisi_palpebra',
                 // Tambahkan mapping baru di sini
             ];
 
