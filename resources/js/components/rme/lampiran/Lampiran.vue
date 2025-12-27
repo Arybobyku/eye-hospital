@@ -234,6 +234,7 @@ export default {
     FormAsuhanGizi: defineAsyncComponent(() =>import("./create/FormAsuhanGizi.vue")),
     FormLaserLPI: defineAsyncComponent(() =>import("./create/FormLaserLPI.vue")),
     FormLaserPRP: defineAsyncComponent(() =>import("./create/FormLaserPRP.vue")),
+    FormLaporanOperasiTrabulektomi: defineAsyncComponent(() =>import("./create/FormLaporanOperasiTrabulektomi.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -370,6 +371,13 @@ export default {
           component: "FormLaserPRP",
           description: "Form Laser PRP Pasien",
           backendType: "dokumen_tindakan_laser_prp",
+        },
+        {
+          value: "dokumen_laporan_operasi_trabekulektomi",
+          label: "Form Laporan Operasi Trabekulektomi",
+          component: "FormLaporanOperasiTrabulektomi",
+          description: "Form Laporan Operasi Trabekulektomi",
+          backendType: "dokumen_laporan_operasi_trabekulektomi",
         },
         // {
         //   value: "informed-consent",
