@@ -235,6 +235,10 @@ export default {
     FormLaserPRP: defineAsyncComponent(() =>import("./create/FormLaserPRP.vue")),
     FormLaporanOperasiPterygium: defineAsyncComponent(() =>import("./create/FormLaporanOperasiPterygium.vue")),
     FormLaporanEksisiPalebra: defineAsyncComponent(() =>import("./create/FormLaporanEksisiPalebra.vue")),
+    FormAssesmenAwalKeperawatanRawatInap: defineAsyncComponent(() =>import("./create/FormAssesmenAwalKeperawatanRawatInap.vue")),
+    FormResumeMedisRawatInap: defineAsyncComponent(() =>import("./create/FormResumeMedisRawatInap.vue")),
+    FormResumeMedisRawatJalan: defineAsyncComponent(() =>import("./create/FormResumeMedisRawatJalan.vue")),
+    FormCPPTRawatInap: defineAsyncComponent(() =>import("./create/FormCPPTRawatInap.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -392,6 +396,34 @@ export default {
           component: "FormLaporanEksisiPalebra",
           description: "Form Laporan Eksisi Palebra",
           backendType: "dokumen_laporan_eksisi_palpebra",
+        },
+        {
+          value: "asessmen_nawal_keperawatan_rawat_inap",
+          label: "Assemen Awal Keperawatan Rawat Inap",
+          component: "FormAssesmenAwalKeperawatanRawatInap",
+          description: "Assemen Awal Keperawatan Rawat Inap",
+          backendType: "asessmen_nawal_keperawatan_rawat_inap",
+        },
+        {
+          value: "resume_medis_rawat_inap",
+          label: "Form Resume Medis Rawat Inap",
+          component: "FormResumeMedisRawatInap",
+          description: "Resume Medis Rawat Inap",
+          backendType: "resume_medis_rawat_inap",
+        },
+        {
+          value: "resume_medis_rawat_jalan",
+          label: "Form Resume Medis Rawat Jalan",
+          component: "FormResumeMedisRawatJalan",
+          description: "Resume Medis Rawat Jalan",
+          backendType: "resume_medis_rawat_jalan",
+        },
+        {
+          value: "cppt_rawat_inap",
+          label: "Form CPPT Rawat Inap",
+          component: "FormCPPTRawatInap",
+          description: "CPPT Rawat Inap",
+          backendType: "cppt_rawat_inap",
         },
         // {
         //   value: "informed-consent",
