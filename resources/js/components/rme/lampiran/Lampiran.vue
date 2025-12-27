@@ -211,8 +211,7 @@
 
 <script>
 import axios from "axios";
-import { defineAsyncComponent } from "vue";import FormLaseLPI from "./create/FormLaserLPI.vue";
-;
+import { defineAsyncComponent } from "vue";
 
 export default {
   name: "ListLampiran",
@@ -234,7 +233,7 @@ export default {
     FormAsuhanGizi: defineAsyncComponent(() =>import("./create/FormAsuhanGizi.vue")),
     FormLaserLPI: defineAsyncComponent(() =>import("./create/FormLaserLPI.vue")),
     FormLaserPRP: defineAsyncComponent(() =>import("./create/FormLaserPRP.vue")),
-    FormLaporanOperasiTrabulektomi: defineAsyncComponent(() =>import("./create/FormLaporanOperasiTrabulektomi.vue")),
+    FormLaporanOperasiPterygium: defineAsyncComponent(() =>import("./create/FormLaporanOperasiPterygium.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -378,6 +377,13 @@ export default {
           component: "FormLaporanOperasiTrabulektomi",
           description: "Form Laporan Operasi Trabekulektomi",
           backendType: "dokumen_laporan_operasi_trabekulektomi",
+        },
+        {
+          value: "dokumen_laporan_operasi_pterygium",
+          label: "Form Laporan Operasi Pterygrium",
+          component: "FormLaporanOperasiPterygium",
+          description: "Form Laporan Operasi Pterygrium",
+          backendType: "dokumen_laporan_operasi_pterygium",
         },
         // {
         //   value: "informed-consent",
