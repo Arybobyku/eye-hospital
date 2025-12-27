@@ -17,6 +17,7 @@ use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
 use App\Models\DokumenSuratPernyataanBatalOperasi;
 use App\Models\DokumenSuratPernyataanPasienUmum;
+use App\Models\DokumenPersetujuanUmum;
 use App\Models\DokumenTindakanLaserLPI;
 use App\Models\DokumenTindakanLaserPRP;
 use App\Models\LayananPasien;
@@ -1264,5 +1265,28 @@ class PasienCtrl extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function listBillPembayaran(Request $request)
+    {
+        $page = $request->page - 1;
+        $skip = $page * $this->take;
+        $search = $request->search;
+
+        if ($request->search != '') {
+            $data = Registrasi::withSum('layanan', 'total')->withSum('layanan', 'diskon_rp')
+            ->where('pasien_uuid', $search)
+            ->where('status_kasir', 'Sudah Bayar')
+            ->orderBy('created_at', 'desc')
+            ->skip($skip)
+            ->take($this->take)
+            ->get();
+        
+            $total = Registrasi::where('pasien_uuid', '=', $search)->where('status_kasir', 'Sudah Bayar')
+                ->orderBy('created_at', 'desc')
+                ->orderBy('created_at', 'desc')->count();
+        }
+
+        return response()->json(['data' => $data, 'total' => $total]);
     }
 }

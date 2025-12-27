@@ -5,115 +5,117 @@
       <div class="spinner-rme"></div>
       Loading...
     </div>
-    <div v-if="state == 'list'">
+
     <!-- HEADER -->
-    
 
-    <div class="header-component-rme">Persetujuan Umum (General Consent)</div>
+      <div class="header-component-rme">Daftar Bill Pembayaran</div>
 
-    <ButtonTambah  @click="onAdd" />
-    <!-- <button class="btn-add" @click="onAdd">+ s</button> -->
 
-    
-    <!-- FILTER BAR -->
-    <div class="filter-bar">
-      <div class="filter-left">
-        Tampil
-        <select v-model="perPage">
-          <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
-        </select>
-        data
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <div class="filter-left">
+          Tampil
+          <select v-model="perPage">
+            <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
+          </select>
+          data
+        </div>
+
+        <div class="filter-right">
+          Cari:
+          <input type="text" v-model="searchQueryRacikan" class="search-input" />
+        </div>
       </div>
 
-      <div class="filter-right">
-        Cari:
-        <input type="text" v-model="searchQuery" class="search-input" />
+      <!-- TABLE -->
+
+      <table class="custom-table-rme">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>NO KWITANSI</th>
+            <th>TANGGAL</th>
+            <th>JAM</th>
+            <th>CARA BAYAR</th>
+            <th>METODE PEMBAYARAN</th>
+            <th>TOTAL PEMBAYARAN</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+
+        <tbody>
+  <tr v-for="(item, index) in paginatedData" :key="item.id">
+    <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
+    <td>{{ item.no_kwitansi }}</td>
+    <td>{{ item.tanggal }}</td>
+    <td>{{ item.kasir_jam_selesai }}</td>
+    <td>{{ item.carabayar_nama }}</td>
+    <td>{{ item.metode_pembayaran }}</td>
+    <td>  {{
+    formatRupiah(
+      item.layanan_sum_total
+      - item.layanan_sum_diskon_rp
+      - item.diskon_rp
+      // - (item.layanan_sum_total * (item.diskon_persen ?? 0) / 100)
+    )
+  }}</td>
+
+    <td class="action-buttons">
+      <i class="fa fa-print action-icon icon-print" @click="printItem(item)"></i>
+    </td>
+  </tr>
+</tbody>
+
+      </table>
+
+      <!-- FOOTER INFO -->
+      <div class="table-info">
+        Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
       </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination-rme">
+        <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
+
+        <button v-for="page in totalPages" :key="page" :class="['page-btn', { active: currentPage === page }]"
+          @click="currentPage = page">
+          {{ page }}
+        </button>
+
+        <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
+      </div>
+  
     </div>
 
-    <!-- TABLE -->
-     
-    <table class="custom-table-rme">
-      <thead>
-        <tr>
-          <th>NO</th>
-          <th>TANGGAL & JAM</th>
-          <th>NAMA PASIEN</th>
-          <th>JENIS KELAMIN</th>
-          <th>NIK</th>
-          <th>USER</th>
-          <th>ACTION</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(item, index) in paginatedData" :key="item.id">
-          <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-          <td>{{ item.created_at }}</td>
-          <td>{{ item.nama_pasien }}</td>
-          <td>{{ item.jenis_kelamin }}</td>
-          <td>{{ item.nik }}</td>
-          <td>{{ item.nama_pemberi_informasi }}</td>
-          <td class="action-buttons">
-            <i class="fa fa-bookmark action-icon icon-edit" @click="editItem(item)"></i>
-            <i class="fa fa-times action-icon icon-delete" @click="deleteItem(item)"></i>
-            <i class="fa fa-print action-icon icon-print" @click="print(item)"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- FOOTER INFO -->
-    <div class="table-info">
-      Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
-    </div>
-
-    <!-- PAGINATION -->
-    <div class="pagination-rme">
-      <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
-
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        :class="['page-btn', { active: currentPage === page }]"
-        @click="currentPage = page"
-      >
-        {{ page }}
-      </button>
-
-      <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
-    </div>
-  </div>
-    <!-- Create Data -->
-  <div v-if="state == 'create'">
-    <CreatePersetujuanUmum @back="state = 'list'" :selectedPatient="selectedPatient" />
-  </div>
-  </div>
 
 </template>
 
 <script>
 import axios from "axios";
+import ButtonTambah from '../components/ButtonTambah.vue';
+// import { datename, formatrupiah } from '../../../module/Manipulation.js';
 import { defineAsyncComponent } from "vue";
-import ButtonTambah from '../components/ButtonTambah.vue'
-// import CreatePersetujuanUmum from "./CreatePersetujuanUmum.vue";
 export default {
   name: "HistoryKunjungan",
-  components: { ButtonTambah,
-    CreatePersetujuanUmum: defineAsyncComponent(() =>
-      import("./CreatePersetujuanUmum.vue")
-    ),
-   },
+  components: {
+    ButtonTambah,
+  },
 
   data() {
     return {
       perPage: 10,
+      perPageRacikan: 10,
       currentPage: 1,
+      currentPageRacikan: 1,
       searchQuery: "",
-      state: "list",
+      searchQueryRacikan: "",
       loading: false, // Loading indicator
+      state: "list",
       data: [
       ],
+      registrasi:[
+
+      ]
     };
   },
   props: {
@@ -121,6 +123,7 @@ export default {
       type: Object,
       required: true,
     },
+    
   },
 
   watch: {
@@ -162,12 +165,14 @@ export default {
       const end = this.currentPage * this.perPage;
       return end > this.data.length ? this.data.length : end;
     },
+   
   },
   mounted() {
     // this.fetchHistory();
   },
 
   methods: {
+
     async fetchHistory() {
       this.loading = true;
 
@@ -178,7 +183,7 @@ export default {
         formData.append("limit", 10);
         formData.append("page", 1);
 
-        const res = await axios.post("/master/pasien/list-dokumen-persetujuan-umum", formData, {
+        const res = await axios.post("/rme/pasien/listbillpembayaran", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -186,6 +191,7 @@ export default {
 
         // 👇 pastikan data backend berupa array
         this.data = res.data?.data ?? [];
+        console.log("respons", res);
       } catch (err) {
         console.error("Gagal memuat history:", err);
         alert("Gagal memuat data history.");
@@ -193,46 +199,50 @@ export default {
         this.loading = false;
       }
     },
-
+    formatRupiah(value) {
+    if (!value) return "Rp 0";
+    return Number(value).toLocaleString("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0
+    });
+  },
     editItem(item) {
       console.log("Edit:", item)
       // buka modal atau pindah halaman
-      },
-      deleteItem(item) {
-        console.log("Delete:", item)
-        // konfirmasi hapus
-      },
-      printItem(item) {
-        console.log("Print:", item)
-        // buka print atau cetakan PDF
-      },
-      onAdd() {
-        this.state = "create";
-        console.log("TAMBAH");
-      },
-
-    mappedStatus(data){
-        if(data?.status_ro != 'Sudah Diperiksa'){
-            return 'Pemriksasan Refraksi Optisi'
-        }
-        if(data?.status_dokter != 'Sudah Diperiksa'){
-            return 'Pemriksasan Dokter'
-        }
-        if(data?.status_dokter != 'Sudah Bayar'){
-            return 'Farmasi'
-        }
-        if(data?.status_dokter != 'Sudah Bayar'){
-            return 'Kasir'
-        }
-
-        return 'Selesai'
     },
-
-    print(item) {
+    detailItem(item) {
+      console.log("Detail:", item)
+      this.registrasi = item;
+      this.state = "detail";
+    },
+    printItem(item) {
+      console.log("Print:", item)
       window.open(
-        `/print/rekammedis/rawat-jalan/rm1dot1/`+item.uuid,
+        `/print/kasir/`+item.uuid,
         "_blank"
       );
+      // buka print atau cetakan PDF
+    },
+    
+    
+
+
+    mappedStatus(data) {
+      if (data?.status_ro != 'Sudah Diperiksa') {
+        return 'Pemriksasan Refraksi Optisi'
+      }
+      if (data?.status_dokter != 'Sudah Diperiksa') {
+        return 'Pemriksasan Dokter'
+      }
+      if (data?.status_dokter != 'Sudah Bayar') {
+        return 'Farmasi'
+      }
+      if (data?.status_dokter != 'Sudah Bayar') {
+        return 'Kasir'
+      }
+
+      return 'Selesai'
     },
   },
 };
@@ -351,6 +361,7 @@ export default {
     transform: rotate(360deg);
   }
 }
+
 .action-buttons {
   display: flex;
   align-items: center;
@@ -365,19 +376,21 @@ export default {
 
 /* warna sesuai gambar */
 .icon-edit {
-  color: #5cb85c;   /* hijau */
+  color: #5cb85c;
+  /* hijau */
 }
 
 .icon-delete {
-  color: #d9534f;   /* merah */
+  color: #d9534f;
+  /* merah */
 }
 
 .icon-print {
-  color: #0275d8;   /* biru */
+  color: #0275d8;
+  /* biru */
 }
 
 .action-icon:hover {
   opacity: 0.7;
 }
-
 </style>

@@ -35,7 +35,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		//Report
 		Route::post('listobat', [PasienCtrl::class, 'listobat'])->name('report-pasien-listobat');
 		Route::post('detailobat', [PasienCtrl::class, 'detailobat'])->name('report-pasien-detailobat');
-
+		
+		Route::post('listbillpembayaran', [PasienCtrl::class, 'listBillPembayaran'])->name('report-pasien-listbillpembayaran');
 
 	});
 
