@@ -29,6 +29,7 @@ use App\Models\DokumenLaporanOperasiTrabekulektomi;
 use App\Models\DokumenLaporanOperasiPterygium;
 use App\Models\DokumenLaporanEksisiPalpebra;
 use App\Models\DokumenLaporanEksisiChalazion;
+use App\Models\DokumenAsesmenKeperawatanRawatInap;
 use Cookie;
 use Crypt;
 use DB;
@@ -1478,6 +1479,68 @@ class PasienCtrl extends Controller
             ], 500);
         }
     }
+    public function storeAsesmenKeperawatanRawatInap(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $request->all();
+            
+            // Ambil data pengguna dari Cookie (encrypted)
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+            
+            $uuid = $request->input('uuid');
+            
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+            unset($data['id']); // Hindari mass assignment 'id'
+            
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenAsesmenKeperawatanRawatInap::where('uuid', $uuid)->first();
+                
+                if (!$dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+                
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Asesmen Awal Keperawatan Rawat Inap berhasil diupdate';
+                
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $data['id'] = '';
+                $dokumen = DokumenAsesmenKeperawatanRawatInap::create($data);
+                $action = 'create';
+                $message = 'Asesmen Awal Keperawatan Rawat Inap berhasil disimpan';
+            }
+            
+            DB::commit();
+            
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Asesmen Awal Keperawatan Rawat Inap',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
     public function storeLaporanEksisiChalazion(Request $request)
     {
