@@ -345,6 +345,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-hand-sparkles',
                     'color' => '#9C27B0', // Purple
                 ],
+                [
+                    'table' => 'dokumen_kronologis_pasien',
+                    'type' => 'dokumen_kronologis_pasien',
+                    'label' => 'Dokumen Kronologi Pasien',
+                    'icon' => 'fa-hand-sparkles',
+                    'color' => '#9C27B0', // Purple
+                ],
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -568,6 +575,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_kronologis_pasien' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -620,6 +633,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_pulang_atas_permintaan_sendiri' => 'dokumen_pulang_atas_permintaan_sendiri',
                 'dokumen_tindakan_laser_capsulotomy' => 'dokumen_tindakan_laser_capsulotomy',
                 'dokumen_tindakan_epilasi' => 'dokumen_tindakan_epilasi',
+                'dokumen_kronologis_pasien' => 'dokumen_kronologis_pasien',
                 // Tambahkan mapping baru di sini
             ];
 

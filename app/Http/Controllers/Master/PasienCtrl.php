@@ -32,6 +32,7 @@ use App\Models\DokumenLaporanEksisiChalazion;
 use App\Models\DokumenAsesmenKeperawatanRawatInap;
 use App\Models\DokumenPulangAtasPermintaanSendiri;
 use App\Models\DokumenTindakanLaserCapsulotomy;
+use App\Models\DokumenKronologisPasien;
 use App\Models\DokumenTindakanEpilasi;
 use Cookie;
 use Crypt;
@@ -1792,6 +1793,72 @@ class PasienCtrl extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Gagal menyimpan Tindakan Epilasi',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeKronologisPasien(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            // Convert checkbox values to boolean
+            $data['lokasi_kecelakaan_lalu_lintas'] = filter_var($data['lokasi_kecelakaan_lalu_lintas'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            $data['lokasi_rumah'] = filter_var($data['lokasi_rumah'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            $data['lokasi_lainnya_check'] = filter_var($data['lokasi_lainnya_check'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenKronologisPasien::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Form Kronologis Pasien berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenKronologisPasien::create($data);
+                $action = 'create';
+                $message = 'Form Kronologis Pasien berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Form Kronologis Pasien',
                 'error' => $e->getMessage(),
             ], 500);
         }

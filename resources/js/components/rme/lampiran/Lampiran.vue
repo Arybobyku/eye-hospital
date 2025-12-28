@@ -243,6 +243,7 @@ export default {
     FormPulangAtasPermintaanSendiri: defineAsyncComponent(() =>import("./create/FormPulangAtasPermintaanSendiri.vue")),
     FormTindakanLaserCapsulotomy: defineAsyncComponent(() =>import("./create/FormTindakanLaserCapsulotomy.vue")),
     FormTindakanEpilasi: defineAsyncComponent(() =>import("./create/FormTindakanEpilasi.vue")),
+    FormKronologisPasien: defineAsyncComponent(() =>import("./create/FormKronologisPasien.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -456,6 +457,13 @@ export default {
           component: "FormTindakanEpilasi",
           description: "Form Tindakan Epilasi",
           backendType: "dokumen_tindakan_epilasi",
+        },
+        {
+          value: "dokumen_kronologis_pasien",
+          label: "Form Kronologi Pasien",
+          component: "FormKronologisPasien",
+          description: "Form Kronologi Pasien",
+          backendType: "dokumen_kronologis_pasien",
         },
         // {
         //   value: "informed-consent",
