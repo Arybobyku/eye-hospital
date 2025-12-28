@@ -314,36 +314,36 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_laporan_eksisi_palpebra',
                     'type' => 'dokumen_laporan_eksisi_palpebra',
                     'label' => 'Dokumen Laporan Eksisi Palbebra',
-                    'icon' => 'fa-eye-slash',
+                    'icon' => 'fa-scissors',
                     'color' => '#F57C00', // Orange tua
                 ],
                 [
                     'table' => 'dokumen_laporan_eksisi_chalazion',
                     'type' => 'dokumen_laporan_eksisi_chalazion',
                     'label' => 'Dokumen Laporan Eksisi Chalazion',
-                    'icon' => 'fa-eye-slash',
-                    'color' => '#F57C00', // Orange tua
+                    'icon' => 'fa-scalpel-line-dashed',
+                    'color' => '#FF5722', // Deep Orange
                 ],
                 [
                     'table' => 'dokumen_pulang_atas_permintaan_sendiri',
                     'type' => 'dokumen_pulang_atas_permintaan_sendiri',
                     'label' => 'Dokumen Pulang Atas Permintaan Sendiri',
-                    'icon' => 'fa-eye-slash',
-                    'color' => '#F57C00', // Orange tua
+                    'icon' => 'fa-person-walking-arrow-right',
+                    'color' => '#607D8B', // Blue Grey
                 ],
                 [
                     'table' => 'dokumen_tindakan_laser_capsulotomy',
                     'type' => 'dokumen_tindakan_laser_capsulotomy',
                     'label' => 'Dokumen Tindakan Laser Capsulotomy',
-                    'icon' => 'fa-eye-slash',
-                    'color' => '#F57C00', // Orange tua
+                    'icon' => 'fa-burst',
+                    'color' => '#00ACC1', // Cyan accent
                 ],
                 [
                     'table' => 'dokumen_tindakan_epilasi',
                     'type' => 'dokumen_tindakan_epilasi',
                     'label' => 'Dokumen Tindakan Epilasi',
-                    'icon' => 'fa-eye-slash',
-                    'color' => '#F57C00', // Orange tua
+                    'icon' => 'fa-hand-sparkles',
+                    'color' => '#9C27B0', // Purple
                 ],
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
