@@ -317,6 +317,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-eye-slash',
                     'color' => '#F57C00', // Orange tua
                 ],
+                [
+                    'table' => 'dokumen_laporan_eksisi_chalazion',
+                    'type' => 'dokumen_laporan_eksisi_chalazion',
+                    'label' => 'Dokumen Laporan Eksisi Chalazion',
+                    'icon' => 'fa-eye-slash',
+                    'color' => '#F57C00', // Orange tua
+                ],
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -516,6 +523,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_laporan_eksisi_chalazion' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -564,6 +577,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_laporan_operasi_trabekulektomi' => 'dokumen_laporan_operasi_trabekulektomi',
                 'dokumen_laporan_operasi_pterygium' => 'dokumen_laporan_operasi_pterygium',
                 'dokumen_laporan_eksisi_palpebra' => 'dokumen_laporan_eksisi_palpebra',
+                'dokumen_laporan_eksisi_chalazion' => 'dokumen_laporan_eksisi_chalazion',
                 // Tambahkan mapping baru di sini
             ];
 

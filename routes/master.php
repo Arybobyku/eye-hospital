@@ -54,6 +54,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('dokumen-operasi-trabekulektomi', [PasienCtrl::class, 'storeLaporanOperasiTrabekulektomi'])->name('master-pasien-storeLaporanOperasiTrabekulektomi');
 		Route::post('dokumen-operasi-pterygium', [PasienCtrl::class, 'storeLaporanOperasiPterygium'])->name('master-pasien-storeLaporanOperasiPterygium');
 		Route::post('dokumen-eksisi-palpebra', [PasienCtrl::class, 'storeLaporanEksisiPalpebra'])->name('master-pasien-storeLaporanEksisiPalpebra');
+		Route::post('dokumen-eksisi-chalazion', [PasienCtrl::class, 'storeLaporanEksisiChalazion'])->name('master-pasien-storeLaporanEksisiChalazion');
 	});
 
 	Route::prefix('rekammedis')->group(function () {
