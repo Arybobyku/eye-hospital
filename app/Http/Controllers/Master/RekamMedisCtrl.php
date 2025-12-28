@@ -331,6 +331,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-eye-slash',
                     'color' => '#F57C00', // Orange tua
                 ],
+                [
+                    'table' => 'dokumen_tindakan_laser_capsulotomy',
+                    'type' => 'dokumen_tindakan_laser_capsulotomy',
+                    'label' => 'Dokumen Tindakan Laser Capsulotomy',
+                    'icon' => 'fa-eye-slash',
+                    'color' => '#F57C00', // Orange tua
+                ],
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -542,6 +549,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_tindakan_laser_capsulotomy' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -592,6 +605,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_laporan_eksisi_palpebra' => 'dokumen_laporan_eksisi_palpebra',
                 'dokumen_laporan_eksisi_chalazion' => 'dokumen_laporan_eksisi_chalazion',
                 'dokumen_pulang_atas_permintaan_sendiri' => 'dokumen_pulang_atas_permintaan_sendiri',
+                'dokumen_tindakan_laser_capsulotomy' => 'dokumen_tindakan_laser_capsulotomy',
                 // Tambahkan mapping baru di sini
             ];
 
