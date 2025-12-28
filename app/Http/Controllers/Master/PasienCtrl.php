@@ -32,6 +32,7 @@ use App\Models\DokumenLaporanEksisiChalazion;
 use App\Models\DokumenAsesmenKeperawatanRawatInap;
 use App\Models\DokumenPulangAtasPermintaanSendiri;
 use App\Models\DokumenTindakanLaserCapsulotomy;
+use App\Models\DokumenTindakanEpilasi;
 use Cookie;
 use Crypt;
 use DB;
@@ -1730,4 +1731,70 @@ class PasienCtrl extends Controller
             ], 500);
         }
     }
+
+    public function storeTindakanEpilasi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+
+            // Convert checkbox values to boolean
+            $data['mata_od'] = filter_var($data['mata_od'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            $data['mata_os'] = filter_var($data['mata_os'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenTindakanEpilasi::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Tindakan Epilasi berhasil diupdate';
+
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenTindakanEpilasi::create($data);
+                $action = 'create';
+                $message = 'Tindakan Epilasi berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Tindakan Epilasi',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }
