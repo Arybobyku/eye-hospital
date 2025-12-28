@@ -240,6 +240,7 @@ export default {
     FormResumeMedisRawatInap: defineAsyncComponent(() =>import("./create/FormResumeMedisRawatInap.vue")),
     FormResumeMedisRawatJalan: defineAsyncComponent(() =>import("./create/FormResumeMedisRawatJalan.vue")),
     FormCPPTRawatInap: defineAsyncComponent(() =>import("./create/FormCPPTRawatInap.vue")),
+    FormPulangAtasPermintaanSendiri: defineAsyncComponent(() =>import("./create/FormPulangAtasPermintaanSendiri.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -432,6 +433,13 @@ export default {
           component: "FormLaporanEksisiChalazion",
           description: "Form Laporan Eksisi Chalazion",
           backendType: "dokumen_laporan_eksisi_chalazion",
+        },
+        {
+          value: "dokumen_pulang_atas_permintaan_sendiri",
+          label: "Form Pulang Atas Permintaan Sendiri",
+          component: "FormPulangAtasPermintaanSendiri",
+          description: "Form Pulang Atas Permintaan Sendiri",
+          backendType: "dokumen_pulang_atas_permintaan_sendiri",
         }
         // {
         //   value: "informed-consent",
