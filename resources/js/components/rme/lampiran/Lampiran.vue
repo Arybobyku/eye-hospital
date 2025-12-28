@@ -212,6 +212,7 @@
 <script>
 import axios from "axios";
 import { defineAsyncComponent } from "vue";
+import FormCatatanOperasi from "./create/FormCatatanOperasi.vue";
 
 export default {
   name: "ListLampiran",
@@ -244,6 +245,7 @@ export default {
     FormTindakanLaserCapsulotomy: defineAsyncComponent(() =>import("./create/FormTindakanLaserCapsulotomy.vue")),
     FormTindakanEpilasi: defineAsyncComponent(() =>import("./create/FormTindakanEpilasi.vue")),
     FormKronologisPasien: defineAsyncComponent(() =>import("./create/FormKronologisPasien.vue")),
+    FormCatatanOperasi: defineAsyncComponent(() =>import("./create/FormCatatanOperasi.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -464,6 +466,13 @@ export default {
           component: "FormKronologisPasien",
           description: "Form Kronologi Pasien",
           backendType: "dokumen_kronologis_pasien",
+        },
+        {
+          value: "dokumen_catatan_operasi",
+          label: "Form Catatan Operasi",
+          component: "FormCatatanOperasi",
+          description: "Form Catatan Operasi",
+          backendType: "dokumen_catatan_operasi",
         },
         // {
         //   value: "informed-consent",

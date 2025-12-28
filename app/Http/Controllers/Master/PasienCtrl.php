@@ -34,6 +34,7 @@ use App\Models\DokumenPulangAtasPermintaanSendiri;
 use App\Models\DokumenTindakanLaserCapsulotomy;
 use App\Models\DokumenKronologisPasien;
 use App\Models\DokumenTindakanEpilasi;
+use App\Models\DokumenCatatanOperasi;
 use Cookie;
 use Crypt;
 use DB;
@@ -1859,6 +1860,104 @@ class PasienCtrl extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Gagal menyimpan Form Kronologis Pasien',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeCatatanOperasi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+
+            // Convert all checkbox values to boolean
+            $booleanFields = [
+                // Anesthesi
+                'anesthesi_topikal', 'anesthesi_intracamelar', 'anesthesi_retrobulbar',
+                'anesthesi_nu', 'anesthesi_subconjunctival', 'anesthesi_xylocain', 'anesthesi_lidocain',
+                // Insisi
+                'insisi_kornea', 'insisi_limbus', 'insisi_sclera',
+                // Wound
+                'wound_main_port', 'wound_two_side_port', 'wound_one_side_port',
+                'wound_keratome', 'wound_crescen_knife',
+                // Capsulotomi
+                'capsulotomi_ccc', 'capsulotomi_xmas_tree', 'capsulotomi_linear',
+                'capsulotomi_can_opener', 'capsulotomi_tryphan_blue',
+                // Teknik
+                'teknik_ctr', 'teknik_kapsulotomi_posterior', 'teknik_vitrektomi_anterior',
+                // Cairan
+                'cairan_rl', 'cairan_bss',
+                // Lensa
+                'lensa_dalam_kantung', 'lensa_diluar_kantung', 'lensa_bilik_mata_depan',
+                'lensa_afakia', 'lensa_sulcus_siliaris', 'lensa_fiksasi_scleral',
+                // Visko
+                'visko_hpmc', 'visko_viscoat', 'visko_hyaluronic_acid',
+                // Benang
+                'benang_tanpa_jahitan', 'benang_ethylon', 'benang_vicryl',
+                // Komplikasi
+                'komplikasi_tidak_ada', 'komplikasi_pcr', 'komplikasi_prolaps_vitreous',
+                'komplikasi_drop_nucleus', 'komplikasi_perdarahan', 'komplikasi_corneal_burn',
+                'komplikasi_convert_ecce', 'komplikasi_convert_icce',
+                // Perawatan
+                'perawatan_pulang', 'perawatan_opname',
+                // Instruksi
+                'instruksi_perban_2jam', 'instruksi_obat_setelah_buka',
+                'instruksi_perban_tutup_kembali', 'instruksi_pantangan',
+            ];
+
+            foreach ($booleanFields as $field) {
+                $data[$field] = filter_var($data[$field] ?? false, FILTER_VALIDATE_BOOLEAN);
+            }
+
+            if ($uuid) {
+                // UPDATE
+                $dokumen = DokumenCatatanOperasi::where('uuid', $uuid)->first();
+
+                if (! $dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action = 'update';
+                $message = 'Catatan Operasi berhasil diupdate';
+
+            } else {
+                // CREATE
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenCatatanOperasi::create($data);
+                $action = 'create';
+                $message = 'Catatan Operasi berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Catatan Operasi',
                 'error' => $e->getMessage(),
             ], 500);
         }
