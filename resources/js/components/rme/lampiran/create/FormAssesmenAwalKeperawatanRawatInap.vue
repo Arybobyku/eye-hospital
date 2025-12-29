@@ -1067,7 +1067,7 @@ export default {
       this.form.nama = this.selectedPatient?.nama;
       this.form.tanggal_lahir = this.selectedPatient?.tanggal_lahir;
       this.form.jenis_kelamin = this.selectedPatient?.jenis_kelamin;
-      this.form.nik = this.selectedPatient?.nik;
+      this.form.nik = this.selectedPatient?.no_ktp;
     },
 
     clearAlergi() {

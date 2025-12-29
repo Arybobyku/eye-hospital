@@ -61,6 +61,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('dokumen-tindakan-epilasi', [PasienCtrl::class, 'storeTindakanEpilasi'])->name('master-pasien-storeTindakanEpilasi');
 		Route::post('dokumen-kronologis', [PasienCtrl::class, 'storeKronologisPasien'])->name('master-pasien-storeKronologisPasien');
 		Route::post('dokumen-catatan-operasi', [PasienCtrl::class, 'storeCatatanOperasi'])->name('master-pasien-storeCatatanOperasi');
+		Route::post('dokumen-resume-medis-rawat-jalan', [PasienCtrl::class, 'storeResumeMedisRawatJalan'])->name('master-pasien-storeResumeMedisRawatJalan');
 	});
 
 	Route::prefix('rekammedis')->group(function () {
