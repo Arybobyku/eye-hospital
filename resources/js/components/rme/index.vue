@@ -191,7 +191,7 @@ export default {
 			// { name: "CPPT", icon: "📑" },
 			{ name: "Status Pasien", icon: "👥" },
 			{ name: "Pengkajian Prabedah", icon: "🔬" },
-			{ name: "Penunjang Medis", icon: "💉" },
+			{ name: "Penunjang Medis", icon: "📑" },
 			{ name: "MCU", icon: "🚑" },
 			{ name: "Resep dan Obat", icon: "💊" },
 			{ name: "Bill Pembayaran", icon: "💳" },

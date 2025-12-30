@@ -212,6 +212,7 @@
 <script>
 import axios from "axios";
 import { defineAsyncComponent } from "vue";import FormLaseLPI from "./create/FormLaserLPI.vue";
+import FormPersetujuanTindakanAnestesi from "./create/FormPersetujuanTindakanAnestesi.vue";
 ;
 
 export default {
@@ -233,6 +234,8 @@ export default {
     FormDietitianPasienBaru: defineAsyncComponent(() =>import("./create/FormDietitianPasienBaru.vue")),
     FormAsuhanGizi: defineAsyncComponent(() =>import("./create/FormAsuhanGizi.vue")),
     FormLaserLPI: defineAsyncComponent(() =>import("./create/FormLaserLPI.vue")),
+    FormTransfer: defineAsyncComponent(() =>import("./create/FormTransfer.vue")),
+    FormPersetujuanTindakanAnestesi: defineAsyncComponent(() =>import("./create/FormPersetujuanTindakanAnestesi.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -363,6 +366,16 @@ export default {
           description: "Form Laser LPI Pasien",
           backendType: "dokumen_tindakan_laser_lpi",
         },
+
+        {
+          value: "persetujuan_tindakan_anestesi",
+          label: "Form Persetujuan Tindakan Anestesi",
+          component: "FormPersetujuanTindakanAnestesi",
+          description: "Form Persetujuan Tindakan Anestesi",
+          backendType: "persetujuan_tindakan_anestesi",
+        },
+        
+
         // {
         //   value: "informed-consent",
         //   label: "Informed Consent",
