@@ -405,7 +405,7 @@ export default {
           backendType: "dokumen_laporan_eksisi_palpebra",
         },
         {
-          value: "asessmen_nawal_keperawatan_rawat_inap",
+          value: "asesmen_awal_keperawatan_rawat_inap",
           label: "Assemen Awal Keperawatan Rawat Inap",
           component: "FormAssesmenAwalKeperawatanRawatInap",
           description: "Assemen Awal Keperawatan Rawat Inap",

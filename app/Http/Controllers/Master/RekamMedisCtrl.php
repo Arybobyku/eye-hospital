@@ -359,6 +359,27 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-hand-sparkles',
                     'color' => '#9C27B0', // Purple
                 ],
+                [
+                    'table' => 'dokumen_resume_medis_rawat_jalan',
+                    'type' => 'dokumen_resume_medis_rawat_jalan',
+                    'label' => 'Dokumen Resume Medis Rawat Jalan',
+                    'icon' => 'fa-hand-sparkles',
+                    'color' => '#9C27B0', // Purple
+                ],
+                [
+                    'table' => 'dokumen_resume_medis_rawat_inap',
+                    'type' => 'dokumen_resume_medis_rawat_inap',
+                    'label' => 'Dokumen Resume Medis Rawat Inap',
+                    'icon' => 'fa-hand-sparkles',
+                    'color' => '#9C27B0', // Purple
+                ],
+                [
+                    'table' => 'dokumen_asesmen_keperawatan_rawat_inap',
+                    'type' => 'dokumen_asesmen_keperawatan_rawat_inap',
+                    'label' => 'Dokumen Assesmen Keperawatan Rawat Inap',
+                    'icon' => 'fa-hand-sparkles',
+                    'color' => '#9C27B0', // Purple
+                ],
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;

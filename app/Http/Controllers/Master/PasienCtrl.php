@@ -36,6 +36,7 @@ use App\Models\DokumenKronologisPasien;
 use App\Models\DokumenTindakanEpilasi;
 use App\Models\DokumenCatatanOperasi;
 use App\Models\DokumenResumeMedisRawatJalan;
+use App\Models\DokumenResumeMedisRawatInap;
 use Cookie;
 use Crypt;
 use DB;
@@ -1520,6 +1521,7 @@ class PasienCtrl extends Controller
                 
             } else {
                 // CREATE: buat baru
+                $data['tanggal'] = date('Y-m-d');
                 $data['created_by'] = $pengguna_nama;
                 $data['id'] = '';
                 $dokumen = DokumenAsesmenKeperawatanRawatInap::create($data);
@@ -1998,6 +2000,7 @@ class PasienCtrl extends Controller
                 
             } else {
                 // CREATE: buat baru
+                $data['tanggal'] = date('Y-m-d');
                 $data['created_by'] = $pengguna_nama;
                 $data['id'] = '';
                 $dokumen = DokumenResumeMedisRawatJalan::create($data);
@@ -2024,5 +2027,100 @@ class PasienCtrl extends Controller
             ], 500);
         }
     }
+    public function storeResumeMedisRawatInap(Request $request)
+{
+    try {
+        DB::beginTransaction();
+        $data = $request->all();
+        
+        // Ambil data pengguna dari Cookie (encrypted)
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+        
+        $uuid = $request->input('uuid');
+        
+        // Hapus uuid dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+        unset($data['id']); // Hindari mass assignment 'id'
+        
+        // ===== HANDLING KHUSUS UNTUK TERAPI PULANG (JSON) =====
+        if (isset($data['terapi_pulang'])) {
+            // Jika dari frontend datang sebagai string JSON, decode dulu
+            if (is_string($data['terapi_pulang'])) {
+                $data['terapi_pulang'] = json_decode($data['terapi_pulang'], true);
+            }
+            
+            // Validasi bahwa terapi_pulang adalah array
+            if (!is_array($data['terapi_pulang'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Format terapi pulang tidak valid',
+                ], 400);
+            }
+        }
+        
+        // ===== CONVERT CHECKBOX BOOLEAN =====
+        // Frontend mengirim true/false sebagai string atau boolean
+        $booleanFields = [
+            'kondisi_sembuh',
+            'kondisi_pindah_rs',
+            'kondisi_pulang_sendiri',
+            'kondisi_meninggal',
+            'kondisi_lainnya'
+        ];
+        
+        foreach ($booleanFields as $field) {
+            if (isset($data[$field])) {
+                $data[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+        
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $dokumen = DokumenResumeMedisRawatInap::where('uuid', $uuid)->first();
+            
+            if (!$dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+            
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Resume Medis Rawat Inap berhasil diupdate';
+            
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            $data['id'] = '';
+            $data['tanggal'] = date('Y-m-d');
+            $dokumen = DokumenResumeMedisRawatInap::create($data);
+            $action = 'create';
+            $message = 'Resume Medis Rawat Inap berhasil disimpan';
+
+        }
+        
+        DB::commit();
+        
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+        
+    } catch (Exception $e) {
+        DB::rollBack();
+        
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Resume Medis Rawat Inap',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
 
 }
