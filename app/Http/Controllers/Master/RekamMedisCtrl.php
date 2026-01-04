@@ -669,6 +669,8 @@ class RekamMedisCtrl extends Controller
                 'dokumen_tindakan_epilasi' => 'dokumen_tindakan_epilasi',
                 'dokumen_kronologis_pasien' => 'dokumen_kronologis_pasien',
                 'dokumen_catatan_operasi' => 'dokumen_catatan_operasi',
+                'dokumen_resume_medis_rawat_jalan' => 'dokumen_resume_medis_rawat_jalan',
+                'dokumen_resume_medis_rawat_inap' => 'dokumen_resume_medis_rawat_inap',
                 // Tambahkan mapping baru di sini
             ];
 

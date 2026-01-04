@@ -18,6 +18,7 @@ use App\Models\Pasien;
 use App\Models\PencegahanPasienJatuh;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\Registrasi;
+use App\Models\DokumenResumeMedisRawatInap;
 use App\Models\Cppt;
 use App\Models\DokumenSuratBalasanKonsul;
 use App\Models\DokumenSuratKontrol;
@@ -1312,6 +1313,24 @@ function printFormLaserBarrage($uuid)
       compact(
         'pasien',
         'racikans',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+  function printResumeMedisRawatInap($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenResumeMedisRawatInap::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = Pasien::where('uuid', '=', $data->pasien_uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.rawat-inap.formresumerawatinap',
+      compact(
+        'data',
+        'pasien',
         'registrasi',
       ),
     )->setPaper('a4', 'potrait');

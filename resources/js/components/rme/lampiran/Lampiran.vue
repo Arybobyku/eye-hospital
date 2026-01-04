@@ -416,7 +416,7 @@ export default {
           label: "Form Resume Medis Rawat Inap",
           component: "FormResumeMedisRawatInap",
           description: "Resume Medis Rawat Inap",
-          backendType: "resume_medis_rawat_inap",
+          backendType: "dokumen_resume_medis_rawat_inap",
         },
         {
           value: "resume_medis_rawat_jalan",
@@ -692,6 +692,8 @@ export default {
         surat_penolakan_rujukan: `/print/rekammedis/general/suratpenolakanrujukan/${item.uuid}`,
         surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
         surat_balasan_konsul: `/print/rekammedis/general/suratbalasankonsul/${item.uuid}`,
+        resume_medis_rawat_jalan: `/print/rekammedis/general/formresumerawatjalan/${item.uuid}`,
+        dokumen_resume_medis_rawat_inap: `/print/rekammedis/lampiran/rekam-medis-rawat-inap/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];
