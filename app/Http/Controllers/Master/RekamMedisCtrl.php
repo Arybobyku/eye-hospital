@@ -615,6 +615,24 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_resume_medis_rawat_jalan' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_resume_medis_rawat_inap' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_asesmen_keperawatan_rawat_inap' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
