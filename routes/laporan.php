@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Laporan\LaporanFarmasiCtrl;
 use App\Http\Controllers\Laporan\LaporanKeuanganCtrl;
 use App\Http\Controllers\Laporan\LaporanFakturObatCtrl;
+use App\Http\Controllers\Laporan\LaporanKontrolCtrl;
 
 Route::group(['middleware' => 'throttle: 250, 1'], function(){
 
@@ -30,6 +31,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::get('excel/returgudang/{dari}/{ke}/{supplier_uuid}', [LaporanFarmasiCtrl::class, 'returgudang'])->name('laporan-returgudang');
 
 	Route::get('excel/tindakan/{dari}/{ke}/{carabayar_uuid}/{asuransi_uuid}/{dokter_uuid}/{layanan_uuid}', [LaporanKeuanganCtrl::class, 'tindakan'])->name('laporan-tindakan');
+	Route::get('excel/kontrol/{dari}/{ke}/{carabayar_uuid}/{asuransi_uuid}/{dokter_uuid}/{layanan_uuid}', [LaporanKontrolCtrl::class, 'registrasi'])->name('laporan-kontrol');
 	Route::get('excel/registrasi/{dari}/{ke}/{carabayar_uuid}/{asuransi_uuid}/{dokter_uuid}', [LaporanKeuanganCtrl::class, 'registrasi'])->name('laporan-registrasi');
 
 	Route::post('fakturobat', [LaporanFakturObatCtrl::class, 'datapage'])->name('laporan-fakturobat');

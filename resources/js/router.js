@@ -549,6 +549,13 @@ const routes = [
 		meta: { title: 'Laporan Keuangan' },
 		props: true 
 	},
+	{ 
+		path: _base + 'laporan-kontrol-pasien', 
+		name: 'Laporan Kontrol Pasien', 
+		component: () => import('./components/laporan/laporankontrol/index.vue'),
+		meta: { title: 'Laporan Kontrol Pasien' },
+		props: true 
+	},
 
 	/**********************************************************************************
 	 * Bagian Apotek
