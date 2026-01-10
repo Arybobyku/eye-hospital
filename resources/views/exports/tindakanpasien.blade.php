@@ -47,6 +47,7 @@
 		<td>Tarif</td>
 		<td>Diskon Rp</td>
 		<td>Diskon Persen</td>
+		<td>Diskon Global</td>
 		<td>Total</td>
 	</tr>
 	@foreach ($data as $row)
@@ -74,7 +75,9 @@
 			<td>{{ $row->tarif }}</td>
 			<td>{{ $row->diskon_rp }}</td>
 			<td>{{ $row->diskon_persen }}</td>
-			<td>{{ $row->total }}</td>
+			<td>{{ $row->registrasi_diskon_persen  }}</td>
+			<td>{{ $row->registrasi_diskon_persen > 0 ? $row->total - ($row->total * ($row->registrasi_diskon_persen / 100) ) :   $row->total }}</td>
+			{{-- <td>{{ $row->total }}</td> --}}
 		</tr>
 	@endforeach
 	

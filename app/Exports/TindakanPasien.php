@@ -49,7 +49,7 @@ class TindakanPasien implements FromView, ShouldAutoSize, WithEvents
 	public function registerEvents(): array
 	{
 		$alphabetRange = range('A', 'Z');
-		$alphabet = $alphabetRange[17]; // returns Alphabet
+		$alphabet = $alphabetRange[18]; // returns Alphabet
 		$tmp = $this->rdata();
 		$total = count($tmp['data']) + 3;
     $cellRange = 'A1:'.$alphabet.$total;
@@ -93,6 +93,8 @@ class TindakanPasien implements FromView, ShouldAutoSize, WithEvents
 										'registrasi.kasir_jam_selesai as kasir_jam_selesai',
 										'registrasi.tanggal_bayar as tanggal_bayar',
 										'registrasi.metode_pembayaran as metode_pembayaran',
+										'registrasi.diskon_rp as registrasi_diskon_rp',
+										'registrasi.diskon_persen as registrasi_diskon_persen',
 										'layanan_pasien.nama_layanan as nama_layanan',
 										'layanan_pasien.tarif as tarif',
 										'layanan_pasien.diskon_rp as diskon_rp',
