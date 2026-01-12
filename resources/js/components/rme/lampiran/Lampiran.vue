@@ -246,6 +246,8 @@ export default {
     FormTindakanEpilasi: defineAsyncComponent(() =>import("./create/FormTindakanEpilasi.vue")),
     FormKronologisPasien: defineAsyncComponent(() =>import("./create/FormKronologisPasien.vue")),
     FormCatatanOperasi: defineAsyncComponent(() =>import("./create/FormCatatanOperasi.vue")),
+    FormMonitoringEfekSampingObat: defineAsyncComponent(() =>import("./create/FormMonitoringEfekSampingObat.vue")),
+    FormCatatanKeperawatan: defineAsyncComponent(() =>import("./create/FormCatatanKeperawatan.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -405,11 +407,11 @@ export default {
           backendType: "dokumen_laporan_eksisi_palpebra",
         },
         {
-          value: "asesmen_awal_keperawatan_rawat_inap",
+          value: "asesmen-keperawatan-rawat-inap",
           label: "Assemen Awal Keperawatan Rawat Inap",
           component: "FormAssesmenAwalKeperawatanRawatInap",
           description: "Assemen Awal Keperawatan Rawat Inap",
-          backendType: "asessmen_nawal_keperawatan_rawat_inap",
+          backendType: "asesmen_keperawatan_rawat_inap",
         },
         {
           value: "resume_medis_rawat_inap",
@@ -419,18 +421,18 @@ export default {
           backendType: "dokumen_resume_medis_rawat_inap",
         },
         {
-          value: "resume_medis_rawat_jalan",
+          value: "dokumen_resume_medis_rawat_jalan",
           label: "Form Resume Medis Rawat Jalan",
           component: "FormResumeMedisRawatJalan",
           description: "Resume Medis Rawat Jalan",
-          backendType: "resume_medis_rawat_jalan",
+          backendType: "dokumen_resume_medis_rawat_jalan",
         },
         {
-          value: "cppt_rawat_inap",
+          value: "dokumen_cppt_rawat_inap",
           label: "Form CPPT Rawat Inap",
           component: "FormCPPTRawatInap",
           description: "CPPT Rawat Inap",
-          backendType: "cppt_rawat_inap",
+          backendType: "dokumen_cppt_rawat_inap",
         },
         {
           value: "dokumen_laporan_eksisi_chalazion",
@@ -473,6 +475,20 @@ export default {
           component: "FormCatatanOperasi",
           description: "Form Catatan Operasi",
           backendType: "dokumen_catatan_operasi",
+        },
+        {
+          value: "dokumen_monitoring_efek_samping_obat",
+          label: "Form Monitoring Efek Samping Obat",
+          component: "FormMonitoringEfekSampingObat",
+          description: "Form Monitoring Efek Samping Obat",
+          backendType: "dokumen_monitoring_efek_samping_obat",
+        },
+        {
+          value: "dokumen_catatan_keperawatan",
+          label: "Form Catatan Keperawatan",
+          component: "FormCatatanKeperawatan",
+          description: "Form Catatan Keperawatan",
+          backendType: "dokumen_catatan_keperawatan",
         },
         // {
         //   value: "informed-consent",
@@ -692,8 +708,13 @@ export default {
         surat_penolakan_rujukan: `/print/rekammedis/general/suratpenolakanrujukan/${item.uuid}`,
         surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
         surat_balasan_konsul: `/print/rekammedis/general/suratbalasankonsul/${item.uuid}`,
+        
+        resume_perawatan_rawat_jalan: `/print/rekammedis/general/formresumerawatjalan/${item.uuid}`,
         resume_medis_rawat_jalan: `/print/rekammedis/general/formresumerawatjalan/${item.uuid}`,
         dokumen_resume_medis_rawat_inap: `/print/rekammedis/lampiran/rekam-medis-rawat-inap/${item.uuid}`,
+        asesmen_keperawatan_rawat_inap: `/print/rekammedis/lampiran/asesmen-awal-keperawatan-rawat-inap/${item.uuid}`,
+        dokumen_monitoring_efek_samping_obat: `/print/rekammedis/lampiran/monitoring-efek-samping-obat/${item.uuid}`,
+        dokumen_catatan_keperawatan: `/print/rekammedis/lampiran/catatan-keperawatan/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];

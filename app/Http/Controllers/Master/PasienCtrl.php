@@ -37,6 +37,9 @@ use App\Models\DokumenTindakanEpilasi;
 use App\Models\DokumenCatatanOperasi;
 use App\Models\DokumenResumeMedisRawatJalan;
 use App\Models\DokumenResumeMedisRawatInap;
+use App\Models\DokumenCPPTRawatInap;
+use App\Models\DokumenMonitoringEfekSampingObat;
+use App\Models\DokumenCatatanKeperawatan;
 use Cookie;
 use Crypt;
 use DB;
@@ -2028,7 +2031,7 @@ class PasienCtrl extends Controller
         }
     }
     public function storeResumeMedisRawatInap(Request $request)
-{
+    {
     try {
         DB::beginTransaction();
         $data = $request->all();
@@ -2118,6 +2121,268 @@ class PasienCtrl extends Controller
         return response()->json([
             'status' => false,
             'message' => 'Gagal menyimpan Resume Medis Rawat Inap',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+public function storeCPPTRawatInap(Request $request)
+{
+    try {
+        DB::beginTransaction();
+        $data = $request->all();
+        
+        // Ambil data pengguna dari Cookie (encrypted)
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+        
+        $uuid = $request->input('uuid');
+        
+        // Hapus uuid dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+        unset($data['id']); // Hindari mass assignment 'id'
+        
+        // ===== HANDLING KHUSUS UNTUK CPPT_ROWS (JSON) =====
+        if (isset($data['cppt_rows'])) {
+            // Jika dari frontend datang sebagai string JSON, decode dulu
+            if (is_string($data['cppt_rows'])) {
+                $data['cppt_rows'] = json_decode($data['cppt_rows'], true);
+            }
+            
+            // Validasi bahwa cppt_rows adalah array
+            if (!is_array($data['cppt_rows'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Format CPPT rows tidak valid',
+                ], 400);
+            }
+            
+            // Validasi minimal ada 1 entri
+            if (empty($data['cppt_rows'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Minimal harus ada 1 catatan perkembangan pasien',
+                ], 400);
+            }
+        }
+        
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $dokumen = DokumenCPPTRawatInap::where('uuid', $uuid)->first();
+            
+            if (!$dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+            
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'CPPT Rawat Inap berhasil diupdate';
+            
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            $data['tanggal'] = date('Y-m-d');
+            $data['id'] = '';
+            $dokumen = DokumenCPPTRawatInap::create($data);
+            $action = 'create';
+            $message = 'CPPT Rawat Inap berhasil disimpan';
+        }
+        
+        DB::commit();
+        
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+        
+    } catch (Exception $e) {
+        DB::rollBack();
+        
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan CPPT Rawat Inap',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+public function storeMonitoringEfekSampingObat(Request $request)
+{
+    try {
+        DB::beginTransaction();
+        $data = $request->all();
+        
+        // Ambil data pengguna dari Cookie (encrypted)
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+        
+        $uuid = $request->input('uuid');
+        
+        // Hapus uuid dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+        unset($data['id']);
+        
+        // ===== HANDLING KHUSUS UNTUK SEJARAH_MEDIS_ROWS (JSON) =====
+        if (isset($data['sejarah_medis_rows'])) {
+            if (is_string($data['sejarah_medis_rows'])) {
+                $data['sejarah_medis_rows'] = json_decode($data['sejarah_medis_rows'], true);
+            }
+            
+            if (!is_array($data['sejarah_medis_rows'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Format sejarah medis tidak valid',
+                ], 400);
+            }
+        }
+        
+        // ===== CONVERT CHECKBOX BOOLEAN =====
+        $booleanFields = [
+            'penilaian_ketidakpatuhan',
+            'penilaian_pengetahuan_kurang',
+            'penilaian_cara_salah',
+            'penilaian_komunikasi_kurang',
+            'penilaian_efek_samping',
+            'penilaian_masalah_lain'
+        ];
+        
+        foreach ($booleanFields as $field) {
+            if (isset($data[$field])) {
+                $data[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+        
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $dokumen = DokumenMonitoringEfekSampingObat::where('uuid', $uuid)->first();
+            
+            if (!$dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+            
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Monitoring Efek Samping Obat berhasil diupdate';
+            
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            $data['tanggal'] = date('Y-m-d');
+            $data['id'] = '';
+            $dokumen = DokumenMonitoringEfekSampingObat::create($data);
+            $action = 'create';
+            $message = 'Monitoring Efek Samping Obat berhasil disimpan';
+        }
+        
+        DB::commit();
+        
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+        
+    } catch (Exception $e) {
+        DB::rollBack();
+        
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Monitoring Efek Samping Obat',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+public function storeCatatanKeperawatan(Request $request)
+{
+    try {
+        DB::beginTransaction();
+        $data = $request->all();
+        
+        // Ambil data pengguna dari Cookie (encrypted)
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+        
+        $uuid = $request->input('uuid');
+        
+        // Hapus uuid dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+        unset($data['id']);
+        
+        // ===== HANDLING KHUSUS UNTUK CATATAN_ROWS (JSON) =====
+        if (isset($data['catatan_rows'])) {
+            if (is_string($data['catatan_rows'])) {
+                $data['catatan_rows'] = json_decode($data['catatan_rows'], true);
+            }
+            
+            if (!is_array($data['catatan_rows'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Format catatan rows tidak valid',
+                ], 400);
+            }
+            
+            // Validasi minimal ada 1 entri
+            if (empty($data['catatan_rows'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Minimal harus ada 1 catatan keperawatan',
+                ], 400);
+            }
+        }
+        
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $dokumen = DokumenCatatanKeperawatan::where('uuid', $uuid)->first();
+            
+            if (!$dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+            
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Catatan Keperawatan berhasil diupdate';
+            
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            $data['id'] = '';
+            $dokumen = DokumenCatatanKeperawatan::create($data);
+            $action = 'create';
+            $message = 'Catatan Keperawatan berhasil disimpan';
+        }
+        
+        DB::commit();
+        
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+        
+    } catch (Exception $e) {
+        DB::rollBack();
+        
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Catatan Keperawatan',
             'error' => $e->getMessage(),
         ], 500);
     }

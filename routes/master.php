@@ -63,6 +63,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('dokumen-catatan-operasi', [PasienCtrl::class, 'storeCatatanOperasi'])->name('master-pasien-storeCatatanOperasi');
 		Route::post('dokumen-resume-medis-rawat-jalan', [PasienCtrl::class, 'storeResumeMedisRawatJalan'])->name('master-pasien-storeResumeMedisRawatJalan');
 		Route::post('dokumen-resume-medis-rawat-inap', [PasienCtrl::class, 'storeResumeMedisRawatInap'])->name('master-pasien-storeResumeMedisRawatInap');
+		Route::post('dokumen-cppt-rawat-inap', [PasienCtrl::class, 'storeCPPTRawatInap'])->name('master-pasien-storeCPPTRawatInap');
+		Route::post('dokumen-monitoring-efek-samping-obat', [PasienCtrl::class, 'storeMonitoringEfekSampingObat'])->name('master-pasien-storeMonitoringEfekSampingObat');
 	});
 
 	Route::prefix('rekammedis')->group(function () {

@@ -1015,7 +1015,7 @@ export default {
         if (this.editData.uuid) {
           // Fetch detail dari server untuk data lengkap
           const response = await axios.get(
-            `/master/pasien/asesmen-awal-keperawatan-rawat-inap/${this.editData.uuid}`
+             `/master/pasien/lampiran/${this.editUuid}?type=asesmen_keperawatan_rawat_inap`
           );
 
           if (response.data.status) {
