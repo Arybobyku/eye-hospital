@@ -361,14 +361,14 @@ class RekamMedisCtrl extends Controller
                 ],
                 [
                     'table' => 'dokumen_resume_medis_rawat_jalan',
-                    'type' => 'dokumen_resume_medis_rawat_jalan',
+                    'type' => 'resume_medis_rawat_jalan',
                     'label' => 'Dokumen Resume Medis Rawat Jalan',
                     'icon' => 'fa-hand-sparkles',
                     'color' => '#2196F3', // Blue
                 ],
                 [
                     'table' => 'dokumen_resume_medis_rawat_inap',
-                    'type' => 'dokumen_resume_medis_rawat_inap',
+                    'type' => 'resume_medis_rawat_inap',
                     'label' => 'Dokumen Resume Medis Rawat Inap',
                     'icon' => 'fa-hand-sparkles',
                     'color' => '#4CAF50', // Green
@@ -710,8 +710,8 @@ class RekamMedisCtrl extends Controller
                 'dokumen_kronologis_pasien' => 'dokumen_kronologis_pasien',
                 'dokumen_catatan_operasi' => 'dokumen_catatan_operasi',
                 'asesmen_keperawatan_rawat_inap' => 'dokumen_asesmen_keperawatan_rawat_inap',
-                'dokumen_resume_medis_rawat_jalan' => 'dokumen_resume_medis_rawat_jalan',
-                'dokumen_resume_medis_rawat_inap' => 'dokumen_resume_medis_rawat_inap',
+                'resume_medis_rawat_jalan' => 'dokumen_resume_medis_rawat_jalan',
+                'resume_medis_rawat_inap' => 'dokumen_resume_medis_rawat_inap',
                 'dokumen_cppt_rawat_inap' => 'dokumen_cppt_rawat_inap',
                 'dokumen_monitoring_efek_samping_obat' => 'dokumen_monitoring_efek_samping_obat',
                 'catatan_keperawatan' => 'dokumen_catatan_keperawatan',

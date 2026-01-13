@@ -266,6 +266,9 @@
         class="signature-box-rme"
       />
       <button class="btn-save" @click="saveSign('dokter_ttd')">Simpan ✔</button>
+      <button class="btn-clear" @click="clearSign('dokter_ttd')">
+        Clear ✖
+      </button>
 
       <label>Nama Jelas Dokter</label>
       <input v-model="form.nama_dokter" class="input-rme" placeholder="Nama Jelas dan Tanda Tangan" />
@@ -282,137 +285,214 @@
 </template>
 
 <script>
-import axios from "axios";
-
-export default {
-  name: "ResumeMedisRawatInap",
-  props: {
-    selectedPatient: { type: Object, required: true },
-  },
-  data() {
-    return {
-      loading: false,
-      sigOption: { penColor: "black", backgroundColor: "white" },
-      form: {
-        uuid_pasien: "",
-        nama: "",
-        tanggal_lahir: "",
-        jenis_kelamin: "",
-        no_rm: "",
-        nik: "",
-        tanggal_masuk: "",
-        tanggal_keluar: "",
-        ruang_rawat: "",
-        penanggung_pembayaran: "",
-        dpjp: "",
-        rawat_tim: "tidak",
-        tim_dokter_1: "",
-        tim_dokter_2: "",
-        tim_dokter_3: "",
-        tim_dokter_4: "",
-        alasan_dirawat: "",
-        diagnosa_masuk: "",
-        diagnosa_keluar: "",
-        icd_utama: "",
-        diagnosa_sekunder_1: "",
-        diagnosa_sekunder_2: "",
-        diagnosa_sekunder_3: "",
-        diagnosa_sekunder_4: "",
-        penyebab_kematian: "",
-        pemeriksaan_fisik: "",
-        laboratorium: "",
-        radiologi: "",
-        penunjang_lain: "",
-        tindakan_operasi: "",
-        icd_tindakan: "",
-        pengobatan: "",
-        kondisi_sembuh: false,
-        kondisi_pindah_rs: false,
-        kondisi_pulang_sendiri: false,
-        kondisi_meninggal: false,
-        kondisi_lainnya: false,
-        kontrol_tanggal: "",
-        diet: "",
-        latihan: "",
-        kondisi_darurat: "",
-        terapi_pulang: [
-          { nama_obat: "", jumlah: "", dosis: "", frekuensi: "", cara_pemberian: "" }
-        ],
-        dokter_ttd: "",
-        nama_dokter: "",
+  import axios from "axios";
+  
+  export default {
+    name: "ResumeMedisRawatInap",
+    props: {
+      selectedPatient: { 
+        type: Object, 
+        required: true 
       },
-    };
-  },
-  computed: {
-    currentDate() {
-      const d = new Date();
-      return d.toLocaleDateString("id-ID", { 
-        day: "numeric", 
-        month: "long", 
-        year: "numeric" 
-      });
-    }
-  },
-  mounted() {
-    this.setDataPasien();
-  },
-  methods: {
-    setDataPasien() {
-      const p = this.selectedPatient;
-      this.form.uuid_pasien = p?.uuid;
-      this.form.nama = p?.nama;
-      this.form.tanggal_lahir = p?.tanggal_lahir;
-      this.form.no_rm = p?.rekam_medis;
-      this.form.nik = p?.no_ktp;
-      this.form.jenis_kelamin = p?.jenis_kelamin;
+      editUuid: {
+        type: String,
+        default: null,
+      },
     },
-    addObat() {
-      this.form.terapi_pulang.push({
-        nama_obat: "",
-        jumlah: "",
-        dosis: "",
-        frekuensi: "",
-        cara_pemberian: ""
-      });
+    data() {
+      return {
+        loading: false,
+        sigOption: { penColor: "black", backgroundColor: "white" },
+        form: {
+          uuid: "",
+          uuid_pasien: "",
+          nama: "",
+          tanggal_lahir: "",
+          jenis_kelamin: "",
+          no_rm: "",
+          nik: "",
+          tanggal_masuk: "",
+          tanggal_keluar: "",
+          ruang_rawat: "",
+          penanggung_pembayaran: "",
+          dpjp: "",
+          rawat_tim: "tidak",
+          tim_dokter_1: "",
+          tim_dokter_2: "",
+          tim_dokter_3: "",
+          tim_dokter_4: "",
+          alasan_dirawat: "",
+          diagnosa_masuk: "",
+          diagnosa_keluar: "",
+          icd_utama: "",
+          diagnosa_sekunder_1: "",
+          diagnosa_sekunder_2: "",
+          diagnosa_sekunder_3: "",
+          diagnosa_sekunder_4: "",
+          penyebab_kematian: "",
+          pemeriksaan_fisik: "",
+          laboratorium: "",
+          radiologi: "",
+          penunjang_lain: "",
+          tindakan_operasi: "",
+          icd_tindakan: "",
+          pengobatan: "",
+          kondisi_sembuh: false,
+          kondisi_pindah_rs: false,
+          kondisi_pulang_sendiri: false,
+          kondisi_meninggal: false,
+          kondisi_lainnya: false,
+          kontrol_tanggal: "",
+          diet: "",
+          latihan: "",
+          kondisi_darurat: "",
+          terapi_pulang: [
+            { nama_obat: "", jumlah: "", dosis: "", frekuensi: "", cara_pemberian: "" }
+          ],
+          dokter_ttd: "",
+          nama_dokter: "",
+        },
+      };
     },
-    removeObat(idx) {
-      if (this.form.terapi_pulang.length > 1) {
-        this.form.terapi_pulang.splice(idx, 1);
-      }
-    },
-    saveSign(ref) {
-      const { data } = this.$refs[ref].saveSignature();
-      this.form[ref] = data;
-    },
-    async submitForm() {
-      this.loading = true;
-      try {
-        const fd = new FormData();
-        
-        // Convert terapi_pulang array to JSON string
-        const terapiJSON = JSON.stringify(this.form.terapi_pulang);
-        
-        Object.keys(this.form).forEach((k) => {
-          if (k === "terapi_pulang") {
-            fd.append(k, terapiJSON);
-          } else {
-            fd.append(k, this.form[k]);
-          }
+    computed: {
+      isEditMode() {
+        return !!this.editUuid;
+      },
+      currentDate() {
+        const d = new Date();
+        return d.toLocaleDateString("id-ID", { 
+          day: "numeric", 
+          month: "long", 
+          year: "numeric" 
         });
-
-        await axios.post("/master/pasien/dokumen-resume-medis-rawat-inap", fd);
-        alert("Data berhasil disimpan");
-        this.$emit("back");
-      } catch (e) {
-        console.error(e);
-        alert("Gagal menyimpan data");
-      } finally {
-        this.loading = false;
       }
     },
-  },
-};
-</script>
+    mounted() {
+      if (this.isEditMode) {
+        this.loadDataForEdit();
+      } else {
+        this.setDataPasien();
+      }
+    },
+    methods: {
+      setDataPasien() {
+        const p = this.selectedPatient;
+        this.form.uuid_pasien = p?.uuid;
+        this.form.nama = p?.nama;
+        this.form.tanggal_lahir = p?.tanggal_lahir;
+        this.form.no_rm = p?.rekam_medis;
+        this.form.nik = p?.no_ktp;
+        this.form.jenis_kelamin = p?.jenis_kelamin;
+      },
+  
+      async loadDataForEdit() {
+        try {
+          const response = await axios.get(
+            `/master/rekammedis/lampiran/${this.editUuid}?type=resume_medis_rawat_inap`
+          );
+  
+          if (response.data.status) {
+            const data = response.data.data;
+            
+            Object.keys(this.form).forEach(key => {
+              if (key === 'terapi_pulang' && data.terapi_pulang) {
+                // Parse JSON string ke array
+                this.form.terapi_pulang = typeof data.terapi_pulang === 'string' 
+                  ? JSON.parse(data.terapi_pulang) 
+                  : data.terapi_pulang;
+              } else if (data[key] !== undefined && key !== 'terapi_pulang') {
+                this.form[key] = data[key];
+              }
+            });
+            this.$nextTick(() => {
+              if (this.form.dokter_ttd && this.$refs.dokter_ttd) {
+                this.$refs.dokter_ttd.fromDataURL(this.form.dokter_ttd);
+              }
+            });
+          }
+        } catch (error) {
+          console.error("Error loading data:", error);
+          alert("Gagal memuat data untuk edit!");
+          this.$emit('back');
+        }
+      },
+  
+      addObat() {
+        this.form.terapi_pulang.push({
+          nama_obat: "",
+          jumlah: "",
+          dosis: "",
+          frekuensi: "",
+          cara_pemberian: ""
+        });
+      },
+  
+      removeObat(idx) {
+        if (this.form.terapi_pulang.length > 1) {
+          this.form.terapi_pulang.splice(idx, 1);
+        }
+      },
+  
+      saveSign(ref) {
+        const pad = this.$refs[ref];
+        if (!pad) {
+          console.error("REF tidak ditemukan:", ref);
+          return;
+        }
+        const { data } = pad.saveSignature();
+        this.form.dokter_ttd = data; // Simpan ke field dokter_ttd
+        alert("Tanda Tangan Berhasil Disimpan Silahkan Lanjut Menyimpan Data");
+        console.log("TTD saved:", ref);
+      },
+  
+      clearSign(ref) {
+        const pad = this.$refs[ref];
+        if (!pad) return;
+  
+        pad.clearSignature();
+        this.form.dokter_ttd = ""; // Reset field dokter_ttd
+        console.log("TTD cleared");
+      },
+  
+      async submitForm() {
+        this.loading = true;
+        try {
+          const fd = new FormData();
+          
+          Object.keys(this.form).forEach((k) => {
+            // Skip uuid jika kosong (create mode)
+            if (k === 'uuid' && !this.form[k]) {
+              return;
+            }
+            
+            if (k === "terapi_pulang") {
+              // Convert array to JSON string
+              fd.append(k, JSON.stringify(this.form[k]));
+            } else {
+              fd.append(k, this.form[k] || '');
+            }
+          });
+  
+          const response = await axios.post(
+            "/master/pasien/dokumen-resume-medis-rawat-inap", 
+            fd,
+            { headers: { "Content-Type": "multipart/form-data" } }
+          );
+  
+          if (response.data.status) {
+            alert(response.data.message || "Data berhasil disimpan");
+            this.$emit("back");
+          }
+        } catch (e) {
+          console.error("Error:", e.response?.data || e);
+          alert("Gagal menyimpan data");
+        } finally {
+          this.loading = false;
+        }
+      },
+    },
+  };
+  </script>
 
 <style scoped>
 .box-rme {
@@ -520,5 +600,12 @@ export default {
   border-radius: 3px;
   cursor: pointer;
   font-size: 12px;
+}
+.btn-clear {
+  background: #e53935;
+  color: #fff;
+  padding: 6px 14px;
+  border: none;
+  margin-left: 8px;
 }
 </style>

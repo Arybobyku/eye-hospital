@@ -414,18 +414,18 @@ export default {
           backendType: "asesmen_keperawatan_rawat_inap",
         },
         {
-          value: "resume_medis_rawat_inap",
+          value: "resume-medis-rawat-inap",
           label: "Form Resume Medis Rawat Inap",
           component: "FormResumeMedisRawatInap",
           description: "Resume Medis Rawat Inap",
-          backendType: "dokumen_resume_medis_rawat_inap",
+          backendType: "resume_medis_rawat_inap",
         },
         {
-          value: "dokumen_resume_medis_rawat_jalan",
+          value: "resume-medis-rawat-jalan",
           label: "Form Resume Medis Rawat Jalan",
           component: "FormResumeMedisRawatJalan",
           description: "Resume Medis Rawat Jalan",
-          backendType: "dokumen_resume_medis_rawat_jalan",
+          backendType: "resume_medis_rawat_jalan",
         },
         {
           value: "dokumen_cppt_rawat_inap",

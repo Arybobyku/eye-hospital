@@ -290,6 +290,11 @@ export default {
               this.form[key] = data[key];
             }
           });
+          this.$nextTick(() => {
+            if (this.form.ttd_dokter && this.$refs.ttd_dokter) {
+              this.$refs.ttd_dokter.fromDataURL(this.form.ttd_dokter);
+            }
+          });
         }
       } catch (error) {
         console.error("Error loading data:", error);

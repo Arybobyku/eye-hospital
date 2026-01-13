@@ -113,12 +113,14 @@
 
       <label>Dokter yang Memeriksa</label>
       <VueSignaturePad
-        ref="dokter_ttd"
+        ref="ttd_dokter"
         :options="sigOption"
         class="signature-box-rme"
       />
-      <button class="btn-save" @click="saveSign('dokter_ttd')">Simpan ✔</button>
-
+      <button class="btn-save" @click="saveSign('ttd_dokter')">Simpan ✔</button>
+      <button class="btn-clear" @click="clearSign('ttd_dokter')">
+        Clear ✖
+      </button>
       <input
         v-model="form.nama_dokter"
         class="input-rme"
@@ -131,83 +133,165 @@
     <button class="btn-save-form" @click="submitForm" :disabled="loading">
       {{ loading ? "Menyimpan..." : "Save" }}
     </button>
+
     <button class="btn-back" @click="$emit('back')">Back</button>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-
-export default {
-  name: "ResumeMedisRawatJalan",
-  props: {
-    selectedPatient: { type: Object, required: true },
-  },
-  data() {
-    return {
-      loading: false,
-      sigOption: { penColor: "black", backgroundColor: "white" },
-      form: {
-        uuid_pasien: "",
-        nama: "",
-        tanggal_lahir: "",
-        jenis_kelamin: "",
-        no_rm: "",
-        nik: "",
-        tanggal_berobat: "",
-        dokter: "",
-        poli: "",
-        penanggung: "",
-        anamnese: "",
-        pemeriksaan_fisik: "",
-        alergi_obat: "",
-        penunjang_medis: "",
-        diagnosa: "",
-        tindakan: "",
-        terapi: "",
-        riwayat: "",
-        edukasi: "",
-        tanggal_kontrol: "",
-        tempat_kontrol: "",
-        dokter_ttd: "",
-        nama_dokter: "",
+  import axios from "axios";
+  
+  export default {
+    name: "ResumeMedisRawatJalan",
+    props: {
+      selectedPatient: { 
+        type: Object, 
+        required: true 
       },
-    };
-  },
-  mounted() {
-    this.setDataPasien();
-  },
-  methods: {
-    setDataPasien() {
-      const p = this.selectedPatient;
-      this.form.uuid_pasien = p?.uuid;
-      this.form.nama = p?.nama;
-      this.form.tanggal_lahir = p?.tanggal_lahir;
-      this.form.no_rm = p?.rekam_medis;
-      this.form.nik = p?.no_ktp;
-      this.form.jenis_kelamin = p?.jenis_kelamin;
+      editUuid: {
+        type: String,
+        default: null,
+      },
     },
-    saveSign(ref) {
-      const { data } = this.$refs[ref].saveSignature();
-      this.form[ref] = data;
+    data() {
+      return {
+        loading: false,
+        sigOption: { 
+          penColor: "black", 
+          backgroundColor: "white" 
+        },
+        form: {
+          uuid: "",
+          uuid_pasien: "",
+          nama: "",
+          tanggal_lahir: "",
+          jenis_kelamin: "",
+          no_rm: "",
+          nik: "",
+          tanggal_berobat: "",
+          dokter: "",
+          poli: "",
+          penanggung: "",
+          anamnese: "",
+          pemeriksaan_fisik: "",
+          alergi_obat: "",
+          penunjang_medis: "",
+          diagnosa: "",
+          tindakan: "",
+          terapi: "",
+          riwayat: "",
+          edukasi: "",
+          tanggal_kontrol: "",
+          tempat_kontrol: "",
+          ttd_dokter: "",
+          nama_dokter: "",
+        },
+      };
     },
-    async submitForm() {
-      this.loading = true;
-      try {
-        const fd = new FormData();
-        Object.keys(this.form).forEach((k) => fd.append(k, this.form[k]));
-        await axios.post("/master/pasien/dokumen-resume-medis-rawat-jalan", fd);
-        alert("Data berhasil disimpan");
-        this.$emit("back");
-      } catch (e) {
-        alert("Gagal menyimpan data");
-      } finally {
-        this.loading = false;
+    computed: {
+      isEditMode() {
+        return !!this.editUuid;
       }
     },
-  },
-};
-</script>
+    mounted() {
+      if (this.isEditMode) {
+        this.loadDataForEdit();
+      } else {
+        this.setDataPasien();
+      }
+    },
+    methods: {
+      setDataPasien() {
+        const p = this.selectedPatient;
+        this.form.uuid_pasien = p?.uuid;
+        this.form.nama = p?.nama;
+        this.form.tanggal_lahir = p?.tanggal_lahir;
+        this.form.no_rm = p?.rekam_medis;
+        this.form.nik = p?.no_ktp;
+        this.form.jenis_kelamin = p?.jenis_kelamin;
+      },
+  
+      async loadDataForEdit() {
+        try {
+          const response = await axios.get(
+            `/master/rekammedis/lampiran/${this.editUuid}?type=resume_medis_rawat_jalan`
+          );
+  
+          if (response.data.status) {
+            const data = response.data.data;
+            
+            // Map semua field ke form
+            Object.keys(this.form).forEach(key => {
+              if (data[key] !== undefined) {
+                this.form[key] = data[key];
+              }
+            });
+                  // ⬇️ PENTING: load ulang tanda tangan
+      this.$nextTick(() => {
+        if (this.form.ttd_dokter && this.$refs.ttd_dokter) {
+          this.$refs.ttd_dokter.fromDataURL(this.form.ttd_dokter);
+        }
+      });
+          }
+        } catch (error) {
+          console.error("Error loading data:", error);
+          alert("Gagal memuat data untuk edit!");
+          this.$emit('back');
+        }
+      },
+  
+      saveSign(ref) {
+        const pad = this.$refs[ref];
+        if (!pad) {
+          console.error("REF tidak ditemukan:", ref);
+          return;
+        }
+        const { data } = pad.saveSignature();
+        this.form[ref] = data;
+        alert("Tanda Tangan Berhasil Disimpan Silahkan Lanjut Menyimpan Data");
+        console.log("TTD saved:", ref);
+      },
+      clearSign(ref) {
+      const pad = this.$refs[ref];
+      if (!pad) return;
+
+      pad.clearSignature();
+      this.form[ref] = ""; // penting supaya DB ikut kosong
+    },
+  
+      async submitForm() {
+        this.loading = true;
+        try {
+          const fd = new FormData();
+          
+          Object.keys(this.form).forEach((k) => {
+            // Skip uuid jika kosong (untuk create mode)
+            if (k === 'uuid' && !this.form[k]) {
+              return;
+            }
+            fd.append(k, this.form[k] || '');
+          });
+  
+          const response = await axios.post(
+            "/master/pasien/dokumen-resume-medis-rawat-jalan", 
+            fd,
+            { headers: { "Content-Type": "multipart/form-data" } }
+          );
+  
+          if (response.data.status) {
+            alert(response.data.message || "Data berhasil disimpan");
+            this.$emit("back");
+          }
+        } catch (e) {
+          console.error("Error:", e.response?.data || e);
+          alert("Gagal menyimpan data");
+        } finally {
+          this.loading = false;
+        }
+      },
+    },
+  };
+  </script>
 
 <style scoped>
 .box-rme {
@@ -261,5 +345,12 @@ export default {
   color: white;
   padding: 8px 18px;
   border: none;
+}
+.btn-clear {
+  background: #e53935;
+  color: #fff;
+  padding: 6px 14px;
+  border: none;
+  margin-left: 8px;
 }
 </style>
