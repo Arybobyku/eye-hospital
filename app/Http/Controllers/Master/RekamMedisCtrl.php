@@ -382,21 +382,21 @@ class RekamMedisCtrl extends Controller
                 ],
                 [
                     'table' => 'dokumen_cppt_rawat_inap',
-                    'type' => 'dokumen_cppt_rawat_inap',
+                    'type' => 'cppt_rawat_inap',
                     'label' => 'Dokumen CPPT Rawat Inap',
                     'icon' => 'fa fa-bed',
                     'color' => '#E91E63', // Pink
                 ],
                 [
                     'table' => 'dokumen_monitoring_efek_samping_obat',
-                    'type' => 'dokumen_monitoring_efek_samping_obat',
+                    'type' => 'monitoring_efek_samping_obat',
                     'label' => 'Dokumen Monitoring Efek Samping Obat',
                     'icon' => 'fa fa-glass',
                     'color' => '#1ABC9C', // Turquoise
                 ],
                 [
                     'table' => 'dokumen_catatan_keperawatan',
-                    'type' => 'dokumen_catatan_keperawatan',
+                    'type' => 'catatan_keperawatan',
                     'label' => 'Dokumen Catatan Keperawatan',
                     'icon' => 'fa fa-bed',
                     'color' => '#673AB7', // Depp Purple
@@ -712,8 +712,8 @@ class RekamMedisCtrl extends Controller
                 'asesmen_keperawatan_rawat_inap' => 'dokumen_asesmen_keperawatan_rawat_inap',
                 'resume_medis_rawat_jalan' => 'dokumen_resume_medis_rawat_jalan',
                 'resume_medis_rawat_inap' => 'dokumen_resume_medis_rawat_inap',
-                'dokumen_cppt_rawat_inap' => 'dokumen_cppt_rawat_inap',
-                'dokumen_monitoring_efek_samping_obat' => 'dokumen_monitoring_efek_samping_obat',
+                'cppt_rawat_inap' => 'dokumen_cppt_rawat_inap',
+                'monitoring_efek_samping_obat' => 'dokumen_monitoring_efek_samping_obat',
                 'catatan_keperawatan' => 'dokumen_catatan_keperawatan',
                 // Tambahkan mapping baru di sini
             ];

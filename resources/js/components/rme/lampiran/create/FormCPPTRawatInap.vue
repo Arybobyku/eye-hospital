@@ -328,6 +328,23 @@ export default {
               this.form[key] = data[key];
             }
           });
+          this.$nextTick(() => {
+          this.form.cppt_rows.forEach((row, index) => {
+
+            // ===== TTD PPA =====
+            if (row.ttd_ppa && this.$refs[`ttd_ppa_${index}`]) {
+              const padPpa = this.$refs[`ttd_ppa_${index}`][0];
+              padPpa.fromDataURL(row.ttd_ppa);
+            }
+
+            // ===== TTD DPJP =====
+            if (row.ttd_dpjp && this.$refs[`ttd_dpjp_${index}`]) {
+              const padDpjp = this.$refs[`ttd_dpjp_${index}`][0];
+              padDpjp.fromDataURL(row.ttd_dpjp);
+            }
+
+          });
+        });
         }
       } catch (error) {
         console.error("Error loading data:", error);

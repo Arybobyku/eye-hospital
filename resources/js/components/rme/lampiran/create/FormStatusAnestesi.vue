@@ -418,12 +418,6 @@ export default {
               this.form[key] = data[key];
             }
           });
-                            // ⬇️ PENTING: load ulang tanda tangan
-      this.$nextTick(() => {
-        if (this.form.ttd_petugas && this.$refs.ttd_petugas) {
-          this.$refs.ttd_petugas.fromDataURL(this.form.ttd_petugas);
-        }
-      });
         }
       } catch (error) {
         console.error("Error loading data:", error);

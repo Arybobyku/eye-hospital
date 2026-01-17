@@ -17,6 +17,10 @@ class DokumenResumeMedisRawatJalan extends Model
         'uuid_pasien', 'no_rm', 'nama', 'tanggal_lahir', 
         'jenis_kelamin', 'nik',
         
+        'dokter',
+        'poli',
+        'penanggung',
+        'tanggal_berobat',
         'anamnese',
         'pemeriksaan_fisik',
         'alergi_obat',

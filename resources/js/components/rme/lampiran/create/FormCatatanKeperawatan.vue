@@ -33,14 +33,11 @@
             <input type="text" v-model="form.nik" class="input-rme" readonly />
           </div>
         </div>
-
+        
         <div class="row">
           <div class="col-md-6">
             <label>Jenis Kelamin :</label>
-            <select v-model="form.jenis_kelamin" class="input-rme" disabled>
-              <option value="L">L</option>
-              <option value="P">P</option>
-            </select>
+            <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
           </div>
         </div>
       </div>
@@ -221,7 +218,7 @@ export default {
       if (this.selectedPatient) {
         this.form.uuid_pasien = this.selectedPatient.uuid;
         this.form.no_rm = this.selectedPatient.rekam_medis;
-        this.form.nik = this.selectedPatient.nik || "";
+        this.form.nik = this.selectedPatient.no_ktp || "";
         this.form.nama = this.selectedPatient.nama;
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
         this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin || "L";
@@ -234,28 +231,39 @@ export default {
     },
 
     async loadDataForEdit() {
-      try {
-        const response = await axios.get(
-          `/master/rekammedis/lampiran/${this.editUuid}?type=catatan_keperawatan`
-        );
+  try {
+    const response = await axios.get(
+      `/master/rekammedis/lampiran/${this.editUuid}?type=catatan_keperawatan`
+    );
 
-        if (response.data.status) {
-          const data = response.data.data;
-          
-          Object.keys(this.form).forEach(key => {
-            if (key === 'catatan_rows' && data.catatan_rows) {
-              this.form.catatan_rows = JSON.parse(data.catatan_rows);
-            } else if (data[key] !== undefined && key !== 'catatan_rows') {
-              this.form[key] = data[key];
-            }
-          });
+    if (response.data.status) {
+      const data = response.data.data;
+
+      Object.keys(this.form).forEach(key => {
+        if (key === 'catatan_rows' && data.catatan_rows) {
+          this.form.catatan_rows = JSON.parse(data.catatan_rows);
+        } else if (data[key] !== undefined) {
+          this.form[key] = data[key];
         }
-      } catch (error) {
-        console.error("Error loading data:", error);
-        alert("Gagal memuat data untuk edit!");
-        this.$emit('back');
-      }
-    },
+      });
+
+      // 🔴 INI PENTING
+      this.$nextTick(() => {
+        this.form.catatan_rows.forEach((row, index) => {
+          if (row.ttd_perawat) {
+            const pad = this.$refs[`ttd_${index}`];
+            if (pad && pad[0]) {
+              pad[0].fromDataURL(row.ttd_perawat);
+            }
+          }
+        });
+      });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+},
+
 
     addRow() {
       const now = new Date();

@@ -2361,6 +2361,7 @@ public function storeCatatanKeperawatan(Request $request)
             
         } else {
             // CREATE: buat baru
+            $data['created_by'] = date('Y-m-d');
             $data['created_by'] = $pengguna_nama;
             $data['id'] = '';
             $dokumen = DokumenCatatanKeperawatan::create($data);

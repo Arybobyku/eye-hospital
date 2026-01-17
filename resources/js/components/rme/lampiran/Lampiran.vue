@@ -428,11 +428,11 @@ export default {
           backendType: "resume_medis_rawat_jalan",
         },
         {
-          value: "dokumen_cppt_rawat_inap",
+          value: "cppt-rawat-inap",
           label: "Form CPPT Rawat Inap",
           component: "FormCPPTRawatInap",
           description: "CPPT Rawat Inap",
-          backendType: "dokumen_cppt_rawat_inap",
+          backendType: "cppt_rawat_inap",
         },
         {
           value: "dokumen_laporan_eksisi_chalazion",
@@ -477,18 +477,18 @@ export default {
           backendType: "dokumen_catatan_operasi",
         },
         {
-          value: "dokumen_monitoring_efek_samping_obat",
+          value: "monitoring-efek-samping-obat",
           label: "Form Monitoring Efek Samping Obat",
           component: "FormMonitoringEfekSampingObat",
           description: "Form Monitoring Efek Samping Obat",
-          backendType: "dokumen_monitoring_efek_samping_obat",
+          backendType: "monitoring_efek_samping_obat",
         },
         {
-          value: "dokumen_catatan_keperawatan",
+          value: "dokumen-catatan-keperawatan",
           label: "Form Catatan Keperawatan",
           component: "FormCatatanKeperawatan",
           description: "Form Catatan Keperawatan",
-          backendType: "dokumen_catatan_keperawatan",
+          backendType: "catatan_keperawatan",
         },
         // {
         //   value: "informed-consent",
@@ -708,13 +708,13 @@ export default {
         surat_penolakan_rujukan: `/print/rekammedis/general/suratpenolakanrujukan/${item.uuid}`,
         surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
         surat_balasan_konsul: `/print/rekammedis/general/suratbalasankonsul/${item.uuid}`,
-        
-        resume_perawatan_rawat_jalan: `/print/rekammedis/general/formresumerawatjalan/${item.uuid}`,
-        resume_medis_rawat_jalan: `/print/rekammedis/general/formresumerawatjalan/${item.uuid}`,
-        dokumen_resume_medis_rawat_inap: `/print/rekammedis/lampiran/rekam-medis-rawat-inap/${item.uuid}`,
+        cppt_rawat_inap: `/print/rekammedis/lampiran/cppt-rawat-inap/${item.uuid}`,
+        resume_perawatan_rawat_jalan: `/print/rekammedis/lampiran/rekam-medis-perawatan-rawat-jalan/${item.uuid}`,
+        resume_medis_rawat_jalan: `/print/rekammedis/lampiran/rekam-medis-rawat-jalan/${item.uuid}`,
+        resume_medis_rawat_inap: `/print/rekammedis/lampiran/rekam-medis-rawat-inap/${item.uuid}`,
         asesmen_keperawatan_rawat_inap: `/print/rekammedis/lampiran/asesmen-awal-keperawatan-rawat-inap/${item.uuid}`,
-        dokumen_monitoring_efek_samping_obat: `/print/rekammedis/lampiran/monitoring-efek-samping-obat/${item.uuid}`,
-        dokumen_catatan_keperawatan: `/print/rekammedis/lampiran/catatan-keperawatan/${item.uuid}`,
+        monitoring_efek_samping_obat: `/print/rekammedis/lampiran/monitoring-efek-samping-obat/${item.uuid}`,
+        catatan_keperawatan: `/print/rekammedis/lampiran/catatan-keperawatan/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];
