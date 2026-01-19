@@ -18,6 +18,12 @@ use App\Models\Pasien;
 use App\Models\PencegahanPasienJatuh;
 use App\Models\PersetujuanTindakanKedokteran;
 use App\Models\Registrasi;
+use App\Models\DokumenResumeMedisRawatInap;
+use App\Models\DokumenResumePerawatanRawatJalan;
+use App\Models\DokumenCPPTRawatInap;
+use App\Models\DokumenResumeMedisRawatJalan;
+use App\Models\DokumenCatatanKeperawatan;
+use App\Models\DokumenMonitoringEfekSampingObat;
 use App\Models\Cppt;
 use App\Models\DokumenSuratBalasanKonsul;
 use App\Models\DokumenSuratKontrol;
@@ -967,9 +973,178 @@ function printFormLaserBarrage($uuid)
 
     return $pdf->stream();
   }
+    function printSuratPengantarUntukDiRawatInap ($uuid)
+  {
+        $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.suratpengantaruntukdirawatinap',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
 
-<<<<<<< HEAD
-=======
+    return $pdf->stream();
+  }
+
+      function printFormCpptRanap ($uuid)
+  {
+        $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.formcpptranap',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
+
+    return $pdf->stream();
+  }
+        function printPengkajianKeperawatanMata ($uuid)
+  {
+        $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.pengkajiankeperawatanmata',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
+
+    return $pdf->stream();
+  }
+  //   function printCatatanKeperawatan ($uuid)
+  // {
+  //       $pdf = \App::make('dompdf.wrapper');
+  //   $pasien = Pasien::where('uuid', '=', $uuid)->first();
+  //   $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+  //   $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+  //     ->orderBy('created_at', 'asc')
+  //     ->first();
+  //   //dump($ptk);die();
+  //   $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+  //   $pdf->loadView(
+  //     'print-rekam-medis.general.catatankeperawatan',
+  //     compact('pasien', 'ro', 'roperasi', 'ptk',)
+  //   )->setPaper('a4', 'potrait');
+
+  //   return $pdf->stream();
+  // }
+  function printResumeMedis ($uuid)
+  {
+        $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.resumemedis',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
+
+    return $pdf->stream();
+  }
+    function printLaporanEksisiChalazion ($uuid)
+  {
+        $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.laporaneksisichalazion',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
+
+    return $pdf->stream();
+  }
+      function printLaporanOperasiTrabekulektomi ($uuid)
+  {
+        $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.laporanoperasitrabekulektomi',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
+
+    return $pdf->stream();
+  }
+
+        function printLaporanOperasiPterygium ($uuid)
+  {
+        $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.laporanoperasipterygium',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
+
+    return $pdf->stream();
+  }
+
+          function printLaporanEksisiPalbera ($uuid)
+  {
+        $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.laporaneksisipalbera',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
+
+    return $pdf->stream();
+  }
+  
+          function printBalanceCairanHarian ($uuid)
+  {
+        $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.BalanceCairanHarian',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
+
     return $pdf->stream();
   }
           function printKunjunganAwalDietitianPadaPasienBaru ($uuid)
@@ -1081,23 +1256,23 @@ function printFormLaserBarrage($uuid)
 
     return $pdf->stream();
   }
-    function printMonitoringEfekSampingObat ($uuid)
-  {
-        $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
-    $pdf->loadView(
-      'print-rekam-medis.general.monitoringefeksampingobat',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
-    )->setPaper('a4', 'potrait');
+  //   function printMonitoringEfekSampingObat ($uuid)
+  // {
+  //       $pdf = \App::make('dompdf.wrapper');
+  //   $pasien = Pasien::where('uuid', '=', $uuid)->first();
+  //   $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+  //   $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+  //     ->orderBy('created_at', 'asc')
+  //     ->first();
+  //   //dump($ptk);die();
+  //   $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+  //   $pdf->loadView(
+  //     'print-rekam-medis.general.monitoringefeksampingobat',
+  //     compact('pasien', 'ro', 'roperasi', 'ptk',)
+  //   )->setPaper('a4', 'potrait');
 
-    return $pdf->stream();
-  }
+  //   return $pdf->stream();
+  // }
       function printFormulirReaksiTranfusiDarah ($uuid)
   {
         $pdf = \App::make('dompdf.wrapper');
@@ -1150,7 +1325,113 @@ function printFormLaserBarrage($uuid)
 
     return $pdf->stream();
   }
->>>>>>> 66d7a3867a9cdcc41f2c53a75ebe5957fc2928b7
+  function printResumeMedisRawatInap($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenResumeMedisRawatInap::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = Pasien::where('uuid', '=', $data->pasien_uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.rawat-inap.formresumerawatinap',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
 
+
+    return $pdf->stream();
+  }
+  function printResumeMedisPerawatanRawatJalan($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenResumePerawatanRawatJalan::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = Pasien::where('uuid', '=', $data->pasien_uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.resumeperawatanrawatjalan',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+  function printCpptRawatInap($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenCPPTRawatInap::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $pdf->loadView(
+      'print-rekam-medis.general.formcpptranap',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+  function printResumeMedisRawatJalan($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenResumeMedisRawatJalan::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $pdf->loadView(
+      'print-rekam-medis.general.formresumemedisrawatjalan',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+  function printCatatanKeperawatan ($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenCatatanKeperawatan::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $pdf->loadView(
+      'print-rekam-medis.general.catatankeperawatan',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+      function printMonitoringEfekSampingObat($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenMonitoringEfekSampingObat::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $pdf->loadView(
+      'print-rekam-medis.general.monitoringefeksampingobat',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
 
   }
+}

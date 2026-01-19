@@ -253,6 +253,11 @@ export default {
           return defineAsyncComponent(() =>
             import("./lampiran/lampiran.vue")
           );
+        case "Bill Pembayaran":
+          return defineAsyncComponent(() =>
+            import("./billPembayaran/BillPembayaran.vue")
+          );
+
 
         case "Pengkajian Data Umum":
           return defineAsyncComponent(() =>

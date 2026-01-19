@@ -211,9 +211,8 @@
 
 <script>
 import axios from "axios";
-import { defineAsyncComponent } from "vue";import FormLaseLPI from "./create/FormLaserLPI.vue";
-import FormPersetujuanTindakanAnestesi from "./create/FormPersetujuanTindakanAnestesi.vue";
-;
+import { defineAsyncComponent } from "vue";
+import FormCatatanOperasi from "./create/FormCatatanOperasi.vue";
 
 export default {
   name: "ListLampiran",
@@ -234,8 +233,26 @@ export default {
     FormDietitianPasienBaru: defineAsyncComponent(() =>import("./create/FormDietitianPasienBaru.vue")),
     FormAsuhanGizi: defineAsyncComponent(() =>import("./create/FormAsuhanGizi.vue")),
     FormLaserLPI: defineAsyncComponent(() =>import("./create/FormLaserLPI.vue")),
-    FormTransfer: defineAsyncComponent(() =>import("./create/FormTransfer.vue")),
-    FormPersetujuanTindakanAnestesi: defineAsyncComponent(() =>import("./create/FormPersetujuanTindakanAnestesi.vue")),
+    FormLaserPRP: defineAsyncComponent(() =>import("./create/FormLaserPRP.vue")),
+    FormLaporanOperasiPterygium: defineAsyncComponent(() =>import("./create/FormLaporanOperasiPterygium.vue")),
+    FormLaporanEksisiPalebra: defineAsyncComponent(() =>import("./create/FormLaporanEksisiPalebra.vue")),
+    FormLaporanEksisiChalazion: defineAsyncComponent(() =>import("./create/FormLaporanEksisiChalazion.vue")),
+    FormAssesmenAwalKeperawatanRawatInap: defineAsyncComponent(() =>import("./create/FormAssesmenAwalKeperawatanRawatInap.vue")),
+    FormResumeMedisRawatInap: defineAsyncComponent(() =>import("./create/FormResumeMedisRawatInap.vue")),
+    FormResumeMedisRawatJalan: defineAsyncComponent(() =>import("./create/FormResumeMedisRawatJalan.vue")),
+    FormCPPTRawatInap: defineAsyncComponent(() =>import("./create/FormCPPTRawatInap.vue")),
+    FormPulangAtasPermintaanSendiri: defineAsyncComponent(() =>import("./create/FormPulangAtasPermintaanSendiri.vue")),
+    FormTindakanLaserCapsulotomy: defineAsyncComponent(() =>import("./create/FormTindakanLaserCapsulotomy.vue")),
+    FormTindakanEpilasi: defineAsyncComponent(() =>import("./create/FormTindakanEpilasi.vue")),
+    FormKronologisPasien: defineAsyncComponent(() =>import("./create/FormKronologisPasien.vue")),
+    FormCatatanOperasi: defineAsyncComponent(() =>import("./create/FormCatatanOperasi.vue")),
+    FormMonitoringEfekSampingObat: defineAsyncComponent(() =>import("./create/FormMonitoringEfekSampingObat.vue")),
+    FormCatatanKeperawatan: defineAsyncComponent(() =>import("./create/FormCatatanKeperawatan.vue")),
+    FormPelaksanaanPencegahanPasienJatuh: defineAsyncComponent(() =>import("./create/FormPelaksanaanPencegahanPasienJatuh.vue")),
+    FormEvaluasiPraAnesthesi: defineAsyncComponent(() =>import("./create/FormEvaluasiPraAnesthesi.vue")),
+    FormLaporanPembedahan: defineAsyncComponent(() =>import("./create/FormLaporanPembedahan.vue")),
+    FormSuratPengantarRawatInap: defineAsyncComponent(() =>import("./create/FormSuratPengantarRawatInap.vue")),
+    FormPenilaianPraAnestesiSedasi: defineAsyncComponent(() =>import("./create/FormPenilaianPraAnestesiSedasi.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -366,16 +383,157 @@ export default {
           description: "Form Laser LPI Pasien",
           backendType: "dokumen_tindakan_laser_lpi",
         },
+        {
+          value: "dokumen_tindakan_laser_prp",
+          label: "Form Dokumen Laser PRP",
+          component: "FormLaserPRP",
+          description: "Form Laser PRP Pasien",
+          backendType: "dokumen_tindakan_laser_prp",
+        },
+        {
+          value: "dokumen_laporan_operasi_trabekulektomi",
+          label: "Form Laporan Operasi Trabekulektomi",
+          component: "FormLaporanOperasiTrabulektomi",
+          description: "Form Laporan Operasi Trabekulektomi",
+          backendType: "dokumen_laporan_operasi_trabekulektomi",
+        },
+        {
+          value: "dokumen_laporan_operasi_pterygium",
+          label: "Form Laporan Operasi Pterygrium",
+          component: "FormLaporanOperasiPterygium",
+          description: "Form Laporan Operasi Pterygrium",
+          backendType: "dokumen_laporan_operasi_pterygium",
+        },
+        {
+          value: "dokumen_laporan_eksisi_palpebra",
+          label: "Form Laporan Eksisi Palebra",
+          component: "FormLaporanEksisiPalebra",
+          description: "Form Laporan Eksisi Palebra",
+          backendType: "dokumen_laporan_eksisi_palpebra",
+        },
+        {
+          value: "asesmen-keperawatan-rawat-inap",
+          label: "Assemen Awal Keperawatan Rawat Inap",
+          component: "FormAssesmenAwalKeperawatanRawatInap",
+          description: "Assemen Awal Keperawatan Rawat Inap",
+          backendType: "asesmen_keperawatan_rawat_inap",
+        },
+        {
+          value: "resume-medis-rawat-inap",
+          label: "Form Resume Medis Rawat Inap",
+          component: "FormResumeMedisRawatInap",
+          description: "Resume Medis Rawat Inap",
+          backendType: "resume_medis_rawat_inap",
+        },
+        {
+          value: "resume-medis-rawat-jalan",
+          label: "Form Resume Medis Rawat Jalan",
+          component: "FormResumeMedisRawatJalan",
+          description: "Resume Medis Rawat Jalan",
+          backendType: "resume_medis_rawat_jalan",
+        },
+        {
+          value: "cppt-rawat-inap",
+          label: "Form CPPT Rawat Inap",
+          component: "FormCPPTRawatInap",
+          description: "CPPT Rawat Inap",
+          backendType: "cppt_rawat_inap",
+        },
+        {
+          value: "dokumen_laporan_eksisi_chalazion",
+          label: "Form Laporan Eksisi Chalazion",
+          component: "FormLaporanEksisiChalazion",
+          description: "Form Laporan Eksisi Chalazion",
+          backendType: "dokumen_laporan_eksisi_chalazion",
+        },
+        {
+          value: "dokumen_pulang_atas_permintaan_sendiri",
+          label: "Form Pulang Atas Permintaan Sendiri",
+          component: "FormPulangAtasPermintaanSendiri",
+          description: "Form Pulang Atas Permintaan Sendiri",
+          backendType: "dokumen_pulang_atas_permintaan_sendiri",
+        },
+        {
+          value: "dokumen_tindakan_laser_capsulotomy",
+          label: "Form Tindakan Laser Capsulotomy",
+          component: "FormTindakanLaserCapsulotomy",
+          description: "Form Tindakan Laser Capsulotomy",
+          backendType: "dokumen_tindakan_laser_capsulotomy",
+        },
+        {
+          value: "dokumen_tindakan_epilasi",
+          label: "Form Tindakan Epilasi",
+          component: "FormTindakanEpilasi",
+          description: "Form Tindakan Epilasi",
+          backendType: "dokumen_tindakan_epilasi",
+        },
+        {
+          value: "dokumen_kronologis_pasien",
+          label: "Form Kronologi Pasien",
+          component: "FormKronologisPasien",
+          description: "Form Kronologi Pasien",
+          backendType: "dokumen_kronologis_pasien",
+        },
+        {
+          value: "dokumen_catatan_operasi",
+          label: "Form Catatan Operasi",
+          component: "FormCatatanOperasi",
+          description: "Form Catatan Operasi",
+          backendType: "dokumen_catatan_operasi",
+        },
+        {
+          value: "monitoring-efek-samping-obat",
+          label: "Form Monitoring Efek Samping Obat",
+          component: "FormMonitoringEfekSampingObat",
+          description: "Form Monitoring Efek Samping Obat",
+          backendType: "monitoring_efek_samping_obat",
+        },
+        {
+          value: "dokumen-catatan-keperawatan",
+          label: "Form Catatan Keperawatan",
+          component: "FormCatatanKeperawatan",
+          description: "Form Catatan Keperawatan",
+          backendType: "catatan_keperawatan",
+        },
+        	{
+          value: "form_transfer",
+          label: "Form Transfer",
+          component: "FormTransfer",
+          description: "Form Transfer",
+          backendType: "dokumen_form_transfer_pasien",
+        },
 
         {
-          value: "persetujuan_tindakan_anestesi",
-          label: "Form Persetujuan Tindakan Anestesi",
-          component: "FormPersetujuanTindakanAnestesi",
-          description: "Form Persetujuan Tindakan Anestesi",
-          backendType: "persetujuan_tindakan_anestesi",
+          value: "FormPelaksanaanPencegahanPasienJatuh",
+          label: "Form Pelaksanaan Pencegahan Pasien Jatuh",
+          component: "FormPelaksanaanPencegahanPasienJatuh",
+          description: "Form Pelaksanaan Pencegahan Pasien Jatuh",
+          backendType: "dokumen_pelaksanaan_pencegahan_pasien_jatuh",
+        },
+
+        {
+          value: "FormEvaluasiPraAnesthesi",
+          label: "Form Evaluasi Pra Anesthesi",
+          component: "FormEvaluasiPraAnesthesi",
+          description: "Form Evaluasi Pra Anesthesi",
+          backendType: "dokumen_evaluasi_pra_anesthesi",
+        },
+
+        {
+          value: "FormSuratPengantarRawatInap",
+          label: "Surat Pengantar Rawat Inap",
+          component: "FormSuratPengantarRawatInap",
+          description: "Form Surat Pengantar Rawat Inap",
+          backendType: "dokumen_surat_pengantar_rawat_inap",
         },
         
-
+        {
+          value: "FormPenilaianPraAnestesiSedasi",
+          label: "Penilaian Pra-Anestesi dan Sedasi",
+          component: "FormPenilaianPraAnestesiSedasi",
+          description: "Form Penilaian Pra-Anestesi dan Sedasi",
+          backendType: "dokumen_penilaian_pra_anestesi_sedasi",
+        },
         // {
         //   value: "informed-consent",
         //   label: "Informed Consent",
@@ -594,6 +752,13 @@ export default {
         surat_penolakan_rujukan: `/print/rekammedis/general/suratpenolakanrujukan/${item.uuid}`,
         surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
         surat_balasan_konsul: `/print/rekammedis/general/suratbalasankonsul/${item.uuid}`,
+        cppt_rawat_inap: `/print/rekammedis/lampiran/cppt-rawat-inap/${item.uuid}`,
+        resume_perawatan_rawat_jalan: `/print/rekammedis/lampiran/rekam-medis-perawatan-rawat-jalan/${item.uuid}`,
+        resume_medis_rawat_jalan: `/print/rekammedis/lampiran/rekam-medis-rawat-jalan/${item.uuid}`,
+        resume_medis_rawat_inap: `/print/rekammedis/lampiran/rekam-medis-rawat-inap/${item.uuid}`,
+        asesmen_keperawatan_rawat_inap: `/print/rekammedis/lampiran/asesmen-awal-keperawatan-rawat-inap/${item.uuid}`,
+        monitoring_efek_samping_obat: `/print/rekammedis/lampiran/monitoring-efek-samping-obat/${item.uuid}`,
+        catatan_keperawatan: `/print/rekammedis/lampiran/catatan-keperawatan/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];

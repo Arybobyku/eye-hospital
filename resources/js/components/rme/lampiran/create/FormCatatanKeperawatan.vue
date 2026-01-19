@@ -5,13 +5,23 @@
     <div class="container py-4">
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
-        <h2 class="fw-bold">RESUME PERAWATAN PASIEN RAWAT JALAN</h2>
-        <p class="text-muted">RM 1.6/RPPRJ/22</p>
+        <h2 class="fw-bold">CATATAN KEPERAWATAN</h2>
       </div>
 
       <!-- ================= INFORMASI PASIEN ================= -->
       <div class="box-rme mb-4">
         <h5 class="section-title-rme">Informasi Pasien</h5>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label>Nama :</label>
+            <input type="text" v-model="form.nama" class="input-rme" readonly />
+          </div>
+          <div class="col-md-6">
+            <label>Tanggal Lahir :</label>
+            <input type="date" v-model="form.tanggal_lahir" class="input-rme" readonly />
+          </div>
+        </div>
 
         <div class="row mb-3">
           <div class="col-md-6">
@@ -23,99 +33,87 @@
             <input type="text" v-model="form.nik" class="input-rme" readonly />
           </div>
         </div>
-
-        <div class="row mb-3">
+        
+        <div class="row">
           <div class="col-md-6">
-            <label>Nama Pasien :</label>
-            <input type="text" v-model="form.nama" class="input-rme" readonly />
-          </div>
-          <div class="col-md-3">
-            <label>Tanggal Lahir :</label>
-            <input type="date" v-model="form.tanggal_lahir" class="input-rme" readonly />
-          </div>
-          <div class="col-md-3">
             <label>Jenis Kelamin :</label>
             <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
-            </div>
+          </div>
         </div>
       </div>
 
-      <!-- ================= TABEL RESUME KUNJUNGAN ================= -->
+      <!-- ================= TABEL CATATAN KEPERAWATAN ================= -->
       <div class="box-rme mb-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="section-title-rme mb-0">Data Resume Kunjungan</h5>
+          <h5 class="section-title-rme mb-0">Data Catatan Keperawatan</h5>
           <button @click="addRow" class="btn-add-row">
-            <i class="fas fa-plus"></i> Tambah Kunjungan
+            <i class="fas fa-plus"></i> Tambah Catatan
           </button>
         </div>
 
         <div class="table-responsive">
-          <table class="resume-table">
+          <table class="catatan-table">
             <thead>
               <tr>
-                <th style="width: 130px">Tanggal<br/>Kunjungan</th>
-                <th style="width: 150px">Poli</th>
-                <th style="width: 250px">Diagnosa</th>
-                <th>Terapi/Tindakan</th>
-                <th style="width: 150px">Dokter</th>
+                <th style="width: 120px">Tanggal</th>
+                <th style="width: 100px">Jam</th>
+                <th>Uraian</th>
+                <th style="width: 220px">Nama & Paraf</th>
                 <th style="width: 80px">Aksi</th>
               </tr>
             </thead>
 
             <tbody>
-              <tr v-for="(row, index) in form.resume_rows" :key="index">
-                <!-- Tanggal Kunjungan -->
+              <tr v-for="(row, index) in form.catatan_rows" :key="index">
+                <!-- Tanggal -->
                 <td>
                   <input 
                     type="date" 
-                    v-model="row.tanggal_kunjungan" 
+                    v-model="row.tanggal" 
                     class="input-table"
                   />
                 </td>
 
-                <!-- Poli -->
-                <td>
-                  <select v-model="row.poli" class="input-table">
-                    <option value="">-- Pilih Poli --</option>
-                    <option value="Poli Mata">Poli Mata</option>
-                    <option value="Poli Umum">Poli Umum</option>
-                    <option value="Poli Gigi">Poli Gigi</option>
-                    <option value="Poli Anak">Poli Anak</option>
-                    <option value="Poli Bedah">Poli Bedah</option>
-                    <option value="Poli Saraf">Poli Saraf</option>
-                    <option value="IGD">IGD</option>
-                    <option value="Lainnya">Lainnya</option>
-                  </select>
-                </td>
-
-                <!-- Diagnosa -->
-                <td>
-                  <textarea 
-                    v-model="row.diagnosa" 
-                    class="textarea-table" 
-                    rows="2"
-                    placeholder="ICD-10, diagnosa kerja..."
-                  ></textarea>
-                </td>
-
-                <!-- Terapi/Tindakan -->
-                <td>
-                  <textarea 
-                    v-model="row.terapi_tindakan" 
-                    class="textarea-table" 
-                    rows="2"
-                    placeholder="Obat yang diberikan, tindakan yang dilakukan..."
-                  ></textarea>
-                </td>
-
-                <!-- Dokter -->
+                <!-- Jam -->
                 <td>
                   <input 
-                    type="text" 
-                    v-model="row.dokter" 
+                    type="time" 
+                    v-model="row.jam" 
                     class="input-table"
-                    placeholder="Nama Dokter"
                   />
+                </td>
+
+                <!-- Uraian -->
+                <td>
+                  <textarea 
+                    v-model="row.uraian" 
+                    class="textarea-table" 
+                    rows="3"
+                    placeholder="Catatan keperawatan, observasi, tindakan yang dilakukan..."
+                  ></textarea>
+                </td>
+
+                <!-- Nama & Paraf -->
+                <td class="text-center">
+                  <div class="signature-cell">
+                    <input 
+                      type="text" 
+                      v-model="row.nama_perawat" 
+                      class="input-table mb-1"
+                      placeholder="Nama Perawat"
+                    />
+                    <VueSignaturePad
+                      :ref="`ttd_${index}`"
+                      :options="sigOption"
+                      class="signature-box-table"
+                    />
+                    <button 
+                      @click="saveSign(`ttd_${index}`, index)" 
+                      class="btn-save-mini"
+                    >
+                      Simpan ✔
+                    </button>
+                  </div>
                 </td>
 
                 <!-- Aksi -->
@@ -123,7 +121,7 @@
                   <button 
                     @click="deleteRow(index)" 
                     class="btn-delete-row"
-                    :disabled="form.resume_rows.length === 1"
+                    :disabled="form.catatan_rows.length === 1"
                     title="Hapus Baris"
                   >
                     <i class="fas fa-trash"></i>
@@ -131,9 +129,9 @@
                 </td>
               </tr>
 
-              <tr v-if="form.resume_rows.length === 0">
-                <td colspan="6" class="text-center text-muted">
-                  Belum ada data kunjungan. Klik "Tambah Kunjungan" untuk menambah data.
+              <tr v-if="form.catatan_rows.length === 0">
+                <td colspan="5" class="text-center text-muted">
+                  Belum ada catatan. Klik "Tambah Catatan" untuk menambah data.
                 </td>
               </tr>
             </tbody>
@@ -142,48 +140,7 @@
 
         <!-- Summary Info -->
         <div class="summary-info mt-3">
-          <strong>Total Kunjungan:</strong> {{ form.resume_rows.length }} kali
-        </div>
-      </div>
-
-      <!-- ================= CATATAN TAMBAHAN ================= -->
-      <div class="box-rme mb-4">
-        <h5 class="section-title-rme">Catatan Tambahan</h5>
-
-        <div class="row mb-3">
-          <div class="col-md-12">
-            <textarea 
-              v-model="form.catatan" 
-              class="textarea-rme" 
-              rows="4"
-              placeholder="Catatan perkembangan pasien, riwayat alergi, catatan khusus, dll"
-            ></textarea>
-          </div>
-        </div>
-      </div>
-
-      <!-- ================= TANDA TANGAN ================= -->
-      <div class="box-rme mb-4">
-        <h5 class="section-title-rme">Verifikasi</h5>
-
-        <div class="row">
-          <div class="col-md-6 text-center">
-            <label class="fw-bold mb-2">Tanda Tangan Dokter Penanggung Jawab</label>
-            <VueSignaturePad
-              ref="ttd_dokter"
-              :options="sigOption"
-              class="signature-box-rme mx-auto"
-            />
-            <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">
-              Simpan ✔
-            </button>
-            <input
-              type="text"
-              v-model="form.nama_dokter_verifikasi"
-              class="input-rme mt-2"
-              placeholder="Nama Lengkap Dokter"
-            />
-          </div>
+          <strong>Total Catatan:</strong> {{ form.catatan_rows.length }} entri
         </div>
       </div>
     </div>
@@ -206,7 +163,7 @@
 import axios from "axios";
 
 export default {
-  name: "FormResumePerawatanRawatJalan",
+  name: "FormCatatanKeperawatan",
   props: {
     selectedPatient: {
       type: Object,
@@ -232,18 +189,15 @@ export default {
         nama: "",
         tanggal_lahir: "",
         jenis_kelamin: "L",
-        resume_rows: [
+        catatan_rows: [
           {
-            tanggal_kunjungan: "",
-            poli: "",
-            diagnosa: "",
-            terapi_tindakan: "",
-            dokter: ""
+            tanggal: "",
+            jam: "",
+            uraian: "",
+            nama_perawat: "",
+            ttd_perawat: ""
           }
-        ],
-        catatan: "",
-        ttd_dokter: "",
-        nama_dokter_verifikasi: "",
+        ]
       }
     };
   },
@@ -270,83 +224,92 @@ export default {
         this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin || "L";
       }
 
-      // Set default tanggal untuk baris pertama
-      const today = new Date().toISOString().split('T')[0];
-      this.form.resume_rows[0].tanggal_kunjungan = today;
+      // Set default tanggal & jam untuk baris pertama
+      const now = new Date();
+      this.form.catatan_rows[0].tanggal = now.toISOString().split('T')[0];
+      this.form.catatan_rows[0].jam = now.toTimeString().substring(0, 5);
     },
 
     async loadDataForEdit() {
-      try {
-        const response = await axios.get(
-          `/master/rekammedis/lampiran/${this.editUuid}?type=resume_perawatan_rawat_jalan`
-        );
-        if (response.data.status) {
-          const data = response.data.data;
-          
-          Object.keys(this.form).forEach(key => {
-            if (key === 'resume_rows' && data.resume_rows) {
-              this.form.resume_rows = JSON.parse(data.resume_rows);
-            } else if (data[key] !== undefined && key !== 'resume_rows') {
-              this.form[key] = data[key];
-            }
-          });
-          this.$nextTick(() => {
-            if (this.form.ttd_dokter && this.$refs.ttd_dokter) {
-              this.$refs.ttd_dokter.fromDataURL(this.form.ttd_dokter);
-            }
-          });
+  try {
+    const response = await axios.get(
+      `/master/rekammedis/lampiran/${this.editUuid}?type=catatan_keperawatan`
+    );
+
+    if (response.data.status) {
+      const data = response.data.data;
+
+      Object.keys(this.form).forEach(key => {
+        if (key === 'catatan_rows' && data.catatan_rows) {
+          this.form.catatan_rows = JSON.parse(data.catatan_rows);
+        } else if (data[key] !== undefined) {
+          this.form[key] = data[key];
         }
-      } catch (error) {
-        console.error("Error loading data:", error);
-        alert("Gagal memuat data untuk edit!");
-        this.$emit('back');
-      }
-    },
+      });
+
+      // 🔴 INI PENTING
+      this.$nextTick(() => {
+        this.form.catatan_rows.forEach((row, index) => {
+          if (row.ttd_perawat) {
+            const pad = this.$refs[`ttd_${index}`];
+            if (pad && pad[0]) {
+              pad[0].fromDataURL(row.ttd_perawat);
+            }
+          }
+        });
+      });
+    }
+  } catch (err) {
+    console.error(err);
+  }
+},
+
 
     addRow() {
-      const today = new Date().toISOString().split('T')[0];
+      const now = new Date();
       
-      this.form.resume_rows.push({
-        tanggal_kunjungan: today,
-        poli: "",
-        diagnosa: "",
-        terapi_tindakan: "",
-        dokter: ""
+      this.form.catatan_rows.push({
+        tanggal: now.toISOString().split('T')[0],
+        jam: now.toTimeString().substring(0, 5),
+        uraian: "",
+        nama_perawat: "",
+        ttd_perawat: ""
       });
     },
 
     deleteRow(index) {
-      if (this.form.resume_rows.length > 1) {
-        this.form.resume_rows.splice(index, 1);
+      if (this.form.catatan_rows.length > 1) {
+        this.form.catatan_rows.splice(index, 1);
       }
     },
 
-    saveSign(refName) {
+    saveSign(refName, index) {
       const pad = this.$refs[refName];
-      if (!pad) {
+      
+      if (!pad || !pad[0]) {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
 
-      const { data } = pad.saveSignature();
-      this.form[refName] = data;
+      const { data } = pad[0].saveSignature();
+      this.form.catatan_rows[index].ttd_perawat = data;
       console.log("TTD saved:", refName);
     },
 
     async submitForm() {
       // Validasi
-      if (this.form.resume_rows.length === 0) {
-        alert("Minimal harus ada 1 data kunjungan!");
+      if (this.form.catatan_rows.length === 0) {
+        alert("Minimal harus ada 1 catatan!");
         return;
       }
 
       // Validasi ada data yang diisi
-      const hasData = this.form.resume_rows.some(row => 
-        row.tanggal_kunjungan || row.poli || row.diagnosa || row.terapi_tindakan || row.dokter
+      const hasData = this.form.catatan_rows.some(row => 
+        row.tanggal || row.uraian || row.nama_perawat
       );
 
       if (!hasData) {
-        alert("Harap isi minimal 1 data kunjungan!");
+        alert("Harap isi minimal 1 catatan keperawatan!");
         return;
       }
 
@@ -359,7 +322,7 @@ export default {
           if (key === 'uuid' && !this.form[key]) {
             return;
           }
-          if (key === 'resume_rows') {
+          if (key === 'catatan_rows') {
             fd.append(key, JSON.stringify(this.form[key]));
           } else {
             fd.append(key, this.form[key] || '');
@@ -367,7 +330,7 @@ export default {
         });
 
         const response = await axios.post(
-          "/master/pasien/dokumen-resume-perawatan-rawat-jalan",
+          "/master/pasien/dokumen-catatan-keperawatan",
           fd,
           { headers: { "Content-Type": "multipart/form-data" } }
         );
@@ -378,7 +341,7 @@ export default {
         }
       } catch (error) {
         console.error("ERROR:", error.response?.data || error);
-        alert("Gagal menyimpan resume perawatan rawat jalan!");
+        alert("Gagal menyimpan catatan keperawatan!");
       } finally {
         this.loadingSubmit = false;
       }
@@ -423,28 +386,18 @@ export default {
   cursor: not-allowed;
 }
 
-.textarea-rme {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  background: #f9f9f9;
-  font-size: 14px;
-  resize: vertical;
-}
-
-/* RESUME TABLE */
+/* TABLE */
 .table-responsive {
   overflow-x: auto;
 }
 
-.resume-table {
+.catatan-table {
   width: 100%;
   border-collapse: collapse;
   font-size: 13px;
 }
 
-.resume-table th {
+.catatan-table th {
   background: #2d74b7;
   color: white;
   padding: 10px 8px;
@@ -453,7 +406,7 @@ export default {
   text-align: center;
 }
 
-.resume-table td {
+.catatan-table td {
   border: 1px solid #ddd;
   padding: 8px;
   vertical-align: top;
@@ -463,7 +416,7 @@ export default {
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 3px;
-  padding: 6px 8px;
+  padding: 5px 6px;
   font-size: 13px;
 }
 
@@ -479,12 +432,43 @@ export default {
   padding: 6px 8px;
   font-size: 13px;
   resize: vertical;
-  min-height: 50px;
+  min-height: 60px;
 }
 
 .textarea-table:focus {
   outline: none;
   border-color: #2d74b7;
+}
+
+.signature-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.signature-box-table {
+  width: 200px;
+  height: 80px;
+  border: 2px solid #999;
+  border-radius: 4px;
+  background: white;
+}
+
+.btn-save-mini {
+  background: #1e88e5;
+  color: white;
+  padding: 3px 10px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 500;
+  width: 100%;
+}
+
+.btn-save-mini:hover {
+  background: #1565c0;
 }
 
 .text-center {
@@ -541,24 +525,6 @@ export default {
   font-size: 14px;
 }
 
-/* SIGNATURE */
-.signature-box-rme {
-  width: 300px;
-  height: 150px;
-  border: 2px solid #999;
-  border-radius: 4px;
-}
-
-.btn-save {
-  background: #1e88e5;
-  color: white;
-  padding: 6px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-}
-
 /* ACTION FOOTER */
 .action-footer {
   margin-top: 30px;
@@ -599,7 +565,7 @@ export default {
   font-size: 16px;
 }
 
-/* RESPONSIVE */
+/* RESPONSIVE GRID */
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -607,16 +573,10 @@ export default {
   margin-right: -8px;
 }
 
-.col-md-3,
 .col-md-6,
 .col-md-12 {
   padding-left: 8px;
   padding-right: 8px;
-}
-
-.col-md-3 {
-  flex: 0 0 25%;
-  max-width: 25%;
 }
 
 .col-md-6 {
@@ -641,16 +601,12 @@ export default {
   align-items: center;
 }
 
-.gap-2 {
-  gap: 8px;
-}
-
 .mb-0 {
   margin-bottom: 0;
 }
 
-.mb-2 {
-  margin-bottom: 8px;
+.mb-1 {
+  margin-bottom: 4px;
 }
 
 .mb-3 {
@@ -661,10 +617,6 @@ export default {
   margin-bottom: 24px;
 }
 
-.mt-2 {
-  margin-top: 8px;
-}
-
 .mt-3 {
   margin-top: 16px;
 }
@@ -673,26 +625,30 @@ export default {
   font-weight: bold;
 }
 
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
+.py-4 {
+  padding-top: 24px;
+  padding-bottom: 24px;
 }
 
 @media (max-width: 768px) {
-  .col-md-3,
   .col-md-6 {
     flex: 0 0 100%;
     max-width: 100%;
   }
 
-  .resume-table {
+  .catatan-table {
     font-size: 11px;
   }
 
   .input-table,
   .textarea-table {
     font-size: 11px;
-    padding: 4px 6px;
+    padding: 4px 5px;
+  }
+
+  .signature-box-table {
+    width: 150px;
+    height: 70px;
   }
 }
 </style>

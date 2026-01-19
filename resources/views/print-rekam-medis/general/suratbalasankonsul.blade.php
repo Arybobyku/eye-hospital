@@ -34,18 +34,8 @@
 
 	<br>
 	<div class="">
-<<<<<<< HEAD
-		<span class="left" style="font-weight: bold"> <u>SURAT BALASAN KONSUL</u>
-		<br>
-		REPLY LETTER	
-		</span>
-		<span class="right"> ....................... <br>
-		Tanggal/Date
-		</span>
-=======
 		<span class="left" style="font-weight: bold"> <u>SURAT BALASAN KONSUL</u>	</span>
 		<span class="right">        {{ \Carbon\Carbon::parse($data->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }} </span>
->>>>>>> 5b04e9ee05a9f24af28477c8fb55c57b18281b49
 
 	</div>
 	<br>
@@ -53,13 +43,6 @@
 	<br>
 	<br>
 	
-<<<<<<< HEAD
-			<div>
-			Kepada Yang Terhormat/Dear Collegue <br>
-			TS. PROF/DR………………………………………. 
-			<br>
-			Di/In…………………………………………………
-=======
 	<table style="width: 100%; margin-top: 20px" cellpadding="0" cellspacing="0">
 		<tr>
 			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify">Kepada Yang Terhormat/Dear Collegue <br>
@@ -73,7 +56,6 @@
 			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify">
 			Bersama ini kami konsulkan pasien : <br>
 			Herewith, we would like to refer following patient : <br>
->>>>>>> 5b04e9ee05a9f24af28477c8fb55c57b18281b49
 			<br>
 			</div>
 
@@ -84,46 +66,6 @@
 			Herewith, we would like to refer following patient : <br>
 			<br>
 			<br>
-<<<<<<< HEAD
-			</div>
-
-		 <table style="width: 100%; margin-top: 20px" cellpadding="0" cellspacing="0">
-              <tr>
-    <td style="width: 525px; font-size: 12pt; line-height: 22px; padding-top: 5px">Nama/Name</td>
-        <td> : </td>
-        <td> ..................... </td>
-        <br>
-    </tr>
-	<tr>
-    <td style="width: 525px; font-size: 12pt; line-height: 22px; padding-top: 5px">Umur/Age</td>
-        <td> : </td>
-        <td> ..................... </td>
-        <br>
-    </tr>
-	<tr>
-    <td style="width: 525px; font-size: 12pt; line-height: 22px; padding-top: 5px">Keluhan Utama/Chief Complaint</td>
-        <td> : </td>
-        <td> ..................... </td>
-        <br>
-    </tr>
-	<tr>
-    <td style="width: 525px; font-size: 12pt; line-height: 22px; padding-top: 5px">Diagnosa Sementara/Differential Diagnosis</td>
-        <td> : </td>
-        <td> ..................... </td>
-        <br>
-    </tr>
-	<tr>
-    <td style="width: 525px; font-size: 12pt;line-height: 22px; padding-top: 5px">Pengobatan & Tindakan yang telah diberikan / Medication & Treatments Given</td>
-        <td> : </td>
-        <td> ..........................</td>
-        <br>
-    </tr>
-		 </table>
-
-		 <br>
-
-			<div> Atas bantuannya, kami ucapkan banyak terima kasih <br>
-=======
 		</tr>
 		<tr>
 			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
@@ -143,7 +85,6 @@
 		</tr>
 		<tr>
 			<td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 10px; text-align: justify"> Atas bantuannya, kami ucapkan banyak terima kasih <br>
->>>>>>> 5b04e9ee05a9f24af28477c8fb55c57b18281b49
 			Really appreciate to your assistance. Thank you in advanced and we are looking forward to receiving 
 			your report.
 			</div>
@@ -155,17 +96,10 @@
 				<br>
 				  <img src="{{ $data->ttd_dokter }}" alt="Base64 Image" width="200px">
 				<br>
-<<<<<<< HEAD
-				<br>
-				……………………………<br>
-				Tanda tangan Dr & Stempel & Doctor’s Stamp
-			</div>
-=======
 				({{$data->nama_dokter_konsultan}})
 			</td>
 		</tr>
 	</table>
->>>>>>> 5b04e9ee05a9f24af28477c8fb55c57b18281b49
 </div>
 </body>
 </html>

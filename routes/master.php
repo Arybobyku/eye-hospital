@@ -50,6 +50,28 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('dokumen-dietitian-pasien-baru', [PasienCtrl::class, 'storeDokumenDietitianPasienBaru'])->name('master-pasien-storeDokumenDietitianPasienBaru');
 		Route::post('dokumen-asuhan-gizi', [PasienCtrl::class, 'storeDokumenAsuhanGizi'])->name('master-pasien-storeDokumenAsuhanGizi');
 		Route::post('dokumen-laser-lpi', [PasienCtrl::class, 'storeDokumenLaserLPI'])->name('master-pasien-storeDokumenLaserLPI');
+		Route::post('dokumen-laser-prp', [PasienCtrl::class, 'storeDokumenLaserPRP'])->name('master-pasien-storeDokumenLaserLPI');
+		Route::post('dokumen-operasi-trabekulektomi', [PasienCtrl::class, 'storeLaporanOperasiTrabekulektomi'])->name('master-pasien-storeLaporanOperasiTrabekulektomi');
+		Route::post('dokumen-operasi-pterygium', [PasienCtrl::class, 'storeLaporanOperasiPterygium'])->name('master-pasien-storeLaporanOperasiPterygium');
+		Route::post('dokumen-eksisi-palpebra', [PasienCtrl::class, 'storeLaporanEksisiPalpebra'])->name('master-pasien-storeLaporanEksisiPalpebra');
+		Route::post('dokumen-eksisi-chalazion', [PasienCtrl::class, 'storeLaporanEksisiChalazion'])->name('master-pasien-storeLaporanEksisiChalazion');
+		Route::post('asesmen-awal-keperawatan-rawat-inap', [PasienCtrl::class, 'storeAsesmenKeperawatanRawatInap'])->name('master-pasien-storeAsesmenKeperawatanRawatInap');
+		Route::post('dokumen-pulang-aps', [PasienCtrl::class, 'storeDokumenPulangAPS'])->name('master-pasien-storeDokumenPulangAPS');
+		Route::post('dokumen-laser-capsulotomy', [PasienCtrl::class, 'storeTindakanLaserCapsulotomy'])->name('master-pasien-storeTindakanLaserCapsulotomy');
+		Route::post('dokumen-tindakan-epilasi', [PasienCtrl::class, 'storeTindakanEpilasi'])->name('master-pasien-storeTindakanEpilasi');
+		Route::post('dokumen-kronologis', [PasienCtrl::class, 'storeKronologisPasien'])->name('master-pasien-storeKronologisPasien');
+		Route::post('dokumen-catatan-operasi', [PasienCtrl::class, 'storeCatatanOperasi'])->name('master-pasien-storeCatatanOperasi');
+		Route::post('dokumen-resume-medis-rawat-jalan', [PasienCtrl::class, 'storeResumeMedisRawatJalan'])->name('master-pasien-storeResumeMedisRawatJalan');
+		Route::post('dokumen-resume-medis-rawat-inap', [PasienCtrl::class, 'storeResumeMedisRawatInap'])->name('master-pasien-storeResumeMedisRawatInap');
+		Route::post('dokumen-cppt-rawat-inap', [PasienCtrl::class, 'storeCPPTRawatInap'])->name('master-pasien-storeCPPTRawatInap');
+		Route::post('dokumen-monitoring-efek-samping-obat', [PasienCtrl::class, 'storeMonitoringEfekSampingObat'])->name('master-pasien-storeMonitoringEfekSampingObat');
+		Route::post('dokumen-catatan-keperawatan', [PasienCtrl::class, 'storeCatatanKeperawatan'])->name('master-pasien-storeCatatanKeperawatan');
+		Route::post('dokumen-form-transfer-pasien', [PasienCtrl::class, 'storeDokumenFormTransferPasien'])->name('master-pasien-storeDokumenFormTransferPasien');
+		Route::post('dokumen-pelaksanaan-pencegahan-pasien-jatuh', [PasienCtrl::class, 'storeDokumenPelaksanaanPencegahanPasienJatuh'])->name('master-pasien-storeDokumenPelaksanaanPencegahanPasienJatuh');
+		Route::post('dokumen-evaluasi-pra-anesthesi', [PasienCtrl::class, 'storeDokumenEvaluasiPraAnesthesi'])->name('master-pasien-storeDokumenEvaluasiPraAnesthesi');
+		Route::post('dokumen-penilaian-pra-anestesi-sedasi', [PasienCtrl::class, 'storePenilaianPraAnestesiSedasi'])->name('master-pasien-storePenilaianPraAnestesiSedasi');
+		//Route::post('dokumen-laporan-pembedahan', [PasienCtrl::class, 'storeLaporanPembedahan'])->name('master-pasien-storeLaporanPembedahan');
+		Route::post('dokumen-surat-pengantar-rawat-inap', [PasienCtrl::class, 'storeSuratPengantarRawatInap'])->name('master-pasien-storeSuratPengantarRawatInap');
 	});
 
 	Route::prefix('rekammedis')->group(function () {
