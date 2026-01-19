@@ -232,6 +232,7 @@ export default {
               if (response.data.data[key] !== undefined) {
                 this.form[key] = response.data.data[key];
               }
+              console.log("Loaded form data for edit:", this.form);
             });
           }
         }

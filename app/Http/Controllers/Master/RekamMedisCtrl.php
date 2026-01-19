@@ -402,6 +402,14 @@ class RekamMedisCtrl extends Controller
                     'color' => '#673AB7', // Depp Purple
                 ],
                 
+                [
+                    'table' => 'dokumen_surat_pengantar_rawat_inap',
+                    'type' => 'dokumen_surat_pengantar_rawat_inap',
+                    'label' => 'Dokumen Surat Pengantar Rawat Inap',
+                    'icon' => 'fa fa-bed',
+                    'color' => '#673AB7', // Depp Purple
+                ],
+                
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -655,6 +663,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_surat_pengantar_rawat_inap' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -715,6 +729,7 @@ class RekamMedisCtrl extends Controller
                 'cppt_rawat_inap' => 'dokumen_cppt_rawat_inap',
                 'monitoring_efek_samping_obat' => 'dokumen_monitoring_efek_samping_obat',
                 'catatan_keperawatan' => 'dokumen_catatan_keperawatan',
+                'dokumen_surat_pengantar_rawat_inap' => 'dokumen_surat_pengantar_rawat_inap',
                 // Tambahkan mapping baru di sini
             ];
 

@@ -729,6 +729,10 @@ export default {
         this.selectedDocumentType = doc.value;
         this.editUuid = item.uuid;
 
+        console.log("Edit Data:", this.editData);
+        console.log("Selected Document Type:", this.selectedDocumentType);
+        console.log("Edit UUID:", this.editUuid);
+
         // 3. Navigate ke component create/edit
         this.state = "create";
 
