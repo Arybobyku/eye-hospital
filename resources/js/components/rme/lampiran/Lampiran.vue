@@ -217,7 +217,7 @@ import FormCatatanOperasi from "./create/FormCatatanOperasi.vue";
 export default {
   name: "ListLampiran",
   components: {
-    // Lazy load components
+    // Lazy load componentseditUuid
     CreateLaporanBedah: defineAsyncComponent(() => import("./create/LaporanBedah.vue")),
     FormLaserBargage: defineAsyncComponent(() => import("./create/FormLaserBarage.vue")),
     FormPersetujuanTindakanKedokteran: defineAsyncComponent(() => import("./create/FormPersetujuanTindakanKedokteran.vue")),
@@ -248,6 +248,7 @@ export default {
     FormCatatanOperasi: defineAsyncComponent(() =>import("./create/FormCatatanOperasi.vue")),
     FormMonitoringEfekSampingObat: defineAsyncComponent(() =>import("./create/FormMonitoringEfekSampingObat.vue")),
     FormCatatanKeperawatan: defineAsyncComponent(() =>import("./create/FormCatatanKeperawatan.vue")),
+    FormLaporanOperasiTrabulektomi: defineAsyncComponent(() =>import("./create/FormLaporanOperasiTrabulektomi.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -330,7 +331,7 @@ export default {
           backendType: "surat_kontrol_ulang",
         },
         {
-          value: "surat-kosultasi",
+          value: "surat_konsul",
           label: "Surat Konsultasi",
           component: "FormSuratKonsul",
           description: "Form Surat Konsultasi Pasien",
@@ -715,6 +716,14 @@ export default {
         asesmen_keperawatan_rawat_inap: `/print/rekammedis/lampiran/asesmen-awal-keperawatan-rawat-inap/${item.uuid}`,
         monitoring_efek_samping_obat: `/print/rekammedis/lampiran/monitoring-efek-samping-obat/${item.uuid}`,
         catatan_keperawatan: `/print/rekammedis/lampiran/catatan-keperawatan/${item.uuid}`,
+        surat_konsul: `/print/rekammedis/general/suratkonsul/${item.uuid}`,
+        dokumen_tindakan_laser_prp: `/print/rekammedis/general/formlaserprp/${item.uuid}`,
+        dokumen_laporan_operasi_trabekulektomi: `/print/rekammedis/general/laporanoperasitrabekulektomi/${item.uuid}`,
+        dokumen_laporan_operasi_pterygium: `/print/rekammedis/general/laporanoperasipterygium/${item.uuid}`,
+        dokumen_laporan_eksisi_chalazion: `/print/rekammedis/general/laporaneksisichalazion/${item.uuid}`,
+        dokumen_laporan_eksisi_palpebra: `/print/rekammedis/general/laporaneksisipalbera/${item.uuid}`,
+        dokumen_tindakan_laser_capsulotomy: `/print/rekammedis/general/formlasercapsulotomy/${item.uuid}`,
+        dokumen_tindakan_epilasi: `/print/rekammedis/general/formtindakanepilasi/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];

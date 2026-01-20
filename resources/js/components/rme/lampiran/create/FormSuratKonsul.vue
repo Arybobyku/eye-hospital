@@ -2,164 +2,180 @@
   <button @click="$emit('back')" class="btn-back">Kembali</button>
 
   <div class="container py-4">
-    <!-- LOADING OVERLAY -->
-    <div v-if="loadingData" class="loading-overlay">
-      <div class="spinner-rme"></div>
-      <p>Memuat data...</p>
-    </div>
-
-    <!-- ================= HEADER ================= -->
-    <div class="text-center mb-4">
-      <h2 class="fw-bold">SURAT KONSUL</h2>
-      <h5 class="text-muted">REFERAL LETTER</h5>
-      <span v-if="isEditMode" class="badge bg-warning">Mode Edit</span>
-      <span v-else class="badge bg-success">Mode Baru</span>
-    </div>
-
-    <!-- DATE -->
-    <div class="row mb-3">
-      <div class="col-md-12 mb-2">
-        <label>Tanggal / Date :</label>
-        <input type="date" v-model="form.tanggal" class="form-control" />
+    <div class="form-wrapper position-relative">
+      <!-- OVERLAY SAAT VIEW -->
+      <div v-if="disabledSubmit" class="view-overlay"></div>
+      <!-- ================= HEADER ================= -->
+      <div class="text-center mb-4">
+        <h2 class="fw-bold">LAPORAN INJEKSI ANTI VECF</h2>
+        <h4 class="fw-semibold">RM 8.8/LIAV/22</h4>
       </div>
-    </div>
 
-    <!-- ================= KEPADA YANG TERHORMAT ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">Kepada Yang Terhormat / Dear Collegue</h5>
+      <!-- LOADING OVERLAY -->
+      <div v-if="loadingData" class="loading-overlay">
+        <div class="spinner-rme"></div>
+        <p>Memuat data...</p>
+      </div>
 
+      <!-- ================= HEADER ================= -->
+      <div class="text-center mb-4">
+        <h2 class="fw-bold">SURAT KONSUL</h2>
+        <h5 class="text-muted">REFERAL LETTER</h5>
+        <span v-if="isEditMode" class="badge bg-warning">Mode Edit</span>
+        <span v-else class="badge bg-success">Mode Baru</span>
+      </div>
+
+      <!-- DATE -->
       <div class="row mb-3">
-        <div class="col-md-12">
-          <label>TS. PROF/DR :</label>
-          <input 
-            type="text" 
-            v-model="form.tujuan_nama_dokter" 
-            class="input-rme" 
-            placeholder="Masukkan nama dokter tujuan konsul..."
-          />
+        <div class="col-md-12 mb-2">
+          <label>Tanggal / Date :</label>
+          <input type="date" v-model="form.tanggal" class="form-control" />
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          <label>Di/In :</label>
-          <input 
-            type="text" 
-            v-model="form.tujuan_lokasi" 
-            class="input-rme" 
-            placeholder="Masukkan lokasi/rumah sakit tujuan..."
-          />
-        </div>
-      </div>
-    </div>
+      <!-- ================= KEPADA YANG TERHORMAT ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">Kepada Yang Terhormat / Dear Collegue</h5>
 
-    <!-- ================= INFORMASI PASIEN ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">Bersama ini kami konsulkan pasien</h5>
-      <p class="small text-muted">Herewith, we would like to refer following patient:</p>
-
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Nama / Name :</label>
-          <input type="text" v-model="form.pasien_nama" class="input-rme" readonly />
-        </div>
-
-        <div class="col-md-6">
-          <label>Umur / Age :</label>
-          <input type="text" v-model="form.pasien_umur" class="input-rme" />
-        </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-md-12">
-          <label>Keluhan Utama / Chief Complaint :</label>
-          <textarea 
-            v-model="form.keluhan_utama" 
-            class="textarea-rme" 
-            rows="2"
-            placeholder="Masukkan keluhan utama pasien..."
-          ></textarea>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <label>Diagnosa Sementara / Differential Diagnosis :</label>
-          <textarea 
-            v-model="form.diagnosa_sementara" 
-            class="textarea-rme" 
-            rows="3"
-            placeholder="Masukkan diagnosa sementara..."
-          ></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= PENGOBATAN & TINDAKAN ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">Pengobatan & Tindakan yang telah diberikan</h5>
-      <p class="small text-muted">Medication & Treatments Given:</p>
-
-      <div class="row">
-        <div class="col-md-12">
-          <textarea 
-            v-model="form.pengobatan_tindakan" 
-            class="textarea-rme" 
-            rows="4"
-            placeholder="Masukkan daftar pengobatan dan tindakan yang telah diberikan..."
-          ></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= PENUTUP ================= -->
-    <div class="box-rme mb-4">
-      <p style="text-align: justify; line-height: 1.8">
-        Atas bantuannya, kami ucapkan banyak terima kasih<br/>
-        <em>Really appreciate to your assistance. Thank you in advanced and we are looking forward to receiving your report.</em>
-      </p>
-    </div>
-
-    <!-- ================= TEMPAT & TANGGAL ================= -->
-    <div class="row mb-4">
-      <div class="col-md-12">
-        <div class="tanggal-tempat">
-          Medan, {{ formatTanggal(form.tanggal) }}
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= SIGNATURE AREA ================= -->
-    <div class="signature-container">
-      <div class="signature-section">
-        <!-- Dokter Penanggung Jawab -->
-        <div class="sign-box">
-          <label>Hormat kami / With Regards,</label>
-          <label class="mt-2">Dokter Penanggung Jawab / Attending Doctor</label>
-
-          <!-- Preview TTD yang sudah ada -->
-          <div v-if="form.ttd_dokter && !signatureCleared.ttd_dokter" class="signature-preview">
-            <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
-            <button @click="clearSignature('ttd_dokter')" class="btn-clear">
-              Hapus & Tanda Tangan Ulang
-            </button>
-          </div>
-
-          <!-- Signature Pad -->
-          <div v-else>
-            <VueSignaturePad
-              ref="ttd_dokter"
-              :options="sigOption"
-              class="signature-box-rme"
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <label>TS. PROF/DR :</label>
+            <input
+              type="text"
+              v-model="form.tujuan_nama_dokter"
+              class="input-rme"
+              placeholder="Masukkan nama dokter tujuan konsul..."
             />
-            <button @click="saveSign('ttd_dokter')" class="btn-save">Simpan ✔</button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <label>Di/In :</label>
+            <input
+              type="text"
+              v-model="form.tujuan_lokasi"
+              class="input-rme"
+              placeholder="Masukkan lokasi/rumah sakit tujuan..."
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= INFORMASI PASIEN ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">Bersama ini kami konsulkan pasien</h5>
+        <p class="small text-muted">
+          Herewith, we would like to refer following patient:
+        </p>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label>Nama / Name :</label>
+            <input type="text" v-model="form.pasien_nama" class="input-rme" readonly />
           </div>
 
-          <input
-            v-model="form.nama_dokter_pengirim"
-            class="input-rme mt-2"
-            placeholder="Tanda tangan Dr & Stempel & Doctor's Stamp"
-          />
+          <div class="col-md-6">
+            <label>Umur / Age :</label>
+            <input type="text" v-model="form.pasien_umur" class="input-rme" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <label>Keluhan Utama / Chief Complaint :</label>
+            <textarea
+              v-model="form.keluhan_utama"
+              class="textarea-rme"
+              rows="2"
+              placeholder="Masukkan keluhan utama pasien..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <label>Diagnosa Sementara / Differential Diagnosis :</label>
+            <textarea
+              v-model="form.diagnosa_sementara"
+              class="textarea-rme"
+              rows="3"
+              placeholder="Masukkan diagnosa sementara..."
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PENGOBATAN & TINDAKAN ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">Pengobatan & Tindakan yang telah diberikan</h5>
+        <p class="small text-muted">Medication & Treatments Given:</p>
+
+        <div class="row">
+          <div class="col-md-12">
+            <textarea
+              v-model="form.pengobatan_tindakan"
+              class="textarea-rme"
+              rows="4"
+              placeholder="Masukkan daftar pengobatan dan tindakan yang telah diberikan..."
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= PENUTUP ================= -->
+      <div class="box-rme mb-4">
+        <p style="text-align: justify; line-height: 1.8">
+          Atas bantuannya, kami ucapkan banyak terima kasih<br />
+          <em
+            >Really appreciate to your assistance. Thank you in advanced and we are
+            looking forward to receiving your report.</em
+          >
+        </p>
+      </div>
+
+      <!-- ================= TEMPAT & TANGGAL ================= -->
+      <div class="row mb-4">
+        <div class="col-md-12">
+          <div class="tanggal-tempat">Medan, {{ formatTanggal(form.tanggal) }}</div>
+        </div>
+      </div>
+
+      <!-- ================= SIGNATURE AREA ================= -->
+      <div class="signature-container">
+        <div class="signature-section">
+          <!-- Dokter Penanggung Jawab -->
+          <div class="sign-box">
+            <label>Hormat kami / With Regards,</label>
+            <label class="mt-2">Dokter Penanggung Jawab / Attending Doctor</label>
+
+            <!-- Preview TTD yang sudah ada -->
+            <div
+              v-if="form.ttd_dokter && !signatureCleared.ttd_dokter"
+              class="signature-preview"
+            >
+              <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+              <button @click="clearSignature('ttd_dokter')" class="btn-clear">
+                Hapus & Tanda Tangan Ulang
+              </button>
+            </div>
+
+            <!-- Signature Pad -->
+            <div v-else>
+              <VueSignaturePad
+                ref="ttd_dokter"
+                :options="sigOption"
+                class="signature-box-rme"
+              />
+              <button @click="saveSign('ttd_dokter')" class="btn-save">Simpan ✔</button>
+            </div>
+
+            <input
+              v-model="form.nama_dokter_pengirim"
+              class="input-rme mt-2"
+              placeholder="Tanda tangan Dr & Stempel & Doctor's Stamp"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -170,7 +186,7 @@
     <!-- TOMBOL SUBMIT -->
     <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
       <span v-if="loadingSubmit">Menyimpan...</span>
-      <span v-else>{{ isEditMode ? 'Update' : 'Save' }}</span>
+      <span v-else>{{ isEditMode ? "Update" : "Save" }}</span>
     </button>
 
     <!-- TOMBOL BACK -->
@@ -281,7 +297,7 @@ export default {
 
       // Data pasien untuk form
       this.form.pasien_nama = this.selectedPatient?.nama || "";
-      
+
       // Hitung umur dari tanggal lahir
       if (this.selectedPatient?.tanggal_lahir) {
         this.form.pasien_umur = this.calculateAge(this.selectedPatient.tanggal_lahir);
@@ -345,16 +361,16 @@ export default {
 
     calculateAge(birthDate) {
       if (!birthDate) return "";
-      
+
       const today = new Date();
       const birth = new Date(birthDate);
       let age = today.getFullYear() - birth.getFullYear();
       const monthDiff = today.getMonth() - birth.getMonth();
-      
+
       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
         age--;
       }
-      
+
       return `${age} tahun`;
     },
 
@@ -416,11 +432,9 @@ export default {
           fd.append(key, this.form[key] || "");
         });
 
-        const response = await axios.post(
-          "/master/pasien/dokumen-surat-konsul",
-          fd,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
+        const response = await axios.post("/master/pasien/dokumen-surat-konsul", fd, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
 
         console.log("BERHASIL:", response.data);
 
@@ -675,5 +689,19 @@ label {
 
 .text-muted {
   color: #6c757d;
+}
+
+view-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 251, 251, 0.1); /* transparan */
+  z-index: 10;
+  cursor: not-allowed;
+}
+.form-wrapper {
+  position: relative;
 }
 </style>

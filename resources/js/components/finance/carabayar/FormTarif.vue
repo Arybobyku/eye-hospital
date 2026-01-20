@@ -417,13 +417,13 @@ export default {
 				{ value: 'rawatjalan', label: 'Data Tindakan', class: 'tab-active' },
 				// { value: 'nonbedah', label: 'Tindakan Non Bedah', class: 'tab-no-active' },
 				// { value: 'bedah', label: 'Tindakan Bedah', class: 'tab-no-active' },
-				// { value: 'jeniskamar', label: 'Biaya Kamar', class: 'tab-no-active' },
+				{ value: 'jeniskamar', label: 'Biaya Kamar', class: 'tab-no-active' },
 			],
 			content: { 
 				rawatjalan: true, 
 				// nonbedah: false, 
 				// bedah: false, 
-				// jeniskamar: false 
+				jeniskamar: false 
 			}
 		},
 	}},
