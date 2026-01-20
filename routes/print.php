@@ -97,4 +97,6 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/lampiran/cppt-rawat-inap/{uuid}', [PrintRekamMedisCtrl::class, 'printCpptRawatInap']);
     Route::get('rekammedis/lampiran/catatan-keperawatan/{uuid}', [PrintRekamMedisCtrl::class, 'printCatatanKeperawatan']);
     Route::get('rekammedis/lampiran/monitoring-efek-samping-obat/{uuid}', [PrintRekamMedisCtrl::class, 'printMonitoringEfekSampingObat']);
+    Route::get('rekammedis/lampiran/status-anestesi/{uuid}', [PrintRekamMedisCtrl::class, 'printMonitoringEfekSampingObat']);
+    Route::get('rekammedis/lampiran/laporan-operasi-vitreo-retina/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanOperasiVitreoRetina']);
 });

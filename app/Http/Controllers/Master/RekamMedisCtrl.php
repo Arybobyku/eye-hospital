@@ -401,6 +401,20 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa fa-bed',
                     'color' => '#673AB7', // Depp Purple
                 ],
+                [
+                    'table' => 'dokumen_status_anestesi',
+                    'type' => 'status_anestesi',
+                    'label' => 'Dokumen Status Anestesi',
+                    'icon' => 'fa fa-bed',
+                    'color' => '#FF0000', // RED
+                ],
+                [
+                    'table' => 'dokumen_laporan_operasi_vitreo_retina',
+                    'type' => 'laporan_operasi_vitreo_retina',
+                    'label' => 'Dokumen Laporan Operasi Vitreo Retina',
+                    'icon' => 'fa fa-eye',
+                    'color' => '#FF0000', // rED
+                ],
                 
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
@@ -655,6 +669,18 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_laporan_operasi_vitreo_retina' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_status_anestesi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -715,6 +741,8 @@ class RekamMedisCtrl extends Controller
                 'cppt_rawat_inap' => 'dokumen_cppt_rawat_inap',
                 'monitoring_efek_samping_obat' => 'dokumen_monitoring_efek_samping_obat',
                 'catatan_keperawatan' => 'dokumen_catatan_keperawatan',
+                'laporan_operasi_vitreo_retina' => 'dokumen_laporan_operasi_vitreo_retina',
+                'status_anestesi' => 'dokumen_status_anestesi',
                 // Tambahkan mapping baru di sini
             ];
 

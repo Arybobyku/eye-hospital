@@ -249,6 +249,8 @@ export default {
     FormMonitoringEfekSampingObat: defineAsyncComponent(() =>import("./create/FormMonitoringEfekSampingObat.vue")),
     FormCatatanKeperawatan: defineAsyncComponent(() =>import("./create/FormCatatanKeperawatan.vue")),
     FormLaporanOperasiTrabulektomi: defineAsyncComponent(() =>import("./create/FormLaporanOperasiTrabulektomi.vue")),
+    FormStatusAnestesi: defineAsyncComponent(() =>import("./create/FormStatusAnestesi.vue")),
+    FormLaporanOperasiVitreoRetina: defineAsyncComponent(() =>import("./create/FormLaporanOperasiVitreoRetina.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -491,6 +493,20 @@ export default {
           description: "Form Catatan Keperawatan",
           backendType: "catatan_keperawatan",
         },
+        {
+          value: "dokumen-status-anestesi",
+          label: "Form Status Anestesi",
+          component: "FormStatusAnestesi",
+          description: "Status Anestesi",
+          backendType: "status_anestesi",
+        },
+        {
+          value: "dokumen-form-laporan-operasi-vitreo-retina",
+          label: "Form Laporan Operasi Vitreo Retina",
+          component: "FormLaporanOperasiVitreoRetina",
+          description: "Laporan Operasi Operasi Bedah Mata",
+          backendType: "laporan_operasi_vitreo_retina",
+        },
         // {
         //   value: "informed-consent",
         //   label: "Informed Consent",
@@ -724,6 +740,8 @@ export default {
         dokumen_laporan_eksisi_palpebra: `/print/rekammedis/general/laporaneksisipalbera/${item.uuid}`,
         dokumen_tindakan_laser_capsulotomy: `/print/rekammedis/general/formlasercapsulotomy/${item.uuid}`,
         dokumen_tindakan_epilasi: `/print/rekammedis/general/formtindakanepilasi/${item.uuid}`,
+        status_anestesi: `/print/rekammedis/lampiran/status-anestesi/${item.uuid}`,
+        laporan_operasi_vitreo_retina: `/print/rekammedis/lampiran/laporan-operasi-vitreo-retina/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];
