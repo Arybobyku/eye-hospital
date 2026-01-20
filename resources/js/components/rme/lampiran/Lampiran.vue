@@ -213,6 +213,7 @@
 import axios from "axios";
 import { defineAsyncComponent } from "vue";
 import FormCatatanOperasi from "./create/FormCatatanOperasi.vue";
+import FormChecklistKeselamatanPasienOperasi from "./create/FormChecklistKeselamatanPasienOperasi.vue";
 
 export default {
   name: "ListLampiran",
@@ -253,6 +254,15 @@ export default {
     FormLaporanPembedahan: defineAsyncComponent(() =>import("./create/FormLaporanPembedahan.vue")),
     FormSuratPengantarRawatInap: defineAsyncComponent(() =>import("./create/FormSuratPengantarRawatInap.vue")),
     FormPenilaianPraAnestesiSedasi: defineAsyncComponent(() =>import("./create/FormPenilaianPraAnestesiSedasi.vue")),
+    FormTransfer: defineAsyncComponent(() =>import("./create/FormTransfer.vue")),
+    FormInformedConsent: defineAsyncComponent(() =>import("./create/FormInformedConsent.vue")),
+    FormLaporanOperasiTrabulektomi: defineAsyncComponent(() =>import("./create/FormLaporanOperasiTrabulektomi.vue")),
+    FormLaporanEksisiChalazion: defineAsyncComponent(() =>import("./create/FormLaporanEksisiChalazion.vue")),
+    FormLaporanCatatanOperasi: defineAsyncComponent(() =>import("./create/FormCatatanOperasi.vue")),
+    formMonitoringEfekSampingObat: defineAsyncComponent(() =>import("./create/FormMonitoringEfekSampingObat.vue")),
+    FormCatatanKeperawatan: defineAsyncComponent(() =>import("./create/FormCatatanKeperawatan.vue")),
+    FormChecklistKeselamatanPasienOperasi: defineAsyncComponent(() =>import("./create/FormChecklistKeselamatanPasienOperasi.vue")),
+
     // Tambahkan component baru di sini
   },
 
@@ -533,6 +543,14 @@ export default {
           component: "FormPenilaianPraAnestesiSedasi",
           description: "Form Penilaian Pra-Anestesi dan Sedasi",
           backendType: "dokumen_penilaian_pra_anestesi_sedasi",
+        },
+
+        {
+          value: "FormChecklistKeselamatanPasienOperasi",
+          label: "Checklist Keselamatan Pasien Operasi",
+          component: "FormChecklistKeselamatanPasienOperasi",
+          description: "Form Checklist Keselamatan Pasien Operasi",
+          backendType: "dokumen_checklist_keselamatan_pasien_operasi",
         },
         // {
         //   value: "informed-consent",

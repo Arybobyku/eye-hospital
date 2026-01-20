@@ -2870,5 +2870,66 @@ public function storeSuratPengantarRawatInap(Request $request)
     }
 }
 
+public function storeChecklistKeselamatanPasienOperasi(Request $request)
+{
+    try {
+        DB::beginTransaction();
+        
+        $data = $request->all();
+        
+        // Ambil data user dari cookie
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+        
+        $uuid = $request->input('uuid');
+        
+        // Hapus uuid dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+        
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $dokumen = DokumenChecklistKeselamatanPasienOperasi::where('uuid', $uuid)->first();
+            
+            if (!$dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+            
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Checklist Keselamatan Pasien Operasi berhasil diupdate';
+            
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            $dokumen = DokumenChecklistKeselamatanPasienOperasi::create($data);
+            $action = 'create';
+            $message = 'Checklist Keselamatan Pasien Operasi berhasil disimpan';
+        }
+        
+        DB::commit();
+        
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+        
+    } catch (Exception $e) {
+        DB::rollBack();
+        
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Checklist Keselamatan Pasien Operasi',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 
 }

@@ -29,6 +29,24 @@ use App\Models\DokumenSuratBalasanKonsul;
 use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
 use App\Models\DokumenSuratPernyataanPasienUmum;
+use App\Models\DokumenSuratPernyataanBatalOperasi;
+use App\Models\DokumenSuratPengantarUntukDiRawatInap;
+use App\Models\DokumenFormPermintaanPulang;
+use App\Models\DokumenLaporanOperasiPterygium;
+use App\Models\DokumenLaporanOperasiTrabekulektomi;
+use App\Models\DokumenLaporanEksisiPalbera;
+use App\Models\DokumenLaporanEksisiChalazion;
+use App\Models\DokumenKunjunganAwalDietitianPadaPasienBaru;
+use App\Models\DokumenBalanceCairanHarian;
+use App\Models\DokumenPengkajianKeperawatanMata;
+use App\Models\DokumenFormLaserCapsulotomy;
+use App\Models\DokumenFormLaserPRP;
+use App\Models\DokumenTindakanLaserLPI;
+use App\Models\DokumenLaporanInjeksi;
+use App\Models\DokumenFormTindakanEpilasi;
+use App\Models\DokumenFormLaserFokal;
+use App\Models\DokumenFormLaserBarrage;
+use App\Models\DokumenSuratKonsul;
 use App\Models\DokumenPersetujuanUmum;
 use App\Models\PemeriksaanDokterIcd9;
 use App\Models\Pengguna;
@@ -954,6 +972,25 @@ function printFormLaserBarrage($uuid)
     $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.general.formpermintaanpulang',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+
+  function printSuratPernyataanBatalOperasi ($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.suratpernyataanbataloperasi',
       compact('pasien', 'ro', 'roperasi', 'ptk',)
     )->setPaper('a4', 'potrait');
 
