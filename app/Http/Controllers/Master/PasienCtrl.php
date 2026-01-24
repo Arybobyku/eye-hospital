@@ -2780,28 +2780,28 @@ class PasienCtrl extends Controller
 
         return response()->json(['data' => $data, 'total' => $total]);
     }
-    public function listBillPembayaran(Request $request)
-    {
-        $page = $request->page - 1;
-        $skip = $page * $this->take;
-        $search = $request->search;
+    // public function listBillPembayaran(Request $request)
+    // {
+    //     $page = $request->page - 1;
+    //     $skip = $page * $this->take;
+    //     $search = $request->search;
 
-        if ($request->search != '') {
-            $data = Registrasi::withSum('layanan', 'total')->withSum('layanan', 'diskon_rp')
-                ->where('pasien_uuid', $search)
-                ->where('status_kasir', 'Sudah Bayar')
-                ->orderBy('created_at', 'desc')
-                ->skip($skip)
-                ->take($this->take)
-                ->get();
+    //     if ($request->search != '') {
+    //         $data = Registrasi::withSum('layanan', 'total')->withSum('layanan', 'diskon_rp')
+    //             ->where('pasien_uuid', $search)
+    //             ->where('status_kasir', 'Sudah Bayar')
+    //             ->orderBy('created_at', 'desc')
+    //             ->skip($skip)
+    //             ->take($this->take)
+    //             ->get();
 
-            $total = Registrasi::where('pasien_uuid', '=', $search)->where('status_kasir', 'Sudah Bayar')
-                ->orderBy('created_at', 'desc')
-                ->orderBy('created_at', 'desc')->count();
-        }
+    //         $total = Registrasi::where('pasien_uuid', '=', $search)->where('status_kasir', 'Sudah Bayar')
+    //             ->orderBy('created_at', 'desc')
+    //             ->orderBy('created_at', 'desc')->count();
+    //     }
 
-        return response()->json(['data' => $data, 'total' => $total]);
-    }
+    //     return response()->json(['data' => $data, 'total' => $total]);
+    // }
     public function dokumenList(Request $request)
     {
         if ($this->error != 'next') {

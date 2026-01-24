@@ -58,12 +58,7 @@
             <th style="width: 50px">NO</th>
             <th style="width: 180px">JENIS DOKUMEN</th>
             <th style="width: 100px">TANGGAL</th>
-            <!-- <th style="width: 80px">JAM</th> -->
-            <!-- <th style="width: 120px">NO. RM</th> -->
-            <!-- <th>NAMA PASIEN</th> -->
-            <!-- <th style="width: 80px">JK</th> -->
             <th style="width: 150px">Creator</th>
-            <!-- <th>DETAIL INFO</th> -->
             <th style="width: 120px" class="text-center">ACTION</th>
           </tr>
         </thead>
@@ -90,12 +85,7 @@
             </td>
 
             <td>{{ formatDate(item.tanggal) }}</td>
-            <!-- <td>{{ formatTime(item.waktu) }}</td> -->
-            <!-- <td>{{ item.no_rm }}</td> -->
-            <!-- <td>{{ item.nama }}</td> -->
-            <!-- <td>{{ item.jenis_kelamin }}</td> -->
             <td>{{ item.created_by || "-" }}</td>
-            <!-- <td> <div class="detail-info">{{ truncate(item.detail_info, 50) }} </div></td> -->
 
             <!-- ACTION BUTTONS -->
             <td class="text-center">
@@ -165,19 +155,77 @@
       <div class="document-selector-card">
         <p class="mb-3">Silakan pilih jenis dokumen yang ingin ditambahkan:</p>
 
+        <!-- 🔍 SEARCH DOCUMENT - IMPROVED -->
         <div class="form-group">
-          <label for="documentType" class="form-label">Jenis Dokumen:</label>
-          <select id="documentType" v-model="selectedDocumentType" class="form-select">
-            <option value="">-- Pilih Dokumen --</option>
-            <option v-for="doc in availableDocuments" :key="doc.value" :value="doc.value">
-              {{ doc.label }}
-            </option>
-          </select>
+          <label class="form-label">
+            <i class="fas fa-search"></i> Cari Jenis Dokumen
+          </label>
+          <div class="search-wrapper">
+            <input
+              type="text"
+              v-model="documentSearch"
+              class="form-input-search"
+              placeholder="Ketik nama dokumen untuk mencari..."
+              @focus="showDocumentList = true"
+            />
+            <i v-if="documentSearch" 
+               class="fas fa-times clear-search" 
+               @click="clearDocumentSearch"
+               title="Hapus pencarian"></i>
+          </div>
+          
+          <!-- Document count info -->
+          <div v-if="documentSearch" class="search-info">
+            <i class="fas fa-info-circle"></i>
+            Ditemukan {{ filteredAvailableDocuments.length }} dari {{ availableDocuments.length }} dokumen
+          </div>
         </div>
 
+        <!-- DOCUMENT LIST - REACTIVE DISPLAY -->
+        <div class="document-list-container">
+          <div class="form-label">
+            <i class="fas fa-file-medical"></i> Pilih Dokumen:
+          </div>
+          
+          <!-- EMPTY STATE -->
+          <div
+            v-if="filteredAvailableDocuments.length === 0"
+            class="empty-state"
+          >
+            <i class="fas fa-search"></i>
+            <p>Tidak ada dokumen ditemukan untuk "{{ documentSearch }}"</p>
+            <button class="btn-clear-search" @click="clearDocumentSearch">
+              <i class="fas fa-redo"></i> Tampilkan Semua Dokumen
+            </button>
+          </div>
+
+          <!-- DOCUMENT CARDS - REACTIVE LIST -->
+          <div v-else class="document-cards">
+            <div
+              v-for="doc in filteredAvailableDocuments"
+              :key="doc.value"
+              :class="['document-card', { selected: selectedDocumentType === doc.value }]"
+              @click="selectDocument(doc.value)"
+            >
+              <div class="document-card-header">
+                <i :class="['fas', getDocumentIcon(doc.value)]"></i>
+                <span class="document-title">{{ doc.label }}</span>
+              </div>
+              <div class="document-description">{{ doc.description }}</div>
+              <div v-if="selectedDocumentType === doc.value" class="selected-indicator">
+                <i class="fas fa-check-circle"></i> Dipilih
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SELECTED DOCUMENT INFO -->
         <div v-if="selectedDocumentType" class="document-info mt-3">
           <i class="fas fa-info-circle"></i>
-          <span>{{ getSelectedDocumentInfo() }}</span>
+          <div>
+            <strong>Dokumen yang dipilih:</strong><br>
+            <span>{{ getSelectedDocumentInfo() }}</span>
+          </div>
         </div>
 
         <div class="button-group mt-4">
@@ -224,12 +272,11 @@
 <script>
 import axios from "axios";
 import { defineAsyncComponent } from "vue";
-import FormCatatanOperasi from "./create/FormCatatanOperasi.vue";
 
 export default {
   name: "ListLampiran",
   components: {
-    // Lazy load componentseditUuid
+    // Lazy load components
     CreateLaporanBedah: defineAsyncComponent(() => import("./create/LaporanBedah.vue")),
     FormLaserBargage: defineAsyncComponent(() => import("./create/FormLaserBarage.vue")),
     FormPersetujuanTindakanKedokteran: defineAsyncComponent(() =>
@@ -344,19 +391,20 @@ export default {
     FormLaporanOperasiVitreoRetina: defineAsyncComponent(() =>
       import("./create/FormLaporanOperasiVitreoRetina.vue")
     ),
-    // Tambahkan component baru di sini
   },
 
   data() {
     return {
       perPage: 10,
       searchQuery: "",
-      state: "list", // list | select-document | create
+      state: "list",
       selectedDocumentType: "",
       editData: null,
       editUuid: null,
       loading: false,
       data: [],
+      documentSearch: "",
+      showDocumentList: true,
       pagination: {
         total: 0,
         per_page: 10,
@@ -367,7 +415,6 @@ export default {
       },
       searchTimeout: null,
 
-      // ✨ KONFIGURASI DOKUMEN (HARUS SINKRON DENGAN BACKEND)
       availableDocuments: [
         {
           value: "laporan-bedah",
@@ -474,7 +521,6 @@ export default {
           description: "Form Laser LPI Pasien",
           backendType: "dokumen_tindakan_laser_lpi",
         },
-
         {
           value: "form_persetujuan_umum_pasien_keluarga",
           label: "Form Persetujuan Umum Pasien Keluarga",
@@ -622,7 +668,6 @@ export default {
           description: "Form Pulang Atas Permintaan Sendiri",
           backendType: "dokumen_pulang_atas_permintaan_sendiri",
         },
-
         {
           value: "dokumen_tindakan_laser_capsulotomy",
           label: "Form Tindakan Laser",
@@ -665,7 +710,6 @@ export default {
           description: "Form Catatan Keperawatan",
           backendType: "catatan_keperawatan",
         },
-
         {
           value: "dokumen_form_laser_barrage",
           label: "Form Laser Barrage",
@@ -687,14 +731,6 @@ export default {
           description: "Laporan Operasi Operasi Bedah Mata",
           backendType: "laporan_operasi_vitreo_retina",
         },
-        // {
-        //   value: "informed-consent",
-        //   label: "Informed Consent",
-        //   component: "FormInformedConsent",
-        //   description: "Surat persetujuan/penolakan tindakan medis",
-        //   backendType: "informed_consent"
-        // },
-        // ✨ TAMBAHKAN DOKUMEN BARU DI SINI
       ],
     };
   },
@@ -735,11 +771,8 @@ export default {
       const delta = 2;
 
       let pages = [];
-
-      // Always show first page
       pages.push(1);
 
-      // Pages around current
       for (
         let i = Math.max(2, current - delta);
         i <= Math.min(total - 1, current + delta);
@@ -748,13 +781,25 @@ export default {
         pages.push(i);
       }
 
-      // Always show last page
       if (total > 1) {
         pages.push(total);
       }
 
-      // Remove duplicates and sort
       return [...new Set(pages)].sort((a, b) => a - b);
+    },
+
+    filteredAvailableDocuments() {
+      if (!this.documentSearch.trim()) return this.availableDocuments;
+
+      const keyword = this.documentSearch.toLowerCase().trim();
+
+      return this.availableDocuments.filter(
+        (doc) =>
+          doc.label.toLowerCase().includes(keyword) ||
+          doc.value.toLowerCase().includes(keyword) ||
+          doc.description.toLowerCase().includes(keyword) ||
+          doc.backendType.toLowerCase().includes(keyword)
+      );
     },
   },
 
@@ -794,7 +839,6 @@ export default {
     },
 
     onSearch() {
-      // Debounce search
       clearTimeout(this.searchTimeout);
       this.searchTimeout = setTimeout(() => {
         this.pagination.current_page = 1;
@@ -811,7 +855,32 @@ export default {
     onAdd() {
       this.state = "select-document";
       this.selectedDocumentType = "";
+      this.documentSearch = "";
       this.editUuid = null;
+    },
+
+    selectDocument(value) {
+      this.selectedDocumentType = value;
+    },
+
+    clearDocumentSearch() {
+      this.documentSearch = "";
+    },
+
+    getDocumentIcon(value) {
+      const iconMap = {
+        'laporan-bedah': 'fa-file-medical',
+        'laser-bargage': 'fa-radiation',
+        'dokumen_form_laser_fokal': 'fa-bullseye',
+        'persetujuan_tindakan_kedokteran': 'fa-file-signature',
+        'resume-perawatan-rawat-jalan': 'fa-file-medical-alt',
+        'balance-cairan-harian': 'fa-tint',
+        'surat-penolakan-rujukan': 'fa-times-circle',
+        'surat-kontrol-ulang': 'fa-redo',
+        'surat_konsul': 'fa-comment-medical',
+        'surat-balasan-kosultasi': 'fa-reply',
+      };
+      return iconMap[value] || 'fa-file-alt';
     },
 
     onProceedToCreate() {
@@ -826,6 +895,7 @@ export default {
     onCancelSelection() {
       this.state = "list";
       this.selectedDocumentType = "";
+      this.documentSearch = "";
     },
 
     onBackToList() {
@@ -839,55 +909,52 @@ export default {
       const doc = this.availableDocuments.find(
         (d) => d.value === this.selectedDocumentType
       );
-      return doc ? doc.description : "";
+      return doc ? `${doc.label} - ${doc.description}` : "";
     },
+
     async onView(item) {
-      console.log("🟡 EDIT - Item yang dipilih:", item);
+      console.log("🟡 VIEW - Item yang dipilih:", item);
 
       try {
         this.loading = true;
 
-        // Map backend type to frontend type
         const doc = this.availableDocuments.find(
           (d) => d.backendType === item.document_type
         );
 
-        console.log("🟡 EDIT - Doc Config Found:", doc);
+        console.log("🟡 VIEW - Doc Config Found:", doc);
 
         if (!doc) {
           alert("Tipe dokumen tidak ditemukan!");
           return;
         }
 
-        // Kirim request untuk get detail
         const formData = new FormData();
         formData.append("type", item.document_type);
 
         const url = `/master/rekammedis/lampiran/${item.uuid}/detail`;
-        console.log("🟡 EDIT - URL:", url);
+        console.log("🟡 VIEW - URL:", url);
 
         const response = await axios.post(url, formData);
 
-        console.log("🟡 EDIT - Response:", response.data);
+        console.log("🟡 VIEW - Response:", response.data);
 
         if (!response.data.status) {
           alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen"));
           return;
         }
 
-        // ✅ PENTING: Set data SEBELUM pindah state
         this.editData = response.data.data;
         this.selectedDocumentType = doc.value;
 
-        console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
-        console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
+        console.log("🟡 VIEW - View Data yang dikirim ke component:", this.editData);
+        console.log("🟡 VIEW - Selected Type:", this.selectedDocumentType);
 
-        // ✅ Pindah state TERAKHIR setelah data ready
         this.$nextTick(() => {
           this.state = "view";
         });
       } catch (error) {
-        console.error("🟡 EDIT - Error:", error);
+        console.error("🟡 VIEW - Error:", error);
         alert(
           "Error: " +
             (error.response?.data?.message || "Terjadi kesalahan saat mengambil data")
@@ -903,7 +970,6 @@ export default {
       try {
         this.loading = true;
 
-        // Map backend type to frontend type
         const doc = this.availableDocuments.find(
           (d) => d.backendType === item.document_type
         );
@@ -915,7 +981,6 @@ export default {
           return;
         }
 
-        // Kirim request untuk get detail
         const formData = new FormData();
         formData.append("type", item.document_type);
 
@@ -931,14 +996,12 @@ export default {
           return;
         }
 
-        // ✅ PENTING: Set data SEBELUM pindah state
         this.editData = response.data.data;
         this.selectedDocumentType = doc.value;
 
         console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
         console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
 
-        // ✅ Pindah state TERAKHIR setelah data ready
         this.$nextTick(() => {
           this.state = "create";
         });
@@ -954,7 +1017,6 @@ export default {
     },
 
     onPrint(item) {
-      // Generate print URL based on document type
       const printUrls = {
         laser_bargage: `/print/laser-bargage/${item.uuid}`,
         laporan_bedah: `/print/laporan-pembedahan/${item.uuid}`,
@@ -1013,7 +1075,6 @@ export default {
       console.log("🔴 DELETE - Item yang dipilih:", item);
       console.log("🔴 DELETE - Document Type:", item.document_type);
 
-      // ✅ Ganti swal dengan confirm
       const confirmDelete = confirm(
         `Apakah Anda yakin ingin menghapus ${item.document_label}?`
       );
@@ -1049,7 +1110,6 @@ export default {
       }
     },
 
-    // Helper methods
     formatDate(date) {
       if (!date) return "-";
       const d = new Date(date);
@@ -1062,7 +1122,6 @@ export default {
 
     formatTime(time) {
       if (!time) return "-";
-      // Handle both time string and datetime
       if (typeof time === "string") {
         return time.substring(0, 5);
       }
@@ -1099,7 +1158,6 @@ export default {
   border-radius: 4px;
 }
 
-/* PATIENT INFO CARD */
 .patient-info-card {
   background: #f8f9fa;
   border: 1px solid #dee2e6;
@@ -1125,7 +1183,6 @@ export default {
   color: #495057;
 }
 
-/* FILTER BAR */
 .filter-bar {
   display: flex;
   justify-content: space-between;
@@ -1173,7 +1230,6 @@ export default {
   background: #218838;
 }
 
-/* DOCUMENT BADGE */
 .document-badge {
   display: inline-block;
   padding: 4px 10px;
@@ -1188,7 +1244,6 @@ export default {
   margin-right: 5px;
 }
 
-/* TABLE */
 .custom-table-rme {
   width: 100%;
   border-collapse: collapse;
@@ -1227,7 +1282,6 @@ export default {
   color: #666;
 }
 
-/* ACTION BUTTONS */
 .action-buttons {
   display: flex;
   gap: 5px;
@@ -1276,7 +1330,6 @@ export default {
   background: #c82333;
 }
 
-/* PAGINATION */
 .pagination-rme {
   display: flex;
   gap: 5px;
@@ -1308,7 +1361,6 @@ export default {
   font-weight: bold;
 }
 
-/* TABLE INFO */
 .table-info {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -1316,7 +1368,6 @@ export default {
   color: #666;
 }
 
-/* LOADING */
 .loading-overlay {
   position: absolute;
   inset: 0;
@@ -1340,7 +1391,7 @@ export default {
   margin-bottom: 10px;
 }
 
-/* SELECT DOCUMENT STYLES */
+/* ==================== IMPROVED SELECT DOCUMENT STYLES ==================== */
 .select-document-container {
   padding: 20px;
 }
@@ -1350,55 +1401,229 @@ export default {
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   padding: 30px;
-  max-width: 600px;
+  max-width: 900px;
   margin: 20px auto;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .form-label {
   display: block;
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   color: #333;
   font-size: 15px;
 }
 
-.form-select {
+.form-label i {
+  margin-right: 8px;
+  color: #1d72c9;
+}
+
+/* Search Input dengan Clear Button */
+.search-wrapper {
+  position: relative;
   width: 100%;
-  padding: 10px 12px;
+}
+
+.form-input-search {
+  width: 100%;
+  padding: 12px 40px 12px 15px;
   border: 2px solid #d0d0d0;
   border-radius: 6px;
   font-size: 15px;
   background: white;
-  transition: border-color 0.3s;
+  transition: all 0.3s;
 }
 
-.form-select:focus {
+.form-input-search:focus {
   outline: none;
   border-color: #1d72c9;
+  box-shadow: 0 0 0 3px rgba(29, 114, 201, 0.1);
 }
 
-.document-info {
+.clear-search {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  cursor: pointer;
+  padding: 5px;
+  transition: color 0.2s;
+}
+
+.clear-search:hover {
+  color: #dc3545;
+}
+
+/* Search Info */
+.search-info {
+  margin-top: 8px;
+  padding: 8px 12px;
   background: #e3f2fd;
-  border-left: 4px solid #1d72c9;
-  padding: 12px 15px;
+  border-left: 3px solid #1d72c9;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #555;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-info i {
+  color: #1d72c9;
+}
+
+/* Document List Container */
+.document-list-container {
+  margin-top: 20px;
+}
+
+/* Document Cards Grid */
+.document-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 15px;
+  max-height: 500px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background: #fafafa;
+}
+
+/* Individual Document Card */
+.document-card {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.document-card:hover {
+  border-color: #1d72c9;
+  box-shadow: 0 4px 12px rgba(29, 114, 201, 0.15);
+  transform: translateY(-2px);
+}
+
+.document-card.selected {
+  border-color: #28a745;
+  background: #f0f9f4;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.document-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.document-card-header i {
+  font-size: 24px;
+  color: #1d72c9;
+}
+
+.document-card.selected .document-card-header i {
+  color: #28a745;
+}
+
+.document-title {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  flex: 1;
+}
+
+.document-description {
+  font-size: 12px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.selected-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #28a745;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 15px;
+  color: #ccc;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.btn-clear-search {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-clear-search:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+}
+
+/* Selected Document Info */
+.document-info {
+  background: #e8f5e9;
+  border-left: 4px solid #28a745;
+  padding: 15px;
   border-radius: 4px;
   font-size: 14px;
   color: #555;
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 12px;
 }
 
 .document-info i {
-  color: #1d72c9;
+  color: #28a745;
   margin-top: 2px;
+  font-size: 18px;
 }
 
+.document-info strong {
+  color: #333;
+}
+
+/* Button Group */
 .button-group {
   display: flex;
   gap: 12px;
@@ -1407,7 +1632,7 @@ export default {
 
 .btn-primary,
 .btn-secondary {
-  padding: 10px 24px;
+  padding: 12px 28px;
   border: none;
   border-radius: 6px;
   font-size: 15px;
@@ -1433,6 +1658,7 @@ export default {
 .btn-primary:disabled {
   background: #ccc;
   cursor: not-allowed;
+  transform: none;
 }
 
 .btn-secondary {
@@ -1445,7 +1671,7 @@ export default {
   transform: translateY(-1px);
 }
 
-/* UTILITY */
+/* Utility Classes */
 .mb-3 {
   margin-bottom: 16px;
 }
@@ -1456,6 +1682,25 @@ export default {
 
 .mt-4 {
   margin-top: 24px;
+}
+
+/* Scrollbar Styling */
+.document-cards::-webkit-scrollbar {
+  width: 8px;
+}
+
+.document-cards::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.document-cards::-webkit-scrollbar-thumb {
+  background: #1d72c9;
+  border-radius: 4px;
+}
+
+.document-cards::-webkit-scrollbar-thumb:hover {
+  background: #155a9c;
 }
 
 @keyframes spin-rme {
@@ -1489,6 +1734,11 @@ export default {
   .document-selector-card {
     padding: 20px;
     margin: 10px;
+  }
+
+  .document-cards {
+    grid-template-columns: 1fr;
+    max-height: 400px;
   }
 
   .button-group {

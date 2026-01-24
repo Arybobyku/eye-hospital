@@ -369,6 +369,7 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-eye',
                     'color' => '#083D77', // Biru paling gelap
                 ],
+                [
                     'table' => 'dokumen_tindakan_laser_prp',
                     'type' => 'dokumen_tindakan_laser_prp',
                     'label' => 'Dokumen Tindakan Laser PRP',
@@ -486,7 +487,8 @@ class RekamMedisCtrl extends Controller
                     'label' => 'Dokumen Form Laser Fokal',
                     'icon' => 'fa fa-bed',
                     'color' => '#673AB7', // Depp Purple
-                ],[
+                ],
+                [
                     'table' => 'dokumen_status_anestesi',
                     'type' => 'status_anestesi',
                     'label' => 'Dokumen Status Anestesi',
@@ -500,7 +502,7 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa fa-eye',
                     'color' => '#FF0000', // rED
                 ],
-                
+
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -670,7 +672,7 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-                'form_edukasi_pasien_dan_keluarga_rawat_jalan' => [
+            'form_edukasi_pasien_dan_keluarga_rawat_jalan' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
                 // 'user_pelaksana' => 'pembedahan',
@@ -934,7 +936,7 @@ class RekamMedisCtrl extends Controller
                     'message' => 'Data tidak ditemukan'
                 ], 404);
             }
-            
+
             return response()->json([
                 'status' => true,
                 'data' => $data,
