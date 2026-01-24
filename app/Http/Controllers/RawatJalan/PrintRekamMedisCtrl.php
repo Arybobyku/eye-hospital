@@ -60,6 +60,7 @@ use App\Models\FormLaporanInjeksi;
 use App\Models\FormPermintaanPulang;
 use App\Models\VoucherRawatInap;
 use App\Models\FormReaksiTransfusiDarah;
+use App\Models\DokumenAsesmenKeperawatanRawatInap;
 use App\Models\Pengguna;
 use App\Models\Resep;
 use App\Models\ResepRacikan;
@@ -947,21 +948,7 @@ class PrintRekamMedisCtrl extends Controller
 
     return $pdf->stream();
   }
-  function printCatatanKeperawatan($uuid)
-  {
-    $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
-    $pdf->loadView(
-      'print-rekam-medis.general.catatankeperawatan',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
-    )->setPaper('a4', 'potrait');
-  }
+
   //   function printCatatanKeperawatan ($uuid)
   // {
   //       $pdf = \App::make('dompdf.wrapper');
@@ -1417,5 +1404,24 @@ class PrintRekamMedisCtrl extends Controller
 
 
     return $pdf->stream();
+  }
+  function printAsessmenAwalKeperawatanRawatInap($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenAsesmenKeperawatanRawatInap::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $pdf->loadView(
+      'print-rekam-medis.rawat-inap.formassesmen',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+
   }
 }

@@ -4,12 +4,15 @@
     <meta charset="utf-8">
     <title>Laporan Operasi Vitreo Retina</title>
     <style>
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+        @page {
+    margin: 15mm 15mm 15mm 15mm;
+}
         body {
             font-family: Arial, sans-serif;
             font-size: 10px;
@@ -19,19 +22,16 @@
         
         .wrap {
             width: 100%;
-            padding: 0 20px;
         }
         
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 0;
-        }
+    width: 100%;
+    table-layout: fixed;
+}
         
         table td {
             border: 1px solid #000;
             padding: 3px 5px;
-            vertical-align: top;
         }
         
         table.no-border td {
