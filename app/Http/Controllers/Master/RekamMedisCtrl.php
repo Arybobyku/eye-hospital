@@ -979,6 +979,14 @@ class RekamMedisCtrl extends Controller
                 'voucher_rawat_inap' => 'voucher_rawat_inap',
                 'form_reaksi_transfusi_darah' => 'form_reaksi_transfusi_darah',
                 'dokumen_form_laser_fokal' => 'dokumen_form_laser_fokal',
+                'laporan_operasi_vitreo_retina' => 'dokumen_laporan_operasi_vitreo_retina',
+                'status_anestesi' => 'dokumen_status_anestesi',
+                'asesmen_keperawatan_rawat_inap' => 'dokumen_asesmen_keperawatan_rawat_inap',
+                'resume_medis_rawat_jalan' => 'dokumen_resume_medis_rawat_jalan',
+                'resume_medis_rawat_inap' => 'dokumen_resume_medis_rawat_inap',
+                'cppt_rawat_inap' => 'dokumen_cppt_rawat_inap',
+                'monitoring_efek_samping_obat' => 'dokumen_monitoring_efek_samping_obat',
+                'catatan_keperawatan' => 'dokumen_catatan_keperawatan',
             ];
 
             if (!isset($tableMap[$type])) {
