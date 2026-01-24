@@ -202,8 +202,8 @@ class RekamMedisCtrl extends Controller
             // ✨ KONFIGURASI DOKUMEN
             $documentConfigs = [
                 [
-                    'table' => 'dokumen_form_laser_bargage',
-                    'type' => 'laser_barbage',
+                    'table' => 'dokumen_form_laser_barrage',
+                    'type' => 'dokumen_form_laser_barrage',
                     'label' => 'Form Laser Bargage',
                     'icon' => 'fa-laser-pointer',
                     'color' => '#FF6B35', // Orange terang
@@ -247,15 +247,15 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_surat_konsul',
                     'type' => 'surat_konsul',
                     'label' => 'Surat Konsultasi',
-                    'icon' => 'fa-reply',
-                    'color' => '#FFA726', // Orange konsultasi
+                    'icon' => 'fa-comments-medical',
+                    'color' => '#FF9800', // Orange gelap
                 ],
                 [
                     'table' => 'dokumen_surat_balasan_konsul',
                     'type' => 'surat_balasan_konsul',
                     'label' => 'Surat Balasan Konsultasi',
-                    'icon' => 'fa-reply',
-                    'color' => '#FFA726', // Orange konsultasi
+                    'icon' => 'fa-reply-all',
+                    'color' => '#FFA726', // Orange terang
                 ],
                 [
                     'table' => 'dokumen_surat_pernyataan_batal_operasi',
@@ -289,8 +289,8 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_tindakan_laser_lpi',
                     'type' => 'dokumen_tindakan_laser_lpi',
                     'label' => 'Dokumen Tindakan Laser LPI',
-                    'icon' => 'fa-eye',
-                    'color' => '#00BCD4', // Cyan (untuk mata/laser)
+                    'icon' => 'fa-circle-radiation',
+                    'color' => '#00BCD4', // Cyan
                 ],
                 [
                     'table' => 'dokumen_ceklist_kesiapan_bedah',
@@ -369,6 +369,138 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-eye',
                     'color' => '#083D77', // Biru paling gelap
                 ],
+                    'table' => 'dokumen_tindakan_laser_prp',
+                    'type' => 'dokumen_tindakan_laser_prp',
+                    'label' => 'Dokumen Tindakan Laser PRP',
+                    'icon' => 'fa-bolt',
+                    'color' => '#0097A7', // Cyan gelap
+                ],
+                [
+                    'table' => 'dokumen_laporan_operasi_trabekulektomi',
+                    'type' => 'dokumen_laporan_operasi_trabekulektomi',
+                    'label' => 'Dokumen Laporan Operasi Trabekulektomi',
+                    'icon' => 'fa-eye-dropper',
+                    'color' => '#7B1FA2', // Ungu tua
+                ],
+                [
+                    'table' => 'dokumen_laporan_operasi_pterygium',
+                    'type' => 'dokumen_laporan_operasi_pterygium',
+                    'label' => 'Dokumen Laporan Operasi Pterygium',
+                    'icon' => 'fa-eye-low-vision',
+                    'color' => '#C2185B', // Pink tua
+                ],
+                [
+                    'table' => 'dokumen_laporan_eksisi_palpebra',
+                    'type' => 'dokumen_laporan_eksisi_palpebra',
+                    'label' => 'Dokumen Laporan Eksisi Palbebra',
+                    'icon' => 'fa-scissors',
+                    'color' => '#F57C00', // Orange tua
+                ],
+                [
+                    'table' => 'dokumen_laporan_eksisi_chalazion',
+                    'type' => 'dokumen_laporan_eksisi_chalazion',
+                    'label' => 'Dokumen Laporan Eksisi Chalazion',
+                    'icon' => 'fa-scalpel-line-dashed',
+                    'color' => '#FF5722', // Deep Orange
+                ],
+                [
+                    'table' => 'dokumen_pulang_atas_permintaan_sendiri',
+                    'type' => 'dokumen_pulang_atas_permintaan_sendiri',
+                    'label' => 'Dokumen Pulang Atas Permintaan Sendiri',
+                    'icon' => 'fa-person-walking-arrow-right',
+                    'color' => '#607D8B', // Blue Grey
+                ],
+                [
+                    'table' => 'dokumen_tindakan_laser_capsulotomy',
+                    'type' => 'dokumen_tindakan_laser_capsulotomy',
+                    'label' => 'Dokumen Tindakan Laser Capsulotomy',
+                    'icon' => 'fa-burst',
+                    'color' => '#00ACC1', // Cyan accent
+                ],
+                [
+                    'table' => 'dokumen_tindakan_epilasi',
+                    'type' => 'dokumen_tindakan_epilasi',
+                    'label' => 'Dokumen Tindakan Epilasi',
+                    'icon' => 'fa-hand-sparkles',
+                    'color' => '#9C27B0', // Purple
+                ],
+                [
+                    'table' => 'dokumen_kronologis_pasien',
+                    'type' => 'dokumen_kronologis_pasien',
+                    'label' => 'Dokumen Kronologi Pasien',
+                    'icon' => 'fa-hand-sparkles',
+                    'color' => '#9C27B0', // Purple
+                ],
+                [
+                    'table' => 'dokumen_catatan_operasi',
+                    'type' => 'dokumen_catatan_operasi',
+                    'label' => 'Dokumen Catatan Operasi',
+                    'icon' => 'fa-hand-sparkles',
+                    'color' => '#9C27B0', // Purple
+                ],
+                [
+                    'table' => 'dokumen_resume_medis_rawat_jalan',
+                    'type' => 'resume_medis_rawat_jalan',
+                    'label' => 'Dokumen Resume Medis Rawat Jalan',
+                    'icon' => 'fa-hand-sparkles',
+                    'color' => '#2196F3', // Blue
+                ],
+                [
+                    'table' => 'dokumen_resume_medis_rawat_inap',
+                    'type' => 'resume_medis_rawat_inap',
+                    'label' => 'Dokumen Resume Medis Rawat Inap',
+                    'icon' => 'fa-hand-sparkles',
+                    'color' => '#4CAF50', // Green
+                ],
+                [
+                    'table' => 'dokumen_asesmen_keperawatan_rawat_inap',
+                    'type' => 'asesmen_keperawatan_rawat_inap',
+                    'label' => 'Dokumen Assesmen Keperawatan Rawat Inap',
+                    'icon' => 'fa fa-bed',
+                    'color' => '#FF9800', // Orange
+                ],
+                [
+                    'table' => 'dokumen_cppt_rawat_inap',
+                    'type' => 'cppt_rawat_inap',
+                    'label' => 'Dokumen CPPT Rawat Inap',
+                    'icon' => 'fa fa-bed',
+                    'color' => '#E91E63', // Pink
+                ],
+                [
+                    'table' => 'dokumen_monitoring_efek_samping_obat',
+                    'type' => 'monitoring_efek_samping_obat',
+                    'label' => 'Dokumen Monitoring Efek Samping Obat',
+                    'icon' => 'fa fa-glass',
+                    'color' => '#1ABC9C', // Turquoise
+                ],
+                [
+                    'table' => 'dokumen_catatan_keperawatan',
+                    'type' => 'catatan_keperawatan',
+                    'label' => 'Dokumen Catatan Keperawatan',
+                    'icon' => 'fa fa-bed',
+                    'color' => '#673AB7', // Depp Purple
+                ],
+                [
+                    'table' => 'dokumen_form_laser_fokal',
+                    'type' => 'dokumen_form_laser_fokal',
+                    'label' => 'Dokumen Form Laser Fokal',
+                    'icon' => 'fa fa-bed',
+                    'color' => '#673AB7', // Depp Purple
+                ],[
+                    'table' => 'dokumen_status_anestesi',
+                    'type' => 'status_anestesi',
+                    'label' => 'Dokumen Status Anestesi',
+                    'icon' => 'fa fa-bed',
+                    'color' => '#FF0000', // RED
+                ],
+                [
+                    'table' => 'dokumen_laporan_operasi_vitreo_retina',
+                    'type' => 'laporan_operasi_vitreo_retina',
+                    'label' => 'Dokumen Laporan Operasi Vitreo Retina',
+                    'icon' => 'fa fa-eye',
+                    'color' => '#FF0000', // rED
+                ],
+                
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -466,9 +598,9 @@ class RekamMedisCtrl extends Controller
     private function mapField($table, $fieldType)
     {
         $mapping = [
-            'dokumen_form_laser_barbage' => [
+            'dokumen_form_laser_barrage' => [
                 'tanggal' => 'tanggal',
-                'waktu' => 'waktu',
+                'waktu' => 'created_at',
                 // 'user_pelaksana' => 'dokter_pelaksana',
                 // 'detail_info' => 'jenis_laser'
             ],
@@ -610,6 +742,102 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_tindakan_laser_prp' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_laporan_operasi_trabekulektomi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_laporan_operasi_pterygium' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_laporan_eksisi_palpebra' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_laporan_eksisi_chalazion' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_pulang_atas_permintaan_sendiri' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_tindakan_laser_capsulotomy' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_tindakan_epilasi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_kronologis_pasien' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_catatan_operasi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_resume_medis_rawat_jalan' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_resume_medis_rawat_inap' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_asesmen_keperawatan_rawat_inap' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_form_laser_fokal' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'      
+            ],
+            'dokumen_laporan_operasi_vitreo_retina' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_status_anestesi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -640,6 +868,7 @@ class RekamMedisCtrl extends Controller
             // Map document type to table
             $tableMap = [
                 'laser_bargage' => 'dokumen_form_laser_bargage',
+                'dokumen_form_laser_barrage' => 'dokumen_form_laser_barrage',
                 'laporan_bedah' => 'laporan_pembedahan',
                 'informed_consent' => 'dokumen_informed_consent',
                 'surat_pernyataan_pasien_umum' => 'dokumen_surat_pernyataan_pasien_umum',
@@ -665,6 +894,25 @@ class RekamMedisCtrl extends Controller
                 'form_permintaan_pulang' => 'form_permintaan_pulang',
                 'form_reaksi_transfusi_darah' => 'form_reaksi_transfusi_darah',
                 'voucher_rawat_inap' => 'voucher_rawat_inap',
+                'dokumen_tindakan_laser_prp' => 'dokumen_tindakan_laser_prp',
+                'dokumen_laporan_operasi_trabekulektomi' => 'dokumen_laporan_operasi_trabekulektomi',
+                'dokumen_laporan_operasi_pterygium' => 'dokumen_laporan_operasi_pterygium',
+                'dokumen_laporan_eksisi_palpebra' => 'dokumen_laporan_eksisi_palpebra',
+                'dokumen_laporan_eksisi_chalazion' => 'dokumen_laporan_eksisi_chalazion',
+                'dokumen_pulang_atas_permintaan_sendiri' => 'dokumen_pulang_atas_permintaan_sendiri',
+                'dokumen_tindakan_laser_capsulotomy' => 'dokumen_tindakan_laser_capsulotomy',
+                'dokumen_tindakan_epilasi' => 'dokumen_tindakan_epilasi',
+                'dokumen_kronologis_pasien' => 'dokumen_kronologis_pasien',
+                'dokumen_catatan_operasi' => 'dokumen_catatan_operasi',
+                'asesmen_keperawatan_rawat_inap' => 'dokumen_asesmen_keperawatan_rawat_inap',
+                'resume_medis_rawat_jalan' => 'dokumen_resume_medis_rawat_jalan',
+                'resume_medis_rawat_inap' => 'dokumen_resume_medis_rawat_inap',
+                'cppt_rawat_inap' => 'dokumen_cppt_rawat_inap',
+                'monitoring_efek_samping_obat' => 'dokumen_monitoring_efek_samping_obat',
+                'catatan_keperawatan' => 'dokumen_catatan_keperawatan',
+                'dokumen_form_laser_fokal' => 'dokumen_form_laser_fokal',
+                'laporan_operasi_vitreo_retina' => 'dokumen_laporan_operasi_vitreo_retina',
+                'status_anestesi' => 'dokumen_status_anestesi',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -686,7 +934,7 @@ class RekamMedisCtrl extends Controller
                     'message' => 'Data tidak ditemukan'
                 ], 404);
             }
-
+            
             return response()->json([
                 'status' => true,
                 'data' => $data,
@@ -728,6 +976,7 @@ class RekamMedisCtrl extends Controller
                 'form_permintaan_pulang' => 'form_permintaan_pulang',
                 'voucher_rawat_inap' => 'voucher_rawat_inap',
                 'form_reaksi_transfusi_darah' => 'form_reaksi_transfusi_darah',
+                'dokumen_form_laser_fokal' => 'dokumen_form_laser_fokal',
             ];
 
             if (!isset($tableMap[$type])) {

@@ -12,12 +12,15 @@ class DokumenPersetujuanPenolakanTindakanDokter extends Model
     protected $table = 'dokumen_persetujuan_penolakan_tindakan_dokter';
     public $timestamps = false;
     protected $fillable = [
+        "id",
         "uuid_pasien",
         "date",
         "time",
         "kodeMR",
         "nama",
         "usia",
+        "lainlain",
+        "lainlain_ttd",
         "alamat",
         "petugas",
         "pemberi_info",
@@ -118,6 +121,9 @@ class DokumenPersetujuanPenolakanTindakanDokter extends Model
 
             "saksi_2" => $request->saksi_2,
             "saksi_2_ttd" => $request->saksi_2_ttd,
+
+            "lainlain" => $request->lainlain,
+            "lainlain_ttd" => $request->lainlain_ttd,
         ]);
     }
 }

@@ -82,7 +82,7 @@
             <th style="width: 60px">No</th>
             <th style="width: 250px">Jenis Informasi</th>
             <th>Isi Informasi</th>
-            <th style="width: 230px">Paraf (Diisi pasien/keluarga)</th>
+            <th style="width: 150px">Tandai ✓</th>
           </tr>
         </thead>
 
@@ -94,14 +94,14 @@
               <textarea v-model="form.diagnosis" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="diagnosis_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('diagnosis_ttd')" class="btn-save">
-                Simpan ✔
-              </button>
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.diagnosis_ttd" 
+                  id="diagnosis_ttd"
+                  class="checkbox-input"
+                />
+              </div>
             </td>
           </tr>
 
@@ -112,14 +112,14 @@
               <textarea v-model="form.dasar_diagnosis" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="dasar_diagnosis_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('dasar_diagnosis_ttd')" class="btn-save">
-                Simpan ✔
-              </button>
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.dasar_diagnosis_ttd" 
+                  id="dasar_diagnosis_ttd"
+                  class="checkbox-input"
+                />
+              </div>
             </td>
           </tr>
 
@@ -133,16 +133,17 @@
               ></textarea>
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="tindakan_kedokteran_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('tindakan_kedokteran_ttd')" class="btn-save">
-                Simpan ✔
-              </button>
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.tindakan_kedokteran_ttd" 
+                  id="tindakan_kedokteran_ttd"
+                  class="checkbox-input"
+                />
+              </div>
             </td>
           </tr>
+
           <tr>
             <td>4</td>
             <td>Indikasi Tindakan</td>
@@ -150,16 +151,17 @@
               <textarea v-model="form.indikasi_tindakan" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="indikasi_tindakan_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('indikasi_tindakan_ttd')" class="btn-save">
-                Simpan ✔
-              </button>
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.indikasi_tindakan_ttd" 
+                  id="indikasi_tindakan_ttd"
+                  class="checkbox-input"
+                />
+              </div>
             </td>
           </tr>
+
           <tr>
             <td>5</td>
             <td>Tata Cara</td>
@@ -167,16 +169,17 @@
               <textarea v-model="form.tata_cara" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="tata_cara_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('tata_cara_ttd')" class="btn-save">
-                Simpan ✔
-              </button>
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.tata_cara_ttd" 
+                  id="tata_cara_ttd"
+                  class="checkbox-input"
+                />
+              </div>
             </td>
           </tr>
+
           <tr>
             <td>6</td>
             <td>Tujuan</td>
@@ -184,14 +187,17 @@
               <textarea v-model="form.tujuan" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="tujuan_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('tujuan_ttd')" class="btn-save">Simpan ✔</button>
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.tujuan_ttd" 
+                  id="tujuan_ttd"
+                  class="checkbox-input"
+                />
+              </div>
             </td>
           </tr>
+
           <tr>
             <td>7</td>
             <td>Risiko</td>
@@ -199,14 +205,17 @@
               <textarea v-model="form.risiko" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="risiko_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('risiko_ttd')" class="btn-save">Simpan ✔</button>
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.risiko_ttd" 
+                  id="risiko_ttd"
+                  class="checkbox-input"
+                />
+              </div>
             </td>
           </tr>
+
           <tr>
             <td>8</td>
             <td>Komplikasi</td>
@@ -214,16 +223,17 @@
               <textarea v-model="form.komplikasi" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="komplikasi_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('komplikasi_ttd')" class="btn-save">
-                Simpan ✔
-              </button>
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.komplikasi_ttd" 
+                  id="komplikasi_ttd"
+                  class="checkbox-input"
+                />
+              </div>
             </td>
           </tr>
+
           <tr>
             <td>9</td>
             <td>Prognosis</td>
@@ -231,16 +241,17 @@
               <textarea v-model="form.prognosis" class="textarea-rme"></textarea>
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="prognosis_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('prognosis_ttd')" class="btn-save">
-                Simpan ✔
-              </button>
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.prognosis_ttd" 
+                  id="prognosis_ttd"
+                  class="checkbox-input"
+                />
+              </div>
             </td>
           </tr>
+
           <tr>
             <td>10</td>
             <td>Alternatif & Resiko</td>
@@ -251,16 +262,37 @@
               ></textarea>
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="alternatif_dan_risiko_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('alternatif_dan_risiko_ttd')" class="btn-save">
-                Simpan ✔
-              </button>
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.alternatif_dan_risiko_ttd" 
+                  id="alternatif_dan_risiko_ttd"
+                  class="checkbox-input"
+                />
+              </div>
             </td>
           </tr>
+          <tr>
+            <td>11</td>
+            <td>Lain - Lain</td>
+            <td>
+              <textarea
+                v-model="form.lainlain"
+                class="textarea-rme"
+              ></textarea>
+            </td>
+            <td class="text-center">
+              <div class="checkbox-paraf">
+                <input 
+                  type="checkbox" 
+                  v-model="form.lainlain_ttd" 
+                  id="alternatif_dan_risiko_ttd"
+                  class="checkbox-input"
+                />
+              </div>
+            </td>
+          </tr>
+
           <tr>
             <td colspan="3">
               Dengan ini menyatakan bahwa saya telah menerangkan hal-hal di atas secara
@@ -278,6 +310,7 @@
               </button>
             </td>
           </tr>
+
           <tr>
             <td colspan="3">
               Dengan ini menyatakan bahwa saya telah menerima informasi sebagaimana di
@@ -423,7 +456,7 @@
 <script>
 import axios from "axios";
 export default {
-  name: "HistoryKunjungan",
+  name: "PersetujuanPenolakanTindakan",
   data() {
     return {
       loadingSubmit: false,
@@ -448,25 +481,27 @@ export default {
         pemberi_info: "",
         penerima_info: "",
         diagnosis: "",
-        diagnosis_ttd: "",
+        diagnosis_ttd: false,
         dasar_diagnosis: "",
-        dasar_diagnosis_ttd: "",
+        dasar_diagnosis_ttd: false,
         tindakan_kedokteran: "",
-        tindakan_kedokteran_ttd: "",
+        tindakan_kedokteran_ttd: false,
         indikasi_tindakan: "",
-        indikasi_tindakan_ttd: "",
+        indikasi_tindakan_ttd: false,
         tata_cara: "",
-        tata_cara_ttd: "",
+        tata_cara_ttd: false,
         tujuan: "",
-        tujuan_ttd: "",
+        tujuan_ttd: false,
         risiko: "",
-        risiko_ttd: "",
+        risiko_ttd: false,
         komplikasi: "",
-        komplikasi_ttd: "",
+        komplikasi_ttd: false,
         prognosis: "",
-        prognosis_ttd: "",
+        prognosis_ttd: false,
         alternatif_dan_risiko: "",
-        alternatif_dan_risiko_ttd: "",
+        alternatif_dan_risiko_ttd: false,
+        lainlain: "",
+        lainlain_ttd: "",
         menyatakan_menerangkan_ttd: "",
         menyatakan_memahami_ttd: "",
         yang_bertanda_tangan: "",
@@ -501,7 +536,15 @@ export default {
     },
   },
 
-  computed: {},
+  computed: {
+    currentDate() {
+      const today = new Date();
+      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+                      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      return `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+    }
+  },
+
   mounted() {
     this.setDataForm();
   },
@@ -555,14 +598,17 @@ export default {
         return;
       }
 
-      pad.readOnly = true;
-
       // fungsi yang benar untuk vue-signature-pad
-      const { data } = pad.saveSignature();
+      const { isEmpty, data } = pad.saveSignature();
+
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
 
       this.form[refName] = data; // base64 string
 
-      console.log("TTD saved:", refName, data);
+      console.log("TTD saved:", refName);
     },
 
     async submitForm() {
@@ -634,6 +680,36 @@ export default {
   border: 1px solid #ccc;
   padding: 8px;
 }
+
+/* CHECKBOX PARAF STYLING */
+.checkbox-paraf {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+}
+
+.checkbox-input {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #2d74b7;
+}
+
+.checkbox-label {
+  cursor: pointer;
+  margin: 0;
+  font-weight: 500;
+  color: #333;
+  user-select: none;
+}
+
+.checkbox-input:checked + .checkbox-label {
+  color: #2d74b7;
+  font-weight: 600;
+}
+
 .signature-box-rme {
   width: 180px;
   height: 90px;
@@ -718,8 +794,8 @@ export default {
 .action-footer {
   margin-top: 90px;
   display: flex;
-  justify-content: flex-end; /* tombol ke kanan */
-  gap: 12px; /* jarak antar tombol */
+  justify-content: flex-end;
+  gap: 12px;
 }
 
 .btn-save-form {
@@ -740,6 +816,11 @@ export default {
   border-radius: 4px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.tanggal-tempat {
+  margin-top: 20px;
+  font-weight: 600;
 }
 
 @keyframes spin-rme {

@@ -207,14 +207,14 @@
       />
     </div>
 
-      <div v-if="state == 'view'">
+    <div v-if="state == 'view'">
       <component
         :is="currentDocumentComponent"
         @back="onBackToList"
         :selectedPatient="selectedPatient"
         :editUuid="editUuid"
         :editData="editData"
-        :viewData=true
+        :viewData="true"
         :documentType="selectedDocumentType"
       />
     </div>
@@ -223,39 +223,127 @@
 
 <script>
 import axios from "axios";
-import { defineAsyncComponent } from "vue";import FormLaseLPI from "./create/FormLaserLPI.vue";
-;
+import { defineAsyncComponent } from "vue";
+import FormCatatanOperasi from "./create/FormCatatanOperasi.vue";
 
 export default {
   name: "ListLampiran",
   components: {
-    // Lazy load components
+    // Lazy load componentseditUuid
     CreateLaporanBedah: defineAsyncComponent(() => import("./create/LaporanBedah.vue")),
     FormLaserBargage: defineAsyncComponent(() => import("./create/FormLaserBarage.vue")),
-    FormPersetujuanTindakanKedokteran: defineAsyncComponent(() => import("./create/FormPersetujuanTindakanKedokteran.vue")),
+    FormPersetujuanTindakanKedokteran: defineAsyncComponent(() =>
+      import("./create/FormPersetujuanTindakanKedokteran.vue")
+    ),
     FormLaserFokal: defineAsyncComponent(() => import("./create/FormLaserFokal.vue")),
-    FormResumePerawatanRawatJalan: defineAsyncComponent(() => import("./create/FormResumePerawatanRawatJalan.vue")),
-    FormBalanceCairanHarian: defineAsyncComponent(() =>import("./create/FormBalanceCairanHarian.vue")),
-    FormPenolakanRujukan: defineAsyncComponent(() =>import("./create/FormPenolakanRujukan.vue")),
-    FormSuratKontrol: defineAsyncComponent(() =>import("./create/FormSuratKontrol.vue")),
-    FormSuratKonsul: defineAsyncComponent(() =>import("./create/FormSuratKonsul.vue")),
-    FormSuratBalasanKonsul: defineAsyncComponent(() =>import("./create/FormSuratBalasanKonsul.vue")),
-    FormPernyataanBatalOperasi: defineAsyncComponent(() =>import("./create/FormPernyataanBatalOperasi.vue")),
-    FormPernyataanPasienUmum: defineAsyncComponent(() =>import("./create/FormPernyataanPasienUmum.vue")),
-    FormDietitianPasienBaru: defineAsyncComponent(() =>import("./create/FormDietitianPasienBaru.vue")),
-    FormAsuhanGizi: defineAsyncComponent(() =>import("./create/FormAsuhanGizi.vue")),
-    FormLaserLPI: defineAsyncComponent(() =>import("./create/FormLaserLPI.vue")),
-    PenolakanTindakanAnestesi: defineAsyncComponent(() => import("./create/PenolakanTindakanAnestesi.vue")),
-    FormChecklistKesiapanBedah: defineAsyncComponent(() => import("./create/FormChecklistKesiapanBedah.vue")),
-    FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap: defineAsyncComponent(() => import("./create/FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap.vue")),
-    FormEdukasiPasienDanKeluargaRawatJalan: defineAsyncComponent(() => import("./create/FormEdukasiPasienDanKeluargaRawatJalan.vue")),
-    FormProsesPerawatanPeriOperative: defineAsyncComponent(() => import("./create/FormProsesPerawatanPeriOperative.vue")),
-    FormPersetujuanUmumPasienKeluarga: defineAsyncComponent(() => import("./create/FormPersetujuanUmumPasienKeluarga.vue")),
-    FormPengkajianKeperawatanMataRawatJalan: defineAsyncComponent(() => import("./create/FormPengkajianKeperawatanMataRawatJalan.vue")),
-    FormLaporanInjeksi: defineAsyncComponent(() => import("./create/FormLaporanInjeksi.vue")),
-    FormPermintaanPulang: defineAsyncComponent(() => import("./create/FormPermintaanPulang.vue")),
+    FormResumePerawatanRawatJalan: defineAsyncComponent(() =>
+      import("./create/FormResumePerawatanRawatJalan.vue")
+    ),
+    FormBalanceCairanHarian: defineAsyncComponent(() =>
+      import("./create/FormBalanceCairanHarian.vue")
+    ),
+    FormPenolakanRujukan: defineAsyncComponent(() =>
+      import("./create/FormPenolakanRujukan.vue")
+    ),
+    FormSuratKontrol: defineAsyncComponent(() => import("./create/FormSuratKontrol.vue")),
+    FormSuratKonsul: defineAsyncComponent(() => import("./create/FormSuratKonsul.vue")),
+    FormSuratBalasanKonsul: defineAsyncComponent(() =>
+      import("./create/FormSuratBalasanKonsul.vue")
+    ),
+    FormPernyataanBatalOperasi: defineAsyncComponent(() =>
+      import("./create/FormPernyataanBatalOperasi.vue")
+    ),
+    FormPernyataanPasienUmum: defineAsyncComponent(() =>
+      import("./create/FormPernyataanPasienUmum.vue")
+    ),
+    FormDietitianPasienBaru: defineAsyncComponent(() =>
+      import("./create/FormDietitianPasienBaru.vue")
+    ),
+    FormAsuhanGizi: defineAsyncComponent(() => import("./create/FormAsuhanGizi.vue")),
+    FormLaserLPI: defineAsyncComponent(() => import("./create/FormLaserLPI.vue")),
+    PenolakanTindakanAnestesi: defineAsyncComponent(() =>
+      import("./create/PenolakanTindakanAnestesi.vue")
+    ),
+    FormChecklistKesiapanBedah: defineAsyncComponent(() =>
+      import("./create/FormChecklistKesiapanBedah.vue")
+    ),
+    FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap: defineAsyncComponent(() =>
+      import("./create/FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap.vue")
+    ),
+    FormEdukasiPasienDanKeluargaRawatJalan: defineAsyncComponent(() =>
+      import("./create/FormEdukasiPasienDanKeluargaRawatJalan.vue")
+    ),
+    FormProsesPerawatanPeriOperative: defineAsyncComponent(() =>
+      import("./create/FormProsesPerawatanPeriOperative.vue")
+    ),
+    FormPersetujuanUmumPasienKeluarga: defineAsyncComponent(() =>
+      import("./create/FormPersetujuanUmumPasienKeluarga.vue")
+    ),
+    FormPengkajianKeperawatanMataRawatJalan: defineAsyncComponent(() =>
+      import("./create/FormPengkajianKeperawatanMataRawatJalan.vue")
+    ),
+    FormLaporanInjeksi: defineAsyncComponent(() =>
+      import("./create/FormLaporanInjeksi.vue")
+    ),
+    FormPermintaanPulang: defineAsyncComponent(() =>
+      import("./create/FormPermintaanPulang.vue")
+    ),
     VoucherRawatInap: defineAsyncComponent(() => import("./create/VoucherRawatInap.vue")),
-    FormReaksiTransfusiDarah: defineAsyncComponent(() => import("./create/FormReaksiTransfusiDarah.vue")),
+    FormReaksiTransfusiDarah: defineAsyncComponent(() =>
+      import("./create/FormReaksiTransfusiDarah.vue")
+    ),
+    FormLaserPRP: defineAsyncComponent(() => import("./create/FormLaserPRP.vue")),
+    FormLaporanOperasiPterygium: defineAsyncComponent(() =>
+      import("./create/FormLaporanOperasiPterygium.vue")
+    ),
+    FormLaporanEksisiPalebra: defineAsyncComponent(() =>
+      import("./create/FormLaporanEksisiPalebra.vue")
+    ),
+    FormLaporanEksisiChalazion: defineAsyncComponent(() =>
+      import("./create/FormLaporanEksisiChalazion.vue")
+    ),
+    FormAssesmenAwalKeperawatanRawatInap: defineAsyncComponent(() =>
+      import("./create/FormAssesmenAwalKeperawatanRawatInap.vue")
+    ),
+    FormResumeMedisRawatInap: defineAsyncComponent(() =>
+      import("./create/FormResumeMedisRawatInap.vue")
+    ),
+    FormResumeMedisRawatJalan: defineAsyncComponent(() =>
+      import("./create/FormResumeMedisRawatJalan.vue")
+    ),
+    FormCPPTRawatInap: defineAsyncComponent(() =>
+      import("./create/FormCPPTRawatInap.vue")
+    ),
+    FormPulangAtasPermintaanSendiri: defineAsyncComponent(() =>
+      import("./create/FormPulangAtasPermintaanSendiri.vue")
+    ),
+    FormTindakanLaserCapsulotomy: defineAsyncComponent(() =>
+      import("./create/FormTindakanLaserCapsulotomy.vue")
+    ),
+    FormTindakanEpilasi: defineAsyncComponent(() =>
+      import("./create/FormTindakanEpilasi.vue")
+    ),
+    FormKronologisPasien: defineAsyncComponent(() =>
+      import("./create/FormKronologisPasien.vue")
+    ),
+    FormCatatanOperasi: defineAsyncComponent(() =>
+      import("./create/FormCatatanOperasi.vue")
+    ),
+    FormMonitoringEfekSampingObat: defineAsyncComponent(() =>
+      import("./create/FormMonitoringEfekSampingObat.vue")
+    ),
+    FormCatatanKeperawatan: defineAsyncComponent(() =>
+      import("./create/FormCatatanKeperawatan.vue")
+    ),
+    FormLaporanOperasiTrabulektomi: defineAsyncComponent(() =>
+      import("./create/FormLaporanOperasiTrabulektomi.vue")
+    ),
+    FormStatusAnestesi: defineAsyncComponent(() =>
+      import("./create/FormStatusAnestesi.vue")
+    ),
+    FormLaporanOperasiVitreoRetina: defineAsyncComponent(() =>
+      import("./create/FormLaporanOperasiVitreoRetina.vue")
+    ),
     // Tambahkan component baru di sini
   },
 
@@ -296,11 +384,11 @@ export default {
           backendType: "laser_bargage",
         },
         {
-          value: "laser-fokal",
+          value: "dokumen_form_laser_fokal",
           label: "Form Laser Fokal",
           component: "FormLaserFokal",
           description: "Form tindakan laser Fokal medis",
-          backendType: "laser_fokal",
+          backendType: "dokumen_form_laser_fokal",
         },
         {
           value: "persetujuan_tindakan_kedokteran",
@@ -338,7 +426,7 @@ export default {
           backendType: "surat_kontrol_ulang",
         },
         {
-          value: "surat-kosultasi",
+          value: "surat_konsul",
           label: "Surat Konsultasi",
           component: "FormSuratKonsul",
           description: "Form Surat Konsultasi Pasien",
@@ -386,7 +474,7 @@ export default {
           description: "Form Laser LPI Pasien",
           backendType: "dokumen_tindakan_laser_lpi",
         },
-        
+
         {
           value: "form_persetujuan_umum_pasien_keluarga",
           label: "Form Persetujuan Umum Pasien Keluarga",
@@ -463,6 +551,141 @@ export default {
           component: "FormReaksiTransfusiDarah",
           description: "Form Reaksi Transfusi Darah",
           backendType: "form_reaksi_transfusi_darah",
+        },
+        {
+          value: "dokumen_tindakan_laser_prp",
+          label: "Form Dokumen Laser PRP",
+          component: "FormLaserPRP",
+          description: "Form Laser PRP Pasien",
+          backendType: "dokumen_tindakan_laser_prp",
+        },
+        {
+          value: "dokumen_laporan_operasi_trabekulektomi",
+          label: "Form Laporan Operasi Trabekulektomi",
+          component: "FormLaporanOperasiTrabulektomi",
+          description: "Form Laporan Operasi Trabekulektomi",
+          backendType: "dokumen_laporan_operasi_trabekulektomi",
+        },
+        {
+          value: "dokumen_laporan_operasi_pterygium",
+          label: "Form Laporan Operasi Pterygrium",
+          component: "FormLaporanOperasiPterygium",
+          description: "Form Laporan Operasi Pterygrium",
+          backendType: "dokumen_laporan_operasi_pterygium",
+        },
+        {
+          value: "dokumen_laporan_eksisi_palpebra",
+          label: "Form Laporan Eksisi Palebra",
+          component: "FormLaporanEksisiPalebra",
+          description: "Form Laporan Eksisi Palebra",
+          backendType: "dokumen_laporan_eksisi_palpebra",
+        },
+        {
+          value: "asesmen-keperawatan-rawat-inap",
+          label: "Assemen Awal Keperawatan Rawat Inap",
+          component: "FormAssesmenAwalKeperawatanRawatInap",
+          description: "Assemen Awal Keperawatan Rawat Inap",
+          backendType: "asesmen_keperawatan_rawat_inap",
+        },
+        {
+          value: "resume-medis-rawat-inap",
+          label: "Form Resume Medis Rawat Inap",
+          component: "FormResumeMedisRawatInap",
+          description: "Resume Medis Rawat Inap",
+          backendType: "resume_medis_rawat_inap",
+        },
+        {
+          value: "resume-medis-rawat-jalan",
+          label: "Form Resume Medis Rawat Jalan",
+          component: "FormResumeMedisRawatJalan",
+          description: "Resume Medis Rawat Jalan",
+          backendType: "resume_medis_rawat_jalan",
+        },
+        {
+          value: "cppt-rawat-inap",
+          label: "Form CPPT Rawat Inap",
+          component: "FormCPPTRawatInap",
+          description: "CPPT Rawat Inap",
+          backendType: "cppt_rawat_inap",
+        },
+        {
+          value: "dokumen_laporan_eksisi_chalazion",
+          label: "Form Laporan Eksisi Chalazion",
+          component: "FormLaporanEksisiChalazion",
+          description: "Form Laporan Eksisi Chalazion",
+          backendType: "dokumen_laporan_eksisi_chalazion",
+        },
+        {
+          value: "dokumen_pulang_atas_permintaan_sendiri",
+          label: "Form Pulang Atas Permintaan Sendiri",
+          component: "FormPulangAtasPermintaanSendiri",
+          description: "Form Pulang Atas Permintaan Sendiri",
+          backendType: "dokumen_pulang_atas_permintaan_sendiri",
+        },
+
+        {
+          value: "dokumen_tindakan_laser_capsulotomy",
+          label: "Form Tindakan Laser",
+          component: "FormTindakanLaserCapsulotomy",
+          description: "Form Tindakan Laser Capsulotomy",
+          backendType: "dokumen_tindakan_laser_capsulotomy",
+        },
+        {
+          value: "dokumen_tindakan_epilasi",
+          label: "Form Tindakan Epilasi",
+          component: "FormTindakanEpilasi",
+          description: "Form Tindakan Epilasi",
+          backendType: "dokumen_tindakan_epilasi",
+        },
+        {
+          value: "dokumen_kronologis_pasien",
+          label: "Form Kronologi Pasien",
+          component: "FormKronologisPasien",
+          description: "Form Kronologi Pasien",
+          backendType: "dokumen_kronologis_pasien",
+        },
+        {
+          value: "dokumen_catatan_operasi",
+          label: "Form Catatan Operasi",
+          component: "FormCatatanOperasi",
+          description: "Form Catatan Operasi",
+          backendType: "dokumen_catatan_operasi",
+        },
+        {
+          value: "monitoring-efek-samping-obat",
+          label: "Form Monitoring Efek Samping Obat",
+          component: "FormMonitoringEfekSampingObat",
+          description: "Form Monitoring Efek Samping Obat",
+          backendType: "monitoring_efek_samping_obat",
+        },
+        {
+          value: "dokumen-catatan-keperawatan",
+          label: "Form Catatan Keperawatan",
+          component: "FormCatatanKeperawatan",
+          description: "Form Catatan Keperawatan",
+          backendType: "catatan_keperawatan",
+        },
+
+        {
+          value: "dokumen_form_laser_barrage",
+          label: "Form Laser Barrage",
+          component: "FormLaserBarage",
+          description: "Form Laser Barrage",
+          backendType: "dokumen_form_laser_barrage",
+        },
+        {
+          value: "dokumen-status-anestesi",
+          label: "Form Status Anestesi",
+          component: "FormStatusAnestesi",
+          description: "Status Anestesi",
+          backendType: "status_anestesi",
+        },
+        {
+          value: "dokumen-form-laporan-operasi-vitreo-retina",
+          label: "Form Laporan Operasi Vitreo Retina",
+          component: "FormLaporanOperasiVitreoRetina",
+          description: "Laporan Operasi Operasi Bedah Mata",
+          backendType: "laporan_operasi_vitreo_retina",
         },
         // {
         //   value: "informed-consent",
@@ -618,114 +841,117 @@ export default {
       );
       return doc ? doc.description : "";
     },
+    async onView(item) {
+      console.log("🟡 EDIT - Item yang dipilih:", item);
 
-async onView(item) {
-  console.log("🟡 EDIT - Item yang dipilih:", item);
-  
-  try {
-    this.loading = true;
+      try {
+        this.loading = true;
 
-    // Map backend type to frontend type
-    const doc = this.availableDocuments.find(
-      (d) => d.backendType === item.document_type
-    );
+        // Map backend type to frontend type
+        const doc = this.availableDocuments.find(
+          (d) => d.backendType === item.document_type
+        );
 
-    console.log("🟡 EDIT - Doc Config Found:", doc);
+        console.log("🟡 EDIT - Doc Config Found:", doc);
 
-    if (!doc) {
-      alert("Tipe dokumen tidak ditemukan!");
-      return;
-    }
+        if (!doc) {
+          alert("Tipe dokumen tidak ditemukan!");
+          return;
+        }
 
-    // Kirim request untuk get detail
-    const formData = new FormData();
-    formData.append("type", item.document_type);
+        // Kirim request untuk get detail
+        const formData = new FormData();
+        formData.append("type", item.document_type);
 
-    const url = `/master/rekammedis/lampiran/${item.uuid}/detail`;
-    console.log("🟡 EDIT - URL:", url);
+        const url = `/master/rekammedis/lampiran/${item.uuid}/detail`;
+        console.log("🟡 EDIT - URL:", url);
 
-    const response = await axios.post(url, formData);
+        const response = await axios.post(url, formData);
 
-    console.log("🟡 EDIT - Response:", response.data);
+        console.log("🟡 EDIT - Response:", response.data);
 
-    if (!response.data.status) {
-      alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen"));
-      return;
-    }
+        if (!response.data.status) {
+          alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen"));
+          return;
+        }
 
-    // ✅ PENTING: Set data SEBELUM pindah state
-    this.editData = response.data.data;
-    this.selectedDocumentType = doc.value;
-    
-    console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
-    console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
-    
-    // ✅ Pindah state TERAKHIR setelah data ready
-    this.$nextTick(() => {
-      this.state = "view";
-    });
+        // ✅ PENTING: Set data SEBELUM pindah state
+        this.editData = response.data.data;
+        this.selectedDocumentType = doc.value;
 
-  } catch (error) {
-    console.error("🟡 EDIT - Error:", error);
-    alert("Error: " + (error.response?.data?.message || "Terjadi kesalahan saat mengambil data"));
-  } finally {
-    this.loading = false;
-  }
-},
+        console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
+        console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
 
-async onEdit(item) {
-  console.log("🟡 EDIT - Item yang dipilih:", item);
-  
-  try {
-    this.loading = true;
+        // ✅ Pindah state TERAKHIR setelah data ready
+        this.$nextTick(() => {
+          this.state = "view";
+        });
+      } catch (error) {
+        console.error("🟡 EDIT - Error:", error);
+        alert(
+          "Error: " +
+            (error.response?.data?.message || "Terjadi kesalahan saat mengambil data")
+        );
+      } finally {
+        this.loading = false;
+      }
+    },
 
-    // Map backend type to frontend type
-    const doc = this.availableDocuments.find(
-      (d) => d.backendType === item.document_type
-    );
+    async onEdit(item) {
+      console.log("🟡 EDIT - Item yang dipilih:", item);
 
-    console.log("🟡 EDIT - Doc Config Found:", doc);
+      try {
+        this.loading = true;
 
-    if (!doc) {
-      alert("Tipe dokumen tidak ditemukan!");
-      return;
-    }
+        // Map backend type to frontend type
+        const doc = this.availableDocuments.find(
+          (d) => d.backendType === item.document_type
+        );
 
-    // Kirim request untuk get detail
-    const formData = new FormData();
-    formData.append("type", item.document_type);
+        console.log("🟡 EDIT - Doc Config Found:", doc);
 
-    const url = `/master/rekammedis/lampiran/${item.uuid}/detail`;
-    console.log("🟡 EDIT - URL:", url);
+        if (!doc) {
+          alert("Tipe dokumen tidak ditemukan!");
+          return;
+        }
 
-    const response = await axios.post(url, formData);
+        // Kirim request untuk get detail
+        const formData = new FormData();
+        formData.append("type", item.document_type);
 
-    console.log("🟡 EDIT - Response:", response.data);
+        const url = `/master/rekammedis/lampiran/${item.uuid}/detail`;
+        console.log("🟡 EDIT - URL:", url);
 
-    if (!response.data.status) {
-      alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen"));
-      return;
-    }
+        const response = await axios.post(url, formData);
 
-    // ✅ PENTING: Set data SEBELUM pindah state
-    this.editData = response.data.data;
-    this.selectedDocumentType = doc.value;
-    
-    console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
-    console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
-    
-    // ✅ Pindah state TERAKHIR setelah data ready
-    this.$nextTick(() => {
-      this.state = "create";
-    });
+        console.log("🟡 EDIT - Response:", response.data);
 
-  } catch (error) {
-    console.error("🟡 EDIT - Error:", error);
-    alert("Error: " + (error.response?.data?.message || "Terjadi kesalahan saat mengambil data"));
-  } finally {
-    this.loading = false;
-  }
-},
+        if (!response.data.status) {
+          alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen"));
+          return;
+        }
+
+        // ✅ PENTING: Set data SEBELUM pindah state
+        this.editData = response.data.data;
+        this.selectedDocumentType = doc.value;
+
+        console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
+        console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
+
+        // ✅ Pindah state TERAKHIR setelah data ready
+        this.$nextTick(() => {
+          this.state = "create";
+        });
+      } catch (error) {
+        console.error("🟡 EDIT - Error:", error);
+        alert(
+          "Error: " +
+            (error.response?.data?.message || "Terjadi kesalahan saat mengambil data")
+        );
+      } finally {
+        this.loading = false;
+      }
+    },
 
     onPrint(item) {
       // Generate print URL based on document type
@@ -748,6 +974,31 @@ async onEdit(item) {
         form_permintaan_pulang: `/print/rekammedis/general/formpermintaanpulang/${item.uuid}`,
         voucher_rawat_inap: `/print/rekammedis/general/voucherrawatinap/${item.uuid}`,
         form_reaksi_transfusi_darah: `/print/rekammedis/general/formreaksitransfusidarah/${item.uuid}`,
+        cppt_rawat_inap: `/print/rekammedis/lampiran/cppt-rawat-inap/${item.uuid}`,
+        resume_perawatan_rawat_jalan: `/print/rekammedis/lampiran/rekam-medis-perawatan-rawat-jalan/${item.uuid}`,
+        resume_medis_rawat_jalan: `/print/rekammedis/lampiran/rekam-medis-rawat-jalan/${item.uuid}`,
+        resume_medis_rawat_inap: `/print/rekammedis/lampiran/rekam-medis-rawat-inap/${item.uuid}`,
+        asesmen_keperawatan_rawat_inap: `/print/rekammedis/lampiran/asesmen-awal-keperawatan-rawat-inap/${item.uuid}`,
+        monitoring_efek_samping_obat: `/print/rekammedis/lampiran/monitoring-efek-samping-obat/${item.uuid}`,
+        catatan_keperawatan: `/print/rekammedis/lampiran/catatan-keperawatan/${item.uuid}`,
+        surat_konsul: `/print/rekammedis/general/suratkonsul/${item.uuid}`,
+        dokumen_tindakan_laser_prp: `/print/rekammedis/general/formlaserprp/${item.uuid}`,
+        dokumen_laporan_operasi_trabekulektomi: `/print/rekammedis/general/laporanoperasitrabekulektomi/${item.uuid}`,
+        dokumen_laporan_operasi_pterygium: `/print/rekammedis/general/laporanoperasipterygium/${item.uuid}`,
+        dokumen_laporan_eksisi_chalazion: `/print/rekammedis/general/laporaneksisichalazion/${item.uuid}`,
+        dokumen_laporan_eksisi_palpebra: `/print/rekammedis/general/laporaneksisipalbera/${item.uuid}`,
+        dokumen_tindakan_laser_capsulotomy: `/print/rekammedis/general/formlasercapsulotomy/${item.uuid}`,
+        dokumen_tindakan_epilasi: `/print/rekammedis/general/formtindakanepilasi/${item.uuid}`,
+        dokumen_form_laser_fokal: `/print/rekammedis/general/formlaserfokal/${item.uuid}`,
+        dokumen_form_laser_barrage: `/print/rekammedis/general/formlaserbarrage/${item.uuid}`,
+        dokumen_asuhan_gizi: `/print/rekammedis/general/asuhangizi/${item.uuid}`,
+        dokumen_tindakan_laser_lpi: `/print/rekammedis/general/tindakanlaserlpi/${item.uuid}`,
+        surat_pernyataan_batal_operasi: `/print/rekammedis/general/suratpernyataanbataloperasi/${item.uuid}`,
+        dokumen_dietitian_pasien_baru: `/print/rekammedis/general/kunjunganawaldietitianpadapasienbaru/${item.uuid}`,
+        dokumen_catatan_operasi: `/print/rekammedis/bedah/rm2dot3/${item.uuid}`,
+        dokumen_kronologis_pasien: `/print/rekammedis/general/kronologis/${item.uuid}`,
+        status_anestesi: `/print/rekammedis/lampiran/status-anestesi/${item.uuid}`,
+        laporan_operasi_vitreo_retina: `/print/rekammedis/lampiran/laporan-operasi-vitreo-retina/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];
@@ -758,43 +1009,45 @@ async onEdit(item) {
       }
     },
 
-async onDelete(item) {
-  console.log("🔴 DELETE - Item yang dipilih:", item);
-  console.log("🔴 DELETE - Document Type:", item.document_type);
-  
-  // ✅ Ganti swal dengan confirm
-  const confirmDelete = confirm(`Apakah Anda yakin ingin menghapus ${item.document_label}?`);
+    async onDelete(item) {
+      console.log("🔴 DELETE - Item yang dipilih:", item);
+      console.log("🔴 DELETE - Document Type:", item.document_type);
 
-  if (!confirmDelete) {
-    console.log("🔴 DELETE - User batal hapus");
-    return;
-  }
+      // ✅ Ganti swal dengan confirm
+      const confirmDelete = confirm(
+        `Apakah Anda yakin ingin menghapus ${item.document_label}?`
+      );
 
-  try {
-    this.loading = true;
+      if (!confirmDelete) {
+        console.log("🔴 DELETE - User batal hapus");
+        return;
+      }
 
-    const url = `/master/rekammedis/lampiran/${item.uuid}?type=${item.document_type}`;
-    console.log("🔴 DELETE - URL yang dipanggil:", url);
+      try {
+        this.loading = true;
 
-    const response = await axios.delete(url);
-    
-    console.log("🔴 DELETE - Response:", response.data);
+        const url = `/master/rekammedis/lampiran/${item.uuid}?type=${item.document_type}`;
+        console.log("🔴 DELETE - URL yang dipanggil:", url);
 
-    if (response.data.status) {
-      alert("Dokumen berhasil dihapus");
-      this.fetchLampiran();
-    } else {
-      console.error("🔴 DELETE - Status false:", response.data.message);
-      alert("Gagal menghapus dokumen: " + response.data.message);
-    }
-  } catch (error) {
-    console.error("🔴 DELETE - Error:", error);
-    console.error("🔴 DELETE - Error Response:", error.response?.data);
-    alert("Error: " + (error.response?.data?.message || "Gagal menghapus dokumen"));
-  } finally {
-    this.loading = false;
-  }
-},
+        const response = await axios.delete(url);
+
+        console.log("🔴 DELETE - Response:", response.data);
+
+        if (response.data.status) {
+          alert("Dokumen berhasil dihapus");
+          this.fetchLampiran();
+        } else {
+          console.error("🔴 DELETE - Status false:", response.data.message);
+          alert("Gagal menghapus dokumen: " + response.data.message);
+        }
+      } catch (error) {
+        console.error("🔴 DELETE - Error:", error);
+        console.error("🔴 DELETE - Error Response:", error.response?.data);
+        alert("Error: " + (error.response?.data?.message || "Gagal menghapus dokumen"));
+      } finally {
+        this.loading = false;
+      }
+    },
 
     // Helper methods
     formatDate(date) {

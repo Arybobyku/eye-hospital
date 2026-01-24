@@ -35,11 +35,8 @@
           </div>
           <div class="col-md-3">
             <label>Jenis Kelamin :</label>
-            <select v-model="form.jenis_kelamin" class="input-rme" disabled>
-              <option value="L">L</option>
-              <option value="P">P</option>
-            </select>
-          </div>
+            <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
+            </div>
         </div>
       </div>
 
@@ -267,7 +264,7 @@ export default {
       if (this.selectedPatient) {
         this.form.uuid_pasien = this.selectedPatient.uuid;
         this.form.no_rm = this.selectedPatient.rekam_medis;
-        this.form.nik = this.selectedPatient.nik || "";
+        this.form.nik = this.selectedPatient.no_ktp || "";
         this.form.nama = this.selectedPatient.nama;
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
         this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin || "L";
@@ -281,9 +278,8 @@ export default {
     async loadDataForEdit() {
       try {
         const response = await axios.get(
-          `/master/pasien/lampiran/${this.editUuid}?type=resume_rawat_jalan`
+          `/master/rekammedis/lampiran/${this.editUuid}?type=resume_perawatan_rawat_jalan`
         );
-
         if (response.data.status) {
           const data = response.data.data;
           
@@ -292,6 +288,11 @@ export default {
               this.form.resume_rows = JSON.parse(data.resume_rows);
             } else if (data[key] !== undefined && key !== 'resume_rows') {
               this.form[key] = data[key];
+            }
+          });
+          this.$nextTick(() => {
+            if (this.form.ttd_dokter && this.$refs.ttd_dokter) {
+              this.$refs.ttd_dokter.fromDataURL(this.form.ttd_dokter);
             }
           });
         }

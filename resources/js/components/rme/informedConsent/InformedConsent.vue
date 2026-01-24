@@ -36,8 +36,7 @@
             <th>TANGGAL</th>
             <th>JAM</th>
             <th>NAMA PASIEN</th>
-            <th>JENIS KELAMIN</th>
-            <th>NIK</th>
+            <th>MENYATAKAN</th>
             <th>USER</th>
             <th>ACTION</th>
           </tr>
@@ -49,13 +48,12 @@
             <td>{{ item.date }}</td>
             <td>{{ item.time }}</td>
             <td>{{ item.nama }}</td>
-            <td>{{ item.jenis_kelamin }}</td>
-            <td>{{ item.no_identitas }}</td>
-            <td>{{ item.carabayar_nama }}</td>
+            <td>{{ item.menyatakan }}</td>
+            <td>{{ item.petugas }}</td>
             <!-- ACTION -->
             <td class="text-center">
               <!-- icon print -->
-              <i class="fas fa-print action-icon" @click="print()"></i>
+              <i class="fas fa-print action-icon" @click="print(item.id)"></i>
             </td>
           </tr>
         </tbody>
@@ -209,9 +207,9 @@ export default {
 
       return "Selesai";
     },
-    print() {
+    print(uuid) {
       window.open(
-        `/print/rekammedis/rawat-jalan/rm1dot1/${this.selectedPatient.uuid}`,
+        `/print/rekammedis/bedah/rm1dot8/${uuid}`,
         "_blank"
       );
     },

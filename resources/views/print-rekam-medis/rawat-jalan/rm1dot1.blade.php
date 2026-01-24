@@ -197,23 +197,15 @@
 		</tr>
 		<tr>
 			<td style="width: 35%; height: 90px">
-				@if($item->ttd_dokter)
-					<img src="{{ $item->ttd_dokter }}" alt="TTD Dokter" style="height: 100px; width: 200px;">
-				@endif
+				    <img src="{{ $item->pemberi_inf_ttd }}" alt="Base64 Image" width="100px"> <br>
 			</td>
 			<td style="width: 30%; height: 90px">
-				@if($item->ttd_keluarga)
-					<img src="{{ $item->ttd_keluarga }}" alt="TTD Keluarga" style="height: 100px; width: 200px;">
-				@endif
+				    <img src="{{ $item->pasien_ttd }}" alt="Base64 Image" width="100px"> <br>
 			</td>
 		</tr>
 		<tr>
-		    <td style="width: 35%">
-		        {{ $item->nama_dokter_ttd ?? '' }}
-		    </td>
-		    <td style="width: 30%">
-		        {{ $item->nama_keluarga_ttd ?? '' }}
-		    </td>
+			<td style="width: 35%">({{ $item->nama_terang_pemberi_inf }})</td>
+			<td style="width: 30%">({{ $item->nama_terang_pasien }})</td>
 		</tr>
 	</table>
 </div>

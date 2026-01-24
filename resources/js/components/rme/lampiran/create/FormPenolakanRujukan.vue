@@ -2,189 +2,205 @@
   <button @click="$emit('back')" class="btn-back">Kembali</button>
 
   <div class="container py-4">
-    <!-- LOADING OVERLAY -->
-    <div v-if="loadingData" class="loading-overlay">
-      <div class="spinner-rme"></div>
-      <p>Memuat data...</p>
-    </div>
-
-    <!-- ================= HEADER ================= -->
-    <div class="text-center mb-4">
-      <h2 class="fw-bold">Surat Penolakan Rujukan</h2>
-      <span v-if="isEditMode" class="badge bg-warning">Mode Edit</span>
-      <span v-else class="badge bg-success">Mode Baru</span>
-    </div>
-
-    <!-- DATE -->
-    <div class="row mb-3">
-      <div class="col-md-12 mb-2">
-        <label>Tanggal :</label>
-        <input type="date" v-model="form.tanggal" class="form-control" />
+    <div class="form-wrapper position-relative">
+      <div v-if="disabledSubmit" class="view-overlay"></div>
+      <!-- LOADING OVERLAY -->
+      <div v-if="loadingData" class="loading-overlay">
+        <div class="spinner-rme"></div>
+        <p>Memuat data...</p>
       </div>
-    </div>
 
-    <!-- ================= PEMBUAT PERNYATAAN ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">Yang Bertanda Tangan Di Bawah Ini</h5>
+      <!-- ================= HEADER ================= -->
+      <div class="text-center mb-4">
+        <h2 class="fw-bold">Surat Penolakan Rujukan</h2>
+        <span v-if="isEditMode && !disabledSubmit" class="badge bg-warning">Mode Edit</span>
+        <!-- <span v-else class="badge bg-success">Mode Baru</span> -->
+      </div>
 
+      <!-- DATE -->
       <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Nama :</label>
-          <input type="text" v-model="form.pembuat_nama" class="input-rme" />
-        </div>
-
-        <div class="col-md-6">
-          <label>NIK :</label>
-          <input type="text" v-model="form.pembuat_nik" class="input-rme" />
+        <div class="col-md-12 mb-2">
+          <label>Tanggal :</label>
+          <input type="date" v-model="form.tanggal" class="form-control" />
         </div>
       </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          <label>Alamat :</label>
-          <textarea v-model="form.pembuat_alamat" class="textarea-rme" rows="2"></textarea>
-        </div>
-      </div>
-    </div>
+      <!-- ================= PEMBUAT PERNYATAAN ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">Yang Bertanda Tangan Di Bawah Ini</h5>
 
-    <!-- ================= INFORMASI PASIEN ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">Selaku Keluarga / Pendamping Pasien</h5>
-
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Nama Pasien :</label>
-          <input type="text" v-model="form.pasien_nama" class="input-rme" readonly />
-        </div>
-
-        <div class="col-md-6">
-          <label>NIK Pasien :</label>
-          <input type="text" v-model="form.pasien_nik" class="input-rme" />
-        </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label>No. Rekam Medis :</label>
-          <input type="text" v-model="form.pasien_no_rm" class="input-rme" readonly />
-        </div>
-
-        <div class="col-md-6">
-          <label>Tanggal Lahir :</label>
-          <input type="text" v-model="form.pasien_tanggal_lahir" class="input-rme" readonly />
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <label>Alamat Pasien :</label>
-          <textarea
-            v-model="form.pasien_alamat"
-            class="textarea-rme"
-            rows="2"
-            readonly
-          ></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= ISI PERNYATAAN ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">Pernyataan</h5>
-
-      <p style="text-align: justify; line-height: 1.8">
-        Dengan ini menyatakan <strong>MENOLAK</strong> untuk dilakukan rujukan ke
-        Rumah Sakit yang lebih lengkap fasilitasnya untuk pasien tersebut di atas.
-      </p>
-
-      <p style="text-align: justify; line-height: 1.8">
-        Saya telah mendapat penjelasan dari dokter yang merawat bahwa kondisi pasien
-        memerlukan perawatan di Rumah Sakit yang lebih lengkap fasilitasnya, namun saya
-        dengan sadar dan tanpa paksaan dari pihak manapun menolak rujukan tersebut.
-      </p>
-
-      <p style="text-align: justify; line-height: 1.8">
-        Saya memahami segala risiko dan konsekuensi yang mungkin terjadi akibat
-        keputusan saya ini, dan saya tidak akan menuntut pihak rumah sakit atau tenaga
-        medis atas segala akibat yang timbul dari penolakan rujukan ini.
-      </p>
-    </div>
-
-    <!-- ================= SIGNATURE AREA ================= -->
-    <div class="signature-container">
-      <div class="signature-section">
-        <!-- Dokter -->
-        <div class="sign-box">
-          <label>Dokter yang Merawat</label>
-
-          <!-- Preview TTD yang sudah ada -->
-          <div v-if="form.ttd_dokter && !signatureCleared.ttd_dokter" class="signature-preview">
-            <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
-            <button @click="clearSignature('ttd_dokter')" class="btn-clear">
-              Hapus & Tanda Tangan Ulang
-            </button>
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label>Nama :</label>
+            <input type="text" v-model="form.pembuat_nama" class="input-rme" />
           </div>
 
-          <!-- Signature Pad -->
-          <div v-else>
-            <VueSignaturePad
-              ref="ttd_dokter"
-              :options="sigOption"
-              class="signature-box-rme"
+          <div class="col-md-6">
+            <label>NIK :</label>
+            <input type="text" v-model="form.pembuat_nik" class="input-rme" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <label>Alamat :</label>
+            <textarea
+              v-model="form.pembuat_alamat"
+              class="textarea-rme"
+              rows="2"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= INFORMASI PASIEN ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">Selaku Keluarga / Pendamping Pasien</h5>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label>Nama Pasien :</label>
+            <input type="text" v-model="form.pasien_nama" class="input-rme" readonly />
+          </div>
+
+          <div class="col-md-6">
+            <label>NIK Pasien :</label>
+            <input type="text" v-model="form.pasien_nik" class="input-rme" />
+          </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-md-6">
+            <label>No. Rekam Medis :</label>
+            <input type="text" v-model="form.pasien_no_rm" class="input-rme" readonly />
+          </div>
+
+          <div class="col-md-6">
+            <label>Tanggal Lahir :</label>
+            <input
+              type="text"
+              v-model="form.pasien_tanggal_lahir"
+              class="input-rme"
+              readonly
             />
-            <button @click="saveSign('ttd_dokter')" class="btn-save">Simpan ✔</button>
           </div>
-
-          <input
-            v-model="form.nama_dokter_ttd"
-            class="input-rme mt-2"
-            placeholder="Nama Dokter"
-          />
         </div>
 
-        <!-- Pembuat Pernyataan -->
-        <div class="sign-box">
-          <label>Yang Membuat Pernyataan</label>
-
-          <!-- Preview TTD yang sudah ada -->
-          <div v-if="form.ttd_pembuat && !signatureCleared.ttd_pembuat" class="signature-preview">
-            <img :src="form.ttd_pembuat" alt="TTD Pembuat" class="img-signature" />
-            <button @click="clearSignature('ttd_pembuat')" class="btn-clear">
-              Hapus & Tanda Tangan Ulang
-            </button>
+        <div class="row">
+          <div class="col-md-12">
+            <label>Alamat Pasien :</label>
+            <textarea
+              v-model="form.pasien_alamat"
+              class="textarea-rme"
+              rows="2"
+              readonly
+            ></textarea>
           </div>
-
-          <!-- Signature Pad -->
-          <div v-else>
-            <VueSignaturePad
-              ref="ttd_pembuat"
-              :options="sigOption"
-              class="signature-box-rme"
-            />
-            <button @click="saveSign('ttd_pembuat')" class="btn-save">Simpan ✔</button>
-          </div>
-
-          <input
-            v-model="form.pembuat_nama"
-            class="input-rme mt-2"
-            placeholder="Nama Pembuat Pernyataan"
-            readonly
-          />
         </div>
       </div>
 
-      <div class="tanggal-tempat">
-        Bekasi, {{ formatTanggal(form.tanggal) }}
+      <!-- ================= ISI PERNYATAAN ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">Pernyataan</h5>
+
+        <p style="text-align: justify; line-height: 1.8">
+          Dengan ini menyatakan <strong>MENOLAK</strong> untuk dilakukan rujukan ke Rumah
+          Sakit yang lebih lengkap fasilitasnya untuk pasien tersebut di atas.
+        </p>
+
+        <p style="text-align: justify; line-height: 1.8">
+          Saya telah mendapat penjelasan dari dokter yang merawat bahwa kondisi pasien
+          memerlukan perawatan di Rumah Sakit yang lebih lengkap fasilitasnya, namun saya
+          dengan sadar dan tanpa paksaan dari pihak manapun menolak rujukan tersebut.
+        </p>
+
+        <p style="text-align: justify; line-height: 1.8">
+          Saya memahami segala risiko dan konsekuensi yang mungkin terjadi akibat
+          keputusan saya ini, dan saya tidak akan menuntut pihak rumah sakit atau tenaga
+          medis atas segala akibat yang timbul dari penolakan rujukan ini.
+        </p>
+      </div>
+
+      <!-- ================= SIGNATURE AREA ================= -->
+      <div class="signature-container">
+        <div class="signature-section">
+          <!-- Dokter -->
+          <div class="sign-box">
+            <label>Dokter yang Merawat</label>
+
+            <!-- Preview TTD yang sudah ada -->
+            <div
+              v-if="form.ttd_dokter && !signatureCleared.ttd_dokter"
+              class="signature-preview"
+            >
+              <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+              <button @click="clearSignature('ttd_dokter')" class="btn-clear">
+                Hapus & Tanda Tangan Ulang
+              </button>
+            </div>
+
+            <!-- Signature Pad -->
+            <div v-else>
+              <VueSignaturePad
+                ref="ttd_dokter"
+                :options="sigOption"
+                class="signature-box-rme"
+              />
+              <button @click="saveSign('ttd_dokter')" class="btn-save">Simpan ✔</button>
+            </div>
+
+            <input
+              v-model="form.nama_dokter_ttd"
+              class="input-rme mt-2"
+              placeholder="Nama Dokter"
+            />
+          </div>
+
+          <!-- Pembuat Pernyataan -->
+          <div class="sign-box">
+            <label>Yang Membuat Pernyataan</label>
+
+            <!-- Preview TTD yang sudah ada -->
+            <div
+              v-if="form.ttd_pembuat && !signatureCleared.ttd_pembuat"
+              class="signature-preview"
+            >
+              <img :src="form.ttd_pembuat" alt="TTD Pembuat" class="img-signature" />
+              <button @click="clearSignature('ttd_pembuat')" class="btn-clear">
+                Hapus & Tanda Tangan Ulang
+              </button>
+            </div>
+
+            <!-- Signature Pad -->
+            <div v-else>
+              <VueSignaturePad
+                ref="ttd_pembuat"
+                :options="sigOption"
+                class="signature-box-rme"
+              />
+              <button @click="saveSign('ttd_pembuat')" class="btn-save">Simpan ✔</button>
+            </div>
+
+            <input
+              v-model="form.pembuat_nama"
+              class="input-rme mt-2"
+              placeholder="Nama Pembuat Pernyataan"
+              readonly
+            />
+          </div>
+        </div>
+
+        <div class="tanggal-tempat">Medan, {{ formatTanggal(form.tanggal) }}</div>
       </div>
     </div>
   </div>
 
   <!-- ================= BUTTON BOTTOM ================= -->
-  <div class="action-footer">
+  <div class="action-footer" v-if="!disabledSubmit">
     <!-- TOMBOL SUBMIT -->
     <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
       <span v-if="loadingSubmit">Menyimpan...</span>
-      <span v-else>{{ isEditMode ? 'Update' : 'Save' }}</span>
+      <span v-else>{{ isEditMode ? "Update" : "Save" }}</span>
     </button>
 
     <!-- TOMBOL BACK -->
@@ -205,6 +221,10 @@ export default {
       type: Object,
       required: true,
     },
+    viewData: {
+      type: Object,
+      default: null,
+    },
     editData: {
       type: Object,
       default: null,
@@ -216,6 +236,7 @@ export default {
       loadingSubmit: false,
       loadingData: false,
       isEditMode: false,
+      disabledSubmit: false,
       signatureCleared: {
         ttd_dokter: false,
         ttd_pembuat: false,
@@ -275,7 +296,11 @@ export default {
   },
 
   mounted() {
-    if (this.editData) {
+    this.disabledSubmit = false;
+    if (this.viewData) {
+      this.disabledSubmit = true;
+      this.loadEditData();
+    } else if (this.editData) {
       this.loadEditData();
     } else {
       this.setDataForm();
@@ -435,187 +460,43 @@ export default {
   },
 };
 </script>
-
 <style scoped>
-.box-rme {
-  border: 1px solid #dcdcdc;
+/* ================= CONTAINER & LAYOUT ================= */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
   padding: 20px;
-  border-radius: 6px;
-  background: #fafafa;
 }
 
-.section-title-rme {
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #2d74b7;
-  font-size: 16px;
+.py-4 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
-.input-rme {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  background: #fff;
+/* ================= TYPOGRAPHY ================= */
+.fw-bold {
+  font-weight: 700;
 }
 
-.textarea-rme {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  background: #fff;
-  resize: vertical;
-}
-
-.signature-container {
-  padding: 20px;
-  background: white;
-  border: 1px solid #dcdcdc;
-  border-radius: 6px;
-}
-
-.signature-section {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 30px;
-  margin-bottom: 20px;
-  gap: 20px;
-}
-
-.sign-box {
-  width: 45%;
+.text-center {
   text-align: center;
 }
 
-.sign-box label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 10px;
+.text-center h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
   color: #333;
 }
 
-.signature-box-rme {
-  width: 100%;
-  height: 160px;
-  border: 1px solid #999;
-  margin-bottom: 10px;
-  background: white;
-}
-
-.signature-preview {
-  width: 100%;
-  border: 1px solid #999;
-  background: white;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
-
-.img-signature {
-  max-width: 100%;
-  height: 160px;
-  object-fit: contain;
-  border: 1px dashed #ccc;
-  background: white;
-}
-
-.btn-save {
-  background: #1e88e5;
-  color: white;
-  padding: 5px 12px;
-  border: none;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.btn-save:hover {
-  background: #1565c0;
-}
-
-.btn-clear {
-  background: #f44336;
-  color: white;
-  padding: 5px 12px;
-  border: none;
-  border-radius: 4px;
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.btn-clear:hover {
-  background: #d32f2f;
-}
-
-.tanggal-tempat {
-  text-align: right;
-  font-weight: bold;
-  margin-top: 20px;
-  font-size: 14px;
-}
-
-.action-footer {
-  margin-top: 30px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 20px 0;
-}
-
-.btn-save-form {
-  background: #0288d1;
-  color: white;
-  padding: 10px 24px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-save-form:hover {
-  background: #0277bd;
-}
-
-.btn-save-form:disabled {
-  background: #b0bec5;
-  cursor: not-allowed;
-}
-
-.btn-back {
-  background: #ff9800;
-  color: white;
-  padding: 10px 24px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-back:hover {
-  background: #f57c00;
-}
-
-.btn-back:disabled {
-  background: #ffcc80;
-  cursor: not-allowed;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-  color: #555;
-}
-
+/* ================= BADGE ================= */
 .badge {
   display: inline-block;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: bold;
   margin-left: 10px;
+  margin-top: 10px;
 }
 
 .badge.bg-warning {
@@ -628,20 +509,322 @@ label {
   color: white;
 }
 
-/* LOADING OVERLAY */
+/* ================= BOX & SECTIONS ================= */
+.box-rme {
+  border: 1px solid #dcdcdc;
+  padding: 20px;
+  border-radius: 6px;
+  background: #fafafa;
+  margin-bottom: 20px;
+}
+
+.section-title-rme {
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #2d74b7;
+  font-size: 16px;
+  border-bottom: 2px solid #2d74b7;
+  padding-bottom: 8px;
+}
+
+.box-rme p {
+  text-align: justify;
+  line-height: 1.8;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.box-rme p:last-child {
+  margin-bottom: 0;
+}
+
+.box-rme p strong {
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+/* ================= FORM ELEMENTS ================= */
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+  font-size: 14px;
+}
+
+.input-rme {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px 12px;
+  background: #fff;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.input-rme:focus {
+  outline: none;
+  border-color: #2d74b7;
+}
+
+.input-rme[readonly] {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  color: #666;
+}
+
+.textarea-rme {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 12px;
+  background: #fff;
+  resize: vertical;
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+  font-size: 14px;
+  min-height: 80px;
+  transition: border-color 0.3s;
+}
+
+.textarea-rme:focus {
+  outline: none;
+  border-color: #2d74b7;
+}
+
+.textarea-rme[readonly] {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  color: #666;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #2d74b7;
+}
+
+/* ================= ROW & COLUMNS ================= */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+}
+
+.mb-2 {
+  margin-bottom: 10px;
+}
+
+.mb-3 {
+  margin-bottom: 15px;
+}
+
+.mb-4 {
+  margin-bottom: 20px;
+}
+
+.col-md-6,
+.col-md-12 {
+  padding: 0 10px;
+  margin-bottom: 15px;
+}
+
+.col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.col-md-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+/* ================= TANGGAL TEMPAT ================= */
+.tanggal-tempat {
+  text-align: right;
+  font-weight: bold;
+  margin-top: 25px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* ================= SIGNATURE SECTION ================= */
+.signature-container {
+  padding: 25px;
+  background: white;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  margin-top: 30px;
+}
+
+.signature-section {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  gap: 30px;
+}
+
+.sign-box {
+  flex: 1;
+  text-align: center;
+  max-width: 45%;
+}
+
+.sign-box label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ================= SIGNATURE PAD & PREVIEW ================= */
+.signature-box-rme {
+  width: 100%;
+  height: 160px;
+  border: 2px solid #999;
+  margin-bottom: 10px;
+  background: white;
+  border-radius: 4px;
+}
+
+.signature-preview {
+  width: 100%;
+  border: 2px solid #999;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 160px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
+}
+
+/* ================= BUTTONS ================= */
+.btn-save {
+  background: #1e88e5;
+  color: white;
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.btn-save:hover {
+  background: #1565c0;
+}
+
+.btn-clear {
+  background: #f44336;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.3s;
+}
+
+.btn-clear:hover {
+  background: #d32f2f;
+}
+
+.btn-back {
+  background: #ff9800;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.btn-back:hover {
+  background: #f57c00;
+}
+
+.btn-back:disabled {
+  background: #ffcc80;
+  cursor: not-allowed;
+}
+
+.btn-save-form {
+  background: #0288d1;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.btn-save-form:hover {
+  background: #0277bd;
+}
+
+.btn-save-form:disabled {
+  background: #b0bec5;
+  cursor: not-allowed;
+}
+
+/* ================= ACTION FOOTER ================= */
+.action-footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* ================= LOADING OVERLAY ================= */
 .loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   font-size: 18px;
   z-index: 9999;
+}
+
+.loading-overlay p {
+  color: #333;
+  font-weight: 500;
+  margin: 0;
 }
 
 .spinner-rme {
@@ -660,7 +843,70 @@ label {
   }
 }
 
+/* ================= UTILITIES ================= */
 .mt-2 {
   margin-top: 8px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .signature-section {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .sign-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .action-footer {
+    flex-direction: column-reverse;
+  }
+
+  .btn-save-form,
+  .btn-back {
+    width: 100%;
+  }
+
+  .text-center h2 {
+    font-size: 18px;
+  }
+
+  .box-rme {
+    padding: 15px;
+  }
+
+  .tanggal-tempat {
+    text-align: center;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .signature-box-rme {
+    height: 180px;
+  }
+
+  .img-signature {
+    height: 180px;
+  }
+
+  .box-rme p {
+    font-size: 13px;
+  }
+
+  .section-title-rme {
+    font-size: 15px;
+  }
 }
 </style>

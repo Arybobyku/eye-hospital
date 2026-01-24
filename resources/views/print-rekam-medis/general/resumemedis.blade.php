@@ -48,6 +48,7 @@
 <div style="position:fixed; right: 13px; bottom: 10px;">
 </div>
 <?php $fullpath = storage_path('app/public/images/header_rme.png');  ?>  
+
 <div class="wrap">
 	<div style="width:100%; text-align:right; margin-bottom:5px">
 		RM 3.5/RM/22

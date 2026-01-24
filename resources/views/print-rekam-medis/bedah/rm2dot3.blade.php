@@ -146,38 +146,38 @@
     <div class="smallfont2dot3">
         <table class="tablee2dot32" cellpadding="5" style="width: 100%; ">
             <tr>
-                <td class="td12dot3x">Dokter Bedah : <b>{{ $cok != null && $cok->dokter_bedah }}</b></td>
-                <td class="td22dot3x">Perawat Scrub : <b>{{ $cok != null && $cok->perawat_scrub }}</b></td>
+                <td class="td12dot3x">Dokter Bedah : <b>{{ $data->dokter_bedah }}</b></td>
+                <td class="td22dot3x">Perawat Scrub : <b>{{ $data->perawat_scrub }}</b></td>
                 <td rowspan="3" class="td22dot3x">
-                    Tanggal : <b>{{ $cok != null && $cok->tanggal }}</b> <br><br>
-                    Operasi Mulai: <b>{{ $cok != null && $cok->operasi_mulai }}</b><br> <br>
-                    Operasi Selesai: <b>{{ $cok != null && $cok->operasi_selesai }}</b>
+                    Tanggal : <b>   {{ \Carbon\Carbon::parse($data->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}</b> <br><br>
+                    Operasi Mulai: <b>{{ \Carbon\Carbon::parse($data->operasi_mulai)->locale('id')->isoFormat('HH:MM') }}</b><br> <br>
+                    Operasi Selesai: <b>{{ \Carbon\Carbon::parse($data->operasi_selesai)->locale('id')->isoFormat('HH:MM') }}</b>
             </tr>
             <tr>
-                <td class="td12dot3x">Dokter Anastesi : <b>{{ $cok != null && $cok->dokter_anastesi }}</b></td>
-                <td class="td22dot3x">Diagnosis Pra Bedah : <b> {{ $cok != null && $cok->diagnosis_pra_bedah }}</b></td>
+                <td class="td12dot3x">Dokter Anastesi : <b>{{ $data->dokter_anestesi }}</b></td>
+                <td class="td22dot3x">Diagnosis Pra Bedah : <b> {{ $data->diagnosis_pra_bedah }}</b></td>
             </tr>
             <tr>
-                <td class="td12dot3x">Tindakan Operasi : <b>{{ $cok != null && $cok->tindakan_operasi }}</b></td>
-                <td class="td22dot3x">Diagnosis Pasca Bedah : <b>{{ $cok != null && $cok->diagnosis_pasca_bedah }}</b></td>
+                <td class="td12dot3x">Tindakan Operasi : <b>{{ $data->tindakan_operasi}}</b></td>
+                <td class="td22dot3x">Diagnosis Pasca Bedah : <b>{{ $data->diagnosis_pasca_bedah}}</b></td>
             </tr>
         </table>
         <table class="tablee2dot32" width="100%" cellpadding="2">
             <tr>
                 <td rowspan="3" class="td12dot3">Anestesi</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->an_topical == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->anesthesi_topikal? 'Checked' : '' }}></td>
                 <td class="td22dot3"> Topikal</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->an_retrobulbar_peribulbar == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->anesthesi_retrobulbar ? 'Checked' : '' }}></td>
                 <td class="td32dot3">Retrobulbar/Peribulbar</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->an_sub_conjunctival == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->anesthesi_subconjunctival? 'Checked' : '' }}></td>
                 <td class="td42dot3">Subconjunctival</td>
             </tr>
             <tr>
-                <td><input type="checkbox" {{ $cok != null && $cok->an_intracamelar == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->anesthesi_intracamelar ? 'Checked' : '' }}></td>
                 <td class="td22dot3"> Intracamelar</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->an_nu_bius_umum == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->anesthesi_nu ? 'Checked' : '' }}></td>
                 <td class="td32dot3">NU/bius umum</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->an_xylocain == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->anesthesi_xylocain? 'Checked' : '' }}></td>
                 <td class="td42dot3">Xylocain</td>
             </tr>
             <tr>
@@ -185,126 +185,126 @@
                 <td class="td22dot3"></td>
                 <td></td>
                 <td class="td32dot3"></td>
-                <td><input type="checkbox" {{ $cok != null && $cok->an_lidocain == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->anesthesi_lidocain ? 'Checked' : '' }}></td>
                 <td class="td42dot3">Lidocain</td>
             </tr>
             <tr>
                 <td class="td12dot3" style="border-top: 1px solid black;">Insisi</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->in_kornea == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->insisi_kornea? 'Checked': '' }}></td>
                 <td style="border-top: 1px solid black;" class="td22dot3"> Kornea</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->in_limbus == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->insisi_limbus? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td32dot3">Limbus</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->in_sclera == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->insisi_sclera ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td42dot3">Sclera</td>
             </tr>
             <tr>
                 <td rowspan="2" style="border-top: 1px solid black;" class="td12dot3">Wound(Tunnel)</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->wt_main_port == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->wound_main_port? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td22dot3"> Main port</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->wt_two_side_port == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->wound_two_side_port? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td32dot3">Two Side Port</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->wt_one_side_port == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->wound_one_side_port? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td42dot3">One Side Port</td>
             </tr>
             <tr>
-                <td><input type="checkbox" {{ $cok != null && $cok->wt_keratome_2_koma_75_mm == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->wound_keratome? 'Checked' : '' }}></td>
                 <td class="td22dot3"> Keratome 2.75mm</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->wt_crescen_knife == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->wound_crescen_knife? 'Checked' : '' }}></td>
                 <td class="td32dot3">Crescen knife</td>
                 <td></td>
                 <td class="td42dot3"></td>
             </tr>
             <tr>
                 <td style="border-top: 1px solid black;" class="td12dot3" rowspan="2">Capsulotomi Anterior</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->cs_ccc == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->capsulotomi_ccc? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td22dot3"> CCC</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->cs_x_mas_tree == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->capsulotomi_xmas_tree ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td32dot3">X'mas tree</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->cs_linear == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->capsulotomi_linear ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td42dot3">Linear</td>
             </tr>
             <tr>
-                <td><input type="checkbox" {{ $cok != null && $cok->cs_can_opener == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->capsulotomi_can_opener ? 'Checked' : '' }}></td>
                 <td class="td22dot3">Can Opener</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->cs_tryphan_blue == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->capsulotomi_tryphan_blue ? 'Checked' : '' }}></td>
                 <td class="td32dot3">Tryphan blue</td>
                 <td></td>
                 <td class="td42dot3"></td>
             </tr>
             <tr>
                 <td class="td12dot3" style="border-top: 1px solid black;">Teknik Tambahan</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->tb_ctr == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->teknik_ctr? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td22dot3"> CTR</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->tb_kapsulotomi_posterior == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->teknik_kapsulotomi_posterior ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td32dot3">Kapsulotomi posterior</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->tb_vitrektomi_anterior == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->teknik_vitrektomi_anterior ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td42dot3">Vitrektomi anterior</td>
             </tr>
             <tr>
                 <td class="td12dot3" style="border-top: 1px solid black;">Cairan Irigasi</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->ci_rl == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->cairan_rl? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td22dot3"> RL</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->ci_bss == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->cairan_bss ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td32dot3">B.S.S</td>
                 <td style="border-top: 1px solid black;"></td>
                 <td style="border-top: 1px solid black;" class="td42dot3"></td>
             </tr>
             <tr>
                 <td rowspan="2" style="border-top: 1px solid black;" class="td12dot3">Lensa Intra Okular</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->lio_dalam_kantung_kapsul == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->lensa_dalam_kantung? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td22dot3"> Dalam Kantung Kapsul</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->lio_bilik_mata_depan == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->lensa_bilik_mata_depan ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td32dot3">Bilik mata depan</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->lio_sulcus_siliaris == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->lensa_sulcus_siliaris ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td42dot3">Sulcus siliaris</td>
             </tr>
             <tr>
-                <td><input type="checkbox" {{ $cok != null && $cok->lio_diluar_kantong_kapsul == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{  $data->lensa_diluar_kantung ? 'Checked' : '' }}></td>
                 <td class="td22dot3">Diluar Kantung Kapsul</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->lio_afakia == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->lensa_afakia? 'Checked' : '' }}></td>
                 <td class="td32dot3">Afakia</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->lio_fiksasi_scleral == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->lensa_fiksasi_scleral? 'Checked' : '' }}></td>
                 <td class="td42dot3">Fiksasi Scleral</td>
             </tr>
             <tr>
                 <td class="td12dot3" style="border-top: 1px solid black;">Cairan Viskoelastik</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->cv_hpmc == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->visko_hpmc ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td22dot3"> HPMC</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->cv_viscoat == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{  $data->visko_viscoat ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td32dot3">Viscoat</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->cv_hyaluronic_acid == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->visko_hyaluronic_acid ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td42dot3">Hyaluronic acid</td>
             </tr>
             <tr>
                 <td class="td12dot3" style="border-top: 1px solid black;">Benang</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->benang_tanpa_jahitan == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->benang_tanpa_jahitan? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td22dot3"> Tanpa Jaitan</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->benang_ethylon_10_0 == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->benang_ethylon ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td32dot3">Ethylon 10-0</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->benang_vicryl_8_0 == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->benang_vicryl ? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td42dot3">Vicryl 8-0 </td>
             </tr>
             <tr>
                 <td rowspan="4" style="border-top: 1px solid black;" class="td12dot3">Komplikasi</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->kompikasi_tidak_ada == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->komplikasi_tidak_ada? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td22dot3"> Tidak ada</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->kompikasi_pcr == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->komplikasi_pcr? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td32dot3">PCR</td>
-                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $cok != null && $cok->kompikasi_prolaps_vitreous == 'ada' ? 'Checked' : '' }}></td>
+                <td style="border-top: 1px solid black;"><input type="checkbox" {{ $data->komplikasi_prolaps_vitreous? 'Checked' : '' }}></td>
                 <td style="border-top: 1px solid black;" class="td42dot3">Prolaps vitreous</td>
             </tr>
             <tr>
-                <td><input type="checkbox" {{ $cok != null && $cok->kompikasi_drop_nucleus == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->komplikasi_drop_nucleus? 'Checked' : '' }}></td>
                 <td class="td22dot3"> Drop Nucleus</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->kompikasi_perdarahan == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->komplikasi_perdarahan? 'Checked' : '' }}></td>
                 <td class="td32dot3">Perdarahan</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->kompikasi_corneal_burn == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->komplikasi_corneal_burn ? 'Checked' : '' }}></td>
                 <td class="td42dot3"> Corneal burn</td>
             </tr>
             <tr>
-                <td><input type="checkbox" {{ $cok != null && $cok->kompikasi_convert_to_ecce == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->komplikasi_convert_ecce ? 'Checked' : '' }}></td>
                 <td class="td22dot3"> Conert to ECCE</td>
-                <td><input type="checkbox" {{ $cok != null && $cok->kompikasi_convert_to_icce == 'ada' ? 'Checked' : '' }}></td>
+                <td><input type="checkbox" {{ $data->komplikasi_convert_icce ? 'Checked' : '' }}></td>
                 <td class="td32dot3"> Conert to ICCE</td>
                 <td></td>
                 <td class="td42dot3"></td>
@@ -321,21 +321,21 @@
                 </td>
             </tr>
             <tr>
-                <td ><input type="checkbox" {{ $cok != null && $cok->ipo_pdb2jpo == 'ada' ? 'Checked' : '' }}></td>
+                <td ><input type="checkbox" {{ $data->instruksi_perban_2jam ? 'Checked' : '' }}></td>
                 <td class="tdb2dot3">
                     Perban dibuka 2 jam paska operasi
                 </td>
-                <td ><input type="checkbox" {{ $cok != null && $cok->ipo_pdbddtksdto == 'ada' ? 'Checked' : '' }}></td>
+                <td ><input type="checkbox" {{ $data->instruksi_perban_tutup_kembali ? 'Checked' : '' }}></td>
                 <td class="tdd2dot3">
                     Perban dibuka dan ditutup kembali setelah ditetes obat
                 </td>
             </tr>
             <tr>
-                <td ><input type="checkbox" {{ $cok != null && $cok->ipo_omdpspdb == 'ada' ? 'Checked' : '' }}></td>
+                <td ><input type="checkbox" {{ $data->instruksi_obat_setelah_buka? 'Checked' : '' }}></td>
                 <td class="tdb2dot3">
                     Obat mulai di pakai setelah perban di buka
                 </td>
-                <td ><input type="checkbox" {{ $cok != null && $cok->ipo_psdipo == 'ada' ? 'Checked' : '' }}></td>
+                <td ><input type="checkbox" {{ $data->instruksi_pantangan ? 'Checked' : '' }}></td>
                 <td class="tdd2dot3">
                     pantangan sesuai dengan insturksi post operasi
                 </td>
@@ -344,7 +344,7 @@
         <table class="tablee2dot32" width="100%" cellpadding="10">
             <tr>
                 <td colspan="2">
-                    Catatan Tambahan :  {{ $cok != null && $cok->catatan_tambahan }}
+                    Catatan Tambahan :  {{ $data->catatan_tambahan }}
                 </td>
                 
             </tr>
@@ -360,19 +360,13 @@
                 </td>
             </tr>
             <tr>
-                <td width="60%">
-                     
-                </td>
-                <td width="40%">
-
-                </td>
-            </tr>
-            <tr>
                 <td>
 
                 </td>
                 <td style="text-align: center">
-                    (dr {{ $cok != null && $cok->operator }})
+
+                       <img src="{{ $data->ttd_operator }}" alt="Base64 Image" width="200px"> <br>
+                    ({{ $data->nama_operator }})
                 </td>
             </tr>
         </table>

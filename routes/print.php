@@ -31,6 +31,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('panjar/{uuid}', [PrintKasirCtrl::class, 'panjar']);
 
     //REKAM MEDIS GENERAL
+    Route::get('rekammedis/general/kronologis/{uuid}', [PrintRekamMedisCtrl::class, 'printKronologis']);
     Route::get('rekammedis/general/suratkonsul/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratKonsul']);
     Route::get('rekammedis/general/formlaserbarrage/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserBarrage']);
     Route::get('rekammedis/general/formlaserfokal/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserFokal']);
@@ -63,6 +64,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/general/monitoringefeksampingobat/{uuid}', [PrintRekamMedisCtrl::class, 'printMonitoringEfekSampingObat']);
     Route::get('rekammedis/general/formreaksitransfusidarah/{uuid}', [PrintRekamMedisCtrl::class, 'printFormReaksiTransfusiDarah']);
     Route::get('rekammedis/general/penolakantindakananestesi/{uuid}', [PrintRekamMedisCtrl::class, 'printPenolakanTindakanAnestesi']);
+    Route::get('rekammedis/general/suratpernyataanbataloperasi/{uuid}', [PrintRekamMedisCtrl::class, 'suratpernyataanbataloperasi']);
     
     // REKAM MEDIS RAWAT JALAN
 	Route::get('rekammedis/{uuid}', [PrintRekamMedisCtrl::class, 'print']);
@@ -92,4 +94,12 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/rawat-jalan/all/{uuid}', [PrintRekamMedisCtrl::class, 'all']);
     Route::get('rekammedis/bedah/all_bedah/{uuid}', [PrintRekamMedisCtrl::class, 'all_bedah']);
     Route::get('rekammedis/obat/print/{uuid}', [PrintRekamMedisCtrl::class, 'printRacikanObat']);
+    Route::get('rekammedis/lampiran/rekam-medis-rawat-inap/{uuid}', [PrintRekamMedisCtrl::class, 'printResumeMedisRawatInap']);
+    Route::get('rekammedis/lampiran/rekam-medis-rawat-jalan/{uuid}', [PrintRekamMedisCtrl::class, 'printResumeMedisRawatJalan']);
+    Route::get('rekammedis/lampiran/rekam-medis-perawatan-rawat-jalan/{uuid}', [PrintRekamMedisCtrl::class, 'printResumeMedisPerawatanRawatJalan']);
+    Route::get('rekammedis/lampiran/cppt-rawat-inap/{uuid}', [PrintRekamMedisCtrl::class, 'printCpptRawatInap']);
+    Route::get('rekammedis/lampiran/catatan-keperawatan/{uuid}', [PrintRekamMedisCtrl::class, 'printCatatanKeperawatan']);
+    Route::get('rekammedis/lampiran/monitoring-efek-samping-obat/{uuid}', [PrintRekamMedisCtrl::class, 'printMonitoringEfekSampingObat']);
+    Route::get('rekammedis/lampiran/status-anestesi/{uuid}', [PrintRekamMedisCtrl::class, 'printMonitoringEfekSampingObat']);
+    Route::get('rekammedis/lampiran/laporan-operasi-vitreo-retina/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanOperasiVitreoRetina']);
 });

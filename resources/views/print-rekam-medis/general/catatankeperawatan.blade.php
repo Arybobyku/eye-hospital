@@ -58,32 +58,51 @@
         </td>
     </tr>
 </table>
-    <table style="width: 100%;  border: 1px solid black; cellpadding="0" cellspacing="0" >
-      <tr>
-        <td class="tablee" style="width: 20%; font-weight: bold;">TANGGAL</td>
-        <td class="tablee" style="width: 20%; font-weight: bold;">JAM </td>
-        <td class="tablee" style="width: 20%; font-weight: bold;">URAIAN</td>
-        <td class="tablee" style="width: 20%; font-weight: bold;"> NAMA & PARAF</td>
-      </tr>
-      <tr>
-        <td class="tablee"><br></td>
-        <td class="tablee"><br></td>
-        <td class="tablee"><br></td>
-        <td class="tablee"><br></td>
-      </tr>
-        <tr>
-        <td class="tablee"><br></td>
-        <td class="tablee"><br></td>
-        <td class="tablee"><br></td>
-        <td class="tablee"><br></td>
-      </tr>
-        <tr>
-        <td class="tablee"><br></td>
-        <td class="tablee"><br></td>
-        <td class="tablee"><br></td>
-        <td class="tablee"><br></td>
-      </tr>
-    </table>
+@php
+  $rows = $data->catatan_rows ?? [];
+@endphp
+
+<table style="width: 100%; border: 1px solid black; border-collapse: collapse;">
+  <tr>
+    <td class="tablee" style="width: 20%; font-weight: bold;">TANGGAL</td>
+    <td class="tablee" style="width: 20%; font-weight: bold;">JAM</td>
+    <td class="tablee" style="width: 20%; font-weight: bold;">URAIAN</td>
+    <td class="tablee" style="width: 20%; font-weight: bold;">NAMA & PARAF</td>
+  </tr>
+
+  @forelse ($rows as $row)
+    <tr>
+      <td class="tablee">
+        {{ $row['tanggal'] ?? '' }}
+      </td>
+
+      <td class="tablee">
+        {{ $row['jam'] ?? '' }}
+      </td>
+
+      <td class="tablee" style="text-align:left;">
+        {!! nl2br(e($row['uraian'] ?? '')) !!}
+      </td>
+
+      <td class="tablee">
+        <div class="text-above">
+          {{ $row['nama_perawat'] ?? '' }}
+        </div>
+
+        @if (!empty($row['ttd_perawat']))
+          <div class="img-wrapper">
+            <img src="{{ $row['ttd_perawat'] }}" style="height:60px;">
+          </div>
+        @endif
+      </td>
+    </tr>
+  @empty
+    <tr>
+      <td class="tablee" colspan="4">Tidak ada data</td>
+    </tr>
+  @endforelse
+</table>
+
 </div>
 </body>
 </html>

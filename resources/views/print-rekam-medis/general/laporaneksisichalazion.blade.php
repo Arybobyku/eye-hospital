@@ -37,51 +37,62 @@
             RM 9.9/LEC/22
         </div>
         @include('print-rekam-medis.partials.header')
-        <h3 style="text-align: center">LAPORAN EKSISI CHALAZION</h3>        
+        <h3 style="text-align: center">LAPORAN EKSISI CHALAZION</h3>
         <table class="tablee" style="width:100%; position:relative">
             <tr>
-                <td style="padding-bottom: 30px; padding-left: 8px;">Diagnosa Pra Bedah :</td>
+                <td style="padding-bottom: 30px; padding-left: 8px;">Diagnosa Pra Bedah : {{ $data->diagnosa_pra_bedah }}
+                </td>
             </tr>
             <tr>
-                <td style="padding-bottom: 30px; padding-left: 8px;">Tindakan :</td>
+                <td style="padding-bottom: 30px; padding-left: 8px;">Tindakan : {{ $data->tindakan }}</td>
             </tr>
             <tr>
-                <td style="padding-bottom: 30px; padding-left: 8px;">Diagnosa Post Bedah</td>
+                <td style="padding-bottom: 30px; padding-left: 8px;">Diagnosa Post Bedah:
+                    {{ $data->diagnosa_post_bedah }}</td>
             </tr>
             <tr>
-                <td style="padding-left: 8px;">Unit Pembedahan :</td>
+                <td style="padding-left: 8px;">Unit Pembedahan :{{ $data->unit_pembedahan }} </td>
             </tr>
             <tr>
-                <td>        
+                <td>
                     <ol style="line-height: 1.8;">
-                        <li >Pasien dibaringkan di meja operasi.</li>
-                        <li >Disinfektan lapangan operasi dengan betadine.</li>
-                        <li >Tutup dengan doek steril.</li>
-                        <li >Pasang forceps chalizon.</li>
-                        <li >Anestesi dengan inj. Lidocain subconjungtiva margin palpebra.</li>
-                        <li >Incesi daerah chalizon, tampak keluar nanah.</li>
-                        <li >Bersihkan chalizon dengan cuvet.</li>
-                        <li >Kontrol perdaharahn.</li>
-                        <li >Beri salep antibiotik kemudian ditutup dengan kassa steril.</li>
-                        <li >Operasi selesai.</li>
+                        <li>Pasien dibaringkan di meja operasi.</li>
+                        <li>Disinfektan lapangan operasi dengan betadine.</li>
+                        <li>Tutup dengan doek steril.</li>
+                        <li>Pasang forceps chalizon.</li>
+                        <li>Anestesi dengan inj. Lidocain subconjungtiva margin palpebra.</li>
+                        <li>Incesi daerah chalizon, tampak keluar nanah.</li>
+                        <li>Bersihkan chalizon dengan cuvet.</li>
+                        <li>Kontrol perdaharahn.</li>
+                        <li>Beri salep antibiotik kemudian ditutup dengan kassa steril.</li>
+                        <li>Operasi selesai.</li>
                     </ol>
                 </td>
-                <tr>
-                    <td style="padding-bottom: 30px;padding-left: 8px;"> Terapi Pasca Bedah :</td>
-                </tr>
-                <tr>
-                    <td>
-                        <table style="width:100%; text-align:center; margin-top:50px">
-                            <tr>
-                                <td style="padding-bottom: 80px;">Perawat</td>
-                                <td style="padding-bottom: 80px;">Operator</td>
-                            </tr>
-                            <tr>
-                                <td style="padding-bottom: 30px;">(...............................................)</td>
-                                <td style="padding-bottom: 30px;">(...............................................)</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+            <tr>
+                <td style="padding-bottom: 30px;padding-left: 8px;"> Terapi Pasca Bedah :
+                    {{ $data->terapi_pasca_bedah }} </td>
             </tr>
-        </div>
+            <tr>
+                <td>
+                    <table style="width:100%; text-align:center; margin-top:50px">
+                        <tr>
+                            <td style="padding-bottom: 10px;">Perawat</td>
+                            <td style="padding-bottom: 10px;">Operator</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <img src="{{ $data->ttd_perawat }}" alt="Base64 Image" width="200px">
+                            </td>
+                            <td>
+                                <img src="{{ $data->ttd_operator }}" alt="Base64 Image" width="200px">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding-bottom: 30px;">({{ $data->nama_perawat }})</td>
+                            <td style="padding-bottom: 30px;">({{ $data->nama_operator }})</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            </tr>
+    </div>
