@@ -296,106 +296,106 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_ceklist_kesiapan_bedah',
                     'type' => 'dokumen_ceklist_kesiapan_bedah',
                     'label' => 'Dokumen Ceklist Kesiapan Bedah',
-                    'icon' => 'fa-eye',
-                    'color' => '#0D47A1', // Biru sangat tua
+                    'icon' => 'fa-list-check',
+                    'color' => '#795548', // Brown
                 ],
                 [
                     'table' => 'form_edukasi_pasien_dan_keluarga_rawat_jalan',
                     'type' => 'form_edukasi_pasien_dan_keluarga_rawat_jalan',
                     'label' => 'Form Edukasi Pasien Dan Keluarga Rawat Jalan',
-                    'icon' => 'fa-eye',
-                    'color' => '#0F5DBB', // Biru tua
+                    'icon' => 'fa-chalkboard-user',
+                    'color' => '#3F51B5', // Indigo
                 ],
                 [
                     'table' => 'form_persetujuan_umum_pasien_keluarga',
                     'type' => 'form_persetujuan_umum_pasien_keluarga',
                     'label' => 'Form Persetujuan Umum Pasien Keluarga',
-                    'icon' => 'fa-eye',
-                    'color' => '#1565C0', // Biru solid
+                    'icon' => 'fa-file-contract',
+                    'color' => '#009688', // Teal dark
                 ],
                 [
                     'table' => 'form_proses_perawatan_peri_operative',
                     'type' => 'form_proses_perawatan_peri_operative',
                     'label' => 'Form Proses Perawatan Peri Operative',
-                    'icon' => 'fa-eye',
-                    'color' => '#1976D2', // Biru medium
+                    'icon' => 'fa-hospital-user',
+                    'color' => '#E91E63', // Pink
                 ],
                 [
                     'table' => 'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap',
                     'type' => 'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap',
                     'label' => 'Form Pendidikan Edukasi Pasien Keluarga Terintegrasi Rawat Inap',
-                    'icon' => 'fa-eye',
-                    'color' => '#1E88E5', // Biru cerah (masih aman)
+                    'icon' => 'fa-users',
+                    'color' => '#03A9F4', // Light Blue
                 ],
                 [
                     'table' => 'penolakan_tindakan_anestesi',
                     'type' => 'penolakan_tindakan_anestesi',
                     'label' => 'Penolakan Tindakan Anestesi',
-                    'icon' => 'fa-eye',
-                    'color' => '#2196F3', // Biru cerah utama
+                    'icon' => 'fa-hand',
+                    'color' => '#F44336', // Red
                 ],
                 [
                     'table' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
                     'type' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
                     'label' => 'Form Pengkajian Keperawatan Mata Rawat Jalan',
                     'icon' => 'fa-eye',
-                    'color' => '#1C7ED6', // Biru medium terang
+                    'color' => '#00796B', // Teal 700
                 ],
                 [
                     'table' => 'form_laporan_injeksi',
                     'type' => 'form_laporan_injeksi',
                     'label' => 'Form Laporan Injeksi',
-                    'icon' => 'fa-eye',
-                    'color' => '#1864AB', // Biru tenang
+                    'icon' => 'fa-syringe',
+                    'color' => '#1976D2', // Blue
                 ],
                 [
                     'table' => 'form_permintaan_pulang',
                     'type' => 'form_permintaan_pulang',
                     'label' => 'Form Permintaan Pulang',
-                    'icon' => 'fa-eye',
-                    'color' => '#1450A3', // Biru agak tua
+                    'icon' => 'fa-door-open',
+                    'color' => '#388E3C', // Green
                 ],
                 [
                     'table' => 'voucher_rawat_inap',
                     'type' => 'voucher_rawat_inap',
                     'label' => 'Voucher Rawat Inap',
-                    'icon' => 'fa-eye',
-                    'color' => '#0B5394', // Biru dalam
+                    'icon' => 'fa-ticket',
+                    'color' => '#F57F17', // Yellow 900
                 ],
                 [
                     'table' => 'form_reaksi_transfusi_darah',
                     'type' => 'form_reaksi_transfusi_darah',
                     'label' => 'Form Reaksi Transfusi Darah',
-                    'icon' => 'fa-eye',
-                    'color' => '#083D77', // Biru paling gelap
+                    'icon' => 'fa-droplet-slash',
+                    'color' => '#C62828', // Red 800
                 ],
                 [
                     'table' => 'dokumen_tindakan_laser_prp',
                     'type' => 'dokumen_tindakan_laser_prp',
                     'label' => 'Dokumen Tindakan Laser PRP',
                     'icon' => 'fa-bolt',
-                    'color' => '#0097A7', // Cyan gelap
+                    'color' => '#0097A7', // Cyan 700
                 ],
                 [
                     'table' => 'dokumen_laporan_operasi_trabekulektomi',
                     'type' => 'dokumen_laporan_operasi_trabekulektomi',
                     'label' => 'Dokumen Laporan Operasi Trabekulektomi',
                     'icon' => 'fa-eye-dropper',
-                    'color' => '#7B1FA2', // Ungu tua
+                    'color' => '#7B1FA2', // Purple 700
                 ],
                 [
                     'table' => 'dokumen_laporan_operasi_pterygium',
                     'type' => 'dokumen_laporan_operasi_pterygium',
                     'label' => 'Dokumen Laporan Operasi Pterygium',
                     'icon' => 'fa-eye-low-vision',
-                    'color' => '#C2185B', // Pink tua
+                    'color' => '#C2185B', // Pink 700
                 ],
                 [
                     'table' => 'dokumen_laporan_eksisi_palpebra',
                     'type' => 'dokumen_laporan_eksisi_palpebra',
                     'label' => 'Dokumen Laporan Eksisi Palbebra',
                     'icon' => 'fa-scissors',
-                    'color' => '#F57C00', // Orange tua
+                    'color' => '#F57C00', // Orange 700
                 ],
                 [
                     'table' => 'dokumen_laporan_eksisi_chalazion',
@@ -416,7 +416,7 @@ class RekamMedisCtrl extends Controller
                     'type' => 'dokumen_tindakan_laser_capsulotomy',
                     'label' => 'Dokumen Tindakan Laser Capsulotomy',
                     'icon' => 'fa-burst',
-                    'color' => '#00ACC1', // Cyan accent
+                    'color' => '#00ACC1', // Cyan 600
                 ],
                 [
                     'table' => 'dokumen_tindakan_epilasi',
@@ -429,81 +429,81 @@ class RekamMedisCtrl extends Controller
                     'table' => 'dokumen_kronologis_pasien',
                     'type' => 'dokumen_kronologis_pasien',
                     'label' => 'Dokumen Kronologi Pasien',
-                    'icon' => 'fa-hand-sparkles',
-                    'color' => '#9C27B0', // Purple
+                    'icon' => 'fa-timeline',
+                    'color' => '#5D4037', // Brown 700
                 ],
                 [
                     'table' => 'dokumen_catatan_operasi',
                     'type' => 'dokumen_catatan_operasi',
                     'label' => 'Dokumen Catatan Operasi',
-                    'icon' => 'fa-hand-sparkles',
-                    'color' => '#9C27B0', // Purple
+                    'icon' => 'fa-notes-medical',
+                    'color' => '#D84315', // Deep Orange 800
                 ],
                 [
                     'table' => 'dokumen_resume_medis_rawat_jalan',
                     'type' => 'resume_medis_rawat_jalan',
                     'label' => 'Dokumen Resume Medis Rawat Jalan',
-                    'icon' => 'fa-hand-sparkles',
-                    'color' => '#2196F3', // Blue
+                    'icon' => 'fa-file-medical-alt',
+                    'color' => '#1565C0', // Blue 800
                 ],
                 [
                     'table' => 'dokumen_resume_medis_rawat_inap',
                     'type' => 'resume_medis_rawat_inap',
                     'label' => 'Dokumen Resume Medis Rawat Inap',
-                    'icon' => 'fa-hand-sparkles',
-                    'color' => '#4CAF50', // Green
+                    'icon' => 'fa-bed-pulse',
+                    'color' => '#2E7D32', // Green 800
                 ],
                 [
                     'table' => 'dokumen_asesmen_keperawatan_rawat_inap',
                     'type' => 'asesmen_keperawatan_rawat_inap',
                     'label' => 'Dokumen Assesmen Keperawatan Rawat Inap',
-                    'icon' => 'fa fa-bed',
-                    'color' => '#FF9800', // Orange
+                    'icon' => 'fa-user-nurse',
+                    'color' => '#EF6C00', // Orange 800
                 ],
                 [
                     'table' => 'dokumen_cppt_rawat_inap',
                     'type' => 'cppt_rawat_inap',
                     'label' => 'Dokumen CPPT Rawat Inap',
-                    'icon' => 'fa fa-bed',
-                    'color' => '#E91E63', // Pink
+                    'icon' => 'fa-clipboard-list',
+                    'color' => '#AD1457', // Pink 800
                 ],
                 [
                     'table' => 'dokumen_monitoring_efek_samping_obat',
                     'type' => 'monitoring_efek_samping_obat',
                     'label' => 'Dokumen Monitoring Efek Samping Obat',
-                    'icon' => 'fa fa-glass',
-                    'color' => '#1ABC9C', // Turquoise
+                    'icon' => 'fa-pills',
+                    'color' => '#00897B', // Teal 600
                 ],
                 [
                     'table' => 'dokumen_catatan_keperawatan',
                     'type' => 'catatan_keperawatan',
                     'label' => 'Dokumen Catatan Keperawatan',
-                    'icon' => 'fa fa-bed',
-                    'color' => '#673AB7', // Depp Purple
+                    'icon' => 'fa-stethoscope',
+                    'color' => '#6A1B9A', // Purple 800
                 ],
                 [
                     'table' => 'dokumen_form_laser_fokal',
                     'type' => 'dokumen_form_laser_fokal',
                     'label' => 'Dokumen Form Laser Fokal',
-                    'icon' => 'fa fa-bed',
-                    'color' => '#673AB7', // Depp Purple
+                    'icon' => 'fa-crosshairs',
+                    'color' => '#00838F', // Cyan 800
                 ],
                 [
                     'table' => 'dokumen_status_anestesi',
                     'type' => 'status_anestesi',
                     'label' => 'Dokumen Status Anestesi',
-                    'icon' => 'fa fa-bed',
-                    'color' => '#FF0000', // RED
+                    'icon' => 'fa-mask',
+                    'color' => '#B71C1C', // Red 900
                 ],
                 [
                     'table' => 'dokumen_laporan_operasi_vitreo_retina',
                     'type' => 'laporan_operasi_vitreo_retina',
                     'label' => 'Dokumen Laporan Operasi Vitreo Retina',
-                    'icon' => 'fa fa-eye',
-                    'color' => '#FF0000', // rED
+                    'icon' => 'fa-circle-dot',
+                    'color' => '#880E4F', // Pink 900
                 ],
-
             ];
+            
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
             foreach ($documentConfigs as $config) {
