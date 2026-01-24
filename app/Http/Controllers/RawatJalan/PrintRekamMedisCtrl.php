@@ -25,6 +25,17 @@ use App\Models\DokumenSuratPenolakanRujukan;
 use App\Models\DokumenSuratPernyataanPasienUmum;
 use App\Models\DokumenPersetujuanUmum;
 use App\Models\PemeriksaanDokterIcd9;
+use App\Models\DokumenCeklistKesiapanBedah;
+use App\Models\FormEdukasiPasienDanKeluargaRawatJalan;
+use App\Models\FormPersetujuanUmumPasienKeluarga;
+use App\Models\FormProsesPerawatanPeriOperative;
+use App\Models\FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap;
+use App\Models\PenolakanTindakanAnestesi;
+use App\Models\FormPengkajianKeperawatanMataRawatJalan;
+use App\Models\FormLaporanInjeksi;
+use App\Models\FormPermintaanPulang;
+use App\Models\VoucherRawatInap;
+use App\Models\FormReaksiTransfusiDarah;
 use App\Models\Pengguna;
 use App\Models\Resep;
 use App\Models\ResepRacikan;
@@ -58,42 +69,41 @@ class PrintRekamMedisCtrl extends Controller
     return $pdf->stream();
   }
 
-  function printRm1dot1($uuid)
-  {
+function printRm1dot1($uuid)
+{
     $pdf = \App::make('dompdf.wrapper');
-    // $registrasi = Registrasi::where('uuid', '=', $uuid)->first();
-    // $pemeriksaanro = PemeriksaanRo::where('registrasi_uuid', '=', $uuid)->first();
-    // $pemeriksaandokter = PemeriksaanDokter::where('registrasi_uuid', '=', $uuid)->first();
-    // dd($uuid);
-    $item = DokumenPersetujuanUmum::where('uuid', '=', $uuid)->first();
+
+    $item = FormPersetujuanUmumPasienKeluarga::where('uuid', '=', $uuid)->first();
     $pasien = Pasien::where('uuid', '=', $item->uuid_pasien)->first();
+
     $pdf->loadView(
-      'print-rekam-medis.rawat-jalan.rm1dot1',
-      compact('pasien', 
-              'item')
+        'print-rekam-medis.rawat-jalan.rm1dot1',
+        compact('pasien', 'item')
     )->setPaper('a4', 'potrait');
 
-
     return $pdf->stream();
-    // return view('print-rekam-medis.rawat-jalan.rm1dot1',compact('pasien'));
-  }
+}
+
   function printRm1dot2($uuid)
   {
-    $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $ep = EdukasiPasien::where('pasien_uuid', '=', $uuid)->first();
-    // $pdf->loadView('print.printrekammedis', compact('registrasi', 'pemeriksaanro', 'pemeriksaandokter', 'pasien'))->setPaper('a4', 'potrait');
-    $pdf->loadView('print-rekam-medis.rawat-jalan.rm1dot2', compact('pasien', 'ep',))->setPaper('a4', 'potrait');
+      $pdf = \App::make('dompdf.wrapper');
 
+      $edukasiPasien = FormEdukasiPasienDanKeluargaRawatJalan::where('uuid', '=', $uuid)->first();
+      $pasien = Pasien::where('uuid', '=', $edukasiPasien->uuid_pasien)->first();
 
-    return $pdf->stream();
-    // return view('print-rekam-medis.rawat-jalan.rm1dot3');
-    
+      $pdf->loadView(
+          'print-rekam-medis.rawat-jalan.rm1dot2',
+          compact('pasien', 'edukasiPasien')
+      )->setPaper('a4', 'potrait');
+
+      return $pdf->stream();
   }
+  
   function printRm1dot3($uuid)
   {
     $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $pengkajian = FormPengkajianKeperawatanMataRawatJalan::where('uuid', '=', $uuid)->first(); 
+    $pasien = Pasien::where('uuid', '=', $pengkajian->uuid_pasien)->first();
     $dataRo = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
 
      
@@ -105,6 +115,7 @@ class PrintRekamMedisCtrl extends Controller
       compact(
         'pasien',
         'dataRo',
+        'pengkajian',
       ),
     )->setPaper('a4', 'potrait');
 
@@ -220,31 +231,20 @@ class PrintRekamMedisCtrl extends Controller
 
     return $pdf->stream();
   }
-
-  function printRm1dot10($uuid)
-  {
+function printRm1dot10($uuid)
+{
     $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->first();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
-    // $ppo = PerawatanPeriOperative::where('pasien_uuid', '=', $uuid)->get();
 
-    // $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->get();
+    $perawatanPeriOperative = FormProsesPerawatanPeriOperative::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $perawatanPeriOperative->uuid_pasien)->first();
 
     $pdf->loadView(
-      'print-rekam-medis.bedah.rm1dot10',
-      compact(
-        'pasien',
-        'ppo',
-        'roperasi',
-        'ro',
-      ),
-    )->setPaper('a4', 'potrait');
-
+        'print-rekam-medis.bedah.rm1dot10',
+        compact('pasien', 'perawatanPeriOperative')
+    )->setPaper('a4', 'portrait');
 
     return $pdf->stream();
-  }
+}
   function printRm1dot8($uuid)
   {
     $pdf = \App::make('dompdf.wrapper');
@@ -266,129 +266,13 @@ class PrintRekamMedisCtrl extends Controller
   function printRm2dot0($uuid)
   {
     $pdf = \App::make('dompdf.wrapper');
-    $ckb = ChecklistKesiapanBedah::where('pasien_uuid', '=', $uuid)->first();
-    $linen_steril = [
-      false,
-      false,
-      false,
-      false,
-    ];
-   
-    if ($ckb != null) {
-    $jsonDatalinen_steril = $ckb->linen_steril; 
-    if ($jsonDatalinen_steril != '' || $jsonDatalinen_steril != null) {
-      $dataArraylinen_steril = json_decode($jsonDatalinen_steril, true);
-
-      foreach ($dataArraylinen_steril as $datalinen_steril) {
-        if ("Jas steril" == $datalinen_steril['nama']) {
-          $linen_steril[0] = true;
-        }
-        if ("Duk steril" == $datalinen_steril['nama']) {
-          $linen_steril[1] = true;
-        }
-        if ("Linen meja instrumen" == $datalinen_steril['nama']) {
-          $linen_steril[2] = true;
-        }
-        if ("Kasa" == $datalinen_steril['nama']) {
-          $linen_steril[3] = true;
-        }
-      }
-    }
-  }
-
-    $alat = [
-      false,
-      false,
-      false,
-      false,
-      false,
-
-    ];
-
-    if ($ckb != null) {
-    $jsonDataalat = $ckb->alat; 
-    if ($jsonDataalat != '' || $jsonDataalat != null) {
-      $dataArrayalat = json_decode($jsonDataalat, true);
-
-      foreach ($dataArrayalat as $dataalat) {
-        if ("Casette, selang, Diatermi, dan kenoktor Mesin Phaco sudah tersedia" == $dataalat['nama']) {
-          $alat[0] = true;
-        }
-        if ("Patient plate sudah tersedia" == $dataalat['nama']) {
-          $alat[1] = true;
-        }
-        if ("Instrument steril sesuai dengan kebutuhan sudah tersedia" == $dataalat['nama']) {
-          $alat[2] = true;
-        }
-        if ("Handle Microskop streril" == $dataalat['nama']) {
-          $alat[3] = true;
-        }
-        if ("Kom kidney steril sudah tersedia" == $dataalat['nama']) {
-          $alat[4] = true;
-        }
-      }
-    }
-  }
-
-    $listrik = [
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-    ];
-
-    if ($ckb != null) {
-    $jsonDatalistrik = $ckb->listrik;
-
-    // Menguraikan JSON menjadi array PHP
-
     
-    if ($jsonDatalistrik != '' || $jsonDatalistrik != null) {
-      $dataArraylistrik = json_decode($jsonDatalistrik, true);
-
-      foreach ($dataArraylistrik as $datalistrik) {
-        if ("Mesin anastesi terhubung dengan sumber listrik, indikator (+)" == $datalistrik['nama']) {
-          $listrik[0] = true;
-        }
-        if ("Mesin Phaco terhubung dengan sumber listrik, indikator (+)" == $datalistrik['nama']) {
-          $listrik[1] = true;
-        }
-        if ("Light source, monitor Mata terhubung dengan sumber listrik, indikator (+)" == $datalistrik['nama']) {
-          $listrik[2] = true;
-        }
-        if ("Extention kabel terhubung degan sumber listrik, indikator (+)" == $datalistrik['nama']) {
-          $listrik[3] = true;
-        }
-        if ("Meja operasi terhubung degan sumber listrik, indikator (+)" == $datalistrik['nama']) {
-          $listrik[4] = true;
-        }
-        if ("Microskop terhubung dengan sumber listrik, indikator (+)" == $datalistrik['nama']) {
-          $listrik[5] = true;
-        }
-        if ("Lampu kamar operasi menyala" == $datalistrik['nama']) {
-          $listrik[6] = true;
-        }
-        if ("AC berfungsi dengan baik" == $datalistrik['nama']) {
-          $listrik[7] = true;
-        }
-        if ("Gas medis terhubung dengan mesin, indikator (+)" == $datalistrik['nama']) {
-          $listrik[8] = true;
-        }
-      }
-    }
-  }
-
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    
+    $ckb = DokumenCeklistKesiapanBedah::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $ckb->uuid_pasien )->first();
   
     $pdf->loadView(
       'print-rekam-medis.bedah.rm2dot0',
-      compact('pasien', 'listrik', 'ckb', 'alat', 'linen_steril',)
+      compact('pasien','ckb')
     )->setPaper('a4', 'potrait');
 
 
@@ -807,6 +691,25 @@ function printFormLaserBarrage($uuid)
     return $pdf->stream();
   }
 
+  function printEvaluasiPraAnesthesi($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+      ->orderBy('created_at', 'asc')
+      ->first();
+    //dump($ptk);die();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.evaluasipraanesthesi',
+      compact('pasien', 'ro', 'roperasi', 'ptk',)
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+
   function printFormLaserFokal($uuid)
   {
     $pdf = \App::make('dompdf.wrapper');
@@ -846,24 +749,29 @@ function printFormLaserBarrage($uuid)
   }
 
 
-  function printLaporanInjeksi($uuid)
-  {
+public function printLaporanInjeksi($uuid)
+{
     $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $injeksi = FormLaporanInjeksi::where('uuid', '=', $uuid)->first();
+    
+    // Ambil data pasien dari uuid_pasien yang ada di form
+    $pasien = Pasien::where('uuid', '=', $injeksi->uuid_pasien)->first();
+    
+    // Data tambahan (jika diperlukan)
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $injeksi->uuid_pasien)->latest()->first();
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $injeksi->uuid_pasien)
+        ->orderBy('created_at', 'asc')
+        ->first();
+    $ro = PemeriksaanRo::where('pasien_uuid', '=', $injeksi->uuid_pasien)->first();
+    
+    // Load view dengan semua data
     $pdf->loadView(
-      'print-rekam-medis.general.laporaninjeksi',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
-    )->setPaper('a4', 'potrait');
-
+        'print-rekam-medis.general.laporaninjeksi',
+        compact('pasien', 'ro', 'roperasi', 'ptk', 'injeksi')
+    )->setPaper('a4', 'portrait');
 
     return $pdf->stream();
-  }
+}
 
   function printTindakanLaserLPI ($uuid)
   {
@@ -936,24 +844,32 @@ function printFormLaserBarrage($uuid)
     return $pdf->stream();
   }
 
-  function printFormPermintaanPulang ($uuid)
-  {
+public function printFormPermintaanPulang($uuid)
+{
     $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    
+    // Ambil data form permintaan pulang berdasarkan uuid
+    $formPulang = FormPermintaanPulang::where('uuid', '=', $uuid)->first();
+    
+    // Cek apakah data ditemukan
+    if (!$formPulang) {
+        abort(404, 'Data form permintaan pulang tidak ditemukan');
+    }
+    
+    // Ambil data pasien berdasarkan uuid_pasien dari form
+    $pasien = Pasien::where('uuid', '=', $formPulang->uuid_pasien)->first();
+    
+    if (!$pasien) {
+        abort(404, 'Data pasien tidak ditemukan');
+    }
+    
     $pdf->loadView(
-      'print-rekam-medis.general.formpermintaanpulang',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
-    )->setPaper('a4', 'potrait');
-
+        'print-rekam-medis.general.formpermintaanpulang',
+        compact('pasien', 'formPulang')
+    )->setPaper('a4', 'portrait');
 
     return $pdf->stream();
-  }
+}
 
   function printSuratPenolakanRujukan ($uuid)
   {
@@ -1002,23 +918,32 @@ function printFormLaserBarrage($uuid)
 
     return $pdf->stream();
   }
-        function printPengkajianKeperawatanMata ($uuid)
-  {
-        $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+function printPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap($uuid)
+{
+    $pdf = \App::make('dompdf.wrapper');
+    
+    // Ambil data pengkajian keperawatan mata berdasarkan uuid
+    $edukasiPasien = FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap::where('uuid', '=', $uuid)->first();
+    
+    // Cek apakah data ditemukan
+    if (!$edukasiPasien) {
+        abort(404, 'Data pengkajian keperawatan mata tidak ditemukan');
+    }
+    
+    // Ambil data pasien berdasarkan uuid_pasien dari pengkajian
+    $pasien = Pasien::where('uuid', '=', $edukasiPasien->uuid_pasien)->first();
+    
+    if (!$pasien) {
+        abort(404, 'Data pasien tidak ditemukan');
+    }
+    
     $pdf->loadView(
-      'print-rekam-medis.general.pengkajiankeperawatanmata',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
-    )->setPaper('a4', 'potrait');
+        'print-rekam-medis.general.pendidikanedukasipasienkeluargaterintegrasirawatinap',
+        compact('pasien', 'edukasiPasien')
+    )->setPaper('a4', 'portrait');
 
     return $pdf->stream();
-  }
+}
           function printCatatanKeperawatan ($uuid)
   {
         $pdf = \App::make('dompdf.wrapper');
@@ -1216,23 +1141,32 @@ function printFormLaserBarrage($uuid)
 
     return $pdf->stream();
   }
-  function printVoucherRawatInap ($uuid)
-  {
-        $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+function printVoucherRawatInap($uuid)
+{
+    $pdf = \App::make('dompdf.wrapper');
+
+    $voucher = VoucherRawatInap::where('uuid', $uuid)->firstOrFail();
+
+    $pasien = Pasien::where('uuid', $voucher->uuid_pasien)->first();
+
+    $roperasi = RegistrasiOperasi::where('pasien_uuid', $voucher->uuid_pasien)
+        ->latest()
+        ->first();
+
+    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', $voucher->uuid_pasien)
+        ->orderBy('created_at', 'asc')
+        ->first();
+
+    $ro = PemeriksaanRo::where('pasien_uuid', $voucher->uuid_pasien)->first();
+
     $pdf->loadView(
-      'print-rekam-medis.general.voucherrawatinap',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
-    )->setPaper('a4', 'potrait');
+        'print-rekam-medis.general.voucherrawatinap',
+        compact('pasien', 'ro', 'roperasi', 'ptk', 'voucher')
+    )->setPaper('a4', 'portrait');
 
     return $pdf->stream();
-  }
+}
+
   function printProsesPerawatanPeriOperatif ($uuid)
   {
         $pdf = \App::make('dompdf.wrapper');
@@ -1267,27 +1201,43 @@ function printFormLaserBarrage($uuid)
 
     return $pdf->stream();
   }
-      function printFormulirReaksiTranfusiDarah ($uuid)
-  {
-        $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+
+function printFormReaksiTransfusiDarah($uuid)
+{
+    $pdf = \App::make('dompdf.wrapper');
+    $formData = FormReaksiTransfusiDarah::where('uuid', '=', $uuid)->first(); 
+    
+    if (!$formData) {
+        abort(404, 'Data form tidak ditemukan');
+    }
+    
+    $pasien = Pasien::where('uuid', '=', $formData->uuid_pasien)->first();
     $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
     $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
       ->orderBy('created_at', 'asc')
       ->first();
-    //dump($ptk);die();
     $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    
+    // Karena Model sudah decode otomatis, langsung gunakan saja
+    $pemberianDarah = $formData->pemberian_darah ?? [];
+    
+    // Pastikan selalu array
+    if (!is_array($pemberianDarah)) {
+        $pemberianDarah = [];
+    }
+    
     $pdf->loadView(
-      'print-rekam-medis.general.forumulirreaksitransfusidarah',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
-    )->setPaper('a4', 'potrait');
+      'print-rekam-medis.general.formreaksitransfusidarah',
+      compact('pasien', 'ro', 'roperasi', 'ptk', 'formData', 'pemberianDarah')
+    )->setPaper('a4', 'portrait');
 
     return $pdf->stream();
-  }
+}
       function printPenolakanTindakanAnestesi ($uuid)
   {
-        $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    $pdf = \App::make('dompdf.wrapper');
+    $penolakan = PenolakanTindakanAnestesi::where('uuid', '=', $uuid)->first(); 
+    $pasien = Pasien::where('uuid', '=', $penolakan->uuid_pasien)->first();
     $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
     $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
       ->orderBy('created_at', 'asc')
@@ -1296,7 +1246,7 @@ function printFormLaserBarrage($uuid)
     $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
     $pdf->loadView(
       'print-rekam-medis.general.penolakantindakananestesi',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
+      compact('pasien', 'ro', 'roperasi', 'ptk','penolakan',)
     )->setPaper('a4', 'potrait');
 
     return $pdf->stream();

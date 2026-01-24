@@ -43,8 +43,9 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/general/formpermintaanpulang/{uuid}', [PrintRekamMedisCtrl::class, 'printFormPermintaanPulang']);
     Route::get('rekammedis/general/suratpenolakanrujukan/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratPenolakanRujukan']);
     Route::get('rekammedis/general/suratpengantaruntukdirawatinap/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratPengantarUntukDiRawatInap']);    
-    Route::get('rekammedis/general/formcpptranap/{uuid}', [PrintRekamMedisCtrl::class, 'printFormCpptRanap']);    
-    Route::get('rekammedis/general/pengkajiankeperawatanmata/{uuid}', [PrintRekamMedisCtrl::class, 'printPengkajianKeperawatanMata']);    
+    Route::get('rekammedis/general/formcpptranap/{uuid}', [PrintRekamMedisCtrl::class, 'printFormCpptRanap']);
+    Route::get('rekammedis/general/pengkajiankeperawatanmata/{uuid}', [PrintRekamMedisCtrl::class, 'printPengkajianKeperawatanMata']);     
+    Route::get('rekammedis/general/pendidikanedukasipasienkeluargaterintegrasirawatinap/{uuid}', [PrintRekamMedisCtrl::class, 'printPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap']);    
     Route::get('rekammedis/general/catatankeperawatan/{uuid}', [PrintRekamMedisCtrl::class, 'printCatatanKeperawatan']);    
     Route::get('rekammedis/general/resumemedis/{uuid}', [PrintRekamMedisCtrl::class, 'printResumeMedis']);
     Route::get('rekammedis/general/laporaneksisichalazion/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanEksisiChalazion']);     
@@ -60,7 +61,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/general/voucherrawatinap/{uuid}', [PrintRekamMedisCtrl::class, 'printVoucherRawatInap']);
     Route::get('rekammedis/general/prosesperawatanperioperatif/{uuid}', [PrintRekamMedisCtrl::class, 'printProsesPerawatanPeriOperatif']);
     Route::get('rekammedis/general/monitoringefeksampingobat/{uuid}', [PrintRekamMedisCtrl::class, 'printMonitoringEfekSampingObat']);
-    Route::get('rekammedis/general/forumulirreaksitransfusidarah/{uuid}', [PrintRekamMedisCtrl::class, 'printFormulirReaksiTranfusiDarah']);
+    Route::get('rekammedis/general/formreaksitransfusidarah/{uuid}', [PrintRekamMedisCtrl::class, 'printFormReaksiTransfusiDarah']);
     Route::get('rekammedis/general/penolakantindakananestesi/{uuid}', [PrintRekamMedisCtrl::class, 'printPenolakanTindakanAnestesi']);
     
     // REKAM MEDIS RAWAT JALAN

@@ -36,6 +36,13 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('dokumen-persetujuan-umum', [PasienCtrl::class, 'dokumenPersetujuanUmum'])->name('dokumen-persetujuan-umum');
 		Route::post('list-dokumen-persetujuan-umum', [PasienCtrl::class, 'listDokumenPersetujuanUmum'])->name('list-dokumen-pertujuan-umum');
 
+		Route::post('dokumen-list', [PasienCtrl::class, 'dokumenList'])->name('master-pasien-dokumen-list');
+    	Route::post('dokumen-store', [PasienCtrl::class, 'dokumenStore'])->name('master-pasien-dokumen-store');
+    	Route::post('dokumen-update', [PasienCtrl::class, 'dokumenUpdate'])->name('master-pasien-dokumen-update');
+    	Route::post('dokumen-delete', [PasienCtrl::class, 'dokumenDelete'])->name('master-pasien-dokumen-delete');
+    	Route::post('dokumen-verify', [PasienCtrl::class, 'dokumenVerify'])->name('master-pasien-dokumen-verify');
+    	Route::post('dokumen-download', [PasienCtrl::class, 'dokumenDownload'])->name('master-pasien-dokumen-download');
+		
 		// Lampiran
 		Route::post('dokumen-form-laser-bargage', [PasienCtrl::class, 'storeFormLaseBarage'])->name('master-pasien-storeFormLaseBarage');
 		Route::post('dokumen-laporan-pembedahan', [PasienCtrl::class, 'storeLaporanPembedahan'])->name('master-pasien-storeLaporanPembedahan');
@@ -50,21 +57,29 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('dokumen-dietitian-pasien-baru', [PasienCtrl::class, 'storeDokumenDietitianPasienBaru'])->name('master-pasien-storeDokumenDietitianPasienBaru');
 		Route::post('dokumen-asuhan-gizi', [PasienCtrl::class, 'storeDokumenAsuhanGizi'])->name('master-pasien-storeDokumenAsuhanGizi');
 		Route::post('dokumen-laser-lpi', [PasienCtrl::class, 'storeDokumenLaserLPI'])->name('master-pasien-storeDokumenLaserLPI');
+		Route::post('dokumen-ceklist-kesiapan-bedah',[PasienCtrl::class, 'storeDokumenCeklistKesiapanBedah']);
+		Route::post('form-edukasi-pasien-dan-keluarga-rawat-jalan',[PasienCtrl::class, 'storeFormEdukasiPasienDanKeluargaRawatJalan']);
+		Route::post('form-persetujuan-umum-pasien-keluarga',[PasienCtrl::class, 'storeFormPersetujuanUmumPasienKeluarga']);
+		Route::post('form-proses-perawatan-peri-operative',[PasienCtrl::class, 'storeFormProsesPerawatanPeriOperative']);
+		Route::post('form-pendidikan-edukasi-pasien-keluarga-terintegrasi-rawat-inap',[PasienCtrl::class, 'storeFormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap']);
+		Route::post('penolakan-tindakan-anestesi',[PasienCtrl::class, 'storePenolakanTindakanAnestesi']);
+		Route::post('form-pengkajian-keperawatan-mata-rawat-jalan',[PasienCtrl::class, 'storeFormPengkajianKeperawatanMataRawatJalan']);
+		Route::post('form-laporan-injeksi',[PasienCtrl::class, 'storeFormLaporanInjeksi']);
+		Route::post('form-permintaan-pulang',[PasienCtrl::class, 'storeFormPermintaanPulang']);
+		Route::post('voucher-rawat-inap',[PasienCtrl::class, 'storeVoucherRawatInap']);
+		Route::post('form-reaksi-transfusi-darah',[PasienCtrl::class, 'storeFormReaksiTransfusiDarah']);
 	});
 
-	Route::prefix('rekammedis')->group(function () {
-		Route::post('list', [RekamMedisCtrl::class, 'list'])->name('master-rekammedis-list');
-		Route::get('listexcel', [RekamMedisCtrl::class, 'listexcel'])->name('master-rekammedis-listexcel');
-		Route::post('statsjumlahpengunjung', [RekamMedisCtrl::class, 'statsjumlahpengunjung'])->name('master-rekammedis-statsjumlahpengunjung');
-		Route::post('statsjumlahkunjungan', [RekamMedisCtrl::class, 'statsjumlahkunjungan'])->name('master-rekammedis-statsjumlahkunjungan');
-		Route::post('statspenyakitterbanyak', [RekamMedisCtrl::class, 'statspenyakitterbanyak'])->name('master-rekammedis-statspenyakitterbanyak');
+Route::prefix('rekammedis')->group(function () {
+    Route::post('list', [RekamMedisCtrl::class, 'list'])->name('master-rekammedis-list');
+    Route::get('listexcel', [RekamMedisCtrl::class, 'listexcel'])->name('master-rekammedis-listexcel');
+    Route::post('statsjumlahpengunjung', [RekamMedisCtrl::class, 'statsjumlahpengunjung'])->name('master-rekammedis-statsjumlahpengunjung');
+    Route::post('statsjumlahkunjungan', [RekamMedisCtrl::class, 'statsjumlahkunjungan'])->name('master-rekammedis-statsjumlahkunjungan');
+    Route::post('statspenyakitterbanyak', [RekamMedisCtrl::class, 'statspenyakitterbanyak'])->name('master-rekammedis-statspenyakitterbanyak');
 
-
-		// Data Lampiran
-		Route::post('list-lampiran', [RekamMedisCtrl::class, 'listLampiran']);
-		Route::get('lampiran/{uuid}', [RekamMedisCtrl::class, 'getDetailLampiran']);
-		Route::delete('lampiran/{uuid}', [RekamMedisCtrl::class, 'deleteLampiran']);
-
-		
-	});
+    // Data Lampiran
+    Route::post('list-lampiran', [RekamMedisCtrl::class, 'listLampiran']);
+    Route::post('lampiran/{uuid}/detail', [RekamMedisCtrl::class, 'getDetailLampiran']);  // ✅ UBAH JADI POST DAN TAMBAH /detail
+    Route::delete('lampiran/{uuid}', [RekamMedisCtrl::class, 'deleteLampiran']);
+});
 });

@@ -22,22 +22,22 @@
                             <tr>
                                 <td width="20%">Nama</td>
                                 <td width="1%">:</td>
-                                <td width=50%>{{ $pasien->nama }}</td>
+                                <td width=50%>{{ $pasien->nama}}</td>
                             </tr>
                             <tr>
                                 <td width="20%">Tgl. Lahir</td>
                                 <td width="1%">:</td>
-                                <td width=50%>{{ $pasien->tanggal_lahir }}</td>
+                                <td width=50%>{{ $pasien->tanggal_lahir}}</td>
                             </tr>
                             <tr>
                                 <td width="20%">No.RM</td>
                                 <td width="1%">:</td>
-                                <td width=50%>{{ $pasien->rekam_medis }}</td>
+                                <td width=50%>{{ $pasien->rekam_medis}}</td>
                             </tr>
                             <tr>
                                 <td width="10%">NIK</td>
                                 <td width="1%">:</td>
-                                <td width=50%>{{ $pasien->no_identitas }}</td>
+                                <td width=50%>{{ $pasien->no_identitas}}</td>
                             </tr>
                         </table>
                     </td>

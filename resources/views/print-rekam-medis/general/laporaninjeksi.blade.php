@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>RM1.3</title>
+    <title>Form Laporan Injeksi Anti VECF</title>
     <style>
         @page {
             margin: 18px;
@@ -11,6 +11,7 @@
 
         body {
             margin: 18px;
+            font-family: Arial, sans-serif;
         }
 
         .wrap {
@@ -20,120 +21,226 @@
         }
 
         .fontsmall {
-            font-size: 10;
+            font-size: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .table-border {
+            border: 1px solid black;
+        }
+
+        .table-border td {
+            border: 1px solid black;
+            padding: 5px;
+        }
+
+        .checkbox-inline {
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .signature-section {
+            margin-top: 30px;
+            text-align: right;
+        }
+
+        .signature-box {
+            display: inline-block;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .prosedur-list {
+            margin: 20px 0;
+            line-height: 1.8;
         }
     </style>
-
 </head>
 
 <body>
-    <div style="position:fixed; right: 13px; bottom: 10px;">
-    </div>
+    <div style="position:fixed; right: 13px; bottom: 10px;"></div>
+    
     <?php $fullpath = storage_path('app/public/images/header_rme.png'); ?>
     <?php $patimg = storage_path('app/public/images/PAT.png'); ?>
     
-        <div class="wrap">
-            <div style="width:100%; text-align:right; margin-bottom:5px">
-                RM 8.8/LIAV/22
+    <div class="wrap">
+        <!-- Nomor RM -->
+        <div style="width:100%; text-align:right; margin-bottom:5px; font-size: 10pt;">
+            RM 8.8/LIAV/22
+        </div>
+
+        <!-- Header -->
+        @include('print-rekam-medis.partials.header')
+
+        <!-- Judul -->
+        <div style="font-weight: bold; text-align:center; margin-top:10px; font-size: 14pt;"> 
+            <u>LAPORAN INJEKSI ANTI VECF</u> 
+        </div>
+        <br>
+
+        <!-- Tanggal Operasi -->
+        <div style="margin-top: 5px; text-align: right; font-size: 11pt;">
+            <span>Tanggal Operasi: <strong>{{ $injeksi->tanggal_operasi ? \Carbon\Carbon::parse($injeksi->tanggal_operasi)->format('d-m-Y') : '_________________' }}</strong></span>
+        </div>
+        <br>
+
+        <!-- Tabel Informasi Operasi -->
+        <table class="table-border" style="margin-top:10px; font-size: 10pt;">
+            <!-- Baris 1: Mata, Operator, Jam, Lama -->
+            <tr>
+                <td style="width: 20%;">
+                    <table style="width: 100%; border-collapse: collapse; border: none;">
+                        <tr>
+                            <td style="white-space: nowrap; border: none;">
+                                Mata:
+                            </td>
+                            <td style="white-space: nowrap; border: none;">
+                                OD
+                            </td>
+                            <td style="border: none;">
+                                <input type="checkbox" {{ $injeksi->mata_od ? 'checked' : '' }} disabled>
+                            </td>
+                            <td style="white-space: nowrap; border: none;">
+                                OS
+                            </td>
+                            <td style="border: none;">
+                                <input type="checkbox" {{ $injeksi->mata_os ? 'checked' : '' }} disabled>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="width: 25%;">
+                    <strong>Operator:</strong> {{ $injeksi->operator ?? '' }}
+                </td>
+                <td style="width: 25%;">
+                    <strong>Jam Operasi:</strong>
+                    {{ $injeksi->jam_operasi ? \Carbon\Carbon::parse($injeksi->jam_operasi)->format('H:i') : '' }}
+                </td>
+
+                <td style="width: 30%;">
+                    <strong>Lama Operasi:</strong> {{ $injeksi->lama_operasi ?? '' }}
+                </td>
+            </tr>
+
+            <!-- Baris 2: Diagnosa, Asisten -->
+            <tr>
+                <td colspan="2">
+                    <strong>Diagnosis:</strong> {{ $injeksi->diagnosis ?? '' }}
+                </td>
+                <td colspan="2">
+                    <strong>Asisten:</strong> {{ $injeksi->asisten ?? '' }}
+                </td>
+            </tr>
+
+            <!-- Baris 3: Jenis Operasi, Anesthesia, Anesthesiologist -->
+            <tr>
+                <td colspan="1">
+                    <strong>Jenis Operasi:</strong> {{ $injeksi->jenis_operasi ?? '' }}
+                </td>
+                <td colspan="1">
+                    <strong>Anesthesia:</strong> {{ $injeksi->anesthesia ?? '' }}
+                </td>
+                <td colspan="2">
+                    <strong>Anesthesiologist:</strong> {{ $injeksi->anesthesiologist ?? '' }}
+                </td>
+            </tr>
+        </table>
+
+        <!-- Prosedur Operasi -->
+        <div class="prosedur-list" style="font-size: 11pt;">
+            <ol style="line-height: 2;">
+                <li>
+                    Pasien berbaring dalam anestesi 
+                    <strong>
+                        @if($injeksi->jenis_anestesi == 'topical') topical
+                        @elseif($injeksi->jenis_anestesi == 'local') local
+                        @elseif($injeksi->jenis_anestesi == 'umum') umum
+                        @else topical / local / umum
+                        @endif
+                    </strong>
+                </li>
+
+                <li>Dilakukan tindakan & antiseptis menggunakan providone iodin</li>
+
+                <li>Dipasangkan eye drape</li>
+
+                <li>Dipasangkan blefarostat</li>
+
+                <li>
+                    Dilakukan pengukuran menggunakan 
+                    <strong>
+                        @if($injeksi->alat_ukur == 'caliper') caliper
+                        @elseif($injeksi->alat_ukur == 'trocar') trocar
+                        @else caliper / trocar
+                        @endif
+                    </strong>
+                    dengan jarak 
+                    <strong>
+                        @if($injeksi->jarak_ukur == '3.5') 3,5 mm
+                        @elseif($injeksi->jarak_ukur == '4') 4 mm
+                        @else 3,5 / 4 mm
+                        @endif
+                    </strong>
+                    dari limbus
+                    <br>
+                    <span style="margin-left: 20px;">
+                        Di kuadran 
+                        <strong>
+                            @if($injeksi->kuadran == 'superior') superior
+                            @elseif($injeksi->kuadran == 'temporal') temporal
+                            @else superior / temporal
+                            @endif
+                        </strong>
+                    </span>
+                </li>
+
+                <li>
+                    Dilakukan injeksi 
+                    <strong>
+                        @if($injeksi->jenis_injeksi == 'avastin') avastin
+                        @elseif($injeksi->jenis_injeksi == 'intravitreal') intravitreal
+                        @else avastin / intravitreal
+                        @endif
+                    </strong>
+                    sebanyak <strong>{{ $injeksi->jumlah_injeksi ?? '.........' }}</strong> ml
+                </li>
+
+                <li>Diteteskan antibiotik</li>
+
+                <li>Mata ditutup kassa & dop</li>
+
+                <li>Tindakan selesai</li>
+            </ol>
+        </div>
+
+        <!-- Tanda Tangan -->
+        <div class="signature-section">
+            <div style="display: inline-block; text-align: center;">
+                <div style="margin-bottom: 5px; font-size: 11pt;">
+                    <strong>Tanda Tangan DPJP / Dokter</strong>
+                </div>
+                
+                @if($injeksi->ttd_dokter)
+                    <div style="margin: 10px 0;">
+                        <img src="{{ $injeksi->ttd_dokter }}" alt="TTD Dokter" style="max-width: 200px; max-height: 100px;">
+                    </div>
+                @else
+                    <div style="height: 80px; margin: 10px 0;"></div>
+                @endif
+
+                <div style="font-size: 11pt;">
+                    ( <u><strong>{{ $injeksi->nama_dokter ?? '................................' }}</strong></u> )
+                </div>
             </div>
-            @include('print-rekam-medis.partials.header')
+        </div>
 
-            <div style="font-weight: bold; text-align:center; margin-top:10px"> 
-         <u>LAPORAN INJEKSI ANTI VEGA </u> 
+        <br><br>
+
     </div>
-    <br>
-
-
-        <div style="margin-top: 5px; float: right">
-        <span> Tanggal Operasi: __________________ </span>
-        </div>
-        <br>
-        <br>
-            <table style="width: 100%; text-align: left; margin-top:10px; padding-top:10px" cellpadding="0" cellspacing="0">
-        
-                {{-- Tanggal --}}
-                <tr style="border: 1px solid black; width:100%">
-                    <table style="border-collapse: collapse; width:100%">
-                        <tr>
-                            <td style="border-right: 1px solid black; width:100%">
-                                Mata:  OD <input type="checkbox" style="padding-left: 10px; padding-right:10px">   OS <input type="checkbox" style="padding-left: 10px; padding-right:10px">
-                                
-                            </td>
-                            <td style="border-right: 1px solid black; width:100%; ">
-                                Operator:       
-                                <br> 
-                            </td>
-                            <td style="border-right: 1px solid black; width:100%">
-                                Jam Operasi: 
-                            </td>
-                            <td style="width:100%">
-                                Lama Operasi: 
-                            </td>
-
-                        </tr>
-                    </table>
-
-                    <tr style="border: 1px solid black; width:100%">
-                    <table style="border-collapse: collapse; width:100%">
-                        <tr>
-                            <td style="border-right: 1px solid black; width:100%">
-                                Diagnosa: 
-                            </td>
-                            <td style="width:100%">
-                                Asisten: 
-                            </td>
-
-                        </tr>
-                    </table>
-                    </tr>
-
-                    <tr style="border: 1px solid black; width:100%">
-                    <table style="border-collapse: collapse; width:100%">
-                        <tr>
-                            <td style="border-right: 1px solid black; width:100%">
-                                Jenis Operasi: 
-                            </td>
-                            <td style="border-right: 1px solid black; width:100%">
-                                Anesthesia: 
-                            </td>
-                            <td style="width:100%">
-                                Anesthesiologist: 
-                            </td>
-
-                        </tr>
-                    </table>
-                    </tr>
-
-                    <br>
-                    <br>
-
-		<tr>
-			<td style="width: 100%; font-size: 12pt;padding-top: 5px">
-			1.Pasien berbaring dalam anestesi topical/  local/  umum <br>
-            2.Dilakukan tindakan a & antiseptis menggunakan providone iodin <br>
-            3.Dipasangkan eye drape <br>
-            4.Dipasangkan blefarostat <br>
-            5.Dilakukan pengukuran menggunakan caliper/ trocar dengan jarak 3,5 / 4 mm dari limbus  <br>
-            Di kuadran superior  /  temporal 	<br>
-            6.Dilakukan injeksi avastin  /  intravitreal sebanyak ……… ml <br> 
-            7.Diteteskan antibiotik <br>
-            8.Mata ditutup kassa & dop <br>
-            9.Tindakan selesai 
-            <br>
-				<br>
-               <br>
-                <br>                       
-            </table>
-
-            <div style="margin-top: 5px; float: right">
-        <span> Tanda Tangan DPJP / Dokter</span>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
-        <span> (…………………………….)</span>
-        </div>
 </body>
 
 </html>

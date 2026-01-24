@@ -206,6 +206,18 @@
         :documentType="selectedDocumentType"
       />
     </div>
+
+      <div v-if="state == 'view'">
+      <component
+        :is="currentDocumentComponent"
+        @back="onBackToList"
+        :selectedPatient="selectedPatient"
+        :editUuid="editUuid"
+        :editData="editData"
+        :viewData=true
+        :documentType="selectedDocumentType"
+      />
+    </div>
   </div>
 </template>
 
@@ -233,6 +245,17 @@ export default {
     FormDietitianPasienBaru: defineAsyncComponent(() =>import("./create/FormDietitianPasienBaru.vue")),
     FormAsuhanGizi: defineAsyncComponent(() =>import("./create/FormAsuhanGizi.vue")),
     FormLaserLPI: defineAsyncComponent(() =>import("./create/FormLaserLPI.vue")),
+    PenolakanTindakanAnestesi: defineAsyncComponent(() => import("./create/PenolakanTindakanAnestesi.vue")),
+    FormChecklistKesiapanBedah: defineAsyncComponent(() => import("./create/FormChecklistKesiapanBedah.vue")),
+    FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap: defineAsyncComponent(() => import("./create/FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap.vue")),
+    FormEdukasiPasienDanKeluargaRawatJalan: defineAsyncComponent(() => import("./create/FormEdukasiPasienDanKeluargaRawatJalan.vue")),
+    FormProsesPerawatanPeriOperative: defineAsyncComponent(() => import("./create/FormProsesPerawatanPeriOperative.vue")),
+    FormPersetujuanUmumPasienKeluarga: defineAsyncComponent(() => import("./create/FormPersetujuanUmumPasienKeluarga.vue")),
+    FormPengkajianKeperawatanMataRawatJalan: defineAsyncComponent(() => import("./create/FormPengkajianKeperawatanMataRawatJalan.vue")),
+    FormLaporanInjeksi: defineAsyncComponent(() => import("./create/FormLaporanInjeksi.vue")),
+    FormPermintaanPulang: defineAsyncComponent(() => import("./create/FormPermintaanPulang.vue")),
+    VoucherRawatInap: defineAsyncComponent(() => import("./create/VoucherRawatInap.vue")),
+    FormReaksiTransfusiDarah: defineAsyncComponent(() => import("./create/FormReaksiTransfusiDarah.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -363,6 +386,84 @@ export default {
           description: "Form Laser LPI Pasien",
           backendType: "dokumen_tindakan_laser_lpi",
         },
+        
+        {
+          value: "form_persetujuan_umum_pasien_keluarga",
+          label: "Form Persetujuan Umum Pasien Keluarga",
+          component: "FormPersetujuanUmumPasienKeluarga",
+          description: "Form Persetujuan Umum Pasien Keluarga",
+          backendType: "form_persetujuan_umum_pasien_keluarga",
+        },
+        {
+          value: "penolakan_tindakan_anestesi",
+          label: "Penolakan Tindakan Anestesi",
+          component: "PenolakanTindakanAnestesi",
+          description: "Penolakan Tindakan Anestesi",
+          backendType: "penolakan_tindakan_anestesi",
+        },
+        {
+          value: "dokumen_ceklist_kesiapan_bedah",
+          label: "Form Checklist Kesiapan Bedah",
+          component: "FormChecklistKesiapanBedah",
+          description: "Form Checklist Kesiapan Bedah",
+          backendType: "dokumen_ceklist_kesiapan_bedah",
+        },
+        {
+          value: "form_proses_perawatan_peri_operative",
+          label: "Form Proses Perawatan Peri Operative",
+          component: "FormProsesPerawatanPeriOperative",
+          description: "Form Proses Perawatan Peri Operative",
+          backendType: "form_proses_perawatan_peri_operative",
+        },
+        {
+          value: "form_edukasi_pasien_dan_keluarga_rawat_jalan",
+          label: "Form Edukasi Pasien Dan Keluarga Rawat Jalan",
+          component: "FormEdukasiPasienDanKeluargaRawatJalan",
+          description: "Form Edukasi Pasien Dan Keluarga Rawat Jalan",
+          backendType: "form_edukasi_pasien_dan_keluarga_rawat_jalan",
+        },
+        {
+          value: "form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap",
+          label: "Form Pendidikan Edukasi Pasien Keluarga Terintegrasi Rawat Inap",
+          component: "FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap",
+          description: "Form Pendidikan Edukasi Pasien Keluarga Terintegrasi Rawat Inap",
+          backendType: "form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap",
+        },
+        {
+          value: "form_pengkajian_keperawatan_mata_rawat_jalan",
+          label: "Form Pengkajian Keperawatan Mata Rawat Jalan",
+          component: "FormPengkajianKeperawatanMataRawatJalan",
+          description: "Form Pengkajian Keperawatan Mata Rawat Jalan",
+          backendType: "form_pengkajian_keperawatan_mata_rawat_jalan",
+        },
+        {
+          value: "form_laporan_injeksi",
+          label: "Form Laporan Injeksi",
+          component: "FormLaporanInjeksi",
+          description: "Form Laporan Injeksi",
+          backendType: "form_laporan_injeksi",
+        },
+        {
+          value: "form_permintaan_pulang",
+          label: "Form Permintaan Pulang",
+          component: "FormPermintaanPulang",
+          description: "Form Permintaan Pulang",
+          backendType: "form_permintaan_pulang",
+        },
+        {
+          value: "voucher_rawat_inap",
+          label: "Voucher Rawat Inap",
+          component: "VoucherRawatInap",
+          description: "Voucher Rawat Inap",
+          backendType: "voucher_rawat_inap",
+        },
+        {
+          value: "form_reaksi_transfusi_darah",
+          label: "Form Reaksi Transfusi Darah",
+          component: "FormReaksiTransfusiDarah",
+          description: "Form Reaksi Transfusi Darah",
+          backendType: "form_reaksi_transfusi_darah",
+        },
         // {
         //   value: "informed-consent",
         //   label: "Informed Consent",
@@ -491,6 +592,7 @@ export default {
     },
 
     onProceedToCreate() {
+      this.editData = null;
       if (!this.selectedDocumentType) {
         alert("Silakan pilih jenis dokumen terlebih dahulu!");
         return;
@@ -517,59 +619,113 @@ export default {
       return doc ? doc.description : "";
     },
 
-    onView(item) {
-      // Implement view modal atau redirect ke detail page
-      console.log("View:", item);
-      // TODO: Implement detail view
-    },
+async onView(item) {
+  console.log("🟡 EDIT - Item yang dipilih:", item);
+  
+  try {
+    this.loading = true;
 
-    async onEdit(item) {
-      try {
-        // Loading state
-        this.isLoading = true;
+    // Map backend type to frontend type
+    const doc = this.availableDocuments.find(
+      (d) => d.backendType === item.document_type
+    );
 
-        // Map backend type to frontend type
-        const doc = this.availableDocuments.find(
-          (d) => d.backendType === item.document_type
-        );
+    console.log("🟡 EDIT - Doc Config Found:", doc);
 
-        if (!doc) {
-          alert("Dokumen tidak ditemukan!");
-          return;
-        }
+    if (!doc) {
+      alert("Tipe dokumen tidak ditemukan!");
+      return;
+    }
 
-        // 1. Get detail lampiran terlebih dahulu
-        const response = await axios.get(
-          `/master/rekammedis/lampiran/${item.uuid}`,
-          {
-            params: {
-              type: item.document_type,
-            },
-          }
-        );
+    // Kirim request untuk get detail
+    const formData = new FormData();
+    formData.append("type", item.document_type);
 
-        if (!response.data.status) {
-          alert(response.data.message || "Gagal mengambil detail dokumen");
-          return;
-        }
+    const url = `/master/rekammedis/lampiran/${item.uuid}/detail`;
+    console.log("🟡 EDIT - URL:", url);
 
-        // 2. Set data untuk dikirim ke component
-        this.editData = response.data.data;
-        this.selectedDocumentType = doc.value;
-        this.editUuid = item.uuid;
+    const response = await axios.post(url, formData);
 
-        // 3. Navigate ke component create/edit
-        this.state = "create";
+    console.log("🟡 EDIT - Response:", response.data);
 
-      } catch (error) {
-        console.error("Error saat edit:", error);
-        alert(
-          error.response?.data?.message || "Terjadi kesalahan saat mengambil data"
-        );
-      } finally {
-        this.isLoading = false;
-      }
-    },
+    if (!response.data.status) {
+      alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen"));
+      return;
+    }
+
+    // ✅ PENTING: Set data SEBELUM pindah state
+    this.editData = response.data.data;
+    this.selectedDocumentType = doc.value;
+    
+    console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
+    console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
+    
+    // ✅ Pindah state TERAKHIR setelah data ready
+    this.$nextTick(() => {
+      this.state = "view";
+    });
+
+  } catch (error) {
+    console.error("🟡 EDIT - Error:", error);
+    alert("Error: " + (error.response?.data?.message || "Terjadi kesalahan saat mengambil data"));
+  } finally {
+    this.loading = false;
+  }
+},
+
+async onEdit(item) {
+  console.log("🟡 EDIT - Item yang dipilih:", item);
+  
+  try {
+    this.loading = true;
+
+    // Map backend type to frontend type
+    const doc = this.availableDocuments.find(
+      (d) => d.backendType === item.document_type
+    );
+
+    console.log("🟡 EDIT - Doc Config Found:", doc);
+
+    if (!doc) {
+      alert("Tipe dokumen tidak ditemukan!");
+      return;
+    }
+
+    // Kirim request untuk get detail
+    const formData = new FormData();
+    formData.append("type", item.document_type);
+
+    const url = `/master/rekammedis/lampiran/${item.uuid}/detail`;
+    console.log("🟡 EDIT - URL:", url);
+
+    const response = await axios.post(url, formData);
+
+    console.log("🟡 EDIT - Response:", response.data);
+
+    if (!response.data.status) {
+      alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen"));
+      return;
+    }
+
+    // ✅ PENTING: Set data SEBELUM pindah state
+    this.editData = response.data.data;
+    this.selectedDocumentType = doc.value;
+    
+    console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
+    console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
+    
+    // ✅ Pindah state TERAKHIR setelah data ready
+    this.$nextTick(() => {
+      this.state = "create";
+    });
+
+  } catch (error) {
+    console.error("🟡 EDIT - Error:", error);
+    alert("Error: " + (error.response?.data?.message || "Terjadi kesalahan saat mengambil data"));
+  } finally {
+    this.loading = false;
+  }
+},
 
     onPrint(item) {
       // Generate print URL based on document type
@@ -581,6 +737,17 @@ export default {
         surat_penolakan_rujukan: `/print/rekammedis/general/suratpenolakanrujukan/${item.uuid}`,
         surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
         surat_balasan_konsul: `/print/rekammedis/general/suratbalasankonsul/${item.uuid}`,
+        dokumen_ceklist_kesiapan_bedah: `/print/rekammedis/bedah/rm2dot0/${item.uuid}`,
+        form_edukasi_pasien_dan_keluarga_rawat_jalan: `/print/rekammedis/rawat-jalan/rm1dot2/${item.uuid}`,
+        form_persetujuan_umum_pasien_keluarga: `/print/rekammedis/rawat-jalan/rm1dot1/${item.uuid}`,
+        form_proses_perawatan_peri_operative: `/print/rekammedis/bedah/rm1dot10/${item.uuid}`,
+        form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap: `/print/rekammedis/general/pendidikanedukasipasienkeluargaterintegrasirawatinap/${item.uuid}`,
+        penolakan_tindakan_anestesi: `/print/rekammedis/general/penolakantindakananestesi/${item.uuid}`,
+        form_pengkajian_keperawatan_mata_rawat_jalan: `/print/rekammedis/rawat-jalan/rm1dot3/${item.uuid}`,
+        form_laporan_injeksi: `/print/rekammedis/general/laporaninjeksi/${item.uuid}`,
+        form_permintaan_pulang: `/print/rekammedis/general/formpermintaanpulang/${item.uuid}`,
+        voucher_rawat_inap: `/print/rekammedis/general/voucherrawatinap/${item.uuid}`,
+        form_reaksi_transfusi_darah: `/print/rekammedis/general/formreaksitransfusidarah/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];
@@ -591,42 +758,43 @@ export default {
       }
     },
 
-    async onDelete(item) {
-      const confirm = await this.$swal({
-        icon: "warning",
-        title: "Konfirmasi Hapus",
-        text: `Apakah Anda yakin ingin menghapus ${item.document_label}?`,
-        showCancelButton: true,
-        confirmButtonText: "Ya, Hapus",
-        cancelButtonText: "Batal",
-        confirmButtonColor: "#d33",
-      });
+async onDelete(item) {
+  console.log("🔴 DELETE - Item yang dipilih:", item);
+  console.log("🔴 DELETE - Document Type:", item.document_type);
+  
+  // ✅ Ganti swal dengan confirm
+  const confirmDelete = confirm(`Apakah Anda yakin ingin menghapus ${item.document_label}?`);
 
-      if (!confirm.isConfirmed) return;
+  if (!confirmDelete) {
+    console.log("🔴 DELETE - User batal hapus");
+    return;
+  }
 
-      try {
-        const response = await axios.delete(
-          `/master/rekammedis/lampiran/${item.uuid}?type=${item.document_type}`
-        );
+  try {
+    this.loading = true;
 
-        if (response.data.status) {
-          this.$swal({
-            icon: "success",
-            title: "Berhasil",
-            text: "Dokumen berhasil dihapus",
-            timer: 2000,
-          });
-          this.fetchLampiran();
-        }
-      } catch (error) {
-        console.error("Error:", error);
-        this.$swal({
-          icon: "error",
-          title: "Error",
-          text: "Gagal menghapus dokumen",
-        });
-      }
-    },
+    const url = `/master/rekammedis/lampiran/${item.uuid}?type=${item.document_type}`;
+    console.log("🔴 DELETE - URL yang dipanggil:", url);
+
+    const response = await axios.delete(url);
+    
+    console.log("🔴 DELETE - Response:", response.data);
+
+    if (response.data.status) {
+      alert("Dokumen berhasil dihapus");
+      this.fetchLampiran();
+    } else {
+      console.error("🔴 DELETE - Status false:", response.data.message);
+      alert("Gagal menghapus dokumen: " + response.data.message);
+    }
+  } catch (error) {
+    console.error("🔴 DELETE - Error:", error);
+    console.error("🔴 DELETE - Error Response:", error.response?.data);
+    alert("Error: " + (error.response?.data?.message || "Gagal menghapus dokumen"));
+  } finally {
+    this.loading = false;
+  }
+},
 
     // Helper methods
     formatDate(date) {

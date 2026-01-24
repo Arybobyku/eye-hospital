@@ -11,6 +11,9 @@ use PenggunaHelp;
 use App\Http\Controllers\Controller;
 use App\Models\Registrasi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;  // ✅ TAMBAHKAN INI
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 
 class RekamMedisCtrl extends Controller
 {
@@ -289,6 +292,83 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-eye',
                     'color' => '#00BCD4', // Cyan (untuk mata/laser)
                 ],
+                [
+                    'table' => 'dokumen_ceklist_kesiapan_bedah',
+                    'type' => 'dokumen_ceklist_kesiapan_bedah',
+                    'label' => 'Dokumen Ceklist Kesiapan Bedah',
+                    'icon' => 'fa-eye',
+                    'color' => '#0D47A1', // Biru sangat tua
+                ],
+                [
+                    'table' => 'form_edukasi_pasien_dan_keluarga_rawat_jalan',
+                    'type' => 'form_edukasi_pasien_dan_keluarga_rawat_jalan',
+                    'label' => 'Form Edukasi Pasien Dan Keluarga Rawat Jalan',
+                    'icon' => 'fa-eye',
+                    'color' => '#0F5DBB', // Biru tua
+                ],
+                [
+                    'table' => 'form_persetujuan_umum_pasien_keluarga',
+                    'type' => 'form_persetujuan_umum_pasien_keluarga',
+                    'label' => 'Form Persetujuan Umum Pasien Keluarga',
+                    'icon' => 'fa-eye',
+                    'color' => '#1565C0', // Biru solid
+                ],
+                [
+                    'table' => 'form_proses_perawatan_peri_operative',
+                    'type' => 'form_proses_perawatan_peri_operative',
+                    'label' => 'Form Proses Perawatan Peri Operative',
+                    'icon' => 'fa-eye',
+                    'color' => '#1976D2', // Biru medium
+                ],
+                [
+                    'table' => 'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap',
+                    'type' => 'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap',
+                    'label' => 'Form Pendidikan Edukasi Pasien Keluarga Terintegrasi Rawat Inap',
+                    'icon' => 'fa-eye',
+                    'color' => '#1E88E5', // Biru cerah (masih aman)
+                ],
+                [
+                    'table' => 'penolakan_tindakan_anestesi',
+                    'type' => 'penolakan_tindakan_anestesi',
+                    'label' => 'Penolakan Tindakan Anestesi',
+                    'icon' => 'fa-eye',
+                    'color' => '#2196F3', // Biru cerah utama
+                ],
+                [
+                    'table' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
+                    'type' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
+                    'label' => 'Form Pengkajian Keperawatan Mata Rawat Jalan',
+                    'icon' => 'fa-eye',
+                    'color' => '#1C7ED6', // Biru medium terang
+                ],
+                [
+                    'table' => 'form_laporan_injeksi',
+                    'type' => 'form_laporan_injeksi',
+                    'label' => 'Form Laporan Injeksi',
+                    'icon' => 'fa-eye',
+                    'color' => '#1864AB', // Biru tenang
+                ],
+                [
+                    'table' => 'form_permintaan_pulang',
+                    'type' => 'form_permintaan_pulang',
+                    'label' => 'Form Permintaan Pulang',
+                    'icon' => 'fa-eye',
+                    'color' => '#1450A3', // Biru agak tua
+                ],
+                [
+                    'table' => 'voucher_rawat_inap',
+                    'type' => 'voucher_rawat_inap',
+                    'label' => 'Voucher Rawat Inap',
+                    'icon' => 'fa-eye',
+                    'color' => '#0B5394', // Biru dalam
+                ],
+                [
+                    'table' => 'form_reaksi_transfusi_darah',
+                    'type' => 'form_reaksi_transfusi_darah',
+                    'label' => 'Form Reaksi Transfusi Darah',
+                    'icon' => 'fa-eye',
+                    'color' => '#083D77', // Biru paling gelap
+                ],
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -452,6 +532,72 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_ceklist_kesiapan_bedah' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+                'form_edukasi_pasien_dan_keluarga_rawat_jalan' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'form_persetujuan_umum_pasien_keluarga' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'form_proses_perawatan_peri_operative' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'penolakan_tindakan_anestesi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'form_pengkajian_keperawatan_mata_rawat_jalan' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'form_laporan_injeksi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'form_permintaan_pulang' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'voucher_rawat_inap' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'form_reaksi_transfusi_darah' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             'dokumen_asuhan_gizi' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
@@ -508,6 +654,17 @@ class RekamMedisCtrl extends Controller
                 'dokumen_dietitian_pasien_baru' => 'dokumen_dietitian_pasien_baru',
                 'dokumen_asuhan_gizi' => 'dokumen_asuhan_gizi',
                 'dokumen_tindakan_laser_lpi' => 'dokumen_tindakan_laser_lpi',
+                'dokumen_ceklist_kesiapan_bedah' => 'dokumen_ceklist_kesiapan_bedah',
+                'form_edukasi_pasien_dan_keluarga_rawat_jalan' => 'form_edukasi_pasien_dan_keluarga_rawat_jalan',
+                'form_persetujuan_umum_pasien_keluarga' => 'form_persetujuan_umum_pasien_keluarga',
+                'form_proses_perawatan_peri_operative' => 'form_proses_perawatan_peri_operative',
+                'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap' => 'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap',
+                'penolakan_tindakan_anestesi' => 'penolakan_tindakan_anestesi',
+                'form_pengkajian_keperawatan_mata_rawat_jalan' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
+                'form_laporan_injeksi' => 'form_laporan_injeksi',
+                'form_permintaan_pulang' => 'form_permintaan_pulang',
+                'form_reaksi_transfusi_darah' => 'form_reaksi_transfusi_darah',
+                'voucher_rawat_inap' => 'voucher_rawat_inap',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -558,6 +715,19 @@ class RekamMedisCtrl extends Controller
                 'laser_bargage' => 'dokumen_form_laser_bargage',
                 'laporan_bedah' => 'laporan_pembedahan',
                 'informed_consent' => 'dokumen_informed_consent',
+
+                //tambahkan untuk delete disini
+                'dokumen_ceklist_kesiapan_bedah' => 'dokumen_ceklist_kesiapan_bedah',
+                'form_edukasi_pasien_dan_keluarga_rawat_jalan' => 'form_edukasi_pasien_dan_keluarga_rawat_jalan',
+                'form_persetujuan_umum_pasien_keluarga' => 'form_persetujuan_umum_pasien_keluarga',
+                'form_proses_perawatan_peri_operative' => 'form_proses_perawatan_peri_operative',
+                'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap' => 'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap',
+                'penolakan_tindakan_anestesi' => 'penolakan_tindakan_anestesi',
+                'form_pengkajian_keperawatan_mata_rawat_jalan' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
+                'form_laporan_injeksi' => 'form_laporan_injeksi',
+                'form_permintaan_pulang' => 'form_permintaan_pulang',
+                'voucher_rawat_inap' => 'voucher_rawat_inap',
+                'form_reaksi_transfusi_darah' => 'form_reaksi_transfusi_darah',
             ];
 
             if (!isset($tableMap[$type])) {
