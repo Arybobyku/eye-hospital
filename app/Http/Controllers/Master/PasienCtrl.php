@@ -7,7 +7,7 @@ use App\Models\Cppt;
 use App\Models\DokumenAsuhanGizi;
 use App\Models\DokumenBalanceCairanHarian;
 use App\Models\DokumenDietitianPasienBaru;
-use App\Models\DokumenFormLaserBargage;
+use App\Models\DokumenFormLaserBarrage;
 use App\Models\DokumenLaporanPembedahan;
 use App\Models\DokumenPersetujuanPenolakanTindakanDokter;
 use App\Models\DokumenResumePerawatanRawatJalan;
@@ -40,6 +40,7 @@ use App\Models\DokumenResumeMedisRawatInap;
 use App\Models\DokumenCPPTRawatInap;
 use App\Models\DokumenMonitoringEfekSampingObat;
 use App\Models\DokumenCatatanKeperawatan;
+use App\Models\DokumenFormLaserFokal;
 use Cookie;
 use Crypt;
 use DB;
@@ -335,8 +336,7 @@ class PasienCtrl extends Controller
         $search = $request->search;
 
         if ($request->search != '') {
-            $data = DokumenPersetujuanPenolakanTindakanDokter::join('pasien', 'dokumen_persetujuan_penolakan_tindakan_dokter.uuid_pasien', '=', 'pasien.uuid')
-                ->where('uuid_pasien', '=', $search)
+            $data = DokumenPersetujuanPenolakanTindakanDokter::where('uuid_pasien', '=', $search)
                 ->orderBy('date', 'desc')
                 ->skip($skip)->take($this->take)
                 ->get();
@@ -402,63 +402,37 @@ class PasienCtrl extends Controller
         }
     }
 
-    public function storeFormLaseBarage(Request $request)
+        public function storeFormLaserBarrage(Request $request)
     {
         try {
             DB::beginTransaction();
-
             $data = $request->all();
-
-            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
             $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
-            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
-
             $uuid = $request->input('uuid');
-
-            // Hapus uuid dari data untuk avoid mass assignment issue
             unset($data['uuid']);
+            
+            $data['mata_kanan'] = filter_var($data['mata_kanan'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            $data['mata_kiri'] = filter_var($data['mata_kiri'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
             if ($uuid) {
-                // UPDATE: cari berdasarkan UUID
-                $dokumen = DokumenFormLaserBargage::where('uuid', $uuid)->first();
-
-                if (! $dokumen) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Data tidak ditemukan',
-                    ], 404);
-                }
-
+                $dokumen = DokumenFormLaserBarrage::where('uuid', $uuid)->first();
+                if (!$dokumen) return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
                 $data['updated_by'] = $pengguna_nama;
                 $dokumen->update($data);
                 $action = 'update';
-                $message = 'Form Laser Bargage berhasil diupdate';
-
+                $message = 'Form Laser Barrage berhasil diupdate';
             } else {
-                // CREATE: buat baru
                 $data['created_by'] = $pengguna_nama;
-                $dokumen = DokumenFormLaserBargage::create($data);
+                $dokumen = DokumenFormLaserBarrage::create($data);
                 $action = 'create';
-                $message = 'Form Laser Bargage berhasil disimpan';
+                $message = 'Form Laser Barrage berhasil disimpan';
             }
 
             DB::commit();
-
-            return response()->json([
-                'status' => true,
-                'message' => $message,
-                'data' => $dokumen,
-                'action' => $action,
-            ], $action === 'create' ? 201 : 200);
-
+            return response()->json(['status' => true, 'message' => $message, 'data' => $dokumen, 'action' => $action], $action === 'create' ? 201 : 200);
         } catch (Exception $e) {
             DB::rollBack();
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Gagal menyimpan Form Laser Bargage',
-                'error' => $e->getMessage(),
-            ], 500);
+            return response()->json(['status' => false, 'message' => 'Gagal menyimpan', 'error' => $e->getMessage()], 500);
         }
     }
 
@@ -2389,4 +2363,116 @@ public function storeCatatanKeperawatan(Request $request)
     }
 }
 
+public function storeFormLaserFokal(Request $request)
+{
+    try {
+        DB::beginTransaction();
+
+        $data = $request->all();
+
+        // Ambil user info dari encrypted cookie
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+
+        $uuid = $request->input('uuid');
+        unset($data['uuid']);
+
+        // Convert checkbox values to boolean
+        $data['mata_kanan'] = filter_var($data['mata_kanan'] ?? false, FILTER_VALIDATE_BOOLEAN);
+        $data['mata_kiri'] = filter_var($data['mata_kiri'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+        if ($uuid) {
+            // UPDATE
+            $dokumen = DokumenFormLaserFokal::where('uuid', $uuid)->first();
+
+            if (! $dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Form Laser Fokal berhasil diupdate';
+
+        } else {
+            // CREATE
+            $data['created_by'] = $pengguna_nama;
+            $dokumen = DokumenFormLaserFokal::create($data);
+            $action = 'create';
+            $message = 'Form Laser Fokal berhasil disimpan';
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+
+    } catch (Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Form Laser Fokal',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+ public function dokumenPersetujuanUmum(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        $pasien = Pasien::where('uuid', $request->uuid_pasien)->first();
+        $data = DokumenPersetujuanUmum::create([
+            'uuid_pasien' => $request->uuid_pasien,
+            'no_rm' => $request->kodeMR,
+            'nik' => $pasien->no_ktp,
+            'nama_pasien' => $request->nama,
+            'nama_pemberi_informasi' => $request->nama_pemberi_informasi,
+            'tanggal_lahir' => $request->tanggal_lahir,
+            'jenis_kelamin' => $pasien->jenis_kelamin,
+            'resume_rows' => $request->resume_rows ?: null,
+            'catatan' => '',
+            'pasien_ttd' => $request->pasien_ttd,
+            'nama_terang_pasien' => $request->nama_terang_pasien,
+            'pemberi_inf_ttd' => $request->pemberi_inf_ttd,
+            'nama_terang_pemberi_inf' => $request->nama_terang_pemberi_inf,
+            'created_by' => auth()->id(),
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        // $data = DokumenPersetujuanPenolakanTindakanDokter::store($request);
+
+        return response()->json(['data' => $data]);
+
+    }
+
+    public function listDokumenPersetujuanUmum(Request $request)
+    {
+        $page = $request->page - 1;
+        $skip = $page * $this->take;
+        $search = $request->search;
+
+        if ($request->search != '') {
+            $data = DokumenPersetujuanUmum::where('uuid_pasien', '=', $search)
+                ->orderBy('created_at', 'desc')
+                ->skip($skip)->take($this->take)
+                ->get();
+            $total = DokumenPersetujuanUmum::where('uuid_pasien', '=', $search)
+                ->orderBy('created_at', 'desc')
+                ->orderBy('created_at', 'desc')->count();
+        }
+
+        return response()->json(['data' => $data, 'total' => $total]);
+
+    }
 }

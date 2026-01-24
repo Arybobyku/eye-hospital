@@ -199,8 +199,8 @@ class RekamMedisCtrl extends Controller
             // ✨ KONFIGURASI DOKUMEN
             $documentConfigs = [
                 [
-                    'table' => 'dokumen_form_laser_bargage',
-                    'type' => 'laser_barbage',
+                    'table' => 'dokumen_form_laser_barrage',
+                    'type' => 'dokumen_form_laser_barrage',
                     'label' => 'Form Laser Bargage',
                     'icon' => 'fa-laser-pointer',
                     'color' => '#FF6B35', // Orange terang
@@ -401,6 +401,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa fa-bed',
                     'color' => '#673AB7', // Depp Purple
                 ],
+                [
+                    'table' => 'dokumen_form_laser_fokal',
+                    'type' => 'dokumen_form_laser_fokal',
+                    'label' => 'Dokumen Form Laser Fokal',
+                    'icon' => 'fa fa-bed',
+                    'color' => '#673AB7', // Depp Purple
+                ],
                 
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
@@ -499,9 +506,9 @@ class RekamMedisCtrl extends Controller
     private function mapField($table, $fieldType)
     {
         $mapping = [
-            'dokumen_form_laser_barbage' => [
+            'dokumen_form_laser_barrage' => [
                 'tanggal' => 'tanggal',
-                'waktu' => 'waktu',
+                'waktu' => 'created_at',
                 // 'user_pelaksana' => 'dokter_pelaksana',
                 // 'detail_info' => 'jenis_laser'
             ],
@@ -655,6 +662,12 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_form_laser_fokal' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -685,6 +698,7 @@ class RekamMedisCtrl extends Controller
             // Map document type to table
             $tableMap = [
                 'laser_bargage' => 'dokumen_form_laser_bargage',
+                'dokumen_form_laser_barrage' => 'dokumen_form_laser_barrage',
                 'laporan_bedah' => 'laporan_pembedahan',
                 'informed_consent' => 'dokumen_informed_consent',
                 'surat_pernyataan_pasien_umum' => 'dokumen_surat_pernyataan_pasien_umum',
@@ -715,6 +729,7 @@ class RekamMedisCtrl extends Controller
                 'cppt_rawat_inap' => 'dokumen_cppt_rawat_inap',
                 'monitoring_efek_samping_obat' => 'dokumen_monitoring_efek_samping_obat',
                 'catatan_keperawatan' => 'dokumen_catatan_keperawatan',
+                'dokumen_form_laser_fokal' => 'dokumen_form_laser_fokal',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -765,6 +780,7 @@ class RekamMedisCtrl extends Controller
                 'laser_bargage' => 'dokumen_form_laser_bargage',
                 'laporan_bedah' => 'laporan_pembedahan',
                 'informed_consent' => 'dokumen_informed_consent',
+                'dokumen_form_laser_fokal' => 'dokumen_form_laser_fokal',
             ];
 
             if (!isset($tableMap[$type])) {

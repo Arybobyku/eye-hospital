@@ -69,7 +69,8 @@
         </div>
         <br>
         <div class="">
-            <span class="right"> Tanggal: {{ \Carbon\Carbon::parse($data->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }} </span>
+            <span class="right"> Tanggal:
+                {{ \Carbon\Carbon::parse($data->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }} </span>
         </div>
 
         <br>
@@ -77,7 +78,7 @@
         <table style="width: 100%; margin-top: 20px" cellpadding="0" cellspacing="0">
             <tr>
                 <td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify">
-                    Diagnosa: {{$data->diagnosa}}<br>
+                    Diagnosa: {{ $data->diagnosa }}<br>
             </tr>
 
             <tr>
@@ -98,7 +99,7 @@
                     7. Dokter menyalakan alat Laser Photocoagulation <br>
                     8. Pasien dipasang Lensa Super Quad/Trans Equator pada mata yang akan dilaser <br>
                     9. Dilakukan tindakan laser dengan parameter laser : <br>
-                    {{$data->parameter_laser}}. <br>
+                    {{ $data->parameter_laser }}. <br>
                     10. Setelah selesai tindakan laser, pasien diberi obat tetes antibiotik <br>
                     11. Pasien diberikan resep obat dan surat kontrol
                     <br>
@@ -116,16 +117,16 @@
                     <br> --}}
                     <br>
                     <div class="right">Tanda Tangan DPJP / Dokter
-                      
-                         <div  style="margin-left:20px">
-                       	  <img src="{{ $data->ttd_dokter }}" alt="Base64 Image" width="200px">
 
-                          <p>
-                            	{{$data->nama_dokter}}
-                          </p>
+                        <div style="margin-left:20px">
+                            <img src="{{ $data->ttd_dokter }}" alt="Base64 Image" width="200px">
+
+                            <p>
+                                {{ $data->nama_dokter }}
+                            </p>
+                        </div>
                     </div>
-                    </div>
-               
+
             </tr>
 
         </table>

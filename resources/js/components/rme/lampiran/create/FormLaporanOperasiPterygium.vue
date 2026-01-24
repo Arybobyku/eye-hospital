@@ -2,280 +2,354 @@
   <button @click="$emit('back')" class="btn-back">Kembali</button>
 
   <div class="container py-4">
-    <!-- LOADING OVERLAY -->
-    <div v-if="loadingData" class="loading-overlay">
-      <div class="spinner-rme"></div>
-      <p>Memuat data...</p>
-    </div>
-
-    <!-- ================= HEADER ================= -->
-    <div class="text-center mb-4">
-      <img src="/logo-rs.png" alt="Logo RS" class="logo-rs mb-3" style="max-width: 150px" />
-      <h2 class="fw-bold text-uppercase">RS KHUSUS MATA PRIMA VISION</h2>
-      <p class="mb-1">VISION FOR THE NATION</p>
-      <p class="mb-1">PRIMA VISION EYE HOSPITAL - 24 HOURS EYE ACCIDENT & EMERGENCY UNIT</p>
-      <p class="mb-1">Jalan Pabrik Tenun No. 51-53, Medan Perjuangan 20112, Sumatera Utara, Indonesia</p>
-      <p class="mb-1">Hospital Hotline: (+6261) 805 14 888</p>
-      <p class="mb-1">24 Hours Eye Emergency Hotline: 0822 7755 5151</p>
-      <p class="mb-3">Email: rsprimavision@gmail.com</p>
-      <hr class="my-3" style="border: 2px solid #000" />
-      
-      <h3 class="fw-bold mt-4 mb-4">LAPORAN OPERASI PTERYGIUM</h3>
-      <p class="text-muted mb-3" style="font-size: 13px">
-        RM 9.0/LOP/22
-      </p>
-      
-      <span v-if="isEditMode" class="badge bg-warning">Mode Edit</span>
-      <span v-else class="badge bg-success">Mode Baru</span>
-    </div>
-
-    <!-- ================= DATA PASIEN ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">Data Pasien</h5>
-      <div class="row mb-2">
-        <div class="col-md-6">
-          <label>Nama :</label>
-          <input type="text" v-model="form.nama_pasien" class="input-rme" readonly />
-        </div>
-        <div class="col-md-6">
-          <label>No. Rekam Medis :</label>
-          <input type="text" v-model="form.no_rm_pasien" class="input-rme" readonly />
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <label>Jenis Kelamin :</label>
-          <input type="text" v-model="form.jenis_kelamin_display" class="input-rme" readonly />
-        </div>
-        <div class="col-md-6">
-          <label>Tanggal Lahir :</label>
-          <input type="text" v-model="form.tanggal_lahir_display" class="input-rme" readonly />
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= INFORMASI OPERASI ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">Informasi Operasi</h5>
-      
-      <div class="row mb-3">
-        <div class="col-md-12">
-          <label>Tgl. Operasi : <span class="text-danger">*</span></label>
-          <input type="date" v-model="form.tanggal_operasi" class="form-control" />
-        </div>
+    <div class="form-wrapper position-relative">
+      <div v-if="disabledSubmit" class="view-overlay"></div>
+      <!-- LOADING OVERLAY -->
+      <div v-if="loadingData" class="loading-overlay">
+        <div class="spinner-rme"></div>
+        <p>Memuat data...</p>
       </div>
 
-      <div class="info-table">
-        <table class="table table-bordered">
-          <tbody>
-            <tr>
-              <td class="label-cell" style="width: 15%">Mata :</td>
-              <td style="width: 35%">
-                <div class="d-flex gap-4">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" v-model="form.mata_od" id="mataOD">
-                    <label class="form-check-label" for="mataOD">OD</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" v-model="form.mata_os" id="mataOS">
-                    <label class="form-check-label" for="mataOS">OS</label>
-                  </div>
-                </div>
-              </td>
-              <td class="label-cell" style="width: 15%">Operator :</td>
-              <td style="width: 35%">
-                <input type="text" v-model="form.operator" class="form-control form-control-sm" 
-                  placeholder="Nama Operator/Dokter">
-              </td>
-            </tr>
-            <tr>
-              <td class="label-cell">Jam Operasi :</td>
-              <td>
-                <input type="time" v-model="form.jam_operasi" class="form-control form-control-sm">
-              </td>
-              <td class="label-cell">Lama Operasi :</td>
-              <td>
-                <input type="text" v-model="form.lama_operasi" class="form-control form-control-sm" 
-                  placeholder="Contoh: 30 menit">
-              </td>
-            </tr>
-            <tr>
-              <td class="label-cell">Diagnosis :</td>
-              <td colspan="3">
-                <input type="text" v-model="form.diagnosis" class="form-control form-control-sm" 
-                  placeholder="Diagnosis pasien">
-              </td>
-            </tr>
-            <tr>
-              <td class="label-cell">Asisten :</td>
-              <td colspan="3">
-                <input type="text" v-model="form.asisten" class="form-control form-control-sm" 
-                  placeholder="Nama Asisten">
-              </td>
-            </tr>
-            <tr>
-              <td class="label-cell">Jenis Operasi :</td>
-              <td>
-                <input type="text" v-model="form.jenis_operasi" class="form-control form-control-sm" 
-                  placeholder="Jenis Operasi">
-              </td>
-              <td class="label-cell">Anesthesia :</td>
-              <td>
-                <input type="text" v-model="form.anesthesia" class="form-control form-control-sm" 
-                  placeholder="Jenis Anestesi">
-              </td>
-            </tr>
-            <tr>
-              <td class="label-cell">Anesthesiologist :</td>
-              <td colspan="3">
-                <input type="text" v-model="form.anesthesiologist" class="form-control form-control-sm" 
-                  placeholder="Nama Dokter Anestesi">
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <!-- ================= HEADER ================= -->
+      <div class="text-center mb-4">
+        <img
+          src="/logo-rs.png"
+          alt="Logo RS"
+          class="logo-rs mb-3"
+          style="max-width: 150px"
+        />
+        <h2 class="fw-bold text-uppercase">RS KHUSUS MATA PRIMA VISION</h2>
+        <p class="mb-1">VISION FOR THE NATION</p>
+        <p class="mb-1">
+          PRIMA VISION EYE HOSPITAL - 24 HOURS EYE ACCIDENT & EMERGENCY UNIT
+        </p>
+        <p class="mb-1">
+          Jalan Pabrik Tenun No. 51-53, Medan Perjuangan 20112, Sumatera Utara, Indonesia
+        </p>
+        <p class="mb-1">Hospital Hotline: (+6261) 805 14 888</p>
+        <p class="mb-1">24 Hours Eye Emergency Hotline: 0822 7755 5151</p>
+        <p class="mb-3">Email: rsprimavision@gmail.com</p>
+        <hr class="my-3" style="border: 2px solid #000" />
+
+        <h3 class="fw-bold mt-4 mb-4">LAPORAN OPERASI PTERYGIUM</h3>
+        <p class="text-muted mb-3" style="font-size: 13px">RM 9.0/LOP/22</p>
+
+        <span v-if="isEditMode && !disabledSubmit" class="badge bg-warning"
+          >Mode Edit</span
+        >
+        <!-- <span v-else class="badge bg-success">Mode Baru</span> -->
       </div>
-    </div>
 
-    <!-- ================= PROSEDUR OPERASI ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">Prosedur Operasi</h5>
-      
-      <div class="procedure-steps">
-        <div class="step-item">
-          <span class="step-number">1.</span>
-          <span class="step-text">Pasien dalam posisi SUPINE di tempat tidur dan Anastesi Parabulper</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">2.</span>
-          <span class="step-text">Teknik A & Antiseptic</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">3.</span>
-          <span class="step-text">Tutup duklubang steril</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">4.</span>
-          <span class="step-text">Pasang Blefarostat</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">5.</span>
-          <span class="step-text">Injeksi Lidocain pada caput dan corpus pterygium</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">6.</span>
-          <span class="step-text">Pisahkan dari epitrkornea hingga bersih</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">7.</span>
-          <span class="step-text">Atasi pendarahan</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">8.</span>
-          <span class="step-text">Gunting corpus pterygium</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">9.</span>
-          <span class="step-text">Buat graft dari konjungtiva bagian superior</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">10.</span>
-          <span class="step-text">Geser ke medial, jahit tepinya</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">11.</span>
-          <span class="step-text">Salep antibiotik</span>
-        </div>
-        
-        <div class="step-item">
-          <span class="step-number">12.</span>
-          <span class="step-text">Operasi selesai</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= SIGNATURE AREA ================= -->
-    <div class="signature-container">
-      <h5 class="section-title-rme text-center mb-4">Tanda Tangan</h5>
-      
-      <div class="signature-section">
-        <!-- Perawat -->
-        <div class="sign-box">
-          <label>Perawat</label>
-
-          <!-- Preview TTD yang sudah ada -->
-          <div v-if="form.ttd_perawat && !signatureCleared.ttd_perawat" class="signature-preview">
-            <img :src="form.ttd_perawat" alt="TTD Perawat" class="img-signature" />
-            <button @click="clearSignature('ttd_perawat')" class="btn-clear">
-              Hapus & Tanda Tangan Ulang
-            </button>
+      <!-- ================= DATA PASIEN ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">Data Pasien</h5>
+        <div class="row mb-2">
+          <div class="col-md-6">
+            <label>Nama :</label>
+            <input type="text" v-model="form.nama_pasien" class="input-rme" readonly />
           </div>
-
-          <!-- Signature Pad -->
-          <div v-else>
-            <VueSignaturePad
-              ref="ttd_perawat"
-              :options="sigOption"
-              class="signature-box-rme"
+          <div class="col-md-6">
+            <label>No. Rekam Medis :</label>
+            <input type="text" v-model="form.no_rm_pasien" class="input-rme" readonly />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <label>Jenis Kelamin :</label>
+            <input
+              type="text"
+              v-model="form.jenis_kelamin_display"
+              class="input-rme"
+              readonly
             />
-            <button @click="saveSign('ttd_perawat')" class="btn-save">Simpan ✔</button>
           </div>
+          <div class="col-md-6">
+            <label>Tanggal Lahir :</label>
+            <input
+              type="text"
+              v-model="form.tanggal_lahir_display"
+              class="input-rme"
+              readonly
+            />
+          </div>
+        </div>
+      </div>
 
-          <input
-            v-model="form.nama_perawat"
-            class="input-rme mt-2"
-            placeholder="Nama Perawat"
-          />
+      <!-- ================= INFORMASI OPERASI ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">Informasi Operasi</h5>
+
+        <div class="row mb-3">
+          <div class="col-md-12">
+            <label>Tgl. Operasi : <span class="text-danger">*</span></label>
+            <input type="date" v-model="form.tanggal_operasi" class="form-control" />
+          </div>
         </div>
 
-        <!-- Operator/Dokter -->
-        <div class="sign-box">
-          <label>Operator</label>
+        <div class="info-table">
+          <table class="table table-bordered">
+            <tbody>
+              <tr>
+                <td class="label-cell" style="width: 15%">Mata :</td>
+                <td style="width: 35%">
+                  <div class="d-flex gap-4">
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        v-model="form.mata_od"
+                        id="mataOD"
+                      />
+                      <label class="form-check-label" for="mataOD">OD</label>
+                    </div>
+                    <div class="form-check">
+                      <input
+                        class="form-check-input"
+                        type="checkbox"
+                        v-model="form.mata_os"
+                        id="mataOS"
+                      />
+                      <label class="form-check-label" for="mataOS">OS</label>
+                    </div>
+                  </div>
+                </td>
+                <td class="label-cell" style="width: 15%">Operator :</td>
+                <td style="width: 35%">
+                  <input
+                    type="text"
+                    v-model="form.operator"
+                    class="form-control form-control-sm"
+                    placeholder="Nama Operator/Dokter"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="label-cell">Jam Operasi :</td>
+                <td>
+                  <input
+                    type="time"
+                    v-model="form.jam_operasi"
+                    class="form-control form-control-sm"
+                  />
+                </td>
+                <td class="label-cell">Lama Operasi :</td>
+                <td>
+                  <input
+                    type="text"
+                    v-model="form.lama_operasi"
+                    class="form-control form-control-sm"
+                    placeholder="Contoh: 30 menit"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="label-cell">Diagnosis :</td>
+                <td colspan="3">
+                  <input
+                    type="text"
+                    v-model="form.diagnosis"
+                    class="form-control form-control-sm"
+                    placeholder="Diagnosis pasien"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="label-cell">Asisten :</td>
+                <td colspan="3">
+                  <input
+                    type="text"
+                    v-model="form.asisten"
+                    class="form-control form-control-sm"
+                    placeholder="Nama Asisten"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="label-cell">Jenis Operasi :</td>
+                <td>
+                  <input
+                    type="text"
+                    v-model="form.jenis_operasi"
+                    class="form-control form-control-sm"
+                    placeholder="Jenis Operasi"
+                  />
+                </td>
+                <td class="label-cell">Anesthesia :</td>
+                <td>
+                  <input
+                    type="text"
+                    v-model="form.anesthesia"
+                    class="form-control form-control-sm"
+                    placeholder="Jenis Anestesi"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td class="label-cell">Anesthesiologist :</td>
+                <td colspan="3">
+                  <input
+                    type="text"
+                    v-model="form.anesthesiologist"
+                    class="form-control form-control-sm"
+                    placeholder="Nama Dokter Anestesi"
+                  />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
 
-          <!-- Preview TTD yang sudah ada -->
-          <div v-if="form.ttd_operator && !signatureCleared.ttd_operator" class="signature-preview">
-            <img :src="form.ttd_operator" alt="TTD Operator" class="img-signature" />
-            <button @click="clearSignature('ttd_operator')" class="btn-clear">
-              Hapus & Tanda Tangan Ulang
-            </button>
+      <!-- ================= PROSEDUR OPERASI ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">Prosedur Operasi</h5>
+
+        <div class="procedure-steps">
+          <div class="step-item">
+            <span class="step-number">1.</span>
+            <span class="step-text"
+              >Pasien dalam posisi SUPINE di tempat tidur dan Anastesi Parabulper</span
+            >
           </div>
 
-          <!-- Signature Pad -->
-          <div v-else>
-            <VueSignaturePad
-              ref="ttd_operator"
-              :options="sigOption"
-              class="signature-box-rme"
+          <div class="step-item">
+            <span class="step-number">2.</span>
+            <span class="step-text">Teknik A & Antiseptic</span>
+          </div>
+
+          <div class="step-item">
+            <span class="step-number">3.</span>
+            <span class="step-text">Tutup duklubang steril</span>
+          </div>
+
+          <div class="step-item">
+            <span class="step-number">4.</span>
+            <span class="step-text">Pasang Blefarostat</span>
+          </div>
+
+          <div class="step-item">
+            <span class="step-number">5.</span>
+            <span class="step-text"
+              >Injeksi Lidocain pada caput dan corpus pterygium</span
+            >
+          </div>
+
+          <div class="step-item">
+            <span class="step-number">6.</span>
+            <span class="step-text">Pisahkan dari epitrkornea hingga bersih</span>
+          </div>
+
+          <div class="step-item">
+            <span class="step-number">7.</span>
+            <span class="step-text">Atasi pendarahan</span>
+          </div>
+
+          <div class="step-item">
+            <span class="step-number">8.</span>
+            <span class="step-text">Gunting corpus pterygium</span>
+          </div>
+
+          <div class="step-item">
+            <span class="step-number">9.</span>
+            <span class="step-text">Buat graft dari konjungtiva bagian superior</span>
+          </div>
+
+          <div class="step-item">
+            <span class="step-number">10.</span>
+            <span class="step-text">Geser ke medial, jahit tepinya</span>
+          </div>
+
+          <div class="step-item">
+            <span class="step-number">11.</span>
+            <span class="step-text">Salep antibiotik</span>
+          </div>
+
+          <div class="step-item">
+            <span class="step-number">12.</span>
+            <span class="step-text">Operasi selesai</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SIGNATURE AREA ================= -->
+      <div class="signature-container">
+        <h5 class="section-title-rme text-center mb-4">Tanda Tangan</h5>
+
+        <div class="signature-section">
+          <!-- Perawat -->
+          <div class="sign-box">
+            <label>Perawat</label>
+
+            <!-- Preview TTD yang sudah ada -->
+            <div
+              v-if="form.ttd_perawat && !signatureCleared.ttd_perawat"
+              class="signature-preview"
+            >
+              <img :src="form.ttd_perawat" alt="TTD Perawat" class="img-signature" />
+              <button @click="clearSignature('ttd_perawat')" class="btn-clear">
+                Hapus & Tanda Tangan Ulang
+              </button>
+            </div>
+
+            <!-- Signature Pad -->
+            <div v-else>
+              <VueSignaturePad
+                ref="ttd_perawat"
+                :options="sigOption"
+                class="signature-box-rme"
+              />
+              <button @click="saveSign('ttd_perawat')" class="btn-save">Simpan ✔</button>
+            </div>
+
+            <input
+              v-model="form.nama_perawat"
+              class="input-rme mt-2"
+              placeholder="Nama Perawat"
             />
-            <button @click="saveSign('ttd_operator')" class="btn-save">Simpan ✔</button>
           </div>
 
-          <input
-            v-model="form.nama_operator"
-            class="input-rme mt-2"
-            placeholder="Nama Operator/Dokter"
-          />
+          <!-- Operator/Dokter -->
+          <div class="sign-box">
+            <label>Operator</label>
+
+            <!-- Preview TTD yang sudah ada -->
+            <div
+              v-if="form.ttd_operator && !signatureCleared.ttd_operator"
+              class="signature-preview"
+            >
+              <img :src="form.ttd_operator" alt="TTD Operator" class="img-signature" />
+              <button @click="clearSignature('ttd_operator')" class="btn-clear">
+                Hapus & Tanda Tangan Ulang
+              </button>
+            </div>
+
+            <!-- Signature Pad -->
+            <div v-else>
+              <VueSignaturePad
+                ref="ttd_operator"
+                :options="sigOption"
+                class="signature-box-rme"
+              />
+              <button @click="saveSign('ttd_operator')" class="btn-save">Simpan ✔</button>
+            </div>
+
+            <input
+              v-model="form.nama_operator"
+              class="input-rme mt-2"
+              placeholder="Nama Operator/Dokter"
+            />
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- ================= BUTTON BOTTOM ================= -->
-  <div class="action-footer">
+  <div class="action-footer" v-if="!disabledSubmit">
     <!-- TOMBOL SUBMIT -->
     <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
       <span v-if="loadingSubmit">Menyimpan...</span>
-      <span v-else>{{ isEditMode ? 'Update' : 'Save' }}</span>
+      <span v-else>{{ isEditMode ? "Update" : "Save" }}</span>
     </button>
 
     <!-- TOMBOL BACK -->
@@ -296,6 +370,10 @@ export default {
       type: Object,
       required: true,
     },
+    viewData: {
+      type: Object,
+      default: null,
+    },
     editData: {
       type: Object,
       default: null,
@@ -307,6 +385,7 @@ export default {
       loadingSubmit: false,
       loadingData: false,
       isEditMode: false,
+      disabledSubmit: false,
       signatureCleared: {
         ttd_perawat: false,
         ttd_operator: false,
@@ -373,7 +452,11 @@ export default {
   },
 
   mounted() {
-    if (this.editData) {
+    this.disabledSubmit = false;
+    if (this.viewData) {
+      this.disabledSubmit = true;
+      this.loadEditData();
+    } else if (this.editData) {
       this.loadEditData();
     } else {
       this.setDataForm();
@@ -384,10 +467,10 @@ export default {
     setDataForm() {
       const today = new Date();
       this.form.tanggal_operasi = this.formatDate(today);
-      
+
       // Set current time
-      const hours = String(today.getHours()).padStart(2, '0');
-      const minutes = String(today.getMinutes()).padStart(2, '0');
+      const hours = String(today.getHours()).padStart(2, "0");
+      const minutes = String(today.getMinutes()).padStart(2, "0");
       this.form.jam_operasi = `${hours}:${minutes}`;
 
       // Data default (wajib dikirim ke BE)
@@ -400,13 +483,16 @@ export default {
       // Data pasien untuk form
       this.form.nama_pasien = this.selectedPatient?.nama || "";
       this.form.no_rm_pasien = this.selectedPatient?.rekam_medis || "";
-      
+
       // Jenis kelamin display
-      this.form.jenis_kelamin_display = this.selectedPatient?.jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan';
-      
+      this.form.jenis_kelamin_display =
+        this.selectedPatient?.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan";
+
       // Format tanggal lahir
       if (this.selectedPatient?.tanggal_lahir) {
-        this.form.tanggal_lahir_display = this.formatTanggal(this.selectedPatient.tanggal_lahir);
+        this.form.tanggal_lahir_display = this.formatTanggal(
+          this.selectedPatient.tanggal_lahir
+        );
       }
     },
 
@@ -572,18 +658,97 @@ export default {
   },
 };
 </script>
-
 <style scoped>
+/* ================= CONTAINER & LAYOUT ================= */
 .container {
   max-width: 1000px;
   margin: 0 auto;
+  padding: 20px;
 }
 
+.py-4 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+/* ================= TYPOGRAPHY ================= */
+.fw-bold {
+  font-weight: 700;
+}
+
+.text-uppercase {
+  text-transform: uppercase;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-muted {
+  color: #6c757d;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.text-center h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.text-center h3 {
+  font-size: 16px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.text-center p {
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.5;
+}
+
+hr {
+  margin: 20px 0;
+  border: 2px solid #000;
+}
+
+/* ================= LOGO ================= */
+.logo-rs {
+  display: block;
+  margin: 0 auto 15px;
+  max-width: 150px;
+}
+
+/* ================= BADGE ================= */
+.badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.badge.bg-warning {
+  background: #ff9800;
+  color: white;
+}
+
+.badge.bg-success {
+  background: #4caf50;
+  color: white;
+}
+
+/* ================= BOX & SECTIONS ================= */
 .box-rme {
   border: 1px solid #dcdcdc;
   padding: 20px;
   border-radius: 6px;
   background: #fafafa;
+  margin-bottom: 20px;
 }
 
 .section-title-rme {
@@ -595,23 +760,159 @@ export default {
   padding-bottom: 8px;
 }
 
+/* ================= FORM ELEMENTS ================= */
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+  font-size: 14px;
+}
+
 .input-rme {
   width: 100%;
   border: 1px solid #ccc;
   border-radius: 4px;
-  padding: 8px;
+  padding: 10px 12px;
   background: #fff;
+  font-size: 14px;
+  transition: border-color 0.3s;
 }
 
-/* INFO TABLE */
+.input-rme:focus {
+  outline: none;
+  border-color: #2d74b7;
+}
+
+.input-rme[readonly] {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  color: #666;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #2d74b7;
+}
+
+.form-control-sm {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+/* ================= CHECKBOX STYLING ================= */
+.form-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-check-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.form-check-label {
+  cursor: pointer;
+  margin: 0;
+  user-select: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* ================= ROW & COLUMNS ================= */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+}
+
+.mb-1 {
+  margin-bottom: 5px;
+}
+
+.mb-2 {
+  margin-bottom: 10px;
+}
+
+.mb-3 {
+  margin-bottom: 15px;
+}
+
+.mb-4 {
+  margin-bottom: 20px;
+}
+
+.mt-2 {
+  margin-top: 10px;
+}
+
+.mt-4 {
+  margin-top: 20px;
+}
+
+.my-3 {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.col-md-6,
+.col-md-12 {
+  padding: 0 10px;
+  margin-bottom: 15px;
+}
+
+.col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.col-md-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+/* ================= FLEXBOX UTILITIES ================= */
+.d-flex {
+  display: flex;
+}
+
+.gap-3 {
+  gap: 1rem;
+}
+
+.gap-4 {
+  gap: 1.5rem;
+}
+
+/* ================= INFO TABLE ================= */
 .info-table {
   background: white;
   border-radius: 6px;
   overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .info-table table {
+  width: 100%;
   margin-bottom: 0;
+  border-collapse: collapse;
+}
+
+.info-table .table-bordered {
+  border: 1px solid #dee2e6;
 }
 
 .info-table .label-cell {
@@ -619,15 +920,22 @@ export default {
   font-weight: 600;
   color: #333;
   vertical-align: middle;
-  padding: 10px;
+  padding: 12px 15px;
+  font-size: 14px;
+  border: 1px solid #dee2e6;
 }
 
 .info-table td {
-  padding: 10px;
+  padding: 12px 15px;
   vertical-align: middle;
+  border: 1px solid #dee2e6;
 }
 
-/* PROCEDURE STEPS STYLING */
+.info-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* ================= PROCEDURE STEPS ================= */
 .procedure-steps {
   background: white;
   padding: 20px;
@@ -638,27 +946,40 @@ export default {
 .step-item {
   display: flex;
   margin-bottom: 15px;
-  padding: 12px;
+  padding: 12px 15px;
   background: #f8f9fa;
   border-radius: 4px;
-  border-left: 3px solid #2d74b7;
+  border-left: 4px solid #2d74b7;
+  transition: all 0.3s;
+}
+
+.step-item:hover {
+  background: #f0f4f8;
+  border-left-color: #1976d2;
+}
+
+.step-item:last-child {
+  margin-bottom: 0;
 }
 
 .step-number {
   font-weight: bold;
   color: #2d74b7;
-  min-width: 35px;
-  font-size: 16px;
+  min-width: 40px;
+  font-size: 15px;
+  flex-shrink: 0;
 }
 
 .step-text {
   flex: 1;
   line-height: 1.6;
   color: #333;
+  font-size: 14px;
 }
 
+/* ================= SIGNATURE SECTION ================= */
 .signature-container {
-  padding: 20px;
+  padding: 25px;
   background: white;
   border: 1px solid #dcdcdc;
   border-radius: 6px;
@@ -668,6 +989,7 @@ export default {
 .signature-section {
   display: flex;
   justify-content: space-around;
+  align-items: flex-start;
   margin-top: 20px;
   gap: 30px;
 }
@@ -681,11 +1003,13 @@ export default {
 .sign-box label {
   font-weight: bold;
   display: block;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   color: #333;
   font-size: 16px;
+  line-height: 1.4;
 }
 
+/* ================= SIGNATURE PAD & PREVIEW ================= */
 .signature-box-rme {
   width: 100%;
   height: 160px;
@@ -710,8 +1034,11 @@ export default {
   object-fit: contain;
   border: 1px dashed #ccc;
   background: white;
+  display: block;
+  margin: 0 auto;
 }
 
+/* ================= BUTTONS ================= */
 .btn-save {
   background: #1e88e5;
   color: white;
@@ -721,6 +1048,8 @@ export default {
   margin-bottom: 10px;
   cursor: pointer;
   font-weight: 500;
+  font-size: 14px;
+  transition: background 0.3s;
 }
 
 .btn-save:hover {
@@ -736,38 +1065,11 @@ export default {
   margin-top: 10px;
   cursor: pointer;
   font-size: 12px;
+  transition: background 0.3s;
 }
 
 .btn-clear:hover {
   background: #d32f2f;
-}
-
-.action-footer {
-  margin-top: 30px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 20px 0;
-}
-
-.btn-save-form {
-  background: #0288d1;
-  color: white;
-  padding: 12px 30px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.btn-save-form:hover {
-  background: #0277bd;
-}
-
-.btn-save-form:disabled {
-  background: #b0bec5;
-  cursor: not-allowed;
 }
 
 .btn-back {
@@ -779,6 +1081,7 @@ export default {
   font-weight: bold;
   cursor: pointer;
   font-size: 16px;
+  transition: background 0.3s;
 }
 
 .btn-back:hover {
@@ -790,34 +1093,38 @@ export default {
   cursor: not-allowed;
 }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-  color: #555;
-  font-size: 14px;
-}
-
-.badge {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 13px;
+.btn-save-form {
+  background: #0288d1;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 4px;
   font-weight: bold;
-  margin-left: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
 }
 
-.badge.bg-warning {
-  background: #ff9800;
-  color: white;
+.btn-save-form:hover {
+  background: #0277bd;
 }
 
-.badge.bg-success {
-  background: #4caf50;
-  color: white;
+.btn-save-form:disabled {
+  background: #b0bec5;
+  cursor: not-allowed;
 }
 
-/* LOADING OVERLAY */
+/* ================= ACTION FOOTER ================= */
+.action-footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* ================= LOADING OVERLAY ================= */
 .loading-overlay {
   position: fixed;
   top: 0;
@@ -831,6 +1138,12 @@ label {
   align-items: center;
   font-size: 18px;
   z-index: 9999;
+}
+
+.loading-overlay p {
+  color: #333;
+  font-weight: 500;
+  margin: 0;
 }
 
 .spinner-rme {
@@ -849,48 +1162,121 @@ label {
   }
 }
 
-.mt-2 {
-  margin-top: 8px;
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .signature-section {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .sign-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .action-footer {
+    flex-direction: column-reverse;
+  }
+
+  .btn-save-form,
+  .btn-back {
+    width: 100%;
+  }
+
+  .text-center h2 {
+    font-size: 16px;
+  }
+
+  .text-center h3 {
+    font-size: 15px;
+  }
+
+  .text-center p {
+    font-size: 12px;
+  }
+
+  .box-rme {
+    padding: 15px;
+  }
+
+  .procedure-steps {
+    padding: 15px;
+  }
+
+  .step-item {
+    padding: 10px 12px;
+  }
+
+  .step-number {
+    min-width: 35px;
+    font-size: 14px;
+  }
+
+  .step-text {
+    font-size: 13px;
+  }
+
+  .info-table .label-cell,
+  .info-table td {
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  /* Stack table cells on mobile */
+  .info-table table,
+  .info-table tbody,
+  .info-table tr,
+  .info-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .info-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .info-table .label-cell {
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  .signature-box-rme {
+    height: 180px;
+  }
+
+  .img-signature {
+    height: 180px;
+  }
 }
 
-.logo-rs {
-  display: block;
-  margin: 0 auto;
-}
+@media (max-width: 480px) {
+  .logo-rs {
+    max-width: 120px;
+  }
 
-hr {
-  margin: 20px 0;
-}
+  .section-title-rme {
+    font-size: 15px;
+  }
 
-.fw-bold {
-  font-weight: 700;
-}
+  .d-flex {
+    flex-direction: column;
+    gap: 10px;
+  }
 
-.text-uppercase {
-  text-transform: uppercase;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-muted {
-  color: #6c757d;
-}
-
-.text-danger {
-  color: #dc3545;
-}
-
-.d-flex {
-  display: flex;
-}
-
-.gap-3 {
-  gap: 1rem;
-}
-
-.gap-4 {
-  gap: 1.5rem;
+  .gap-3,
+  .gap-4 {
+    gap: 0.5rem;
+  }
 }
 </style>

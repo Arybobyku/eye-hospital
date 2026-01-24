@@ -2,402 +2,406 @@
   <button @click="$emit('back')" class="btn-back">Kembali</button>
 
   <div class="container py-4">
-    <!-- LOADING OVERLAY -->
-    <div v-if="loadingData" class="loading-overlay">
-      <div class="spinner-rme"></div>
-      <p>Memuat data...</p>
-    </div>
-
-    <!-- ================= HEADER ================= -->
-    <div class="text-center mb-4">
-      <h2 class="fw-bold">ASESMEN AWAL GIZI - PASIEN BARU</h2>
-      <h5 class="text-muted">Initial Nutrition Assessment - New Patient</h5>
-      <span v-if="isEditMode" class="badge bg-warning">Mode Edit</span>
-      <span v-else class="badge bg-success">Mode Baru</span>
-    </div>
-
-    <!-- DATE -->
-    <div class="row mb-3">
-      <div class="col-md-12 mb-2">
-        <label>Tanggal Asesmen :</label>
-        <input type="date" v-model="form.tanggal_asesmen" class="form-control" />
+    <div class="form-wrapper position-relative">
+      <div v-if="disabledSubmit" class="view-overlay"></div>
+      <!-- LOADING OVERLAY -->
+      <div v-if="loadingData" class="loading-overlay">
+        <div class="spinner-rme"></div>
+        <p>Memuat data...</p>
       </div>
-    </div>
 
-    <!-- PATIENT INFO -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">Data Pasien</h5>
-      <div class="row mb-2">
-        <div class="col-md-6">
-          <label>Nama Pasien :</label>
-          <input type="text" v-model="form.nama_pasien" class="input-rme" readonly />
-        </div>
-        <div class="col-md-6">
-          <label>No. RM :</label>
-          <input type="text" v-model="form.no_rm_pasien" class="input-rme" readonly />
+      <!-- ================= HEADER ================= -->
+      <div class="text-center mb-4">
+        <h2 class="fw-bold">ASESMEN AWAL GIZI - PASIEN BARU</h2>
+        <h5 class="text-muted">Initial Nutrition Assessment - New Patient</h5>
+        <span v-if="isEditMode && !disabledSubmit" class="badge bg-warning"
+          >Mode Edit</span
+        >
+        <!-- <span v-else class="badge bg-success">Mode Baru</span> -->
+      </div>
+
+      <!-- DATE -->
+      <div class="row mb-3">
+        <div class="col-md-12 mb-2">
+          <label>Tanggal Asesmen :</label>
+          <input type="date" v-model="form.tanggal_asesmen" class="form-control" />
         </div>
       </div>
-    </div>
 
-    <!-- ================= 1. DIAGNOSA MEDIS ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">1. Diagnosa Medis</h5>
-      <div class="">
+      <!-- PATIENT INFO -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">Data Pasien</h5>
+        <div class="row mb-2">
+          <div class="col-md-6">
+            <label>Nama Pasien :</label>
+            <input type="text" v-model="form.nama_pasien" class="input-rme" readonly />
+          </div>
+          <div class="col-md-6">
+            <label>No. RM :</label>
+            <input type="text" v-model="form.no_rm_pasien" class="input-rme" readonly />
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 1. DIAGNOSA MEDIS ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">1. Diagnosa Medis</h5>
+        <div class="">
+          <div class="col-md-12">
+            <textarea
+              v-model="form.diagnosa_medis"
+              class="textarea-rme"
+              rows="3"
+              placeholder="Masukkan diagnosa medis pasien..."
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 2. RISIKO MALNUTRISI ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">
+          2. Risiko Malnutrisi Berdasarkan Hasil Skrining Gizi oleh Perawat
+        </h5>
+        <p class="text-muted small mb-3">Kondisi pasien termasuk kategori:</p>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="radio"
+                v-model="form.risiko_malnutrisi"
+                value="Risiko ringan (Nilai MST 0-1)"
+                id="risiko_ringan"
+              />
+              <label class="form-check-label" for="risiko_ringan">
+                Risiko ringan (Nilai MST 0-1)
+              </label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="radio"
+                v-model="form.risiko_malnutrisi"
+                value="Risiko sedang (Nilai MST ≥ 2-3)"
+                id="risiko_sedang"
+              />
+              <label class="form-check-label" for="risiko_sedang">
+                Risiko sedang (Nilai MST ≥ 2-3)
+              </label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="radio"
+                v-model="form.risiko_malnutrisi"
+                value="Risiko tinggi (Nilai MST 4-5)"
+                id="risiko_tinggi"
+              />
+              <label class="form-check-label" for="risiko_tinggi">
+                Risiko tinggi (Nilai MST 4-5)
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 3. KONDISI KHUSUS ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">3. Pasien Mempunyai Kondisi Khusus</h5>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                v-model="form.kondisi_khusus"
+                value="Ya"
+                id="kondisi_ya"
+              />
+              <label class="form-check-label" for="kondisi_ya">Ya</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                v-model="form.kondisi_khusus"
+                value="Tidak"
+                id="kondisi_tidak"
+              />
+              <label class="form-check-label" for="kondisi_tidak">Tidak</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Jika Ya, tampilkan textarea untuk keterangan -->
+        <div v-if="form.kondisi_khusus === 'Ya'" class="row mt-3">
+          <div class="col-md-12">
+            <label>Keterangan Kondisi Khusus :</label>
+            <textarea
+              v-model="form.kondisi_khusus_keterangan"
+              class="textarea-rme"
+              rows="2"
+              placeholder="Jelaskan kondisi khusus pasien..."
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 4. ALERGI MAKANAN ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">4. Alergi Makanan</h5>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                v-model="form.alergi_telur"
+                id="alergi_telur"
+              />
+              <label class="form-check-label" for="alergi_telur"> Telur </label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                v-model="form.alergi_susu"
+                id="alergi_susu"
+              />
+              <label class="form-check-label" for="alergi_susu">
+                Susu sapi & produk olahannya
+              </label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                v-model="form.alergi_kacang"
+                id="alergi_kacang"
+              />
+              <label class="form-check-label" for="alergi_kacang">
+                Kacang kedelai/tanah
+              </label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                v-model="form.alergi_gluten"
+                id="alergi_gluten"
+              />
+              <label class="form-check-label" for="alergi_gluten"> Gluten/gandum </label>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                v-model="form.alergi_udang"
+                id="alergi_udang"
+              />
+              <label class="form-check-label" for="alergi_udang"> Udang </label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                v-model="form.alergi_ikan"
+                id="alergi_ikan"
+              />
+              <label class="form-check-label" for="alergi_ikan"> Ikan </label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                v-model="form.alergi_hazelnut"
+                id="alergi_hazelnut"
+              />
+              <label class="form-check-label" for="alergi_hazelnut">
+                Hazelnut/Almond
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <div class="col-md-12">
+            <label>Alergi Lainnya :</label>
+            <input
+              type="text"
+              v-model="form.alergi_lainnya"
+              class="input-rme"
+              placeholder="Sebutkan alergi makanan lainnya..."
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 5. PRESKRIPSI DIET ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">5. Preskripsi Diet</h5>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                v-model="form.preskripsi_diet"
+                value="Makanan Biasa"
+                id="diet_biasa"
+              />
+              <label class="form-check-label" for="diet_biasa">Makanan Biasa</label>
+            </div>
+
+            <div class="form-check form-check-inline">
+              <input
+                class="form-check-input"
+                type="radio"
+                v-model="form.preskripsi_diet"
+                value="Diet Khusus"
+                id="diet_khusus"
+              />
+              <label class="form-check-label" for="diet_khusus">Diet Khusus</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Jika Diet Khusus, tampilkan textarea -->
+        <div v-if="form.preskripsi_diet === 'Diet Khusus'" class="row mt-3">
+          <div class="col-md-12">
+            <label>Keterangan Diet Khusus :</label>
+            <textarea
+              v-model="form.preskripsi_diet_keterangan"
+              class="textarea-rme"
+              rows="2"
+              placeholder="Jelaskan jenis diet khusus..."
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 6. TINDAK LANJUT ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">6. Tindak Lanjut</h5>
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="radio"
+                v-model="form.tindak_lanjut"
+                value="Perlu asuhan gizi (lanjutkan ke Asesmen gizi)"
+                id="tindak_perlu"
+              />
+              <label class="form-check-label" for="tindak_perlu">
+                Perlu asuhan gizi (lanjutkan ke Asesmen gizi)
+              </label>
+            </div>
+
+            <div class="form-check mb-2">
+              <input
+                class="form-check-input"
+                type="radio"
+                v-model="form.tindak_lanjut"
+                value="Belum perlu asuhan gizi"
+                id="tindak_belum"
+              />
+              <label class="form-check-label" for="tindak_belum">
+                Belum perlu asuhan gizi
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= 7. KESIMPULAN ================= -->
+      <div class="box-rme mb-4">
+        <h5 class="section-title-rme">7. Kesimpulan</h5>
+        <div class="">
+          <div class="col-md-12">
+            <textarea
+              v-model="form.kesimpulan"
+              class="textarea-rme"
+              rows="4"
+              placeholder="Masukkan kesimpulan asesmen gizi..."
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TEMPAT & TANGGAL ================= -->
+      <div class="row mb-4">
         <div class="col-md-12">
-          <textarea 
-            v-model="form.diagnosa_medis" 
-            class="textarea-rme" 
-            rows="3"
-            placeholder="Masukkan diagnosa medis pasien..."
-          ></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= 2. RISIKO MALNUTRISI ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">2. Risiko Malnutrisi Berdasarkan Hasil Skrining Gizi oleh Perawat</h5>
-      <p class="text-muted small mb-3">Kondisi pasien termasuk kategori:</p>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              v-model="form.risiko_malnutrisi"
-              value="Risiko ringan (Nilai MST 0-1)"
-              id="risiko_ringan"
-            />
-            <label class="form-check-label" for="risiko_ringan">
-              Risiko ringan (Nilai MST 0-1)
-            </label>
-          </div>
-
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              v-model="form.risiko_malnutrisi"
-              value="Risiko sedang (Nilai MST ≥ 2-3)"
-              id="risiko_sedang"
-            />
-            <label class="form-check-label" for="risiko_sedang">
-              Risiko sedang (Nilai MST ≥ 2-3)
-            </label>
-          </div>
-
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              v-model="form.risiko_malnutrisi"
-              value="Risiko tinggi (Nilai MST 4-5)"
-              id="risiko_tinggi"
-            />
-            <label class="form-check-label" for="risiko_tinggi">
-              Risiko tinggi (Nilai MST 4-5)
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= 3. KONDISI KHUSUS ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">3. Pasien Mempunyai Kondisi Khusus</h5>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-check form-check-inline">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              v-model="form.kondisi_khusus"
-              value="Ya"
-              id="kondisi_ya"
-            />
-            <label class="form-check-label" for="kondisi_ya">Ya</label>
-          </div>
-
-          <div class="form-check form-check-inline">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              v-model="form.kondisi_khusus"
-              value="Tidak"
-              id="kondisi_tidak"
-            />
-            <label class="form-check-label" for="kondisi_tidak">Tidak</label>
+          <div class="tanggal-tempat">
+            Medan, {{ formatTanggal(form.tanggal_asesmen) }}
           </div>
         </div>
       </div>
 
-      <!-- Jika Ya, tampilkan textarea untuk keterangan -->
-      <div v-if="form.kondisi_khusus === 'Ya'" class="row mt-3">
-        <div class="col-md-12">
-          <label>Keterangan Kondisi Khusus :</label>
-          <textarea 
-            v-model="form.kondisi_khusus_keterangan" 
-            class="textarea-rme" 
-            rows="2"
-            placeholder="Jelaskan kondisi khusus pasien..."
-          ></textarea>
-        </div>
-      </div>
-    </div>
+      <!-- ================= SIGNATURE AREA ================= -->
+      <div class="signature-container">
+        <div class="signature-section">
+          <!-- Dokter Ahli Gizi -->
+          <div class="sign-box">
+            <label>Dokter Ahli Gizi / Dietitian</label>
 
-    <!-- ================= 4. ALERGI MAKANAN ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">4. Alergi Makanan</h5>
+            <!-- Preview TTD yang sudah ada -->
+            <div
+              v-if="form.ttd_dietitian && !signatureCleared.ttd_dietitian"
+              class="signature-preview"
+            >
+              <img :src="form.ttd_dietitian" alt="TTD Dietitian" class="img-signature" />
+              <button @click="clearSignature('ttd_dietitian')" class="btn-clear">
+                Hapus & Tanda Tangan Ulang
+              </button>
+            </div>
 
-      <div class="row">
-        <div class="col-md-6">
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="checkbox" 
-              v-model="form.alergi_telur"
-              id="alergi_telur"
+            <!-- Signature Pad -->
+            <div v-else>
+              <VueSignaturePad
+                ref="ttd_dietitian"
+                :options="sigOption"
+                class="signature-box-rme"
+              />
+              <button @click="saveSign('ttd_dietitian')" class="btn-save">
+                Simpan ✔
+              </button>
+            </div>
+
+            <input
+              v-model="form.nama_dietitian"
+              class="input-rme mt-2"
+              placeholder="Nama Jelas Dokter Ahli Gizi"
             />
-            <label class="form-check-label" for="alergi_telur">
-              Telur
-            </label>
           </div>
-
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="checkbox" 
-              v-model="form.alergi_susu"
-              id="alergi_susu"
-            />
-            <label class="form-check-label" for="alergi_susu">
-              Susu sapi & produk olahannya
-            </label>
-          </div>
-
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="checkbox" 
-              v-model="form.alergi_kacang"
-              id="alergi_kacang"
-            />
-            <label class="form-check-label" for="alergi_kacang">
-              Kacang kedelai/tanah
-            </label>
-          </div>
-
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="checkbox" 
-              v-model="form.alergi_gluten"
-              id="alergi_gluten"
-            />
-            <label class="form-check-label" for="alergi_gluten">
-              Gluten/gandum
-            </label>
-          </div>
-        </div>
-
-        <div class="col-md-6">
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="checkbox" 
-              v-model="form.alergi_udang"
-              id="alergi_udang"
-            />
-            <label class="form-check-label" for="alergi_udang">
-              Udang
-            </label>
-          </div>
-
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="checkbox" 
-              v-model="form.alergi_ikan"
-              id="alergi_ikan"
-            />
-            <label class="form-check-label" for="alergi_ikan">
-              Ikan
-            </label>
-          </div>
-
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="checkbox" 
-              v-model="form.alergi_hazelnut"
-              id="alergi_hazelnut"
-            />
-            <label class="form-check-label" for="alergi_hazelnut">
-              Hazelnut/Almond
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class=" mt-3">
-        <div class="col-md-12">
-          <label>Alergi Lainnya :</label>
-          <input 
-            type="text" 
-            v-model="form.alergi_lainnya" 
-            class="input-rme"
-            placeholder="Sebutkan alergi makanan lainnya..."
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= 5. PRESKRIPSI DIET ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">5. Preskripsi Diet</h5>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-check form-check-inline">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              v-model="form.preskripsi_diet"
-              value="Makanan Biasa"
-              id="diet_biasa"
-            />
-            <label class="form-check-label" for="diet_biasa">Makanan Biasa</label>
-          </div>
-
-          <div class="form-check form-check-inline">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              v-model="form.preskripsi_diet"
-              value="Diet Khusus"
-              id="diet_khusus"
-            />
-            <label class="form-check-label" for="diet_khusus">Diet Khusus</label>
-          </div>
-        </div>
-      </div>
-
-      <!-- Jika Diet Khusus, tampilkan textarea -->
-      <div v-if="form.preskripsi_diet === 'Diet Khusus'" class="row mt-3">
-        <div class="col-md-12">
-          <label>Keterangan Diet Khusus :</label>
-          <textarea 
-            v-model="form.preskripsi_diet_keterangan" 
-            class="textarea-rme" 
-            rows="2"
-            placeholder="Jelaskan jenis diet khusus..."
-          ></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= 6. TINDAK LANJUT ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">6. Tindak Lanjut</h5>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              v-model="form.tindak_lanjut"
-              value="Perlu asuhan gizi (lanjutkan ke Asesmen gizi)"
-              id="tindak_perlu"
-            />
-            <label class="form-check-label" for="tindak_perlu">
-              Perlu asuhan gizi (lanjutkan ke Asesmen gizi)
-            </label>
-          </div>
-
-          <div class="form-check mb-2">
-            <input 
-              class="form-check-input" 
-              type="radio" 
-              v-model="form.tindak_lanjut"
-              value="Belum perlu asuhan gizi"
-              id="tindak_belum"
-            />
-            <label class="form-check-label" for="tindak_belum">
-              Belum perlu asuhan gizi
-            </label>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= 7. KESIMPULAN ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">7. Kesimpulan</h5>
-      <div class="">
-        <div class="col-md-12">
-          <textarea 
-            v-model="form.kesimpulan" 
-            class="textarea-rme" 
-            rows="4"
-            placeholder="Masukkan kesimpulan asesmen gizi..."
-          ></textarea>
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= TEMPAT & TANGGAL ================= -->
-    <div class="row mb-4">
-      <div class="col-md-12">
-        <div class="tanggal-tempat">
-          Medan, {{ formatTanggal(form.tanggal_asesmen) }}
-        </div>
-      </div>
-    </div>
-
-    <!-- ================= SIGNATURE AREA ================= -->
-    <div class="signature-container">
-      <div class="signature-section">
-        <!-- Dokter Ahli Gizi -->
-        <div class="sign-box">
-          <label>Dokter Ahli Gizi / Dietitian</label>
-
-          <!-- Preview TTD yang sudah ada -->
-          <div v-if="form.ttd_dietitian && !signatureCleared.ttd_dietitian" class="signature-preview">
-            <img :src="form.ttd_dietitian" alt="TTD Dietitian" class="img-signature" />
-            <button @click="clearSignature('ttd_dietitian')" class="btn-clear">
-              Hapus & Tanda Tangan Ulang
-            </button>
-          </div>
-
-          <!-- Signature Pad -->
-          <div v-else>
-            <VueSignaturePad
-              ref="ttd_dietitian"
-              :options="sigOption"
-              class="signature-box-rme"
-            />
-            <button @click="saveSign('ttd_dietitian')" class="btn-save">Simpan ✔</button>
-          </div>
-
-          <input
-            v-model="form.nama_dietitian"
-            class="input-rme mt-2"
-            placeholder="Nama Jelas Dokter Ahli Gizi"
-          />
         </div>
       </div>
     </div>
   </div>
 
   <!-- ================= BUTTON BOTTOM ================= -->
-  <div class="action-footer">
+  <div class="action-footer" v-if="!disabledSubmit">
     <!-- TOMBOL SUBMIT -->
     <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
       <span v-if="loadingSubmit">Menyimpan...</span>
-      <span v-else>{{ isEditMode ? 'Update' : 'Save' }}</span>
+      <span v-else>{{ isEditMode ? "Update" : "Save" }}</span>
     </button>
 
     <!-- TOMBOL BACK -->
@@ -418,6 +422,10 @@ export default {
       type: Object,
       required: true,
     },
+    viewData: {
+      type: Object,
+      default: null,
+    },
     editData: {
       type: Object,
       default: null,
@@ -429,6 +437,7 @@ export default {
       loadingSubmit: false,
       loadingData: false,
       isEditMode: false,
+      disabledSubmit: false,
       signatureCleared: {
         ttd_dietitian: false,
       },
@@ -508,7 +517,11 @@ export default {
   },
 
   mounted() {
-    if (this.editData) {
+    this.disabledSubmit = false;
+    if (this.viewData) {
+      this.disabledSubmit = true;
+      this.loadEditData();
+    } else if (this.editData) {
       this.loadEditData();
     } else {
       this.setDataForm();
@@ -917,5 +930,18 @@ label {
 
 .text-muted {
   color: #6c757d;
+}
+.view-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 251, 251, 0.1); /* transparan */
+  z-index: 10;
+  cursor: not-allowed;
+}
+.form-wrapper {
+  position: relative;
 }
 </style>

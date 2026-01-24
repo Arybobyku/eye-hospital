@@ -206,6 +206,18 @@
         :documentType="selectedDocumentType"
       />
     </div>
+
+      <div v-if="state == 'view'">
+        <component
+          :is="currentDocumentComponent"
+          @back="onBackToList"
+          :selectedPatient="selectedPatient"
+          :editUuid="editUuid"
+          :editData="editData"
+          :viewData=true
+          :documentType="selectedDocumentType"
+        />
+    </div>
   </div>
 </template>
 
@@ -289,11 +301,11 @@ export default {
           backendType: "laser_bargage",
         },
         {
-          value: "laser-fokal",
+          value: "dokumen_form_laser_fokal",
           label: "Form Laser Fokal",
           component: "FormLaserFokal",
           description: "Form tindakan laser Fokal medis",
-          backendType: "laser_fokal",
+          backendType: "dokumen_form_laser_fokal",
         },
         {
           value: "persetujuan_tindakan_kedokteran",
@@ -449,9 +461,10 @@ export default {
           description: "Form Pulang Atas Permintaan Sendiri",
           backendType: "dokumen_pulang_atas_permintaan_sendiri",
         },
+
         {
           value: "dokumen_tindakan_laser_capsulotomy",
-          label: "Form Tindakan Laser Capsulotomy",
+          label: "Form Tindakan Laser",
           component: "FormTindakanLaserCapsulotomy",
           description: "Form Tindakan Laser Capsulotomy",
           backendType: "dokumen_tindakan_laser_capsulotomy",
@@ -490,6 +503,14 @@ export default {
           component: "FormCatatanKeperawatan",
           description: "Form Catatan Keperawatan",
           backendType: "catatan_keperawatan",
+        },
+        
+        {
+          value: "dokumen_form_laser_barrage",
+          label: "Form Laser Barrage",
+          component: "FormLaserBarage",
+          description: "Form Laser Barrage",
+          backendType: "dokumen_form_laser_barrage",
         },
         // {
         //   value: "informed-consent",
@@ -644,11 +665,56 @@ export default {
       );
       return doc ? doc.description : "";
     },
+    async onView(item) {
+      try {
+          this.loading = true;
 
-    onView(item) {
-      // Implement view modal atau redirect ke detail page
-      console.log("View:", item);
-      // TODO: Implement detail view
+          // Map backend type to frontend type
+          const doc = this.availableDocuments.find(
+            (d) => d.backendType === item.document_type
+          );
+
+          console.log("🟡 EDIT - Doc Config Found:", doc);
+
+          if (!doc) {
+            alert("Tipe dokumen tidak ditemukan!");
+            return;
+          }
+
+          // Kirim request untuk get detail
+          const formData = new FormData();
+          formData.append("type", item.document_type);
+
+          const url = `/master/rekammedis/lampiran/${item.uuid}/detail`;
+          console.log("🟡 EDIT - URL:", url);
+
+          const response = await axios.post(url, formData);
+
+          console.log("🟡 EDIT - Response:", response.data);
+
+          if (!response.data.status) {
+            alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen"));
+            return;
+          }
+
+          // ✅ PENTING: Set data SEBELUM pindah state
+          this.editData = response.data.data;
+          this.selectedDocumentType = doc.value;
+          
+          console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
+          console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
+          
+          // ✅ Pindah state TERAKHIR setelah data ready
+          this.$nextTick(() => {
+            this.state = "view";
+          });
+
+        } catch (error) {
+          console.error("🟡 EDIT - Error:", error);
+          alert("Error: " + (error.response?.data?.message || "Terjadi kesalahan saat mengambil data"));
+        } finally {
+          this.loading = false;
+        }
     },
 
     async onEdit(item) {
@@ -680,6 +746,8 @@ export default {
           alert(response.data.message || "Gagal mengambil detail dokumen");
           return;
         }
+
+        console.log("CHECK DOC",doc.value)
 
         // 2. Set data untuk dikirim ke component
         this.editData = response.data.data;
@@ -724,6 +792,14 @@ export default {
         dokumen_laporan_eksisi_palpebra: `/print/rekammedis/general/laporaneksisipalbera/${item.uuid}`,
         dokumen_tindakan_laser_capsulotomy: `/print/rekammedis/general/formlasercapsulotomy/${item.uuid}`,
         dokumen_tindakan_epilasi: `/print/rekammedis/general/formtindakanepilasi/${item.uuid}`,
+        dokumen_form_laser_fokal: `/print/rekammedis/general/formlaserfokal/${item.uuid}`,
+        dokumen_form_laser_barrage: `/print/rekammedis/general/formlaserbarrage/${item.uuid}`,
+        dokumen_asuhan_gizi: `/print/rekammedis/general/asuhangizi/${item.uuid}`,
+        dokumen_tindakan_laser_lpi: `/print/rekammedis/general/tindakanlaserlpi/${item.uuid}`,
+        surat_pernyataan_batal_operasi: `/print/rekammedis/general/suratpernyataanbataloperasi/${item.uuid}`,
+        dokumen_dietitian_pasien_baru: `/print/rekammedis/general/kunjunganawaldietitianpadapasienbaru/${item.uuid}`,
+        dokumen_catatan_operasi: `/print/rekammedis/bedah/rm2dot3/${item.uuid}`,
+        dokumen_kronologis_pasien: `/print/rekammedis/general/kronologis/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];

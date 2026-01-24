@@ -5,11 +5,6 @@
     <div class="form-wrapper position-relative">
       <!-- OVERLAY SAAT VIEW -->
       <div v-if="disabledSubmit" class="view-overlay"></div>
-      <!-- ================= HEADER ================= -->
-      <div class="text-center mb-4">
-        <h2 class="fw-bold">LAPORAN INJEKSI ANTI VECF</h2>
-        <h4 class="fw-semibold">RM 8.8/LIAV/22</h4>
-      </div>
 
       <!-- LOADING OVERLAY -->
       <div v-if="loadingData" class="loading-overlay">
@@ -21,8 +16,10 @@
       <div class="text-center mb-4">
         <h2 class="fw-bold">SURAT KONSUL</h2>
         <h5 class="text-muted">REFERAL LETTER</h5>
-        <span v-if="isEditMode" class="badge bg-warning">Mode Edit</span>
-        <span v-else class="badge bg-success">Mode Baru</span>
+        <span v-if="isEditMode && !disabledSubmit" class="badge bg-warning"
+          >Mode Edit</span
+        >
+        <!-- <span v-else class="badge bg-success">Mode Baru</span> -->
       </div>
 
       <!-- DATE -->
@@ -182,7 +179,7 @@
   </div>
 
   <!-- ================= BUTTON BOTTOM ================= -->
-  <div class="action-footer">
+  <div class="action-footer" v-if="!disabledSubmit">
     <!-- TOMBOL SUBMIT -->
     <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
       <span v-if="loadingSubmit">Menyimpan...</span>
@@ -207,6 +204,10 @@ export default {
       type: Object,
       required: true,
     },
+    viewData: {
+      type: Object,
+      default: null,
+    },
     editData: {
       type: Object,
       default: null,
@@ -218,6 +219,7 @@ export default {
       loadingSubmit: false,
       loadingData: false,
       isEditMode: false,
+      disabledSubmit: false,
       signatureCleared: {
         ttd_dokter: false,
       },
@@ -276,7 +278,11 @@ export default {
   },
 
   mounted() {
-    if (this.editData) {
+    this.disabledSubmit = false;
+    if (this.viewData) {
+      this.disabledSubmit = true;
+      this.loadEditData();
+    } else if (this.editData) {
       this.loadEditData();
     } else {
       this.setDataForm();
@@ -455,186 +461,72 @@ export default {
   },
 };
 </script>
-
 <style scoped>
-.box-rme {
-  border: 1px solid #dcdcdc;
+/* ================= CONTAINER & LAYOUT ================= */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
   padding: 20px;
-  border-radius: 6px;
-  background: #fafafa;
 }
 
-.section-title-rme {
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #2d74b7;
-  font-size: 16px;
+.py-4 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
-.input-rme {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  background: #fff;
+.form-wrapper {
+  position: relative;
 }
 
-.textarea-rme {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  background: #fff;
-  resize: vertical;
+/* ================= TYPOGRAPHY ================= */
+.fw-bold {
+  font-weight: 700;
 }
 
-.signature-container {
-  padding: 20px;
-  background: white;
-  border: 1px solid #dcdcdc;
-  border-radius: 6px;
+.fw-semibold {
+  font-weight: 600;
 }
 
-.signature-section {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
-  margin-bottom: 20px;
-}
-
-.sign-box {
-  width: 45%;
+.text-center {
   text-align: center;
 }
 
-.sign-box label {
-  font-weight: bold;
-  display: block;
-  margin-bottom: 10px;
-  color: #333;
+.text-muted {
+  color: #6c757d;
 }
 
-.signature-box-rme {
-  width: 100%;
-  height: 160px;
-  border: 1px solid #999;
-  margin-bottom: 10px;
-  background: white;
+.small {
+  font-size: 0.875rem;
 }
 
-.signature-preview {
-  width: 100%;
-  border: 1px solid #999;
-  background: white;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
-
-.img-signature {
-  max-width: 100%;
-  height: 160px;
-  object-fit: contain;
-  border: 1px dashed #ccc;
-  background: white;
-}
-
-.btn-save {
-  background: #1e88e5;
-  color: white;
-  padding: 5px 12px;
-  border: none;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  cursor: pointer;
-}
-
-.btn-save:hover {
-  background: #1565c0;
-}
-
-.btn-clear {
-  background: #f44336;
-  color: white;
-  padding: 5px 12px;
-  border: none;
-  border-radius: 4px;
-  margin-top: 10px;
-  cursor: pointer;
-  font-size: 12px;
-}
-
-.btn-clear:hover {
-  background: #d32f2f;
-}
-
-.tanggal-tempat {
-  text-align: right;
-  font-weight: bold;
-  margin-top: 20px;
-  font-size: 14px;
-}
-
-.action-footer {
-  margin-top: 30px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 20px 0;
-}
-
-.btn-save-form {
-  background: #0288d1;
-  color: white;
-  padding: 10px 24px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-save-form:hover {
-  background: #0277bd;
-}
-
-.btn-save-form:disabled {
-  background: #b0bec5;
-  cursor: not-allowed;
-}
-
-.btn-back {
-  background: #ff9800;
-  color: white;
-  padding: 10px 24px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.btn-back:hover {
-  background: #f57c00;
-}
-
-.btn-back:disabled {
-  background: #ffcc80;
-  cursor: not-allowed;
-}
-
-label {
-  display: block;
+.text-center h2 {
+  font-size: 20px;
   margin-bottom: 5px;
-  font-weight: 500;
+  color: #333;
+  letter-spacing: 0.5px;
+}
+
+.text-center h4 {
+  font-size: 16px;
+  margin-bottom: 10px;
   color: #555;
 }
 
+.text-center h5 {
+  font-size: 15px;
+  margin-bottom: 15px;
+  font-weight: normal;
+}
+
+/* ================= BADGE ================= */
 .badge {
   display: inline-block;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: bold;
   margin-left: 10px;
+  margin-top: 10px;
 }
 
 .badge.bg-warning {
@@ -647,20 +539,340 @@ label {
   color: white;
 }
 
-/* LOADING OVERLAY */
+/* ================= BOX & SECTIONS ================= */
+.box-rme {
+  border: 1px solid #dcdcdc;
+  padding: 20px;
+  border-radius: 6px;
+  background: #fafafa;
+  margin-bottom: 20px;
+}
+
+.section-title-rme {
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: #2d74b7;
+  font-size: 16px;
+  border-bottom: 2px solid #2d74b7;
+  padding-bottom: 8px;
+}
+
+.box-rme p {
+  text-align: justify;
+  line-height: 1.8;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.box-rme p:last-child {
+  margin-bottom: 0;
+}
+
+.box-rme p em {
+  color: #666;
+  font-size: 13px;
+  display: block;
+  margin-top: 5px;
+}
+
+.box-rme .small {
+  display: block;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+/* ================= FORM ELEMENTS ================= */
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #555;
+  font-size: 14px;
+}
+
+.input-rme {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px 12px;
+  background: #fff;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.input-rme:focus {
+  outline: none;
+  border-color: #2d74b7;
+}
+
+.input-rme[readonly] {
+  background: #f5f5f5;
+  cursor: not-allowed;
+  color: #666;
+}
+
+.textarea-rme {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 12px;
+  background: #fff;
+  resize: vertical;
+  font-family: "Arial", sans-serif;
+  line-height: 1.6;
+  font-size: 14px;
+  min-height: 80px;
+  transition: border-color 0.3s;
+}
+
+.textarea-rme:focus {
+  outline: none;
+  border-color: #2d74b7;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.3s;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #2d74b7;
+}
+
+/* ================= ROW & COLUMNS ================= */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+}
+
+.mb-2 {
+  margin-bottom: 10px;
+}
+
+.mb-3 {
+  margin-bottom: 15px;
+}
+
+.mb-4 {
+  margin-bottom: 20px;
+}
+
+.mt-2 {
+  margin-top: 10px;
+}
+
+.col-md-6,
+.col-md-12 {
+  padding: 0 10px;
+  margin-bottom: 15px;
+}
+
+.col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.col-md-12 {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+/* ================= TANGGAL TEMPAT ================= */
+.tanggal-tempat {
+  text-align: right;
+  font-weight: bold;
+  margin-top: 25px;
+  font-size: 14px;
+  color: #333;
+}
+
+/* ================= SIGNATURE SECTION ================= */
+.signature-container {
+  padding: 25px;
+  background: white;
+  border: 1px solid #dcdcdc;
+  border-radius: 6px;
+  margin-top: 30px;
+}
+
+.signature-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.sign-box {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.sign-box label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* ================= SIGNATURE PAD & PREVIEW ================= */
+.signature-box-rme {
+  width: 100%;
+  height: 180px;
+  border: 2px solid #999;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  background: white;
+  border-radius: 4px;
+}
+
+.signature-preview {
+  width: 100%;
+  border: 2px solid #999;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
+}
+
+/* ================= BUTTONS ================= */
+.btn-save {
+  background: #1e88e5;
+  color: white;
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.btn-save:hover {
+  background: #1565c0;
+}
+
+.btn-clear {
+  background: #f44336;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.3s;
+}
+
+.btn-clear:hover {
+  background: #d32f2f;
+}
+
+.btn-back {
+  background: #ff9800;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.btn-back:hover {
+  background: #f57c00;
+}
+
+.btn-back:disabled {
+  background: #ffcc80;
+  cursor: not-allowed;
+}
+
+.btn-save-form {
+  background: #0288d1;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.btn-save-form:hover {
+  background: #0277bd;
+}
+
+.btn-save-form:disabled {
+  background: #b0bec5;
+  cursor: not-allowed;
+}
+
+/* ================= ACTION FOOTER ================= */
+.action-footer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 0;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* ================= OVERLAYS ================= */
+.view-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 10;
+  cursor: not-allowed;
+}
+
 .loading-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   font-size: 18px;
   z-index: 9999;
+}
+
+.loading-overlay p {
+  color: #333;
+  font-weight: 500;
+  margin: 0;
 }
 
 .spinner-rme {
@@ -679,29 +891,75 @@ label {
   }
 }
 
-.mt-2 {
-  margin-top: 8px;
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+
+  .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+
+  .sign-box {
+    max-width: 100%;
+  }
+
+  .action-footer {
+    flex-direction: column-reverse;
+  }
+
+  .btn-save-form,
+  .btn-back {
+    width: 100%;
+  }
+
+  .text-center h2 {
+    font-size: 18px;
+  }
+
+  .text-center h4 {
+    font-size: 15px;
+  }
+
+  .text-center h5 {
+    font-size: 14px;
+  }
+
+  .box-rme {
+    padding: 15px;
+  }
+
+  .tanggal-tempat {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .signature-box-rme {
+    height: 200px;
+  }
+
+  .img-signature {
+    height: 200px;
+  }
 }
 
-.small {
-  font-size: 0.875rem;
-}
+@media (max-width: 480px) {
+  .section-title-rme {
+    font-size: 15px;
+  }
 
-.text-muted {
-  color: #6c757d;
-}
+  label {
+    font-size: 13px;
+  }
 
-view-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 251, 251, 0.1); /* transparan */
-  z-index: 10;
-  cursor: not-allowed;
-}
-.form-wrapper {
-  position: relative;
+  .box-rme p {
+    font-size: 13px;
+  }
+
+  .box-rme p em {
+    font-size: 12px;
+  }
 }
 </style>

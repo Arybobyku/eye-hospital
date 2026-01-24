@@ -159,7 +159,7 @@
 
             <!-- icon print -->
             <!-- icon print -->
-            <i class="fas fa-print action-icon" @click="print('print')"></i>
+            <i class="fas fa-print action-icon" @click="print(item.registrasi_uuid)"></i>
           </td>
         </tr>
       </tbody>
@@ -453,9 +453,9 @@ export default {
 
       this.showModal = true;
     },
-    print() {
+    print(uuid) {
       window.open(
-        `/print/rekammedis/rawat-jalan/rm1dot4/${this.selectedPatient.uuid}`,
+        `/print/rekammedis/rawat-jalan/rm1dot4/${uuid}`,
         "_blank"
       );
     },

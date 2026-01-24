@@ -7,47 +7,46 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class DokumenTindakanLaserLPI extends Model
+class DokumenFormLaserFokal extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'dokumen_tindakan_laser_lpi';
+    protected $table = 'dokumen_form_laser_fokal';
 
     protected $fillable = [
         'uuid',
         'uuid_pasien',
-        'tanggal_tindakan',
-        'jam_tindakan',
-
+        
         // Data Default (wajib ada)
         'no_rm',
         'jenis_kelamin',
         'nama',
         'nik',
-
+        
         // Data Pasien
         'nama_pasien',
         'no_rm_pasien',
+        'jenis_kelamin_display',
+        
+        // Form Input (7 fields)
         'tanggal_lahir',
-
-        // Form Fields
+        'tanggal',
         'diagnosa',
-        'tindakan_laser_lpi',
-
+        'parameter_laser_fokal',
+        'mata_kanan',
+        'mata_kiri',
+        
         // Tanda Tangan
         'ttd_dokter',
         'nama_dokter',
-
+        
         'created_by',
         'updated_by',
-
-        'mata_kanan',
-        'mata_kiri',
     ];
 
     protected $casts = [
-        'tanggal_tindakan' => 'date',
         'tanggal_lahir' => 'date',
+        'tanggal' => 'date',
         'mata_kanan' => 'boolean',
         'mata_kiri' => 'boolean',
     ];
@@ -70,7 +69,7 @@ class DokumenTindakanLaserLPI extends Model
     {
         return $this->belongsTo(Pasien::class, 'uuid_pasien', 'uuid');
     }
-
+    
     /**
      * Accessor untuk mata yang ditindak
      */

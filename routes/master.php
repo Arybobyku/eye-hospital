@@ -37,7 +37,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('list-dokumen-persetujuan-umum', [PasienCtrl::class, 'listDokumenPersetujuanUmum'])->name('list-dokumen-pertujuan-umum');
 
 		// Lampiran
-		Route::post('dokumen-form-laser-bargage', [PasienCtrl::class, 'storeFormLaseBarage'])->name('master-pasien-storeFormLaseBarage');
+		Route::post('dokumen-laser-barrage', [PasienCtrl::class, 'storeFormLaserBarrage'])->name('master-pasien-storeFormLaserBarrage');
 		Route::post('dokumen-laporan-pembedahan', [PasienCtrl::class, 'storeLaporanPembedahan'])->name('master-pasien-storeLaporanPembedahan');
 		Route::post('dokumen-balance-cairan-harian', [PasienCtrl::class, 'storeBalanceCairanHarian'])->name('master-pasien-storeBalanceCairanHarian');
 		Route::post('dokumen-resume-perawatan-rawat-jalan', [PasienCtrl::class, 'storeResumePerawatanRawatJalan'])->name('master-pasien-storeResumePerawatanRawatJalan');
@@ -66,6 +66,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('dokumen-cppt-rawat-inap', [PasienCtrl::class, 'storeCPPTRawatInap'])->name('master-pasien-storeCPPTRawatInap');
 		Route::post('dokumen-monitoring-efek-samping-obat', [PasienCtrl::class, 'storeMonitoringEfekSampingObat'])->name('master-pasien-storeMonitoringEfekSampingObat');
 		Route::post('dokumen-catatan-keperawatan', [PasienCtrl::class, 'storeCatatanKeperawatan'])->name('master-pasien-storeCatatanKeperawatan');
+		Route::post('dokumen-laser-fokal', [PasienCtrl::class, 'storeFormLaserFokal'])->name('master-pasien-storeFormLaserFokal');
 	});
 
 	Route::prefix('rekammedis')->group(function () {
@@ -79,6 +80,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		// Data Lampiran
 		Route::post('list-lampiran', [RekamMedisCtrl::class, 'listLampiran']);
 		Route::get('lampiran/{uuid}', [RekamMedisCtrl::class, 'getDetailLampiran']);
+		Route::post('lampiran/{uuid}/detail', [RekamMedisCtrl::class, 'getDetailLampiran']);  // ✅ UBAH JADI POST DAN TAMBAH /detail
 		Route::delete('lampiran/{uuid}', [RekamMedisCtrl::class, 'deleteLampiran']);
 
 		

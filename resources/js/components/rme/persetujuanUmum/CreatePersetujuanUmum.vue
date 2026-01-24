@@ -545,6 +545,26 @@ export default {
             this.form.usia = this.selectedPatient?.tanggal_lahir;
             this.form.alamat = this.selectedPatient?.alamat;
         },
+          saveSign(refName) {
+      const pad = this.$refs[refName];
+
+      if (!pad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
+
+      // fungsi yang benar untuk vue-signature-pad
+      const { isEmpty, data } = pad.saveSignature();
+
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+
+      this.form[refName] = data; // base64 string
+
+      console.log("TTD saved:", refName);
+    },
         async submitForm() {
             this.loadingSubmit = true;
 
@@ -554,6 +574,8 @@ export default {
                 Object.keys(this.form).forEach((key) => {
                 fd.append(key, this.form[key]);
                 });
+
+                console.log("PERSETUJUAN UMUM: ",fd);
 
                 const response = await axios.post(
                 "/master/pasien/dokumen-persetujuan-umum",
