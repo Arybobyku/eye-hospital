@@ -261,6 +261,8 @@ export default {
     FormMonitoringEfekSampingObat: defineAsyncComponent(() =>import("./create/FormMonitoringEfekSampingObat.vue")),
     FormCatatanKeperawatan: defineAsyncComponent(() =>import("./create/FormCatatanKeperawatan.vue")),
     FormLaporanOperasiTrabulektomi: defineAsyncComponent(() =>import("./create/FormLaporanOperasiTrabulektomi.vue")),
+    FormStatusAnestesi: defineAsyncComponent(() =>import("./create/FormStatusAnestesi.vue")),
+    FormLaporanOperasiVitreoRetina: defineAsyncComponent(() =>import("./create/FormLaporanOperasiVitreoRetina.vue")),
     // Tambahkan component baru di sini
   },
 
@@ -511,6 +513,20 @@ export default {
           component: "FormLaserBarage",
           description: "Form Laser Barrage",
           backendType: "dokumen_form_laser_barrage",
+        },
+        {
+          value: "dokumen-status-anestesi",
+          label: "Form Status Anestesi",
+          component: "FormStatusAnestesi",
+          description: "Status Anestesi",
+          backendType: "status_anestesi",
+        },
+        {
+          value: "dokumen-form-laporan-operasi-vitreo-retina",
+          label: "Form Laporan Operasi Vitreo Retina",
+          component: "FormLaporanOperasiVitreoRetina",
+          description: "Laporan Operasi Operasi Bedah Mata",
+          backendType: "laporan_operasi_vitreo_retina",
         },
         // {
         //   value: "informed-consent",
@@ -800,6 +816,8 @@ export default {
         dokumen_dietitian_pasien_baru: `/print/rekammedis/general/kunjunganawaldietitianpadapasienbaru/${item.uuid}`,
         dokumen_catatan_operasi: `/print/rekammedis/bedah/rm2dot3/${item.uuid}`,
         dokumen_kronologis_pasien: `/print/rekammedis/general/kronologis/${item.uuid}`,
+        status_anestesi: `/print/rekammedis/lampiran/status-anestesi/${item.uuid}`,
+        laporan_operasi_vitreo_retina: `/print/rekammedis/lampiran/laporan-operasi-vitreo-retina/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];

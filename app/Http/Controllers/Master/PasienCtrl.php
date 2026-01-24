@@ -41,6 +41,9 @@ use App\Models\DokumenCPPTRawatInap;
 use App\Models\DokumenMonitoringEfekSampingObat;
 use App\Models\DokumenCatatanKeperawatan;
 use App\Models\DokumenFormLaserFokal;
+use App\Models\DokumenStatusAnestesi;
+use App\Models\DokumenLaporanOperasiVitreoRetina;
+
 use Cookie;
 use Crypt;
 use DB;
@@ -2358,6 +2361,330 @@ public function storeCatatanKeperawatan(Request $request)
         return response()->json([
             'status' => false,
             'message' => 'Gagal menyimpan Catatan Keperawatan',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+
+}
+public function storeStatusAnestesi(Request $request)
+{
+    try {
+        DB::beginTransaction();
+        $data = $request->all();
+        
+        // Ambil data pengguna dari Cookie (encrypted)
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+        
+        $uuid = $request->input('uuid');
+        
+        // Hapus uuid dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+        unset($data['id']);
+        
+        // ===== HANDLING KHUSUS UNTUK OBAT_INFUS (JSON) =====
+        if (isset($data['obat_infus'])) {
+            if (is_string($data['obat_infus'])) {
+                $data['obat_infus'] = json_decode($data['obat_infus'], true);
+            }
+            
+            if (!is_array($data['obat_infus'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Format obat infus tidak valid',
+                ], 400);
+            }
+        }
+        
+        // ===== HANDLING KHUSUS UNTUK MONITORING_FISIOLOGIS (JSON) =====
+        if (isset($data['monitoring_fisiologis'])) {
+            if (is_string($data['monitoring_fisiologis'])) {
+                $data['monitoring_fisiologis'] = json_decode($data['monitoring_fisiologis'], true);
+            }
+            
+            if (!is_array($data['monitoring_fisiologis'])) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Format monitoring fisiologis tidak valid',
+                ], 400);
+            }
+        }
+        
+        // ===== CONVERT CHECKBOX BOOLEAN =====
+        $booleanFields = [
+            'teknik_sedasi',
+            'teknik_anestesi_umum',
+            'teknik_lain',
+            'teknik_spinal',
+            'teknik_epidural',
+            'teknik_kaudal',
+            'alat_hipotensi',
+            'alat_tci',
+            'alat_cpb',
+            'alat_ventilasi_satu_paru',
+            'alat_bronkoskopi',
+            'alat_glidescope',
+            'alat_usg',
+            'alat_stimulator_saraf',
+            'alat_lainnya_check',
+            'monitoring_ekg',
+            'monitoring_arteri_line',
+            'monitoring_etco2',
+            'monitoring_stetoskop',
+            'monitoring_nibp',
+            'monitoring_ngt',
+            'monitoring_bis',
+            'monitoring_cvp',
+            'monitoring_cath_a_pulmo',
+            'monitoring_spo2',
+            'monitoring_kateter_urine',
+            'monitoring_temp',
+            'monitoring_lainnya_check',
+            'cek_informed_consent',
+            'cek_obat_anestesi',
+            'cek_tatalaksana_jalan_nafas',
+            'cek_mesin_anestesi',
+            'cek_monitoring',
+            'cek_obat_emergensi',
+            'cek_suction_apparatus',
+            'posisi_terlentang',
+            'posisi_lithotomi',
+            'posisi_prone',
+            'posisi_perlindungan_mata',
+            'posisi_lainnya_check',
+            'trakheostomi',
+            'bronkoskopi_fiberoptik',
+            'glidescope_jalan_nafas',
+            'jalan_nafas_lainnya_check',
+            'intubasi_sesudah_tidur',
+            'intubasi_blind',
+            'intubasi_trakheostomi',
+            'dengan_stilet',
+            'ventilasi_spontan',
+            'ventilasi_kendali'
+        ];
+        
+        foreach ($booleanFields as $field) {
+            if (isset($data[$field])) {
+                $data[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+        
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $dokumen = DokumenStatusAnestesi::where('uuid', $uuid)->first();
+            
+            if (!$dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+            
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Status Anestesi berhasil diupdate';
+            
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            if (empty($data['tanggal'])) {
+                $data['tanggal'] = date('Y-m-d');
+            }
+            $data['id'] = '';
+            $dokumen = DokumenStatusAnestesi::create($data);
+            $action = 'create';
+            $message = 'Status Anestesi berhasil disimpan';
+        }
+        
+        DB::commit();
+        
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+        
+    } catch (Exception $e) {
+        DB::rollBack();
+        
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Status Anestesi',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+public function storeLaporanOperasiVitreoRetina(Request $request)
+{
+    try {
+        DB::beginTransaction();
+        $data = $request->all();
+        
+        // Ambil data pengguna dari Cookie (encrypted)
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Username'));
+        
+        $uuid = $request->input('uuid');
+        
+        // Hapus uuid dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+        unset($data['id']);
+        
+        // ===== CONVERT CHECKBOX BOOLEAN =====
+        $booleanFields = [
+            'area_operasi_od',
+            'area_operasi_os',
+            'anestesi_lokal',
+            'anestesi_umum',
+            'anestesi_sedasi',
+            'anestesi_blok',
+            'peritomi_360',
+            'peritomi_sebagian',
+            'kendala_4_rektus',
+            'kendala_rektus_superior',
+            'kendala_tak_dilakukan',
+            'bakel_sirkuler_5mm',
+            'bakel_sirkuler_4mm',
+            'bakel_sirkuler_2_5mm',
+            'bakel_sirkuler_2mm',
+            'bakel_sponge',
+            'bakel_tyre',
+            'bakel_tak_dilakukan',
+            'ikatan_sleeve_ni',
+            'ikatan_sleeve_ns',
+            'ikatan_sleeve_ts',
+            'ikatan_sleeve_ti',
+            'ikatan_benang_ni',
+            'ikatan_benang_ns',
+            'ikatan_benang_ts',
+            'ikatan_benang_ti',
+            'jahitan_bakel_5_0',
+            'jahitan_bakel_6_0',
+            'jahitan_bakel_4_0',
+            'jahitan_bakel_5_0_material',
+            'jahitan_bakel_nylon',
+            'jahitan_bakel_prolene',
+            'jahitan_bakel_vycril',
+            'skleretomi_3_lubang',
+            'skleretomi_4_lubang',
+            'kanula_3mm',
+            'kanula_4mm',
+            'kanula_tak_tembus',
+            'kanula_ujung_tak_terlihat',
+            'teknik_pneumatic_retinopexy',
+            'teknik_fge',
+            'teknik_sice',
+            'teknik_core_vitrectomy',
+            'teknik_endblock',
+            'teknik_ekstirpasi_iol',
+            'teknik_reposisi_iol',
+            'teknik_iridektomi_perifer',
+            'teknik_drainase_cairan',
+            'teknik_pneumatic_dysplacement',
+            'teknik_kriopeksi',
+            'teknik_injeksi_intravitreal',
+            'teknik_pewarna_membran',
+            'teknik_bersihkan_vitreous',
+            'teknik_ekstirpasi_benda_asing',
+            'teknik_ekstirpasi_lensa',
+            'teknik_evakuasi_silicone',
+            'teknik_tpa',
+            'teknik_ilm_peeling',
+            'teknik_membrane_peeling',
+            'teknik_lensectomy',
+            'teknik_ac_fiksasi',
+            'teknik_tidak_dipasang_iol',
+            'teknik_fako',
+            'drainase_lubang_retina_baru',
+            'drainase_robekan_ada',
+            'drainase_external',
+            'laser_dilakukan',
+            'laser_el',
+            'laser_lio',
+            'laser_tidak_dilakukan',
+            'tamponade_cairan',
+            'tamponade_c3f8',
+            'tamponade_f6h8',
+            'tamponade_silicon_oil',
+            'tamponade_corneal_debridemant',
+            'tamponade_retina_melekat_sempurna',
+            'tamponade_sisa_cairan',
+            'tamponade_ya',
+            'tamponade_udara_steril',
+            'tamponade_sf6',
+            'tamponade_perfluorocarbon',
+            'tamponade_lensa_kontak',
+            'tamponade_retina_melekat_tidak_sempurna',
+            'tamponade_retina_tak_melekat',
+            'tamponade_tidak',
+            'komplikasi_ya',
+            'komplikasi_tidak',
+            'perdarahan_ya',
+            'perdarahan_tidak',
+            'transfusi_ya',
+            'transfusi_tidak',
+            'tidur_telungkup_3hr',
+            'tidur_telungkup_10hr',
+            'tidur_telungkup_1bl',
+            'tidur_biasa',
+            'lepas_lensa_kontak'
+        ];
+        
+        foreach ($booleanFields as $field) {
+            if (isset($data[$field])) {
+                $data[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
+            }
+        }
+        
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $dokumen = DokumenLaporanOperasiVitreoRetina::where('uuid', $uuid)->first();
+            
+            if (!$dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+            
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Laporan Operasi Vitreo Retina berhasil diupdate';
+            
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            if (empty($data['tanggal_operasi'])) {
+                $data['tanggal_operasi'] = date('Y-m-d');
+            }
+            $data['id'] = '';
+            $dokumen = DokumenLaporanOperasiVitreoRetina::create($data);
+            $action = 'create';
+            $message = 'Laporan Operasi Vitreo Retina berhasil disimpan';
+        }
+        
+        DB::commit();
+        
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+        
+    } catch (Exception $e) {
+        DB::rollBack();
+        
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Laporan Operasi Vitreo Retina',
             'error' => $e->getMessage(),
         ], 500);
     }

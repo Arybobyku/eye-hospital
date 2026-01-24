@@ -37,6 +37,7 @@ use App\Models\DokumenLaporanOperasiPterygium;
 use App\Models\DokumenLaporanEksisiChalazion;
 use App\Models\DokumenLaporanEksisiPalpebra;
 use App\Models\DokumenTindakanLaserCapsulotomy;
+use App\Models\DokumenLaporanOperasiVitreoRetina;
 use App\Models\DokumenTindakanEpilasi;
 use App\Models\DokumenFormLaserBarrage;
 use App\Models\DokumenFormLaserFokal;
@@ -1415,5 +1416,27 @@ function printFormLaserBarrage($uuid)
     )->setPaper('a4', 'potrait');
 
     return $pdf->stream();
+  }
+
+  
+  function printLaporanOperasiVitreoRetina($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenLaporanOperasiVitreoRetina::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $dokumen = $data;
+    $pdf->loadView(
+      'print-rekam-medis.general.formlaporanoperasivitreoretina',
+      compact(
+        'dokumen',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+
   }
 }
