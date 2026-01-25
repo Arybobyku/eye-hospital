@@ -1074,13 +1074,13 @@
         </div>
       </div>
 
-      <div class="signature-section">
-        <div class="sign-box">
+      <div class="">
+        <div class="">
           <label>Tanda Tangan Perawat</label>
           <VueSignaturePad
             ref="perawat_ttd"
             :options="sigOption"
-            class="signature-box-rme"
+            class="signature2-box-rme"
           />
           <button @click="saveSign('perawat_ttd')" class="btn-save">Simpan ✔</button>
           <input
@@ -1116,15 +1116,14 @@ export default {
       type: Object,
       required: true,
     },
+    editUuid: {
+        type: String,
+        default: null,
+    },
     editData: {
       // ✨ Props untuk data edit
       type: Object,
       default: null,
-    },
-
-    editUuid: {
-        type: String,
-        default: null,
     },
   },
   data() {
@@ -1313,6 +1312,10 @@ export default {
 
 
   computed: {
+    isEditMode() {
+      console.log('p', this.editData.uuid);
+        return !!this.editData.uuid;
+      },
     nortonScore() {
       const fisik = parseInt(this.form.norton_fisik) || 0;
       const mental = parseInt(this.form.norton_mental) || 0;
@@ -1327,16 +1330,13 @@ export default {
       const asupan = parseInt(this.form.gizi_asupan_makanan) || 0;
       return bb + asupan;
     },
-    isEditMode() {
-      console.log('p', this.editUuid);
-        return !!this.editUuid;
-      }
+
     
   },
 
   mounted() {
-    console.log('editmode', this.isEditMode);
-    if (this.isEditMode && this.editData) {
+    console.log('editmode', this.editData);
+    if (this.editData) {
       // ✨ LOAD DATA UNTUK EDIT
       console.log("edit");
       this.loadDataForEdit();
@@ -1350,10 +1350,10 @@ export default {
     async loadDataForEdit() {
       try {
         // Jika data lengkap sudah ada di editData props
-        if (this.editUuid) {
+        if (this.editData.uuid) {
           // Fetch detail dari server untuk data lengkap
           const response = await axios.get(
-             `/master/rekammedis/lampiran/${this.editUuid}?type=asesmen_keperawatan_rawat_inap`
+             `/master/rekammedis/lampiran/${this.editData.uuid}?type=asesmen_keperawatan_rawat_inap`
           );
           console.log("123", response.data)
           if (response.data.status) {
@@ -1363,6 +1363,11 @@ export default {
                 this.form[key] = response.data.data[key];
               }
             });
+            this.$nextTick(() => {
+        if (this.form.perawat_ttd && this.$refs.perawat_ttd) {
+          this.$refs.perawat_ttd.fromDataURL(this.form.perawat_ttd);
+        }
+      });
 
             // ✨ Load signature jika ada
             this.$nextTick(() => {
@@ -1553,6 +1558,14 @@ export default {
   background: #f0f0f0;
   font-weight: bold;
   color: #333;
+}
+.signature2-box-rme {
+  width: 320px !important;
+  height: 280px !important;
+  border: 2px solid #999;
+  border-radius: 4px;
+  display: block;
+  margin: 0 auto;
 }
 
 .info-table td {
