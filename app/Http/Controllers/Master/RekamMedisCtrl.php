@@ -330,21 +330,21 @@ class RekamMedisCtrl extends Controller
                 [
                     'table' => 'penolakan_tindakan_anestesi',
                     'type' => 'penolakan_tindakan_anestesi',
-                    'label' => 'Penolakan Tindakan Anestesi',
+                    'label' => 'Tindakan Anestesi',
                     'icon' => 'fa-eye',
                     'color' => '#0d6ec4',
                     'filter' => ['jenis_form' => 'penolakan'], // 🔥 FILTER KHUSUS
                 ],
-                [
-                    'table' => 'penolakan_tindakan_anestesi',
-                    'type' => 'penolakan_tindakan_anestesi',
-                    'label' => 'Persetujuan Tindakan Anestesi',
-                    'icon' => 'fa-eye',
-                    'color' => '#043f72',
-                    'filter' => ['jenis_form' => 'persetujuan'], // 🔥 FILTER KHUSUS
-                    'icon' => 'fa-hand',
-                    'color' => '#F44336', // Red
-                ],
+                // [
+                //     'table' => 'penolakan_tindakan_anestesi',
+                //     'type' => 'penolakan_tindakan_anestesi',
+                //     'label' => 'Persetujuan Tindakan Anestesi',
+                //     'icon' => 'fa-eye',
+                //     'color' => '#043f72',
+                //     'filter' => ['jenis_form' => 'persetujuan'], // 🔥 FILTER KHUSUS
+                //     'icon' => 'fa-hand',
+                //     'color' => '#F44336', // Red
+                // ],
                 [
                     'table' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
                     'type' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
