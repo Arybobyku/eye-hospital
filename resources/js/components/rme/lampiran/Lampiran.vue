@@ -530,9 +530,9 @@ export default {
         },
         {
           value: "penolakan_tindakan_anestesi",
-          label: "Penolakan Tindakan Anestesi",
+          label: "Form Tindakan Anestesi (Penolakan/Persetujuan)",
           component: "PenolakanTindakanAnestesi",
-          description: "Penolakan Tindakan Anestesi",
+          description: "Form untuk penolakan atau persetujuan tindakan anestesi",
           backendType: "penolakan_tindakan_anestesi",
         },
         {

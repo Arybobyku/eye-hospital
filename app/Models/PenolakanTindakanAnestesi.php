@@ -19,6 +19,7 @@ class PenolakanTindakanAnestesi extends Model
         'uuid_pasien',
         
         // ===== Data Pasien =====
+        'jenis_form',
         'no_rm',
         'nik',
         'nama',

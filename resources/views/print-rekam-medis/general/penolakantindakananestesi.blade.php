@@ -114,7 +114,7 @@
     
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            RM 4.2/PTA/22
+            {{ $penolakan->jenis_form === 'penolakan' ? 'RM 4.2/PTA/22' : 'RM 4.3/PTA/22' }}
         </div>
         
         @include('print-rekam-medis.partials.header')
@@ -122,7 +122,9 @@
         <table class="tablee">
             <!-- HEADER TITLE -->
             <tr>
-                <td colspan="4" class="header-row">PENOLAKAN TINDAKAN ANESTESI</td>
+                <td colspan="4" class="header-row">
+                    {{ $penolakan->jenis_form === 'penolakan' ? 'PENOLAKAN' : 'PERSETUJUAN' }} TINDAKAN ANESTESI
+                </td>
             </tr>
             
             <!-- SUB HEADER -->
@@ -145,7 +147,7 @@
                             <td><strong>{{ $penolakan->perawat_asisten }}</strong></td>
                         </tr>
                         <tr>
-                            <td>Penerima Informasi/Pemberi Penolakan*</td>
+                            <td>Penerima Informasi/Pemberi {{ $penolakan->jenis_form === 'penolakan' ? 'Penolakan' : 'Persetujuan' }}*</td>
                             <td>:</td>
                             <td><strong>{{ $penolakan->penerima_informasi }}</strong></td>
                         </tr>
@@ -565,23 +567,10 @@
                     alamat
                     <strong><u>{{ $penolakan->pernyataan_alamat }}</u></strong>,
                     dengan ini menyatakan
-                    <strong>PENOLAKAN</strong>
+                    <strong>{{ $penolakan->jenis_form === 'penolakan' ? 'PENOLAKAN' : 'PERSETUJUAN' }}</strong>
                     untuk dilakukannya tindakan
                     <strong>ANESTESI</strong>
-                    terhadap saya /
-                    <strong><u>{{ $penolakan->pernyataan_hubungan }}</u></strong>
-                    saya* bernama
-                    <strong><u>{{ $penolakan->pernyataan_nama_pasien }}</u></strong>,
-                    tanggal lahir
-                    <strong><u>{{ $penolakan->pernyataan_tanggal_lahir_pasien ? \Carbon\Carbon::parse($penolakan->pernyataan_tanggal_lahir_pasien)->format('d/m/Y') : '___________' }}</u></strong>,
-                    <strong><u>{{ $penolakan->pernyataan_jenis_kelamin_pasien == 'L' ? 'laki-laki' : 'perempuan' }}</u></strong>,
-                    alamat
-                    <strong><u>{{ $penolakan->pernyataan_alamat_pasien }}</u></strong>.
-                    <br><br>
-                    Saya telah dijelaskan dan memahami tentang jenis tindakan pembiusan beserta manfaat, risiko dan komplikasi lain yang mungkin timbul.
-                    <br>
-                    Saya juga menyadari bahwa dokter melakukan suatu upaya dan oleh karena ilmu kedokteran bukanlah ilmu pasti,
-                    maka keberhasilan tindakan kedokteran bukanlah keniscayaan, melainkan sangat bergantung kepada izin Tuhan Yang Maha Esa.
+                    ...
                 </td>
             </tr>
             <tr>

@@ -332,7 +332,16 @@ class RekamMedisCtrl extends Controller
                     'type' => 'penolakan_tindakan_anestesi',
                     'label' => 'Penolakan Tindakan Anestesi',
                     'icon' => 'fa-eye',
-                    'color' => '#2196F3', // Biru cerah utama
+                    'color' => '#0d6ec4',
+                    'filter' => ['jenis_form' => 'penolakan'], // 🔥 FILTER KHUSUS
+                ],
+                [
+                    'table' => 'penolakan_tindakan_anestesi',
+                    'type' => 'persetujuan_tindakan_anestesi',
+                    'label' => 'Persetujuan Tindakan Anestesi',
+                    'icon' => 'fa-eye',
+                    'color' => '#043f72',
+                    'filter' => ['jenis_form' => 'persetujuan'], // 🔥 FILTER KHUSUS
                 ],
                 [
                     'table' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
@@ -511,6 +520,12 @@ class RekamMedisCtrl extends Controller
                     ->where('uuid_pasien', $uuid_pasien)
                     ->whereNull('deleted_at');
 
+            if (isset($config['filter'])) {
+                foreach ($config['filter'] as $key => $value) {
+                    $count->where($key, $value);
+                }
+            }
+
                 if (!empty($search)) {
                     $count->where(function ($q) use ($search) {
                         $q->where('nama', 'ILIKE', "%{$search}%")
@@ -548,6 +563,13 @@ class RekamMedisCtrl extends Controller
                     )
                     ->where('uuid_pasien', $uuid_pasien)
                     ->whereNull('deleted_at');
+
+                                // 🔥 APPLY FILTER JIKA ADA
+            if (isset($config['filter'])) {
+                foreach ($config['filter'] as $key => $value) {
+                    $query->where($key, $value);
+                }
+            }
 
                 if (!empty($search)) {
                     $query->where(function ($q) use ($search) {
@@ -891,6 +913,7 @@ class RekamMedisCtrl extends Controller
                 'form_proses_perawatan_peri_operative' => 'form_proses_perawatan_peri_operative',
                 'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap' => 'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap',
                 'penolakan_tindakan_anestesi' => 'penolakan_tindakan_anestesi',
+                'persetujuan_tindakan_anestesi' => 'penolakan_tindakan_anestesi',
                 'form_pengkajian_keperawatan_mata_rawat_jalan' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
                 'form_laporan_injeksi' => 'form_laporan_injeksi',
                 'form_permintaan_pulang' => 'form_permintaan_pulang',
@@ -973,6 +996,7 @@ class RekamMedisCtrl extends Controller
                 'form_proses_perawatan_peri_operative' => 'form_proses_perawatan_peri_operative',
                 'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap' => 'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap',
                 'penolakan_tindakan_anestesi' => 'penolakan_tindakan_anestesi',
+                'persetujuan_tindakan_anestesi' => 'penolakan_tindakan_anestesi',
                 'form_pengkajian_keperawatan_mata_rawat_jalan' => 'form_pengkajian_keperawatan_mata_rawat_jalan',
                 'form_laporan_injeksi' => 'form_laporan_injeksi',
                 'form_permintaan_pulang' => 'form_permintaan_pulang',

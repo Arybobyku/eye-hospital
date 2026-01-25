@@ -3372,6 +3372,104 @@ class PasienCtrl extends Controller
         }
     }
 
+    public function storePenolakanTindakanAnestesi(Request $request)
+    {
+        try {
+            // ✅ Debug: Lihat data yang masuk
+            \Log::info('📥 REQUEST DATA:', $request->all());
+            
+            // ✅ Validasi input
+            $validated = $request->validate([
+                'uuid_pasien' => 'required|string',
+                'jenis_form' => 'required|in:penolakan,persetujuan',
+                'pernyataan_nama' => 'required|string|max:255',
+                'pernyataan_tanggal_lahir' => 'required|date',
+                // Tambahkan validasi field lain yang required
+            ], [
+                'uuid_pasien.required' => 'Data pasien harus dipilih',
+                'jenis_form.required' => 'Jenis formulir harus dipilih',
+                'jenis_form.in' => 'Jenis formulir tidak valid',
+                'pernyataan_nama.required' => 'Nama yang menyatakan harus diisi',
+                'pernyataan_tanggal_lahir.required' => 'Tanggal lahir harus diisi',
+            ]);
+            
+            DB::beginTransaction();
+            
+            $data = $request->except(['uuid', '_token']);
+            
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+            
+            $uuid = $request->input('uuid');
+            
+            if ($uuid) {
+                // ✅ UPDATE MODE
+                $dokumen = PenolakanTindakanAnestesi::where('uuid', $uuid)->first();
+                
+                if (!$dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => '❌ Data tidak ditemukan',
+                    ], 404);
+                }
+                
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                
+                $action = 'update';
+                $message = 'Form ' . ucfirst($data['jenis_form']) . ' Tindakan Anestesi berhasil diupdate';
+                
+            } else {
+                // ✅ CREATE MODE
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = PenolakanTindakanAnestesi::create($data);
+                
+                $action = 'create';
+                $message = ' Form ' . ucfirst($data['jenis_form']) . ' Tindakan Anestesi berhasil disimpan';
+            }
+            
+            DB::commit();
+            
+            \Log::info('✅ SUCCESS:', [
+                'action' => $action,
+                'uuid' => $dokumen->uuid,
+                'jenis_form' => $dokumen->jenis_form
+            ]);
+            
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => '❌ Validasi gagal',
+                'errors' => $e->errors(),
+            ], 422);
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            \Log::error('❌ ERROR:', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+            
+            return response()->json([
+                'status' => false,
+                'message' => '❌ Gagal menyimpan Form Tindakan Anestesi',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function storeFormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap(Request $request)
     {
         try {
@@ -3430,65 +3528,7 @@ class PasienCtrl extends Controller
             ], 500);
         }
     }
-
-    public function storePenolakanTindakanAnestesi(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-
-            $data = $request->all();
-
-            // Ambil user info dari encrypted cookie
-            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
-            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
-            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Username'));
-
-            $uuid = $request->input('uuid');
-
-            // Hapus uuid dari data untuk avoid mass assignment issue
-            unset($data['uuid']);
-
-            if ($uuid) {
-                // UPDATE: cari berdasarkan UUID
-                $dokumen = PenolakanTindakanAnestesi::where('uuid', $uuid)->first();
-
-                if (! $dokumen) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Data tidak ditemukan',
-                    ], 404);
-                }
-
-                $data['updated_by'] = $pengguna_nama;
-                $dokumen->update($data);
-                $action = 'update';
-                $message = 'Form Penolakan Tindakan Anestesi berhasil diupdate';
-            } else {
-                // CREATE: buat baru
-                $data['created_by'] = $pengguna_nama;
-                $dokumen = PenolakanTindakanAnestesi::create($data); // ← PERBAIKI INI (tambahkan 'a')
-                $action = 'create';
-                $message = 'Form Penolakan Tindakan Anestesi berhasil disimpan';
-            }
-
-            DB::commit();
-
-            return response()->json([
-                'status' => true,
-                'message' => $message,
-                'data' => $dokumen,
-                'action' => $action,
-            ], $action === 'create' ? 201 : 200);
-        } catch (Exception $e) {
-            DB::rollBack();
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Gagal menyimpan Form Penolakan Tindakan Anestesi',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
-    }
+        
     public function storeFormPengkajianKeperawatanMataRawatJalan(Request $request)
     {
         try {
