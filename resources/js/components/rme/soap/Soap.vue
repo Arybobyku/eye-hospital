@@ -346,7 +346,7 @@ export default {
       this.showModal = false;
     },
     print(){
-        window.open(`/print/rekammedis/rawat-jalan/rm1dot5/${this.selectedPatient.uuid}`, "_blank");
+        window.open(`/print/rekammedis/rawat-jalan/cpptpoli/${this.selectedPatient.uuid}`, "_blank");
     },
     onReady(editor) {
       // Cara resmi CKEditor 5 untuk read-only

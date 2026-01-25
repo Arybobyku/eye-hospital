@@ -333,6 +333,350 @@
       </div>
     </div>
 
+    <!-- ================= RIWAYAT PSIKOSOSIAL KULTURAL SPIRITUAL ================= -->
+<div class="box-rme mb-4">
+  <h5 class="section-title-rme">Riwayat Psikososial Kultural Spiritual</h5>
+
+  <!-- STATUS PSIKOLOGIS -->
+  <h6 class="mt-3 mb-2" style="font-weight: bold;">Status Psikologis</h6>
+  <div class="mb-3">
+    <label class="checkbox-label">
+      <input type="checkbox" v-model="form.psikologis_cemas" /> Cemas
+    </label>
+    <label class="checkbox-label">
+      <input type="checkbox" v-model="form.psikologis_takut" /> Takut
+    </label>
+    <label class="checkbox-label">
+      <input type="checkbox" v-model="form.psikologis_marah" /> Marah
+    </label>
+    <label class="checkbox-label">
+      <input type="checkbox" v-model="form.psikologis_sedih" /> Sedih
+    </label>
+    <label class="checkbox-label">
+      <input type="checkbox" v-model="form.psikologis_bunuh_diri" /> Kecenderungan bunuh diri
+    </label>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <label>Lain-lain, sebutkan:</label>
+      <input type="text" v-model="form.psikologis_lainnya" class="input-rme" placeholder="Sebutkan kondisi psikologis lainnya..." />
+    </div>
+  </div>
+
+  <!-- STATUS SOSIAL -->
+  <h6 class="mt-4 mb-2" style="font-weight: bold;">Status Sosial</h6>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label>Hubungan pasien dengan anggota keluarga:</label>
+      <select v-model="form.hubungan_keluarga" class="input-rme">
+        <option value="">Pilih</option>
+        <option value="Baik">Baik</option>
+        <option value="Tidak Baik">Tidak Baik</option>
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label>Tempat tinggal:</label>
+      <input type="text" v-model="form.tempat_tinggal" class="input-rme" placeholder="Rumah/Apartemen/Panti/Lainnya" />
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <label>Kerabat yang dapat dihubungi - Nama:</label>
+      <input type="text" v-model="form.kerabat_nama" class="input-rme" />
+    </div>
+    <div class="col-md-4">
+      <label>Hubungan:</label>
+      <input type="text" v-model="form.kerabat_hubungan" class="input-rme" placeholder="Contoh: Suami/Istri/Anak" />
+    </div>
+    <div class="col-md-4">
+      <label>Telepon:</label>
+      <input type="tel" v-model="form.kerabat_telepon" class="input-rme" placeholder="08xxxxxxxxxx" />
+    </div>
+  </div>
+
+  <!-- STATUS KULTURAL -->
+  <h6 class="mt-4 mb-2" style="font-weight: bold;">Status Kultural</h6>
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label>Bahasa Sehari-hari:</label>
+      <select v-model="form.bahasa_sehari" class="input-rme">
+        <option value="">Pilih</option>
+        <option value="Indonesia">Indonesia</option>
+        <option value="Daerah">Daerah</option>
+        <option value="Inggris">Inggris (aktif/pasif)</option>
+        <option value="Lainnya">Lainnya</option>
+      </select>
+    </div>
+    <div class="col-md-6" v-if="form.bahasa_sehari === 'Daerah'">
+      <label>Sebutkan bahasa daerah:</label>
+      <input type="text" v-model="form.bahasa_daerah_sebutkan" class="input-rme" placeholder="Contoh: Jawa, Sunda, dll" />
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label>Perlu penterjemah:</label>
+      <select v-model="form.perlu_penterjemah" class="input-rme">
+        <option value="">Pilih</option>
+        <option value="Ya">Ya</option>
+        <option value="Tidak">Tidak</option>
+      </select>
+    </div>
+    <div class="col-md-6" v-if="form.perlu_penterjemah === 'Ya'">
+      <label>Bahasa yang diperlukan:</label>
+      <input type="text" v-model="form.penterjemah_bahasa" class="input-rme" placeholder="Sebutkan bahasa..." />
+    </div>
+  </div>
+
+  <!-- STATUS SPIRITUAL -->
+  <h6 class="mt-4 mb-2" style="font-weight: bold;">Status Spiritual</h6>
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <label>Nilai-nilai atau kepercayaan yang dianut:</label>
+      <textarea v-model="form.spiritual_kepercayaan" class="textarea-rme" rows="3" placeholder="Jelaskan nilai-nilai atau kepercayaan yang dianut pasien..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ================= KHUSUS UNTUK WANITA ================= -->
+<div class="box-rme mb-4" v-if="form.jenis_kelamin === 'Perempuan' || form.jenis_kelamin === 'P'">
+  <h5 class="section-title-rme">Khusus Untuk Wanita</h5>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label>Hamil:</label>
+      <select v-model="form.hamil" class="input-rme">
+        <option value="">Pilih</option>
+        <option value="Ya">Ya</option>
+        <option value="Tidak">Tidak</option>
+      </select>
+    </div>
+    <div class="col-md-6" v-if="form.hamil === 'Ya'">
+      <label>HPHT (Hari Pertama Haid Terakhir):</label>
+      <input type="date" v-model="form.hpht" class="input-rme" />
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <label>Keluhan Menstruasi:</label>
+      <textarea v-model="form.keluhan_menstruasi" class="textarea-rme" rows="2" placeholder="Jelaskan keluhan menstruasi jika ada..."></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- ================= PENILAIAN RISIKO DEKUBITUS (SKALA NORTON) ================= -->
+<div class="box-rme mb-4">
+  <h5 class="section-title-rme">Penilaian Risiko Dekubitus (Skala Norton)</h5>
+
+  <table class="info-table">
+    <thead>
+      <tr>
+        <th style="width: 200px">Yang Dinilai</th>
+        <th style="width: 150px; text-align:center;">4</th>
+        <th style="width: 150px; text-align:center;">3</th>
+        <th style="width: 150px; text-align:center;">2</th>
+        <th style="width: 150px; text-align:center;">1</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- KELUHAN FISIK -->
+      <tr>
+        <td>Keluhan Fisik</td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_fisik" value="4" /> Baik
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_fisik" value="3" /> Sedang
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_fisik" value="2" /> Buruk
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_fisik" value="1" /> Sangat buruk
+          </label>
+        </td>
+      </tr>
+
+      <!-- STATUS MENTAL -->
+      <tr>
+        <td>Status Mental</td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_mental" value="4" /> Sadar
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_mental" value="3" /> Apatis
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_mental" value="2" /> Bingung
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_mental" value="1" /> Stupor
+          </label>
+        </td>
+      </tr>
+
+      <!-- AKTIVITAS -->
+      <tr>
+        <td>Aktivitas</td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_aktivitas" value="4" /> Jalan sendiri
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_aktivitas" value="3" /> Dengan bantuan
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_aktivitas" value="2" /> Kursi roda
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_aktivitas" value="1" /> Di tempat tidur
+          </label>
+        </td>
+      </tr>
+
+      <!-- MOBILITAS -->
+      <tr>
+        <td>Mobilitas</td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_mobilitas" value="4" /> Bebas bergerak
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_mobilitas" value="3" /> Gerak terbatas
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_mobilitas" value="2" /> Sangat terbatas
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_mobilitas" value="1" /> Tidak bergerak
+          </label>
+        </td>
+      </tr>
+
+      <!-- INKONTINENSIA -->
+      <tr>
+        <td>Inkontinensia</td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_inkontinensia" value="4" /> Kontinen
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_inkontinensia" value="3" /> Kadang inkontinen
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_inkontinensia" value="2" /> Selalu inkontinen
+          </label>
+        </td>
+        <td style="text-align:center;">
+          <label>
+            <input type="radio" v-model="form.norton_inkontinensia" value="1" /> Inkontinen urin & alvi
+          </label>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- DISPLAY TOTAL SKOR -->
+  <div class="mt-3" style="padding: 15px; background: #ffffcc; border: 1px solid #ddd; border-radius: 4px;">
+    <label style="font-weight: bold; font-size: 16px;">Jumlah Skor: {{ nortonScore }}</label>
+    <div class="mt-2">
+      <span v-if="nortonScore >= 16 && nortonScore <= 20" style="color: green; font-weight: bold;">
+        ✓ 16-20: Tidak ada risiko
+      </span>
+      <span v-else-if="nortonScore >= 12 && nortonScore <= 15" style="color: orange; font-weight: bold;">
+        ⚠ 12-15: Risiko Sedang
+      </span>
+      <span v-else-if="nortonScore < 12 && nortonScore > 0" style="color: red; font-weight: bold;">
+        ✕ &lt;12: Risiko Tinggi
+      </span>
+      <span v-else style="color: #999; font-style: italic;">
+        Silakan lengkapi penilaian di atas
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= SKRINING RISIKO CEDERA/JATUH ================= -->
+<div class="box-rme mb-4">
+  <h5 class="section-title-rme">Skrining Risiko Cedera/Jatuh</h5>
+
+  <div class="row mb-3">
+    <div class="col-md-12">
+      <label style="font-weight: bold;">Risiko Cedera/Jatuh:</label>
+      <div>
+        <label style="margin-right: 20px;">
+          <input type="radio" v-model="form.risiko_jatuh" value="Ya" /> Ya
+        </label>
+        <label>
+          <input type="radio" v-model="form.risiko_jatuh" value="Tidak" /> Tidak
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div v-if="form.risiko_jatuh === 'Ya'" class="mb-3" style="padding-left: 20px;">
+    <p style="font-weight: bold; margin-bottom: 10px;">Maka lakukan pemasangan:</p>
+    <div>
+      <label class="checkbox-label">
+        <input type="checkbox" v-model="form.gelang_risiko_jatuh" /> Gelang risiko jatuh
+      </label>
+    </div>
+    <div>
+      <label class="checkbox-label">
+        <input type="checkbox" v-model="form.segitiga_risiko_jatuh" /> Segitiga risiko jatuh
+      </label>
+    </div>
+  </div>
+
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label>Diberitahukan ke dokter:</label>
+      <select v-model="form.risiko_jatuh_ke_dokter" class="input-rme">
+        <option value="">Pilih</option>
+        <option value="Ya">Ya</option>
+        <option value="Tidak">Tidak</option>
+      </select>
+    </div>
+    <div class="col-md-6" v-if="form.risiko_jatuh_ke_dokter === 'Ya'">
+      <label>Pukul:</label>
+      <input type="time" v-model="form.risiko_jatuh_ke_dokter_pukul" class="input-rme" />
+    </div>
+  </div>
+</div>
+
     <!-- ================= PENILAIAN SKALA NYERI ================= -->
     <div class="box-rme mb-4">
       <h5 class="section-title-rme">Penilaian Skala Nyeri</h5>
@@ -766,7 +1110,7 @@
 import axios from "axios";
 
 export default {
-  name: "AsesmenKeperawatanRawatInap",
+  name: "FormAssesmenAwalKeperawatanRawatInap",
   props: {
     selectedPatient: {
       type: Object,
@@ -777,10 +1121,10 @@ export default {
       type: Object,
       default: null,
     },
-    isEditMode: {
-      // ✨ Props flag edit mode
-      type: Boolean,
-      default: false,
+
+    editUuid: {
+        type: String,
+        default: null,
     },
   },
   data() {
@@ -967,19 +1311,6 @@ export default {
     };
   },
 
-  props: {
-    selectedPatient: {
-      type: Object,
-      required: true,
-    },
-  },
-
-  props: {
-    selectedPatient: {
-      type: Object,
-      required: true,
-    },
-  },
 
   computed: {
     nortonScore() {
@@ -996,11 +1327,18 @@ export default {
       const asupan = parseInt(this.form.gizi_asupan_makanan) || 0;
       return bb + asupan;
     },
+    isEditMode() {
+      console.log('p', this.editUuid);
+        return !!this.editUuid;
+      }
+    
   },
 
   mounted() {
+    console.log('editmode', this.isEditMode);
     if (this.isEditMode && this.editData) {
       // ✨ LOAD DATA UNTUK EDIT
+      console.log("edit");
       this.loadDataForEdit();
     } else {
       // CREATE MODE
@@ -1012,12 +1350,12 @@ export default {
     async loadDataForEdit() {
       try {
         // Jika data lengkap sudah ada di editData props
-        if (this.editData.uuid) {
+        if (this.editUuid) {
           // Fetch detail dari server untuk data lengkap
           const response = await axios.get(
-             `/master/pasien/lampiran/${this.editUuid}?type=asesmen_keperawatan_rawat_inap`
+             `/master/rekammedis/lampiran/${this.editUuid}?type=asesmen_keperawatan_rawat_inap`
           );
-
+          console.log("123", response.data)
           if (response.data.status) {
             // Populate form dengan data dari server
             Object.keys(this.form).forEach((key) => {
@@ -1116,12 +1454,12 @@ export default {
         const fd = new FormData();
 
         Object.keys(this.form).forEach((key) => {
-          // Jangan kirim uuid jika kosong (mode create)
-          if (key === "uuid" && !this.form[key]) {
-            return;
-          }
-          fd.append(key, this.form[key]);
-        });
+  if (this.form[key] === null) {
+    fd.append(key, "");
+  } else {
+    fd.append(key, this.form[key]);
+  }
+});
 
         const response = await axios.post(
           "/master/pasien/asesmen-awal-keperawatan-rawat-inap",

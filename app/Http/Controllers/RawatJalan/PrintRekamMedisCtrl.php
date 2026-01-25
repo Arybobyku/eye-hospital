@@ -60,6 +60,7 @@ use App\Models\FormLaporanInjeksi;
 use App\Models\FormPermintaanPulang;
 use App\Models\VoucherRawatInap;
 use App\Models\FormReaksiTransfusiDarah;
+use App\Models\DokumenAsesmenKeperawatanRawatInap;
 use App\Models\Pengguna;
 use App\Models\Resep;
 use App\Models\ResepRacikan;
@@ -947,21 +948,7 @@ class PrintRekamMedisCtrl extends Controller
 
     return $pdf->stream();
   }
-  function printCatatanKeperawatan($uuid)
-  {
-    $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
-    $pdf->loadView(
-      'print-rekam-medis.general.catatankeperawatan',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
-    )->setPaper('a4', 'potrait');
-  }
+
   //   function printCatatanKeperawatan ($uuid)
   // {
   //       $pdf = \App::make('dompdf.wrapper');
@@ -1396,6 +1383,50 @@ class PrintRekamMedisCtrl extends Controller
         'registrasi',
       ),
     )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+  function printAsessmenAwalKeperawatanRawatInap($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenAsesmenKeperawatanRawatInap::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $pdf->loadView(
+      'print-rekam-medis.rawat-inap.formassesmen',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+
+    return $pdf->stream();
+  }
+
+  function printCPPTPoli($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $pasien = Pasien::where('uuid', '=', $uuid)->first();
+    // $cppt = Cppt::where('pasien_uuid', '=', $uuid)->get();
+    $cppt = DB::table('cppt')
+      ->leftJoin('pengguna', 'cppt.pengguna_uuid', '=', 'pengguna.uuid')
+      ->where('cppt.pasien_uuid', '=', $uuid)
+      ->select(
+        'cppt.*',
+        DB::raw('pengguna.nama as pengguna_nama_pengguna'), // Add all other biodata fields similarly
+      )
+      ->get();
+
+    $pdf->loadView(
+      'print-rekam-medis.rawat-jalan.cppt-poli',
+      compact(
+        'pasien',
+        'cppt',
+      ),
+    )->setPaper('a4', 'potrait',);
 
 
     return $pdf->stream();
