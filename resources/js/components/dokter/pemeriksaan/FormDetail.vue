@@ -1483,7 +1483,7 @@ export default {
     created: function () { },
     data: function () {
         return {
-            linkR: "/print/rekammedis/rawat-jalan/cppt/",
+            linkR: "/print/rekammedis/rawat-jalan/cpptpoli/",
             editor: ClassicEditor,
             disableButtonSave: false,
             title_racikan: "",

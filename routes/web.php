@@ -22,6 +22,7 @@ use App\Http\Controllers\AntrianCtrl;
 use App\Http\Controllers\RoomCtrl;
 use App\Http\Controllers\MigrasiCtrl;
 use App\Http\Controllers\SearchingCtrl;
+use App\Http\Controllers\master\PasienCtrl;
 
 Route::group(['middleware' => 'throttle: 250, 1', 'middleware' => 'acl'], function(){
 	Route::get('dashboard/{any}', function () {
@@ -90,4 +91,21 @@ Route::prefix('migration')->group(function () {
 
 Route::prefix('searchion')->group(function () {
 	Route::post('searching', [SearchingCtrl::class, 'search'])->name('searchion-search');
+});
+
+Route::prefix('master')->group(function () {
+	Route::prefix('pasien')->group(function () {
+		Route::get('user-info', [PasienCtrl::class, 'getUserInfo'])->name('pasien-user-info');
+		Route::post('dokumen-list', [PasienCtrl::class, 'dokumenList'])->name('pasien-dokumen-list');
+		Route::post('dokumen-store', [PasienCtrl::class, 'dokumenStore'])->name('pasien-dokumen-store');
+		Route::post('dokumen-update', [PasienCtrl::class, 'dokumenUpdate'])->name('pasien-dokumen-update');
+		Route::post('dokumen-delete', [PasienCtrl::class, 'dokumenDelete'])->name('pasien-dokumen-delete');
+		Route::post('dokumen-verify', [PasienCtrl::class, 'dokumenVerify'])->name('pasien-dokumen-verify');
+		Route::post('dokumen-download', [PasienCtrl::class, 'dokumenDownload'])->name('pasien-dokumen-download');
+	});
+});
+Route::prefix('print')->group(function () {
+    Route::prefix('rekammedis')->group(function () {
+        Route::get('dokumen/{uuid}', [PasienCtrl::class, 'dokumenPrint'])->name('print-dokumen-pasien');
+    });
 });

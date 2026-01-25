@@ -7,6 +7,7 @@ import Loader from './section/Loader.vue';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
+import VueSignaturePad from 'vue-signature-pad';
 
 const app = createApp({});
 app.config.globalProperties.$dbNameIndexDb = 'indexDbHospital';
@@ -36,4 +37,8 @@ app.component(VueFeather.name, VueFeather);
 app.component('VueDatePicker', VueDatePicker);
 app.component('Loader', Loader)
 
+// REGISTER SIGNATURE PAD
+app.use(VueSignaturePad);
+
 app.use(router).mount('#app')
+

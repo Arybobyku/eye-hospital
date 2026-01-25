@@ -149,7 +149,7 @@ export default {
                 },
                 {
                     name: "RM.1.5",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot5/",
+                    link: "/print/rekammedis/rawat-jalan/cpptpoli/",
                 },
                 {
                     name: "RM.1.6",
@@ -180,7 +180,7 @@ export default {
             }
         },
         look: function () {
-            vm.linkResume = `${vm.base_url}/print/rekammedis/rawat-jalan/rm1dot5/${vm.pasien.uuid}`;
+            vm.linkResume = `${vm.base_url}/print/rekammedis/rawat-jalan/cpptpoli/${vm.pasien.uuid}`;
         },
         parsingForm: function () {
             vm.$emit("parsingForm", vm.parsepasien(vm.form), "pasien");
