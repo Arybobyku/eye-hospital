@@ -57,6 +57,7 @@
           <tr>
             <th style="width: 50px">NO</th>
             <th style="width: 180px">JENIS DOKUMEN</th>
+            <th style="width: 180px">Nomor Dokumen</th>
             <th style="width: 100px">TANGGAL</th>
             <th style="width: 150px">Creator</th>
             <th style="width: 120px" class="text-center">ACTION</th>
@@ -75,14 +76,17 @@
 
             <!-- JENIS DOKUMEN dengan Badge -->
             <td>
-              <span
+              <!-- <span
                 class="document-badge"
                 :style="{ backgroundColor: item.document_color }"
               >
                 <i :class="['fas', item.document_icon]"></i>
                 {{ item.document_label }}
-              </span>
+              </span> -->
+              {{ item.document_label }}
             </td>
+
+            <td></td>
 
             <td>{{ formatDate(item.tanggal) }}</td>
             <td>{{ item.created_by || "-" }}</td>
