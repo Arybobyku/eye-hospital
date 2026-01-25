@@ -504,6 +504,18 @@ class RekamMedisCtrl extends Controller
                 ],
             ];
 
+            if (!empty($search)) {
+                $searchLower = mb_strtolower($search);
+
+                $documentConfigs = array_values(array_filter($documentConfigs, function ($val) use ($searchLower) {
+                    return
+                        str_contains(mb_strtolower($val['label']), $searchLower)
+                        || str_contains(mb_strtolower($val['type']), $searchLower);
+                }));
+
+                // dd($documentConfigs);
+            }
+
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
             foreach ($documentConfigs as $config) {
@@ -511,12 +523,12 @@ class RekamMedisCtrl extends Controller
                     ->where('uuid_pasien', $uuid_pasien)
                     ->whereNull('deleted_at');
 
-                if (!empty($search)) {
-                    $count->where(function ($q) use ($search) {
-                        $q->where('nama', 'ILIKE', "%{$search}%")
-                            ->orWhere('no_rm', 'ILIKE', "%{$search}%");
-                    });
-                }
+                // if (!empty($search)) {
+                //     $count->where(function ($q) use ($search) {
+                //         $q->where('nama', 'ILIKE', "%{$search}%")
+                //             ->orWhere('no_rm', 'ILIKE', "%{$search}%");
+                //     });
+                // }
 
                 $total += $count->count();
             }
@@ -549,12 +561,12 @@ class RekamMedisCtrl extends Controller
                     ->where('uuid_pasien', $uuid_pasien)
                     ->whereNull('deleted_at');
 
-                if (!empty($search)) {
-                    $query->where(function ($q) use ($search) {
-                        $q->where('nama', 'ILIKE', "%{$search}%")
-                            ->orWhere('no_rm', 'ILIKE', "%{$search}%");
-                    });
-                }
+                // if (!empty($search)) {
+                //     $query->where(function ($q) use ($search) {
+                //         $q->where('nama', 'ILIKE', "%{$search}%")
+                //             ->orWhere('no_rm', 'ILIKE', "%{$search}%");
+                //     });
+                // }
 
                 $data = $data->merge($query->get());
             }
