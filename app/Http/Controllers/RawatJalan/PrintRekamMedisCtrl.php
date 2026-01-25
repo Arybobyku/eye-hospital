@@ -1179,15 +1179,34 @@ class PrintRekamMedisCtrl extends Controller
 
   function printFormReaksiTransfusiDarah($uuid)
   {
-    $pdf = \App::make('dompdf.wrapper');
-    $formData = FormReaksiTransfusiDarah::where('uuid', '=', $uuid)->first();
-
-    if (!$formData) {
-      abort(404, 'Data form tidak ditemukan');
-    }
-
-    $pasien = Pasien::where('uuid', '=', $formData->uuid_pasien)->first();
-    return $pdf->stream();
+      $pdf = \App::make('dompdf.wrapper');
+      $formData = FormReaksiTransfusiDarah::where('uuid', '=', $uuid)->first(); 
+      
+      if (!$formData) {
+          abort(404, 'Data form tidak ditemukan');
+      }
+      
+      $pasien = Pasien::where('uuid', '=', $formData->uuid_pasien)->first();
+      $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
+      $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
+        ->orderBy('created_at', 'asc')
+        ->first();
+      $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+      
+      // Karena Model sudah decode otomatis, langsung gunakan saja
+      $pemberianDarah = $formData->pemberian_darah ?? [];
+      
+      // Pastikan selalu array
+      if (!is_array($pemberianDarah)) {
+          $pemberianDarah = [];
+      }
+      
+      $pdf->loadView(
+        'print-rekam-medis.general.formreaksitransfusidarah',
+        compact('pasien', 'ro', 'roperasi', 'ptk', 'formData', 'pemberianDarah')
+      )->setPaper('a4', 'portrait');
+  
+      return $pdf->stream();
   }
 
   function printFormulirReaksiTranfusiDarah($uuid)
