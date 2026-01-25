@@ -251,7 +251,7 @@ export default {
           );
         case "Lampiran":
           return defineAsyncComponent(() =>
-            import("./lampiran/lampiran.vue")
+            import("./lampiran/Lampiran.vue")
           );
         case "Bill Pembayaran":
           return defineAsyncComponent(() =>

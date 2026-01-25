@@ -20,7 +20,7 @@ use App\Models\DokumenSuratPernyataanBatalOperasi;
 use App\Models\DokumenSuratPernyataanPasienUmum;
 use App\Models\DokumenPersetujuanUmum;
 use App\Models\DokumenTindakanLaserLPI;
-use App\models\DokumenPasien;
+use App\Models\DokumenPasien;
 use App\Models\DokumenCeklistKesiapanBedah;
 use App\Models\FormEdukasiPasienDanKeluargaRawatJalan;
 use App\Models\FormPersetujuanUmumPasienKeluarga;

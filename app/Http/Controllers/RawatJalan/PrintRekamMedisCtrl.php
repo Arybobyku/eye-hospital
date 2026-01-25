@@ -1186,7 +1186,7 @@ class PrintRekamMedisCtrl extends Controller
       abort(404, 'Data form tidak ditemukan');
     }
 
-    $pasien = Pasien::where('uuid', '=', $formData->uuid_pasien)->first();
+    $pasien = Pasien::where('uuid', '=', $formData->uuid_pasien)->first();  
     return $pdf->stream();
   }
 
