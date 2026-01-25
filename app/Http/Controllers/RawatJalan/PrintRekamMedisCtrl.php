@@ -1332,7 +1332,24 @@ class PrintRekamMedisCtrl extends Controller
       ),
     )->setPaper('a4', 'potrait');
 
+    return $pdf->stream();
+  }
 
+  function printCatatanKeperawatan($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenCatatanKeperawatan::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $pdf->loadView(
+      'print-rekam-medis.general.catatankeperawatan',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+    
     return $pdf->stream();
   }
   function printMonitoringEfekSampingObat($uuid)
