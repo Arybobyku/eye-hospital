@@ -1030,7 +1030,7 @@ export default {
         form_persetujuan_umum_pasien_keluarga: `/print/rekammedis/rawat-jalan/rm1dot1/${item.uuid}`,
         form_proses_perawatan_peri_operative: `/print/rekammedis/bedah/rm1dot10/${item.uuid}`,
         form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap: `/print/rekammedis/general/pendidikanedukasipasienkeluargaterintegrasirawatinap/${item.uuid}`,
-        penolakan_tindakan_anestesi: `/print/rekammedis/general/penolakantindakananestesi/${item.uuid}`,
+        penolakan_tindakan_anestesi: `/print/rekammedis/general/tindakananestesi/${item.uuid}`,
         form_pengkajian_keperawatan_mata_rawat_jalan: `/print/rekammedis/rawat-jalan/rm1dot3/${item.uuid}`,
         form_laporan_injeksi: `/print/rekammedis/general/laporaninjeksi/${item.uuid}`,
         form_permintaan_pulang: `/print/rekammedis/general/formpermintaanpulang/${item.uuid}`,

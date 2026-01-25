@@ -558,28 +558,63 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="2" style="text-align: justify; padding: 8px;">
+                <td colspan="2" style="text-align: justify; padding: 8px; line-height: 1.6;">
                     Yang bertanda tangan di bawah ini, saya, nama
-                    <strong><u>{{ $penolakan->pernyataan_nama }}</u></strong>,
+                    <strong><u>{{ $penolakan->pernyataan_nama ?? '___________' }}</u></strong>,
                     tanggal lahir
-                    <strong><u>{{ $penolakan->pernyataan_tanggal_lahir ? \Carbon\Carbon::parse($penolakan->pernyataan_tanggal_lahir)->format('d/m/Y') : '___________' }}</u></strong>,
-                    <strong><u>{{ $penolakan->pernyataan_jenis_kelamin == 'L' ? 'laki-laki' : 'perempuan' }}</u></strong>,
+                    <strong><u>
+                        {{ $penolakan->pernyataan_tanggal_lahir
+                            ? \Carbon\Carbon::parse($penolakan->pernyataan_tanggal_lahir)->format('d/m/Y')
+                            : '___________' }}
+                    </u></strong>,
+                    <strong><u>
+                        {{ $penolakan->pernyataan_jenis_kelamin === 'L'
+                            ? 'laki-laki'
+                            : ($penolakan->pernyataan_jenis_kelamin === 'P' ? 'perempuan' : '___________') }}
+                    </u></strong>,
                     alamat
-                    <strong><u>{{ $penolakan->pernyataan_alamat }}</u></strong>,
+                    <strong><u>{{ $penolakan->pernyataan_alamat ?? '___________' }}</u></strong>,
                     dengan ini menyatakan
-                    <strong>{{ $penolakan->jenis_form === 'penolakan' ? 'PENOLAKAN' : 'PERSETUJUAN' }}</strong>
+                    <strong>
+                        {{ $penolakan->jenis_form === 'penolakan' ? 'PENOLAKAN' : 'PERSETUJUAN' }}
+                    </strong>
                     untuk dilakukannya tindakan
                     <strong>ANESTESI</strong>
-                    ...
+                    terhadap saya /
+                    <strong><u>{{ $penolakan->pernyataan_hubungan ?? '___________' }}</u></strong>
+                    saya*, bernama
+                    <strong><u>{{ $penolakan->pernyataan_nama_pasien ?? '___________' }}</u></strong>,
+                    tanggal lahir
+                    <strong><u>
+                        {{ $penolakan->pernyataan_tanggal_lahir_pasien
+                            ? \Carbon\Carbon::parse($penolakan->pernyataan_tanggal_lahir_pasien)->format('d/m/Y')
+                            : '___________' }}
+                    </u></strong>,
+                    <strong><u>
+                        {{ $penolakan->pernyataan_jenis_kelamin_pasien === 'L'
+                            ? 'laki-laki'
+                            : ($penolakan->pernyataan_jenis_kelamin_pasien === 'P' ? 'perempuan' : '___________') }}
+                    </u></strong>,
+                    alamat
+                    <strong><u>{{ $penolakan->pernyataan_alamat_pasien ?? '___________' }}</u></strong>.
+                    <br><br>
+                
+                    Saya telah dijelaskan dan memahami tentang jenis tindakan pembiusan beserta manfaat,
+                    risiko, dan komplikasi lain yang mungkin timbul.
+                    <br>
+                    Saya juga menyadari bahwa dokter melakukan suatu upaya dan oleh karena ilmu kedokteran
+                    bukanlah ilmu pasti, maka keberhasilan tindakan kedokteran bukanlah keniscayaan,
+                    melainkan sangat bergantung kepada izin Tuhan Yang Maha Esa.
                 </td>
             </tr>
+
             <tr>
                 <td colspan="2" style="padding: 8px;">
                     <!-- BARIS TANGGAL -->
                     <div style="margin-bottom:15px;">
                         <strong>Medan</strong>, 
                         tanggal <strong><u>{{ $penolakan->pernyataan_tanggal ? \Carbon\Carbon::parse($penolakan->pernyataan_tanggal)->format('d/m/Y') : '___________' }}</u></strong>
-                        pukul <strong><u>{{ $penolakan->pernyataan_waktu ? \Carbon\Carbon::parse($penolakan->pernyataan_waktu)->format('H:i') : '_____' }}</u></strong>
+                        pukul <strong><u>{{ $penolakan->pernyataan_waktu ? \Carbon\Carbon::parse($penolakan->pernyataan_waktu)->format('H:i') : '_____' }} WIB</u></strong>
                     </div>
 
                     <!-- TANDA TANGAN -->

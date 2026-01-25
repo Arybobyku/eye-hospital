@@ -337,7 +337,7 @@ class RekamMedisCtrl extends Controller
                 ],
                 [
                     'table' => 'penolakan_tindakan_anestesi',
-                    'type' => 'persetujuan_tindakan_anestesi',
+                    'type' => 'penolakan_tindakan_anestesi',
                     'label' => 'Persetujuan Tindakan Anestesi',
                     'icon' => 'fa-eye',
                     'color' => '#043f72',
