@@ -22,7 +22,7 @@ use App\Http\Controllers\AntrianCtrl;
 use App\Http\Controllers\RoomCtrl;
 use App\Http\Controllers\MigrasiCtrl;
 use App\Http\Controllers\SearchingCtrl;
-use App\Http\Controllers\master\PasienCtrl;
+use App\Http\Controllers\Master\PasienCtrl;
 
 Route::group(['middleware' => 'throttle: 250, 1', 'middleware' => 'acl'], function(){
 	Route::get('dashboard/{any}', function () {
