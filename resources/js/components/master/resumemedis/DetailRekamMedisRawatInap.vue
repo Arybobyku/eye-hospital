@@ -137,7 +137,7 @@ export default {
                 },
                 {
                     name: "RM.1.5",
-                    link: "/print/rekammedis/rawat-jalan/rm1dot5/",
+                    link: "/print/rekammedis/rawat-jalan/cpptpoli/",
                 },
                 {
                     name: "RM.1.6",
