@@ -2326,7 +2326,7 @@ class PasienCtrl extends Controller
                 $message = 'Catatan Keperawatan berhasil diupdate';
             } else {
                 // CREATE: buat baru
-                $data['created_by'] = date('Y-m-d');
+                $data['tanggal'] = date('Y-m-d');
                 $data['created_by'] = $pengguna_nama;
                 $data['id'] = '';
                 $dokumen = DokumenCatatanKeperawatan::create($data);
