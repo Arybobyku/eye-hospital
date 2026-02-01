@@ -461,92 +461,151 @@
               </div>
             </div>
         </div>
-<table class="form-rs">
-  <thead>
-    <tr>
-      <th>Tgl</th>
-      <th>Poliklinik</th>
-      <th>Penjelasan Edukasi Tentang</th>
-      <th>Tanda Tangan Nama Petugas & Profesi</th>
-      <th>Sasaran Edukasi<br>(Nama & Hubungannya dengan pasien)</th>
-      <th>Evaluasi</th>
-    </tr>
-  </thead>
+<div class="box-rme mb-4">
+  <h5 class="section-title-rme">Tabel Edukasi Pasien dan Keluarga</h5>
+  
+  <table class="form-rs">
+    <thead>
+      <tr>
+        <th>Tgl</th>
+        <th>Poliklinik</th>
+        <th>Penjelasan Edukasi Tentang</th>
+        <th>Tanda Tangan Nama Petugas & Profesi</th>
+        <th>Sasaran Edukasi<br>(Nama & Hubungannya dengan pasien)</th>
+        <th>Evaluasi</th>
+        <th style="width: 60px;">Aksi</th>
+      </tr>
+    </thead>
 
-  <tbody>
-    <tr>
-      <td><input type="date" v-model="form.row1_tanggal" class="line-input"></td>
-      <td><input type="text" v-model="form.row1_poliklinik" class="line-input"></td>
-      <td><input type="text" v-model="form.row1_penjelasan_edukasi" class="line-input"></td>
-      <td><input type="text" v-model="form.row1_ttd_petugas" class="line-input"></td>
-      <td><input type="text" v-model="form.row1_sasaran_edukasi" class="line-input"></td>
-      <td>
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="form.row1_eval_sudah_dimengerti" true-value="1" false-value="0">
-            <span>Sudah Dimengerti</span>
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="form.row1_eval_re_demonstrasi" true-value="1" false-value="0">
-            <span>Re-Demonstrasi</span>
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="form.row1_eval_re_edukasi" true-value="1" false-value="0">
-            <span>Re Edukasi</span>
-          </label>
-        </div>
-      </td>
-    </tr>
-
-    <tr>
-      <td><input type="date" v-model="form.row2_tanggal" class="line-input"></td>
-      <td><input type="text" v-model="form.row2_poliklinik" class="line-input"></td>
-      <td><input type="text" v-model="form.row2_penjelasan_edukasi" class="line-input"></td>
-      <td><input type="text" v-model="form.row2_ttd_petugas" class="line-input"></td>
-      <td><input type="text" v-model="form.row2_sasaran_edukasi" class="line-input"></td>
-      <td>
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="form.row2_eval_sudah_dimengerti" true-value="1" false-value="0">
-            <span>Sudah Dimengerti</span>
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="form.row2_eval_re_demonstrasi" true-value="1" false-value="0">
-            <span>Re-Demonstrasi</span>
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="form.row2_eval_re_edukasi" true-value="1" false-value="0">
-            <span>Re Edukasi</span>
-          </label>
-        </div>
-      </td>
-    </tr>
-
-    <tr>
-      <td><input type="date" v-model="form.row3_tanggal" class="line-input"></td>
-      <td><input type="text" v-model="form.row3_poliklinik" class="line-input"></td>
-      <td><input type="text" v-model="form.row3_penjelasan_edukasi" class="line-input"></td>
-      <td><input type="text" v-model="form.row3_ttd_petugas" class="line-input"></td>
-      <td><input type="text" v-model="form.row3_sasaran_edukasi" class="line-input"></td>
-      <td>
-        <div class="checkbox-group">
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="form.row3_eval_sudah_dimengerti" true-value="1" false-value="0">
-            <span>Sudah Dimengerti</span>
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="form.row3_eval_re_demonstrasi" true-value="1" false-value="0">
-            <span>Re-Demonstrasi</span>
-          </label>
-          <label class="checkbox-label">
-            <input type="checkbox" v-model="form.row3_eval_re_edukasi" true-value="1" false-value="0">
-            <span>Re Edukasi</span>
-          </label>
-        </div>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    <tbody>
+      <tr v-for="(item, index) in form.tabel_edukasi" :key="index">
+        <td>
+          <input 
+            type="date" 
+            v-model="item.tanggal" 
+            class="line-input1"
+            :disabled="disabledSubmit"
+          >
+        </td>
+        <td>
+          <input 
+            type="text" 
+            v-model="item.poliklinik" 
+            class="line-input1"
+            :disabled="disabledSubmit"
+          >
+        </td>
+        <td>
+          <input 
+            type="text" 
+            v-model="item.penjelasan_edukasi" 
+            class="line-input1"
+            :disabled="disabledSubmit"
+          >
+        </td>
+        <td>
+          <div class="dokter-dpjp-box">
+            <div class="ttd-container-small">
+              <VueSignaturePad 
+                :ref="`ttd_petugas_${index}`" 
+                :options="sigOption" 
+                class="signature-box-header" 
+              />
+              <div class="signature-actions mt-2" v-if="!disabledSubmit">
+                <button 
+                  @click="clearSign(index)" 
+                  class="btn-clear mt-2"
+                  type="button"
+                >
+                  Clear ↻
+                </button>
+                <button 
+                  @click="saveSign(index)" 
+                  class="btn-save mt-2"
+                  type="button"
+                >
+                  Simpan ✔
+                </button>
+              </div>
+            </div>
+            <div class="input-dokter-dpjp">
+              <input 
+                type="text" 
+                v-model="item.nama_petugas" 
+                class="line-input1" 
+                placeholder="Nama Dokter DPJP"
+                :disabled="disabledSubmit"
+              >
+            </div>
+          </div>
+        </td>
+        <td>
+          <input 
+            type="text" 
+            v-model="item.sasaran_edukasi" 
+            class="line-input1"
+            :disabled="disabledSubmit"
+          >
+        </td>
+        <td>
+          <div class="checkbox-group">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                v-model="item.eval_sudah_dimengerti" 
+                true-value="1" 
+                false-value="0"
+                :disabled="disabledSubmit"
+              >
+              <span>Sudah Dimengerti</span>
+            </label>
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                v-model="item.eval_re_demonstrasi" 
+                true-value="1" 
+                false-value="0"
+                :disabled="disabledSubmit"
+              >
+              <span>Re-Demonstrasi</span>
+            </label>
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                v-model="item.eval_re_edukasi" 
+                true-value="1" 
+                false-value="0"
+                :disabled="disabledSubmit"
+              >
+              <span>Re Edukasi</span>
+            </label>
+          </div>
+        </td>
+        <td style="text-align: center;">
+          <button 
+            @click="hapusTabelEdukasi(index)" 
+            class="btn-delete-small" 
+            v-if="form.tabel_edukasi.length > 1 && !disabledSubmit"
+            type="button"
+            title="Hapus baris"
+          >
+            ✕
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <!-- Tombol Tambah Baris -->
+  <button 
+    @click="tambahTabelEdukasi" 
+    class="btn-add mt-2"
+    type="button"
+    v-if="!disabledSubmit"
+  >
+    ➕ Tambah Baris
+  </button>
+</div>
      </div>
      
 
@@ -594,6 +653,7 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      disabledSubmit: false, // ✅ TAMBAHKAN
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -603,10 +663,11 @@ export default {
         uuid_pasien: "",
         no_rm: "",
         nama_pasien: "",
-        nama: "",              // ← TAMBAHKAN INI
+        nama: "",
         nik: "", 
         tanggal_lahir: "",
         jenis_kelamin: "L",
+        alamat: "",
         
         // Pengkajian Hambatan
         hambatan_bahasa: "0",
@@ -690,41 +751,25 @@ export default {
         rencana_edukasi_kolaboratif: "0",
         rencana_lain_lain: "0",
         rencana_lain_lain_jelaskan: "",
-      
         
         // Kebutuhan Privasi
         privasi_ya: "0",
         privasi_tidak: "0",
-        
-        // Tabel Edukasi Row 1
-        row1_tanggal: "",
-        row1_poliklinik: "",
-        row1_penjelasan_edukasi: "",
-        row1_ttd_petugas: "",
-        row1_sasaran_edukasi: "",
-        row1_eval_sudah_dimengerti: "0",
-        row1_eval_re_demonstrasi: "0",
-        row1_eval_re_edukasi: "0",
-        
-        // Tabel Edukasi Row 2
-        row2_tanggal: "",
-        row2_poliklinik: "",
-        row2_penjelasan_edukasi: "",
-        row2_ttd_petugas: "",
-        row2_sasaran_edukasi: "",
-        row2_eval_sudah_dimengerti: "0",
-        row2_eval_re_demonstrasi: "0",
-        row2_eval_re_edukasi: "0",
-        
-        // Tabel Edukasi Row 3
-        row3_tanggal: "",
-        row3_poliklinik: "",
-        row3_penjelasan_edukasi: "",
-        row3_ttd_petugas: "",
-        row3_sasaran_edukasi: "",
-        row3_eval_sudah_dimengerti: "0",
-        row3_eval_re_demonstrasi: "0",
-        row3_eval_re_edukasi: "0",
+
+        // ✅ TABEL EDUKASI DINAMIS
+        tabel_edukasi: [
+          {
+            tanggal: "",
+            poliklinik: "",
+            penjelasan_edukasi: "",
+            ttd_petugas: "",
+            nama_petugas: "",
+            sasaran_edukasi: "",
+            eval_sudah_dimengerti: "0",
+            eval_re_demonstrasi: "0",
+            eval_re_edukasi: "0"
+          }
+        ],
         
         // Tanda Tangan Pengkaji
         ttd_pengkaji: "",
@@ -741,12 +786,15 @@ export default {
   mounted() {
     console.log("🟢 COMPONENT - Mounted");
     console.log("🟢 COMPONENT - editData:", this.editData);
+    console.log("🟢 COMPONENT - viewData:", this.viewData);
     console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
+    
     this.disabledSubmit = false;
-      if(this.viewData){
-        this.disabledSubmit = true;
-        this.loadDataForEdit();
-      }else if (this.editData) {
+    
+    if (this.viewData) {
+      this.disabledSubmit = true;
+      this.loadDataForEdit();
+    } else if (this.editData) {
       console.log("🟢 MODE: EDIT");
       this.loadDataForEdit();
     } else {
@@ -756,62 +804,109 @@ export default {
   },
   
   methods: {
-  loadDataForEdit() {
-    console.log("🟢 LOAD EDIT - Mulai load data");
-    console.log("🟢 LOAD EDIT - editData yang diterima:", this.editData);
-  
-    try {
-      const dataSource = this.editData || this.viewData; // ✅ INI PENTING
-    
-      if (!dataSource) {
-        console.warn("🟢 LOAD EDIT - Tidak ada data!");
-        this.setDataForm();
-        return;
-      }
-    
-      // Populate form
-      Object.keys(this.form).forEach((key) => {
-        if (dataSource.hasOwnProperty(key)) {
-          let value = dataSource[key];
-          this.form[key] = value !== null ? value : "";
-        }
-      });
-    
-      console.log("🟢 LOAD EDIT - Form setelah populate:", this.form);
-    
-      // 🔥 LOAD SIGNATURE SETELAH DOM SIAP
-      this.$nextTick(() => {
-        this.loadSignatures(dataSource);
-      });
-    
-    } catch (error) {
-      console.error("🟢 LOAD EDIT - Error:", error);
-      alert("Gagal memuat data untuk edit!");
-      this.$emit("back");
-    }
-  },
-
-
-loadSignatures(data) {
-  const signatures = [
-    'row1_ttd_petugas',
-    'row2_ttd_petugas',
-    'row3_ttd_petugas',
-    'ttd_pengkaji',
-  ];
-
-  signatures.forEach(sig => {
-    if (data[sig] && this.$refs[sig]) {
+    // ✅ LOAD DATA FOR EDIT
+    loadDataForEdit() {
+      console.log("🟢 LOAD EDIT - Mulai load data");
+      
       try {
-        this.$refs[sig].fromDataURL(data[sig]);
-      } catch (err) {
-        console.error(`Gagal load signature ${sig}:`, err);
+        const dataSource = this.editData || this.viewData;
+      
+        if (!dataSource) {
+          console.warn("🟢 LOAD EDIT - Tidak ada data!");
+          this.setDataForm();
+          return;
+        }
+      
+        // Populate form (skip tabel_edukasi)
+        Object.keys(this.form).forEach((key) => {
+          if (key === 'tabel_edukasi') return; // Skip, handle terpisah
+          
+          if (dataSource.hasOwnProperty(key)) {
+            let value = dataSource[key];
+            this.form[key] = value !== null ? value : "";
+          }
+        });
+
+        // ✅ Load tabel_edukasi
+        if (dataSource.tabel_edukasi) {
+          try {
+            // Jika string JSON, parse
+            if (typeof dataSource.tabel_edukasi === 'string') {
+              this.form.tabel_edukasi = JSON.parse(dataSource.tabel_edukasi);
+            } 
+            // Jika sudah array
+            else if (Array.isArray(dataSource.tabel_edukasi)) {
+              this.form.tabel_edukasi = dataSource.tabel_edukasi;
+            }
+            
+            // Validasi: pastikan minimal 1 baris
+            if (!this.form.tabel_edukasi || this.form.tabel_edukasi.length === 0) {
+              this.form.tabel_edukasi = [this.createEmptyTabelRow()];
+            }
+          } catch (e) {
+            console.error("Error parsing tabel_edukasi:", e);
+            this.form.tabel_edukasi = [this.createEmptyTabelRow()];
+          }
+        } else {
+          // Jika tidak ada data tabel, buat baris kosong
+          this.form.tabel_edukasi = [this.createEmptyTabelRow()];
+        }
+      
+        console.log("🟢 LOAD EDIT - Form setelah populate:", this.form);
+        console.log("🟢 LOAD EDIT - tabel_edukasi:", this.form.tabel_edukasi);
+      
+        // Load signature setelah DOM siap
+        this.$nextTick(() => {
+          this.loadSignatures(dataSource);
+        });
+      
+      } catch (error) {
+        console.error("🟢 LOAD EDIT - Error:", error);
+        alert("Gagal memuat data untuk edit!");
+        this.$emit("back");
       }
-    }
-  });
-},
+    },
 
+    // ✅ LOAD SIGNATURES
+    loadSignatures(data) {
+      // Load signature pengkaji
+      if (data.ttd_pengkaji && this.$refs.ttd_pengkaji) {
+        try {
+          this.$refs.ttd_pengkaji.fromDataURL(data.ttd_pengkaji);
+          console.log("✅ Loaded ttd_pengkaji");
+        } catch (err) {
+          console.error('Gagal load signature ttd_pengkaji:', err);
+        }
+      }
 
+      // Load signatures tabel
+      if (this.form.tabel_edukasi && Array.isArray(this.form.tabel_edukasi)) {
+        this.form.tabel_edukasi.forEach((item, index) => {
+          if (item.ttd_petugas) {
+            this.$nextTick(() => {
+              const refKey = `ttd_petugas_${index}`;
+              const pad = this.$refs[refKey];
+              
+              if (pad) {
+                try {
+                  // Ref dalam v-for adalah array
+                  if (Array.isArray(pad) && pad[0]) {
+                    pad[0].fromDataURL(item.ttd_petugas);
+                  } else {
+                    pad.fromDataURL(item.ttd_petugas);
+                  }
+                  console.log(`✅ Loaded signature tabel ${index}`);
+                } catch (err) {
+                  console.error(`Gagal load ttd tabel ${index}:`, err);
+                }
+              }
+            });
+          }
+        });
+      }
+    },
+
+    // ✅ SET DATA FORM (untuk mode CREATE)
     setDataForm() {
       const today = new Date();
       this.form.tanggal_pengkaji = today.toISOString().split("T")[0];
@@ -820,46 +915,142 @@ loadSignatures(data) {
       if (this.selectedPatient) {
         this.form.uuid_pasien = this.selectedPatient.uuid;
         this.form.no_rm = this.selectedPatient.rekam_medis;
-        this.form.nama_pasien = this.selectedPatient.nama;          // ← TAMBAHKAN
+        this.form.nama_pasien = this.selectedPatient.nama;
         this.form.nik = this.selectedPatient.nik || ""; 
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
         this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin || "L";
         this.form.alamat = this.selectedPatient.alamat || "";
-
+      }
+      
+      // Pastikan tabel_edukasi ada minimal 1 baris
+      if (!this.form.tabel_edukasi || this.form.tabel_edukasi.length === 0) {
+        this.form.tabel_edukasi = [this.createEmptyTabelRow()];
       }
     },
 
-    saveSign(refName) {
-      const pad = this.$refs[refName];
-      if (!pad) {
-        console.error("REF tidak ditemukan:", refName);
-        return;
-      }
-
-      const { data } = pad.saveSignature();
-      this.form[refName] = data;
-      console.log("TTD saved:", refName);
+    // ✅ CREATE EMPTY ROW
+    createEmptyTabelRow() {
+      return {
+        tanggal: "",
+        poliklinik: "",
+        penjelasan_edukasi: "",
+        ttd_petugas: "",
+        nama_petugas: "",
+        sasaran_edukasi: "",
+        eval_sudah_dimengerti: "0",
+        eval_re_demonstrasi: "0",
+        eval_re_edukasi: "0"
+      };
     },
 
-    clearSign(refName) {
-      const pad = this.$refs[refName];
-      if (pad) {
-        pad.clearSignature();
+    // ✅ TAMBAH BARIS TABEL
+    tambahTabelEdukasi() {
+      this.form.tabel_edukasi.push(this.createEmptyTabelRow());
+      console.log("✅ Baris baru ditambahkan. Total:", this.form.tabel_edukasi.length);
+    },
+
+    // ✅ HAPUS BARIS TABEL
+    hapusTabelEdukasi(index) {
+      if (this.form.tabel_edukasi.length > 1) {
+        this.form.tabel_edukasi.splice(index, 1);
+        console.log(`✅ Baris ${index} dihapus. Total:`, this.form.tabel_edukasi.length);
+      } else {
+        alert("Minimal harus ada 1 baris!");
       }
     },
 
+    // ✅ SAVE SIGNATURE (support tabel dinamis)
+    saveSign(refNameOrIndex) {
+      let pad;
+      
+      // Jika angka (untuk tabel)
+      if (typeof refNameOrIndex === 'number') {
+        const index = refNameOrIndex;
+        const refKey = `ttd_petugas_${index}`;
+        pad = this.$refs[refKey];
+        
+        if (pad) {
+          try {
+            // Ref dalam v-for adalah array
+            const signPad = Array.isArray(pad) ? pad[0] : pad;
+            const { data } = signPad.saveSignature();
+            
+            this.form.tabel_edukasi[index].ttd_petugas = data;
+            console.log(`✅ TTD tabel ${index} saved`);
+            alert(`Tanda tangan baris ${index + 1} tersimpan!`);
+          } catch (err) {
+            console.error(`Error save ttd tabel ${index}:`, err);
+            alert("Gagal menyimpan tanda tangan!");
+          }
+        } else {
+          console.error(`Ref ${refKey} tidak ditemukan`);
+        }
+      } 
+      // Jika string (untuk signature lain seperti pengkaji)
+      else {
+        pad = this.$refs[refNameOrIndex];
+        if (pad) {
+          const { data } = pad.saveSignature();
+          this.form[refNameOrIndex] = data;
+          console.log("✅ TTD saved:", refNameOrIndex);
+          alert("Tanda tangan tersimpan!");
+        } else {
+          console.error("REF tidak ditemukan:", refNameOrIndex);
+        }
+      }
+    },
+
+    // ✅ CLEAR SIGNATURE (support tabel dinamis)
+    clearSign(refNameOrIndex) {
+      let pad;
+      
+      if (typeof refNameOrIndex === 'number') {
+        const index = refNameOrIndex;
+        const refKey = `ttd_petugas_${index}`;
+        pad = this.$refs[refKey];
+        
+        if (pad) {
+          const signPad = Array.isArray(pad) ? pad[0] : pad;
+          signPad.clearSignature();
+          this.form.tabel_edukasi[index].ttd_petugas = "";
+          console.log(`✅ TTD tabel ${index} cleared`);
+        }
+      } else {
+        pad = this.$refs[refNameOrIndex];
+        if (pad) {
+          pad.clearSignature();
+          this.form[refNameOrIndex] = "";
+          console.log("✅ TTD cleared:", refNameOrIndex);
+        }
+      }
+    },
+
+    // ✅ SUBMIT FORM
     async submitForm() {
       this.loadingSubmit = true;
 
       try {
         const fd = new FormData();
 
+        // Append semua field kecuali tabel_edukasi
         Object.keys(this.form).forEach((key) => {
           if (key === "uuid" && !this.form[key]) {
             return;
           }
+          
+          // Skip tabel_edukasi, akan di-handle terpisah
+          if (key === "tabel_edukasi") {
+            return;
+          }
+          
           fd.append(key, this.form[key]);
         });
+
+        // ✅ Serialize tabel_edukasi sebagai JSON
+        fd.append('tabel_edukasi', JSON.stringify(this.form.tabel_edukasi));
+
+        console.log("📤 Mengirim data form:");
+        console.log("📤 tabel_edukasi:", this.form.tabel_edukasi);
 
         const response = await axios.post(
           "/master/pasien/form-edukasi-pasien-dan-keluarga-rawat-jalan",
@@ -870,6 +1061,8 @@ loadSignatures(data) {
         if (response.data.status) {
           alert(response.data.message);
           this.$emit("back");
+        } else {
+          alert(response.data.message || "Gagal menyimpan!");
         }
       } catch (error) {
         console.error("ERROR:", error.response?.data || error);
@@ -924,9 +1117,67 @@ loadSignatures(data) {
   font-size: 14px;
 }
 
+.btn-add {
+  background: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.btn-add:hover {
+  background: #45a049;
+}
+
+.btn-delete-small {
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete-small:hover {
+  background: #d32f2f;
+}
+
+.dokter-dpjp-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ttd-container-small {
+  width: 100%;
+}
+
+.signature-box-header {
+  width: 100% !important;
+  height: 120px !important;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
 .line-input {
   width: 100%;
   border: none;
+  padding: 2px;
+  font-size: 14px;
+}
+
+.line-input1 {
+  width: 100%;
+  border: 1px solid #000;
   padding: 2px;
   font-size: 14px;
 }

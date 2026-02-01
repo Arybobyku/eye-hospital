@@ -113,36 +113,9 @@ class FormEdukasiPasienDanKeluargaRawatJalan extends Model
         // ===== Kebutuhan Privasi =====
         'privasi_ya',
         'privasi_tidak',
-        
-        // ===== Tabel Edukasi Row 1 =====
-        'row1_tanggal',
-        'row1_poliklinik',
-        'row1_penjelasan_edukasi',
-        'row1_ttd_petugas',
-        'row1_sasaran_edukasi',
-        'row1_eval_sudah_dimengerti',
-        'row1_eval_re_demonstrasi',
-        'row1_eval_re_edukasi',
-        
-        // ===== Tabel Edukasi Row 2 =====
-        'row2_tanggal',
-        'row2_poliklinik',
-        'row2_penjelasan_edukasi',
-        'row2_ttd_petugas',
-        'row2_sasaran_edukasi',
-        'row2_eval_sudah_dimengerti',
-        'row2_eval_re_demonstrasi',
-        'row2_eval_re_edukasi',
-        
-        // ===== Tabel Edukasi Row 3 =====
-        'row3_tanggal',
-        'row3_poliklinik',
-        'row3_penjelasan_edukasi',
-        'row3_ttd_petugas',
-        'row3_sasaran_edukasi',
-        'row3_eval_sudah_dimengerti',
-        'row3_eval_re_demonstrasi',
-        'row3_eval_re_edukasi',
+
+        // ✅ TABEL EDUKASI DINAMIS (JSON)
+        'tabel_edukasi',
         
         // ===== Tanda Tangan Pengkaji =====
         'ttd_pengkaji',
@@ -157,11 +130,11 @@ class FormEdukasiPasienDanKeluargaRawatJalan extends Model
 
     protected $casts = [
         'tanggal_lahir' => 'date',
-        'row1_tanggal' => 'date',
-        'row2_tanggal' => 'date',
-        'row3_tanggal' => 'date',
         'tanggal_pengkaji' => 'date',
         'waktu_pengkaji' => 'datetime',
+        
+        // ✅ CAST TABEL EDUKASI SEBAGAI JSON/ARRAY
+        'tabel_edukasi' => 'array',
     ];
 
     protected static function boot()
@@ -181,5 +154,46 @@ class FormEdukasiPasienDanKeluargaRawatJalan extends Model
     public function pasien()
     {
         return $this->belongsTo(Pasien::class, 'uuid_pasien', 'uuid');
+    }
+    
+    /**
+     * ✅ Accessor untuk tabel_edukasi
+     * Memastikan selalu return array
+     */
+    public function getTabelEdukasiAttribute($value)
+    {
+        if (empty($value)) {
+            return [];
+        }
+        
+        // Jika sudah array, return langsung
+        if (is_array($value)) {
+            return $value;
+        }
+        
+        // Jika string JSON, decode
+        $decoded = json_decode($value, true);
+        return is_array($decoded) ? $decoded : [];
+    }
+    
+    /**
+     * ✅ Mutator untuk tabel_edukasi
+     * Memastikan selalu disimpan sebagai JSON string
+     */
+    public function setTabelEdukasiAttribute($value)
+    {
+        if (empty($value)) {
+            $this->attributes['tabel_edukasi'] = json_encode([]);
+            return;
+        }
+        
+        // Jika sudah string JSON, simpan langsung
+        if (is_string($value)) {
+            $this->attributes['tabel_edukasi'] = $value;
+            return;
+        }
+        
+        // Jika array, encode ke JSON
+        $this->attributes['tabel_edukasi'] = json_encode($value);
     }
 }

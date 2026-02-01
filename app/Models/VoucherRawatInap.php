@@ -31,53 +31,8 @@ class VoucherRawatInap extends Model
         'admission_date',
         'discharge_date',
         
-        // ===== Tabel Kunjungan Row 1 =====
-        'row1_hari',
-        'row1_tanggal_jam',
-        'row1_paraf_dokter',
-        'row1_nama_dokter',
-        'row1_paraf_perawat',
-        'row1_nama_perawat',
-        
-        // ===== Tabel Kunjungan Row 2 =====
-        'row2_hari',
-        'row2_tanggal_jam',
-        'row2_paraf_dokter',
-        'row2_nama_dokter',
-        'row2_paraf_perawat',
-        'row2_nama_perawat',
-        
-        // ===== Tabel Kunjungan Row 3 =====
-        'row3_hari',
-        'row3_tanggal_jam',
-        'row3_paraf_dokter',
-        'row3_nama_dokter',
-        'row3_paraf_perawat',
-        'row3_nama_perawat',
-        
-        // ===== Tabel Kunjungan Row 4 =====
-        'row4_hari',
-        'row4_tanggal_jam',
-        'row4_paraf_dokter',
-        'row4_nama_dokter',
-        'row4_paraf_perawat',
-        'row4_nama_perawat',
-        
-        // ===== Tabel Kunjungan Row 5 =====
-        'row5_hari',
-        'row5_tanggal_jam',
-        'row5_paraf_dokter',
-        'row5_nama_dokter',
-        'row5_paraf_perawat',
-        'row5_nama_perawat',
-        
-        // ===== Tabel Kunjungan Row 6 =====
-        'row6_hari',
-        'row6_tanggal_jam',
-        'row6_paraf_dokter',
-        'row6_nama_dokter',
-        'row6_paraf_perawat',
-        'row6_nama_perawat',
+        // ===== Tabel Kunjungan (JSON) =====
+        'tabel_kunjungan',
         
         // ===== Voucher Honor Profesi =====
         'perawatan_visite',
@@ -118,13 +73,8 @@ class VoucherRawatInap extends Model
         'tanggal_lahir' => 'date',
         'admission_date' => 'date',
         'discharge_date' => 'date',
-        'row1_tanggal_jam' => 'datetime',
-        'row2_tanggal_jam' => 'datetime',
-        'row3_tanggal_jam' => 'datetime',
-        'row4_tanggal_jam' => 'datetime',
-        'row5_tanggal_jam' => 'datetime',
-        'row6_tanggal_jam' => 'datetime',
         'date_voucher' => 'date',
+        'tabel_kunjungan' => 'array', // ✅ Cast ke array otomatis
     ];
 
     protected static function boot()
@@ -144,5 +94,42 @@ class VoucherRawatInap extends Model
     public function pasien()
     {
         return $this->belongsTo(Pasien::class, 'uuid_pasien', 'uuid');
+    }
+
+    /**
+     * Accessor untuk memastikan tabel_kunjungan selalu array
+     */
+    public function getTabelKunjunganAttribute($value)
+    {
+        if (is_null($value) || $value === '') {
+            return [];
+        }
+        
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            return is_array($decoded) ? $decoded : [];
+        }
+        
+        return is_array($value) ? $value : [];
+    }
+
+    /**
+     * Mutator untuk memastikan tabel_kunjungan tersimpan sebagai JSON
+     */
+    public function setTabelKunjunganAttribute($value)
+    {
+        if (is_array($value)) {
+            $this->attributes['tabel_kunjungan'] = json_encode($value);
+        } elseif (is_string($value)) {
+            // Validasi apakah string sudah valid JSON
+            $decoded = json_decode($value, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $this->attributes['tabel_kunjungan'] = $value;
+            } else {
+                $this->attributes['tabel_kunjungan'] = json_encode([]);
+            }
+        } else {
+            $this->attributes['tabel_kunjungan'] = json_encode([]);
+        }
     }
 }

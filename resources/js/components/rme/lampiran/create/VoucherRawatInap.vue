@@ -68,7 +68,7 @@
       <!-- ================= TABEL KUNJUNGAN DOKTER ================= -->
       <div class="box-rme mb-4">
         <h5 class="section-title-rme">Catatan Kunjungan Dokter</h5>
-        
+
         <table class="form-rs">
           <thead>
             <tr>
@@ -76,34 +76,116 @@
               <th>TANGGAL-JAM</th>
               <th>PARAF DOKTER</th>
               <th>PARAF PERAWAT</th>
+              <th style="width: 60px;">Aksi</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="i in 6" :key="i">
-              <td><input type="text" v-model="form[`row${i}_hari`]" class="line-input"></td>
-              <td><input type="datetime-local" v-model="form[`row${i}_tanggal_jam`]" class="line-input"></td>
+            <tr v-for="(item, index) in form.tabel_kunjungan" :key="index">
+              <td>
+                <input 
+                  type="text" 
+                  v-model="item.hari" 
+                  class="line-input"
+                  :disabled="disabledSubmit"
+                >
+              </td>
+              <td>
+                <input 
+                  type="datetime-local" 
+                  v-model="item.tanggal_jam" 
+                  class="line-input"
+                  :disabled="disabledSubmit"
+                >
+              </td>
               <td>
                 <div class="text-center">
-                  <VueSignaturePad :ref="`ttd_dokter_${i}`" :options="sigOption" class="signature-box-rme-small mx-auto" />
-                  <input type="text" v-model="form[`row${i}_nama_dokter`]" class="input-rme1 mt-2" placeholder="Nama Dokter" />
-                  <div class="signature-actions mt-2">
-                      <button @click="clearSignRow(i, 'dokter')" class="btn-clear mt-2"> Ulang ↻ </button>
-                  <button @click="saveSignRow(i, 'dokter')" class="btn-save mt-2">Simpan ✔</button></div>
+                  <VueSignaturePad 
+                    :ref="`ttd_dokter_${index}`" 
+                    :options="sigOption" 
+                    class="signature-box-rme-small mx-auto" 
+                  />
+                  <input 
+                    type="text" 
+                    v-model="item.nama_dokter" 
+                    class="input-rme mt-2" 
+                    placeholder="Nama Dokter"
+                    :disabled="disabledSubmit"
+                  />
+                  <div class="signature-actions mt-2" v-if="!disabledSubmit">
+                    <button 
+                      @click="clearSignKunjungan(index, 'dokter')" 
+                      class="btn-clear"
+                      type="button"
+                    >
+                      Ulang ↻
+                    </button>
+                    <button 
+                      @click="saveSignKunjungan(index, 'dokter')" 
+                      class="btn-save"
+                      type="button"
+                    >
+                      Simpan ✔
+                    </button>
+                  </div>
                 </div>
               </td>
               <td>
                 <div class="text-center">
-                  <VueSignaturePad :ref="`ttd_perawat_${i}`" :options="sigOption" class="signature-box-rme-small mx-auto" />
-                  <input type="text" v-model="form[`row${i}_nama_perawat`]" class="input-rme1 mt-2" placeholder="Nama Perawat" />
-                                    <div class="signature-actions mt-2">
-                      <button @click="clearSignRow(i, 'perawat')" class="btn-clear mt-2"> Ulang ↻ </button>
-                  <button @click="saveSignRow(i, 'perawat')" class="btn-save mt-2">Simpan ✔</button> </div>
+                  <VueSignaturePad 
+                    :ref="`ttd_perawat_${index}`" 
+                    :options="sigOption" 
+                    class="signature-box-rme-small mx-auto" 
+                  />
+                  <input 
+                    type="text" 
+                    v-model="item.nama_perawat" 
+                    class="input-rme mt-2" 
+                    placeholder="Nama Perawat"
+                    :disabled="disabledSubmit"
+                  />
+                  <div class="signature-actions mt-2" v-if="!disabledSubmit">
+                    <button 
+                      @click="clearSignKunjungan(index, 'perawat')" 
+                      class="btn-clear"
+                      type="button"
+                    >
+                      Ulang ↻
+                    </button>
+                    <button 
+                      @click="saveSignKunjungan(index, 'perawat')" 
+                      class="btn-save"
+                      type="button"
+                    >
+                      Simpan ✔
+                    </button>
+                  </div>
                 </div>
+              </td>
+              <td style="text-align: center;">
+                <button 
+                  @click="hapusTabelKunjungan(index)" 
+                  class="btn-delete-small" 
+                  v-if="form.tabel_kunjungan.length > 1 && !disabledSubmit"
+                  type="button"
+                  title="Hapus baris"
+                >
+                  ✕
+                </button>
               </td>
             </tr>
           </tbody>
         </table>
-        
+
+        <!-- Tombol Tambah Baris -->
+        <button 
+          @click="tambahTabelKunjungan" 
+          class="btn-add mt-2"
+          type="button"
+          v-if="!disabledSubmit"
+        >
+          ➕ Tambah Baris
+        </button>
+
         <div class="italic-note mt-3">
           <p><strong><em>FORMULIR INI HANYA UNTUK SATU DOKTER. HARAP GUNAKAN FORMULIR LAIN UNTUK DOKTER YANG BERBEDA</em></strong></p>
         </div>
@@ -311,53 +393,17 @@ export default {
         admission_date: "",
         discharge_date: "",
         
-        // Tabel Kunjungan Row 1
-        row1_hari: "",
-        row1_tanggal_jam: "",
-        row1_paraf_dokter: "",
-        row1_nama_dokter: "",
-        row1_paraf_perawat: "",
-        row1_nama_perawat: "",
-        
-        // Tabel Kunjungan Row 2
-        row2_hari: "",
-        row2_tanggal_jam: "",
-        row2_paraf_dokter: "",
-        row2_nama_dokter: "",
-        row2_paraf_perawat: "",
-        row2_nama_perawat: "",
-        
-        // Tabel Kunjungan Row 3
-        row3_hari: "",
-        row3_tanggal_jam: "",
-        row3_paraf_dokter: "",
-        row3_nama_dokter: "",
-        row3_paraf_perawat: "",
-        row3_nama_perawat: "",
-        
-        // Tabel Kunjungan Row 4
-        row4_hari: "",
-        row4_tanggal_jam: "",
-        row4_paraf_dokter: "",
-        row4_nama_dokter: "",
-        row4_paraf_perawat: "",
-        row4_nama_perawat: "",
-        
-        // Tabel Kunjungan Row 5
-        row5_hari: "",
-        row5_tanggal_jam: "",
-        row5_paraf_dokter: "",
-        row5_nama_dokter: "",
-        row5_paraf_perawat: "",
-        row5_nama_perawat: "",
-        
-        // Tabel Kunjungan Row 6
-        row6_hari: "",
-        row6_tanggal_jam: "",
-        row6_paraf_dokter: "",
-        row6_nama_dokter: "",
-        row6_paraf_perawat: "",
-        row6_nama_perawat: "",
+        // ✅ TAMBAHAN SAJA
+        tabel_kunjungan: [
+          {
+            hari: "",
+            tanggal_jam: "",
+            paraf_dokter: "",
+            nama_dokter: "",
+            paraf_perawat: "",
+            nama_perawat: "",
+          }
+        ],
         
         // Voucher Honor Profesi
         perawatan_visite: "",
@@ -395,61 +441,120 @@ export default {
     };
   },
   
-mounted() {
-  console.log("🟢 COMPONENT - Mounted");
-  console.log("🟢 COMPONENT - editData:", this.editData);
-  console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
-  
-this.disabledSubmit = false;
-  if(this.viewData){
-    this.disabledSubmit = true;
-    this.loadDataForEdit();
-  }else if (this.editData) {
-    console.log("🟢 MODE: EDIT");
-    this.loadDataForEdit();
-  } else {
-    console.log("🟢 MODE: CREATE");
-    this.setDataForm();
-  }
-},
+  mounted() {
+    console.log("🟢 COMPONENT - Mounted");
+    console.log("🟢 COMPONENT - editData:", this.editData);
+    console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
+    
+    this.disabledSubmit = false;
+    if(this.viewData){
+      this.disabledSubmit = true;
+      this.loadDataForEdit();
+    }else if (this.editData) {
+      console.log("🟢 MODE: EDIT");
+      this.loadDataForEdit();
+    } else {
+      console.log("🟢 MODE: CREATE");
+      this.setDataForm();
+    }
+  },
   
   methods: {
-loadDataForEdit() {
-  console.log("🟢 LOAD EDIT - Mulai load data");
-  console.log("🟢 LOAD EDIT - editData yang diterima:", this.editData);
-  
-  try {
-    if (!this.editData) {
-      console.warn("🟢 LOAD EDIT - Tidak ada editData!");
-      this.setDataForm(); // Fallback ke create mode
-      return;
-    }
-
-    // ✅ Populate form dengan data dari editData
-    Object.keys(this.form).forEach((key) => {
-      if (this.editData.hasOwnProperty(key)) {
-        // Konversi value yang mungkin berbeda tipe
-        let value = this.editData[key];
+    loadDataForEdit() {
+      console.log("🟢 LOAD EDIT - Mulai load data");
+      console.log("🟢 LOAD EDIT - editData yang diterima:", this.editData);
+      
+      try {
+        // ✅ TIDAK DIUBAH - tetap pakai this.editData (atau this.viewData kalau ada)
+        const dataSource = this.editData || this.viewData;
         
-        // Handle checkbox (convert ke string "0" atau "1")
-        if (key.startsWith('check_')) {
-          this.form[key] = value ? "1" : "0";
-        } else {
-          this.form[key] = value !== null ? value : "";
+        if (!dataSource) {
+          console.warn("🟢 LOAD EDIT - Tidak ada editData!");
+          this.setDataForm(); // Fallback ke create mode
+          return;
         }
-        
-        console.log(`🟢 Set ${key}:`, this.form[key]);
+
+        // ✅ Populate form dengan data dari editData - TIDAK DIUBAH
+        Object.keys(this.form).forEach((key) => {
+          // ✅ HANYA TAMBAHAN INI
+          if (key === 'tabel_kunjungan') return;
+          
+          if (dataSource.hasOwnProperty(key)) {
+            // Konversi value yang mungkin berbeda tipe
+            let value = dataSource[key];
+            
+            // Handle checkbox (convert ke string "0" atau "1")
+            if (key.startsWith('check_')) {
+              this.form[key] = value ? "1" : "0";
+            } else {
+              this.form[key] = value !== null ? value : "";
+            }
+            
+            console.log(`🟢 Set ${key}:`, this.form[key]);
+          }
+        });
+
+        // ✅ TAMBAHAN: Handle tabel_kunjungan
+        if (dataSource.tabel_kunjungan) {
+          if (typeof dataSource.tabel_kunjungan === 'string') {
+            try {
+              this.form.tabel_kunjungan = JSON.parse(dataSource.tabel_kunjungan);
+            } catch (e) {
+              console.error("Error parsing tabel_kunjungan:", e);
+            }
+          } else if (Array.isArray(dataSource.tabel_kunjungan)) {
+            this.form.tabel_kunjungan = dataSource.tabel_kunjungan;
+          }
+        }
+
+        console.log("🟢 LOAD EDIT - Form setelah populate:", this.form);
+
+        // ✅ TAMBAHAN: Load TTD
+        this.$nextTick(() => {
+          this.loadSignaturesToCanvas();
+        });
+
+      } catch (error) {
+        console.error("🟢 LOAD EDIT - Error:", error);
+        alert("Gagal memuat data untuk edit!");
+        this.$emit("back");
       }
-    });
+    },
 
-    console.log("🟢 LOAD EDIT - Form setelah populate:", this.form);
-
-  } catch (error) {
-    console.error("🟢 LOAD EDIT - Error:", error);
-    alert("Gagal memuat data untuk edit!");
-    this.$emit("back");
-  }
-},
+    // ✅ METHOD BARU
+    loadSignaturesToCanvas() {
+      if (this.form.tabel_kunjungan) {
+        this.form.tabel_kunjungan.forEach((item, index) => {
+          if (item.paraf_dokter) {
+            const refDokter = this.$refs[`ttd_dokter_${index}`];
+            const padDokter = Array.isArray(refDokter) ? refDokter[0] : refDokter;
+            if (padDokter && padDokter.fromDataURL) {
+              padDokter.fromDataURL(item.paraf_dokter);
+            }
+          }
+          if (item.paraf_perawat) {
+            const refPerawat = this.$refs[`ttd_perawat_${index}`];
+            const padPerawat = Array.isArray(refPerawat) ? refPerawat[0] : refPerawat;
+            if (padPerawat && padPerawat.fromDataURL) {
+              padPerawat.fromDataURL(item.paraf_perawat);
+            }
+          }
+        });
+      }
+      
+      if (this.form.ttd_dibuat_oleh) {
+        const pad = this.$refs.ttd_dibuat_oleh;
+        if (pad && pad.fromDataURL) {
+          pad.fromDataURL(this.form.ttd_dibuat_oleh);
+        }
+      }
+      if (this.form.ttd_dokter) {
+        const pad = this.$refs.ttd_dokter;
+        if (pad && pad.fromDataURL) {
+          pad.fromDataURL(this.form.ttd_dokter);
+        }
+      }
+    },
 
     setDataForm() {
       const today = new Date();
@@ -465,6 +570,61 @@ loadDataForEdit() {
       }
     },
     
+    // ✅ METHOD BARU untuk tabel dinamis
+    tambahTabelKunjungan() {
+      this.form.tabel_kunjungan.push({
+        hari: "",
+        tanggal_jam: "",
+        paraf_dokter: "",
+        nama_dokter: "",
+        paraf_perawat: "",
+        nama_perawat: "",
+      });
+    },
+
+    hapusTabelKunjungan(index) {
+      if (this.form.tabel_kunjungan.length > 1) {
+        this.form.tabel_kunjungan.splice(index, 1);
+      }
+    },
+
+    saveSignKunjungan(index, type) {
+      const refName = `ttd_${type}_${index}`;
+      const pad = this.$refs[refName];
+      const signaturePad = Array.isArray(pad) ? pad[0] : pad;
+      
+      if (!signaturePad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
+    
+      if (signaturePad.isEmpty()) {
+        alert("Silakan buat tanda tangan terlebih dahulu!");
+        return;
+      }
+    
+      const { data } = signaturePad.saveSignature();
+      this.form.tabel_kunjungan[index][`paraf_${type}`] = data;
+      
+      console.log(`TTD ${type} index ${index} saved`);
+      alert(`Tanda tangan ${type} berhasil disimpan!`);
+    },
+
+    clearSignKunjungan(index, type) {
+      const refName = `ttd_${type}_${index}`;
+      const pad = this.$refs[refName];
+      const signaturePad = Array.isArray(pad) ? pad[0] : pad;
+
+      if (!signaturePad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
+
+      signaturePad.clearSignature();
+      this.form.tabel_kunjungan[index][`paraf_${type}`] = "";
+    },
+    
+    // ✅ SEMUA METHOD LAMA TIDAK DIUBAH SAMA SEKALI
     saveSignRow(rowNum, type) {
       const refName = `ttd_${type}_${rowNum}`;
       const fieldName = `row${rowNum}_paraf_${type}`;
@@ -497,18 +657,17 @@ loadDataForEdit() {
     },
 
     clearSignRow(rowNum, type) {
-  const refName = `ttd_${type}_${rowNum}`;
-  const pad = this.$refs[refName];
-  const signaturePad = Array.isArray(pad) ? pad[0] : pad;
+      const refName = `ttd_${type}_${rowNum}`;
+      const pad = this.$refs[refName];
+      const signaturePad = Array.isArray(pad) ? pad[0] : pad;
 
-  if (!signaturePad) {
-    console.error("REF tidak ditemukan:", refName);
-    return;
-  }
+      if (!signaturePad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
 
-  signaturePad.clearSignature();
-},
-
+      signaturePad.clearSignature();
+    },
 
     saveSign(refName) {
       const pad = this.$refs[refName];
@@ -533,11 +692,17 @@ loadDataForEdit() {
         const fd = new FormData();
 
         Object.keys(this.form).forEach((key) => {
+          // ✅ HANYA TAMBAHAN INI
+          if (key === 'tabel_kunjungan') return;
+          
           if (key === "uuid" && !this.form[key]) {
             return;
           }
           fd.append(key, this.form[key] || "");
         });
+
+        // ✅ TAMBAHAN: append tabel_kunjungan
+        fd.append('tabel_kunjungan', JSON.stringify(this.form.tabel_kunjungan));
 
         const url = this.isEditMode && this.form.uuid
           ? `/master/pasien/voucher-rawat-inap/${this.form.uuid}`
@@ -645,6 +810,39 @@ loadDataForEdit() {
 
 .form-row-2 > div {
   flex: 1;
+}
+
+.btn-add {
+  background: #4caf50;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.btn-add:hover {
+  background: #45a049;
+}
+
+.btn-delete-small {
+  background: #f44336;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete-small:hover {
+  background: #d32f2f;
 }
 
 .signature-row-2 {

@@ -61,7 +61,7 @@
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">RM 9.10/SPPU/22</div>
     </div>
-        @include('print-rekam-medis.partials.header5')
+    @include('print-rekam-medis.partials.header5')
     
     {{-- INFO DOKTER --}}
     <table style="width:100%; border-collapse: collapse; border: 1px solid black;">
@@ -73,129 +73,80 @@
     </table>
     <br>
     
-{{-- TABEL KUNJUNGAN --}}
-<table style="width:100%; border-collapse: collapse; border: 1px solid black; margin-top: 5px; text-align: center;">
-    <tr>
-        <td class="tablee" style="width:15%;"><strong>HARI</strong></td>
-        <td class="tablee" style="width:25%;"><strong>TANGGAL-JAM</strong></td>
-        <td class="tablee" style="width:30%;"><strong>PARAF DOKTER</strong></td>
-        <td class="tablee" style="width:30%;"><strong>PARAF PERAWAT</strong></td>
-    </tr>
-    
-    {{-- ROW 1 --}}
-    <tr>
-        <td class="tablee">{{ $voucher->row1_hari ?? '' }}</td>
-        <td class="tablee">{{ $voucher->row1_tanggal_jam ? \Carbon\Carbon::parse($voucher->row1_tanggal_jam)->format('d-m-Y H:i') : '' }}</td>
-        <td class="tablee">
-            @if($voucher->row1_paraf_dokter)
-                <img src="{{ $voucher->row1_paraf_dokter }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row1_nama_dokter ?? '' }}</small>
-            @endif
-        </td>
-        <td class="tablee">
-            @if($voucher->row1_paraf_perawat)
-                <img src="{{ $voucher->row1_paraf_perawat }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row1_nama_perawat ?? '' }}</small>
-            @endif
-        </td>
-    </tr>
-    
-    {{-- ROW 2 --}}
-    <tr>
-        <td class="tablee">{{ $voucher->row2_hari ?? '' }}</td>
-        <td class="tablee">{{ $voucher->row2_tanggal_jam ? \Carbon\Carbon::parse($voucher->row2_tanggal_jam)->format('d-m-Y H:i') : '' }}</td>
-        <td class="tablee">
-            @if($voucher->row2_paraf_dokter)
-                <img src="{{ $voucher->row2_paraf_dokter }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row2_nama_dokter ?? '' }}</small>
-            @endif
-        </td>
-        <td class="tablee">
-            @if($voucher->row2_paraf_perawat)
-                <img src="{{ $voucher->row2_paraf_perawat }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row2_nama_perawat ?? '' }}</small>
-            @endif
-        </td>
-    </tr>
-    
-    {{-- ROW 3 --}}
-    <tr>
-        <td class="tablee">{{ $voucher->row3_hari ?? '' }}</td>
-        <td class="tablee">{{ $voucher->row3_tanggal_jam ? \Carbon\Carbon::parse($voucher->row3_tanggal_jam)->format('d-m-Y H:i') : '' }}</td>
-        <td class="tablee">
-            @if($voucher->row3_paraf_dokter)
-                <img src="{{ $voucher->row3_paraf_dokter }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row3_nama_dokter ?? '' }}</small>
-            @endif
-        </td>
-        <td class="tablee">
-            @if($voucher->row3_paraf_perawat)
-                <img src="{{ $voucher->row3_paraf_perawat }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row3_nama_perawat ?? '' }}</small>
-            @endif
-        </td>
-    </tr>
-    
-    {{-- ROW 4 --}}
-    <tr>
-        <td class="tablee">{{ $voucher->row4_hari ?? '' }}</td>
-        <td class="tablee">{{ $voucher->row4_tanggal_jam ? \Carbon\Carbon::parse($voucher->row4_tanggal_jam)->format('d-m-Y H:i') : '' }}</td>
-        <td class="tablee">
-            @if($voucher->row4_paraf_dokter)
-                <img src="{{ $voucher->row4_paraf_dokter }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row4_nama_dokter ?? '' }}</small>
-            @endif
-        </td>
-        <td class="tablee">
-            @if($voucher->row4_paraf_perawat)
-                <img src="{{ $voucher->row4_paraf_perawat }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row4_nama_perawat ?? '' }}</small>
-            @endif
-        </td>
-    </tr>
-    
-    {{-- ROW 5 --}}
-    <tr>
-        <td class="tablee">{{ $voucher->row5_hari ?? '' }}</td>
-        <td class="tablee">{{ $voucher->row5_tanggal_jam ? \Carbon\Carbon::parse($voucher->row5_tanggal_jam)->format('d-m-Y H:i') : '' }}</td>
-        <td class="tablee">
-            @if($voucher->row5_paraf_dokter)
-                <img src="{{ $voucher->row5_paraf_dokter }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row5_nama_dokter ?? '' }}</small>
-            @endif
-        </td>
-        <td class="tablee">
-            @if($voucher->row5_paraf_perawat)
-                <img src="{{ $voucher->row5_paraf_perawat }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row5_nama_perawat ?? '' }}</small>
-            @endif
-        </td>
-    </tr>
-    
-    {{-- ROW 6 --}}
-    <tr>
-        <td class="tablee">{{ $voucher->row6_hari ?? '' }}</td>
-        <td class="tablee">{{ $voucher->row6_tanggal_jam ? \Carbon\Carbon::parse($voucher->row6_tanggal_jam)->format('d-m-Y H:i') : '' }}</td>
-        <td class="tablee">
-            @if($voucher->row6_paraf_dokter)
-                <img src="{{ $voucher->row6_paraf_dokter }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row6_nama_dokter ?? '' }}</small>
-            @endif
-        </td>
-        <td class="tablee">
-            @if($voucher->row6_paraf_perawat)
-                <img src="{{ $voucher->row6_paraf_perawat }}" style="max-width: 100px; max-height: 50px;">
-                <br><small>{{ $voucher->row6_nama_perawat ?? '' }}</small>
-            @endif
-        </td>
-    </tr>
-    
-    <tr>
-        <td colspan="4" style="font-style: italic; font-weight: bold; font-size: 12px; text-align: center; padding: 4px;">
-            FORMULIR INI HANYA UNTUK SATU DOKTER. HARAP GUNAKAN FORMULIR LAIN UNTUK DOKTER YANG BERBEDA
-        </td>        
-    </tr>
-</table>
+    {{-- TABEL KUNJUNGAN DINAMIS --}}
+    <table style="width:100%; border-collapse: collapse; border: 1px solid black; margin-top: 5px; text-align: center;">
+        <thead>
+            <tr>
+                <td class="tablee" style="width:15%;"><strong>HARI</strong></td>
+                <td class="tablee" style="width:25%;"><strong>TANGGAL-JAM</strong></td>
+                <td class="tablee" style="width:30%;"><strong>PARAF DOKTER</strong></td>
+                <td class="tablee" style="width:30%;"><strong>PARAF PERAWAT</strong></td>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+                // Decode JSON tabel_kunjungan
+                $tabelKunjungan = [];
+                
+                if (is_string($voucher->tabel_kunjungan)) {
+                    $tabelKunjungan = json_decode($voucher->tabel_kunjungan, true) ?? [];
+                } elseif (is_array($voucher->tabel_kunjungan)) {
+                    $tabelKunjungan = $voucher->tabel_kunjungan;
+                }
+                
+                // Jika tidak ada data, tampilkan minimal 1 row kosong
+                if (empty($tabelKunjungan)) {
+                    $tabelKunjungan = [
+                        [
+                            'hari' => '',
+                            'tanggal_jam' => '',
+                            'paraf_dokter' => '',
+                            'nama_dokter' => '',
+                            'paraf_perawat' => '',
+                            'nama_perawat' => ''
+                        ]
+                    ];
+                }
+            @endphp
+            
+            @foreach($tabelKunjungan as $index => $kunjungan)
+                <tr>
+                    {{-- HARI --}}
+                    <td class="tablee">{{ $kunjungan['hari'] ?? '' }}</td>
+                    
+                    {{-- TANGGAL-JAM --}}
+                    <td class="tablee">
+                        @if(!empty($kunjungan['tanggal_jam']))
+                            {{ \Carbon\Carbon::parse($kunjungan['tanggal_jam'])->format('d-m-Y H:i') }}
+                        @endif
+                    </td>
+                    
+                    {{-- PARAF DOKTER --}}
+                    <td class="tablee">
+                        @if(!empty($kunjungan['paraf_dokter']))
+                            <img src="{{ $kunjungan['paraf_dokter'] }}" style="max-width: 100px; max-height: 50px;">
+                            <br><small>{{ $kunjungan['nama_dokter'] ?? '' }}</small>
+                        @endif
+                    </td>
+                    
+                    {{-- PARAF PERAWAT --}}
+                    <td class="tablee">
+                        @if(!empty($kunjungan['paraf_perawat']))
+                            <img src="{{ $kunjungan['paraf_perawat'] }}" style="max-width: 100px; max-height: 50px;">
+                            <br><small>{{ $kunjungan['nama_perawat'] ?? '' }}</small>
+                        @endif
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" style="font-style: italic; font-weight: bold; font-size: 12px; text-align: center; padding: 4px;">
+                    FORMULIR INI HANYA UNTUK SATU DOKTER. HARAP GUNAKAN FORMULIR LAIN UNTUK DOKTER YANG BERBEDA
+                </td>        
+            </tr>
+        </tfoot>
+    </table>
     
     {{-- PAGE BREAK --}}
     <div style="page-break-after: always;"></div>

@@ -31,6 +31,19 @@
         .page_break {
             page-break-before: always;
         }
+        
+        /* ✅ STYLE UNTUK TTD DI TABEL */
+        .ttd-cell {
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .ttd-image {
+            max-width: 150px;
+            max-height: 80px;
+            display: block;
+            margin: 5px auto;
+        }
     </style>
 
 </head>
@@ -379,7 +392,7 @@
                             <td style="width: 17%;">Tanda Tangan: </td>
                             <td style="width: 15%; text-align: center;">
                                 @if($edukasiPasien->ttd_pengkaji)
-                                    <img src="{{ $edukasiPasien->ttd_pengkaji }}" style="max-width: 150px; max-height: 80px;" alt="TTD Pengkaji">
+                                    <img src="{{ $edukasiPasien->ttd_pengkaji }}" class="ttd-image" alt="TTD Pengkaji">
                                 @else
                                 @endif
                             </td>
@@ -388,130 +401,104 @@
                 </td>
             </tr>
         </table>
-        {{-- TABLE EDUKASI DETAIL --}}
-        <table class="tablee sizesmall" style="width:100%; border-collapse: collapse;">
+        
+        {{-- ✅ TABEL EDUKASI DINAMIS --}}
+        <table class="tablee sizesmall" style="width:100%; border-collapse: collapse; margin-top: 10px;">
             <thead>
                 <tr class="tablee">
                     <th class="tablee">Tanggal</th>
                     <th class="tablee">Poliklinik</th>
                     <th class="tablee">Penjelasan Edukasi Tentang</th>
-                    <th class="tablee">Tanda Tangan nama Petugas & Profesi</th>
-                    <th class="tablee">Sasaran Edukasi (Nama & Hubungannya Dengan Pasien)</th>
+                    <th class="tablee">Tanda Tangan Nama Petugas & Profesi</th>
+                    <th class="tablee">Sasaran Edukasi<br>(Nama & Hubungannya Dengan Pasien)</th>
                     <th class="tablee">Evaluasi</th>
                 </tr>
             </thead>
             <tbody>
-                {{-- ROW 1 --}}
-                <tr class="tablee">
-                    <td class="tablee">{{ $edukasiPasien->row1_tanggal ? \Carbon\Carbon::parse($edukasiPasien->row1_tanggal)->format('d/m/Y') : '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row1_poliklinik ?? '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row1_penjelasan_edukasi ?? '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row1_ttd_petugas ?? '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row1_sasaran_edukasi ?? '' }}</td>
-                    <td class="tablee">
-                        <table style="border: none;">
-                            <tr>
-                                <td style="border: none;"><input type="checkbox" {{ $edukasiPasien->row1_eval_sudah_dimengerti ? 'checked' : '' }} disabled></td>
-                                <td style="border: none;">Sudah Dimengerti</td>
-                            </tr>
-                            <tr>
-                                <td style="border: none;"><input type="checkbox" {{ $edukasiPasien->row1_eval_re_demonstrasi ? 'checked' : '' }} disabled></td>
-                                <td style="border: none;">Re-Demonstrasi</td>
-                            </tr>
-                            <tr>
-                                <td style="border: none;"><input type="checkbox" {{ $edukasiPasien->row1_eval_re_edukasi ? 'checked' : '' }} disabled></td>
-                                <td style="border: none;">Re Edukasi</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                @php
+                    // ✅ Decode JSON tabel_edukasi
+                    $tabelEdukasi = [];
+                    
+                    if (!empty($edukasiPasien->tabel_edukasi)) {
+                        if (is_string($edukasiPasien->tabel_edukasi)) {
+                            $tabelEdukasi = json_decode($edukasiPasien->tabel_edukasi, true) ?? [];
+                        } elseif (is_array($edukasiPasien->tabel_edukasi)) {
+                            $tabelEdukasi = $edukasiPasien->tabel_edukasi;
+                        }
+                    }
+                    
+                    // Jika kosong, buat 3 baris kosong untuk template
+                    if (empty($tabelEdukasi)) {
+                        $tabelEdukasi = array_fill(0, 3, [
+                            'tanggal' => '',
+                            'poliklinik' => '',
+                            'penjelasan_edukasi' => '',
+                            'ttd_petugas' => '',
+                            'nama_petugas' => '',
+                            'sasaran_edukasi' => '',
+                            'eval_sudah_dimengerti' => '0',
+                            'eval_re_demonstrasi' => '0',
+                            'eval_re_edukasi' => '0'
+                        ]);
+                    }
+                @endphp
                 
-                {{-- ROW 2 --}}
+                {{-- ✅ LOOP DINAMIS UNTUK SETIAP BARIS --}}
+                @foreach($tabelEdukasi as $index => $row)
                 <tr class="tablee">
-                    <td class="tablee">{{ $edukasiPasien->row2_tanggal ? \Carbon\Carbon::parse($edukasiPasien->row2_tanggal)->format('d/m/Y') : '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row2_poliklinik ?? '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row2_penjelasan_edukasi ?? '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row2_ttd_petugas ?? '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row2_sasaran_edukasi ?? '' }}</td>
+                    {{-- Tanggal --}}
                     <td class="tablee">
-                        <table style="border: none;">
+                        @if(!empty($row['tanggal']))
+                            {{ \Carbon\Carbon::parse($row['tanggal'])->format('d/m/Y') }}
+                        @endif
+                    </td>
+                    
+                    {{-- Poliklinik --}}
+                    <td class="tablee">{{ $row['poliklinik'] ?? '' }}</td>
+                    
+                    {{-- Penjelasan Edukasi --}}
+                    <td class="tablee">{{ $row['penjelasan_edukasi'] ?? '' }}</td>
+                    
+                    {{-- TTD Petugas & Nama --}}
+                    <td class="tablee ttd-cell">
+                        @if(!empty($row['ttd_petugas']))
+                            <img src="{{ $row['ttd_petugas'] }}" class="ttd-image" alt="TTD Petugas {{ $index + 1 }}">
+                        @endif
+                        <div style="margin-top: 5px; font-weight: bold;">
+                            {{ $row['nama_petugas'] ?? '' }}
+                        </div>
+                    </td>
+                    
+                    {{-- Sasaran Edukasi --}}
+                    <td class="tablee">{{ $row['sasaran_edukasi'] ?? '' }}</td>
+                    
+                    {{-- Evaluasi --}}
+                    <td class="tablee">
+                        <table style="border: none; width: 100%;">
                             <tr>
-                                <td style="border: none;"><input type="checkbox" {{ $edukasiPasien->row2_eval_sudah_dimengerti ? 'checked' : '' }} disabled></td>
+                                <td style="border: none; width: 5%;">
+                                    <input type="checkbox" {{ ($row['eval_sudah_dimengerti'] ?? '0') == '1' ? 'checked' : '' }} disabled>
+                                </td>
                                 <td style="border: none;">Sudah Dimengerti</td>
                             </tr>
                             <tr>
-                                <td style="border: none;"><input type="checkbox" {{ $edukasiPasien->row2_eval_re_demonstrasi ? 'checked' : '' }} disabled></td>
+                                <td style="border: none;">
+                                    <input type="checkbox" {{ ($row['eval_re_demonstrasi'] ?? '0') == '1' ? 'checked' : '' }} disabled>
+                                </td>
                                 <td style="border: none;">Re-Demonstrasi</td>
                             </tr>
                             <tr>
-                                <td style="border: none;"><input type="checkbox" {{ $edukasiPasien->row2_eval_re_edukasi ? 'checked' : '' }} disabled></td>
+                                <td style="border: none;">
+                                    <input type="checkbox" {{ ($row['eval_re_edukasi'] ?? '0') == '1' ? 'checked' : '' }} disabled>
+                                </td>
                                 <td style="border: none;">Re Edukasi</td>
                             </tr>
                         </table>
                     </td>
                 </tr>
-                
-                {{-- ROW 3 --}}
-                <tr class="tablee">
-                    <td class="tablee">{{ $edukasiPasien->row3_tanggal ? \Carbon\Carbon::parse($edukasiPasien->row3_tanggal)->format('d/m/Y') : '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row3_poliklinik ?? '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row3_penjelasan_edukasi ?? '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row3_ttd_petugas ?? '' }}</td>
-                    <td class="tablee">{{ $edukasiPasien->row3_sasaran_edukasi ?? '' }}</td>
-                    <td class="tablee">
-                        <table style="border: none;">
-                            <tr>
-                                <td style="border: none;"><input type="checkbox" {{ $edukasiPasien->row3_eval_sudah_dimengerti ? 'checked' : '' }} disabled></td>
-                                <td style="border: none;">Sudah Dimengerti</td>
-                            </tr>
-                            <tr>
-                                <td style="border: none;"><input type="checkbox" {{ $edukasiPasien->row3_eval_re_demonstrasi ? 'checked' : '' }} disabled></td>
-                                <td style="border: none;">Re-Demonstrasi</td>
-                            </tr>
-                            <tr>
-                                <td style="border: none;"><input type="checkbox" {{ $edukasiPasien->row3_eval_re_edukasi ? 'checked' : '' }} disabled></td>
-                                <td style="border: none;">Re Edukasi</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
-</body
-
-<?php
-
-// function bulans($bln)
-// {
-//     if ($bln == '01') {
-//         $bln = 'Januari';
-//     } elseif ($bln == '02') {
-//         $bln = 'Februari';
-//     } elseif ($bln == '03') {
-//         $bln = 'Maret';
-//     } elseif ($bln == '04') {
-//         $bln = 'April';
-//     } elseif ($bln == '05') {
-//         $bln = 'Mei';
-//     } elseif ($bln == '06') {
-//         $bln = 'Juni';
-//     } elseif ($bln == '07') {
-//         $bln = 'Juli';
-//     } elseif ($bln == '08') {
-//         $bln = 'Agustus';
-//     } elseif ($bln == '09') {
-//         $bln = 'September';
-//     } elseif ($bln == '10') {
-//         $bln = 'Oktober';
-//     } elseif ($bln == '11') {
-//         $bln = 'November';
-//     } elseif ($bln == '12') {
-//         $bln = 'Desember';
-//     }
-//     return $bln;
-// }
-
-?>
-
+</body>
 </html>
