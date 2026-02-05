@@ -31,6 +31,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::get('excel/returgudang/{dari}/{ke}/{supplier_uuid}', [LaporanFarmasiCtrl::class, 'returgudang'])->name('laporan-returgudang');
 
 	Route::get('excel/tindakan/{dari}/{ke}/{carabayar_uuid}/{asuransi_uuid}/{dokter_uuid}/{layanan_uuid}', [LaporanKeuanganCtrl::class, 'tindakan'])->name('laporan-tindakan');
+	Route::get('excel/tindakan-v2/{dari}/{ke}/{carabayar_uuid}/{asuransi_uuid}/{dokter_uuid}/{layanan_uuid}', [LaporanKeuanganCtrl::class, 'tindakanv2'])->name('laporan-tindakan');
 	Route::get('excel/kontrol/{dari}/{ke}/{carabayar_uuid}/{asuransi_uuid}/{dokter_uuid}/{layanan_uuid}', [LaporanKontrolCtrl::class, 'registrasi'])->name('laporan-kontrol');
 	Route::get('excel/registrasi/{dari}/{ke}/{carabayar_uuid}/{asuransi_uuid}/{dokter_uuid}', [LaporanKeuanganCtrl::class, 'registrasi'])->name('laporan-registrasi');
 

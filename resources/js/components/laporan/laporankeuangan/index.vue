@@ -6,6 +6,39 @@
 					<div class="col-12">
 						<h3 style="text-decoration: underline;">Laporan Tindakan Pasien</h3>
 					</div>
+
+					<div class="col-12 mt-3">
+  <label class="fw-bold mb-2">Jenis Laporan</label>
+
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="radio"
+      id="laporanTindakan"
+      value="tindakan"
+      v-model="jenisLaporan"
+      name="jenis_laporan"
+    >
+    <label class="form-check-label" for="laporanTindakan">
+      Laporan Tindakan Pasien
+    </label>
+  </div>
+
+  <div class="form-check">
+    <input
+      class="form-check-input"
+      type="radio"
+      id="laporanDetailTindakan"
+      value="detail_tindakan"
+      v-model="jenisLaporan"
+      name="jenis_laporan"
+    >
+    <label class="form-check-label" for="laporanDetailTindakan">
+      Laporan Detail Tindakan Pasien
+    </label>
+  </div>
+  <br>
+</div>
 					<div class="col-6">
 						<Inputed :ref="form.dari.name" :form="form.dari"></Inputed>
 					</div>
@@ -155,7 +188,7 @@ export default {
 	},
 	data: function () { return {
 		uri: 'histori',
-		position: '',
+		position: '', jenisLaporan: 'tindakan', // default terpilih
 		form: null,
 		attach: { 
 			link : { 
@@ -241,7 +274,15 @@ export default {
 				if (vm.form.select.dokter.value != 'Silahkan Pilih' && vm.form.select.dokter.value != '') { dokter_uuid = vm.form.select.dokter.value; }
 				if (vm.form.select.alltindakan.value != 'Silahkan Pilih' && vm.form.select.alltindakan.value != '') { layanan_uuid = vm.form.select.alltindakan.value; }
 				
+				if(vm.jenisLaporan == 'tindakan'){
 				uri = '/laporan/excel/' + posisi + '/' + vm.form.dari.value + '/' + vm.form.ke.value + '/' + carabayar_uuid + '/' + asuransi_uuid + '/' + dokter_uuid + '/' + layanan_uuid;
+			
+
+				}else{
+				uri = '/laporan/excel/' + posisi + '-v2/' + vm.form.dari.value + '/' + vm.form.ke.value + '/' + carabayar_uuid + '/' + asuransi_uuid + '/' + dokter_uuid + '/' + layanan_uuid;
+			
+
+				}
 			}
 			else if (posisi == 'registrasi') {
 				let carabayar_uuid = 'empty';
