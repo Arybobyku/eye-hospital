@@ -2,6 +2,7 @@
   <button @click="$emit('back')" class="btn-back">Kembali</button>
 
   <div class="container py-4">
+    <div v-if="disabledSubmit" class="view-overlay"></div>
     <div class="text-center mb-4">
       <h3 class="fw-bold">RESUME MEDIS RAWAT INAP</h3>
       <p class="text-muted">RM 3.5/RM/22</p>
@@ -277,7 +278,7 @@
 
   <!-- FOOTER ACTIONS -->
   <div class="action-footer">
-    <button class="btn-save-form" @click="submitForm" :disabled="loading">
+    <button  v-if="!disabledSubmit" class="btn-save-form" @click="submitForm" :disabled="loading">
       {{ loading ? "Menyimpan..." : "Save" }}
     </button>
     <button class="btn-back" @click="$emit('back')" :disabled="loading">Back</button>
@@ -294,14 +295,20 @@
         type: Object, 
         required: true 
       },
-      editUuid: {
-        type: String,
+      viewData: {
+        type: Object,
+        default: null,
+      },
+      editData: {
+        type: Object,
         default: null,
       },
     },
     data() {
       return {
         loading: false,
+        disabledSubmit: false,
+        editUuid: "",
         sigOption: { penColor: "black", backgroundColor: "white" },
         form: {
           uuid: "",
@@ -356,7 +363,7 @@
     },
     computed: {
       isEditMode() {
-        return !!this.editUuid;
+        // return !!this.editUuid;
       },
       currentDate() {
         const d = new Date();
@@ -368,9 +375,17 @@
       }
     },
     mounted() {
-      if (this.isEditMode) {
+      if(this.viewData) {
+        console.log(this.editUuid);
+        this.editUuid = this.editData.uuid;
+        this.disabledSubmit = true;
+        this.loadDataForEdit();
+      } else if (this.editData) {
+        this.editUuid = this.editData.uuid;
+        this.disabledSubmit = false;
         this.loadDataForEdit();
       } else {
+        this.disabledSubmit = false;
         this.setDataPasien();
       }
     },
@@ -534,10 +549,16 @@
   margin-bottom: 10px;
 }
 .action-footer {
+  margin-top: 30px;
+  padding: 20px;
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
-  margin-top: 40px;
+  gap: 12px;
+  background: #f5f5f5;
+  border-top: 2px solid #ddd;
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
 }
 .btn-save-form {
   background: #0288d1;
@@ -607,5 +628,15 @@
   padding: 6px 14px;
   border: none;
   margin-left: 8px;
+}
+.view-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 251, 251, 0.1); /* transparan */
+  z-index: 10;
+  cursor: not-allowed;
 }
 </style>

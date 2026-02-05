@@ -1075,15 +1075,15 @@
         </div>
       </div>
 
-      <div class="">
-        <div class="">
+      <div class="signature-section">
+        <div class="sign-box">
           <label>Tanda Tangan Perawat</label>
           <VueSignaturePad
             ref="perawat_ttd"
             :options="sigOption"
-            class="signature2-box-rme"
+            class="signature-box-rme"
           />
-          <button @click="saveSign('perawat_ttd')" class="btn-save">Simpan ✔</button>
+          <button  @click="saveSign('perawat_ttd')" class="btn-save">Simpan ✔</button>
           <input
             v-model="form.perawat_nama"
             class="input-rme"
@@ -1117,24 +1117,24 @@ export default {
       type: Object,
       required: true,
     },
-    editUuid: {
-        type: String,
-        default: null,
-    },
-    viewData: {
-      type: Object,
-      default: null,
-    },
     editData: {
       // ✨ Props untuk data edit
       type: Object,
       default: null,
     },
+    viewData: {
+      type: Object,
+      default: null,
+    },
+    editUuid: {
+        type: String,
+        default: null,
+    },
   },
   data() {
     return {
       loadingSubmit: false,
-      disabledSubmit: false,
+      disabledSubmit : false,
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -1318,10 +1318,6 @@ export default {
 
 
   computed: {
-    isEditMode() {
-      console.log('p', this.state);
-        return !!this.editData.uuid;
-      },
     nortonScore() {
       const fisik = parseInt(this.form.norton_fisik) || 0;
       const mental = parseInt(this.form.norton_mental) || 0;
@@ -1336,20 +1332,22 @@ export default {
       const asupan = parseInt(this.form.gizi_asupan_makanan) || 0;
       return bb + asupan;
     },
-
+    isEditMode() {
+      console.log('p', this.editUuid);
+        return !!this.editUuid;
+      }
     
   },
 
   mounted() {
-    console.log('editmode', this.viewData);
-    if(this.viewData) {
-      this.disabledSubmit = true;
-      this.loadDataForEdit();
-    } else if (this.editData) {
+    console.log('editmode', this.isEditMode);
+    if (this.isEditMode && this.editData) {
       // ✨ LOAD DATA UNTUK EDIT
       console.log("edit");
       this.disabledSubmit = false;
-
+      this.loadDataForEdit();
+    }else if(this.viewData) {
+      this.disabledSubmit = true;
       this.loadDataForEdit();
     } else {
       this.disabledSubmit = false; 
@@ -1361,10 +1359,10 @@ export default {
   methods: {
     async loadDataForEdit() {
       try {
-        const dataSource = this.editData;
+        const dataSource = this.editData || this.viewData;
 
         // Jika data lengkap sudah ada di editData props
-        if (dataSource.uuid) {
+        if (dataSource) {
           // Fetch detail dari server untuk data lengkap
           const response = await axios.get(
              `/master/rekammedis/lampiran/${dataSource.uuid}?type=asesmen_keperawatan_rawat_inap`
@@ -1377,11 +1375,6 @@ export default {
                 this.form[key] = response.data.data[key];
               }
             });
-            this.$nextTick(() => {
-        if (this.form.perawat_ttd && this.$refs.perawat_ttd) {
-          this.$refs.perawat_ttd.fromDataURL(this.form.perawat_ttd);
-        }
-      });
 
             // ✨ Load signature jika ada
             this.$nextTick(() => {
@@ -1538,16 +1531,7 @@ export default {
   background: #e9ecef;
   cursor: not-allowed;
 }
-.view-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 251, 251, 0.1); /* transparan */
-  z-index: 10;
-  cursor: not-allowed;
-}
+
 .textarea-rme {
   width: 100%;
   min-height: 80px;
@@ -1563,7 +1547,16 @@ export default {
   outline: none;
   border-color: #2d74b7;
 }
-
+.view-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 251, 251, 0.1); /* transparan */
+  z-index: 10;
+  cursor: not-allowed;
+}
 .info-table {
   width: 100%;
   border-collapse: collapse;
@@ -1581,14 +1574,6 @@ export default {
   background: #f0f0f0;
   font-weight: bold;
   color: #333;
-}
-.signature2-box-rme {
-  width: 320px !important;
-  height: 280px !important;
-  border: 2px solid #999;
-  border-radius: 4px;
-  display: block;
-  margin: 0 auto;
 }
 
 .info-table td {

@@ -3,6 +3,7 @@
     <button @click="$emit('back')" class="btn-back">Kembali</button>
 
     <div class="container py-4">
+      <div v-if="disabledSubmit" class="view-overlay"></div>
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">RESUME PERAWATAN PASIEN RAWAT JALAN</h2>
@@ -190,8 +191,8 @@
 
     <!-- ================= BUTTON BOTTOM ================= -->
     <div class="action-footer">
-      <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
-        <span v-if="loadingSubmit">Menyimpan...</span>
+      <button  v-if="!disabledSubmit" class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
+        <span  v-if="loadingSubmit">Menyimpan...</span>
         <span v-else>{{ editUuid ? 'Update' : 'Simpan' }}</span>
       </button>
 
@@ -212,7 +213,11 @@ export default {
       type: Object,
       required: true,
     },
-    editUuid: {
+    editData: {
+      type: String,
+      default: null,
+    },
+    viewData: {
       type: String,
       default: null,
     },
@@ -220,6 +225,8 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      disabledSubmit: false,
+      editUuid: "",
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -249,13 +256,21 @@ export default {
   },
   computed: {
     isEditMode() {
-      return !!this.editUuid;
+      // return !!this.editUuid;
     }
   },
   mounted() {
-    if (this.isEditMode) {
+    if(this.viewData) {
+      console.log(this.editUuid);
+      this.editUuid = this.editData.uuid;
+      this.disabledSubmit = true;
+      this.loadDataForEdit();
+    } else if (this.editData) {
+      this.editUuid = this.editData.uuid;
+      this.disabledSubmit = false;
       this.loadDataForEdit();
     } else {
+      this.disabledSubmit = false;
       this.setDataForm();
     }
   },
@@ -570,6 +585,7 @@ export default {
   border-top: 2px solid #ddd;
   position: sticky;
   bottom: 0;
+  z-index: 10;
 }
 
 .btn-save-form {
@@ -677,7 +693,16 @@ export default {
   margin-left: auto;
   margin-right: auto;
 }
-
+.view-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 251, 251, 0.1); /* transparan */
+  z-index: 10;
+  cursor: not-allowed;
+}
 @media (max-width: 768px) {
   .col-md-3,
   .col-md-6 {

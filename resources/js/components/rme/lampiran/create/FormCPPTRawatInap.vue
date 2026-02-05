@@ -3,6 +3,7 @@
     <button @click="$emit('back')" class="btn-back">Kembali</button>
 
     <div class="container py-4">
+    <div v-if="disabledSubmit" class="view-overlay"></div>
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">CATATAN PERKEMBANGAN PASIEN TERINTEGRASI</h2>
@@ -221,7 +222,7 @@ P: Planning (rencana tindakan)"
 
     <!-- ================= BUTTON BOTTOM ================= -->
     <div class="action-footer">
-      <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
+      <button  v-if="!disabledSubmit"  class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
         <span v-if="loadingSubmit">Menyimpan...</span>
         <span v-else>{{ editUuid ? 'Update' : 'Simpan' }}</span>
       </button>
@@ -243,14 +244,21 @@ export default {
       type: Object,
       required: true,
     },
-    editUuid: {
-      type: String,
+
+    viewData: {
+      type: Object,
+      default: null,
+    },
+    editData: {
+      type: Object,
       default: null,
     },
   },
   data() {
     return {
       loadingSubmit: false,
+      disabledSubmit: false,
+      editUuid: "",
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -284,13 +292,25 @@ export default {
   },
   computed: {
     isEditMode() {
-      return !!this.editUuid;
+      // return !!this.editUuid;
     }
   },
   mounted() {
-    if (this.isEditMode) {
+    console.log("p", this.editData);
+    if(this.viewData) {
+      console.log(this.editUuid);
+
+      this.editUuid = this.editData.uuid;
+      this.disabledSubmit = true;
+      this.loadDataForEdit();
+    }  else if (this.editData) {
+      this.disabledSubmit = false;
+      this.editUuid = this.editData.uuid;
+
       this.loadDataForEdit();
     } else {
+      this.disabledSubmit = false;
+
       this.setDataForm();
     }
   },
@@ -318,7 +338,7 @@ export default {
           `/master/rekammedis/lampiran/${this.editUuid}?type=cppt_rawat_inap`
         );
 
-        if (response.data.status) {
+        if (response.data) {
           const data = response.data.data;
           
           Object.keys(this.form).forEach(key => {
@@ -772,5 +792,15 @@ export default {
     width: 140px;
     height: 80px;
   }
+  .view-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 251, 251, 0.1); /* transparan */
+  z-index: 10;
+  cursor: not-allowed;
+}
 }
 </style>
