@@ -1,398 +1,992 @@
 <template>
-  <div class="patient-data-form">
-    <!-- Header Section -->
-    <div class="header-section">
-      <h2 class="form-title">Penunjang Medis</h2>
-      <div class="date-time-inputs">
-        <div class="input-group">
-          <input 
-            type="date" 
-            v-model="formData.tanggal" 
-            class="form-control"
-            readonly
-          />
-        </div>
-        <div class="input-group">
-          <input 
-            type="time" 
-            v-model="formData.waktu" 
-            class="form-control" 
-            readonly
-          />
-        </div>
+  <div class="history-container">
+    <!-- LOADING OVERLAY -->
+    <div v-if="loading" class="loading-overlay">
+      <div class="spinner-rme"></div>
+      Loading...
+    </div>
+
+    <!-- HEADER -->
+    <div class="header-component-rme">Penunjang Medis</div>
+
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <div class="filter-left">
+        Tampil
+        <select v-model="perPage">
+          <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
+        </select>
+        data
+      </div>
+
+      <div class="filter-right">
+        Cari:
+        <input type="text" v-model="searchQuery" class="search-input" />
       </div>
     </div>
 
-    <!-- Form Section -->
-    <div class="form-section">
-      <h3 class="section-title">Penunjang Medis</h3>
-      
-      <div class="form-row">
-        <!-- Left Column -->
-        <div class="form-column">
-          <div class="form-group">
-            <label>NIK :</label>
-            <input 
-              type="text" 
-              v-model="formData.nik" 
-              class="form-control"
-            />
-          </div>
+    <!-- TABLE -->
+    <table class="custom-table-rme">
+      <thead>
+        <tr>
+          <th>NO</th>
+          <th>REGISTRASI</th>
+          <th>TANGGAL</th>
+          <th>JAM</th>
+          <th>STATUS</th>
+          <th>DOKTER</th>
+          <th>JAMINAN</th>
+        </tr>
+      </thead>
 
-          <div class="form-group">
-            <label>Kode MR :</label>
-            <input 
-              type="text" 
-              v-model="formData.kodeMR" 
-              class="form-control"
-              readonly
-            />
-          </div>
+      <tbody>
+        <tr v-for="(item, index) in paginatedData" :key="item.id">
+          <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
+          <td>{{ item.nomor }}</td>
+          <td>{{ item.tanggal }}</td>
+          <td>{{ item.waktu }}</td>
+          <td>{{ mappedStatus(item) }}</td>
+          <td>{{ item.nama_dokter }}</td>
+          <td>{{ item.carabayar_nama }}</td>
+        </tr>
+      </tbody>
+    </table>
 
-          <div class="form-group">
-            <label>Nama :</label>
-            <input 
-              type="text" 
-              v-model="formData.nama" 
-              class="form-control"
-              readonly
-            />
-          </div>
+    <!-- FOOTER INFO -->
+    <div class="table-info">
+      Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
+    </div>
 
-          <div class="form-group">
-            <label>Nama Suami / Istri :</label>
-            <input 
-              type="text" 
-              v-model="formData.namaPasangan" 
-              class="form-control"
-            />
-          </div>
+    <!-- PAGINATION -->
+    <div class="pagination-rme">
+      <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
 
-          <div class="form-group">
-            <label>NIK Suami / Istri :</label>
-            <input 
-              type="text" 
-              v-model="formData.nikPasangan" 
-              class="form-control"
-            />
-          </div>
+      <button
+        v-for="page in totalPages"
+        :key="page"
+        :class="['page-btn', { active: currentPage === page }]"
+        @click="currentPage = page"
+      >
+        {{ page }}
+      </button>
 
-          <div class="form-group">
-            <label>Pekerjaan :</label>
-            <select v-model="formData.pekerjaan" class="form-control">
-              <option value="">Pilih Pekerjaan</option>
-              <option value="PNS">PNS</option>
-              <option value="Swasta">Swasta</option>
-              <option value="Wiraswasta">Wiraswasta</option>
-              <option value="Petani">Petani</option>
-              <option value="Ibu Rumah Tangga">Ibu Rumah Tangga</option>
-              <option value="Lainnya">Lainnya</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Alamat :</label>
-            <input 
-              type="text" 
-              v-model="formData.alamat" 
-              class="form-control"
-              readonly
-            />
-          </div>
-        </div>
-
-        <!-- Right Column -->
-        <div class="form-column">
-          <div class="form-group">
-            <label>Agama :</label>
-            <input 
-              type="text" 
-              v-model="formData.agama" 
-              class="form-control"
-            />
-          </div>
-
-          <div class="form-group">
-            <label>Jenis Kelamin :</label>
-            <input 
-              type="text" 
-              v-model="formData.jenisKelamin" 
-              class="form-control"
-              readonly
-            />
-          </div>
-
-          <div class="form-group">
-            <label>Tempat Tanggal Lahir :</label>
-            <input 
-              type="text" 
-              v-model="formData.tempatTanggalLahir" 
-              class="form-control"
-              readonly
-            />
-          </div>
-
-          <div class="form-group">
-            <label>Status Pembiayaan :</label>
-            <select v-model="formData.statusPembiayaan" class="form-control">
-              <option value="">Pilih Status</option>
-              <option value="BPJS">BPJS</option>
-              <option value="Umum">Umum</option>
-              <option value="Asuransi">Asuransi</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Status Perkawinan :</label>
-            <select v-model="formData.statusPerkawinan" class="form-control">
-              <option value="">Pilih Status</option>
-              <option value="Menikah">Menikah</option>
-              <option value="Belum Menikah">Belum Menikah</option>
-              <option value="Cerai">Cerai</option>
-              <option value="Janda/Duda">Janda/Duda</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Pendidikan :</label>
-            <select v-model="formData.pendidikan" class="form-control">
-              <option value="">Pilih Pendidikan</option>
-              <option value="SD">SD</option>
-              <option value="SMP">SMP</option>
-              <option value="SMA">SMA</option>
-              <option value="D3">D3</option>
-              <option value="S1">S1</option>
-              <option value="S2">S2</option>
-              <option value="S3">S3</option>
-            </select>
-          </div>
-        </div>
+      <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
+    </div>
+    <!-- SECTION DOKUMEN PASIEN -->
+    <div class="section-wrapper" style="margin-top: 30px;">
+      <!-- LOADING OVERLAY -->
+      <div v-if="loadingDokumen" class="loading-overlay">
+        <div class="spinner-rme"></div>
+        Loading...
       </div>
 
-      <!-- Action Buttons -->
-      <div class="form-actions">
-        <button class="btn-save-form" @click="submitForm">Save</button>
-        <button class="btn-back" @click="$emit('back')">Back</button>
+      <!-- HEADER -->
+      <div class="header-component-rme">Dokumen Pasien</div>
+
+      <!-- BUTTON TAMBAH -->
+      <div class="action-bar">
+        <button @click="openAddModal" class="btn-add">
+          <span>+</span> Tambah Dokumen
+        </button>
+      </div>
+      <div class="filter-left">
+        Tampil
+        <select v-model="perPage">
+          <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
+        </select>
+        data
+      </div>
+
+      <!-- TABLE DOKUMEN -->
+      <table class="custom-table-rme">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>JENIS DOKUMEN</th>
+            <th>NAMA FILE</th>
+            <th>KETERANGAN</th>
+            <th>TANGGAL UPLOAD</th>
+            <th>DIUPLOAD OLEH</th>
+            <th>VERIFIKASI</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr v-if="dataDokumen.length === 0">
+            <td colspan="8" style="text-align: center; padding: 20px;">
+              Belum ada dokumen
+            </td>
+          </tr>
+          <tr v-for="(item, index) in paginatedDokumen" :key="item.uuid">
+            <td>{{ index + 1 + (currentPageDokumen - 1) * perPageDokumen }}</td>
+            <td>{{ item.jenis_dokumen }}</td>
+            <td>
+            <a @click.prevent="printFile(item)" class="file-link">
+              {{ item.nama_file }}
+            </a>
+            </td>
+            <td>{{ item.keterangan || '-' }}</td>
+            <td>{{ item.tanggal_upload }} {{ item.waktu_upload }}</td>
+            <td>{{ item.uploaded_by_nama }}</td>
+            <td>
+              <span v-if="item.is_verified" class="badge-verified">Terverifikasi</span>
+              <button 
+                v-else-if="isSuperAdmin" 
+                @click="verifyDocument(item)" 
+                class="btn-verify"
+              >
+                Verifikasi
+              </button>
+              <span v-else class="badge-unverified">Belum Diverifikasi</span>
+            </td>
+            <td>
+              <div v-if="!item.is_verified" class="action-buttons">
+                <button @click="openEditModal(item)" class="btn-edit">Edit</button>
+                <button @click="deleteDocument(item)" class="btn-delete">Hapus</button>
+              </div>
+              <span v-else class="text-muted">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- FOOTER INFO -->
+      <div class="table-info">
+        Menampilkan {{ startRowDokumen }} s/d {{ endRowDokumen }} dari {{ dataDokumen.length }} data
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination-rme" v-if="totalPagesDokumen > 1">
+        <button :disabled="currentPageDokumen === 1" @click="currentPageDokumen--">Previous</button>
+
+        <button
+          v-for="page in totalPagesDokumen"
+          :key="page"
+          :class="['page-btn', { active: currentPageDokumen === page }]"
+          @click="currentPageDokumen = page"
+        >
+          {{ page }}
+        </button>
+
+        <button :disabled="currentPageDokumen === totalPagesDokumen" @click="currentPageDokumen++">Next</button>
+      </div>
+    </div>
+
+    <!-- MODAL ADD/EDIT DOKUMEN -->
+    <div v-if="showModal" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>{{ isEditMode ? 'Edit Dokumen' : 'Tambah Dokumen' }}</h3>
+          <button @click="closeModal" class="btn-close">×</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Jenis Dokumen <span class="required">*</span></label>
+            <select v-model="form.jenis_dokumen" class="form-control">
+              <option value="">-- Pilih Jenis Dokumen --</option>
+              <option value="DOKUMEN MEDICAL RECORD">DOKUMEN MEDICAL RECORD</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>File <span class="required">*</span></label>
+            <input 
+              type="file" 
+              @change="handleFileChange" 
+              accept=".pdf,.bmp,.jpg,.jpeg,.png"
+              class="form-control"
+            />
+            <small class="form-text">
+              Max 1 MB. Format: PDF, BMP, JPG, JPEG, PNG
+            </small>
+            <div v-if="isEditMode && form.nama_file" class="current-file">
+              File saat ini: <strong>{{ form.nama_file }}</strong>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Keterangan</label>
+            <textarea 
+              v-model="form.keterangan" 
+              class="form-control" 
+              rows="3"
+              placeholder="Masukkan keterangan dokumen (opsional)"
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button @click="closeModal" class="btn-secondary">Batal</button>
+          <button @click="submitForm" class="btn-primary" :disabled="!isFormValid">
+            {{ isEditMode ? 'Update' : 'Simpan' }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
-  name: 'PengkajianDataUmumPasien',
+  name: "HistoryKunjungan",
+
   data() {
     return {
-      formData: {
-        tanggal: '2025-11-22',
-        waktu: '19:24',
-        nik: '',
-        kodeMR: '000307',
-        nama: 'TASYA HESTIA ANGESTI, NN',
-        namaPasangan: '',
-        nikPasangan: '',
-        pekerjaan: '',
-        alamat: 'BEKASI KOTA',
-        agama: '',
-        jenisKelamin: 'PEREMPUAN',
-        tempatTanggalLahir: 'BEKASI, 02-09-1998',
-        statusPembiayaan: '',
-        statusPerkawinan: '',
-        pendidikan: ''
-      }
-    }
+      perPage: 10,
+      currentPage: 1,
+      searchQuery: "",
+      loading: false, // Loading indicator
+      // Sample data (nanti ganti dengan API)
+      data: [
+        // { id: 1, reg: "006969", tanggal: "06-11-2025", jam: "16:27", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "UMUM" },
+        // { id: 2, reg: "006889", tanggal: "10-10-2025", jam: "20:32", layanan: "POLI PSIKOLOGI", dokter: "dr. Yoga Yandika, Sp.A", jaminan: "UMUM" },
+        // { id: 3, reg: "006825", tanggal: "17-09-2025", jam: "22:19", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "APOTEK SUMBER WARAS" },
+        // { id: 4, reg: "006720", tanggal: "04-08-2025", jam: "12:27", layanan: "POLI GIGI", dokter: "drg. ALFI, Sp. KGA", jaminan: "TRANSFER" },
+        // { id: 5, reg: "006726", tanggal: "04-08-2025", jam: "14:55", layanan: "POLI GIGI", dokter: "drg. ALFI, Sp. KGA", jaminan: "PRIBADI" },
+        // { id: 6, reg: "006711", tanggal: "31-07-2025", jam: "15:20", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "PRIBADI" },
+        // { id: 7, reg: "006486", tanggal: "25-04-2025", jam: "17:25", layanan: "BIDAN", dokter: "Dr Dessy", jaminan: "PRIBADI" },
+        // { id: 8, reg: "006415", tanggal: "18-03-2025", jam: "16:37", layanan: "POLI UMUM", dokter: "DOKTER UMUM", jaminan: "UMUM" },
+        // { id: 9, reg: "006385", tanggal: "10-03-2025", jam: "10:15", layanan: "AESTHETIC", dokter: "dr Nisa", jaminan: "UMUM" },
+        // { id: 10, reg: "006315", tanggal: "07-02-2025", jam: "21:17", layanan: "LABORATORIUM", dokter: "dr. Ali indri", jaminan: "UMUM" },
+      ],
+      perPageDokumen: 10,
+      currentPageDokumen: 1,
+      loadingDokumen: false,
+      dataDokumen: [],
+      showModal: false,
+      isEditMode: false,
+      form: {
+        uuid: null,
+        jenis_dokumen: '',
+        file: null,
+        nama_file: '',
+        keterangan: ''
+      },
+      isSuperAdmin: false
+    };
   },
-  methods: {
-    saveData() {
-      // Kirim data ke backend Laravel
-      axios.post('/api/pasien/pengkajian-data-umum', this.formData)
-        .then(response => {
-          this.$swal('Sukses', 'Data berhasil disimpan', 'success');
-          console.log('Data saved:', response.data);
-        })
-        .catch(error => {
-          this.$swal('Error', 'Gagal menyimpan data', 'error');
-          console.error('Error saving data:', error);
-        });
+  props: {
+    selectedPatient: {
+      type: Object,
+      required: true,
     },
-    goBack() {
-      this.$router.go(-1);
+  },
+
+  watch: {
+    selectedPatient: {
+      immediate: true,
+      handler(newVal) {
+        if (newVal?.id) {
+          this.fetchHistory();
+          this.fetchDokumen();
+          this.checkUserRole();
+        }
+      },
     },
-    loadPatientData(mrCode) {
-      // Load data pasien dari backend
-      axios.get(`/api/pasien/${mrCode}`)
-        .then(response => {
-          const data = response.data;
-          this.formData.kodeMR = data.kode_mr;
-          this.formData.nama = data.nama;
-          this.formData.jenisKelamin = data.jenis_kelamin;
-          this.formData.tempatTanggalLahir = data.tempat_tanggal_lahir;
-          this.formData.alamat = data.alamat;
-        })
-        .catch(error => {
-          console.error('Error loading patient data:', error);
-        });
+  },
+
+  computed: {
+    filteredData() {
+      if (!this.searchQuery) return this.data;
+
+      return this.data.filter((row) =>
+        Object.values(row).some((val) =>
+          String(val).toLowerCase().includes(this.searchQuery.toLowerCase())
+        )
+      );
+    },
+
+    totalPages() {
+      return Math.ceil(this.filteredData.length / this.perPage);
+    },
+
+    paginatedData() {
+      const start = (this.currentPage - 1) * this.perPage;
+      return this.filteredData.slice(start, start + this.perPage);
+    },
+
+    startRow() {
+      return (this.currentPage - 1) * this.perPage + 1;
+    },
+
+    endRow() {
+      const end = this.currentPage * this.perPage;
+      return end > this.data.length ? this.data.length : end;
+    },
+    totalPagesDokumen() {
+    return Math.ceil(this.dataDokumen.length / this.perPageDokumen);
+    },
+    paginatedDokumen() {
+      const start = (this.currentPageDokumen - 1) * this.perPageDokumen;
+      return this.dataDokumen.slice(start, start + this.perPageDokumen);
+    },
+    startRowDokumen() {
+      return this.dataDokumen.length === 0 ? 0 : (this.currentPageDokumen - 1) * this.perPageDokumen + 1;
+    },
+    endRowDokumen() {
+      const end = this.currentPageDokumen * this.perPage;
+      return end > this.dataDokumen.length ? this.dataDokumen.length : end;
+    },
+    isFormValid() {
+      if (this.isEditMode) {
+        return this.form.jenis_dokumen !== '';
+      }
+      return this.form.jenis_dokumen !== '' && this.form.file !== null;
     }
   },
   mounted() {
-    // Contoh: load data pasien saat component dimount
-    // this.loadPatientData('000307');
-  }
-}
+    // this.fetchHistory();
+  },
+
+  methods: {
+    async fetchHistory() {
+      this.loading = true;
+
+      try {
+        const formData = new FormData();
+        formData.append("search", this.selectedPatient.uuid);
+        formData.append("limit", 10);
+        formData.append("page", 1);
+
+        const res = await axios.post("/master/pasien/history", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        // 👇 pastikan data backend berupa array
+        this.data = res.data?.data ?? [];
+      } catch (err) {
+        console.error("Gagal memuat history:", err);
+        alert("Gagal memuat data history.");
+      } finally {
+        this.loading = false;
+      }
+    },
+
+
+    mappedStatus(data){
+        if(data?.status_ro != 'Sudah Diperiksa'){
+            return 'Pemriksasan Refraksi Optisi'
+        }
+        if(data?.status_dokter != 'Sudah Diperiksa'){
+            return 'Pemriksasan Dokter'
+        }
+        if(data?.status_dokter != 'Sudah Bayar'){
+            return 'Farmasi'
+        }
+        if(data?.status_dokter != 'Sudah Bayar'){
+            return 'Kasir'
+        }
+
+        return 'Selesai'
+    },
+     async fetchDokumen() {
+    this.loadingDokumen = true;
+    try {
+      const formData = new FormData();
+      formData.append("search", this.selectedPatient.uuid);
+      formData.append("limit", 100);
+      formData.append("page", 1);
+
+      const res = await axios.post("/master/pasien/dokumen-list", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      this.dataDokumen = res.data?.data ?? [];
+    } catch (err) {
+      console.error("Gagal memuat dokumen:", err);
+      alert("Gagal memuat data dokumen.");
+    } finally {
+      this.loadingDokumen = false;
+    }
+  },
+
+  checkUserRole() {
+    try {
+      const cookies = document.cookie.split(';');
+      let userPosition = null;
+
+          console.log('🍪 All cookies:', document.cookie);
+      
+      for (let cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === 'userposition') {
+          userPosition = value;
+          break;
+        }
+      }
+
+          console.log('📍 User Position:', userPosition); // ← TAMBAHKAN INI
+    console.log('🔐 Is Super Admin:', userPosition === '9987'); 
+      
+      this.isSuperAdmin = userPosition === '9987' || userPosition?.includes('9987');
+    } catch (err) {
+      console.error("Gagal cek role user:", err);
+      this.isSuperAdmin = false;
+    }
+  },
+
+  openAddModal() {
+    this.isEditMode = false;
+    this.resetForm();
+    this.showModal = true;
+  },
+
+  openEditModal(item) {
+    this.isEditMode = true;
+    this.form = {
+      uuid: item.uuid,
+      jenis_dokumen: item.jenis_dokumen,
+      file: null,
+      nama_file: item.nama_file,
+      keterangan: item.keterangan
+    };
+    this.showModal = true;
+  },
+
+  closeModal() {
+    this.showModal = false;
+    this.resetForm();
+  },
+
+  resetForm() {
+    this.form = {
+      uuid: null,
+      jenis_dokumen: '',
+      file: null,
+      nama_file: '',
+      keterangan: ''
+    };
+  },
+
+  handleFileChange(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.size > 1024 * 1024) {
+      alert("Ukuran file maksimal 1 MB!");
+      event.target.value = '';
+      return;
+    }
+
+    const allowedTypes = ['application/pdf', 'image/bmp', 'image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowedTypes.includes(file.type)) {
+      alert("Format file harus PDF, BMP, JPG, JPEG, atau PNG!");
+      event.target.value = '';
+      return;
+    }
+
+    this.form.file = file;
+  },
+
+  async submitForm() {
+    if (!this.isFormValid) return;
+
+    this.loadingDokumen = true;
+
+    try {
+      const formData = new FormData();
+      formData.append("pasien_uuid", this.selectedPatient.uuid);
+      formData.append("jenis_dokumen", this.form.jenis_dokumen);
+      formData.append("keterangan", this.form.keterangan || '');
+
+      if (this.isEditMode) {
+        formData.append("uuid", this.form.uuid);
+        if (this.form.file) {
+          formData.append("file", this.form.file);
+        }
+
+        await axios.post("/master/pasien/dokumen-update", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        alert("Dokumen berhasil diupdate!");
+      } else {
+        formData.append("file", this.form.file);
+
+        await axios.post("/master/pasien/dokumen-store", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        alert("Dokumen berhasil diupload!");
+      }
+
+      this.closeModal();
+      this.fetchDokumen();
+    } catch (err) {
+      console.error("Error:", err);
+      const errorMsg = err.response?.data?.message || "Gagal menyimpan dokumen";
+      alert(errorMsg);
+    } finally {
+      this.loadingDokumen = false;
+    }
+  },
+
+  async deleteDocument(item) {
+    if (!confirm(`Yakin ingin menghapus dokumen "${item.nama_file}"?`)) return;
+
+    this.loadingDokumen = true;
+
+    try {
+      const formData = new FormData();
+      formData.append("uuid", item.uuid);
+
+      await axios.post("/master/pasien/dokumen-delete", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert("Dokumen berhasil dihapus!");
+      this.fetchDokumen();
+    } catch (err) {
+      console.error("Error:", err);
+      const errorMsg = err.response?.data?.message || "Gagal menghapus dokumen";
+      alert(errorMsg);
+    } finally {
+      this.loadingDokumen = false;
+    }
+  },
+
+  async verifyDocument(item) {
+    if (!confirm(`Verifikasi dokumen "${item.nama_file}"?`)) return;
+
+    this.loadingDokumen = true;
+
+    try {
+      const formData = new FormData();
+      formData.append("uuid", item.uuid);
+
+      await axios.post("/master/pasien/dokumen-verify", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert("Dokumen berhasil diverifikasi!");
+      this.fetchDokumen();
+    } catch (err) {
+      console.error("Error:", err);
+      const errorMsg = err.response?.data?.message || "Gagal memverifikasi dokumen";
+      alert(errorMsg);
+    } finally {
+      this.loadingDokumen = false;
+    }
+  },
+  async checkUserRole() {
+    try {
+      const res = await axios.get("/master/pasien/user-info");
+      
+      console.log('👤 User Info:', res.data); // ← Debug
+      
+      if (res.data.success) {
+        this.isSuperAdmin = res.data.is_super_admin;
+        console.log('🔐 Is Super Admin:', this.isSuperAdmin); // ← Debug
+      } else {
+        this.isSuperAdmin = false;
+      }
+      
+    } catch (err) {
+      console.error("Gagal cek role user:", err);
+      this.isSuperAdmin = false;
+    }
+  },
+  printFile(item) {
+      window.open(
+        `/print/rekammedis/dokumen/${item.uuid}`,
+        "_blank"
+      );
+    }
+  },
+};
 </script>
 
 <style scoped>
-.patient-data-form {
-  background-color: #f5f5f5;
-  min-height: 100vh;
-  padding: 20px;
+.history-container {
+  background: white;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
 }
 
-.header-section {
-  background-color: white;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+/* TABLE */
+.custom-table-rme th {
+  background: #1d72c9;
+  color: white;
+  padding: 8px;
+  text-align: left;
+  font-size: 13px;
 }
 
-.form-title {
-  color: #2196F3;
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0 0 15px 0;
+.custom-table-rme td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.custom-table-rme tbody tr:nth-child(even) {
+  background: #e9f2ff;
+}
+
+/* PAGINATION */
+
+.pagination-rme button {
+  padding: 5px 10px;
+  border: 1px solid #1d72c9;
+  background: white;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.page-btn.active {
+  background: #1d72c9;
+  color: white;
+}
+
+
+.header-component-rme {
+  background: #0f62a8;
+  color: white;
   text-align: center;
+  padding: 12px;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 15px;
 }
 
-.date-time-inputs {
+.filter-bar {
   display: flex;
-  gap: 15px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.filter-left select {
+  margin: 0 5px;
+}
+
+.search-input {
+  padding: 3px 5px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+}
+
+/* TABLE */
+.custom-table-rme {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+.custom-table-rme th {
+  background: #1d72c9;
+  color: white;
+  padding: 8px;
+  text-align: left;
+  font-size: 13px;
+}
+
+.custom-table-rme td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-size: 13px;
+}
+
+.custom-table-rme tbody tr:nth-child(even) {
+  background: #e9f2ff;
+}
+
+/* INFO */
+.table-info {
+  margin-top: 5px;
+  font-size: 13px;
+}
+
+/* PAGINATION */
+.pagination-rme {
+  display: flex;
+  gap: 5px;
+}
+
+.pagination-rme button {
+  padding: 5px 10px;
+  border: 1px solid #1d72c9;
+  background: white;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.page-btn.active {
+  background: #1d72c9;
+  color: white;
+}
+
+/* LOADING OVERLAY */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.input-group {
-  flex: 0 0 200px;
-}
-
-.form-section {
-  background-color: white;
-  padding: 25px;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.section-title {
-  color: #2196F3;
   font-size: 18px;
-  font-weight: 500;
-  margin: 0 0 20px 0;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #e0e0e0;
+  z-index: 10;
 }
 
-.form-row {
+.spinner-rme {
+  width: 32px;
+  height: 32px;
+  border: 4px solid #ddd;
+  border-top-color: #1d72c9;
+  border-radius: 50%;
+  animation: spin-rme 0.8s linear infinite;
+  margin-bottom: 10px;
+}
+
+@keyframes spin-rme {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.section-wrapper {
+  background: white;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  position: relative;
+}
+
+.action-bar {
+  margin-bottom: 15px;
+  text-align: right;
+}
+
+.btn-add {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.btn-add:hover {
+  background: #218838;
+}
+
+.btn-add span {
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+.file-link {
+  color: #0066cc;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.file-link:hover {
+  color: #004499;
+}
+
+.badge-verified {
+  background: #28a745;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.badge-unverified {
+  background: #ffc107;
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 3px;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.btn-verify {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-verify:hover {
+  background: #0056b3;
+}
+
+.action-buttons {
   display: flex;
-  gap: 30px;
+  gap: 5px;
 }
 
-.form-column {
-  flex: 1;
+.btn-edit {
+  background: #ffc107;
+  color: #333;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-edit:hover {
+  background: #e0a800;
+}
+
+.btn-delete {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-delete:hover {
+  background: #c82333;
+}
+
+.text-muted {
+  color: #999;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #999;
+}
+
+.btn-close:hover {
+  color: #333;
+}
+
+.modal-body {
+  padding: 20px;
 }
 
 .form-group {
   margin-bottom: 15px;
-  display: flex;
-  align-items: center;
 }
 
 .form-group label {
-  flex: 0 0 180px;
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
   font-size: 14px;
-  color: #333;
-  font-weight: 500;
-  text-align: right;
-  padding-right: 15px;
+}
+
+.required {
+  color: red;
 }
 
 .form-control {
-  flex: 1;
-  padding: 8px 12px;
+  width: 100%;
+  padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
   font-size: 14px;
-  background-color: #f5f5f5;
-  transition: border-color 0.3s;
 }
 
-.form-control:focus {
-  outline: none;
-  border-color: #2196F3;
-  background-color: white;
+.form-text {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #666;
 }
 
-.form-control:readonly {
-  background-color: #e9ecef;
-  cursor: not-allowed;
+.current-file {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  font-size: 13px;
 }
 
-.form-control select {
-  cursor: pointer;
-}
-
-.form-actions {
-  margin-top: 30px;
+.modal-footer {
   display: flex;
+  justify-content: flex-end;
   gap: 10px;
-  padding-top: 20px;
-  border-top: 2px solid #e0e0e0;
+  padding: 15px 20px;
+  border-top: 1px solid #ddd;
 }
 
-.btn {
-  padding: 10px 30px;
-  border: none;
-  border-radius: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.btn-save-form {
-  background: #0288d1;
+.btn-secondary {
+  background: #6c757d;
   color: white;
-  padding: 8px 18px;
   border: none;
+  padding: 8px 16px;
   border-radius: 4px;
-  font-weight: bold;
   cursor: pointer;
 }
 
-.btn-back {
-  background: #ff9800;
+.btn-secondary:hover {
+  background: #5a6268;
+}
+
+.btn-primary {
+  background: #007bff;
   color: white;
-  padding: 8px 18px;
   border: none;
+  padding: 8px 16px;
   border-radius: 4px;
-  font-weight: bold;
   cursor: pointer;
 }
 
-@media (max-width: 768px) {
-  .form-row {
-    flex-direction: column;
-    gap: 0;
-  }
-  
-  .form-group {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .form-group label {
-    text-align: left;
-    padding-right: 0;
-    margin-bottom: 5px;
-  }
+.btn-primary:hover {
+  background: #0056b3;
+}
+
+.btn-primary:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 </style>

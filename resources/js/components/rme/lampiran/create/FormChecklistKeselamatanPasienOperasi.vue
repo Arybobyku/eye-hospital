@@ -31,7 +31,7 @@
         </div>
         <div class="col-md-4">
           <label>NIK</label>
-          <input v-model="form.nik" class="input-rme" readonly />
+          <input v-model="form.nik" class="input-rme" />
         </div>
       </div>
     </div>
@@ -59,6 +59,10 @@
             <label class="radio-label">
               <input type="radio" v-model="form.signin_q1" value="ya" />
               Ya
+            </label>
+            <label class="radio-label">
+              <input type="radio" v-model="form.signin_q1" value="tidak" />
+              Tidak
             </label>
           </div>
 
@@ -637,6 +641,7 @@ export default {
 
     async loadDataForEdit() {
       try {
+        console.log("Loading data for edit:", this.editUuid);
         const response = await axios.get(
           `/master/rekammedis/lampiran/${this.editUuid}?type=checklist_keselamatan_pasien_operasi`
         );

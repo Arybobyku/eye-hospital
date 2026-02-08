@@ -38,10 +38,7 @@
         <div class="form-row-3-3">
           <div>
             <label>Jenis Kelamin :</label>
-            <select v-model="form.jenis_kelamin" class="input-rme">
-              <option value="L">Laki-laki</option>
-              <option value="P">Perempuan</option>
-            </select>
+            <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
           </div>
         </div>
       </div>
@@ -241,6 +238,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    editUuid: {
+      type: String,
+      default: null,
+    },
   },
   data() {
     return {
@@ -294,7 +295,7 @@ export default {
     };
   },
   mounted() {
-    if (this.isEditMode && this.editData) {
+    if (this.editUuid) {
       this.loadDataForEdit();
     } else {
       this.setDataForm();
@@ -305,18 +306,31 @@ export default {
       try {
         if (this.editData.uuid) {
           const response = await axios.get(
-            `/master/pasien/dokumen-pelaksanaan-pencegahan-pasien-jatuh/${this.editData.uuid}`
-          );
+          `/master/rekammedis/lampiran/${this.editUuid}?type=pelaksanaan_pencegahan_pasien_jatuh`
 
-          if (response.data.status) {
+          );
+          console.log("LOAD EDIT DATA:", response.data);
+          // if (response.data.status) {
             Object.keys(this.form).forEach((key) => {
               if (response.data.data[key] !== undefined) {
                 this.form[key] = response.data.data[key];
               }
             });
-          }
+             this.$nextTick(() => {
+            const signatureRefs = [
+              'ttd_petugas',
+            ];
+
+            signatureRefs.forEach(ref => {
+              if (this.form[ref] && this.$refs[ref]) {
+                this.$refs[ref].fromDataURL(this.form[ref]);
+              }
+            });
+          });
         }
-      } catch (error) {
+          // }
+        }
+     catch (error) {
         console.error("Error loading data:", error);
         alert("Gagal memuat data untuk edit!");
         this.$emit("back");
@@ -333,10 +347,11 @@ export default {
         this.form.nik = this.selectedPatient.nik || "";
         this.form.nama = this.selectedPatient.nama;
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
-        this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin || "L";
+        this.form.jenis_kelamin = this.selectedPatient?.jenis_kelamin;
       }
     },
 
+    
     saveSign(refName) {
       const pad = this.$refs[refName];
       if (!pad) {

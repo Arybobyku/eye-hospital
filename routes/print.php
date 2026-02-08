@@ -64,6 +64,15 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/general/monitoringefeksampingobat/{uuid}', [PrintRekamMedisCtrl::class, 'printMonitoringEfekSampingObat']);
     Route::get('rekammedis/general/forumulirreaksitransfusidarah/{uuid}', [PrintRekamMedisCtrl::class, 'printFormulirReaksiTranfusiDarah']);
     Route::get('rekammedis/general/penolakantindakananestesi/{uuid}', [PrintRekamMedisCtrl::class, 'printPenolakanTindakanAnestesi']);
+    Route::get('rekammedis/general/formpenilaianpraanestesisedasi/{uuid}', [PrintRekamMedisCtrl::class, 'printPenilaianPraAnestesiSedasi']);
+    Route::get('rekammedis/general/evaluasipraanesthesi/{uuid}', [PrintRekamMedisCtrl::class, 'printEvaluasiPraAnesthesi']);
+    Route::get('rekammedis/general/formtransfer/{uuid}', [PrintRekamMedisCtrl::class, 'printDokumenFormTransferPasien']);    
+    Route::get('rekammedis/general/permintaanpulangatasinisi/{uuid}', [PrintRekamMedisCtrl::class, 'printPermintaanPulangAtasInisiatifSendiri']);
+    Route::get('rekammedis/general/suratpengantaruntukdirawatinap/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratPengantarUntukDirawatInap']);
+    Route::get('rekammedis/general/persetujuantindakananestesi/{uuid}', [PrintRekamMedisCtrl::class, 'printpersetujuananestesi']);
+
+    Route::get('rekammedis/general/pengkajiandataumum/{uuid}', [PrintRekamMedisCtrl::class, 'printPengkajianDataUmum']);
+
     
     // REKAM MEDIS RAWAT JALAN
 	Route::get('rekammedis/{uuid}', [PrintRekamMedisCtrl::class, 'print']);
@@ -82,8 +91,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/bedah/rm2dot0/{uuid}', [PrintRekamMedisCtrl::class, 'printRm2dot0']);
     Route::get('rekammedis/bedah/rm2dot2/{uuid}', [PrintRekamMedisCtrl::class, 'printRm2dot2']);
     Route::get('rekammedis/bedah/rm2dot3/{uuid}', [PrintRekamMedisCtrl::class, 'printRm2dot3']);
-    Route::get('rekammedis/bedah/rm2dot9/{uuid}', [PrintRekamMedisCtrl::class, 'printRm2dot9']);
-    Route::get('rekammedis/bedah/rm4dot9/{uuid}', [PrintRekamMedisCtrl::class, 'printRm4dot9']);
+    Route::get('rekammedis/bedah/rm2dot9/{uuid}', [PrintRekamMedisCtrl::class, 'printPelaksanaanPencegahanPasienJatuh']);
+    Route::get('rekammedis/bedah/rm4dot9/{uuid}', [PrintRekamMedisCtrl::class, 'printChecklistKeselamatanPasienOperasi']);
     Route::get('rekammedis/bedah/rm8dot7/{uuid}', [PrintRekamMedisCtrl::class, 'printRm8dot7']);
     // Route::get('rekammedis/bedah/rm8dot8/{uuid}', [PrintRekamMedisCtrl::class, 'printRm8dot8']);
     // Route::get('rekammedis/bedah/rm8dot9/{uuid}', [PrintRekamMedisCtrl::class, 'printRm8dot9']);

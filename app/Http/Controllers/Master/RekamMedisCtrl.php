@@ -394,6 +394,9 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa fa-glass',
                     'color' => '#1ABC9C', // Turquoise
                 ],
+
+            
+
                 [
                     'table' => 'dokumen_catatan_keperawatan',
                     'type' => 'catatan_keperawatan',
@@ -404,11 +407,63 @@ class RekamMedisCtrl extends Controller
                 
                 [
                     'table' => 'dokumen_surat_pengantar_rawat_inap',
-                    'type' => 'dokumen_surat_pengantar_rawat_inap',
+                    'type' => 'surat_pengantar_rawat_inap',
                     'label' => 'Dokumen Surat Pengantar Rawat Inap',
                     'icon' => 'fa fa-bed',
                     'color' => '#673AB7', // Depp Purple
                 ],
+
+                [
+                    'table' => 'dokumen_form_transfer_pasien',
+                    'type' => 'form_transfer_pasien',
+                    'label' => 'Form Transfer',
+                    'icon' => 'fa fa-bed',
+                    'color' => '#795548', // Brown  
+                ],
+
+                [
+                    'table' => 'dokumen_penilaian_pra_anestesi_sedasi',
+                    'type' => 'dokumen_penilaian_pra_anestesi_sedasi',
+                    'label' => 'Penilaian Pra Anestesi Sedasi',
+                    'icon' => 'fa fa-procedures',
+                    'color' => '#009688', // Teal
+                ],
+
+                [
+                    'table' => 'dokumen_pelaksanaan_pencegahan_pasien_jatuh',
+                    'type' => 'pelaksanaan_pencegahan_pasien_jatuh',
+                    'label' => 'Dokumen Pelaksanaan Pencegahan Pasien Jatuh',
+                    'icon' => 'fa fa-procedures',
+                    'color' => '#3F51B5', // Indigo
+                ],
+
+                [
+                    'table' => 'dokumen_checklist_keselamatan_pasien_operasi',
+                    'type' => 'checklist_keselamatan_pasien_operasi',
+                    'label' => 'Dokumen Checklist Keselamatan Pasien Operasi',
+                    'icon' => 'fa fa-procedures',
+                    'color' => '#9099cc', // Indigo Muda
+                ],  
+
+                [
+                    'table' => 'dokumen_persetujuan_anestesi',
+                    'type' => 'dokumen_persetujuan_anestesi',
+                    'label' => 'Dokumen Persetujuan Anestesi',
+                    'icon' => 'fa fa-procedures',
+                    'color' => '#FF4081', // Pink Accent
+                ],
+
+                [
+                    'table' => 'dokumen_evaluasi_pra_anesthesi',
+                    'type' => 'dokumen_evaluasi_pra_anesthesi',
+                    'label' => 'Dokumen Evaluasi Pra Anestesi',
+                    'icon' => 'fa fa-procedures',
+                    'color' => '#8E24AA', // Purple Gelap
+                ],
+
+                // Tambahkan konfigurasi tabel dokumen baru di sini
+
+            
                 
             ];
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
@@ -669,8 +724,54 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_form_transfer_pasien' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'petugas_transfer',
+                // 'detail_info' => 'tujuan_transfer'
+            ],
+
+            
+                'dokumen_penilaian_pra_anestesi_sedasi' => [
+                    'tanggal' => 'created_at',
+                    'waktu' => 'created_at',
+                    // 'user_pelaksana' => 'dokter_anestesi',
+                    // 'detail_info' => 'jenis_sedasi'
+            ],
+
+                'dokumen_pelaksanaan_pencegahan_pasien_jatuh' => [
+                    'tanggal' => 'created_at',
+                    'waktu' => 'created_at',
+                    // 'user_pelaksana' => 'perawat_pelaksana',
+                    // 'detail_info' => 'tingkat_resiko_jatuh'
+            ],
+
+            'dokumen_checklist_keselamatan_pasien_operasi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'perawat_sirkuler',
+                // 'detail_info' => 'jenis_operasi'
+
             // Tambahkan mapping untuk tabel baru di sini
+        ],
+
+        
+            'dokumen_evaluasi_pra_anesthesi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'dokter_anestesi',
+                // 'detail_info' => 'hasil_evaluasi'
+        ],
+
+    
+            'dokumen_persetujuan_anestesi' => [
+                'tanggal' => 'created_at',
+                'waktu' => 'created_at',
+                // 'user_pelaksana' => 'dokter_anestesi',
+                // 'detail_info' => 'jenis_anestesi'
+        ],
         ];
+
 
         return $mapping[$table][$fieldType] ?? $fieldType;
     }
@@ -729,7 +830,13 @@ class RekamMedisCtrl extends Controller
                 'cppt_rawat_inap' => 'dokumen_cppt_rawat_inap',
                 'monitoring_efek_samping_obat' => 'dokumen_monitoring_efek_samping_obat',
                 'catatan_keperawatan' => 'dokumen_catatan_keperawatan',
-                'dokumen_surat_pengantar_rawat_inap' => 'dokumen_surat_pengantar_rawat_inap',
+                'surat_pengantar_rawat_inap' => 'dokumen_surat_pengantar_rawat_inap',
+                'dokumen_form_transfer_pasien' => 'dokumen_form_transfer_pasien',
+                'dokumen_penilaian_pra_anestesi_sedasi' => 'dokumen_penilaian_pra_anestesi_sedasi',
+                'pelaksanaan_pencegahan_pasien_jatuh' => 'dokumen_pelaksanaan_pencegahan_pasien_jatuh',
+                'checklist_keselamatan_pasien_operasi' => 'dokumen_checklist_keselamatan_pasien_operasi',
+                'dokumen_evaluasi_pra_anesthesi' => 'dokumen_evaluasi_pra_anesthesi',
+                'dokumen_persetujuan_anestesi' => 'dokumen_persetujuan_anestesi',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -780,6 +887,10 @@ class RekamMedisCtrl extends Controller
                 'laser_bargage' => 'dokumen_form_laser_bargage',
                 'laporan_bedah' => 'laporan_pembedahan',
                 'informed_consent' => 'dokumen_informed_consent',
+                'form_transfer_pasien' => 'dokumen_form_transfer_pasien',
+                'surat_pengantar_rawat_inap' => 'dokumen_surat_pengantar_rawat_inap',
+                'dokumen_pelaksanaan_pencegahan_pasien_jatuh' => 'dokumen_pelaksanaan_pencegahan_pasien_jatuh',
+                'dokumen_checklist_keselamatan_pasien_operasi' => 'dokumen_checklist_keselamatan_pasien_operasi',
             ];
 
             if (!isset($tableMap[$type])) {

@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>REKAM MEDIS GENERAL - SURAT KONSUL</title>
+    <title>REKAM MEDIS GENERAL - SURAT PENGANTAR UNTUK RAWAT INAP</title>
     <style>
     @page { margin: 18px; }
     body { margin: 18px; }
@@ -61,10 +61,10 @@
             <td width="69%">
                 <table style="width:100%; border:none;">
                     <tr>
-                        <td width="1%"><input type="checkbox"></td>
+                        <td width="1%"><input type="checkbox"{{ $data->asal_ruangan == 'IGD' ? 'checked' : '' }}></td>
                         <td width="9%">IGD</td>
-                        <td width="1%"><input type="checkbox"></td>
-                        <td width="89%">Poliklinik, ................</td>
+                        <td width="1%"><input type="checkbox"{{ $data->asal_ruangan == 'Poliklinik' ? 'checked' : '' }}></td>
+                        <td width="89%">Poliklinik, {{$data->nama_poliklinik}}</td>
                     </tr>
                 </table>
             </td>
@@ -72,7 +72,7 @@
         <tr>
             <td  style="padding-left: 5px; padding: 30px 7px;">Rencana Perawatan di</td>
             <td > : </td>
-            <td >........................................................</td>
+            <td >{{$data->rencana_perawatan_di}}</td>
         </tr>
         <tr>
             <td colspan="3" style="padding: 10px 7px; ">Bersama ini kami kirimkan pasien tersebut diatas untuk dirawat inap :</td>
@@ -81,33 +81,33 @@
         <tr>
             <td style="padding: 30px 7px;">Karena Menderita</td>
             <td> : </td>
-            <td >........................................................</td>
+            <td >{{$data->karena_menderita}}</td>
         </tr>
         <tr>
             <td style=" padding: 30px 7px;">Saran Terapi</td>
             <td> : </td>
-            <td >........................................................</td>
+            <td >{{$data->saran_terapi}}</td>
         </tr>
                 <tr>
             <td style="padding: 30px 7px;">Rencana Tindakan</td>
             <td> : </td>
-            <td >........................................................</td>
+            <td >{{$data->rencana_tindakan}}</td>
         </tr>
         <tr>
             <td colspan="3" style="padding: 10px 7px;">Mohon ditindaklanjuti untuk rencana tindakan terapi. </td>
         </tr>
 
         <tr>
-            <td colspan="3" style="text-align: center; padding-top: 60px;">Medan, Tgl..............</td>
+            <td colspan="3" style="text-align: center; padding-top: 60px;">Medan,  {{ $data->tanggal_surat}}</td>
         </tr>
         <tr>
             <td colspan="3" style="text-align: center;">Dokter yang memeriksa</td>
         </tr>
         <tr>
-            <td colspan="3" style="text-align: center; padding-top: 90px; padding-bottom: 10px;">(............................................)</td>
+            <td colspan="3" style="text-align: center; padding-top: 20px; padding-bottom: 10px;"> <img src="{{ $data->ttd_dokter }}" alt="Base64 Image" width="200px"></td>
         </tr>
         <tr>
-            <td colspan="3" style="text-align: center;">Nama Jelas Dan Tanda Tangan</td>
+            <td colspan="3" style="text-align: center; padding-bottom: 10px;">{{ $data->nama_dokter_ttd }}</td>
         </tr>
     </table>
 </div>

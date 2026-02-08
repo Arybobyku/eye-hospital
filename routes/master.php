@@ -36,6 +36,51 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('dokumen-persetujuan-umum', [PasienCtrl::class, 'dokumenPersetujuanUmum'])->name('dokumen-persetujuan-umum');
 		Route::post('list-dokumen-persetujuan-umum', [PasienCtrl::class, 'listDokumenPersetujuanUmum'])->name('list-dokumen-pertujuan-umum');
 
+		Route::post('/pengkajian-data-umum', [PasienCtrl::class, 'pengkajianDataUmum'])->name('master-pasien-pengkajian-data-umum');
+		Route::post('/list-pengkajian-data-umum', [PasienCtrl::class, 'listPengkajianDataUmum'])->name('master-pasien-list-pengkajian-data-umum');
+
+		// ✅ TAMBAHAN: Route untuk update dan delete
+		Route::post('/pengkajian-data-umum-update/{id}', [PasienCtrl::class, 'updatePengkajianDataUmum'])->name('master-pasien-update-pengkajian-data-umum');
+		Route::delete('/pengkajian-data-umum/{id}', [PasienCtrl::class, 'deletePengkajianDataUmum'])->name('master-pasien-delete-pengkajian-data-umum');
+		Route::get('/pengkajian-data-umum/{id}', [PasienCtrl::class, 'getPengkajianDataUmum'])->name('master-pasien-get-pengkajian-data-umum');
+
+		// Route::post('penunjang-medis-list', [PasienCtrl::class, 'penunjangMedisList'])->name('master-pasien-penunjang-medis-list');
+		// Route::post('list-penunjang-medis', [PasienCtrl::class, 'listPenunjangMedis'])->name('master-pasien-list-penunjang_medis');
+
+		 // Routes Laboratorium
+		Route::prefix('laboratorium')->group(function () {
+        Route::get('hasil-pemeriksaan', [PasienCtrl::class, 'hasilPemeriksaan']);
+        Route::post('hasil-upload-laboratorium', [PasienCtrl::class, 'hasilUploadLaboratorium']);
+        
+        // ✅ PERBAIKAN: Tambahkan {uuid} parameter
+        Route::post('hasil-update/{uuid}', [PasienCtrl::class, 'hasilUpdateLaboratorium']);
+        
+        Route::get('user-info', [PasienCtrl::class, 'userInfo']);
+        
+        // ✅ PERBAIKAN: Ganti method destroy menjadi deleteLab
+        Route::delete('hasil/{uuid}', [PasienCtrl::class, 'deleteLab']);
+        
+        // ✅ TAMBAHAN: Route untuk print/view file
+        Route::get('print/{uuid}', [PasienCtrl::class, 'printLab']);
+    });
+
+		// Routes Radiologi
+ 		Route::prefix('radiologi')->group(function () {
+        Route::get('hasil-radiologi', [PasienCtrl::class, 'hasilRadiologi']);
+        Route::post('hasil-upload-radiologi', [PasienCtrl::class, 'hasilUploadRadiologi']);
+        
+        // ✅ PERBAIKAN: Tambahkan {uuid} parameter
+        Route::post('hasil-update/{uuid}', [PasienCtrl::class, 'hasilUpdateRadiologi']);
+        
+        // ✅ PERBAIKAN: Ganti method destroy menjadi deleteRadiologi
+        Route::delete('hasil/{uuid}', [PasienCtrl::class, 'deleteRadiologi']);
+        
+        // ✅ PERBAIKAN: Ganti view-file menjadi menggunakan uuid
+        Route::get('view-file/{uuid}', [PasienCtrl::class, 'viewFileRadiologi']);
+    });
+});
+	
+
 		// Lampiran
 		Route::post('dokumen-form-laser-bargage', [PasienCtrl::class, 'storeFormLaseBarage'])->name('master-pasien-storeFormLaseBarage');
 		Route::post('dokumen-laporan-pembedahan', [PasienCtrl::class, 'storeLaporanPembedahan'])->name('master-pasien-storeLaporanPembedahan');
@@ -72,6 +117,10 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('dokumen-penilaian-pra-anestesi-sedasi', [PasienCtrl::class, 'storePenilaianPraAnestesiSedasi'])->name('master-pasien-storePenilaianPraAnestesiSedasi');
 		//Route::post('dokumen-laporan-pembedahan', [PasienCtrl::class, 'storeLaporanPembedahan'])->name('master-pasien-storeLaporanPembedahan');
 		Route::post('dokumen-surat-pengantar-rawat-inap', [PasienCtrl::class, 'storeSuratPengantarRawatInap'])->name('master-pasien-storeSuratPengantarRawatInap');
+		Route::post('dokumen-pelaksanaan-pencegahan-pasien-jatuh', [PasienCtrl::class, 'storeDokumenPelaksanaanPencegahanPasienJatuh'])->name('master-pasien-storeDokumenPelaksanaanPencegahanPasienJatuh');
+		Route::post('dokumen-checklist-keselamatan-pasien-operasi', [PasienCtrl::class, 'storeChecklistKeselamatanPasienOperasi'])->name('master-pasien-storeDokumenChecklistKeselamatanPasienOperasi');
+		Route::post('dokumen-form-persetujuan-tindakan-anestesi', [PasienCtrl::class, 'storePersetujuanAnestesi'])->name('master-pasien-storePersetujuanAnestesi');
+		
 	});
 
 	Route::prefix('rekammedis')->group(function () {
@@ -89,4 +138,3 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 
 		
 	});
-});

@@ -20,7 +20,7 @@
         </div>
         <div>
           <label>NIK :</label>
-          <input type="text" v-model="form.nik" class="input-rme" readonly />
+          <input type="text" v-model="form.nik" class="input-rme" />
         </div>
       </div>
     
@@ -61,13 +61,13 @@
             </div>
             <div>
               <label>Pemberi Informasi :</label>
-              <input type="text" v-model="form.perawat_asisten" class="input-rme" />
+              <input type="text" v-model="form.pemberi_informasi" class="input-rme" />
             </div>
           </div>
           <div class="form-row-2">
             <div>
               <label>Penerima informasi/pemberi persetujuan* :</label>
-              <input type="text" v-model="form.ruangan" class="input-rme" />
+              <input type="text" v-model="form.penerima_informasi" class="input-rme" />
             </div>
           </div>
         </div>
@@ -78,26 +78,26 @@
             <div class="form-row-2">
                 <div>
                   <label>Status Fisik ASA :</label>
-                  <input type="text" v-model="form.dokter_pelaksana" class="input-rme" />
+                  <input type="text" v-model="form.diagnosis" class="input-rme" />
                 </div>
             </div>
             <h5 class="section-title-rme">Dasar Diagnosis</h5>
             <div class="form-row-2">
                 <div>
                   <label>Klinis :</label>
-                  <input type="text" v-model="form.dokter_pelaksana" class="input-rme" />
+                  <input type="text" v-model="form.dasar_diagnosis_klinis" class="input-rme" />
                 </div>
                 <div>
                   <label>Radiologi :</label>
-                  <input type="text" v-model="form.dokter_pelaksana" class="input-rme" />
+                  <input type="text" v-model="form.dasar_diagnosis_radiologi" class="input-rme" />
                 </div>
                 <div>
                   <label>EKG :</label>
-                  <input type="text" v-model="form.dokter_pelaksana" class="input-rme" />
+                  <input type="text" v-model="form.dasar_diagnosis_ekg" class="input-rme" />
                 </div>
                 <div>
                   <label>Laboratorium :</label>
-                  <input type="text" v-model="form.dokter_pelaksana" class="input-rme" />
+                  <input type="text" v-model="form.dasar_diagnosis_laboratorium" class="input-rme" />
                 </div>
             </div>
         </div>
@@ -114,19 +114,19 @@
             <div class="form-row-inline">
               <span class="row-label">1. Umum :</span>
               <label class="checkbox-item">
-                <input type="checkbox" v-model="form.umum_intubasi" />
+                <input type="checkbox" v-model="form.anestesi_umum" />
                 Intubasi
               </label>
               <label class="checkbox-item">
-                <input type="checkbox" v-model="form.umum_lma" />
+                <input type="checkbox" v-model="form.anestesi_umum_intubasi" />
                 LMA
               </label>
               <label class="checkbox-item">
-                <input type="checkbox" v-model="form.umum_fm" />
+                <input type="checkbox" v-model="form.anestesi_umum_fm" />
                 FM
               </label>
               <label class="checkbox-item">
-                <input type="checkbox" v-model="form.umum_tiva" />
+                <input type="checkbox" v-model="form.anestesi_umum_tiva" />
                 TIVA
               </label>
             </div>
@@ -149,13 +149,13 @@
             <div class="form-row-2">
               <div style="display: flex; flex-direction: column;">
                 <label>Indikasi Tindakan & Tujuan :</label>
-                <input type="text" v-model="form.dokter_pelaksana" class="input-rme" />
+                <input type="text" v-model="form.indikasi_tindakan" class="input-rme" />
               </div>
             </div>
             <div class="form-row-2">
               <div style="display: flex; flex-direction: column;">
                 <label>Tata Cara Tindakan :</label>
-                <input type="text" v-model="form.dokter_pelaksana" class="input-rme" />
+                <input type="text" v-model="form.tata_cara_tindakan" class="input-rme" />
               </div>
             </div>
           </div>
@@ -245,19 +245,19 @@
             <div class="form-row-2">
               <div style="display: flex; flex-direction: column;">
                 <label>Prognosis  :</label>
-                <input type="text" v-model="form.dokter_pelaksana" class="input-rme" />
+                <input type="text" v-model="form.prognosis" class="input-rme" />
               </div>
             </div>
             <div class="form-row-2">
               <div style="display: flex; flex-direction: column;">
                 <label>Alternatif tindakan :</label>
-                <input type="text" v-model="form.dokter_pelaksana" class="input-rme" />
+                <input type="text" v-model="form.alternatif_tindakan" class="input-rme" />
               </div>
             </div>
             <div class="form-row-2">
               <div style="display: flex; flex-direction: column;">
                 <label>Lain-lain :</label>
-                <input type="text" v-model="form.dokter_pelaksana" class="input-rme" />
+                <input type="text" v-model="form.lain_lain" class="input-rme" />
               </div>
             </div>
           </div>
@@ -322,60 +322,70 @@
         <!-- PERNYATAAN DAN TTD DOKTER & PASIEN SEJAJAR -->
         <div class="row mt-4">
           <!-- KOLOM KIRI - DOKTER -->
-          <div class="col-md-12 mb-4">
-            <label style="margin-bottom: 20px; text-align: justify; display: block; line-height: 1.6;">
-                Yang bertanda tangan di bawah ini, saya nama 
-                <span style="color: #667eea; font-weight: 700;">
-                    <span id="displayDokter" style="border-bottom: 2px dotted #667eea; padding: 0 5px;">_____</span>
-                </span>
-                , tanggal lahir
-                <span style="color: #667eea; font-weight: 700;">
-                    <span id="displayDokter" style="border-bottom: 2px dotted #667eea; padding: 0 5px;">_____</span>
-                </span>
-                laki-laki/perempuan, alamat
-                <span style="color: #667eea; font-weight: 700;">
-                    <span id="displayDokter" style="border-bottom: 2px dotted #667eea; padding: 0 5px;">_____</span>
-                </span>
-                Dengan ini menyatakan <b>PERSETUJUAN</b> untuk dilakukannya tindakan <b>ANESTESI</b> terhadap saya /
-                <span style="color: #667eea; font-weight: 700;">
-                    <span id="displayDokter" style="border-bottom: 2px dotted #667eea; padding: 0 5px;">_____</span>
-                </span>
-                 saya* bernama
-                <span style="color: #667eea; font-weight: 700;">
-                    <span id="displayDokter" style="border-bottom: 2px dotted #667eea; padding: 0 5px;">_____</span>
-                </span>
-                tanggal lahir
-                <span style="color: #667eea; font-weight: 700;">
-                    <span id="displayDokter" style="border-bottom: 2px dotted #667eea; padding: 0 5px;">_____</span>
-                </span> 
-                laki-laki/perempuan, alamat
-                <span style="color: #667eea; font-weight: 700;">
-                    <span id="displayDokter" style="border-bottom: 2px dotted #667eea; padding: 0 5px;">_____</span>
-                </span> <br> <br>
-                Saya telah dijelaskan dan memahami tentang jenis tindakan pembiusan beserta manfaat, risiko dan komplikasi lain yang mungkin timbul.                 
-                <br> 
-                Saya juga menyadari bahwa dokter melakukan suatu upaya dan oleh karena ilmu kedokteran bukanlah ilmu pasti, maka keberhasilan tindakan kedokteran bukanlah keniscayaan, melainkan sangat bergantung kepada izin Tuhan Yang Maha Esa.            </label>
-                <div class="row mb-3">
-                  <div class="col-md-6 mb-2">
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-                      <span>Medan, Tanggal</span>
-                      <input 
-                        type="date" 
-                        v-model="form.tanggal" 
-                        class="input-rme"
-                        style="width: 200px;"
-                      />
-                      <span>Waktu</span>
-                      <input 
-                        type="time" 
-                        v-model="form.waktu" 
-                        class="input-rme"
-                        style="width: 130px;"
-                      />
-                    </div>
-                  </div>
-                </div>
+          <div class="row mt-4">
+    <!-- KOLOM KIRI - DOKTER -->
+    <div class="col-md-12 mb-4">
+      <label style="margin-bottom: 20px; text-align: justify; display: block; line-height: 1.6;">
+          Yang bertanda tangan di bawah ini, saya nama 
+          <span style="color: #667eea; font-weight: 700;">
+              <input type="text" v-model="form.pernyataan_nama" class="line-input" style="border-bottom: 2px dotted #667eea; padding: 0 5px; min-width: 200px;">
+          </span>
+          , tanggal lahir
+          <span style="color: #667eea; font-weight: 700;">
+              <input type="date" v-model="form.pernyataan_tanggal_lahir" class="line-input" style="border-bottom: 2px dotted #667eea; padding: 0 5px; min-width: 150px;">
+          </span>
+          <select v-model="form.pernyataan_jenis_kelamin" class="line-input" style="border-bottom: 2px dotted #667eea; padding: 0 5px; min-width: 100px; color: #667eea; font-weight: 700;">
+            <option value="L">laki-laki</option>
+            <option value="P">perempuan</option>
+          </select>, alamat
+          <span style="color: #667eea; font-weight: 700;">
+              <input type="text" v-model="form.pernyataan_alamat" class="line-input"  style="border-bottom: 2px dotted #667eea; padding: 0 5px; min-width: 250px;">
+          </span>
+          Dengan ini menyatakan <b>PENOLAKAN</b> untuk dilakukannya tindakan <b>ANESTESI</b> terhadap saya /
+          <span style="color: #667eea; font-weight: 700;">
+              <input type="text" v-model="form.pernyataan_hubungan" class="line-input"style="border-bottom: 2px dotted #667eea; padding: 0 5px; min-width: 120px;">
+          </span>
+           saya* bernama
+          <span style="color: #667eea; font-weight: 700;">
+              <input type="text" v-model="form.pernyataan_nama_pasien" class="line-input" style="border-bottom: 2px dotted #667eea; padding: 0 5px; min-width: 200px;">
+          </span>
+          tanggal lahir
+          <span style="color: #667eea; font-weight: 700;">
+              <input type="date" v-model="form.pernyataan_tanggal_lahir_pasien" class="line-input" style="border-bottom: 2px dotted #667eea; padding: 0 5px; min-width: 150px;">
+          </span> 
+          <select v-model="form.pernyataan_jenis_kelamin_pasien" class="line-input" style="border-bottom: 2px dotted #667eea; padding: 0 5px; min-width: 100px; color: #667eea; font-weight: 700;">
+            <option value="L">laki-laki</option>
+            <option value="P">perempuan</option>
+          </select>, alamat
+          <span style="color: #667eea; font-weight: 700;">
+              <input type="text" v-model="form.pernyataan_alamat_pasien" class="line-input" style="border-bottom: 2px dotted #667eea; padding: 0 5px; min-width: 250px;">
+          </span> <br> <br>
+          Saya telah dijelaskan dan memahami tentang jenis tindakan pembiusan beserta manfaat, risiko dan komplikasi lain yang mungkin timbul.                 
+          <br> 
+          Saya juga menyadari bahwa dokter melakukan suatu upaya dan oleh karena ilmu kedokteran bukanlah ilmu pasti, maka keberhasilan tindakan kedokteran bukanlah keniscayaan, melainkan sangat bergantung kepada izin Tuhan Yang Maha Esa.            </label>
+          <div class="row mb-3">
+            <div class="col-md-6 mb-2">
+              <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                <span>Medan, Tanggal</span>
+                <input 
+                  type="date" 
+                  v-model="form.pernyataan_tanggal" 
+                  class="input-rme"
+                  style="width: 200px;"
+                />
+                <span>Waktu</span>
+                <input 
+                  type="time" 
+                  v-model="form.pernyataan_waktu" 
+                  class="input-rme"
+                  style="width: 130px;"
+                />
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
             </div>
           </div>
 
@@ -476,7 +486,7 @@ export default {
         nik: "",
         nama: "",
         tanggal_lahir: "",
-        jenis_kelamin: "L",
+        jenis_kelamin: "",
         alamat: "",
         dokter_pelaksana: "",
         perawat_asisten: "",
@@ -500,9 +510,9 @@ export default {
         persiapan_pasien: "",
         teknik_tindakan: "",
         temuan_tindakan: "",
-        hasil_tindakan: "Berhasil",
-        kondisi_pasien: "Baik",
-        ada_komplikasi: "tidak",
+        hasil_tindakan: "",
+        kondisi_pasien: "",
+        ada_komplikasi: "",
         deskripsi_komplikasi: "",
         catatan_tambahan: "",
         instruksi_perawatan_luka: "",
@@ -902,6 +912,22 @@ label {
 .form-row-2 > div {
   flex: 1;         /* biar ukurannya seimbang */
   padding: 0.5rem; /* ruang di dalam setiap kolom */
+}
+
+.line-input {
+  border: none;
+  border-bottom: 2px dotted;
+  background: transparent;
+  outline: none;
+  text-align: center;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 700;
+}
+
+.line-input:focus {
+  border-bottom: 2px solid ;
+  background: #f0f4ff;
 }
 
 .signature-row {

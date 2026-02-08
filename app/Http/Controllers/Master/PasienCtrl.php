@@ -15,7 +15,11 @@ use App\Models\DokumenSuratBalasanKonsul;
 use App\Models\DokumenSuratKonsul;
 use App\Models\DokumenSuratKontrol;
 use App\Models\DokumenSuratPenolakanRujukan;
+use Illuminate\Support\Facades\Storage;
 use App\Models\DokumenSuratPernyataanBatalOperasi;
+use App\Models\HasilRadiologi;
+use App\Models\HasilLaboratorium;
+use App\Models\DokumenPersetujuanAnestesi;
 use App\Models\DokumenSuratPernyataanPasienUmum;
 use App\Models\DokumenPersetujuanUmum;
 use App\Models\DokumenTindakanLaserLPI;
@@ -42,9 +46,11 @@ use App\Models\DokumenMonitoringEfekSampingObat;
 use App\Models\DokumenCatatanKeperawatan;
 use App\Models\DokumenFormTransferPasien;
 use App\Models\DokumenPelaksanaanPencegahanPasienJatuh;
+use App\Models\DokumenChecklistKeselamatanPasienOperasi;
 use App\Models\DokumenEvaluasiPraAnesthesi;
 use App\Models\DokumenSuratPengantarRawatInap;
 use App\Models\DokumenPenilaianPraAnestesiSedasi;
+use App\Models\PengkajianDataUmumPasien;
 use Cookie;
 use Crypt;
 use DB;
@@ -355,6 +361,8 @@ class PasienCtrl extends Controller
 
     }
 
+
+    
     // public function storeLaporanPembedahan(Request $request) TBD Konfirm ulang ke boby
     // {
     //     try {
@@ -406,6 +414,179 @@ class PasienCtrl extends Controller
     //         ], 500);
     //     }
     // }
+
+/**
+ * Get Single Pengkajian Data Umum (untuk edit)
+ */
+public function getPengkajianDataUmum($id)
+{
+    try {
+        $data = PengkajianDataUmumPasien::where('id', $id)->first();
+
+        if (!$data) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal memuat data: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Update Pengkajian Data Umum Pasien
+ */
+public function updatePengkajianDataUmum(Request $request, $id)
+{
+    try {
+        DB::beginTransaction();
+
+        $pengkajian = PengkajianDataUmumPasien::where('id', $id)->first();
+
+        if (!$pengkajian) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        // Update data
+        $pengkajian->id = $request->id;
+        $pengkajian->uuid_pasien = $request->uuid_pasien;
+        $pengkajian->tanggal = $request->tanggal;
+        $pengkajian->waktu = $request->waktu;
+        $pengkajian->nik = $request->nik;
+        $pengkajian->kodemr = $request->kodemr;
+        $pengkajian->nama = $request->nama;
+        $pengkajian->nama_pasangan = $request->nama_pasangan;
+        $pengkajian->nik_pasangan = $request->nik_pasangan;
+        $pengkajian->pekerjaan = $request->pekerjaan;
+        $pengkajian->alamat = $request->alamat;
+        $pengkajian->agama = $request->agama;
+        $pengkajian->jenis_kelamin = $request->jenis_kelamin;
+        $pengkajian->tempat_tanggal_lahir = $request->tempat_tanggal_lahir;
+        $pengkajian->status_pembiayaan = $request->status_pembiayaan;
+        $pengkajian->status_perkawinan = $request->status_perkawinan;
+        $pengkajian->pendidikan = $request->pendidikan;
+
+        $pengkajian->save();
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil diupdate',
+            'data' => $pengkajian
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal update: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Delete Pengkajian Data Umum Pasien
+ */
+public function deletePengkajianDataUmum($id)
+{
+    try {
+        DB::beginTransaction();
+
+        $pengkajian = PengkajianDataUmumPasien::where('id', $id)->first();
+
+        if (!$pengkajian) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        $pengkajian->delete();
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil dihapus'
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus: ' . $e->getMessage()
+        ], 500);
+    }
+}
+        /**
+     * Store Pengkajian Data Umum Pasien
+     */
+    public function pengkajianDataUmum(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        $data = PengkajianDataUmumPasien::store($request);
+
+        return response()->json(['data' => $data]);
+    }
+
+    /**
+     * List Pengkajian Data Umum Pasien
+     */
+    public function listPengkajianDataUmum(Request $request)
+    {
+        $page = $request->page - 1;
+        $skip = $page * $this->take;
+        $search = $request->search;
+
+        if ($request->search != '') {
+            $data = PengkajianDataUmumPasien::join('pasien', 'pengkajian_data_umum_pasien.uuid_pasien', '=', 'pasien.uuid')
+                ->where('uuid_pasien', '=', $search)
+                ->orderBy('tanggal', 'desc')
+                ->skip($skip)->take($this->take)
+                ->get();
+                
+            $total = PengkajianDataUmumPasien::join('pasien', 'pengkajian_data_umum_pasien.uuid_pasien', '=', 'pasien.uuid')
+                ->where('uuid_pasien', '=', $search)
+                ->count();
+        } else {
+            $data = PengkajianDataUmumPasien::join('pasien', 'pengkajian_data_umum_pasien.uuid_pasien', '=', 'pasien.uuid')
+                ->where('uuid_pasien', '=', $search)
+                ->orderBy('tanggal', 'desc')
+                ->skip($skip)->take($this->take)
+                ->get();
+                
+            $total = PengkajianDataUmumPasien::join('pasien', 'pengkajian_data_umum_pasien.uuid_pasien', '=', 'pasien.uuid')
+                ->where('uuid_pasien', '=', $search)
+                ->count();
+        }
+
+        return response()->json(['data' => $data, 'total' => $total]);
+    }
+
+    public function print($uuid)
+{
+  $data = HasilLab::where('uuid', $uuid)->firstOrFail();
+  $pdf = PDF::loadView('print.lab', compact('data'));
+  return $pdf->stream('hasil-lab.pdf');
+}
+
+
 
     public function storeFormLaseBarage(Request $request)
     {
@@ -2870,6 +3051,7 @@ public function storeSuratPengantarRawatInap(Request $request)
     }
 }
 
+
 public function storeChecklistKeselamatanPasienOperasi(Request $request)
 {
     try {
@@ -2931,5 +3113,512 @@ public function storeChecklistKeselamatanPasienOperasi(Request $request)
     }
 }
 
+   // Get list hasil lab
+    public function hasilPemeriksaan(Request $request)
+    {
+        try {
+            $limit = $request->limit ?? 100;
+            $page = $request->page ?? 1;
+            $search = $request->search ?? '';
+
+            $query = HasilLaboratorium::where('delete_soft', 0);
+
+            if ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('no_periksa', 'ilike', "%{$search}%")
+                      ->orWhere('nama_pasien', 'ilike', "%{$search}%")
+                      ->orWhere('mr', 'ilike', "%{$search}%")
+                      ->orWhere('register', 'ilike', "%{$search}%");
+                });
+            }
+
+            $data = $query->orderBy('tgl_periksa', 'desc')
+                          ->orderBy('jam_periksa', 'desc')
+                          ->limit($limit)
+                          ->offset(($page - 1) * $limit)
+                          ->get();
+
+            $total = $query->count();
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+                'total' => $total
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Upload hasil lab
+    public function hasilUploadLaboratorium(Request $request)
+    {
+        $request->validate([
+            'no_periksa' => 'required|string',
+            'tgl_periksa' => 'required|date',
+            'jam_periksa' => 'required',
+            'register' => 'required|string',
+            'mr' => 'required|string',
+            'nama_pasien' => 'required|string',
+            'layanan_dari' => 'required|string',
+            'dokter_pengirim' => 'required|string',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'keterangan' => 'nullable|string'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $file = $request->file('file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('hasil_laboratorium', $filename, 'public');
+
+            $hasil = HasilLaboratorium::create([
+                'uuid' => Uuid::uuid4()->toString(),
+                'no_periksa' => $request->no_periksa,
+                'pasien_uuid' => $request->pasien_uuid ?? null,
+                'pasien_nama' => $request->nama_pasien,
+                'register' => $request->register,
+                'mr' => $request->mr,
+                'tgl_periksa' => $request->tgl_periksa,
+                'jam_periksa' => $request->jam_periksa,
+                'layanan_dari' => $request->layanan_dari,
+                'dokter_pengirim_uuid' => null,
+                'dokter_pengirim' => $request->dokter_pengirim,
+                'nama_file' => $file->getClientOriginalName(),
+                'file_path' => $path,
+                'keterangan' => $request->keterangan,
+                'tanggal_upload' => date('Y-m-d'),
+                'waktu_upload' => date('H:i:s'),
+                'uploaded_by_uuid' => $pengguna_uuid,
+                'uploaded_by_nama' => $pengguna_nama,
+                'is_verified' => false,
+                'delete_soft' => 0
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Hasil lab berhasil diupload',
+                'data' => $hasil
+            ], 201);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal upload: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Update hasil radiologi
+public function hasilUpdateRadiologi(Request $request, $uuid)
+{
+    $request->validate([
+        'no_radiologi' => 'required|string',
+        'tanggal' => 'required|date',
+        'nama_pasien' => 'required|string',
+        'register' => 'required|string',
+        'pemeriksaan' => 'required|string',
+        'dokter_pengirim' => 'required|string',
+        'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        'keterangan' => 'nullable|string'
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        $hasil = HasilRadiologi::where('uuid', $uuid)
+                              ->where('delete_soft', 0)
+                              ->first();
+
+        if (!$hasil) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        $hasil->no_radiologi = $request->no_radiologi;
+        $hasil->pasien_nama = $request->nama_pasien;
+        $hasil->register = $request->register;
+        $hasil->tanggal = $request->tanggal;
+        $hasil->pemeriksaan = $request->pemeriksaan;
+        $hasil->dokter_pengirim = $request->dokter_pengirim;
+        $hasil->keterangan = $request->keterangan;
+
+        if ($request->hasFile('file')) {
+            // Hapus file lama
+            if ($hasil->file_path && Storage::disk('public')->exists($hasil->file_path)) {
+                Storage::disk('public')->delete($hasil->file_path);
+            }
+
+            $file = $request->file('file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('hasil_radiologi', $filename, 'public');
+
+            $hasil->nama_file = $file->getClientOriginalName();
+            $hasil->file_path = $path;
+        }
+
+        $hasil->save();
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Hasil radiologi berhasil diupdate',
+            'data' => $hasil
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal update: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+// Delete Lab
+public function deleteLab($uuid)
+{
+    try {
+        DB::beginTransaction();
+
+        $hasil = HasilLaboratorium::where('uuid', $uuid)
+                                  ->where('delete_soft', 0)
+                                  ->first();
+
+        if (!$hasil) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        if ($hasil->is_verified) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data yang sudah diverifikasi tidak dapat dihapus'
+            ], 403);
+        }
+
+        // Soft delete
+        $hasil->delete_soft = 1;
+        $hasil->save();
+
+        // Atau hard delete (jika ingin hapus permanen + file)
+        // if ($hasil->file_path && Storage::disk('public')->exists($hasil->file_path)) {
+        //     Storage::disk('public')->delete($hasil->file_path);
+        // }
+        // $hasil->delete();
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data lab berhasil dihapus'
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+
+// Print Lab (untuk menampilkan file PDF)
+public function printLab($uuid)
+{
+    try {
+        $hasil = HasilLaboratorium::where('uuid', $uuid)
+                                  ->where('delete_soft', 0)
+                                  ->first();
+
+        if (!$hasil) {
+            abort(404, 'Data tidak ditemukan');
+        }
+
+        $filePath = storage_path('app/public/' . $hasil->file_path);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File tidak ditemukan di server');
+        }
+
+        return response()->file($filePath, [
+            'Content-Type' => mime_content_type($filePath),
+            'Content-Disposition' => 'inline; filename="' . $hasil->nama_file . '"'
+        ]);
+    } catch (\Exception $e) {
+        abort(500, 'Gagal membuka file: ' . $e->getMessage());
+    }
+}
+
+// Delete Radiologi
+public function deleteRadiologi($uuid)
+{
+    try {
+        DB::beginTransaction();
+
+        $hasil = HasilRadiologi::where('uuid', $uuid)
+                               ->where('delete_soft', 0)
+                               ->first();
+
+        if (!$hasil) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        // Soft delete
+        $hasil->delete_soft = 1;
+        $hasil->save();
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data radiologi berhasil dihapus'
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+// Update method hasilUpdateLaboratorium untuk menerima $uuid parameter
+public function hasilUpdateLaboratorium(Request $request, $uuid)
+{
+    $request->validate([
+        'no_periksa' => 'required|string',
+        'tgl_periksa' => 'required|date',
+        'jam_periksa' => 'required',
+        'register' => 'required|string',
+        'mr' => 'required|string',
+        'nama_pasien' => 'required|string',
+        'layanan_dari' => 'required|string',
+        'dokter_pengirim' => 'required|string',
+        'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120',
+        'keterangan' => 'nullable|string'
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        $hasil = HasilLaboratorium::where('uuid', $uuid)
+                                  ->where('delete_soft', 0)
+                                  ->first();
+
+        if (!$hasil) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+
+        if ($hasil->is_verified) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data yang sudah diverifikasi tidak dapat diubah'
+            ], 403);
+        }
+
+        $hasil->no_periksa = $request->no_periksa;
+        $hasil->pasien_nama = $request->nama_pasien;
+        $hasil->register = $request->register;
+        $hasil->mr = $request->mr;
+        $hasil->tgl_periksa = $request->tgl_periksa;
+        $hasil->jam_periksa = $request->jam_periksa;
+        $hasil->layanan_dari = $request->layanan_dari;
+        $hasil->dokter_pengirim = $request->dokter_pengirim;
+        $hasil->keterangan = $request->keterangan;
+
+        if ($request->hasFile('file')) {
+            // Hapus file lama
+            if ($hasil->file_path && Storage::disk('public')->exists($hasil->file_path)) {
+                Storage::disk('public')->delete($hasil->file_path);
+            }
+
+            $file = $request->file('file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('hasil_laboratorium', $filename, 'public');
+
+            $hasil->nama_file = $file->getClientOriginalName();
+            $hasil->file_path = $path;
+        }
+
+        $hasil->save();
+
+        DB::commit();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Hasil lab berhasil diupdate',
+            'data' => $hasil
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal update: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+    // User info untuk cek permission
+    public function userInfo()
+    {
+        try {
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $user = \App\Models\Pengguna::where('uuid', $pengguna_uuid)->first();
+
+            return response()->json([
+                'success' => true,
+                'can_verify' => $user && $user->posisi == 9987
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+// Get list hasil radiologi
+    public function hasilradiologi(Request $request)
+    {
+        try {
+            $limit = $request->limit ?? 100;
+            $page = $request->page ?? 1;
+
+            $data = HasilRadiologi::where('delete_soft', 0)
+                                  ->orderBy('tanggal', 'desc')
+                                  ->limit($limit)
+                                  ->offset(($page - 1) * $limit)
+                                  ->get();
+
+            $total = HasilRadiologi::where('delete_soft', 0)->count();
+
+            return response()->json([
+                'success' => true,
+                'data' => $data,
+                'total' => $total
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memuat data: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // Upload hasil radiologi
+    public function hasilUploadRadiologi(Request $request)
+    {
+        $request->validate([
+            'no_radiologi' => 'required|string',
+            'tanggal' => 'required|date',
+            'nama_pasien' => 'required|string',
+            'register' => 'required|string',
+            'pemeriksaan' => 'required|string',
+            'dokter_pengirim' => 'required|string',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120',
+            'keterangan' => 'nullable|string'
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $file = $request->file('file');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('hasil_radiologi', $filename, 'public');
+
+            $hasil = HasilRadiologi::create([
+                'uuid' => Uuid::uuid4()->toString(),
+                'no_radiologi' => $request->no_radiologi,
+                'pasien_uuid' => $request->pasien_uuid ?? null,
+                'pasien_nama' => $request->nama_pasien,
+                'register' => $request->register,
+                'tanggal' => $request->tanggal,
+                'pemeriksaan' => $request->pemeriksaan,
+                'dokter_pengirim_uuid' => null,
+                'dokter_pengirim' => $request->dokter_pengirim,
+                'nama_file' => $file->getClientOriginalName(),
+                'file_path' => $path,
+                'keterangan' => $request->keterangan,
+                'tanggal_upload' => date('Y-m-d'),
+                'waktu_upload' => date('H:i:s'),
+                'uploaded_by_uuid' => $pengguna_uuid,
+                'uploaded_by_nama' => $pengguna_nama,
+                'is_verified' => false,
+                'delete_soft' => 0
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Hasil radiologi berhasil diupload',
+                'data' => $hasil
+            ], 201);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal upload: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    // View file radiologi
+    public function viewFileRadiologi($uuid)
+{
+    try {
+        $hasil = HasilRadiologi::where('uuid', $uuid)
+                               ->where('delete_soft', 0)
+                               ->first();
+
+        if (!$hasil) {
+            abort(404, 'File tidak ditemukan');
+        }
+
+        $filePath = storage_path('app/public/' . $hasil->file_path);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File tidak ditemukan di server');
+        }
+
+        return response()->file($filePath, [
+            'Content-Type' => mime_content_type($filePath),
+            'Content-Disposition' => 'inline; filename="' . $hasil->nama_file . '"'
+        ]);
+    } catch (\Exception $e) {
+        abort(500, 'Gagal membuka file: ' . $e->getMessage());
+    }
+}
 
 }
+

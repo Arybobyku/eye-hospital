@@ -255,13 +255,14 @@ export default {
     FormSuratPengantarRawatInap: defineAsyncComponent(() =>import("./create/FormSuratPengantarRawatInap.vue")),
     FormPenilaianPraAnestesiSedasi: defineAsyncComponent(() =>import("./create/FormPenilaianPraAnestesiSedasi.vue")),
     FormTransfer: defineAsyncComponent(() =>import("./create/FormTransfer.vue")),
-    FormInformedConsent: defineAsyncComponent(() =>import("./create/FormInformedConsent.vue")),
+    // FormInformedConsent: defineAsyncComponent(() =>import("./create/FormInformedConsent.vue")),
     FormLaporanOperasiTrabulektomi: defineAsyncComponent(() =>import("./create/FormLaporanOperasiTrabulektomi.vue")),
     FormLaporanEksisiChalazion: defineAsyncComponent(() =>import("./create/FormLaporanEksisiChalazion.vue")),
     FormLaporanCatatanOperasi: defineAsyncComponent(() =>import("./create/FormCatatanOperasi.vue")),
     formMonitoringEfekSampingObat: defineAsyncComponent(() =>import("./create/FormMonitoringEfekSampingObat.vue")),
     FormCatatanKeperawatan: defineAsyncComponent(() =>import("./create/FormCatatanKeperawatan.vue")),
     FormChecklistKeselamatanPasienOperasi: defineAsyncComponent(() =>import("./create/FormChecklistKeselamatanPasienOperasi.vue")),
+    FormPersetujuanTindakanAnestesi: defineAsyncComponent(() =>import("./create/FormPersetujuanTindakanAnestesi.vue")),
 
     // Tambahkan component baru di sini
   },
@@ -506,20 +507,20 @@ export default {
           backendType: "catatan_keperawatan",
         },
         	{
-          value: "form_transfer",
+          value: "dokumen_form_transfer_pasien",
           label: "Form Transfer",
           component: "FormTransfer",
           description: "Form Transfer",
           backendType: "dokumen_form_transfer_pasien",
         },
 
-        {
-          value: "FormPelaksanaanPencegahanPasienJatuh",
-          label: "Form Pelaksanaan Pencegahan Pasien Jatuh",
-          component: "FormPelaksanaanPencegahanPasienJatuh",
-          description: "Form Pelaksanaan Pencegahan Pasien Jatuh",
-          backendType: "dokumen_pelaksanaan_pencegahan_pasien_jatuh",
-        },
+        // {
+        //   value: "FormPelaksanaanPencegahanPasienJatuh",
+        //   label: "Form Pelaksanaan Pencegahan Pasien Jatuh",
+        //   component: "FormPelaksanaanPencegahanPasienJatuh",
+        //   description: "Form Pelaksanaan Pencegahan Pasien Jatuh",
+        //   backendType: "pelaksanaan_pencegahan_pasien_jatuh",
+        // },
 
         {
           value: "FormEvaluasiPraAnesthesi",
@@ -529,13 +530,13 @@ export default {
           backendType: "dokumen_evaluasi_pra_anesthesi",
         },
 
-        {
-          value: "FormSuratPengantarRawatInap",
-          label: "Surat Pengantar Rawat Inap",
-          component: "FormSuratPengantarRawatInap",
-          description: "Form Surat Pengantar Rawat Inap",
-          backendType: "dokumen_surat_pengantar_rawat_inap",
-        },
+        // {
+        //   value: "FormSuratPengantarRawatInap",
+        //   label: "Surat Pengantar Rawat Inap",
+        //   component: "FormSuratPengantarRawatInap",
+        //   description: "Form Surat Pengantar Rawat Inap",
+        //   backendType: "dokumen_surat_pengantar_rawat_inap",
+        // },
         
         {
           value: "FormPenilaianPraAnestesiSedasi",
@@ -550,8 +551,66 @@ export default {
           label: "Checklist Keselamatan Pasien Operasi",
           component: "FormChecklistKeselamatanPasienOperasi",
           description: "Form Checklist Keselamatan Pasien Operasi",
-          backendType: "dokumen_checklist_keselamatan_pasien_operasi",
+          backendType: "checklist_keselamatan_pasien_operasi",
         },
+        {
+          value: "dokumen_laporan_catatan_operasi",
+          label: "Form Laporan Catatan Operasi",
+          component: "FormLaporanCatatanOperasi",   
+          description: "Form Laporan Catatan Operasi",
+          backendType: "dokumen_laporan_catatan_operasi",
+        },
+        {
+          value: "dokumen_monitoring_efek_samping_obat",
+          label: "Form Monitoring Efek Samping Obat",
+          component: "FormMonitoringEfekSampingObat",   
+          description: "Form Monitoring Efek Samping Obat",
+          backendType: "dokumen_monitoring_efek_samping_obat",
+        },
+        {
+          value: "dokumen_catatan_keperawatan",
+          label: "Form Catatan Keperawatan",
+          component: "FormCatatanKeperawatan",   
+          description: "Form Catatan Keperawatan",
+          backendType: "dokumen_catatan_keperawatan",
+        },
+         {
+          value: "dokumen_penilaian_pra_anestesi_sedasi",
+          label: "Form Penilaian Pra Anestesi dan Sedasi",
+          component: "FormPenilaianPraAnestesiSedasi",   
+          description: "Form Penilaian Pra Anestesi dan Sedasi",
+          backendType: "dokumen_penilaian_pra_anestesi_sedasi",
+        },
+         {
+          value: "dokumen_surat_pengantar_rawat_inap",
+          label: "Form Surat Pengantar Rawat Inap",
+          component: "FormSuratPengantarRawatInap",   
+          description: "Form Surat Pengantar Rawat Inap",
+          backendType: "surat_pengantar_rawat_inap",
+        },
+        {
+          value: "dokumen_form_transfer_pasien",
+          label: "Form Transfer",
+          component: "FormTransfer",   
+          description: "Form Transfer",
+          backendType: "dokumen_form_transfer_pasien",
+        },
+         {
+          value: "dokumen_pelaksanaan_pencegahan_pasien_jatuh",
+          label: "Form Pelaksanaan Pencegahan Pasien Jatuh",
+          component: "FormPelaksanaanPencegahanPasienJatuh",   
+          description: "Form Pelaksanaan Pencegahan Pasien Jatuh",
+          backendType: "pelaksanaan_pencegahan_pasien_jatuh",
+        },
+
+        {
+          value: "dokumen_persetujuan_anestesi",
+          label: "Form Persetujuan Anestesi",
+          component: "FormPersetujuanTindakanAnestesi",
+          description: "Form Persetujuan Anestesi",
+          backendType: "dokumen_persetujuan_anestesi",
+        },
+
         // {
         //   value: "informed-consent",
         //   label: "Informed Consent",
@@ -769,7 +828,17 @@ export default {
       const printUrls = {
         laser_bargage: `/print/laser-bargage/${item.uuid}`,
         laporan_bedah: `/print/laporan-pembedahan/${item.uuid}`,
-        informed_consent: `/print/informed-consent/${item.uuid}`,
+        // informed_consent: `/print/informed-consent/${item.uuid}`,
+        penunjang_medis: `/print/penunjang-medis/${item.uuid}`,
+        persetujuan_tindakan_kedokteran: `/print/rekammedis/general/persetujuantindakankedokteran/${item.uuid}`,
+        surat_konsul: `/print/rekammedis/general/suratkonsul/${item.uuid}`,
+        surat_pernyataan_batal_operasi: `/print/rekammedis/general/suratpernyataanbataloperasi/${item.uuid}`,
+        laporan_pembedahan: `/print/rekammedis/general/laporanpembedahan/${item.uuid}`,
+        surat_kontrol: `/print/rekammedis/general/suratkontrol/${item.uuid}`,
+        dietitian_pasien_baru: `/print/rekammedis/general/dietitianpasienbaru/${item.uuid}`,
+        dokumen_asuhan_gizi: `/print/rekammedis/general/dokumenasuhangizi/${item.uuid}`,
+        dokumen_tindakan_laser_lpi: `/print/rekammedis/general/dokumentindakanlaserlpi/${item.uuid}`,
+        dokumen_tindakan_laser_prp: `/print/rekammedis/general/dokumentindakanlaserprp/${item.uuid}`, 
         surat_kontrol_ulang: `/print/rekammedis/general/suratkontrolulang/${item.uuid}`,
         surat_penolakan_rujukan: `/print/rekammedis/general/suratpenolakanrujukan/${item.uuid}`,
         surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
@@ -781,6 +850,30 @@ export default {
         asesmen_keperawatan_rawat_inap: `/print/rekammedis/lampiran/asesmen-awal-keperawatan-rawat-inap/${item.uuid}`,
         monitoring_efek_samping_obat: `/print/rekammedis/lampiran/monitoring-efek-samping-obat/${item.uuid}`,
         catatan_keperawatan: `/print/rekammedis/lampiran/catatan-keperawatan/${item.uuid}`,
+        //surat_pengantar_rawat_inap: `/print/rekammedis/lampiran/surat-pengantar-rawat-inap/${item.uuid}`,
+        penilaian_pra_anestesi_sedasi: `/print/rekammedis/lampiran/penilaian-pra-anestesi-sedasi/${item.uuid}`,
+        dokumen_laporan_operasi_trabekulektomi: `/print/rekammedis/lampiran/laporan-operasi-trabekulektomi/${item.uuid}`,
+        dokumen_laporan_operasi_pterygium: `/print/rekammedis/lampiran/laporan-operasi-pterygium/${item.uuid}`,
+        dokumen_laporan_eksisi_palpebra: `/print/rekammedis/lampiran/laporan-eksisi-palpebra/${item.uuid}`,
+        dokumen_laporan_eksisi_chalazion: `/print/rekammedis/lampiran/laporan-eksisi-chalazion/${item.uuid}`,
+        dokumen_pulang_atas_permintaan_sendiri: `/print/rekammedis/lampiran/pulang-atas-permintaan-sendiri/${item.uuid}`,
+        dokumen_tindakan_laser_capsulotomy: `/print/rekammedis/lampiran/tindakan-laser-capsulotomy/${item.uuid}`,
+        dokumen_tindakan_epilasi: `/print/rekammedis/lampiran/tindakan-epilasi/${item.uuid}`,
+        dokumen_kronologis_pasien: `/print/rekammedis/lampiran/kronologis-pasien/${item.uuid}`,
+        dokumen_catatan_operasi: `/print/rekammedis/lampiran/catatan-operasi/${item.uuid}`,
+        form_transfer_pasien: `/print/rekammedis/general/formtransfer/${item.uuid}`,
+        // form_pelaksanaan_pencegahan_pasien_jatuh: `/print/rekammedis/lampiran/pelaksanaan-pencegahan-pasien-jatuh/${item.uuid}`,
+        dokumen_evaluasi_pra_anesthesi: `/print/rekammedis/general/evaluasipraanesthesi/${item.uuid}`,
+        form_balance_cairan_harian: `/print/rekammedis/lampiran/balance-cairan-harian/${item.uuid}`,  
+        dokumen_penilaian_pra_anestesi_sedasi: `/print/rekammedis/general/formpenilaianpraanestesisedasi/${item.uuid}`,
+        surat_pengantar_rawat_inap: `/print/rekammedis/general/suratpengantaruntukdirawatinap/${item.uuid}`,
+        pelaksanaan_pencegahan_pasien_jatuh: `/print/rekammedis/bedah/rm2dot9/${item.uuid}`,
+        checklist_keselamatan_pasien_operasi: `/print/rekammedis/bedah/rm4dot9/${item.uuid}`,
+        dokumen_persetujuan_anestesi: `/print/rekammedis/general/persetujuantindakananestesi/${item.uuid}`,
+
+        // Tambahkan URL print baru di sini
+
+
       };
 
       const url = printUrls[item.document_type];
