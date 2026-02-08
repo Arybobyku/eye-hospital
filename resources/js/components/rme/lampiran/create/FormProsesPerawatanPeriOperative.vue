@@ -10,7 +10,7 @@
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">PROSES PERAWATAN PERI – OPERATIVE </h2>
-        <h4 class="fw-semibold">RM 1.10/PPPO/22</h4>
+        <h4 class="fw-semibold">{{ form.no_surat}}</h4>
       </div>
 
       <!-- DATE & TIME -->
@@ -369,6 +369,7 @@ export default {
         
         // Data Pasien
         no_rm: "",
+        no_surat: "RM 1.10/PPPO/22",
         nik: "",
         nama_pasien: "",
         tanggal_lahir: "",

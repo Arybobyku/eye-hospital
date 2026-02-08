@@ -52,7 +52,7 @@
     <?php $eyero = storage_path('app/public/images/EYE-RO.png'); ?>
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            RM 1.10/PPOP/22
+           {{ $item->no_surat ?? 'RM 1.10/PPPO/22' }}
         </div>
         @include('print-rekam-medis.partials.header7')
 <table style="width: 100%; border:1px solid">

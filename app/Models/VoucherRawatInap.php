@@ -20,6 +20,7 @@ class VoucherRawatInap extends Model
         
         // ===== Data Pasien =====
         'no_rm',
+        'no_surat',
         'nama',
         'tanggal_lahir',
         'lantai_kamar',

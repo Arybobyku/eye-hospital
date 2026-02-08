@@ -81,7 +81,7 @@
     <?php $fullpath = storage_path('app/public/images/header_rme2.png'); ?>
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            RM 2.4/PEPKTRI/22
+           {{ $item->no_surat ?? 'RRM 2.4/PEPKTRI/22'}}
         </div>
         <table style="border-collapse: collapse;">
             @include('print-rekam-medis.partials.header2')

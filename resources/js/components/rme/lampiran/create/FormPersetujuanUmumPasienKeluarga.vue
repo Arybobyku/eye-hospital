@@ -10,7 +10,7 @@
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">PERSETUJUAN UMUM (GENERAL CONSENT)</h2>
-        <h4 class="fw-semibold"> RM 1.1/PU(GJ)/22</h4>
+        <h4 class="fw-semibold">{{ form.no_surat }}</h4>
       </div>
 
     <!-- ================= INFORMASI PASIEN ================= -->
@@ -229,7 +229,7 @@ export default {
       form: {
         uuid: "",
         uuid_pasien: "",
-        no_rm: "",
+        no_surat: "RM 1.1/PU(GJ)/22",
         nik: "",
         nama: "",
         tanggal_lahir: "",

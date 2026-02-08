@@ -16,7 +16,7 @@
             </small>
           </h2>
       
-          <h4 class="fw-semibold">RM 1.2/FEPDKRJ/22</h4>
+          <h4 class="fw-semibold">{{ form.no_surat}}</h4>
         </div>
 
 
@@ -662,6 +662,7 @@ export default {
         uuid: "",
         uuid_pasien: "",
         no_rm: "",
+        no_surat: "RM 1.2/FEPDKRJ/22",
         nama_pasien: "",
         nama: "",
         nik: "", 

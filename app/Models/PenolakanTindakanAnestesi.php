@@ -21,6 +21,7 @@ class PenolakanTindakanAnestesi extends Model
         // ===== Data Pasien =====
         'jenis_form',
         'no_rm',
+        'no_surat',
         'nik',
         'nama',
         'tanggal_lahir',
@@ -153,6 +154,20 @@ class PenolakanTindakanAnestesi extends Model
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
+            }
+            
+            if (empty($model->no_surat)) {
+                $model->no_surat = $model->jenis_form === 'penolakan' 
+                    ? 'RM 4.2/PTA/22' 
+                    : 'RM 4.3/PTA/22';
+            }
+        });
+    
+        static::updating(function ($model) {
+            if ($model->isDirty('jenis_form')) {
+                $model->no_surat = $model->jenis_form === 'penolakan'
+                    ? 'RM 4.2/PTA/22'
+                    : 'RM 4.3/PTA/22';
             }
         });
     }

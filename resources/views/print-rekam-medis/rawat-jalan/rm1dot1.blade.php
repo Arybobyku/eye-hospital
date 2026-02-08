@@ -21,7 +21,7 @@
 <?php $fullpath = storage_path('app/public/images/header_rme.png');  ?>
 <div class="wrap">
 	<div style="width:100%; text-align:right; margin-bottom:5px">
-		RM 1.1/PU(GJ)/22
+		{{ $item->no_surat ?? 'RM 1.1/PU(GJ)/22' }}
 	</div>
 	@include('print-rekam-medis.partials.header')
 	<br />

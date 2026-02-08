@@ -19,6 +19,7 @@ class FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap extends Model
         
         // Informasi Pasien
         'no_rm',
+        'no_surat',
         'nik',
         'nama',
         'tanggal_lahir',

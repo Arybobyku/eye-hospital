@@ -20,6 +20,7 @@ class FormReaksiTransfusiDarah extends Model
         
         // ===== Data Pasien =====
         'no_rm',
+        'no_surat',
         'nik',
         'nama',
         'tanggal_lahir',

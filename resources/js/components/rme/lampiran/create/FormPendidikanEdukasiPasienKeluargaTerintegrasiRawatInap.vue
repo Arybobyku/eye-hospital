@@ -13,7 +13,7 @@
             PENDIDIKAN EDUKASI PASIEN KELUARGA TERINTEGRASI RAWAT INAP <br>
           </h2>
       
-          <h4 class="fw-semibold">RM 2.4/PEPKTRI/22 </h4>
+          <h4 class="fw-semibold">{{ form.no_surat}} </h4>
         </div>
 
 
@@ -2238,6 +2238,7 @@ export default {
         
         // Informasi Pasien
         no_rm: "",
+        no_surat: "RM 2.4/PEPKTRI/22",
         nik: "",
         nama: "",
         tanggal_lahir: "",

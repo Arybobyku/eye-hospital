@@ -17,6 +17,7 @@ class FormPersetujuanUmumPasienKeluarga extends Model
         // ===== Identitas =====
         'uuid',
         'uuid_pasien',
+        'no_surat',
         
         // ===== Data Pasien =====
         'no_rm',

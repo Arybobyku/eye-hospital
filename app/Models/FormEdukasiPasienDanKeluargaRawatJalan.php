@@ -20,6 +20,7 @@ class FormEdukasiPasienDanKeluargaRawatJalan extends Model
         
         // ===== Data Pasien =====
         'no_rm',
+        'no_surat',
         'nama',
         'nik', 
         'nama_pasien',

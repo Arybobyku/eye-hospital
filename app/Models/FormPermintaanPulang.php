@@ -17,6 +17,7 @@ class FormPermintaanPulang extends Model
         'uuid',
         'uuid_pasien',
         'no_rm',
+        'no_surat',
         'nama',
         'nik',
         'jenis_kelamin',

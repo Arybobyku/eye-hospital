@@ -20,6 +20,7 @@ class DokumenCeklistKesiapanBedah extends Model
 
         // ===== Data Default =====
         'no_rm',
+        'no_surat',
         'jenis_kelamin',
         'nama',
         'nik',
