@@ -172,12 +172,12 @@
               placeholder="Ketik nama dokumen untuk mencari..."
               @focus="showDocumentList = true"
             />
-            <i v-if="documentSearch" 
-               class="fas fa-times clear-search" 
+            <i v-if="documentSearch"
+               class="fas fa-times clear-search"
                @click="clearDocumentSearch"
                title="Hapus pencarian"></i>
           </div>
-          
+
           <!-- Document count info -->
           <div v-if="documentSearch" class="search-info">
             <i class="fas fa-info-circle"></i>
@@ -190,7 +190,7 @@
           <div class="form-label">
             <i class="fas fa-file-medical"></i> Pilih Dokumen:
           </div>
-          
+
           <!-- EMPTY STATE -->
           <div
             v-if="filteredAvailableDocuments.length === 0"
@@ -427,13 +427,13 @@ export default {
           description: "Form untuk mencatat laporan operasi dan pembedahan pasien",
           backendType: "laporan_bedah",
         },
-        {
-          value: "laser-bargage",
-          label: "Form Laser Bargage",
-          component: "FormLaserBargage",
-          description: "Form tindakan laser bargage medis",
-          backendType: "laser_bargage",
-        },
+        // {
+        //   value: "laser-bargage",
+        //   label: "Form Laser Bargage",
+        //   component: "FormLaserBargage",
+        //   description: "Form tindakan laser bargage medis",
+        //   backendType: "laser_bargage",
+        // },
         {
           value: "dokumen_form_laser_fokal",
           label: "Form Laser Fokal",
@@ -717,7 +717,7 @@ export default {
         {
           value: "dokumen_form_laser_barrage",
           label: "Form Laser Barrage",
-          component: "FormLaserBarage",
+          component: "FormLaserBargage",
           description: "Form Laser Barrage",
           backendType: "dokumen_form_laser_barrage",
         },
