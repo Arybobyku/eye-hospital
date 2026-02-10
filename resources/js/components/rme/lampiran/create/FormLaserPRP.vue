@@ -194,65 +194,41 @@
         </div>
       </div>
 
-     <!-- ================= DIAGRAM MATA ================= -->
-<div class="box-rme mb-4">
-  <h5 class="section-title-rme text-center">Diagram Tindakan</h5>
+        <!-- ================= DIAGRAM MATA ================= -->
+        <div class="box-rme mb-4">
+        <h5 class="section-title-rme text-center">Diagram Tindakan</h5>
 
-  <!-- FLEX CONTAINER -->
-  <div class="eye-container">
-    <!-- MATA KIRI -->
-    <div class="eye-item">
-      <h6 class="fw-bold text-center">Mata Kiri</h6>
+        <div class="eye-single-wrapper">
 
-      <div class="eye-draw-wrapper">
-        <svg class="eye-svg" viewBox="0 0 150 150">
-          <circle cx="75" cy="75" r="70" fill="none" stroke="#ccc" />
-          <circle cx="75" cy="75" r="55" fill="none" stroke="#ccc" />
-          <circle cx="75" cy="75" r="40" fill="none" stroke="#ccc" />
-          <circle cx="75" cy="75" r="25" fill="none" stroke="#666" stroke-width="2" />
-          <circle cx="55" cy="75" r="8" fill="#f0f0f0" stroke="#999" />
-        </svg>
+            <!-- SVG BACKGROUND -->
+            <div class="eye-svg-wrapper">
+            <!-- bisa inline SVG atau img -->
+            <img
+                src="/images/eye-prp-background.svg"
+                alt="Diagram Mata"
+                class="eye-svg-bg"
+            />
 
-        <VueSignaturePad
-          ref="mata_kiri"
-          :options="eyeSigOption"
-          class="eye-canvas"
-        />
-      </div>
+            <!-- CANVAS GAMBAR -->
+            <VueSignaturePad
+                ref="eyeDiagram"
+                :options="eyeSigOption"
+                class="eye-canvas-overlay"
+            />
+            </div>
 
-      <div class="eye-action">
+            <div class="text-center mt-2">
+            <button
+                class="btn btn-sm btn-outline-danger"
+                @click="clearEyeDiagram"
+            >
+                Hapus Diagram
+            </button>
+            </div>
 
-        <button class="btn btn-sm btn-outline-danger">Hapus</button>
-      </div>
-    </div>
+        </div>
+        </div>
 
-    <!-- MATA KANAN -->
-    <div class="eye-item">
-      <h6 class="fw-bold text-center">Mata Kanan</h6>
-
-      <div class="eye-draw-wrapper">
-        <svg class="eye-svg" viewBox="0 0 150 150">
-          <circle cx="75" cy="75" r="70" fill="none" stroke="#ccc" />
-          <circle cx="75" cy="75" r="55" fill="none" stroke="#ccc" />
-          <circle cx="75" cy="75" r="40" fill="none" stroke="#ccc" />
-          <circle cx="75" cy="75" r="25" fill="none" stroke="#666" stroke-width="2" />
-          <circle cx="95" cy="75" r="8" fill="#f0f0f0" stroke="#999" />
-        </svg>
-
-        <VueSignaturePad
-          ref="mata_kanan"
-          :options="eyeSigOption"
-          class="eye-canvas"
-        />
-      </div>
-
-      <div class="eye-action">
-
-        <button class="btn btn-sm btn-outline-danger">Hapus</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
 
@@ -378,8 +354,8 @@ export default {
       nama_dokter: "",
 
       // 🔽 HASIL GAMBAR MATA
-      diagram_mata_kanan: "",
-      diagram_mata_kiri: "",
+      diagram_mata: "",
+
     },
   };
 },
@@ -449,25 +425,31 @@ export default {
     }
   },
 
+  clearEyeDiagram() {
+    if (this.$refs.eyeDiagram) {
+      this.$refs.eyeDiagram.clearSignature()
+    }
+  },
+
   // ======================
   // BARU – DIAGRAM MATA
   // ======================
-  saveEye(ref, targetField) {
-    const pad = this.$refs[ref];
+//   saveEye(ref, targetField) {
+//     const pad = this.$refs[ref];
 
-    if (!pad || pad.isEmpty()) {
-      alert("Belum ada gambar pada diagram mata");
-      return;
-    }
+//     if (!pad || pad.isEmpty()) {
+//       alert("Belum ada gambar pada diagram mata");
+//       return;
+//     }
 
-    const result = pad.saveSignature();
-    this.form[targetField] = result.data;
-  },
+//     const result = pad.saveSignature();
+//     this.form[targetField] = result.data;
+//   },
 
-  clearEye(ref, targetField) {
-    this.$refs[ref].clearSignature();
-    this.form[targetField] = "";
-  },
+//   clearEye(ref, targetField) {
+//     this.$refs[ref].clearSignature();
+//     this.form[targetField] = "";
+//   },
 
   // method lama lain (submit, fetch, dll) tetap di sini
 
@@ -503,7 +485,12 @@ export default {
           if (data.tanggal_tindakan) {
             this.form.tanggal_tindakan = this.formatDate(new Date(data.tanggal_tindakan));
           }
-
+          this.$nextTick(() => {
+            if (this.form.diagram_mata && this.$refs.eyeDiagram) {
+                this.$refs.eyeDiagram.clearSignature();
+                this.$refs.eyeDiagram.fromDataURL(this.form.diagram_mata);
+            }
+            });
           console.log("Data loaded for edit:", this.form);
         }
       } catch (error) {
@@ -513,20 +500,6 @@ export default {
       } finally {
         this.loadingData = false;
       }
-
-      this.$nextTick(() => {
-  // Mata kiri
-  if (this.form.diagram_mata_kiri && this.$refs.mata_kiri) {
-    this.$refs.mata_kiri.clearSignature();
-    this.$refs.mata_kiri.fromDataURL(this.form.diagram_mata_kiri);
-  }
-
-  // Mata kanan
-  if (this.form.diagram_mata_kanan && this.$refs.mata_kanan) {
-    this.$refs.mata_kanan.clearSignature();
-    this.$refs.mata_kanan.fromDataURL(this.form.diagram_mata_kanan);
-  }
-});
     },
 
     clearSignature(refName) {
@@ -574,23 +547,19 @@ export default {
       console.log("TTD saved:", refName);
     },
 
-    saveAllEyeDiagram() {
-    // Mata kiri
-    if (this.$refs.mata_kiri && !this.$refs.mata_kiri.isEmpty()) {
-        this.form.diagram_mata_kiri =
-        this.$refs.mata_kiri.saveSignature().data;
+    getEyeDiagramImage() {
+    const pad = this.$refs.eyeDiagram;
+
+    if (!pad || pad.isEmpty()) {
+        return null;
     }
 
-    // Mata kanan
-    if (this.$refs.mata_kanan && !this.$refs.mata_kanan.isEmpty()) {
-        this.form.diagram_mata_kanan =
-        this.$refs.mata_kanan.saveSignature().data;
-    }
+    return pad.saveSignature().data;
     },
 
     async submitForm() {
 
-      this.saveAllEyeDiagram();
+    this.form.diagram_mata = this.getEyeDiagramImage();
       // Validasi
       if (!this.form.tanggal_tindakan) {
         alert("Mohon lengkapi tanggal tindakan!");
@@ -932,90 +901,42 @@ label {
   margin-bottom: 10px;
 }
 
-/* ================= EYE DIAGRAM ================= */
+/* ================= SINGLE EYE DIAGRAM (FINAL) ================= */
+
 .eye-diagram {
   margin: 20px auto;
   padding: 20px;
   background: #f8f9fa;
   border-radius: 8px;
-  display: inline-block;
   border: 1px solid #e0e0e0;
-}
-
-.eye-container {
-  display: flex;
-  justify-content: center; /* center satu grup */
-  gap: 80px;               /* jarak antar mata */
-  margin-top: 20px;
-}
-
-.eye-item {
-  width: 220px;            /* FIXED WIDTH = SIMETRIS */
-  text-align: center;
-}
-
-.eye-draw-wrapper {
-  position: relative;
-  width: 150px;
-  height: 150px;
-  margin: 0 auto;          /* center SVG + canvas */
-}
-
-.eye-svg,
-.eye-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.eye-canvas {
-  width: 150px !important;
-  height: 150px !important;
-}
-
-.eye-action {
-  margin-top: 10px;
   display: flex;
   justify-content: center;
-  gap: 8px;
 }
 
-
-.eye-circle {
-  width: 180px;
-  height: 180px;
-  border: 3px solid #333;
-  border-radius: 50%;
+/* WRAPPER UTAMA */
+.eye-svg-wrapper {
   position: relative;
-  background: #fff;
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 500px;   /* LOGICAL SIZE — JANGAN RESPONSIVE */
+  height: 250px;
+  background: white;
+  border: 1px solid #ddd;
 }
 
-.pupil {
-  width: 50px;
-  height: 50px;
-  background: #000;
-  border-radius: 50%;
+/* SVG BACKGROUND */
+.eye-svg-bg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none; /* SVG tidak bisa digambar */
+}
+
+/* CANVAS DRAW */
+.eye-canvas-overlay {
   position: absolute;
-  z-index: 10;
-}
-
-.retina-pattern {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-h6.fw-bold {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 10px;
-  font-size: 15px;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  cursor: crosshair;
 }
 
 /* ================= SIGNATURE SECTION ================= */

@@ -35,8 +35,7 @@ class DokumenTindakanLaserPRP extends Model
         'parameter_laser',
 
         // 🔽 HASIL GAMBAR MATA
-        'diagram_mata_kiri',
-        'diagram_mata_kanan',
+        'diagram_mata',
 
         // Tanda Tangan
         'ttd_dokter',
