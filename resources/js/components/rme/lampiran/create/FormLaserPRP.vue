@@ -196,38 +196,40 @@
 
         <!-- ================= DIAGRAM MATA ================= -->
         <div class="box-rme mb-4">
-        <h5 class="section-title-rme text-center">Diagram Tindakan</h5>
+            <h5 class="section-title-rme text-center mb-3">
+                Diagram Tindakan
+            </h5>
 
-        <div class="eye-single-wrapper">
+            <div class="eye-diagram-container">
 
-            <!-- SVG BACKGROUND -->
-            <div class="eye-svg-wrapper">
-            <!-- bisa inline SVG atau img -->
-            <img
-                src="/images/eye-prp-background.svg"
-                alt="Diagram Mata"
-                class="eye-svg-bg"
-            />
+                <div class="eye-svg-wrapper">
+                    <!-- BACKGROUND SVG -->
+                    <img
+                        src="/images/eye-prp-background.svg"
+                        alt="Diagram Mata"
+                        class="eye-svg-bg"
+                    />
 
-            <!-- CANVAS GAMBAR -->
-            <VueSignaturePad
-                ref="eyeDiagram"
-                :options="eyeSigOption"
-                class="eye-canvas-overlay"
-            />
+                    <!-- CORETAAN DOKTER -->
+                    <VueSignaturePad
+                        ref="eyeDiagram"
+                        :options="eyeSigOption"
+                        class="eye-canvas-overlay"
+                    />
+                </div>
+
+                <div class="eye-action">
+                    <button
+                        class="btn btn-sm btn-outline-danger"
+                        @click="clearEyeDiagram"
+                    >
+                        Hapus Diagram
+                    </button>
+                </div>
+
             </div>
-
-            <div class="text-center mt-2">
-            <button
-                class="btn btn-sm btn-outline-danger"
-                @click="clearEyeDiagram"
-            >
-                Hapus Diagram
-            </button>
-            </div>
-
         </div>
-        </div>
+
 
 
 
@@ -903,23 +905,22 @@ label {
 
 /* ================= SINGLE EYE DIAGRAM (FINAL) ================= */
 
-.eye-diagram {
-  margin: 20px auto;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
+/* CONTAINER UTAMA */
+.eye-diagram-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* WRAPPER UTAMA */
+/* WRAPPER SVG + CANVAS */
 .eye-svg-wrapper {
   position: relative;
-  width: 500px;   /* LOGICAL SIZE — JANGAN RESPONSIVE */
+  width: 500px;        /* HARUS SAMA DENGAN PDF */
   height: 250px;
-  background: white;
   border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
 }
 
 /* SVG BACKGROUND */
@@ -927,16 +928,20 @@ label {
   width: 100%;
   height: 100%;
   display: block;
-  pointer-events: none; /* SVG tidak bisa digambar */
 }
 
-/* CANVAS DRAW */
+/* CANVAS CORETAAN */
 .eye-canvas-overlay {
   position: absolute;
   inset: 0;
-  width: 100% !important;
-  height: 100% !important;
+  width: 100%;
+  height: 100%;
   cursor: crosshair;
+}
+
+/* AREA TOMBOL */
+.eye-action {
+  margin-top: 12px;
 }
 
 /* ================= SIGNATURE SECTION ================= */
