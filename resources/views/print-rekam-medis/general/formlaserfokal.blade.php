@@ -147,7 +147,7 @@
                     5. Pasien duduk menghadap ke alat laser <br>
                     6. Pasien menempelkan dagu dan dahi ke peyangga pada alat laser <br>
                     7. Dokter menyalakan alat Laser Photocoagulation <br>
-                    8. Pasien dipasang Lensa Super Quad/Trans Equator pada mata yang akan dilaser <br>
+                    8. Pasien dipasang marker pada mata yang akan dilaser <br>
                     9. Dilakukan tindakan laser dengan parameter laser : <br>
                     {{ $data->parameter_laser_fokal }}. <br>
                     10. Setelah selesai tindakan laser, pasien diberi obat tetes antibiotik <br>
