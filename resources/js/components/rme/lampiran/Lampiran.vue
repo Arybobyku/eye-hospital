@@ -888,12 +888,23 @@ export default {
     },
 
     onProceedToCreate() {
-      this.editData = null;
-      if (!this.selectedDocumentType) {
-        alert("Silakan pilih jenis dokumen terlebih dahulu!");
-        return;
-      }
-      this.state = "create";
+        this.editData = null;
+
+        if (!this.selectedDocumentType) {
+            alert("Silakan pilih jenis dokumen terlebih dahulu!");
+            return;
+        }
+
+        const doc = this.availableDocuments.find(
+            d => d.value === this.selectedDocumentType
+        );
+        console.log(doc.label, "ini doc")
+
+        this.state = "create";
+
+        this.$emit("set-breadcrumb", {
+            docName: doc.label
+        });
     },
 
     onCancelSelection() {
@@ -906,6 +917,9 @@ export default {
       this.state = "list";
       this.selectedDocumentType = "";
       this.editUuid = null;
+      this.$emit("set-breadcrumb", {
+        docName: null
+    });
       this.fetchLampiran();
     },
 
@@ -950,6 +964,13 @@ export default {
 
         this.editData = response.data.data;
         this.selectedDocumentType = doc.value;
+        this.$emit("set-breadcrumb", {
+            docName: item.document_label
+            });
+
+            this.$nextTick(() => {
+            this.state = "view";
+        });
 
         console.log("🟡 VIEW - View Data yang dikirim ke component:", this.editData);
         console.log("🟡 VIEW - Selected Type:", this.selectedDocumentType);
@@ -1002,6 +1023,10 @@ export default {
 
         this.editData = response.data.data;
         this.selectedDocumentType = doc.value;
+        this.$emit("set-breadcrumb", {
+            docName: item.document_label
+        });
+
 
         console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
         console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);

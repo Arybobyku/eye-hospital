@@ -1,7 +1,7 @@
 <template>
-	<div class="search-container">	
+	<div class="search-container">
 		<!-- INPUT -->
-		<input 
+		<input
 			type="text"
 			v-model="searchQuery"
 			@input="searchPatient"
@@ -10,11 +10,11 @@
 		/>
 
 		<!-- DROPDOWN HASIL -->
-		<div 
+		<div
 			v-if="showDropdown && patientResults.length > 0"
 			class="dropdown-result"
 		>
-			<div 
+			<div
 			class="item"
 			v-for="(item, i) in patientResults"
 			:key="i"
@@ -48,7 +48,7 @@
 		</div>
 
 		<div class="badge badge-extra">
-			{{ selectedPatient.kota || '-' }}, 
+			{{ selectedPatient.kota || '-' }},
 			{{ selectedPatient.tanggal_lahir || '-' }}
 		</div>
 	</div>
@@ -91,8 +91,24 @@
 		</table>
 	</div>
 </div>
- 
+
 <br>
+<!-- BREADCRUMB RME -->
+<div v-if="selectedPatient" class="rme-breadcrumb">
+  <span class="crumb">Rekam Medis</span>
+  <span class="separator">/</span>
+
+  <span class="crumb">{{ activeMenu }}</span>
+
+  <template v-if="breadcrumbDocName">
+    <span class="separator">/</span>
+    <span class="crumb active">
+      {{ breadcrumbDocName }}
+    </span>
+  </template>
+</div>
+
+
 <div  v-if="selectedPatient" class="layout-container">
 
     <!-- SIDEBAR -->
@@ -114,7 +130,11 @@
 
     <!-- CONTENT -->
     <main class="content">
-      <component :is="currentComponent" :selectedPatient="selectedPatient"></component>
+     <component
+  :is="currentComponent"
+  :selectedPatient="selectedPatient"
+  @set-breadcrumb="handleBreadcrumb"
+/>
     </main>
 
 </div>
@@ -134,8 +154,8 @@ import { initindexdb, indexdbprocessing } from '../../module/Indexdb.js';
 export default {
 	emits: ["titletrigger", "repatch"],
 	beforeUnmount:function() {},
-	components: { 
-		toast, 
+	components: {
+		toast,
 		Datatable: defineAsyncComponent(() => import('../../section/Datatable.vue')) ,
 		Inputed: defineAsyncComponent(() => import('../../section/Inputed.vue')),
 		Selected: defineAsyncComponent(() => import('../../section/Selected.vue')),
@@ -147,21 +167,21 @@ export default {
 		setTimeout(() => {
 			vm.form = vm.formpermintaan();
 		}, 1250);
-		window.onclick = function(event) { 
-			let a = event.target.className; 
-			
-			try { 
-				if (a.split(" ")) { 
-					a = a.split(" "); 
-					
-					if (a[0] != 'hospitals' && a[0] != 'click-title') { 
-						vm.selecthide(); 
-					} 
-				} 
-				if (event.target.className == '') { 
-					vm.selecthide(); 
-				} 
-			} 
+		window.onclick = function(event) {
+			let a = event.target.className;
+
+			try {
+				if (a.split(" ")) {
+					a = a.split(" ");
+
+					if (a[0] != 'hospitals' && a[0] != 'click-title') {
+						vm.selecthide();
+					}
+				}
+				if (event.target.className == '') {
+					vm.selecthide();
+				}
+			}
 			catch { console.log('mistmatch'); } }
 	},
 	data: function () { return {
@@ -175,6 +195,8 @@ export default {
 		selectedPatient: null,
 		showDropdown: false,
 		typingTimer: null,
+
+        breadcrumbDocName: null,
 
     // Handling Sidebar
     activeMenu: "Riwayat Kesehatan",
@@ -200,85 +222,112 @@ export default {
 			{ name: "Lampiran", icon: "✉️" },
 		],
 	}},
+  watch: {
+  activeMenu() {
+    // Reset breadcrumb view/edit
+    this.breadcrumbMode = null;
+    this.breadcrumbDocName = null;
+  }
+},
+
   computed: {
-    currentComponent() {
-      switch (this.activeMenu) {
-        case "Riwayat Kesehatan":
-          return defineAsyncComponent(() =>
-            import("./riwayatKesehatan/RiwayatKesehatan.vue")
-          );
-        case "History Kunjungan":
-          return defineAsyncComponent(() =>
-            import("./historykunjungan/HistoryKunjungan.vue")
-          );
-        case "Persetujuan Umum":
-          return defineAsyncComponent(() =>
-            import("./persetujuanUmum/PersetujuanUmum.vue")
-          );
-        case "Tindakan":
-          return defineAsyncComponent(() =>
-            import("./tindakan/Tindakan.vue")
-          );
-        case "Tanda-Tanda Umum":
-          return defineAsyncComponent(() =>
-            import("./tandaTandaUmum/TandaTandaUmum.vue")
-          );
-		case "Pemeriksaan RO":
-          return defineAsyncComponent(() =>
-            import("./pemeriksaanRO/PemeriksaanRO.vue")
-          );
 
-		case "Resep dan Obat":
-          return defineAsyncComponent(() =>
-            import("./resepObat/ResepObat.vue")
-          );
-		  
-        case "CPPT & SOAP":
-          return defineAsyncComponent(() =>
-            import("./soap/Soap.vue")
-          );
-        case "Informed Consent":
-          return defineAsyncComponent(() =>
-            import("./informedConsent/InformedConsent.vue")
-          );
-        case "Laporan Pembedahan":
-          return defineAsyncComponent(() =>
-            import("./laporanPembedahan/LaporanPembedahan.vue")
-          );
-        case "Resume":
-          return defineAsyncComponent(() =>
-            import("./resume/resume.vue")
-          );
-        case "Lampiran":
-          return defineAsyncComponent(() =>
-            import("./lampiran/Lampiran.vue")
-          );
-        case "Bill Pembayaran":
-          return defineAsyncComponent(() =>
-            import("./billPembayaran/BillPembayaran.vue")
-          );
+  currentComponent() {
+    switch (this.activeMenu) {
+      case "Riwayat Kesehatan":
+        return defineAsyncComponent(() =>
+          import("./riwayatKesehatan/RiwayatKesehatan.vue")
+        );
 
+      case "History Kunjungan":
+        return defineAsyncComponent(() =>
+          import("./historykunjungan/HistoryKunjungan.vue")
+        );
 
-        default:
-          return defineAsyncComponent(() =>
-            import("./commingsoon/CommingSoon.vue")
-          );
-      }
-    },
+      case "Persetujuan Umum":
+        return defineAsyncComponent(() =>
+          import("./persetujuanUmum/PersetujuanUmum.vue")
+        );
+
+      case "Tindakan":
+        return defineAsyncComponent(() =>
+          import("./tindakan/Tindakan.vue")
+        );
+
+      case "Tanda-Tanda Umum":
+        return defineAsyncComponent(() =>
+          import("./tandaTandaUmum/TandaTandaUmum.vue")
+        );
+
+      case "Pemeriksaan RO":
+        return defineAsyncComponent(() =>
+          import("./pemeriksaanRO/PemeriksaanRO.vue")
+        );
+
+      case "Resep dan Obat":
+        return defineAsyncComponent(() =>
+          import("./resepObat/ResepObat.vue")
+        );
+
+      case "CPPT & SOAP":
+        return defineAsyncComponent(() =>
+          import("./soap/Soap.vue")
+        );
+
+      case "Informed Consent":
+        return defineAsyncComponent(() =>
+          import("./informedConsent/InformedConsent.vue")
+        );
+
+      case "Laporan Pembedahan":
+        return defineAsyncComponent(() =>
+          import("./laporanPembedahan/LaporanPembedahan.vue")
+        );
+
+      case "Resume":
+        return defineAsyncComponent(() =>
+          import("./resume/resume.vue")
+        );
+
+      case "Lampiran":
+        return defineAsyncComponent(() =>
+          import("./lampiran/Lampiran.vue")
+        );
+
+      case "Bill Pembayaran":
+        return defineAsyncComponent(() =>
+          import("./billPembayaran/BillPembayaran.vue")
+        );
+
+      default:
+        return defineAsyncComponent(() =>
+          import("./commingsoon/CommingSoon.vue")
+        );
+    }
   },
+
+  // 🔥 TAMBAHKAN DI SINI
+  breadcrumbModeLabel() {
+    if (this.breadcrumbMode === "view") return "View";
+    if (this.breadcrumbMode === "edit") return "Edit";
+    return "";
+  }
+
+},
+
 	methods: {
     selectMenu(menuName) {
       this.activeMenu = menuName;
     },
 		formpermintaan,
-		
+
 		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected, initindexdb, indexdbprocessing,
 		selectfilter: function (event, key) { vm.form = vm.filterselected(vm.form, key); },
 		selecthide:function() { vm.form = vm.hideselected(vm.form); },
-		selecteditem:function(item, key) { 
+		selecteditem:function(item, key) {
 			vm.form = vm.itemselected(vm.form, item, key);
 		},
-		selectclear:function(key) { 
+		selectclear:function(key) {
 			vm.form = vm.clearselected(vm.form, key);
 		},
 		selectbox:function(event, key, statics) {
@@ -296,7 +345,7 @@ export default {
 			if (statics) { vm.form.select[key].data = this.arr[key]; vm.form.select[key].filter = this.arr[key]; }
 			else {
 				vm.initindexdb(vm.$dbNameIndexDb, key)
-					.then(function(response){ 
+					.then(function(response){
 						vm.form = vm.indexdbprocessing(response, vm.form, key);
 					})
 					.catch(function(error){ console.log(error); });
@@ -348,6 +397,10 @@ export default {
       }, 300);
     },
 
+    handleBreadcrumb(payload) {
+  console.log("Breadcrumb diterima:", payload);
+  this.breadcrumbDocName = payload.docName;
+},
 
 		// Mock API — kamu ganti sendiri dengan axios / fetch
 		fakePatientAPI(keyword) {
@@ -370,7 +423,7 @@ export default {
 			this.searchQuery = patient.name;
 			this.showDropdown = false;
 		},
-		
+
 
 		/*************************************************************************************************************************
 		* Bagian fungsi yang opsional untuk manipulasi data dan string
@@ -380,11 +433,11 @@ export default {
 		/*************************************************************************************************************************
 		* Bagian fungsi yang wajib disertakan disetiap index dan tidak perlu diubah-ubah
 		*************************************************************************************************************************/
-		executions: function () { 
+		executions: function () {
 			axios.post(vm.attach.url, vm.attach.data, {
-				 headers: { 
+				 headers: {
 					'Content-Type': 'multipart/form-data',
-				 } 
+				 }
 				}).then(function (response) { if (response.data.data == '419') { window.location.href = '/masuk'; } setTimeout(function(){ vm.berhasil(response); }, 750, this); }).catch(function (error){ setTimeout(function(){ vm.gagal(error); }, 750, this); }); },
 		dialog: function (_text, _confirm, posisi) { Swal.fire({ title:"Apakah Anda Yakin?", text:_text, icon:"warning", showCancelButton:!0, confirmButtonColor:"#1c84ee", cancelButtonColor:"#fd625e", confirmButtonText: _confirm, cancelButtonText:"Tidak, batal!" }).then(function(e){ if (e.isConfirmed) { vm.runconfirm(posisi); } }); },
 		notification: function (message, timer, position) { if (position == 'error') { toast.error(message, { rtl: false, autoClose: timer }); } else { toast.success(message, { rtl: false, autoClose: timer }); } },
@@ -393,7 +446,7 @@ export default {
 		unloadPatch: function (position) { vm.firstloader(); if (position == 'success') { vm.notification('Data berhasil dipatch.', 3000, position); } else if (position == 'error') { vm.notification('Data gagal dipatch.', 3000, position); } },
 		titletrigger: function () { let title = vm.$router.currentRoute._value.meta.title; vm.$emit('titletrigger', title); }
 	}
-	
+
 }
 
 </script>
@@ -794,5 +847,29 @@ export default {
     transform: translateY(0);
   }
 }
+
+.rme-breadcrumb {
+  background: #f8f9fb;
+  padding: 12px 18px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  border: 1px solid #e2e8f0;
+}
+
+.rme-breadcrumb .crumb {
+  color: #6b7280;
+}
+
+.rme-breadcrumb .active {
+  color: #1c75bc;
+  font-weight: 600;
+}
+
+.rme-breadcrumb .separator {
+  margin: 0 8px;
+  color: #9ca3af;
+}
+
 
 </style>
