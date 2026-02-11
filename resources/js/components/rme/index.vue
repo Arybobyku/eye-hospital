@@ -97,9 +97,7 @@
 <div v-if="selectedPatient" class="rme-breadcrumb">
   <span class="crumb">Rekam Medis</span>
   <span class="separator">/</span>
-
   <span class="crumb">{{ activeMenu }}</span>
-
   <template v-if="breadcrumbDocName">
     <span class="separator">/</span>
     <span class="crumb active">
@@ -111,7 +109,6 @@
 
 <div  v-if="selectedPatient" class="layout-container">
 
-    <!-- SIDEBAR -->
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-title">Data Pasien</div>
@@ -855,10 +852,16 @@ export default {
   font-size: 14px;
   margin-bottom: 15px;
   border: 1px solid #e2e8f0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .rme-breadcrumb .crumb {
   color: #6b7280;
+}
+.rme-breadcrumb span {
+  display: inline;
 }
 
 .rme-breadcrumb .active {
