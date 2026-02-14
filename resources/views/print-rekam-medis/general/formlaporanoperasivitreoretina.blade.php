@@ -67,9 +67,10 @@
         }
         
         .checkbox.checked::before {
-            content: '✓';
+            content: 'V';
             font-weight: bold;
         }
+        
         
         .label-inline {
             display: inline-block;

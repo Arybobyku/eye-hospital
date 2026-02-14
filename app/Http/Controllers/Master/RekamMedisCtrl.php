@@ -644,6 +644,7 @@ class RekamMedisCtrl extends Controller
             'dokumen_resume_perawatan_rawat_jalan' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
+                'no_surat' => 'RM 1.6/RPPRJ/22',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
@@ -830,18 +831,21 @@ class RekamMedisCtrl extends Controller
             'dokumen_resume_medis_rawat_jalan' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
+                'no_surat' => 'RM 1.7/RMRJ/22',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_resume_medis_rawat_inap' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
+                'no_surat' => 'RM 3.5/RM/22',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_asesmen_keperawatan_rawat_inap' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
+                'no_surat' => 'RM 7.8/AAKRI/2022',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
@@ -854,15 +858,33 @@ class RekamMedisCtrl extends Controller
             'dokumen_laporan_operasi_vitreo_retina' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
+                'no_surat' => 'RM 10.1/LOVR/22',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_status_anestesi' => [
                 'tanggal' => 'created_at',
                 'waktu' => 'created_at',
+                'no_surat' => 'RM 5.2/LA/22',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_cppt_rawat_inap' => [
+                'no_surat' => 'RM 2.10/CPPTRI',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_monitoring_efek_samping_obat' => [
+                'no_surat' => 'RM 3.8/MESO/22',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            'dokumen_catatan_keperawatan' => [
+                'no_surat' => 'RM 3.0/CP/22',
+                // 'user_pelaksana' => 'pembedahan',
+                // 'detail_info' => 'jenis_operasi_detail'
+            ],
+            
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
