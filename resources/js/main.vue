@@ -1,32 +1,54 @@
 <template>
 	<div class="header">
 		<div  class="left">
-			<router-link to="/dashboard/profile"><img src="/images/logopanjang.png" /></router-link>
 			<div class="nav-control" v-on:click="tabmenu()"><div class="hamburger"><span class="line"></span><span class="line"></span><span class="line"></span></div></div>
-			<span>{{ title }} 
+			<router-link to="/dashboard/profile"><img src="/images/logopanjang.png" /></router-link>
+			<span>
+				{{ title }} 
 				<button class="antrian" v-on:click="antrian()" v-if="showbutton">Antrian</button>
 			</span> 
 			<div ref="rootmenu" class="menu-router-link" :class="menu.isactive ? 'slide-to-right' : ''">
 				<ul>
-					<li v-for="(value, key) in menu.data"><div><span>{{key}}</span></div>
-						<ul>
+					<li v-for="(value, key) in menu.data" class="menu-item">
+						<div class="menu-category">
+							<span>{{key}}</span>
+							<vue-feather type="chevron-right" class="chevron-icon"></vue-feather>
+						</div>
+						<ul class="submenu" :data-category="key">
 							<li v-for="(item, index) in value">
-								<router-link :to="item.label_link" v-on:click="closemenu()"><vue-feather :type="item.label_icon"></vue-feather> {{ item.label_nama }}</router-link>
+								<router-link :to="item.label_link" v-on:click="closemenu()">
+									<vue-feather :type="item.label_icon"></vue-feather> {{ item.label_nama }}
+								</router-link>
 							</li>
 						</ul>
 					</li>
 				</ul>
-
 				<Loader ref="Loader"></Loader>
-
 			</div>
 		</div>
 		<div class="side-right">
 			<HeaderRight ref="HeaderRight" :username="username" @repatch="repatch" @reloading="reloading"></HeaderRight>
 		</div>
 	</div>
-	
 	<div class="content">
+				<!-- Breadcrumb -->
+		<div class="breadcrumb-bar">
+			<ul class="breadcrumb-list">
+				<li>
+					<router-link to="/dashboard/profile">
+						<vue-feather type="home"></vue-feather>
+					</router-link>
+				</li>
+				<li v-if="breadcrumb.category">
+					<vue-feather type="chevron-right" class="bc-separator"></vue-feather>
+					<span class="bc-category">{{ breadcrumb.category }}</span>
+				</li>
+				<li v-if="breadcrumb.page">
+					<vue-feather type="chevron-right" class="bc-separator"></vue-feather>
+					<span class="bc-active">{{ breadcrumb.page }}</span>
+				</li>
+			</ul>
+		</div>
 		<router-view v-slot="{ Component }"><component ref="view" :is="Component" @titletrigger="titletrigger" /></router-view>
 	</div>
 	
@@ -76,7 +98,8 @@ export default {
 			username: document.querySelector('meta[name="usernametitle"]').content,
 			menu : { data: null, isactive: false, loading: 'display: none' },
 			showbutton: false,
-			keys: ''
+			keys: '',
+			breadcrumb: { category: '', page: '' } 
 		}
 	},
 	methods: {
@@ -102,7 +125,8 @@ export default {
 
 		closemenu:function() {
 			vm.menu.isactive =false;
-			vm.menu.data = null;
+			// vm.menu.data = null;
+			setTimeout(() => { vm.setBreadcrumb(); }, 300, this);
 		},
 
 		removeIndexDB:function(response) {
@@ -167,12 +191,18 @@ export default {
 				});
 		},
 
-		titletrigger: function (_title){ vm.title = _title; },
+		titletrigger: function (_title){ vm.title = _title; vm.setBreadcrumb();},
 
 		tabmenu: function () {
 			if (!vm.menu.isactive) {
 				vm.menu.isactive = true;
-				vm.menu.data = [];
+				// vm.menu.data = [];
+
+				// Jika data menu sudah ada, langsung tampilkan tanpa fetch API
+				if (vm.menu.data && Object.keys(vm.menu.data).length > 0) {
+					return;
+				}
+
 				vm.loaderrun();
 				setTimeout(() => { 
 					vm.attach.url = '/allapi/menu';
@@ -208,10 +238,29 @@ export default {
 					r[a.label_based] = r[a.label_based] || [];
 					r[a.label_based].push(a);
 					return r;
-				}, Object.create(null));	
+				}, Object.create(null));
+				
+				vm.setBreadcrumb();
 			}
 		},
+		setBreadcrumb: function () {
+			const currentPath = vm.$router.currentRoute._value.path;
+			const currentTitle = vm.$router.currentRoute._value.meta.title || '';
 
+			if (vm.menu.data) {
+				for (const [category, items] of Object.entries(vm.menu.data)) {
+					const found = items.find(item => item.label_link === currentPath);
+					if (found) {
+						vm.breadcrumb.category = category;
+						vm.breadcrumb.page = found.label_nama;
+						return;
+					}
+				}
+			}
+			// fallback pakai meta title jika tidak ketemu di menu
+			vm.breadcrumb.category = '';
+			vm.breadcrumb.page = currentTitle;
+		},
 		executions: function (position) {
 			const vm = this;
 			axios.post(vm.attach.url, vm.attach.data, { headers: { 'Content-Type': 'multipart/form-data' } })

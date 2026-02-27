@@ -25,12 +25,13 @@ a { text-decoration: none; color: #252525; }
 	width: 200px;
 	position: relative;
 	top: 2px;
+  margin-left: 60px; /* beri ruang untuk icon hamburger */
 }
 
 .nav-control {
   cursor: pointer;
   position: absolute;
-  left:265px;
+  left: 16px; /* sebelum logo */
   top: 38px;
   text-align: center;
   transform: translateY(-50%);
@@ -51,7 +52,7 @@ a { text-decoration: none; color: #252525; }
   z-index: 999; }
 
 .hamburger .line {
-  background: #3088bf !important;
+  background: #1a6f1d !important;
   display: block;
   height: 3px;
   border-radius: 3px;
@@ -107,6 +108,7 @@ a { text-decoration: none; color: #252525; }
 	left: 340px;
 	top: 22px;
 	font-size: 24px;
+  left: 300px; /* geser sedikit karena logo sudah bergeser */
 	font-family: "Roboto Regular";
 }
 
@@ -285,7 +287,7 @@ a { text-decoration: none; color: #252525; }
 	height: auto;
 	float: left;
 	padding: 10px;
-	margin-top: 80px;
+	margin-top: 75px;
 	position: relative;
 }
 
@@ -2104,21 +2106,6 @@ ul.list-detail > li > span {
 	border: 1px solid #114312;
 }
 
-.menu-router-link {
-	width: 380px;
-	height: auto;
-	position: fixed;
-	background: #ffffff;
-	overflow-y: auto;
-	left: -3560px;
-	top: 85px;
-	bottom: 10px;
-	border-radius: 10px;
-	box-shadow: 0 0 4px #c6c6c6;
-	box-sizing: border-box;
-	padding-bottom: 10px;
-}
-
 /* width */
 .menu-router-link::-webkit-scrollbar { width: 15px; }
 /* Track */
@@ -2145,58 +2132,131 @@ ul.list-detail > li > span {
 }
 
 
+.menu-router-link {
+    width: 250px; /* lebih compact dari 380px */
+    height: auto;
+    position: fixed;
+    background: #ffffff;
+    overflow-y: auto;
+    left: -3560px;
+    top: 85px;
+    bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 4px #c6c6c6;
+    box-sizing: border-box;
+    padding-bottom: 10px;
+    overflow: visible; /* penting agar submenu bisa keluar ke kanan */
+}
+
 .menu-router-link > ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	padding-top: 24px;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
 }
 
-.menu-router-link > ul > li {
-	padding: 10px;
-	width: auto;
-	margin-top: 6px;
+/* Parent menu item */
+.menu-item {
+    position: relative;
+    padding: 0;
+    margin: 0;
 }
 
-.menu-router-link > ul > li > div {
-	border-bottom: 1px solid #c2c0c0;
-	box-shadow: -4px 4px 3px #d0cece;
-	width: 100%;
+/* Category header */
+.menu-category {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 15px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
 }
 
-.menu-router-link > ul > li > div > span {
-	padding: 5px 20px;
-	position: relative;
-	top: -5px;
-	color: #FFF;
-	font-family: "Roboto Black";
-	background: #1a6f1d;
+.menu-category:hover {
+    background: #f0f7f0;
+    border-left: 3px solid #1a6f1d;
 }
 
-.menu-router-link > ul > li > ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	margin-top: 14px;
+.menu-category > span {
+    color: #1a6f1d;
+    font-family: "Roboto Black";
+    font-size: 13px;
+    letter-spacing: 0.3px;
 }
 
-.menu-router-link > ul > li > ul > li {
-	padding: 5px;
+.chevron-icon {
+    width: 14px;
+    height: 14px;
+    color: #1a6f1d;
+    transition: transform 0.2s ease;
 }
 
-.menu-router-link > ul > li > ul > li > a:hover {
-	font-size: 14px;
-	color: #114312;
-	font-family: "Roboto Black";
+/* Submenu - muncul ke kanan */
+.submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 230px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.15);
+    list-style: none;
+    padding: 6px 0;
+    margin: 0;
+    z-index: 999;
 }
 
-.menu-router-link > ul > li > ul > li > a > i > svg {
-	width: 16px;
-	position: relative;
-	top: 3px;
-	margin-right: 10px;
+/* Submenu header label */
+.submenu::before {
+    content: attr(data-category);
+    display: block;
+    padding: 8px 15px;
+    font-family: "Roboto Black";
+    font-size: 11px;
+    color: #ffffff;
+    background: #1a6f1d;
+    border-radius: 8px 8px 0 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
+.submenu li a {
+    display: flex;
+    align-items: center;
+    padding: 9px 15px;
+    color: #333;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.15s ease;
+    gap: 10px;
+}
+
+.submenu li a:hover {
+    background: #f0f7f0;
+    color: #1a6f1d;
+    font-family: "Roboto Black";
+}
+
+.submenu li a svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+/* Tampilkan submenu saat hover pada parent li */
+.menu-item:hover .submenu {
+    display: block;
+}
+
+.menu-item:hover .menu-category {
+    background: #f0f7f0;
+    border-left: 3px solid #1a6f1d;
+}
+
+.menu-item:hover .chevron-icon {
+    transform: rotate(90deg);
+}
 button.antrian {
 	width: auto;
 	height: auto;
@@ -2410,3 +2470,76 @@ button.button-modal-blue:hover {
 }
 
 .modal-body-top {padding: 5px 10px;}
+
+/* Breadcrumb Bar */
+.breadcrumb-bar {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 18px;
+    margin-bottom: 10px;
+    background: #ffffff;
+    border-bottom: 1px solid #e8e8e8;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-radius: 8px;
+}
+
+.breadcrumb-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.breadcrumb-list li {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Home icon */
+.breadcrumb-list li:first-child a {
+    display: flex;
+    align-items: center;
+    color: #1a6f1d;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb-list li:first-child a:hover {
+    color: #114312;
+}
+
+.breadcrumb-list li:first-child a svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Separator */
+.bc-separator {
+    width: 13px;
+    height: 13px;
+    color: #b0b0b0;
+}
+
+/* Category label */
+.bc-category {
+    font-size: 12px;
+    color: #888888;
+    font-family: "Roboto Black";
+    letter-spacing: 0.3px;
+}
+
+/* Active page */
+.bc-active {
+    font-size: 12px;
+    color: #1a6f1d;
+    font-family: "Roboto Black";
+    padding: 2px 10px;
+    background: #edf6ed;
+    border-radius: 50px;
+    border: 1px solid #c3dfc4;
+    letter-spacing: 0.3px;
+}
