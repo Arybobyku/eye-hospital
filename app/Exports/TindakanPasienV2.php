@@ -280,6 +280,11 @@ class TindakanPasienV2 implements FromView, ShouldAutoSize, WithEvents
 			$tmp = DB::table('carabayar')->where('uuid', '=', $this->carabayar_uuid)->first();
 			if ($tmp) { $carabayar_nama = $tmp->nama; }
 			$layanan = $layanan->where('registrasi.carabayar_uuid', '=', $this->carabayar_uuid);
+
+			$obat = $obat->where('registrasi.carabayar_uuid', '=', $this->carabayar_uuid);
+			$obatBedah = $obatBedah->where('registrasi.carabayar_uuid', '=', $this->carabayar_uuid);
+			$obatRacikan = $obatRacikan->where('registrasi.carabayar_uuid', '=', $this->carabayar_uuid);
+			$obatRacikanBedah = $obatRacikanBedah->where('registrasi.carabayar_uuid', '=', $this->carabayar_uuid);
 		}
 
 		$nama_asuransi = '-';
@@ -287,6 +292,11 @@ class TindakanPasienV2 implements FromView, ShouldAutoSize, WithEvents
 			$tmp = DB::table('asuransi')->where('uuid', '=', $this->asuransi_uuid)->first();
 			if ($tmp) { $nama_asuransi = $tmp->nama; }
 			$layanan = $layanan->where('registrasi.asuransi_uuid', '=', $this->asuransi_uuid);
+
+			$obat = $obat->where('registrasi.asuransi_uuid', '=', $this->asuransi_uuid);
+			$obatBedah = $obatBedah->where('registrasi.asuransi_uuid', '=', $this->asuransi_uuid);
+			$obatRacikan = $obatRacikan->where('registrasi.asuransi_uuid', '=', $this->asuransi_uuid);
+			$obatRacikanBedah = $obatRacikanBedah->where('registrasi.asuransi_uuid', '=', $this->asuransi_uuid);
 		}
 
 		$nama_dokter = '-';
@@ -294,6 +304,11 @@ class TindakanPasienV2 implements FromView, ShouldAutoSize, WithEvents
 			$tmp = DB::table('biodata')->where('uuid', '=', $this->dokter_uuid)->first();
 			if ($tmp) { $nama_dokter = $tmp->nama_pengguna; }
 			$layanan = $layanan->where('registrasi.pengguna_uuid', '=', $this->dokter_uuid);
+
+			$obat = $obat->where('registrasi.pengguna_uuid', '=', $this->dokter_uuid);
+			$obatBedah = $obatBedah->where('registrasi.pengguna_uuid', '=', $this->dokter_uuid);
+			$obatRacikan = $obatRacikan->where('registrasi.pengguna_uuid', '=', $this->dokter_uuid);
+			$obatRacikanBedah = $obatRacikanBedah->where('registrasi.pengguna_uuid', '=', $this->dokter_uuid);
 		}
 
 		$nama_layanan = '-';
@@ -301,6 +316,11 @@ class TindakanPasienV2 implements FromView, ShouldAutoSize, WithEvents
 			$tmp = DB::table('tindakan_rawat_jalan')->where('uuid', '=', $this->layanan_uuid)->first();
 			if ($tmp) { $nama_layanan = $tmp->nama; }
 			$layanan = $layanan->where('layanan_pasien.layanan_uuid', '=', $this->layanan_uuid);
+
+			$obat = $obat->where('registrasi.layanan_uuid', '=', $this->layanan_uuid);
+			$obatBedah = $obatBedah->where('registrasi.layanan_uuid', '=', $this->layanan_uuid);
+			$obatRacikan = $obatRacikan->where('registrasi.layanan_uuid', '=', $this->layanan_uuid);
+			$obatRacikanBedah = $obatRacikanBedah->where('registrasi.layanan_uuid', '=', $this->layanan_uuid);
 		}
 
 
