@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RawatInap\PasienCtrl;
+use App\Http\Controllers\RawatInap\ReqOpnameCtrl;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -30,5 +31,13 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
         Route::post('removeobat', [PasienCtrl::class, 'removeobat'])->name('pemeriksaan-removeobat');
         Route::post('pulang', [PasienCtrl::class, 'pulang'])->name('pemeriksaan-pulang');
         Route::post('detailpulang', [PasienCtrl::class, 'detailpulang'])->name('pemeriksaan-detailpulang');
+    });
+
+        Route::prefix('reqopname')->group(function () {
+        Route::post('list', [ReqOpnameCtrl::class, 'list'])->name('ri-reqopname-list');
+        Route::post('detail', [ReqOpnameCtrl::class, 'detail'])->name('ri-reqopname-detail');
+        Route::post('minta', [ReqOpnameCtrl::class, 'minta'])->name('ri-reqopname-minta');
+        Route::post('terima', [ReqOpnameCtrl::class, 'terima'])->name('ri-reqopname-terima');
+        Route::post('batal', [ReqOpnameCtrl::class, 'batal'])->name('ri-reqopname-batal');
     });
 });

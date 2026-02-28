@@ -595,6 +595,13 @@ const routes = [
 		meta: { title: '(Apotek) Permintaan Obat/Alkes' },
 		props: true 
 	},
+	{ 
+		path: _base + 'ri-request-opname', 
+		name: '(Rawat Inap) Permintaan Obat/Alkes ke Gudang', 
+		component: () => import('./components/rawatinap/reqopname/index.vue'),
+		meta: { title: '(Rawat Inap) Permintaan Obat/Alkes ke Gudang' },
+		props: true 
+	},
 
 	{ 
 		path: _base + 'farmasi', 
