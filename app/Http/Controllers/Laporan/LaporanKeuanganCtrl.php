@@ -29,30 +29,31 @@ class LaporanKeuanganCtrl extends Controller
 		$this->error = PenggunaHelp::acl();
 	}
 
-	public function tindakan($dari, $ke, $carabayar_uuid, $asuransi_uuid, $dokter_uuid, $layanan_uuid)
+	public function tindakan($dari, $ke, $carabayar_uuid, $asuransi_uuid, $dokter_uuid, $layanan_uuid, $jenis_registrasi)
 	{
 		set_time_limit(3000);
 		$filename = date('Y-m-d') . '-Tindakan ke Pasien.xlsx';
 		return \Excel::download(new TindakanPasien($dari, $ke, $carabayar_uuid, $asuransi_uuid, $dokter_uuid, $layanan_uuid), $filename);
 	}
 
-	public function tindakanv2($dari, $ke, $carabayar_uuid, $asuransi_uuid, $dokter_uuid, $layanan_uuid)
+	public function tindakanv2($dari, $ke, $carabayar_uuid, $asuransi_uuid, $dokter_uuid, $layanan_uuid, $jenis_registrasi)
 	{
 		set_time_limit(3000);
 		$filename = date('Y-m-d') . '-Tindakan ke Pasien v2.xlsx';
-		// return \Excel::download(new TindakanPasienV2($dari, $ke, $carabayar_uuid, $asuransi_uuid, $dokter_uuid, $layanan_uuid), $filename);
+		return \Excel::download(new TindakanPasienV2($dari, $ke, $carabayar_uuid, $asuransi_uuid, $dokter_uuid, $layanan_uuid, $jenis_registrasi), $filename);
 
-		$export = new TindakanPasienV2(
-			$dari,
-			$ke,
-			$carabayar_uuid,
-			$asuransi_uuid,
-			$dokter_uuid,
-			$layanan_uuid
-		);
+		// $export = new TindakanPasienV2(
+		// 	$dari,
+		// 	$ke,
+		// 	$carabayar_uuid,
+		// 	$asuransi_uuid,
+		// 	$dokter_uuid,
+		// 	$layanan_uuid,
+		// 	$jenis_registrasi
+		// );
 
-		// ⬇️ PANGGIL view() LANGSUNG
-		return $export->view();
+		// // ⬇️ PANGGIL view() LANGSUNG
+		// return $export->view();
 	}
 
 	public function registrasi($dari, $ke, $carabayar_uuid, $asuransi_uuid, $dokter_uuid)

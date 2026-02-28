@@ -21,13 +21,17 @@ class TindakanPasienV2 implements FromView, ShouldAutoSize, WithEvents
 	private $carabayar_uuid = '';
 	private $asuransi_uuid = '';
 	private $dokter_uuid = '';
-	public function __construct($dari, $ke, $carabayar_uuid, $asuransi_uuid, $dokter_uuid, $layanan_uuid) {
+	private $jenis_registrasi = '';
+	private $layanan_uuid = '';
+
+	public function __construct($dari, $ke, $carabayar_uuid, $asuransi_uuid, $dokter_uuid, $layanan_uuid, $jenis_registrasi) {
 		$this->dari = $dari;
 		$this->ke = $ke;
 		$this->carabayar_uuid = $carabayar_uuid;
 		$this->asuransi_uuid = $asuransi_uuid;
 		$this->dokter_uuid = $dokter_uuid;
 		$this->layanan_uuid = $layanan_uuid;
+		$this->jenis_registrasi = $jenis_registrasi;
 	}
 
   public function view(): View
@@ -321,6 +325,15 @@ class TindakanPasienV2 implements FromView, ShouldAutoSize, WithEvents
 			$obatBedah = $obatBedah->where('registrasi.layanan_uuid', '=', $this->layanan_uuid);
 			$obatRacikan = $obatRacikan->where('registrasi.layanan_uuid', '=', $this->layanan_uuid);
 			$obatRacikanBedah = $obatRacikanBedah->where('registrasi.layanan_uuid', '=', $this->layanan_uuid);
+		}
+
+		if ($this->jenis_registrasi != 'semua') {
+			$layanan = $layanan->where('registrasi.jenis', '=', $this->jenis_registrasi);
+
+			$obat = $obat->where('registrasi.jenis', '=', $this->jenis_registrasi);
+			$obatBedah = $obatBedah->where('registrasi.jenis', '=', $this->jenis_registrasi);
+			$obatRacikan = $obatRacikan->where('registrasi.jenis', '=', $this->jenis_registrasi);
+			$obatRacikanBedah = $obatRacikanBedah->where('registrasi.jenis', '=', $this->jenis_registrasi);
 		}
 
 

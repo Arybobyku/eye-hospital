@@ -50,7 +50,12 @@
 						:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
 						:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)"></Selected>
 					</div>
-					<div class="col-6 form-ml">
+					<div class="col-6">
+						<Selected v-on:click="selectbox($event, form.select.jenisregistrasi.name, form.select.jenisregistrasi.statics)" 
+							:ref="form.select.jenisregistrasi.name" @selecteditem="selecteditem" @selectclear="selectclear"
+							:selection="form.select.jenisregistrasi" v-on:keyup="selectfilter($event, form.select.jenisregistrasi.name)"></Selected>
+					</div>
+						<div class="col-6 form-ml">
 						<Selected v-on:click="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)" 
 						:ref="form.select.asuransi.name" @selecteditem="selecteditem" @selectclear="selectclear"
 						:selection="form.select.asuransi" v-on:keyup="selectfilter($event, form.select.asuransi.name)"></Selected>
@@ -147,7 +152,7 @@
 
 var vm;
 import { defineAsyncComponent } from 'vue';
-import { formpermintaan } from './FormData.js';
+import { formpermintaan, jenisRegistrasiOptions } from './FormData.js';
 import { nullAndZero, datename } from '../../../module/Manipulation.js';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
@@ -241,6 +246,11 @@ export default {
 
 		getIndexDB:function(key, statics) {
 			vm.form.select[key].data = []; vm.form.select[key].filter = [];
+			if(key == 'jenisregistrasi'){
+					vm.form.select.jenisregistrasi.data = jenisRegistrasiOptions;
+					vm.form.select.jenisregistrasi.filter = jenisRegistrasiOptions;
+				return;
+			}
 			if (statics) { vm.form.select[key].data = this.arr[key]; vm.form.select[key].filter = this.arr[key]; }
 			else {
 				vm.initindexdb(vm.$dbNameIndexDb, key)
@@ -269,19 +279,22 @@ export default {
 				let asuransi_uuid = 'empty';
 				let dokter_uuid = 'empty';
 				let layanan_uuid = 'empty';
+				let jenis_registrasi = 'semua'; 
+
+				if (vm.form.select.jenisregistrasi.value != 'Silahkan Pilih' && vm.form.select.jenisregistrasi.value != '' && vm.form.select.jenisregistrasi.value != 'semua') { 
+					jenis_registrasi = vm.form.select.jenisregistrasi.value; 
+				}
+
 				if (vm.form.select.carabayar.value != 'Silahkan Pilih' && vm.form.select.carabayar.value != '') { carabayar_uuid = vm.form.select.carabayar.value; }
 				if (vm.form.select.asuransi.value != 'Silahkan Pilih' && vm.form.select.asuransi.value != '') { asuransi_uuid = vm.form.select.asuransi.value; }
 				if (vm.form.select.dokter.value != 'Silahkan Pilih' && vm.form.select.dokter.value != '') { dokter_uuid = vm.form.select.dokter.value; }
 				if (vm.form.select.alltindakan.value != 'Silahkan Pilih' && vm.form.select.alltindakan.value != '') { layanan_uuid = vm.form.select.alltindakan.value; }
 				
 				if(vm.jenisLaporan == 'tindakan'){
-				uri = '/laporan/excel/' + posisi + '/' + vm.form.dari.value + '/' + vm.form.ke.value + '/' + carabayar_uuid + '/' + asuransi_uuid + '/' + dokter_uuid + '/' + layanan_uuid;
+				uri = '/laporan/excel/' + posisi + '/' + vm.form.dari.value + '/' + vm.form.ke.value + '/' + carabayar_uuid + '/' + asuransi_uuid + '/' + dokter_uuid + '/' + layanan_uuid + '/' + jenis_registrasi;
 			
-
 				}else{
-				uri = '/laporan/excel/' + posisi + '-v2/' + vm.form.dari.value + '/' + vm.form.ke.value + '/' + carabayar_uuid + '/' + asuransi_uuid + '/' + dokter_uuid + '/' + layanan_uuid;
-			
-
+				uri = '/laporan/excel/' + posisi + '-v2/' + vm.form.dari.value + '/' + vm.form.ke.value + '/' + carabayar_uuid + '/' + asuransi_uuid + '/' + dokter_uuid + '/' + layanan_uuid + '/' + jenis_registrasi;
 				}
 			}
 			else if (posisi == 'registrasi') {
