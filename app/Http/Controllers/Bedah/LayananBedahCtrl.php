@@ -155,13 +155,25 @@ class LayananBedahCtrl extends Controller
     public function update(Request $request)
     {
         $reg = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+    
+        // Simpan data lama sebelum dihapus
+        $existingQuery = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid);
+        if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
+            $existingQuery = $existingQuery->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
+        }
+        $existingData = $existingQuery->get()->keyBy('layanan_uuid');
+    
+        // Hapus data lama
         $remove = LayananPasien::where('registrasi_uuid', '=', $request->registrasi_uuid);
         if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
             $remove = $remove->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
         }
         $remove = $remove->delete();
+    
         $tindakan = json_decode($request->layanan);
         foreach ($tindakan as $row) {
+            $old = $existingData->get($row->tindakan_rawat_jalan_uuid);
+    
             $item = new LayananPasien();
             $item->uuid = Uuid::uuid4();
             $item->registrasi_uuid = $reg->uuid;
@@ -173,13 +185,10 @@ class LayananBedahCtrl extends Controller
             $item->rekam_medis = $reg->rekam_medis;
             $item->nama_pasien = $reg->nama_pasien;
             $item->pengguna_uuid = $reg->pengguna_uuid;
-
-            $item->tanggal = date('Y-m-d');
-            $item->waktu = date('H:i');
-
+            $item->tanggal = $old ? $old->tanggal : date('Y-m-d');
+            $item->waktu = $old ? $old->waktu : date('H:i');
             $item->carabayar_uuid = $reg->carabayar_uuid;
             $item->carabayar_nama = $reg->carabayar_nama;
-
             $item->is_paket_bedah = $row->is_paket_bedah;
             $item->layanan_uuid = $row->tindakan_rawat_jalan_uuid;
             $item->nama_layanan = $row->nama_tindakan_rawat_jalan;
@@ -227,10 +236,9 @@ class LayananBedahCtrl extends Controller
             $item->default = $row->default;
             $item->save();
         }
-
+    
         return response()->json(['data' => $reg, 'layanan' => $tindakan]);
     }
-
 
 
 
