@@ -826,24 +826,40 @@ function ubahTanpaJam($created) {
 	return $tgl . ' ' . $bln . ' ' . $thn;
 }
 
-function umurs($tanggal) {
-	$tglnow = date('d');
-	$blnnow = (int) date('m');
-	$thnnow = (int) date('Y');
+// function umurs($tanggal) {
+// 	$tglnow = date('d');
+// 	$blnnow = (int) date('m');
+// 	$thnnow = (int) date('Y');
 
-	$tgl = explode('-', $tanggal);
-	$tgllahir = $tgl[2];
-	$blnlahir = (int) $tgl[1];
-	$thnlahir = (int) $tgl[0];
+// 	$tgl = explode('-', $tanggal);
+// 	$tgllahir = $tgl[2];
+// 	$blnlahir = (int) $tgl[1];
+// 	$thnlahir = (int) $tgl[0];
 
-	$thnlahir = $thnnow - $thnlahir;
-	if ($blnnow < $blnlahir) { $blnnow += 2 + 10; }
-	$blnlahir = $blnnow - $blnlahir;
-	if ($thnlahir >= 1) {
-		if ($blnlahir > 0) { return $thnlahir . ' tahun ' . $blnlahir . ' bulan';  }
-		return $thnlahir . ' tahun'; 
-	}
-	return $blnlahir . ' bulan';
+// 	$thnlahir = $thnnow - $thnlahir;
+// 	if ($blnnow < $blnlahir) { $blnnow += 2 + 10; }
+// 	$blnlahir = $blnnow - $blnlahir;
+// 	if ($thnlahir >= 1) {
+// 		if ($blnlahir > 0) { return $thnlahir . ' tahun ' . $blnlahir . ' bulan';  }
+// 		return $thnlahir . ' tahun'; 
+// 	}
+// 	return $blnlahir . ' bulan';
+// }
+function umurs($tanggal)
+{
+    $now = new DateTime();
+    $lahir = new DateTime($tanggal);
+
+    $diff = $now->diff($lahir);
+
+    if ($diff->y >= 1) {
+        if ($diff->m > 0) {
+            return $diff->y . ' tahun ' . $diff->m . ' bulan';
+        }
+        return $diff->y . ' tahun';
+    }
+
+    return $diff->m . ' bulan';
 }
 
 function tglse($created) {
