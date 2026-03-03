@@ -100,7 +100,8 @@ export default {
 			header: [],
 			search: { text: '', column: '' },
 			pagination: { ispaging: false, data: [], page: 1, temp_page: 0, max: 10, total: 0, row: 15, count_page: 0, begin: 1 },
-			isskeleton: false
+			isskeleton: false,
+			searchTimeout: null
 		}
 	},
 	methods: {
@@ -178,31 +179,65 @@ export default {
 
 		skeleton:function() { vm.isskeleton = vm.isskeleton ? false : true; },
 
-		searching:function(event, item, index) {
-			let value = event.target.value;
-			for (let i = 0; i < vm.header.length; i++) {
-				if (vm.header[i].value != '#' && vm.header[i].value != item.value) {
-					if (vm.header[i].search) {
-						vm.$refs[vm.header[i].value][0].value = '';
-						vm.header[i].close = false;
-					}
-				}
-			}
-			if (value != '') { vm.header[index].close = true; }
-			else { vm.header[index].close = false; }
+		// searching:function(event, item, index) { //remark by yudha
+		// 	let value = event.target.value;
+		// 	for (let i = 0; i < vm.header.length; i++) {
+		// 		if (vm.header[i].value != '#' && vm.header[i].value != item.value) {
+		// 			if (vm.header[i].search) {
+		// 				vm.$refs[vm.header[i].value][0].value = '';
+		// 				vm.header[i].close = false;
+		// 			}
+		// 		}
+		// 	}
+		// 	if (value != '') { vm.header[index].close = true; }
+		// 	else { vm.header[index].close = false; }
 
-			if (event.key == 'Enter') { 
-				vm.search.text = value; vm.search.column = item.value; vm.pagination.count_page = 0;
-				vm.pagination.begin = 1; vm.pagination.page = 1; vm.pagination.temp_page = 1;
-				vm.skeleton(); vm.tablereload(); 
-			}
-			if (value == '') { 
-				vm.search.text = ''; vm.search.column = '';  vm.pagination.count_page = 0;
-				vm.pagination.begin = 1; vm.pagination.page = 1; vm.pagination.temp_page = 1;
-				vm.skeleton(); vm.tablereload();
-			}
+		// 	if (event.key == 'Enter') { 
+		// 		vm.search.text = value; vm.search.column = item.value; vm.pagination.count_page = 0;
+		// 		vm.pagination.begin = 1; vm.pagination.page = 1; vm.pagination.temp_page = 1;
+		// 		vm.skeleton(); vm.tablereload(); 
+		// 	}
+		// 	if (value == '') { 
+		// 		vm.search.text = ''; vm.search.column = '';  vm.pagination.count_page = 0;
+		// 		vm.pagination.begin = 1; vm.pagination.page = 1; vm.pagination.temp_page = 1;
+		// 		vm.skeleton(); vm.tablereload();
+		// 	}
+		// },
+		
+		searching(event, item, index) {
+			const value = event.target.value.trim();
+
+			if (value === this.search.text) return;
+			
+			if (value.length > 0 && value.length < 2) return;
+
+			// Reset kolom lain
+			// for (let i = 0; i < this.header.length; i++) {
+			// 	if (this.header[i].value !== '#' && this.header[i].value !== item.value) {
+			// 		if (this.header[i].search) {
+			// 			const ref = this.$refs[this.header[i].value];
+			// 			if (ref && ref[0]) ref[0].value = '';
+			// 			this.header[i].close = false;
+			// 		}
+			// 	}
+			// }
+
+			// Update close button visibility
+			this.header[index].close = value !== '';
+
+			// Debounce search
+			clearTimeout(this.searchTimeout);
+			this.searchTimeout = setTimeout(() => {
+				this.search.text = value;
+				this.search.column = value ? item.value : '';
+				this.pagination.count_page = 0;
+				this.pagination.begin = 1;
+				this.pagination.page = 1;
+				this.pagination.temp_page = 1;
+				this.skeleton();
+				this.tablereload();
+			}, 400);
 		},
-
 		/* Fungsi untuk membersihkan field input pencarian yang ada diheader */
 		clear:function(item, index) {
 			vm.header[index].close = false; 
