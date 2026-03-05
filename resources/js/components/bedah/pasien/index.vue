@@ -26,6 +26,8 @@
 	<FormDetailDokter ref="FormDetailDokter" @dialog="dialog" @parsingForm="parsingForm"></FormDetailDokter>
 	<FormEditBedah ref="FormEditBedah" @dialog="dialog" @parsingForm="parsingForm"></FormEditBedah>
 	<FormHistoriDokter ref="FormHistoriDokter"></FormHistoriDokter>
+	<FormEditLayanan ref="FormEditLayanan" @dialog="dialog" @parsingForm="parsingForm"></FormEditLayanan>
+
 </template>
 
 <script>
@@ -43,6 +45,7 @@ export default {
 		FormObat: defineAsyncComponent(() => import('./FormObat.vue')),
 		FormResep: defineAsyncComponent(() => import('./FormResep.vue')),
 		FormJadwalKontrol: defineAsyncComponent(() => import('./FormJadwalKontrol.vue')),
+		FormEditLayanan: defineAsyncComponent(() => import('./FormEditLayanan.vue')),
 		FormDetail: defineAsyncComponent(() => import('./FormDetail.vue')),
 		FormDetailDokter: defineAsyncComponent(() => import('./FormDetailDokter.vue')),
 		FormEditBedah: defineAsyncComponent(() => import('./FormEditBedah.vue')),
@@ -73,7 +76,8 @@ export default {
 				editbedah: '/bedah/pasien/editbedah',
 				addbedah: '/bedah/pasien/addbedah',
 				adddokter: '/bedah/pasien/adddokter',
-
+				editlayanan: '/bedah/layananbedah/edit',
+				updatelayanan: '/bedah/layananbedah/update',
 				histori: '/rawatjalan/pemeriksaan/histori',
 				historidokter: '/dokter/pemeriksaan/histori',
 
@@ -180,6 +184,7 @@ export default {
 				//{ icon: 'check-circle', color: 'btn-info', posisi: 'jadwalkontrol', tooltip: 'Jadwal Kontrol', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Histori RO', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-success', posisi: 'historidokter', tooltip: 'Histori Dokter', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'editlayanan', tooltip: 'Edit Layanan Bedah', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -203,6 +208,7 @@ export default {
 				//{ icon: 'check-circle', color: 'btn-info', posisi: 'jadwalkontrol', tooltip: 'Jadwal Kontrol', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Histori RO', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-success', posisi: 'historidokter', tooltip: 'Histori Dokter', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'editlayanan', tooltip: 'Edit Layanan Bedah', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -456,7 +462,17 @@ export default {
 				vm.attach.data.append('jenis', data.jenis);
 				vm.attach.url = vm.attach.link.getjadwalkontrol;
 				vm.executions();
-			}
+			}else if (posisi == 'editlayanan') {
+				vm.$refs.FormEditLayanan.aturulang();
+				vm.position = "editlayanan";
+				vm.$refs.FormEditLayanan.show('edit', 'Ganti Paket Bedah', data.uuid, data);
+				setTimeout(() => { vm.loadingModal('formeditlayanan'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.editlayanan;
+				vm.executions();
+				
+			}		
 		},
 
 		loadingModal: function (position) { 
@@ -474,6 +490,7 @@ export default {
 			else if (position == 'inapdata') { vm.$refs.FormInap.loaderprocess(); }
 			else if (position == 'formhistori') { vm.$refs.FormHistori.loaderprocess();  }
 			else if (position == 'formhistoridokter') { vm.$refs.FormHistoriDokter.loaderprocess();  }
+			else if (position == 'formeditlayanan') { vm.$refs.FormEditLayanan.loaderprocess();  }
 		},
 
 		parsingForm:function(data, key) {
@@ -517,6 +534,10 @@ export default {
 			else if (key == 'inapadd') {
 				vm.position = 'inapadd';
 				vm.attach.url = vm.attach.link.inapadd;
+			}
+			if (key == 'updatelayanan') {
+				vm.position = 'updatelayanan';
+				vm.attach.url = vm.attach.link.updatelayanan;
 			}
 		},
 
@@ -627,6 +648,10 @@ export default {
 				vm.$refs.Datatable.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total); 
 				vm.$refs.Datatable.paging(); 
 				active = 0;
+			}
+			else if (vm.position == 'editlayanan') { 
+				vm.$refs.FormEditLayanan.setdataform(response); 
+				active = 0; 
 			}
 			else if (vm.position == 'loaddone') { 
 				vm.posisieksternal='done';
@@ -743,6 +768,11 @@ export default {
 				//vm.position = "updatedata"; 
 				active = 0; 
 			}
+			else if (vm.position == 'updatelayanan') {
+				vm.$refs.FormEditLayanan.hide();
+				setTimeout(() => { vm.$refs.DatatableDone.skeleton(); vm.tablereload(); }, 500, this);
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
+			}
 			vm.message('success', active);
 		},
 
@@ -766,7 +796,7 @@ export default {
 				else if (vm.position == 'updatedata') { vm.notification('Pembaharuan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'updatedokterdata') { vm.notification('Penambahan/Pembaharuan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'updatebedahdata') { vm.notification('Penambahan/Pembaharuan data gagal diproses.', 3000, position); }
-
+				else if (vm.position == 'editlayanan') { vm.notification('Data gagal dimuat.', 3000, position); }
 				else if (vm.position == 'prosesdata') { vm.notification('Proses perubahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'selesaidata') { vm.notification('Proses perubahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'historidata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
@@ -777,8 +807,9 @@ export default {
 				if (vm.position == 'adddata') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				if (vm.position == 'updatedokterdata') { vm.notification('Penambahan/Pembaharuan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'updatebedahdata') { vm.notification('Penambahan/Pembaharuan data berhasil diproses.', 3000, position); }
-
+				// else if (vm.position == 'editlayanan') { vm.notification('Data gagal dimuat.', 3000, position); }
 				else if (vm.position == 'inapadd') { vm.notification('Penambahan Kamar Inap berhasil diproses.', 3000, position); }
+				else if (vm.position == 'updatelayanan') { vm.notification('Penambahan/Pembaharuan data berhasil diproses', 3000, position); }
 				else if (vm.position == 'adddataobat') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'adddataresep') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'addjadwalkontrol') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }

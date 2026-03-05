@@ -51,23 +51,58 @@ export const streachcapital = (str) => {
 	return words.join(" ");
 }
 
-export const countage = (dates) => {
-	let tmp = dates.split(" ");
-	dates = tmp[0].split("-");
-	let yearBirthday = dates[0], monthBirthday = parseInt(dates[1]);
-	var dateObj = new Date();
-	var monthToday = dateObj.getUTCMonth() + 1;
-	var yearToday = dateObj.getUTCFullYear();
-	yearBirthday = parseInt(yearToday) - parseInt(yearBirthday);
-	if (monthToday < monthBirthday) { monthToday += 2 + 10; }
-	monthBirthday = monthToday - monthBirthday;
-	if (yearBirthday >= 1) {
-		if (monthBirthday > 0) { return yearBirthday + ' tahun ' + monthBirthday + ' bulan';  }
-		return yearBirthday + ' tahun'; 
-	}
-	return monthBirthday + ' bulan';
-}
+// export const countage = (dates) => { //remark by Yudha
+// 	let tmp = dates.split(" ");
+// 	dates = tmp[0].split("-");
+// 	let yearBirthday = dates[0], monthBirthday = parseInt(dates[1]);
+// 	var dateObj = new Date();
+// 	var monthToday = dateObj.getUTCMonth() + 1;
+// 	var yearToday = dateObj.getUTCFullYear();
+// 	yearBirthday = parseInt(yearToday) - parseInt(yearBirthday);
+// 	if (monthToday < monthBirthday) { monthToday += 2 + 10; }
+// 	monthBirthday = monthToday - monthBirthday;
+// 	if (yearBirthday >= 1) {
+// 		if (monthBirthday > 0) { return yearBirthday + ' tahun ' + monthBirthday + ' bulan';  }
+// 		return yearBirthday + ' tahun'; 
+// 	}
+// 	return monthBirthday + ' bulan';
+// }
+export const countage = (dateString) => {
+    // Pastikan format YYYY-MM-DD
+    const [year, month, day] = dateString.split(" ")[0].split("-").map(Number);
 
+    const today = new Date();
+    const birth = new Date(year, month - 1, day); // month 0-based
+
+    let yearDiff = today.getFullYear() - birth.getFullYear();
+    let monthDiff = today.getMonth() - birth.getMonth();
+    let dayDiff = today.getDate() - birth.getDate();
+
+    // Jika hari belum lewat → kurangi 1 bulan
+    if (dayDiff < 0) {
+        monthDiff -= 1;
+    }
+
+    // Jika bulan minus → kurangi 1 tahun
+    if (monthDiff < 0) {
+        yearDiff -= 1;
+        monthDiff += 12;
+    }
+
+    // Safety: jika tanggal lahir di masa depan
+    if (yearDiff < 0) {
+        return "0 bulan";
+    }
+
+    if (yearDiff >= 1) {
+        if (monthDiff > 0) {
+            return `${yearDiff} tahun ${monthDiff} bulan`;
+        }
+        return `${yearDiff} tahun`;
+    }
+
+    return `${monthDiff} bulan`;
+};
 export const nullAndZero = (str) => {
 	if (str) { if (str != '0') { return str; } }
 	return '-';
