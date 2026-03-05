@@ -114,7 +114,7 @@
     
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            {{ $penolakan->jenis_form === 'penolakan' ? 'RM 4.2/PTA/22' : 'RM 4.3/PTA/22' }}
+            {{ $penolakan->no_surat ?? ($penolakan->jenis_form === 'penolakan' ? 'RM 4.2/PTA/' : 'RM 4.3/PTA/') . config('app.tahun_akreditasi', '22') }}
         </div>
         
         @include('print-rekam-medis.partials.header')

@@ -7,7 +7,7 @@
       <!-- HEADER -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">LAPORAN OPERASI VITREO RETINA</h2>
-        <p class="text-muted">RM 10.1/LOVR/22</p>
+        <p class="text-muted">{{ form.no_surat}}</p>
       </div>
 
       <!-- IDENTITAS PASIEN -->
@@ -840,6 +840,7 @@ export default {
         uuid: "",
         uuid_pasien: "",
         no_rm: "",
+        no_surat: "",
         nik: "",
         nama: "",
         tanggal_lahir: "",
@@ -1019,7 +1020,8 @@ export default {
       // return !!this.editUuid;
     }
   },
-  mounted() {
+  async mounted() {
+  await this.fetchTahunAkreditasi();
     if(this.viewData) {
       console.log(this.editUuid);
       this.editUuid = this.editData.uuid;
@@ -1035,6 +1037,24 @@ export default {
     }
   },
   methods: {
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RM 10.1/LOVR/${tahun}`;
+        }
+
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 10.1/LOVR/22';
+        }
+      }
+    },
     setDataForm() {
       if (this.selectedPatient) {
         this.form.uuid_pasien = this.selectedPatient.uuid;

@@ -17,6 +17,7 @@ class DokumenCPPTRawatInap extends Model
         'uuid',
         'uuid_pasien',
         'no_rm',
+        'no_surat',
         'nik',
         'nama',
         'tanggal_lahir',
@@ -40,6 +41,10 @@ class DokumenCPPTRawatInap extends Model
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
+            }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "RM 2.10/CPPTRI/{$tahun}";
             }
         });
     }

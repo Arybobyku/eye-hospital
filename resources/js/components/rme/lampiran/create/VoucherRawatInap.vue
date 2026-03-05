@@ -15,7 +15,6 @@
             (DOCTOR VISIT RECORD)
           </small>
         </h2>
-        <h4 class="fw-semibold">RM 9.10/SPPU/22</h4>
       </div>
 
       <!-- ================= INFORMASI PASIEN ================= -->

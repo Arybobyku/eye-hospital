@@ -51,7 +51,7 @@
 
 <div class="wrap">
 	<div style="width:100%; text-align:right; margin-bottom:5px">
-		RM 3.5/RM/22
+    {{ $data->no_surat ?? 'RM 3.5/RM/' . config('app.tahun_akreditasi', '22') }}
 	</div>
 	@include('print-rekam-medis.partials.header')
 <table style="width: 100%; border: 1px solid black; border-collapse: collapse;">

@@ -19,6 +19,7 @@ class DokumenStatusAnestesi extends Model
         // Identitas Pasien
         'tanggal',
         'no_rm',
+        'no_surat',
         'nama',
         'tanggal_lahir',
         'jenis_kelamin',
@@ -284,6 +285,10 @@ class DokumenStatusAnestesi extends Model
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
+            }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "RM 5.2/LA/{$tahun}";
             }
         });
     }

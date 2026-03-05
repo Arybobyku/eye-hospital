@@ -15,7 +15,7 @@ class DokumenAsesmenKeperawatanRawatInap extends Model
     protected $table = 'dokumen_asesmen_keperawatan_rawat_inap';
     protected $guarded = ['id'];
     protected $fillable = [
-        'uuid_pasien', 'date', 'time', 'no_rm', 'nama', 'tanggal_lahir', 
+        'uuid_pasien', 'date', 'time', 'no_rm','no_surat', 'nama', 'tanggal_lahir', 
         'jenis_kelamin', 'nik',
         // Alergi
         'tidak_ada_alergi', 'alergi_obat_check', 'alergi_obat', 'alergi_obat_reaksi',
@@ -107,4 +107,18 @@ class DokumenAsesmenKeperawatanRawatInap extends Model
         'dp_makanan' => 'boolean',
         'dp_lainnya_check' => 'boolean',
     ];
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uuid)) {
+                $model->uuid = (string) Str::uuid();
+            }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "RM 3.8/MESO/{$tahun}";
+            }
+        });
+    }
 }   

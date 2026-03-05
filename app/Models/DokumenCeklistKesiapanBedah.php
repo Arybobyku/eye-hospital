@@ -84,6 +84,10 @@ class DokumenCeklistKesiapanBedah extends Model
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
             }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "RM 2.0/CKB/{$tahun}";
+            }
         });
     }
 }

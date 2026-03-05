@@ -84,6 +84,10 @@ class FormLaporanInjeksi extends Model
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
             }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "RM 8.8/LIAV/{$tahun}";
+            }
         });
     }
 

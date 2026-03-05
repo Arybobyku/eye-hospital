@@ -150,7 +150,7 @@
     <?php $fullpath = storage_path('app/public/images/header_rme.png');  ?>  
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            RM 10.1/LOVR/22
+            {{ $dokumen->no_surat ?? 'RM 10.1/LOVR/' . config('app.tahun_akreditasi', '22') }}
         </div>
         @include('print-rekam-medis.partials.header')
         
@@ -398,7 +398,7 @@
         
         <!-- PAGE 2 HEADER -->
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            RM 10.1/LOVR/22
+            {{ $dokumen->no_surat ?? 'RM 10.1/LOVR/' . config('app.tahun_akreditasi', '22') }}
         </div>
         <div class="header-title">LAPORAN OPERASI VITREO RETINA</div>
         

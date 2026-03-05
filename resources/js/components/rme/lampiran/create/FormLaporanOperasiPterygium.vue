@@ -32,7 +32,7 @@
         <hr class="my-3" style="border: 2px solid #000" />
 
         <h3 class="fw-bold mt-4 mb-4">LAPORAN OPERASI PTERYGIUM</h3>
-        <p class="text-muted mb-3" style="font-size: 13px">RM 9.0/LOP/22</p>
+        <p class="text-muted mb-3" style="font-size: 13px">{{ form.no_surat}}</p>
 
         <span v-if="isEditMode && !disabledSubmit" class="badge bg-warning"
           >Mode Edit</span
@@ -401,6 +401,7 @@ export default {
 
         // Data Default (wajib dikirim ke BE)
         no_rm: "",
+        no_surat: "",
         jenis_kelamin: "",
         nama: "",
         nik: "",
@@ -451,7 +452,8 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
+  await this.fetchTahunAkreditasi();
     this.disabledSubmit = false;
     if (this.viewData) {
       this.disabledSubmit = true;
@@ -464,6 +466,24 @@ export default {
   },
 
   methods: {
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RM 9.0/LOP/${tahun}`;
+        }
+
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 9.0/LOP/22';
+        }
+      }
+    },
     setDataForm() {
       const today = new Date();
       this.form.tanggal_operasi = this.formatDate(today);

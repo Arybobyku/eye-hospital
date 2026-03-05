@@ -10,7 +10,7 @@
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">LAPORAN INJEKSI ANTI VECF</h2>
-        <h4 class="fw-semibold">RM 8.8/LIAV/22</h4>
+        <h4 class="fw-semibold">{{ form.no_surat}} </h4>
       </div>
 
       <!-- ================= INFORMASI PASIEN ================= -->
@@ -319,6 +319,7 @@ export default {
         
         // Data Default Pasien
         no_rm: "",
+        no_surat: "",
         nik: "",
         nama: "",
         tanggal_lahir: "",
@@ -352,10 +353,12 @@ export default {
       },
     };
   },
-mounted() {
+async mounted() { 
   console.log("🟢 COMPONENT - Mounted");
   console.log("🟢 COMPONENT - editData:", this.editData);
   console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
+
+  await this.fetchTahunAkreditasi();
   
     this.disabledSubmit = false;
   if(this.viewData){
@@ -370,6 +373,25 @@ mounted() {
   }
 },
   methods: {
+  async fetchTahunAkreditasi() {
+    try {
+      const response = await axios.get('/api/tahun-akreditasi');
+      const tahun = response.data.tahun || '22';
+      
+      if (!this.form.no_surat) {
+        this.form.no_surat = `RM 8.8/LIAV/${tahun}`;
+      }
+      
+      console.log("✅ Tahun akreditasi:", tahun);
+      console.log("✅ No surat:", this.form.no_surat);
+    } catch (error) {
+      console.error("❌ Error fetch tahun:", error);
+      if (!this.form.no_surat) {
+        this.form.no_surat = 'RM 8.8/LIAV/22';
+      }
+    }
+  },
+
 loadDataForEdit() {
   console.log("🟢 LOAD EDIT - Mulai load data");
   console.log("🟢 LOAD EDIT - editData yang diterima:", this.editData);

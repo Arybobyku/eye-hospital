@@ -14,6 +14,7 @@
       <div class="text-center mb-4">
         <h2 class="fw-bold">ASUHAN GIZI</h2>
         <h5 class="text-muted">Nutrition Care / Nutritional Treatment</h5>
+        <h4 class="fw-semibold">{{ form.no_surat}} </h4>
         <span v-if="isEditMode && !disabledSubmit" class="badge bg-warning"
           >Mode Edit</span
         >
@@ -356,6 +357,7 @@ export default {
 
         // Data Default (wajib dikirim ke BE)
         no_rm: "",
+        no_surat: "",
         jenis_kelamin: "",
         nama: "",
         nik: "",
@@ -437,7 +439,8 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
+    await this.fetchTahunAkreditasi();
     this.disabledSubmit = false;
     if (this.viewData) {
       this.disabledSubmit = true;
@@ -450,6 +453,24 @@ export default {
   },
 
   methods: {
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RM 3.3/AG/${tahun}`;
+        }
+
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 3.3/AG/22';
+        }
+      }
+    },
     setDataForm() {
       const today = new Date();
       this.form.tanggal_asuhan = this.formatDate(today);

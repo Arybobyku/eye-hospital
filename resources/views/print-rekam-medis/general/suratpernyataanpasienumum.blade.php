@@ -56,7 +56,7 @@
     <div style="position:fixed; right: 13px; bottom: 10px;"></div>
     <?php $fullpath = storage_path('app/public/images/header_rme3.png'); ?>
     <div class="wrap">
-        <div style="width:100%; text-align:right; margin-bottom:5px">RM 9.10/SPPU/22</div>
+        <div style="width:100%; text-align:right; margin-bottom:5px">{{ $data->no_surat ?? 'RM 9.10/SPPU/' . config('app.tahun_akreditasi', '22') }}</div>
         @include('print-rekam-medis.partials.header3')
         <div style="font-weight: bold; text-align: center; padding: 10px;">SURAT PERNYATAAN PASIEN UMUM</div>
         <table style="width: 100%; border-collapse: collapse;">

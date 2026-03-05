@@ -221,7 +221,7 @@ export default {
   data() {
     return {
       loadingSubmit: false,
-      disabledSubmit: false, // ✅ Tambahkan ini
+      disabledSubmit: false,
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -229,7 +229,8 @@ export default {
       form: {
         uuid: "",
         uuid_pasien: "",
-        no_surat: "RM 1.1/PU(GJ)/22",
+        no_surat: "",
+        no_rm: "",
         nik: "",
         nama: "",
         tanggal_lahir: "",
@@ -254,12 +255,14 @@ export default {
     }
   },
 
-  mounted() {
+  async mounted() {
     console.log("🟢 COMPONENT - Mounted");
     console.log("🟢 COMPONENT - editData:", this.editData);
     console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
     
     this.disabledSubmit = false;
+
+    await this.fetchTahunAkreditasi();
     
     if (this.viewData) {
       this.disabledSubmit = true;
@@ -274,6 +277,26 @@ export default {
   },
 
   methods: {
+
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+        
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RM 1.1/PU(GJ)/${tahun}`;
+        }
+        
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 1.1/PU(GJ)/22';
+        }
+      }
+    },
+
     loadDataForEdit() {
       console.log("🟢 LOAD EDIT - Mulai load data");
       console.log("🟢 LOAD EDIT - editData yang diterima:", this.editData);

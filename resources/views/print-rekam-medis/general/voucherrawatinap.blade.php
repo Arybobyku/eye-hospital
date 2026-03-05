@@ -57,10 +57,6 @@
     {{-- HALAMAN 1: CATATAN KUNJUNGAN DOKTER --}}
     <div style="position:fixed; right: 13px; bottom: 10px;"></div>
     <?php $fullpath = storage_path('app/public/images/header_rme4.png');  ?>  
-    
-    <div class="wrap">
-        <div style="width:100%; text-align:right; margin-bottom:5px">RM 9.10/SPPU/22</div>
-    </div>
     @include('print-rekam-medis.partials.header5')
     
     {{-- INFO DOKTER --}}

@@ -2238,7 +2238,7 @@ export default {
         
         // Informasi Pasien
         no_rm: "",
-        no_surat: "RM 2.4/PEPKTRI/22",
+        no_surat: "",
         nik: "",
         nama: "",
         tanggal_lahir: "",
@@ -2473,10 +2473,12 @@ export default {
   }
 },
   
-mounted() {
+async mounted() {
   console.log("🟢 COMPONENT - Mounted");
   console.log("🟢 COMPONENT - editData:", this.editData);
   console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
+
+await this.fetchTahunAkreditasi();
   
 this.disabledSubmit = false;
   if(this.viewData){
@@ -2492,6 +2494,26 @@ this.disabledSubmit = false;
 },
   
   methods: {
+
+  async fetchTahunAkreditasi() {
+    try {
+      const response = await axios.get('/api/tahun-akreditasi');
+      const tahun = response.data.tahun || '22';
+      
+      if (!this.form.no_surat) {
+        this.form.no_surat = `RM 2.4/PEPKTRI/${tahun}`;
+      }
+      
+      console.log("✅ Tahun akreditasi:", tahun);
+      console.log("✅ No surat:", this.form.no_surat);
+    } catch (error) {
+      console.error("❌ Error fetch tahun:", error);
+      if (!this.form.no_surat) {
+        this.form.no_surat = 'RM 2.4/PEPKTRI/22';
+      }
+    }
+  },
+
 loadDataForEdit() {
   console.log("🟢 LOAD EDIT - Mulai load data");
   console.log("🟢 LOAD EDIT - editData yang diterima:", this.editData);

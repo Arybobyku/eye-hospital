@@ -83,7 +83,7 @@
 
 <div class="wrap">
     <div style="width:100%; text-align:right; margin-bottom:5px; font-size:10pt;">
-        RM 10.0/FPAPS/22
+        {{ $formPulang->no_surat ?? 'RM 10.0/FPAPS/' . config('app.tahun_akreditasi', '22') }}
     </div>
     
     @include('print-rekam-medis.partials.header', [

@@ -156,19 +156,21 @@ class PenolakanTindakanAnestesi extends Model
                 $model->uuid = (string) Str::uuid();
             }
             
-            if (empty($model->no_surat)) {
-                $model->no_surat = $model->jenis_form === 'penolakan' 
-                    ? 'RM 4.2/PTA/22' 
-                    : 'RM 4.3/PTA/22';
-            }
+        if (empty($model->no_surat)) {
+            $tahun = config('app.tahun_akreditasi', '22');
+            $model->no_surat = $model->jenis_form === 'penolakan' 
+                ? "RM 4.2/PTA/{$tahun}" 
+                : "RM 4.3/PTA/{$tahun}";
+        }
         });
     
         static::updating(function ($model) {
-            if ($model->isDirty('jenis_form')) {
-                $model->no_surat = $model->jenis_form === 'penolakan'
-                    ? 'RM 4.2/PTA/22'
-                    : 'RM 4.3/PTA/22';
-            }
+        if ($model->isDirty('jenis_form')) {
+            $tahun = config('app.tahun_akreditasi', '22');
+            $model->no_surat = $model->jenis_form === 'penolakan'
+                ? "RM 4.2/PTA/{$tahun}"
+                : "RM 4.3/PTA/{$tahun}";
+        }
         });
     }
     

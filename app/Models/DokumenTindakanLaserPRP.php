@@ -20,6 +20,7 @@ class DokumenTindakanLaserPRP extends Model
         
         // Data Default (wajib ada)
         'no_rm',
+        'no_surat',
         'jenis_kelamin',
         'nama',
         'nik',
@@ -53,6 +54,10 @@ class DokumenTindakanLaserPRP extends Model
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
+            }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "RM 8.7/FTLP/{$tahun}";
             }
         });
     }

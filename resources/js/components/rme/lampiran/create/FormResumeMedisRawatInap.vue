@@ -5,7 +5,7 @@
     <div v-if="disabledSubmit" class="view-overlay"></div>
     <div class="text-center mb-4">
       <h3 class="fw-bold">RESUME MEDIS RAWAT INAP</h3>
-      <p class="text-muted">RM 3.5/RM/22</p>
+      <p class="text-muted">{{ form.no_surat}}</p>
     </div>
 
     <!-- IDENTITAS PASIEN -->
@@ -317,6 +317,7 @@
           tanggal_lahir: "",
           jenis_kelamin: "",
           no_rm: "",
+          no_surat: "",
           nik: "",
           tanggal_masuk: "",
           tanggal_keluar: "",
@@ -374,7 +375,8 @@
         });
       }
     },
-    mounted() {
+    async mounted() {
+      await this.fetchTahunAkreditasi();
       if(this.viewData) {
         console.log(this.editUuid);
         this.editUuid = this.editData.uuid;
@@ -390,6 +392,24 @@
       }
     },
     methods: {
+      async fetchTahunAkreditasi() {
+        try {
+          const response = await axios.get('/api/tahun-akreditasi');
+          const tahun = response.data.tahun || '22';
+
+          if (!this.form.no_surat) {
+            this.form.no_surat = `RM 3.5/RM/${tahun}`;
+          }
+
+          console.log("✅ Tahun akreditasi:", tahun);
+          console.log("✅ No surat:", this.form.no_surat);
+        } catch (error) {
+          console.error("❌ Error fetch tahun:", error);
+          if (!this.form.no_surat) {
+            this.form.no_surat = 'RM 3.5/RM/22';
+          }
+        }
+      },
       setDataPasien() {
         const p = this.selectedPatient;
         this.form.uuid_pasien = p?.uuid;

@@ -27,6 +27,7 @@
         <hr class="my-3" style="border: 2px solid #000" />
 
         <h3 class="fw-bold mt-4 mb-4">TINDAKAN LASER PERIPHERAL IRIDECTOMY (LPI)</h3>
+        <h4 class="fw-semibold">{{ form.no_surat}} </h4>
 
         <span v-if="isEditMode && !disabledSubmit" class="badge bg-warning">Mode Edit</span>
         <!-- <span v-else class="badge bg-success">Mode Baru</span> -->
@@ -230,6 +231,7 @@ export default {
 
         // Data Default (wajib dikirim ke BE)
         no_rm: "",
+        no_surat: "",
         jenis_kelamin: "",
         nama: "",
         nik: "",
@@ -272,7 +274,8 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
+    await this.fetchTahunAkreditasi();
     console.log("🟢 COMPONENT - Mounted");
     console.log("🟢 COMPONENT - editData:", this.editData);
     console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
@@ -288,6 +291,24 @@ export default {
   },
 
   methods: {
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RM 10.3/FTLPI/${tahun}`;
+        }
+
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 10.3/FTLPI/22';
+        }
+      }
+    },
     setDataForm() {
       const today = new Date();
       this.form.tanggal_tindakan = this.formatDate(today);

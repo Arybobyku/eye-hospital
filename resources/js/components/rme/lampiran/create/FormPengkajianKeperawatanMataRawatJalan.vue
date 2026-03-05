@@ -10,7 +10,7 @@
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">PENGKAJIAN KEPERAWATAN MATA RAWAT JALAN</h2>
-        <h4 class="fw-semibold">RM 1.3/PKMRJ/22</h4>
+        <h4 class="fw-semibold">{{form.no_surat}}</h4>
       </div>
 
 <!-- DATE & TIME -->
@@ -657,6 +657,7 @@ export default {
         waktu: "",
         perawat_pengkaji: "",
         no_rm: "",
+        no_surat: "",
         nik: "",
         nama: "",
         tanggal_lahir: "",
@@ -763,10 +764,12 @@ computed: {
     return this.editData !== null && this.editData !== undefined;
   }
 },
-mounted() {
+async mounted() {
   console.log("🟢 COMPONENT - Mounted");
   console.log("🟢 COMPONENT - editData:", this.editData);
   console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
+
+  await this.fetchTahunAkreditasi();
   
 this.disabledSubmit = false;
   if(this.viewData){
@@ -781,6 +784,24 @@ this.disabledSubmit = false;
   }
 },
   methods: {
+  async fetchTahunAkreditasi() {
+    try {
+      const response = await axios.get('/api/tahun-akreditasi');
+      const tahun = response.data.tahun || '22';
+      
+      if (!this.form.no_surat) {
+        this.form.no_surat = `RM 1.3/PKMRJ/${tahun}`;
+      }
+      
+      console.log("✅ Tahun akreditasi:", tahun);
+      console.log("✅ No surat:", this.form.no_surat);
+    } catch (error) {
+      console.error("❌ Error fetch tahun:", error);
+      if (!this.form.no_surat) {
+        this.form.no_surat = 'RM 1.3/PKMRJ/22';
+      }
+    }
+  },
 loadDataForEdit() {
   console.log("🟢 LOAD EDIT - Mulai load data");
   console.log("🟢 LOAD EDIT - editData yang diterima:", this.editData);

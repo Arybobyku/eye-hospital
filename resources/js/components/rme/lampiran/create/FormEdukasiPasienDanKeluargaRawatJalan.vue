@@ -662,7 +662,7 @@ export default {
         uuid: "",
         uuid_pasien: "",
         no_rm: "",
-        no_surat: "RM 1.2/FEPDKRJ/22",
+        no_surat: "",
         nama_pasien: "",
         nama: "",
         nik: "", 
@@ -784,11 +784,13 @@ export default {
     };
   },
   
-  mounted() {
+  async mounted() {
     console.log("🟢 COMPONENT - Mounted");
     console.log("🟢 COMPONENT - editData:", this.editData);
     console.log("🟢 COMPONENT - viewData:", this.viewData);
     console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
+
+    await this.fetchTahunAkreditasi();
     
     this.disabledSubmit = false;
     
@@ -805,6 +807,24 @@ export default {
   },
   
   methods: {
+  async fetchTahunAkreditasi() {
+    try {
+      const response = await axios.get('/api/tahun-akreditasi');
+      const tahun = response.data.tahun || '22';
+      
+      if (!this.form.no_surat) {
+        this.form.no_surat = `RM 1.2/FEPDKRJ/${tahun}`;
+      }
+      
+      console.log("✅ Tahun akreditasi:", tahun);
+      console.log("✅ No surat:", this.form.no_surat);
+    } catch (error) {
+      console.error("❌ Error fetch tahun:", error);
+      if (!this.form.no_surat) {
+        this.form.no_surat = 'RM 1.2/FEPDKRJ/22';
+      }
+    }
+  },
     // ✅ LOAD DATA FOR EDIT
     loadDataForEdit() {
       console.log("🟢 LOAD EDIT - Mulai load data");

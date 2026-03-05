@@ -62,6 +62,10 @@ class FormPermintaanPulang extends Model
             if (empty($model->uuid)) {
                 $model->uuid = Str::uuid();
             }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "RM 10.0/FPAPS/{$tahun}";
+            }
             if (auth()->check()) {
                 $model->created_by = auth()->user()->name ?? auth()->user()->username;
             }

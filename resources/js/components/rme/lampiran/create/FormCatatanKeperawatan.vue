@@ -6,6 +6,7 @@
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">CATATAN KEPERAWATAN</h2>
+        <h4 class="fw-semibold">{{ form.no_surat}} </h4>
       </div>
 
       <!-- ================= INFORMASI PASIEN ================= -->
@@ -185,6 +186,7 @@ export default {
         uuid: "",
         uuid_pasien: "",
         no_rm: "",
+        no_surat: "",
         nik: "",
         nama: "",
         tanggal_lahir: "",
@@ -206,7 +208,8 @@ export default {
       return !!this.editUuid;
     }
   },
-  mounted() {
+  async mounted() {
+    await this.fetchTahunAkreditasi();
     if (this.isEditMode) {
       this.loadDataForEdit();
     } else {
@@ -214,6 +217,24 @@ export default {
     }
   },
   methods: {
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+        
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RRM 3.0/CP/${tahun}`;
+        }
+        
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 3.0/CP/22';
+        }
+      }
+    },
     setDataForm() {
       if (this.selectedPatient) {
         this.form.uuid_pasien = this.selectedPatient.uuid;
@@ -623,6 +644,9 @@ export default {
 
 .fw-bold {
   font-weight: bold;
+}
+.fw-semibold {
+  font-weight: 600;
 }
 
 .py-4 {

@@ -70,7 +70,7 @@
     <div class="wrap">
         <!-- Nomor RM -->
         <div style="width:100%; text-align:right; margin-bottom:5px; font-size: 10pt;">
-            RM 8.8/LIAV/22
+            {{ $injeksi->no_surat ?? 'RM 8.8/LIAV/' . config('app.tahun_akreditasi', '22') }}
         </div>
 
         <!-- Header -->

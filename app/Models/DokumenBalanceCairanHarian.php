@@ -17,6 +17,7 @@ class DokumenBalanceCairanHarian extends Model
         'uuid',
         'uuid_pasien',
         'no_rm',
+        'no_surat',
         'nik',
         'nama',
         'tanggal_lahir',
@@ -41,6 +42,10 @@ class DokumenBalanceCairanHarian extends Model
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
+            }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "M 3.1/BCH/{$tahun}";
             }
         });
     }

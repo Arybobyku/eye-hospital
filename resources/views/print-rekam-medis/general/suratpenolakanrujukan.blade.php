@@ -58,7 +58,7 @@
     <?php $fullpath = storage_path('app/public/images/header_rme.png'); ?>
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            RM 9.5/SPPR/22
+            {{ $data->no_surat ?? 'RM 9.5/SPPR/' . config('app.tahun_akreditasi', '22') }}
         </div>
         @include('print-rekam-medis.partials.header')
         <br />

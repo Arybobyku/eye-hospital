@@ -608,6 +608,7 @@ export default {
         tanggal: "",
         waktu: "",
         no_rm: "",
+        no_surat: "",
         nik: "",
         nama: "",
         tanggal_lahir: "",
@@ -725,9 +726,8 @@ export default {
     },
     
     formCode() {
-      return this.form.jenis_form === 'penolakan'
-        ? 'RM 4.2/PTA/22'
-        : 'RM 4.3/PTA/22';
+      return this.form.no_surat || 
+        (this.form.jenis_form === 'penolakan' ? 'RM 4.2/PTA/22' : 'RM 4.3/PTA/22');
     },
     
     pernyataanTitle() {
@@ -743,11 +743,13 @@ export default {
     }
   },
 
-mounted() {
+async mounted() {
   console.log("🟢 COMPONENT - Mounted");
   console.log("🟢 COMPONENT - editData:", this.editData);
   console.log("🟢 COMPONENT - viewData:", this.viewData);
   console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
+
+  await this.fetchTahunAkreditasi();
   
   this.disabledSubmit = false;
   
@@ -776,6 +778,23 @@ mounted() {
 },
 
   methods: {
+
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+        
+        // Update no_surat untuk display
+        if (!this.form.no_surat && this.form.jenis_form) {
+          this.form.no_surat = this.form.jenis_form === 'penolakan'
+            ? `RM 4.2/PTA/${tahun}`
+            : `RM 4.3/PTA/${tahun}`;
+        }
+      } catch (error) {
+        console.error("Error fetch tahun:", error);
+      }
+    },
+    
     // 🔥 METHOD BARU: Update form type
     updateFormType() {
       console.log('📝 Form type changed to:', this.form.jenis_form);

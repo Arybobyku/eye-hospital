@@ -60,6 +60,7 @@
             </td>
             <td style="width: 50%">
                 <table style="width: 100%">
+                    <tr><td>no surat</td><td>: {{ $data->no_surat ?? 'RM 1.7/RMRJ/' . config('app.tahun_akreditasi', '22') }}</td></tr>
                     <tr><td>Dokter</td><td>: {{ $data['dokter'] ?? '' }}</td></tr>
                     <tr><td>Poli</td><td>: {{ $data['poli'] ?? '' }}</td></tr>
                     <tr><td>Penanggung</td><td>: {{ $data['penanggung'] ?? '' }}</td></tr>

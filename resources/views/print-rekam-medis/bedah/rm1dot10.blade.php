@@ -48,7 +48,7 @@
 
         <div class="wrap">
             <div style="width:100%; text-align:right; margin-bottom:5px">
-                RM 1.10/PPPO/22
+                {{ $perawatanPeriOperative->no_surat ?? 'RM 1.10/PPPO/' . config('app.tahun_akreditasi', '22') }}
             </div>
             @include('print-rekam-medis.partials.header')
         </div>

@@ -34,7 +34,7 @@
     <?php $eyero = storage_path('app/public/images/EYE-RO.png'); ?>
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            RM 9.3/LEP/22
+            {{ $data->no_surat ?? 'RM 9.3/LEP/' . config('app.tahun_akreditasi', '22') }}
         </div>
         @include('print-rekam-medis.partials.header')
         <h3 style="text-align: center">LAPORAN EKSISI PALPEBRA</h3>

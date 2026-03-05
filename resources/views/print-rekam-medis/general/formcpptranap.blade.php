@@ -43,7 +43,7 @@
     <?php $eyero = storage_path('app/public/images/EYE-RO.png'); ?>
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            RM 2.10/CPPTRI
+            {{ $data->no_surat ?? 'RM 2.10/CPPTRI/' . config('app.tahun_akreditasi', '22') }}
         </div>
         @include('print-rekam-medis.partials.header')
         <h3 style="text-align: center">CATATAN PERKEMBANGAN PASIEN TERINTEGERASI RAWAT INAP</h3>

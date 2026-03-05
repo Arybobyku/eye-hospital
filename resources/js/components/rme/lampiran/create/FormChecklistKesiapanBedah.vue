@@ -10,7 +10,7 @@
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">CHECKLIST KESIAPAN BEDAH</h2>
-        <h4 class="fw-semibold">RM 2.0/CKB/22</h4>
+        <h4 class="fw-semibold">{{ form.no_surat}} </h4>
       </div>
 
       <!-- ================= INFORMASI PASIEN ================= -->
@@ -56,36 +56,7 @@
 
       <!-- ================= INFORMASI KLINIK + CHECKLIST + TTD ================= -->
       <div class="form-container-rme">
-    <div class="header-rme">
-      <h3>CEKLIST KESIAPAN BEDAH</h3>
-    </div>
 
-    <!-- ================= DATA PASIEN ================= -->
-    <div class="box-rme mb-4">
-      <h5 class="section-title-rme">DATA PASIEN</h5>
-      
-      <div class="form-row-2">
-        <div>
-          <label>No. RM :</label>
-          <input type="text" v-model="form.no_rm_pasien" class="input-rme" readonly />
-        </div>
-        <div>
-          <label>Nama Pasien :</label>
-          <input type="text" v-model="form.nama_pasien" class="input-rme" readonly />
-        </div>
-      </div>
-
-      <div class="form-row-2">
-        <div>
-          <label>Tanggal Lahir :</label>
-          <input type="date" v-model="form.tanggal_lahir" class="input-rme" readonly />
-        </div>
-        <div>
-          <label>Jenis Kelamin :</label>
-          <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
-        </div>
-      </div>
-    </div>
 
     <!-- ================= INFORMASI KLINIK + CHECKLIST + TTD ================= -->
     <div class="box-rme mb-4">
@@ -249,6 +220,7 @@ export default {
         
         // Data Default
         no_rm: "",
+        no_surat: "",
         jenis_kelamin: "",
         nama: "",
         nik: "",
@@ -301,12 +273,14 @@ export default {
       },
     };
   },
-mounted() {
+async mounted() {
   console.log("🟢 COMPONENT - Mounted");
   console.log("🟢 COMPONENT - editData:", this.editData);
   console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
+
+  await this.fetchTahunAkreditasi();
   
-    this.disabledSubmit = false;
+  this.disabledSubmit = false;
   if(this.viewData){
     this.disabledSubmit = true;
     this.loadDataForEdit();
@@ -319,6 +293,25 @@ mounted() {
   }
 },
   methods: {
+  async fetchTahunAkreditasi() {
+    try {
+      const response = await axios.get('/api/tahun-akreditasi');
+      const tahun = response.data.tahun || '22';
+      
+      if (!this.form.no_surat) {
+        this.form.no_surat = `RM 2.0/CKB/${tahun}`;
+      }
+      
+      console.log("✅ Tahun akreditasi:", tahun);
+      console.log("✅ No surat:", this.form.no_surat);
+    } catch (error) {
+      console.error("❌ Error fetch tahun:", error);
+      if (!this.form.no_surat) {
+        this.form.no_surat = 'RM 2.0/CKB/22';
+      }
+    }
+  },
+
 loadDataForEdit() {
   console.log("🟢 LOAD EDIT - Mulai load data");
   console.log("🟢 LOAD EDIT - editData yang diterima:", this.editData);

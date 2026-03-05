@@ -53,7 +53,7 @@
     
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            {{ $item->no_surat ?? 'RM 1.2/FEPDKRJ/22'}}
+            {{ $edukasiPasien->no_surat ?? 'RM 1.2/FEPDKRJ/' . config('app.tahun_akreditasi', '22') }}
         </div>
         
         <table style="border-collapse: collapse;">

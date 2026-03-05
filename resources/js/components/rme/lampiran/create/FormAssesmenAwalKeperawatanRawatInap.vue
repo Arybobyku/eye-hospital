@@ -7,7 +7,7 @@
     <div class="text-center mb-4">
       <h2 class="fw-bold">Asesmen Awal Keperawatan Rawat Inap</h2>
       <p class="small">(Formulir ini digunakan untuk pasien dewasa/usia lanjut dan harus dilengkapi dalam waktu 24 jam pertama pasien masuk ruang rawat inap)</p>
-      <p class="small fw-semibold">RM 7.8/AAKRI/2022</p>
+      <p class="small fw-semibold">{{ form.no_surat}}</p>
     </div>
 
     <!-- DATE & TIME -->
@@ -1145,6 +1145,7 @@ export default {
         date: "",
         time: "",
         no_rm: "",
+        no_surat: "",
         nama: "",
         tanggal_lahir: "",
         jenis_kelamin: "",
@@ -1340,7 +1341,9 @@ export default {
     
   },
 
-  mounted() {
+  async mounted() {
+
+    await this.fetchTahunAkreditasi();
     console.log('editmode', this.viewData);
     if(this.viewData) {
       this.disabledSubmit = true;
@@ -1359,6 +1362,24 @@ export default {
   },
 
   methods: {
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RM 7.8/AAKRI/${tahun}`;
+        }
+
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 7.8/AAKRI/22';
+        }
+      }
+    },
     async loadDataForEdit() {
       try {
         const dataSource = this.editData;

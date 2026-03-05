@@ -6,6 +6,7 @@
 
     <div class="text-center mb-4">
       <h3 class="fw-bold">RESUME MEDIS RAWAT JALAN</h3>
+      <h4 class="fw-semibold">{{ form.no_surat}} </h4>
     </div>
     <!-- IDENTITAS PASIEN -->
     <div class="box-rme mb-4">
@@ -174,6 +175,7 @@
           tanggal_lahir: "",
           jenis_kelamin: "",
           no_rm: "",
+          no_surat: "",
           nik: "",
           tanggal_berobat: "",
           dokter: "",
@@ -200,7 +202,8 @@
         // return !!this.editUuid;
       }
     },
-    mounted() {
+    async mounted() {
+      await this.fetchTahunAkreditasi();
       if(this.viewData) {
       console.log(this.editUuid);
 
@@ -217,6 +220,25 @@
       }
     },
     methods: {
+      async fetchTahunAkreditasi() {
+        try {
+          const response = await axios.get('/api/tahun-akreditasi');
+          const tahun = response.data.tahun || '22';
+
+          if (!this.form.no_surat) {
+            this.form.no_surat = `RM 1.7/RMRJ/${tahun}`;
+          }
+
+          console.log("✅ Tahun akreditasi:", tahun);
+          console.log("✅ No surat:", this.form.no_surat);
+        } catch (error) {
+          console.error("❌ Error fetch tahun:", error);
+          if (!this.form.no_surat) {
+            this.form.no_surat = 'RM 1.7/RMRJ/22';
+          }
+        }
+      },
+
       setDataPasien() {
         const p = this.selectedPatient;
         this.form.uuid_pasien = p?.uuid;
@@ -374,6 +396,15 @@
   padding: 6px 14px;
   border: none;
   margin-left: 8px;
+}
+
+
+.fw-bold {
+  font-weight: bold;
+}
+
+.fw-semibold {
+  font-weight: 600;
 }
 .view-overlay {
   position: absolute;

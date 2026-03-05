@@ -4,7 +4,7 @@
   <div class="container py-4">
     <div class="text-center mb-4">
       <h3 class="fw-bold">LAPORAN ANESTESI</h3>
-      <p class="text-muted">RM 5.2/LA/22</p>
+      <p class="text-muted">{{ form.no_surat}}</p>
     </div>
 
     <!-- TABS NAVIGATION -->
@@ -1039,6 +1039,7 @@ export default {
         // Identitas
         tanggal: "",
         no_rm: "",
+        no_surat: "",
         nama: "",
         tanggal_lahir: "",
         jenis_kelamin: "",
@@ -1229,7 +1230,8 @@ export default {
       return !!this.editUuid;
     }
   },
-  mounted() {
+  async mounted() {
+    await this.fetchTahunAkreditasi();
     if (this.isEditMode) {
       this.loadDataForEdit();
     } else {
@@ -1237,6 +1239,24 @@ export default {
     }
   },
   methods: {
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RM 5.2/LA/${tahun}`;
+        }
+
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 5.2/LA/22';
+        }
+      }
+    },
     setDataPasien() {
       const p = this.selectedPatient;
       this.form.uuid_pasien = p?.uuid;

@@ -135,6 +135,10 @@ class FormReaksiTransfusiDarah extends Model
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
             }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "RM 6.2/FRTD/{$tahun}";
+            }
         });
     }
     

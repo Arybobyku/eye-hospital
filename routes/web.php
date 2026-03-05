@@ -24,6 +24,12 @@ use App\Http\Controllers\MigrasiCtrl;
 use App\Http\Controllers\SearchingCtrl;
 use App\Http\Controllers\Master\PasienCtrl;
 
+Route::get('/api/tahun-akreditasi', function () {
+    return response()->json([
+        'tahun' => config('app.tahun_akreditasi', '22')
+    ]);
+});
+
 Route::group(['middleware' => 'throttle: 250, 1', 'middleware' => 'acl'], function(){
 	Route::get('dashboard/{any}', function () {
     return view('welcome');

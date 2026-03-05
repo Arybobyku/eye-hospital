@@ -15,7 +15,7 @@ class DokumenFormLaserBarrage extends Model
 
     protected $fillable = [
         'uuid', 'uuid_pasien',
-        'no_rm', 'jenis_kelamin', 'nama', 'nik',
+        'no_rm','no_surat', 'jenis_kelamin', 'nama', 'nik',
         'nama_pasien', 'no_rm_pasien', 'jenis_kelamin_display',
         'tanggal_lahir', 'tanggal', 'diagnosa',
         'parameter_laser_barrage',
@@ -37,6 +37,10 @@ class DokumenFormLaserBarrage extends Model
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
+            }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "RM 10.5/FTLB/{$tahun}";
             }
         });
     }

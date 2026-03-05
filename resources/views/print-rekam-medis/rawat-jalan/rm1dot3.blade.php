@@ -34,7 +34,7 @@
     
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            RM 1.3/PKMRJ/22
+            {{ $pengkajian->no_surat ?? 'RM 1.3/PKMRJ/' . config('app.tahun_akreditasi', '22') }}
         </div>
         @include('print-rekam-medis.partials.header')
         <table style="width: 100%; text-align: left;" cellpadding="0" cellspacing="0">
