@@ -159,11 +159,19 @@ class PasienCtrl extends Controller
         $column = $request->column;
 
         if ($request->search != '') {
-            $data = Pasien::where('delete_soft', '=', 1)
+            $data = Pasien::where('pasien.delete_soft', '=', 1)
+                ->leftJoin('registrasi', 'pasien.uuid', '=', 'registrasi.pasien_uuid')
+                ->select(
+                    'pasien.*',
+                    'registrasi.uuid as registrasi_uuid',
+                    'registrasi.created_at as tgl_registrasi',
+                    'registrasi.photos as photos',
+                    'registrasi.status as status_registrasi'
+                )
                 ->where(function ($q) use ($search) {
-                    $q->where('nama', 'ilike', '%' . $search . '%')
-                        ->orWhere('no_identitas', 'ilike', '%' . $search . '%')
-                        ->orWhere('rekam_medis', 'ilike', '%' . $search . '%');
+                    $q->where('pasien.nama', 'ilike', '%' . $search . '%')
+                        ->orWhere('pasien.no_identitas', 'ilike', '%' . $search . '%')
+                        ->orWhere('pasien.rekam_medis', 'ilike', '%' . $search . '%');
                 })
                 ->skip($skip)->take($this->take)
                 ->get();

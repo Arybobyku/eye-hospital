@@ -32,11 +32,12 @@
 	<!-- LEFT FOTO + INFO SINGKAT -->
 	<div class="left-box">
     <div class="photo-wrapper">
-      <img
-        class="avatar"
-        :src="selectedPatient.foto || '/default-avatar.png'"
-        alt="Foto Pasien"
-      />
+        <img
+            class="avatar"
+            :src="selectedPatient?.photos ? '/' + selectedPatient.photos : '/default-avatar.png'"
+            alt="Foto Pasien"
+            @error="onImageError"
+        />
     </div>
 
 		<div class="badge badge-rm">
@@ -303,6 +304,10 @@ export default {
 			}
 		},
 
+    onImageError(e) {
+        // e.target.src = '/default-avatar.png';
+    },
+
 		// -------------------------------------
 		// 👇 FITUR REALTIME SEARCH PASIEN
 		// -------------------------------------
@@ -369,6 +374,7 @@ export default {
 			this.selectedPatient = patient;
 			this.searchQuery = patient.name;
 			this.showDropdown = false;
+      console.log("Selected patient:", patient);
 		},
 		
 
