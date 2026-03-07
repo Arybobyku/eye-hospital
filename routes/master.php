@@ -101,5 +101,16 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
 		Route::get('lampiran/{uuid}', [RekamMedisCtrl::class, 'getDetailLampiran']);
 		Route::post('lampiran/{uuid}/detail', [RekamMedisCtrl::class, 'getDetailLampiran']);  // ✅ UBAH JADI POST DAN TAMBAH /detail
 		Route::delete('lampiran/{uuid}', [RekamMedisCtrl::class, 'deleteLampiran']);
+
+
+		// Assign dokter untuk tanda tangan lampiran
+		Route::post('lampiran/assign-dokter', [RekamMedisCtrl::class, 'assignDokter']);
+
+		// Update status assign (direview -> ditandatangan)
+		Route::post('lampiran/assign-dokter/update-status', [RekamMedisCtrl::class, 'updateStatusAssign']);
+
+		// Get list dokter (untuk dropdown pilih dokter di modal)
+		Route::post('lampiran/list-dokter', [RekamMedisCtrl::class, 'listDokterForAssign']);
+		Route::post('tanda-tangan-dokter/list', [RekamMedisCtrl::class, 'listTandaTanganDokter']);
 	});
 });

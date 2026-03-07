@@ -515,17 +515,18 @@ class RekamMedisCtrl extends Controller
                 ],
             ];
 
-            if (!empty($search)) {
-                $searchLower = mb_strtolower($search);
+            // if (!empty($search)) {
+            //     $searchLower = mb_strtolower($search);
 
-                $documentConfigs = array_values(array_filter($documentConfigs, function ($val) use ($searchLower) {
-                    return
-                        str_contains(mb_strtolower($val['label']), $searchLower)
-                        || str_contains(mb_strtolower($val['type']), $searchLower);
-                }));
+            //     $documentConfigs = array_values(array_filter($documentConfigs, function ($val) use ($searchLower) {
+            //         return
+            //             str_contains(mb_strtolower($val['label']), $searchLower)
+            //             || str_contains(mb_strtolower($val['type']), $searchLower)
+            //             ;
+            //     }));
 
-                // dd($documentConfigs);
-            }
+            //     // dd($documentConfigs);
+            // }
 
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -548,36 +549,46 @@ class RekamMedisCtrl extends Controller
             $data = collect();
 
             foreach ($documentConfigs as $config) {
-                $query = \DB::table($config['table'])
+
+                $table = $config['table'];
+
+                $query = \DB::table($table)
+                    ->leftJoin('lampiran_assign_dokter as lad', function ($join) use ($table, $config) {
+                        $join->on('lad.id_dokumen', '=', "$table.id")
+                            ->where('lad.jenis_dokumen', '=', $config['type']);
+                    })
                     ->select(
-                        'uuid',
-                        'uuid_pasien',
-                        \DB::raw($this->mapField($config['table'], 'tanggal') . ' as tanggal'),
-                        \DB::raw($this->mapField($config['table'], 'waktu') . '::text as waktu'),
-                        'no_rm',
-                        'nama',
-                        'jenis_kelamin',
-                        'nik',
-                        // \DB::raw($this->mapField($config['table'], 'user_pelaksana') . ' as user_pelaksana'),
-                        // \DB::raw($this->mapField($config['table'], 'detail_info') . ' as detail_info'),
-                        'created_at',
-                        'created_by',
-                        'updated_at',
-                        'updated_by',
+                        "$table.id",
+                        "$table.uuid",
+                        "$table.uuid_pasien",
+                        "$table.no_surat",
+                        \DB::raw($this->mapField($table, 'tanggal') . " as tanggal"),
+                        \DB::raw($this->mapField($table, 'waktu') . "::text as waktu"),
+                        "$table.no_rm",
+                        "$table.nama",
+                        "$table.jenis_kelamin",
+                        "$table.nik",
+                        "lad.status as status_dokter",
+                        "lad.nama_dokter as nama_dokter",
+                        "$table.created_at",
+                        "$table.created_by",
+                        "$table.updated_at",
+                        "$table.updated_by",
                         \DB::raw("'{$config['type']}' as document_type"),
                         \DB::raw("'{$config['label']}' as document_label"),
                         \DB::raw("'{$config['icon']}' as document_icon"),
                         \DB::raw("'{$config['color']}' as document_color")
                     )
-                    ->where('uuid_pasien', $uuid_pasien)
-                    ->whereNull('deleted_at');
+                    ->where("$table.uuid_pasien", $uuid_pasien)
+                    ->whereNull("$table.deleted_at");
 
-                // if (!empty($search)) {
-                //     $query->where(function ($q) use ($search) {
-                //         $q->where('nama', 'ILIKE', "%{$search}%")
-                //             ->orWhere('no_rm', 'ILIKE', "%{$search}%");
-                //     });
-                // }
+                if (!empty($search)) {
+                    $searchLower = strtolower($search);
+
+                    $query->where(function ($q) use ($searchLower, $table) {
+                        $q->whereRaw("LOWER($table.no_surat) LIKE ?", ["%{$searchLower}%"]);
+                    });
+                }
 
                 $data = $data->merge($query->get());
             }
@@ -624,247 +635,246 @@ class RekamMedisCtrl extends Controller
     {
         $mapping = [
             'dokumen_form_laser_barrage' => [
-                'tanggal' => 'tanggal',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'dokter_pelaksana',
                 // 'detail_info' => 'jenis_laser'
             ],
             'dokumen_laporan_pembedahan' => [
-                'tanggal' => 'tanggal_operasi',
-                'waktu' => 'jam_mulai',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_balance_cairan_harian' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                 'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_resume_perawatan_rawat_jalan' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
-                'no_surat' => 'RM 1.6/RPPRJ/22',
+                 'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_surat_penolakan_rujukan' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                 'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_surat_kontrol' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_surat_balasan_konsul' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_surat_konsul' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-            'dokumen_surat_pernyataan_batal_operasi' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+            'dokumen_surat_pernyataan_batal_operasi' => [     
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-            'dokumen_surat_pernyataan_pasien_umum' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+            'dokumen_surat_pernyataan_pasien_umum' => [                
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_dietitian_pasien_baru' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_ceklist_kesiapan_bedah' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-            'form_edukasi_pasien_dan_keluarga_rawat_jalan' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+            'form_edukasi_pasien_dan_keluarga_rawat_jalan' => [               
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-            'form_persetujuan_umum_pasien_keluarga' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+            'form_persetujuan_umum_pasien_keluarga' => [       
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'form_proses_perawatan_peri_operative' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'form_pendidikan_edukasi_pasien_keluarga_terintegrasi_rawat_inap' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'penolakan_tindakan_anestesi' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'form_pengkajian_keperawatan_mata_rawat_jalan' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'form_laporan_injeksi' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'form_permintaan_pulang' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'voucher_rawat_inap' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'form_reaksi_transfusi_darah' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_asuhan_gizi' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_tindakan_laser_lpi' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_tindakan_laser_prp' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_laporan_operasi_trabekulektomi' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_laporan_operasi_pterygium' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_laporan_eksisi_palpebra' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_laporan_eksisi_chalazion' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_pulang_atas_permintaan_sendiri' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_tindakan_laser_capsulotomy' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_tindakan_epilasi' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_kronologis_pasien' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_catatan_operasi' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_resume_medis_rawat_jalan' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
                 'no_surat' => 'RM 1.7/RMRJ/22',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_resume_medis_rawat_inap' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
                 'no_surat' => 'RM 3.5/RM/22',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_asesmen_keperawatan_rawat_inap' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
                 'no_surat' => 'RM 7.8/AAKRI/2022',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_form_laser_fokal' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'      
             ],
             'dokumen_laporan_operasi_vitreo_retina' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
                 'no_surat' => 'RM 10.1/LOVR/22',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_status_anestesi' => [
-                'tanggal' => 'created_at',
-                'waktu' => 'created_at',
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
                 'no_surat' => 'RM 5.2/LA/22',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
@@ -1096,4 +1106,269 @@ class RekamMedisCtrl extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Assign dokter untuk menandatangani lampiran
+     * POST /master/rekammedis/lampiran/assign-dokter
+     */
+    public function assignDokter(Request $request)
+    {
+        try {
+            $pasien_uuid    = $request->input('pasien_uuid');
+            $dokter_uuid    = $request->input('dokter_uuid');
+            $dokter_nama    = $request->input('nama_dokter');
+            $id_dokumen     = $request->input('id_dokumen');
+            $uuid_dokumen     = $request->input('uuid_dokumen');
+            $jenis_dokumen  = $request->input('jenis_dokumen');
+            $catatan        = $request->input('catatan', null);
+
+            // Validasi input
+            if (empty($pasien_uuid) || empty($dokter_uuid) || empty($id_dokumen) || empty($jenis_dokumen)) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Data tidak lengkap. pasien_uuid, dokter_uuid, id_dokumen, jenis_dokumen wajib diisi.'
+                ], 422);
+            }
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            // Cek apakah dokumen ini sudah pernah di-assign sebelumnya (yang belum dihapus)
+            $existingAssign = \DB::table('lampiran_assign_dokter')
+                ->where('id_dokumen', $id_dokumen)
+                ->where('jenis_dokumen', $jenis_dokumen)
+                ->whereNull('deleted_at')
+                ->first();
+
+            if ($existingAssign) {
+                // Jika sudah ada, update dokter dan reset status ke 'direview'
+                \DB::table('lampiran_assign_dokter')
+                    ->where('id', $existingAssign->id)
+                    ->update([
+                        'dokter_uuid'  => $dokter_uuid,
+                        'nama_dokter'  => $dokter_nama,
+                        'catatan'      => $catatan,
+                        'status'       => 'direview',
+                        'updated_at'   => now(),
+                        'updated_by'   => $pengguna_nama,
+                    ]);
+
+                $uuid = $existingAssign->uuid;
+                $message = 'Assign dokter berhasil diperbarui';
+            } else {
+                // Insert baru
+                $uuid = \Str::uuid()->toString();
+                \DB::table('lampiran_assign_dokter')->insert([
+                    'uuid'          => $uuid,
+                    'pasien_uuid'   => $pasien_uuid,
+                    'dokter_uuid'   => $dokter_uuid,
+                    'id_dokumen'    => $id_dokumen,
+                    'uuid_dokumen'    => $uuid_dokumen,
+                    'jenis_dokumen' => $jenis_dokumen,
+                    'status'        => 'direview',
+                    'catatan'       => $catatan,
+                    'created_at'    => now(),
+                    'created_by'    => $pengguna_nama,
+                ]);
+
+                $message = 'Lampiran berhasil di-assign ke dokter';
+            }
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'uuid'    => $uuid,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal assign dokter',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Update status assign (direview -> ditandatangan)
+     * POST /master/rekammedis/lampiran/assign-dokter/update-status
+     */
+    public function updateStatusAssign(Request $request)
+    {
+        try {
+            $uuid   = $request->input('uuid');
+            $status = $request->input('status'); // 'direview' atau 'ditandatangan'
+
+            if (empty($uuid) || empty($status)) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'uuid dan status wajib diisi'
+                ], 422);
+            }
+
+            if (!in_array($status, ['direview', 'ditandatangan'])) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Status tidak valid. Gunakan: direview atau ditandatangan'
+                ], 422);
+            }
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $affected = \DB::table('lampiran_assign_dokter')
+                ->where('uuid', $uuid)
+                ->whereNull('deleted_at')
+                ->update([
+                    'status'     => $status,
+                    'updated_at' => now(),
+                    'updated_by' => $pengguna_nama,
+                ]);
+
+            if ($affected === 0) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'Data assign tidak ditemukan'
+                ], 404);
+            }
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Status berhasil diperbarui menjadi ' . $status,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal update status',
+                'error'   => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * List dokter untuk dropdown assign
+     * POST /master/rekammedis/lampiran/list-dokter
+     */
+    public function listDokterForAssign(Request $request)
+    {
+        try {
+            $search = $request->input('search', '');
+
+            // Sesuaikan nama tabel dan kolom dengan skema DB Anda
+            // Asumsi tabel 'pengguna' dengan kolom uuid, nama, role/jabatan
+            $query = \DB::table('pengguna')
+                ->select('uuid', 'nama', 'posisi')
+                ->where('delete_soft', '=','1')
+                ->where(function ($q) {
+                    // Filter hanya role dokter - sesuaikan dengan kolom role di DB Anda
+                    $q->Where('posisi', '=', '8808');
+                });
+
+            if (!empty($search)) {
+                $query->where('nama', 'ILIKE', "%{$search}%");
+            }
+
+            $dokters = $query->orderBy('nama')->limit(50)->get();
+
+            return response()->json([
+                'status' => true,
+                'data'   => $dokters,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal mengambil data dokter',
+                'error'   => $e->getMessage()
+            ], 500);
+        }    
+    }
+
+
+    public function listTandaTanganDokter(Request $request)
+    {
+        try {
+
+            $search  = $request->input('search', '');
+            $status  = $request->input('status', '');   // '' = semua, 'direview', 'ditandatangan'
+            $limit   = (int) $request->input('limit', 10);
+            $page    = (int) $request->input('page', 1);
+            $offset  = ($page - 1) * $limit;
+
+            // Ambil UUID dokter yang sedang login dari cookie
+            // Sesuaikan dengan cara project kamu mengambil UUID user login
+            $dokter_uuid =  Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+
+            // ── Query utama ──────────────────────────────────────────────
+            // JOIN ke tabel pasien untuk mendapatkan info pasien
+            // Sesuaikan nama tabel pasien dan kolom dengan skema DB kamu
+            $query = \DB::table('lampiran_assign_dokter as lad')
+                ->leftJoin('pasien as p', 'p.uuid', '=', 'lad.pasien_uuid')
+                ->select(
+                    // Data assign
+                    'lad.uuid as assign_uuid',
+                    'lad.pasien_uuid',
+                    'lad.dokter_uuid',
+                    'lad.id_dokumen',
+                    'lad.uuid_dokumen',
+                    'lad.nama_dokter',
+                    'lad.jenis_dokumen',
+                    'lad.status',
+                    'lad.catatan',
+                    'lad.created_at',
+                    'lad.created_by',
+                    'lad.updated_at',
+                    // Data pasien
+                    'p.nama as nama_pasien',
+                    'p.rekam_medis',
+                    'p.no_identitas as identitas',
+                )
+                ->whereNull('lad.deleted_at');
+
+            if($dokter_uuid != '49e7cf52-9bfd-4933-b42e-0444af1eaeb7'){
+                $query->where('lad.dokter_uuid', $dokter_uuid);
+            }    
+            // Filter status
+            if (!empty($status)) {
+                $query->where('lad.status', $status);
+            }
+
+            // Filter search (nama pasien atau no RM)
+            if (!empty($search)) {
+                $query->where(function ($q) use ($search) {
+                    $q->where('p.nama', 'ILIKE', "%{$search}%")
+                    ->orWhere('p.no_rm', 'ILIKE', "%{$search}%");
+                });
+            }
+
+            // Count total untuk pagination
+            $total = (clone $query)->count();
+
+            // Ambil data dengan pagination
+            $data = $query
+                ->orderBy('lad.created_at', 'desc')
+                ->offset($offset)
+                ->limit($limit)
+                ->get();
+
+            $totalPages = $total > 0 ? ceil($total / $limit) : 1;
+
+            return response()->json([
+                'status' => true,
+                'data'   => $data,
+                'pagination' => [
+                    'total'        => $total,
+                    'per_page'     => $limit,
+                    'current_page' => $page,
+                    'total_pages'  => $totalPages,
+                    'from'         => $total > 0 ? $offset + 1 : 0,
+                    'to'           => min($offset + $limit, $total),
+                ],
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal mengambil data tanda tangan',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }

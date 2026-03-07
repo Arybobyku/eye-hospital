@@ -8,10 +8,14 @@ import 'sweetalert2/dist/sweetalert2.min.css';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
 import VueSignaturePad from 'vue-signature-pad';
+import Swal from 'sweetalert2';
 
 const app = createApp({});
 app.config.globalProperties.$dbNameIndexDb = 'indexDbHospital';
 app.config.globalProperties.$debugs = true;
+
+// Daftarkan sebagai global property
+app.config.globalProperties.$swal = Swal;
 // app.mixin({
 // 	globalHelper: function (component) { 
 // 		defineAsyncComponent(() => import(component));
