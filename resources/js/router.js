@@ -533,6 +533,14 @@ const routes = [
 		props: true 
 	},
 
+	{ 
+		path: _base + 'rme-ttd-dokter', 
+		name: 'Notifikasi Tanda Tangan Dokter', 
+		component: () => import('./components/rme/ttd-dokter/index.vue'),
+		meta: { title: 'Notifikasi Tanda Tangan Dokter' },
+		props: true 
+	},
+
 	/**********************************************************************************
 	 * Laporan
 	 ***********************************************************************************/

@@ -60,13 +60,14 @@
             <th style="width: 180px">Nomor Dokumen</th>
             <th style="width: 100px">TANGGAL</th>
             <th style="width: 150px">Creator</th>
-            <th style="width: 120px" class="text-center">ACTION</th>
+            <th style="width: 130px">STATUS TTD</th>
+            <th style="width: 150px" class="text-center">ACTION</th>
           </tr>
         </thead>
 
         <tbody>
           <tr v-if="data.length === 0">
-            <td colspan="10" class="text-center">
+            <td colspan="7" class="text-center">
               {{ loading ? "Memuat data..." : "Tidak ada data" }}
             </td>
           </tr>
@@ -74,22 +75,26 @@
           <tr v-for="(item, index) in data" :key="item.uuid">
             <td>{{ pagination.from + index }}</td>
 
-            <!-- JENIS DOKUMEN dengan Badge -->
-            <td>
-              <!-- <span
-                class="document-badge"
-                :style="{ backgroundColor: item.document_color }"
-              >
-                <i :class="['fas', item.document_icon]"></i>
-                {{ item.document_label }}
-              </span> -->
-              {{ item.document_label }}
-            </td>
+            <td>{{ item.document_label }}</td>
 
             <td></td>
 
             <td>{{ formatDate(item.tanggal) }}</td>
             <td>{{ item.created_by || "-" }}</td>
+
+            <!-- KOLOM STATUS TTD -->
+            <td>
+              <span
+                v-if="item?.status_dokter"
+                :class="['status-badge', 'status-' + item?.status_dokter]"
+              >
+                <i :class="item?.status_dokter"></i>
+                {{ item?.status_dokter}}
+              </span>
+              <span v-else class="status-badge status-kosong">
+                <i class="fas fa-minus"></i> -
+              </span>
+            </td>
 
             <!-- ACTION BUTTONS -->
             <td class="text-center">
@@ -104,6 +109,15 @@
 
                 <button class="btn-action btn-print" @click="onPrint(item)" title="Print">
                   <i class="fas fa-print"></i>
+                </button>
+
+                <!-- TOMBOL ASSIGN DOKTER -->
+                <button
+                  class="btn-action btn-assign"
+                  @click="onOpenAssignModal(item)"
+                  title="Assign ke Dokter"
+                >
+                  <i class="fas fa-user-doctor"></i>
                 </button>
 
                 <button
@@ -159,7 +173,6 @@
       <div class="document-selector-card">
         <p class="mb-3">Silakan pilih jenis dokumen yang ingin ditambahkan:</p>
 
-        <!-- 🔍 SEARCH DOCUMENT - IMPROVED -->
         <div class="form-group">
           <label class="form-label">
             <i class="fas fa-search"></i> Cari Jenis Dokumen
@@ -172,30 +185,24 @@
               placeholder="Ketik nama dokumen untuk mencari..."
               @focus="showDocumentList = true"
             />
-            <i v-if="documentSearch" 
-               class="fas fa-times clear-search" 
+            <i v-if="documentSearch"
+               class="fas fa-times clear-search"
                @click="clearDocumentSearch"
                title="Hapus pencarian"></i>
           </div>
-          
-          <!-- Document count info -->
+
           <div v-if="documentSearch" class="search-info">
             <i class="fas fa-info-circle"></i>
             Ditemukan {{ filteredAvailableDocuments.length }} dari {{ availableDocuments.length }} dokumen
           </div>
         </div>
 
-        <!-- DOCUMENT LIST - REACTIVE DISPLAY -->
         <div class="document-list-container">
           <div class="form-label">
             <i class="fas fa-file-medical"></i> Pilih Dokumen:
           </div>
-          
-          <!-- EMPTY STATE -->
-          <div
-            v-if="filteredAvailableDocuments.length === 0"
-            class="empty-state"
-          >
+
+          <div v-if="filteredAvailableDocuments.length === 0" class="empty-state">
             <i class="fas fa-search"></i>
             <p>Tidak ada dokumen ditemukan untuk "{{ documentSearch }}"</p>
             <button class="btn-clear-search" @click="clearDocumentSearch">
@@ -203,7 +210,6 @@
             </button>
           </div>
 
-          <!-- DOCUMENT CARDS - REACTIVE LIST -->
           <div v-else class="document-cards">
             <div
               v-for="doc in filteredAvailableDocuments"
@@ -223,7 +229,6 @@
           </div>
         </div>
 
-        <!-- SELECTED DOCUMENT INFO -->
         <div v-if="selectedDocumentType" class="document-info mt-3">
           <i class="fas fa-info-circle"></i>
           <div>
@@ -270,6 +275,129 @@
         :documentType="selectedDocumentType"
       />
     </div>
+
+    <!-- ================= MODAL ASSIGN DOKTER ================= -->
+    <div v-if="showAssignModal" class="modal-overlay" @click.self="closeAssignModal">
+      <div class="modal-assign">
+        <!-- Modal Header -->
+        <div class="modal-assign-header">
+          <div class="modal-assign-title">
+            <i class="fas fa-user-doctor"></i>
+            Assign Dokter untuk Tanda Tangan
+          </div>
+          <button class="modal-close-btn" @click="closeAssignModal">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-assign-body">
+          <!-- Info Dokumen -->
+          <div class="assign-doc-info">
+            <i class="fas fa-file-medical"></i>
+            <div>
+              <div class="assign-doc-label">Dokumen</div>
+              <div class="assign-doc-name">{{ assignTarget?.document_label }}</div>
+            </div>
+          </div>
+
+          <!-- Status existing assign (jika ada) -->
+          <div
+            v-if="assignTarget?.status_dokter"
+            class="assign-existing-info"
+          >
+            <i class="fas fa-info-circle"></i>
+            <div>
+              Dokumen ini sudah di-assign ke
+              <strong>{{ assignTarget?.nama_dokter }}</strong>
+              dengan status
+              <span :class="['status-badge-sm', 'status-' + assignTarget?.status_dokter]">
+                {{ assignTarget?.status_dokter }}
+              </span>.
+              Assign ulang akan mengganti dokter dan mereset status ke <em>Direview</em>.
+            </div>
+          </div>
+
+          <!-- Cari Dokter -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-search"></i> Cari Dokter
+            </label>
+            <div class="search-wrapper">
+              <input
+                type="text"
+                v-model="dokterSearch"
+                @input="onSearchDokter"
+                class="form-input-search"
+                placeholder="Ketik nama dokter..."
+              />
+              <i class="fas fa-circle-notch fa-spin search-loading" v-if="loadingDokter"></i>
+            </div>
+          </div>
+
+          <!-- List Dokter -->
+          <div class="dokter-list-container">
+            <div v-if="loadingDokter" class="dokter-loading">
+              <i class="fas fa-circle-notch fa-spin"></i> Memuat data dokter...
+            </div>
+
+            <div v-else-if="availableDokters.length === 0" class="dokter-empty">
+              <i class="fas fa-user-slash"></i>
+              <p>Tidak ada dokter ditemukan</p>
+            </div>
+
+            <div v-else class="dokter-list">
+              <div
+                v-for="dokter in availableDokters"
+                :key="dokter.uuid"
+                :class="['dokter-item', { selected: selectedDokterUuid === dokter.uuid }]"
+                @click="selectDokter(dokter)"
+              >
+                <div class="dokter-avatar">
+                  <i class="fas fa-user-doctor"></i>
+                </div>
+                <div class="dokter-info">
+                  <div class="dokter-nama">{{ dokter.nama }}</div>
+                  <div class="dokter-jabatan">{{ dokter.jabatan || 'Dokter' }}</div>
+                </div>
+                <div v-if="selectedDokterUuid === dokter.uuid" class="dokter-check">
+                  <i class="fas fa-check-circle"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Catatan (Opsional) -->
+          <div class="form-group mt-3">
+            <label class="form-label">
+              <i class="fas fa-comment-medical"></i> Catatan (Opsional)
+            </label>
+            <textarea
+              v-model="assignCatatan"
+              class="form-textarea"
+              placeholder="Tambahkan catatan untuk dokter..."
+              rows="2"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-assign-footer">
+          <button
+            class="btn-primary"
+            @click="submitAssign"
+            :disabled="!selectedDokterUuid || loadingAssign"
+          >
+            <i v-if="loadingAssign" class="fas fa-circle-notch fa-spin"></i>
+            <i v-else class="fas fa-paper-plane"></i>
+            {{ loadingAssign ? 'Menyimpan...' : 'Assign Dokter' }}
+          </button>
+          <button class="btn-secondary" @click="closeAssignModal" :disabled="loadingAssign">
+            <i class="fas fa-times"></i> Batal
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -280,7 +408,6 @@ import { defineAsyncComponent } from "vue";
 export default {
   name: "ListLampiran",
   components: {
-    // Lazy load components
     CreateLaporanBedah: defineAsyncComponent(() => import("./create/LaporanBedah.vue")),
     FormLaserBargage: defineAsyncComponent(() => import("./create/FormLaserBarage.vue")),
     FormPersetujuanTindakanKedokteran: defineAsyncComponent(() =>
@@ -418,6 +545,20 @@ export default {
         to: 0,
       },
       searchTimeout: null,
+
+      // ===== ASSIGN DOKTER STATE =====
+      showAssignModal: false,
+      assignTarget: null,           // item lampiran yang sedang di-assign
+      availableDokters: [],
+      selectedDokterUuid: null,
+      selectedDokterNama: null,
+      assignCatatan: "",
+      dokterSearch: "",
+      loadingDokter: false,
+      loadingAssign: false,
+      dokterSearchTimeout: null,
+      // Map: id_dokumen (uuid lampiran) -> data assign {status, dokter_nama, ...}
+      assignMap: {},
 
       availableDocuments: [
         {
@@ -773,10 +914,8 @@ export default {
       const total = this.pagination.total_pages;
       const current = this.pagination.current_page;
       const delta = 2;
-
       let pages = [];
       pages.push(1);
-
       for (
         let i = Math.max(2, current - delta);
         i <= Math.min(total - 1, current + delta);
@@ -784,19 +923,13 @@ export default {
       ) {
         pages.push(i);
       }
-
-      if (total > 1) {
-        pages.push(total);
-      }
-
+      if (total > 1) pages.push(total);
       return [...new Set(pages)].sort((a, b) => a - b);
     },
 
     filteredAvailableDocuments() {
       if (!this.documentSearch.trim()) return this.availableDocuments;
-
       const keyword = this.documentSearch.toLowerCase().trim();
-
       return this.availableDocuments.filter(
         (doc) =>
           doc.label.toLowerCase().includes(keyword) ||
@@ -808,11 +941,12 @@ export default {
   },
 
   methods: {
+    // ===========================
+    // EXISTING METHODS (unchanged)
+    // ===========================
     async fetchLampiran() {
       if (!this.selectedPatient?.uuid) return;
-
       this.loading = true;
-
       try {
         const formData = new FormData();
         formData.append("uuid_pasien", this.selectedPatient.uuid);
@@ -821,9 +955,7 @@ export default {
         formData.append("page", this.pagination.current_page);
 
         const res = await axios.post("/master/rekammedis/list-lampiran", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         });
 
         if (res.data.status) {
@@ -832,11 +964,7 @@ export default {
         }
       } catch (err) {
         console.error("Gagal memuat lampiran:", err);
-        this.$swal({
-          icon: "error",
-          title: "Error",
-          text: "Gagal memuat data lampiran",
-        });
+        this.$swal({ icon: "error", title: "Error", text: "Gagal memuat data lampiran" });
       } finally {
         this.loading = false;
       }
@@ -873,18 +1001,18 @@ export default {
 
     getDocumentIcon(value) {
       const iconMap = {
-        'laporan-bedah': 'fa-file-medical',
-        'laser-bargage': 'fa-radiation',
-        'dokumen_form_laser_fokal': 'fa-bullseye',
-        'persetujuan_tindakan_kedokteran': 'fa-file-signature',
-        'resume-perawatan-rawat-jalan': 'fa-file-medical-alt',
-        'balance-cairan-harian': 'fa-tint',
-        'surat-penolakan-rujukan': 'fa-times-circle',
-        'surat-kontrol-ulang': 'fa-redo',
-        'surat_konsul': 'fa-comment-medical',
-        'surat-balasan-kosultasi': 'fa-reply',
+        "laporan-bedah": "fa-file-medical",
+        "laser-bargage": "fa-radiation",
+        dokumen_form_laser_fokal: "fa-bullseye",
+        persetujuan_tindakan_kedokteran: "fa-file-signature",
+        "resume-perawatan-rawat-jalan": "fa-file-medical-alt",
+        "balance-cairan-harian": "fa-tint",
+        "surat-penolakan-rujukan": "fa-times-circle",
+        "surat-kontrol-ulang": "fa-redo",
+        surat_konsul: "fa-comment-medical",
+        "surat-balasan-kosultasi": "fa-reply",
       };
-      return iconMap[value] || 'fa-file-alt';
+      return iconMap[value] || "fa-file-alt";
     },
 
     onProceedToCreate() {
@@ -917,104 +1045,44 @@ export default {
     },
 
     async onView(item) {
-      console.log("🟡 VIEW - Item yang dipilih:", item);
-
       try {
         this.loading = true;
-
-        const doc = this.availableDocuments.find(
-          (d) => d.backendType === item.document_type
-        );
-
-        console.log("🟡 VIEW - Doc Config Found:", doc);
-
-        if (!doc) {
-          alert("Tipe dokumen tidak ditemukan!");
-          return;
-        }
+        const doc = this.availableDocuments.find((d) => d.backendType === item.document_type);
+        if (!doc) { alert("Tipe dokumen tidak ditemukan!"); return; }
 
         const formData = new FormData();
         formData.append("type", item.document_type);
+        const response = await axios.post(`/master/rekammedis/lampiran/${item.uuid}/detail`, formData);
 
-        const url = `/master/rekammedis/lampiran/${item.uuid}/detail`;
-        console.log("🟡 VIEW - URL:", url);
-
-        const response = await axios.post(url, formData);
-
-        console.log("🟡 VIEW - Response:", response.data);
-
-        if (!response.data.status) {
-          alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen"));
-          return;
-        }
+        if (!response.data.status) { alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen")); return; }
 
         this.editData = response.data.data;
         this.selectedDocumentType = doc.value;
-
-        console.log("🟡 VIEW - View Data yang dikirim ke component:", this.editData);
-        console.log("🟡 VIEW - Selected Type:", this.selectedDocumentType);
-
-        this.$nextTick(() => {
-          this.state = "view";
-        });
+        this.$nextTick(() => { this.state = "view"; });
       } catch (error) {
-        console.error("🟡 VIEW - Error:", error);
-        alert(
-          "Error: " +
-            (error.response?.data?.message || "Terjadi kesalahan saat mengambil data")
-        );
+        alert("Error: " + (error.response?.data?.message || "Terjadi kesalahan saat mengambil data"));
       } finally {
         this.loading = false;
       }
     },
 
     async onEdit(item) {
-      console.log("🟡 EDIT - Item yang dipilih:", item);
-
       try {
         this.loading = true;
-
-        const doc = this.availableDocuments.find(
-          (d) => d.backendType === item.document_type
-        );
-
-        console.log("🟡 EDIT - Doc Config Found:", doc);
-
-        if (!doc) {
-          alert("Tipe dokumen tidak ditemukan!");
-          return;
-        }
+        const doc = this.availableDocuments.find((d) => d.backendType === item.document_type);
+        if (!doc) { alert("Tipe dokumen tidak ditemukan!"); return; }
 
         const formData = new FormData();
         formData.append("type", item.document_type);
+        const response = await axios.post(`/master/rekammedis/lampiran/${item.uuid}/detail`, formData);
 
-        const url = `/master/rekammedis/lampiran/${item.uuid}/detail`;
-        console.log("🟡 EDIT - URL:", url);
-
-        const response = await axios.post(url, formData);
-
-        console.log("🟡 EDIT - Response:", response.data);
-
-        if (!response.data.status) {
-          alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen"));
-          return;
-        }
+        if (!response.data.status) { alert("Error: " + (response.data.message || "Gagal mengambil detail dokumen")); return; }
 
         this.editData = response.data.data;
         this.selectedDocumentType = doc.value;
-
-        console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
-        console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
-
-        this.$nextTick(() => {
-          this.state = "create";
-        });
+        this.$nextTick(() => { this.state = "create"; });
       } catch (error) {
-        console.error("🟡 EDIT - Error:", error);
-        alert(
-          "Error: " +
-            (error.response?.data?.message || "Terjadi kesalahan saat mengambil data")
-        );
+        alert("Error: " + (error.response?.data?.message || "Terjadi kesalahan saat mengambil data"));
       } finally {
         this.loading = false;
       }
@@ -1076,38 +1144,21 @@ export default {
     },
 
     async onDelete(item) {
-      console.log("🔴 DELETE - Item yang dipilih:", item);
-      console.log("🔴 DELETE - Document Type:", item.document_type);
-
-      const confirmDelete = confirm(
-        `Apakah Anda yakin ingin menghapus ${item.document_label}?`
-      );
-
-      if (!confirmDelete) {
-        console.log("🔴 DELETE - User batal hapus");
-        return;
-      }
+      const confirmDelete = confirm(`Apakah Anda yakin ingin menghapus ${item.document_label}?`);
+      if (!confirmDelete) return;
 
       try {
         this.loading = true;
-
         const url = `/master/rekammedis/lampiran/${item.uuid}?type=${item.document_type}`;
-        console.log("🔴 DELETE - URL yang dipanggil:", url);
-
         const response = await axios.delete(url);
-
-        console.log("🔴 DELETE - Response:", response.data);
 
         if (response.data.status) {
           alert("Dokumen berhasil dihapus");
           this.fetchLampiran();
         } else {
-          console.error("🔴 DELETE - Status false:", response.data.message);
           alert("Gagal menghapus dokumen: " + response.data.message);
         }
       } catch (error) {
-        console.error("🔴 DELETE - Error:", error);
-        console.error("🔴 DELETE - Error Response:", error.response?.data);
         alert("Error: " + (error.response?.data?.message || "Gagal menghapus dokumen"));
       } finally {
         this.loading = false;
@@ -1117,31 +1168,176 @@ export default {
     formatDate(date) {
       if (!date) return "-";
       const d = new Date(date);
-      return d.toLocaleDateString("id-ID", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      });
+      return d.toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
     },
 
-    formatTime(time) {
-      if (!time) return "-";
-      if (typeof time === "string") {
-        return time.substring(0, 5);
+    // ===========================
+    // ASSIGN DOKTER METHODS
+    // ===========================
+
+
+    /**
+     * Dapatkan status assign berdasarkan uuid lampiran
+     */
+    getAssignStatus(dokumentUuid) {
+      return this.assignMap[dokumentUuid]?.status || null;
+    },
+
+    /**
+     * Dapatkan nama dokter yang di-assign
+     */
+    getAssignDokterNama(dokumentUuid) {
+      return this.assignMap[dokumentUuid]?.dokter_nama || "-";
+    },
+
+    /**
+     * Label status yang ditampilkan
+     */
+    getAssignStatusLabel(dokumentUuid) {
+      const status = this.getAssignStatus(dokumentUuid);
+      const labels = {
+        direview: "Direview",
+        ditandatangan: "Ditandatangani",
+      };
+      return labels[status] || "-";
+    },
+
+    /**
+     * Icon status
+     */
+    getAssignStatusIcon(dokumentUuid) {
+      const status = this.getAssignStatus(dokumentUuid);
+      const icons = {
+        direview: "fas fa-clock",
+        ditandatangan: "fas fa-signature",
+      };
+      return icons[status] || "fas fa-minus";
+    },
+
+    /**
+     * Buka modal assign
+     */
+    onOpenAssignModal(item) {
+      this.assignTarget = item;
+      this.selectedDokterUuid = null;
+      this.selectedDokterNama = null;
+      this.assignCatatan = "";
+      this.dokterSearch = "";
+      this.availableDokters = [];
+      this.showAssignModal = true;
+      // Load dokter langsung saat modal terbuka
+      this.fetchDokters();
+    },
+
+    closeAssignModal() {
+      this.showAssignModal = false;
+      this.assignTarget = null;
+      this.selectedDokterUuid = null;
+      this.selectedDokterNama = null;
+      this.assignCatatan = "";
+      this.dokterSearch = "";
+      this.availableDokters = [];
+    },
+
+    /**
+     * Fetch list dokter dari backend
+     */
+    async fetchDokters() {
+      this.loadingDokter = true;
+      try {
+        const formData = new FormData();
+        formData.append("search", this.dokterSearch);
+
+        const res = await axios.post(
+          "/master/rekammedis/lampiran/list-dokter",
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+
+        if (res.data.status) {
+          this.availableDokters = res.data.data || [];
+        }
+      } catch (err) {
+        console.error("Gagal memuat dokter:", err);
+        this.availableDokters = [];
+      } finally {
+        this.loadingDokter = false;
       }
-      return "-";
     },
 
-    truncate(text, length) {
-      if (!text) return "-";
-      if (text.length <= length) return text;
-      return text.substring(0, length) + "...";
+    /**
+     * Search dokter dengan debounce
+     */
+    onSearchDokter() {
+      clearTimeout(this.dokterSearchTimeout);
+      this.dokterSearchTimeout = setTimeout(() => {
+        this.fetchDokters();
+      }, 400);
+    },
+
+    /**
+     * Pilih dokter dari list
+     */
+    selectDokter(dokter) {
+      this.selectedDokterUuid = dokter.uuid;
+      this.selectedDokterNama = dokter.nama;
+    },
+
+    /**
+     * Submit assign dokter
+     */
+    async submitAssign() {
+      if (!this.selectedDokterUuid) {
+        alert("Silakan pilih dokter terlebih dahulu!");
+        return;
+      }
+
+      this.loadingAssign = true;
+      try {
+        const formData = new FormData();
+        formData.append("pasien_uuid", this.selectedPatient.uuid);
+        formData.append("dokter_uuid", this.selectedDokterUuid);
+        formData.append("nama_dokter", this.selectedDokterNama);
+        formData.append("id_dokumen", this.assignTarget.id);
+        formData.append("uuid_dokumen", this.assignTarget.uuid);
+        formData.append("jenis_dokumen", this.assignTarget.document_type);
+        formData.append("catatan", this.assignCatatan);
+
+        const res = await axios.post(
+          "/master/rekammedis/lampiran/assign-dokter",
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+
+        console.log("Assign response:", res.data);
+
+        if (res.data.status == true) {
+          this.$swal.fire({
+          icon: "success",
+          title: "Berhasil",
+          text: res.data.message || "Lampiran berhasil di-assign ke dokter",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+          this.closeAssignModal();
+        } else {
+          alert("Gagal: " + (res.data.message || "Terjadi kesalahan"));
+        }
+      } catch (err) {
+        console.error("Error assign dokter:", err);
+        alert("Error: " + (err.response?.data?.message || "Terjadi kesalahan"));
+      } finally {
+        this.loadingAssign = false;
+
+        this.fetchLampiran();
+      }
     },
   },
 };
 </script>
 
 <style scoped>
+/* ====== EXISTING STYLES (unchanged) ====== */
 .history-container {
   background: white;
   padding: 15px;
@@ -1183,9 +1379,7 @@ export default {
   font-size: 14px;
 }
 
-.patient-info-card strong {
-  color: #495057;
-}
+.patient-info-card strong { color: #495057; }
 
 .filter-bar {
   display: flex;
@@ -1230,23 +1424,7 @@ export default {
   gap: 5px;
 }
 
-.btn-add:hover {
-  background: #218838;
-}
-
-.document-badge {
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 4px;
-  color: white;
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.document-badge i {
-  margin-right: 5px;
-}
+.btn-add:hover { background: #218838; }
 
 .custom-table-rme {
   width: 100%;
@@ -1269,22 +1447,9 @@ export default {
   vertical-align: middle;
 }
 
-.custom-table-rme tbody tr:nth-child(even) {
-  background: #f8f9fa;
-}
-
-.custom-table-rme tbody tr:hover {
-  background: #e9f2ff;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.detail-info {
-  font-size: 12px;
-  color: #666;
-}
+.custom-table-rme tbody tr:nth-child(even) { background: #f8f9fa; }
+.custom-table-rme tbody tr:hover { background: #e9f2ff; }
+.text-center { text-align: center; }
 
 .action-buttons {
   display: flex;
@@ -1302,38 +1467,60 @@ export default {
   color: white;
 }
 
-.btn-view {
-  background: #17a2b8;
+.btn-view    { background: #17a2b8; }
+.btn-view:hover  { background: #138496; }
+.btn-edit    { background: #ffc107; }
+.btn-edit:hover  { background: #e0a800; }
+.btn-print   { background: #6c757d; }
+.btn-print:hover { background: #5a6268; }
+.btn-delete  { background: #dc3545; }
+.btn-delete:hover { background: #c82333; }
+
+/* TOMBOL ASSIGN */
+.btn-assign  { background: #6f42c1; }
+.btn-assign:hover { background: #5a32a3; }
+
+/* ====== STATUS BADGE ====== */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.btn-view:hover {
-  background: #138496;
+.status-direview {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffc107;
 }
 
-.btn-edit {
-  background: #ffc107;
+.status-ditandatangan {
+  background: #d1e7dd;
+  color: #0a3622;
+  border: 1px solid #28a745;
 }
 
-.btn-edit:hover {
-  background: #e0a800;
+.status-kosong {
+  background: #f8f9fa;
+  color: #adb5bd;
+  border: 1px solid #dee2e6;
 }
 
-.btn-print {
-  background: #6c757d;
+.status-badge-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
 }
 
-.btn-print:hover {
-  background: #5a6268;
-}
-
-.btn-delete {
-  background: #dc3545;
-}
-
-.btn-delete:hover {
-  background: #c82333;
-}
-
+/* ====== PAGINATION (unchanged) ====== */
 .pagination-rme {
   display: flex;
   gap: 5px;
@@ -1350,20 +1537,9 @@ export default {
   transition: all 0.2s;
 }
 
-.pagination-rme button:hover:not(:disabled) {
-  background: #e9f2ff;
-}
-
-.pagination-rme button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.page-btn.active {
-  background: #1d72c9;
-  color: white;
-  font-weight: bold;
-}
+.pagination-rme button:hover:not(:disabled) { background: #e9f2ff; }
+.pagination-rme button:disabled { opacity: 0.5; cursor: not-allowed; }
+.page-btn.active { background: #1d72c9; color: white; font-weight: bold; }
 
 .table-info {
   margin-top: 10px;
@@ -1395,10 +1571,294 @@ export default {
   margin-bottom: 10px;
 }
 
-/* ==================== IMPROVED SELECT DOCUMENT STYLES ==================== */
-.select-document-container {
+/* ====== MODAL ASSIGN DOKTER ====== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 20px;
 }
+
+.modal-assign {
+  background: white;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.modal-assign-header {
+  background: #6f42c1;
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.modal-assign-title {
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modal-close-btn {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.modal-close-btn:hover { background: rgba(255,255,255,0.35); }
+
+.modal-assign-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.assign-doc-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f0e6ff;
+  border: 1px solid #d4b8ff;
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-bottom: 16px;
+}
+
+.assign-doc-info i {
+  font-size: 22px;
+  color: #6f42c1;
+  flex-shrink: 0;
+}
+
+.assign-doc-label {
+  font-size: 11px;
+  color: #888;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.assign-doc-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+}
+
+.assign-existing-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff8e1;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.5;
+}
+
+.assign-existing-info i {
+  color: #f59e0b;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.form-group { margin-bottom: 16px; }
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-label i {
+  margin-right: 6px;
+  color: #6f42c1;
+}
+
+.search-wrapper { position: relative; }
+
+.form-input-search {
+  width: 100%;
+  padding: 10px 38px 10px 13px;
+  border: 2px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.form-input-search:focus {
+  outline: none;
+  border-color: #6f42c1;
+  box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+}
+
+.search-loading {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6f42c1;
+}
+
+.form-textarea {
+  width: 100%;
+  padding: 10px 13px;
+  border: 2px solid #d0d0d0;
+  border-radius: 6px;
+  font-size: 14px;
+  resize: vertical;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.form-textarea:focus {
+  outline: none;
+  border-color: #6f42c1;
+  box-shadow: 0 0 0 3px rgba(111, 66, 193, 0.1);
+}
+
+/* Dokter List */
+.dokter-list-container {
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #fafafa;
+}
+
+.dokter-loading,
+.dokter-empty {
+  text-align: center;
+  padding: 30px 20px;
+  color: #888;
+  font-size: 13px;
+}
+
+.dokter-empty i {
+  font-size: 32px;
+  margin-bottom: 8px;
+  display: block;
+  color: #ccc;
+}
+
+.dokter-list { padding: 6px; }
+
+.dokter-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+  margin-bottom: 4px;
+}
+
+.dokter-item:hover {
+  background: #f0e6ff;
+  border-color: #d4b8ff;
+}
+
+.dokter-item.selected {
+  background: #ede0ff;
+  border-color: #6f42c1;
+}
+
+.dokter-avatar {
+  width: 38px;
+  height: 38px;
+  background: #6f42c1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.dokter-item.selected .dokter-avatar { background: #5a32a3; }
+
+.dokter-info { flex: 1; min-width: 0; }
+
+.dokter-nama {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dokter-jabatan {
+  font-size: 12px;
+  color: #888;
+}
+
+.dokter-check { color: #6f42c1; font-size: 18px; }
+
+/* Modal Footer */
+.modal-assign-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #eee;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  background: #fafafa;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-primary { background: #6f42c1; color: white; }
+.btn-primary:hover:not(:disabled) { background: #5a32a3; transform: translateY(-1px); }
+.btn-primary:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+.btn-secondary { background: #6c757d; color: white; }
+.btn-secondary:hover:not(:disabled) { background: #5a6268; }
+
+/* ====== SELECT DOCUMENT STYLES (unchanged) ====== */
+.select-document-container { padding: 20px; }
 
 .document-selector-card {
   background: white;
@@ -1410,61 +1870,6 @@ export default {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.form-group {
-  margin-bottom: 25px;
-}
-
-.form-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 10px;
-  color: #333;
-  font-size: 15px;
-}
-
-.form-label i {
-  margin-right: 8px;
-  color: #1d72c9;
-}
-
-/* Search Input dengan Clear Button */
-.search-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.form-input-search {
-  width: 100%;
-  padding: 12px 40px 12px 15px;
-  border: 2px solid #d0d0d0;
-  border-radius: 6px;
-  font-size: 15px;
-  background: white;
-  transition: all 0.3s;
-}
-
-.form-input-search:focus {
-  outline: none;
-  border-color: #1d72c9;
-  box-shadow: 0 0 0 3px rgba(29, 114, 201, 0.1);
-}
-
-.clear-search {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #999;
-  cursor: pointer;
-  padding: 5px;
-  transition: color 0.2s;
-}
-
-.clear-search:hover {
-  color: #dc3545;
-}
-
-/* Search Info */
 .search-info {
   margin-top: 8px;
   padding: 8px 12px;
@@ -1478,16 +1883,10 @@ export default {
   gap: 8px;
 }
 
-.search-info i {
-  color: #1d72c9;
-}
+.search-info i { color: #1d72c9; }
 
-/* Document List Container */
-.document-list-container {
-  margin-top: 20px;
-}
+.document-list-container { margin-top: 20px; }
 
-/* Document Cards Grid */
 .document-cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -1500,7 +1899,6 @@ export default {
   background: #fafafa;
 }
 
-/* Individual Document Card */
 .document-card {
   background: white;
   border: 2px solid #e0e0e0;
@@ -1530,27 +1928,11 @@ export default {
   margin-bottom: 10px;
 }
 
-.document-card-header i {
-  font-size: 24px;
-  color: #1d72c9;
-}
+.document-card-header i { font-size: 24px; color: #1d72c9; }
+.document-card.selected .document-card-header i { color: #28a745; }
 
-.document-card.selected .document-card-header i {
-  color: #28a745;
-}
-
-.document-title {
-  font-weight: 600;
-  font-size: 14px;
-  color: #333;
-  flex: 1;
-}
-
-.document-description {
-  font-size: 12px;
-  color: #666;
-  line-height: 1.4;
-}
+.document-title { font-weight: 600; font-size: 14px; color: #333; flex: 1; }
+.document-description { font-size: 12px; color: #666; line-height: 1.4; }
 
 .selected-indicator {
   position: absolute;
@@ -1567,23 +1949,14 @@ export default {
   gap: 5px;
 }
 
-/* Empty State */
 .empty-state {
   text-align: center;
   padding: 60px 20px;
   color: #888;
 }
 
-.empty-state i {
-  font-size: 48px;
-  margin-bottom: 15px;
-  color: #ccc;
-}
-
-.empty-state p {
-  font-size: 16px;
-  margin-bottom: 20px;
-}
+.empty-state i { font-size: 48px; margin-bottom: 15px; color: #ccc; }
+.empty-state p { font-size: 16px; margin-bottom: 20px; }
 
 .btn-clear-search {
   background: #6c757d;
@@ -1599,12 +1972,8 @@ export default {
   gap: 8px;
 }
 
-.btn-clear-search:hover {
-  background: #5a6268;
-  transform: translateY(-1px);
-}
+.btn-clear-search:hover { background: #5a6268; transform: translateY(-1px); }
 
-/* Selected Document Info */
 .document-info {
   background: #e8f5e9;
   border-left: 4px solid #28a745;
@@ -1617,142 +1986,43 @@ export default {
   gap: 12px;
 }
 
-.document-info i {
-  color: #28a745;
-  margin-top: 2px;
-  font-size: 18px;
-}
+.document-info i { color: #28a745; margin-top: 2px; font-size: 18px; }
+.document-info strong { color: #333; }
 
-.document-info strong {
-  color: #333;
-}
-
-/* Button Group */
 .button-group {
   display: flex;
   gap: 12px;
   justify-content: center;
 }
 
-.btn-primary,
-.btn-secondary {
-  padding: 12px 28px;
-  border: none;
-  border-radius: 6px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+/* Utility */
+.mb-3 { margin-bottom: 16px; }
+.mt-3 { margin-top: 16px; }
+.mt-4 { margin-top: 24px; }
 
-.btn-primary {
-  background: #28a745;
-  color: white;
-}
+/* Scrollbar */
+.document-cards::-webkit-scrollbar,
+.dokter-list-container::-webkit-scrollbar { width: 6px; }
+.document-cards::-webkit-scrollbar-track,
+.dokter-list-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+.document-cards::-webkit-scrollbar-thumb,
+.dokter-list-container::-webkit-scrollbar-thumb { background: #aaa; border-radius: 4px; }
+.document-cards::-webkit-scrollbar-thumb:hover,
+.dokter-list-container::-webkit-scrollbar-thumb:hover { background: #888; }
 
-.btn-primary:hover:not(:disabled) {
-  background: #218838;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
-}
+@keyframes spin-rme { to { transform: rotate(360deg); } }
 
-.btn-primary:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.btn-secondary {
-  background: #6c757d;
-  color: white;
-}
-
-.btn-secondary:hover {
-  background: #5a6268;
-  transform: translateY(-1px);
-}
-
-/* Utility Classes */
-.mb-3 {
-  margin-bottom: 16px;
-}
-
-.mt-3 {
-  margin-top: 16px;
-}
-
-.mt-4 {
-  margin-top: 24px;
-}
-
-/* Scrollbar Styling */
-.document-cards::-webkit-scrollbar {
-  width: 8px;
-}
-
-.document-cards::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.document-cards::-webkit-scrollbar-thumb {
-  background: #1d72c9;
-  border-radius: 4px;
-}
-
-.document-cards::-webkit-scrollbar-thumb:hover {
-  background: #155a9c;
-}
-
-@keyframes spin-rme {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* RESPONSIVE */
+/* Responsive */
 @media (max-width: 768px) {
-  .filter-bar {
-    flex-direction: column;
-    gap: 10px;
-    align-items: flex-start;
-  }
-
-  .filter-right {
-    width: 100%;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .search-input {
-    width: 100%;
-  }
-
-  .action-buttons {
-    flex-wrap: wrap;
-  }
-
-  .document-selector-card {
-    padding: 20px;
-    margin: 10px;
-  }
-
-  .document-cards {
-    grid-template-columns: 1fr;
-    max-height: 400px;
-  }
-
-  .button-group {
-    flex-direction: column;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-    justify-content: center;
-  }
+  .filter-bar { flex-direction: column; gap: 10px; align-items: flex-start; }
+  .filter-right { width: 100%; flex-direction: column; align-items: stretch; }
+  .search-input { width: 100%; }
+  .action-buttons { flex-wrap: wrap; }
+  .document-selector-card { padding: 20px; margin: 10px; }
+  .document-cards { grid-template-columns: 1fr; max-height: 400px; }
+  .button-group { flex-direction: column; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+  .modal-assign { max-width: 100%; margin: 10px; }
+  .modal-assign-footer { flex-direction: column-reverse; }
 }
 </style>
