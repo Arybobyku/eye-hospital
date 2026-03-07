@@ -631,13 +631,15 @@
 				
 			@endif
 			
-			@if ($diskon != 0)
+			@if ($diskon != 0 || $registrasi->diskon_rp != 0)
 				<?php 
+				  $diskonGlobal = $registrasi->diskon_rp;
+				  $totalDiskonGlobal = $diskonGlobal + $diskon;
 					// $grandtotal = $grandtotal - $diskon; 
 				?>
 				<tr >
 					<td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Diskon</b></td>
-					<td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($diskon) }}</b></td>
+					<td colspan="2" align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($totalDiskonGlobal) }}</b></td>
 				</tr>
 				<tr >
 					<td colspan="6" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Pembayaran</b></td>

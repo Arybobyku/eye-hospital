@@ -15,6 +15,8 @@ export const parsekelurahan = (form, detail, listdata) => {
 	data.append('jenis', detail.jenis);
 	data.append('kode', detail.kode);
 	data.append('nomor', detail.nomor);
+	data.append('diskon_rp', form.diskon_rp);
+	data.append('diskon_persen', form.diskon_persen);
 	data.append('tindakan', JSON.stringify(listdata));
 
 	data.append('metode_pembayaran', form.select.metodepembayaran.value);

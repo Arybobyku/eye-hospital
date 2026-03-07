@@ -135,6 +135,14 @@ export const formkelurahan = () => {
 			title: 'Quantity', for_id: 'form_'+'quantity', type: 'number', required: '', 
 			name: 'quantity', value: '', disabled: false, show: true, kinds: ''
 		},
+		diskon_rp:{
+			title: 'Diskon Rp', for_id: 'form_'+'diskon_rp', type: 'number', required: '', 
+			name: 'diskon_rp', value: '', disabled: false, show: true, kinds: ''
+		},
+		diskon_persen:{
+			title: 'Diskon Persen', for_id: 'form_'+'diskon_persen', type: 'number', required: '', 
+			name: 'diskon_persen', value: '', disabled: false, show: true, kinds: ''
+		},
 
 
 		select: {
