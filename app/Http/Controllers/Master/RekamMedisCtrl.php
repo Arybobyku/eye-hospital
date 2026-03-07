@@ -586,9 +586,7 @@ class RekamMedisCtrl extends Controller
                     $searchLower = strtolower($search);
 
                     $query->where(function ($q) use ($searchLower, $table) {
-                        $q->whereRaw("LOWER($table.nama) LIKE ?", ["%{$searchLower}%"])
-                        ->orWhereRaw("LOWER($table.no_rm) LIKE ?", ["%{$searchLower}%"])
-                        ->orWhereRaw("LOWER($table.no_surat) LIKE ?", ["%{$searchLower}%"]);
+                        $q->whereRaw("LOWER($table.no_surat) LIKE ?", ["%{$searchLower}%"]);
                     });
                 }
 
