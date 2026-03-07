@@ -515,17 +515,18 @@ class RekamMedisCtrl extends Controller
                 ],
             ];
 
-            if (!empty($search)) {
-                $searchLower = mb_strtolower($search);
+            // if (!empty($search)) {
+            //     $searchLower = mb_strtolower($search);
 
-                $documentConfigs = array_values(array_filter($documentConfigs, function ($val) use ($searchLower) {
-                    return
-                        str_contains(mb_strtolower($val['label']), $searchLower)
-                        || str_contains(mb_strtolower($val['type']), $searchLower);
-                }));
+            //     $documentConfigs = array_values(array_filter($documentConfigs, function ($val) use ($searchLower) {
+            //         return
+            //             str_contains(mb_strtolower($val['label']), $searchLower)
+            //             || str_contains(mb_strtolower($val['type']), $searchLower)
+            //             ;
+            //     }));
 
-                // dd($documentConfigs);
-            }
+            //     // dd($documentConfigs);
+            // }
 
             // ✨ GET TOTAL COUNT (sum dari setiap tabel)
             $total = 0;
@@ -552,7 +553,7 @@ class RekamMedisCtrl extends Controller
                 $table = $config['table'];
 
                 $query = \DB::table($table)
-                     ->leftJoin('lampiran_assign_dokter as lad', function ($join) use ($table, $config) {
+                    ->leftJoin('lampiran_assign_dokter as lad', function ($join) use ($table, $config) {
                         $join->on('lad.id_dokumen', '=', "$table.id")
                             ->where('lad.jenis_dokumen', '=', $config['type']);
                     })
@@ -560,6 +561,7 @@ class RekamMedisCtrl extends Controller
                         "$table.id",
                         "$table.uuid",
                         "$table.uuid_pasien",
+                        "$table.no_surat",
                         \DB::raw($this->mapField($table, 'tanggal') . " as tanggal"),
                         \DB::raw($this->mapField($table, 'waktu') . "::text as waktu"),
                         "$table.no_rm",
@@ -579,6 +581,16 @@ class RekamMedisCtrl extends Controller
                     )
                     ->where("$table.uuid_pasien", $uuid_pasien)
                     ->whereNull("$table.deleted_at");
+
+                if (!empty($search)) {
+                    $searchLower = strtolower($search);
+
+                    $query->where(function ($q) use ($searchLower, $table) {
+                        $q->whereRaw("LOWER($table.nama) LIKE ?", ["%{$searchLower}%"])
+                        ->orWhereRaw("LOWER($table.no_rm) LIKE ?", ["%{$searchLower}%"])
+                        ->orWhereRaw("LOWER($table.no_surat) LIKE ?", ["%{$searchLower}%"]);
+                    });
+                }
 
                 $data = $data->merge($query->get());
             }

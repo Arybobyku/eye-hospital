@@ -57,7 +57,7 @@
           <tr>
             <th style="width: 50px">NO</th>
             <th style="width: 180px">JENIS DOKUMEN</th>
-            <th style="width: 180px">Nomor Dokumen</th>
+            <th style="width: 180px">NOMOR SURAT</th>
             <th style="width: 100px">TANGGAL</th>
             <th style="width: 150px">Creator</th>
             <th style="width: 130px">STATUS TTD</th>
@@ -77,7 +77,9 @@
 
             <td>{{ item.document_label }}</td>
 
-            <td></td>
+            <td>
+              {{ item?.no_surat || "-" }}
+            </td>
 
             <td>{{ formatDate(item.tanggal) }}</td>
             <td>{{ item.created_by || "-" }}</td>
