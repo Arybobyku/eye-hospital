@@ -106,7 +106,11 @@
                     <tr>
                         <td>Tanggal Selesai Periksa</td>
                         <td>:
-                            {{ !empty($honor[0]->created_at) ? ubahDate($honor[0]->created_at) : (!empty($rawatjalan[0]->created_at) ? ubahDate($rawatjalan[0]->created_at) : (!empty($resep_alkes[0]->created_at) ? ubahDate($resep_alkes[0]->created_at) : 'Date not available')) }}
+                            @if (!empty($registrasi->tanggal_selesai_periksa))
+                                {{ tglse($registrasi->tanggal_selesai_periksa) }}
+                            @else
+                                {{ !empty($honor[0]->created_at) ? ubahDate($honor[0]->created_at) : (!empty($rawatjalan[0]->created_at) ? ubahDate($rawatjalan[0]->created_at) : (!empty($resep_alkes[0]->created_at) ? ubahDate($resep_alkes[0]->created_at) : 'Date not available')) }}
+                            @endif
                         </td>
                     </tr>
                 </table>

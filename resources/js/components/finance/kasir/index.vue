@@ -76,6 +76,7 @@ export default {
 				callbeli: '/finance/bebas/call',
 				selesaibeli: '/finance/bebas/selesai',
 				kasirbeli: '/print/kasirbeli/',
+				editkasir: '/finance/kasir/editkasir',
 			}, url: '', data: null
 		},
 		column: [
@@ -203,6 +204,8 @@ export default {
 				show: _item.status_kasir == 'Sudah Bayar' ? true : false },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'printrincian', tooltip: 'Cetak Rincian Tagihan', item: _item, index: _index, 
 				show: _item.status_kasir == 'Sudah Bayar' ? true : false },
+				{ icon: 'edit', color: 'btn-primary', posisi: 'editkasir', tooltip: 'Edit Kasir', item: _item, index: _index, 
+  				show: _item.status_kasir == 'Sudah Bayar' ? true : false },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cancelbayar', tooltip: 'Batalkan Pembayaran', item: _item, index: _index, 
 				show: _item.status_kasir == 'Sudah Bayar' ? true : false },
 				// { icon: 'printer', color: 'btn-success', posisi: 'rekammedis', tooltip: 'Cetak Rekam Medis', item: _item, index: _index, 
@@ -225,6 +228,8 @@ export default {
 				show: _item.status_kasir == 'Sudah Bayar' ? true : false },
 				// { icon: 'printer', color: 'btn-success', posisi: 'rekammedis', tooltip: 'Cetak Rekam Medis', item: _item, index: _index, 
 				// show: _item.status_kasir == 'Sudah Bayar' ? true : false },
+				{ icon: 'edit', color: 'btn-primary', posisi: 'editkasir', tooltip: 'Edit Kasir', item: _item, index: _index, 
+        		show: _item.status_kasir == 'Sudah Bayar' ? true : false },
 			]
 			return str;
 		},
@@ -484,6 +489,17 @@ export default {
 				vm.attach.data.append('uuid', data.uuid);
 				vm.dialog('Yakin ingin membatalkan pembayaran ini.', 'Ya, batalkan pembayaran', 'cancelbayar');
 			}
+			else if (posisi == 'editkasir') {
+				console.log('editkasir clicked', data.uuid);
+			    vm.$refs.FormDetail.aturulang();
+			    vm.position = "editkasir";
+			    vm.$refs.FormDetail.show('editkasir', 'Edit Kasir', data.uuid);
+			    setTimeout(() => { vm.loadingModal('formdetail'); }, 250, this);
+			    vm.attach.data = new FormData();
+			    vm.attach.data.append('uuid', data.uuid);
+			    vm.attach.url = vm.attach.link.detail;
+			    vm.executions();
+			}
 		},
 
 		loadingModal: function (position) { 
@@ -502,6 +518,7 @@ export default {
 			}
 			else if (key == 'panjar') { vm.position = 'updatepanjar'; vm.attach.url = vm.attach.link.addpanjar; }
 			else if (key == 'hapus') { vm.position = 'hapusbiaya'; vm.attach.url = vm.attach.link.hapusbiaya; }
+			else if (key == 'editkasir') { vm.position = 'saveeeditkasir'; vm.attach.url = vm.attach.link.editkasir; }
 			else if (key == 'perbaharui') { vm.position = 'perbaharuibiaya'; vm.attach.url = vm.attach.link.perbaharuibiaya; }
 		},
 
@@ -637,6 +654,8 @@ export default {
 			else if (vm.position == 'historidata') { vm.loadingModal('formhistori'); vm.$refs.FormHistori.hide();  }
 			else if (vm.position == 'historidokter') { vm.loadingModal('formhistoridokter'); vm.$refs.FormHistoriDokter.hide();  }
 			else if (vm.position == 'callbeli') { vm.$refs.DatatableBeli.skeleton(); }
+			else if (vm.position == 'editkasir') { vm.loadingModal('formdetail'); vm.$refs.FormDetail.hide(); }
+			else if (vm.position == 'saveeeditkasir') { vm.loadingModal('formdetail'); }
 			
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
@@ -728,6 +747,17 @@ export default {
 				vm.position = "updatedata"; 
 				active = 1; 
 			}
+			else if (vm.position == 'editkasir') {
+			    vm.$refs.FormDetail.setdataform(response); 
+			    vm.position = "saveeeditkasir"; 
+			    active = 0; 
+			}
+			else if (vm.position == 'saveeeditkasir') {
+			    vm.loadingModal('formdetail');
+			    vm.$refs.FormDetail.hide(); 
+			    setTimeout(() => { vm.$refs.DatatableBayar.skeleton(); vm.tablereload(); }, 500, this);
+			    active = 1;
+			}
 			else if (vm.position == 'panjardata') {
 				vm.$refs.FormPanjar.setdataform(response); 
 				vm.position = "updatepanjar"; 
@@ -795,6 +825,8 @@ export default {
 				else if (vm.position == 'historidokter') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 				else if (vm.position == 'terimadata') { vm.notification('Uang panjar gagal diproses.', 3000, position); }
 				else if (vm.position == 'callbeli') { vm.notification('Pemanggilan antrian gagal diproses.', 3000, position); }
+				else if (vm.position == 'editkasir') { vm.notification('Proses pengambilan data edit gagal.', 3000, position); }
+				else if (vm.position == 'saveeeditkasir') { vm.notification('Data kasir gagal diperbarui.', 3000, position); }
 			}
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'updatedata') { vm.notification('Data tagihan pasien berhasil diproses.', 3000, position); }
@@ -807,6 +839,7 @@ export default {
 				else if (vm.position == 'call1') { vm.notification('Antrian pasien berhasil dipanggil.', 3000, position); }
 				else if (vm.position == 'terimadata') { vm.notification('Uang Panjar berhasil diproses.', 3000, position); }
 				else if (vm.position == 'callbeli') { vm.notification('Pemanggilan antrian berhasil diproses.', 3000, position); }
+				else if (vm.position == 'saveeeditkasir') { vm.notification('Data kasir berhasil diperbarui.', 3000, position); }
 			}
 		},
 

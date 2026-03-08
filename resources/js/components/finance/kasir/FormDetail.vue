@@ -33,6 +33,27 @@
 									v-on:keyup="selectfilter($event, form.select.metodepembayaran.name)"></Selected>
 							</li>
 						</ul>
+						<div v-if="currentposisi == 'editkasir'" class="editkasir-card">
+						    <div class="editkasir-header">Edit Data Kasir</div>
+						    <div v-for="field in [
+						        { label: 'No Kwitansi',           model: 'no_kwitansi',             type: 'text' },
+						        { label: 'No / Order Invoice',    model: 'no_invoice',              type: 'text' },
+						        { label: 'Tanggal Cetak',         model: 'tanggal_bayar',           type: 'date' },
+						        { label: 'Tgl Selesai Periksa',   model: 'tanggal_selesai_periksa', type: 'date' },
+						        { label: 'Kode Pendaftaran',      model: 'kode',                    type: 'text' },
+						        { label: 'Nomor Pendaftaran',     model: 'nomor',                   type: 'text' },
+						        { label: 'Tanggal Masuk',         model: 'tanggal',                 type: 'date' },
+						    ]" class="editkasir-field">
+						        <label class="editkasir-label">{{ field.label }}</label>
+						        <input
+						            :type="field.type"
+						            v-model="editform[field.model]"
+						            class="editkasir-input"
+						            @focus="$event.target.classList.add('focused')"
+						            @blur="$event.target.classList.remove('focused')"
+						        />
+						    </div>
+						</div>
 					</div>
 					<div class="col-8">
 
@@ -40,7 +61,7 @@
 							<div class="col-2"></div>
 							<div class="col-8">
 								<div class="cop-surat">
-									<div class="top" style="left: 70px">
+									<div class="top" style="left: 28%">
 										<img src="/images/favicon.png">
 										<div class="label">
 											<span class="label1">RUMAH SAKIT KHUSUS MATA</span><br />
@@ -207,20 +228,22 @@
 
 				</div>
 
-				<div class="grid" style="border-top: 1px solid #d0d0d0; margin-top: 16px; padding-top: 20px;"
-					v-if="detail">
-					<div class="col-8"></div>
-					<div class="col-4" style="text-align: right" v-if="detail.approvement_obat == 'yes'">
-						<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
-							}}</button>
-					</div>
-					<div class="col-4" style="text-align: right"
-						v-if="listobat.length < 1 || listobatracikan.length < 1 ">
-						<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green
-							}}</button>
-					</div>
+				<div class="grid" style="border-top: 1px solid #d0d0d0; margin-top: 16px; padding-top: 20px;" v-if="detail">
+				    <div class="col-8"></div>
+				    <div class="col-4" style="text-align: right" 
+				        v-if="detail.approvement_obat == 'yes' && currentposisi != 'editkasir'">
+				        <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
+				        <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+				    </div>
+				    <div class="col-4" style="text-align: right" 
+				        v-if="(listobat.length < 1 || listobatracikan.length < 1) && currentposisi != 'editkasir'">
+				        <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
+				        <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+				    </div>
+				    <div class="col-4" style="text-align: right" v-if="currentposisi == 'editkasir'">
+				        <button class="button-modal-page button-modal-red" v-on:click="hide()">Cancel</button>
+				        <button class="button-modal-page button-modal-green" v-on:click="saveeeditkasir()">Simpan</button>
+				    </div>
 				</div>
 			</div>
 			<Loader ref="Loader"></Loader>
@@ -301,6 +324,7 @@ export default {
 	},
 	created:function() {},
 	data:function() { return { 
+		currentposisi: '', 
 		listdata: [], tmplistdata:[], listobat: [], listobatracikan: [], tempobat: null,
 		listadministrasi: [], listrawatjalan: [], sementara: [], globalindex: 0, globalitem: null,
 		terminate: { show: false, display: 'display: none' },
@@ -313,6 +337,15 @@ export default {
 			nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
 			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', catatan: '', diskon_rp: '', diskon_global: '',
 		},
+		editform: {
+    	    no_kwitansi: '',
+    	    no_invoice: '',
+    	    tanggal_bayar: '',
+    	    tanggal_selesai_periksa: '',
+    	    kode: '',
+    	    nomor: '',
+    	    tanggal: '',
+    	},
 		bedah: {
 			id: null,
 			nama: null,
@@ -331,6 +364,21 @@ export default {
 			let value = event.target.value;
 			vm.listdata[index].tarif = value;
 			vm.listdata[index].total = value;
+		},
+
+		saveeeditkasir: function() {
+		    let data = new FormData();
+		    data.append('uuid', vm.detail.uuid);
+		    data.append('no_kwitansi', vm.editform.no_kwitansi);
+		    data.append('no_invoice', vm.editform.no_invoice);
+		    data.append('tanggal_bayar', vm.editform.tanggal_bayar);
+		    data.append('tanggal_selesai_periksa', vm.editform.tanggal_selesai_periksa);
+		    data.append('kode', vm.editform.kode);
+		    data.append('nomor', vm.editform.nomor);
+		    data.append('tanggal', vm.editform.tanggal);
+			data.append('metode_pembayaran', vm.form.select.metodepembayaran.value);
+		    vm.$emit('parsingForm', data, 'editkasir');
+		    vm.$emit('dialog', 'Yakin ingin menyimpan perubahan data kasir ini.', 'Ya, simpan', 'formdetail');
 		},
 		
 		edit:function(item, index) {
@@ -464,7 +512,7 @@ export default {
 					vm.action();
 				}
 				
-			}
+			}	
 		},
 
 		redbutton:function() {
@@ -494,7 +542,7 @@ export default {
 				vm.form.select.carabayartindakanrawatjalan.label = 'Silahkan Pilih';
 			}
 			else if (key == 'apotek') {
-				vm.tempobat = item;
+			    vm.tempobat = item;
 			}
 		},
 		selectclear:function(key) { vm.form = vm.clearselected(vm.form, key); },
@@ -523,15 +571,25 @@ export default {
 			return data;
 		},
 
-		show:function(posisi, title, uuid){ vm.btnlbl = posisi == 'adddata' ? 'Proses Pembayaran' : 'Update Data'; vm.form.uuid = uuid;
+		show:function(posisi, title, uuid){ vm.currentposisi = posisi; vm.btnlbl = posisi == 'adddata' ? 'Proses Pembayaran' : 'Update Data'; vm.form.uuid = uuid;
 			vm.form.title = title; vm.form.posisi = posisi; 
 			vm.form.posisi = posisi; body.style.overflowY = 'hidden'; vm.terminate.display = 'display: block'; vm.terminate.show = true;
     },
-		aturulang: function () { 
+		aturulang: function () {
+			vm.currentposisi = ''; 
 			vm.form = vm.formkelurahan(); 
 			vm.listdata = [];
 			vm.listobat = [];
 			vm.tempobat = null;
+			vm.editform = {
+    		    no_kwitansi: '',
+    		    no_invoice: '',
+    		    tanggal_bayar: '',
+    		    tanggal_selesai_periksa: '',
+    		    kode: '',
+    		    nomor: '',
+    		    tanggal: '',
+    		};
 			vm.detail = { uuid: '',
 				agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
 				kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
@@ -568,6 +626,17 @@ export default {
 
 			vm.listdata = [];
 			vm.detail = response.data.data;
+
+			if (vm.currentposisi == 'editkasir') {
+				console.log('masuk editkasir, mengisi editform');
+    		    vm.editform.no_kwitansi             = vm.detail.no_kwitansi ?? '';
+    		    vm.editform.no_invoice              = vm.detail.no_invoice ?? '';
+    		    vm.editform.tanggal_bayar           = vm.detail.tanggal_bayar ?? '';
+    		    vm.editform.tanggal_selesai_periksa = vm.detail.tanggal_selesai_periksa ?? '';
+    		    vm.editform.kode                    = vm.detail.kode ?? '';
+    		    vm.editform.nomor                   = vm.detail.nomor ?? '';
+    		    vm.editform.tanggal                 = vm.detail.tanggal ?? '';
+    		}
 
 			if(response.data.bedah){
 				vm.bedah = response.data.bedah;
@@ -654,5 +723,41 @@ export default {
 	color: #FFF; 
 	padding: 15px 20px; 
 	background-color: #62ad9b;
+}
+.editkasir-header {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #d0d8ff;
+}
+.editkasir-field {
+    margin-bottom: 10px;
+}
+.editkasir-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.editkasir-input {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #1e293b;
+    background: #ffffff;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    outline: none;
+}
+.editkasir-input.focused {
+    border-color: #3a5bcc;
 }
 </style>

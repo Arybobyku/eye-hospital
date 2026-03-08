@@ -670,6 +670,43 @@ class KasirCtrl extends Controller
         return response()->json(['data' => 'berhasil']);
     }
 
+    public function editkasir(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+    
+        $data = Registrasi::where('uuid', '=', $request->uuid)->first();
+        if ($data) {
+            \PenggunaHelp::log('Melakukan perubahan data kasir atas nama pasien '.$data->nama_pasien.' pada tanggal '.date('Y-m-d'));
+        }
+    
+        try {
+            \DB::beginTransaction();
+    
+            $arr = [
+                'no_kwitansi'             => $request->no_kwitansi,
+                'no_invoice'              => $request->no_invoice,
+                'tanggal_bayar'           => $request->tanggal_bayar,
+                'tanggal_selesai_periksa' => $request->tanggal_selesai_periksa,
+                'kode'                    => $request->kode,
+                'nomor'                   => $request->nomor,
+                'tanggal'                 => $request->tanggal,
+                'metode_pembayaran'       => $request->metode_pembayaran,
+            ];
+    
+            Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+    
+            \DB::commit();
+    
+            return response()->json(['data' => 'berhasil']);
+    
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return response()->json(['data' => 'gagal', 'message' => $e->getMessage()]);
+        }
+    }
+
     public function panjar(Request $request)
     {
         if ($this->error != 'next') {

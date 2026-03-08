@@ -127,6 +127,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('editbayar', [KasirCtrl::class, 'editbayar'])->name('kasir-editbayar');
 		Route::post('cancelbayar', [KasirCtrl::class, 'cancelbayar'])->name('kasir-cancelbayar');
 		Route::post('terima', [KasirCtrl::class, 'terima'])->name('kasir-terima');
+		Route::post('editkasir', [KasirCtrl::class, 'editkasir'])->name('kasir-editkasir');
 	});
 
 	Route::prefix('historikasir')->group(function () {

@@ -27,6 +27,21 @@
 									:selection="form.select.metodepembayaran" v-on:keyup="selectfilter($event, form.select.metodepembayaran.name)"></Selected>
 							</li>
 						</ul>
+						<div v-if="currentposisi == 'editkasir'" style="margin-top: 16px;">
+						    <div class="editkasir-header">Edit Data Kasir</div>
+						    <div v-for="field in [
+						        { label: 'No Kwitansi',           model: 'no_kwitansi',             type: 'text' },
+						        { label: 'No / Order Invoice',    model: 'no_invoice',              type: 'text' },
+						        { label: 'Tanggal Cetak',         model: 'tanggal_bayar',           type: 'date' },
+						        { label: 'Tgl Selesai Periksa',   model: 'tanggal_selesai_periksa', type: 'date' },
+						        { label: 'Kode Pendaftaran',      model: 'kode',                    type: 'text' },
+						        { label: 'Nomor Pendaftaran',     model: 'nomor',                   type: 'text' },
+						        { label: 'Tanggal Masuk',         model: 'tanggal',                 type: 'date' },
+						    ]" class="editkasir-field">
+						        <label class="editkasir-label">{{ field.label }}</label>
+						        <input :type="field.type" v-model="editform[field.model]" class="editkasir-input" />
+						    </div>
+						</div>
 					</div>
 					<div class="col-8">
 						
@@ -130,15 +145,21 @@
 				</div>
 
 				<div class="grid" style="border-top: 1px solid #d0d0d0; margin-top: 16px; padding-top: 20px;" v-if="detail">
-					<div class="col-8"></div>
-					<div class="col-4" style="text-align: right" v-if="detail.approvement_obat == 'yes'">
-						<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
-					</div>
-					<div class="col-4" style="text-align: right" v-if="listobat.length < 1 || listobatracikan.length < 1 ">
-						<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
-					</div>
+				    <div class="col-8"></div>
+				    <div class="col-4" style="text-align: right" 
+				        v-if="detail.approvement_obat == 'yes' && currentposisi != 'editkasir'">
+				        <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
+				        <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+				    </div>
+				    <div class="col-4" style="text-align: right" 
+				        v-if="(listobat.length < 1 || listobatracikan.length < 1) && currentposisi != 'editkasir'">
+				        <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
+				        <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+				    </div>
+				    <div class="col-4" style="text-align: right" v-if="currentposisi == 'editkasir'">
+				        <button class="button-modal-page button-modal-red" v-on:click="hide()">Cancel</button>
+				        <button class="button-modal-page button-modal-green" v-on:click="saveeeditkasir()">Simpan</button>
+				    </div>
 				</div>
 			</div>
 			<Loader ref="Loader"></Loader>
@@ -205,6 +226,7 @@ export default {
 	},
 	created:function() {},
 	data:function() { return { 
+		currentposisi: '',
 		listdata: [], tmplistdata:[], listobat: [], listobatracikan: [], tempobat: null,
 		listadministrasi: [], listrawatjalan: [],
 		terminate: { show: false, display: 'display: none' },
@@ -217,11 +239,35 @@ export default {
 			nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
 			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', catatan: ''
 		},
+		editform: {
+    	    no_kwitansi: '',
+    	    no_invoice: '',
+    	    tanggal_bayar: '',
+    	    tanggal_selesai_periksa: '',
+    	    kode: '',
+    	    nomor: '',
+    	    tanggal: '',
+    	},
 		temphitung: [],
 	}},
 	methods: {
 
 		formatrupiah,
+
+		saveeeditkasir: function() {
+		    let data = new FormData();
+		    data.append('uuid', vm.detail.uuid);
+		    data.append('no_kwitansi', vm.editform.no_kwitansi);
+		    data.append('no_invoice', vm.editform.no_invoice);
+		    data.append('tanggal_bayar', vm.editform.tanggal_bayar);
+		    data.append('tanggal_selesai_periksa', vm.editform.tanggal_selesai_periksa);
+		    data.append('kode', vm.editform.kode);
+		    data.append('nomor', vm.editform.nomor);
+		    data.append('tanggal', vm.editform.tanggal);
+		    data.append('metode_pembayaran', vm.form.select.metodepembayaran.value);
+		    vm.$emit('parsingForm', data, 'editkasir');
+		    vm.$emit('dialog', 'Yakin ingin menyimpan perubahan data kasir ini.', 'Ya, simpan', 'formdetail');
+		},
 
 		printsa:function(posisi) {
 			if (posisi == 'kwitansi') {
@@ -362,15 +408,25 @@ export default {
 			return data;
 		},
 
-		show:function(posisi, title, uuid){ vm.btnlbl = posisi == 'adddata' ? 'Proses Pembayaran' : 'Update Data'; vm.form.uuid = uuid;
+		show:function(posisi, title, uuid){vm.currentposisi = posisi; vm.btnlbl = posisi == 'adddata' ? 'Proses Pembayaran' : 'Update Data'; vm.form.uuid = uuid;
 			vm.form.title = title; vm.form.posisi = posisi; 
 			vm.form.posisi = posisi; body.style.overflowY = 'hidden'; vm.terminate.display = 'display: block'; vm.terminate.show = true;
     },
-		aturulang: function () { 
+		aturulang: function () {
+			vm.currentposisi = ''; 
 			vm.form = vm.formkelurahan(); 
 			vm.listdata = [];
 			vm.listobat = [];
 			vm.tempobat = null;
+			vm.editform = {
+    		    no_kwitansi: '',
+    		    no_invoice: '',
+    		    tanggal_bayar: '',
+    		    tanggal_selesai_periksa: '',
+    		    kode: '',
+    		    nomor: '',
+    		    tanggal: '',
+    		};
 			vm.detail = { uuid: '',
 				agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
 				kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
@@ -390,8 +446,20 @@ export default {
 			console.log(response);
 			vm.detail = response.data.data;
 
+			if (vm.currentposisi == 'editkasir') {
+    		    vm.editform.no_kwitansi             = vm.detail.no_kwitansi ?? '';
+    		    vm.editform.no_invoice              = vm.detail.no_invoice ?? '';
+    		    vm.editform.tanggal_bayar           = vm.detail.tanggal_bayar ?? '';
+    		    vm.editform.tanggal_selesai_periksa = vm.detail.tanggal_selesai_periksa ?? '';
+    		    vm.editform.kode                    = vm.detail.kode ?? '';
+    		    vm.editform.nomor                   = vm.detail.nomor ?? '';
+    		    vm.editform.tanggal                 = vm.detail.tanggal ?? '';
+    		}
+
 			if (vm.detail.carabayar_nama == 'Umum') {
 				vm.form.select.metodepembayaran.isrequired = true;
+				vm.form.select.metodepembayaran.value = vm.detail.metode_pembayaran ?? '';
+        		vm.form.select.metodepembayaran.label = vm.detail.metode_pembayaran ?? 'Silahkan Pilih';
 			}
 			else {
 				vm.form.select.metodepembayaran.isrequired = false;

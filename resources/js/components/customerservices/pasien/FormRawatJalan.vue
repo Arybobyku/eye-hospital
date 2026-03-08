@@ -3,26 +3,34 @@
 	<div class="col-4">
 		<Inputed :ref="form.nopendaftaran.name" :form="form.nopendaftaran" v-on:keyup="hurufbesar($event)"></Inputed>
 		<Selected v-on:click="selectbox($event, form.select.caramasuk.name, form.select.caramasuk.statics)" 
-			:ref="form.select.caramasuk.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.caramasuk"></Selected>
+		    :ref="form.select.caramasuk.name" @selecteditem="selecteditem" @selectclear="selectclear"
+		    :selection="form.select.caramasuk"
+		    v-on:keyup="selectfilter($event, form.select.caramasuk.name)"
+			@focus="selectbox($event, form.select.caramasuk.name, form.select.caramasuk.statics)">
+			
+		</Selected>
 
 		<Inputed :ref="form.rujukan.name" :form="form.rujukan"></Inputed>
 
 		<Selected v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)" 
 			:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)"></Selected>
+			:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)"
+			@focus="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)"></Selected>
 
 		<Selected v-on:click="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)" 
 			:ref="form.select.asuransi.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.asuransi" v-on:keyup="selectfilter($event, form.select.asuransi.name)"></Selected>
+			:selection="form.select.asuransi" v-on:keyup="selectfilter($event, form.select.asuransi.name)"
+			@focus="selectbox($event, form.select.asuransi.name, form.select.asuransi.statics)"></Selected>
 
 		<Selected v-on:click="selectbox($event, form.select.dokter.name, form.select.dokter.statics)" 
 			:ref="form.select.dokter.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.dokter" v-on:keyup="selectfilter($event, form.select.dokter.name)"></Selected>
+			:selection="form.select.dokter" v-on:keyup="selectfilter($event, form.select.dokter.name)"
+			@focus="selectbox($event, form.select.dokter.name, form.select.dokter.statics)"></Selected>
 
 		<Selected v-on:click="selectbox($event, form.select.dokterumum.name, form.select.dokterumum.statics)" 
 			:ref="form.select.dokterumum.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.dokterumum" v-on:keyup="selectfilter($event, form.select.dokterumum.name)"></Selected>
+			:selection="form.select.dokterumum" v-on:keyup="selectfilter($event, form.select.dokterumum.name)"
+			@focus="selectbox($event, form.select.dokterumum.name, form.select.dokterumum.statics)"></Selected>
 	</div>
 	<div class="col-4 form-ml" ref="camerainternal">
 		<div class="web-camera-container" v-if="isphotos">
@@ -74,17 +82,23 @@
 	<div class="col-4 form-ml">
 		<Inputed :ref="form.pjnama.name" :form="form.pjnama"></Inputed>
 		<Selected v-on:click="selectbox($event, form.select.jenisidentitas.name, form.select.jenisidentitas.statics)" 
-			:ref="form.select.jenisidentitas.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.jenisidentitas"></Selected>
+		    :ref="form.select.jenisidentitas.name" @selecteditem="selecteditem" @selectclear="selectclear"
+		    :selection="form.select.jenisidentitas"
+		    v-on:keyup="selectfilter($event, form.select.jenisidentitas.name)"
+			@focus="selectbox($event, form.select.jenisidentitas.name, form.select.jenisidentitas.statics)">
+		</Selected>
 		<Inputed :ref="form.pjnoidentitas.name" :form="form.pjnoidentitas"></Inputed>
 		<Inputed :ref="form.pjhubungan.name" :form="form.pjhubungan"></Inputed>
 		<Inputed :ref="form.pjalamat.name" :form="form.pjalamat"></Inputed>
 		<Inputed :ref="form.pjnohandphone.name" :form="form.pjnohandphone"></Inputed>
 	</div>
 	<div class="col-4">
-		<Selected v-on:click="selectbox($event, form.select.berkebutuhankhusus.name, form.select.berkebutuhankhusus.statics)" 
-		:ref="form.select.berkebutuhankhusus.name" @selecteditem="selecteditem" @selectclear="selectclear"
-		:selection="form.select.berkebutuhankhusus"></Selected>
+	<Selected v-on:click="selectbox($event, form.select.berkebutuhankhusus.name, form.select.berkebutuhankhusus.statics)" 
+	    :ref="form.select.berkebutuhankhusus.name" @selecteditem="selecteditem" @selectclear="selectclear"
+	    :selection="form.select.berkebutuhankhusus"
+	    v-on:keyup="selectfilter($event, form.select.berkebutuhankhusus.name)"
+		@focus="selectbox($event, form.select.berkebutuhankhusus.name, form.select.berkebutuhankhusus.statics)">
+	</Selected>
 		
 		
 	</div>
@@ -92,9 +106,12 @@
 		<Inputed :ref="form.keteranganberkebutuhan.name" :form="form.keteranganberkebutuhan"></Inputed>
 	</div>
 	<div class="col-4 form-ml">
-		<Selected v-on:click="selectbox($event, form.select.klinik.name, form.select.klinik.statics)" 
-			:ref="form.select.klinik.name" @selecteditem="selecteditem" @selectclear="selectclear"
-			:selection="form.select.klinik"></Selected>
+	<Selected v-on:click="selectbox($event, form.select.klinik.name, form.select.klinik.statics)" 
+	    :ref="form.select.klinik.name" @selecteditem="selecteditem" @selectclear="selectclear"
+	    :selection="form.select.klinik"
+	    v-on:keyup="selectfilter($event, form.select.klinik.name)" 
+		@focus="selectbox($event, form.select.klinik.name, form.select.klinik.statics)">
+	</Selected>
 	</div>
 	<div :style="cover" v-if="!ishide"></div>
 </div>
@@ -287,7 +304,23 @@ export default {
 		formrawatjalan, parserawatjalan, arrregistrasi,
 		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected, initindexdb, indexdbprocessing,
 
-		selectfilter: function (event, key) { vm.form = vm.filterselected(vm.form, key); },
+		selectfilter: function (event, key) { 
+		    // Abaikan tombol navigasi
+		    const ignoreKeys = ['ArrowDown', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'Enter', 'Escape', 'Tab', 'Shift'];
+		    if (ignoreKeys.includes(event.key)) return;
+		
+		    // Jika list belum terbuka, buka dan load data dulu
+		    if (vm.form.select[key].option !== 'display: block') {
+		        vm.selecthide(); // tutup dropdown lain
+		        // Load data jika belum ada
+		        if (!vm.form.select[key].data || vm.form.select[key].data.length === 0) {
+		            vm.getIndexDB(key, vm.form.select[key].statics);
+		        }
+		        vm.form.select[key].option = 'display: block';
+		    }
+		
+		    vm.form = vm.filterselected(vm.form, key); 
+		},
 		selecthide:function() { vm.form = vm.hideselected(vm.form); },
 		selecteditem:function(item, key) { 
 			vm.form = vm.conditionselected(vm.form, item, key, 'address');
@@ -296,6 +329,7 @@ export default {
 		},
 		selectclear:function(key) { 
 			vm.form = vm.clearselected(vm.form, key);
+			vm.form.select[key].search = '';
 			vm.manipulationform(key, '', false);
 		},
 		selectbox:function(event, key, statics) {
