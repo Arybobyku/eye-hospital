@@ -10,7 +10,7 @@
     <div v-if="state === 'list'">
       <div class="header-component-rme">
         <i class="fas fa-file-signature"></i>
-        Daftar Lampiran - Perlu Tanda Tangan
+        Daftar Formulir - Perlu Tanda Tangan
       </div>
 
       <!-- FILTER BAR -->

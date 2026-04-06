@@ -291,6 +291,7 @@ class PasienCtrl extends Controller
             ->where('registrasi.status', '=', 'Selesai')
             ->select('pemeriksaan_ro.*')
             ->where('pemeriksaan_ro.pasien_uuid', '=', $request->search)
+            ->orderBy('pemeriksaan_ro.id', 'desc')
             ->get();
 
         $total = PemeriksaanRo::join('registrasi', 'pemeriksaan_ro.registrasi_uuid', '=', 'registrasi.uuid')

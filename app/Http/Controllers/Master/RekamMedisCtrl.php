@@ -1170,7 +1170,7 @@ class RekamMedisCtrl extends Controller
                     'created_by'    => $pengguna_nama,
                 ]);
 
-                $message = 'Lampiran berhasil di-assign ke dokter';
+                $message = 'Formulir berhasil di-assign ke dokter';
             }
 
             return response()->json([

@@ -9,7 +9,7 @@
     <!-- ================= LIST STATE ================= -->
     <div v-if="state == 'list'">
       <!-- HEADER -->
-      <div class="header-component-rme">Daftar Lampiran Dokumen</div>
+      <div class="header-component-rme">Daftar Formulir Dokumen</div>
 
       <!-- PATIENT INFO CARD -->
       <div class="patient-info-card mb-3">
@@ -1317,7 +1317,7 @@ export default {
           this.$swal.fire({
           icon: "success",
           title: "Berhasil",
-          text: res.data.message || "Lampiran berhasil di-assign ke dokter",
+          text: res.data.message || "Formulir berhasil di-assign ke dokter",
           timer: 2000,
           showConfirmButton: false,
         });

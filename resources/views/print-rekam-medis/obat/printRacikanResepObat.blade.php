@@ -162,7 +162,7 @@
                 <div class="info-value">{{ $registrasi->jenis }}</div>
             </div>
             <div class="info-row">
-                <div class="info-label">Reg/MR</div>
+                <div class="info-label">Reg/RM</div>
                 <div class="info-colon">:</div>
                 <div class="info-value">{{ $registrasi->rekam_medis }}</div>
             </div>

@@ -41,7 +41,7 @@
     </div>
 
 		<div class="badge badge-rm">
-			MR : {{ selectedPatient.rekam_medis }}
+			RME : {{ selectedPatient.rekam_medis }}
 		</div>
 
 		<div class="badge badge-name">
@@ -198,7 +198,7 @@ export default {
 			{ name: "Bill Pembayaran", icon: "💳" },
 			{ name: "Laporan Pembedahan", icon: "💳" },
 			{ name: "Resume", icon: "✉️" },
-			{ name: "Lampiran", icon: "✉️" },
+			{ name: "Formulir", icon: "✉️" },
 		],
 	}},
   computed: {
@@ -250,7 +250,7 @@ export default {
           return defineAsyncComponent(() =>
             import("./resume/resume.vue")
           );
-        case "Lampiran":
+        case "Formulir":
           return defineAsyncComponent(() =>
             import("./lampiran/Lampiran.vue")
           );

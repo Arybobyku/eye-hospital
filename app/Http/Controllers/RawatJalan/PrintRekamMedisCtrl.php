@@ -1453,7 +1453,7 @@ class PrintRekamMedisCtrl extends Controller
       ->select(
         'cppt.*',
         DB::raw('pengguna.nama as pengguna_nama_pengguna'), // Add all other biodata fields similarly
-      )
+      )->orderBy('cppt.id', 'desc')
       ->get();
 
     $pdf->loadView(

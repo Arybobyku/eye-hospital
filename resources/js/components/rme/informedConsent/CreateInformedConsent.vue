@@ -24,7 +24,7 @@
 
       <div class="row mb-3">
         <div class="col-md-6">
-          <label>Kode MR :</label>
+          <label>Kode RME :</label>
           <input type="text" v-model="form.kodemr" class="input-rme" readonly />
         </div>
 
@@ -354,7 +354,7 @@
         </select>
         untuk dilakukan tindakan
         <input v-model="form.dilakukan_tindakan" class="input-rme large" />
-        terhadap saya / anak saya yang bernama
+        terhadap saya / keluarga saya yang bernama
         <input v-model="form.nama_anak" class="input-rme" />
       </div>
 

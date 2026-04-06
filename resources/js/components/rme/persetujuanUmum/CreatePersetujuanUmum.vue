@@ -26,7 +26,7 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label>Kode MR :</label>
+                    <label>Kode RME :</label>
                     <input type="text" v-model="form.kodeMR" class="input-rme" readonly />
                 </div>
 
