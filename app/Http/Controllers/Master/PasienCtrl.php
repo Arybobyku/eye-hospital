@@ -56,6 +56,7 @@ use App\Models\DokumenCatatanKeperawatan;
 use App\Models\DokumenFormLaserFokal;
 use App\Models\DokumenStatusAnestesi;
 use App\Models\DokumenLaporanOperasiVitreoRetina;
+use App\Models\Pengguna;
 
 use Cookie;
 use Crypt;
@@ -3828,5 +3829,13 @@ class PasienCtrl extends Controller
                 'error' => $e->getMessage(),
             ], 500);
         }
+    }
+    public function masterDokter(Request $request)
+    {
+
+        $data = Pengguna::whereIn('posisi', ['8808', '8809'])->where('delete_soft', '1')->where('status', 'active')
+        ->get();
+
+        return response()->json(['data' => $data]);
     }
 }

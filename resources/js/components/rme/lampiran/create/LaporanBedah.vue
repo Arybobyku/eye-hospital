@@ -1,3 +1,60 @@
+
+<style scoped>
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+.btn-clear {
+  background: #f44336;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  margin-top: 10px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background 0.3s;
+}
+
+.btn-clear:hover {
+  background: #d32f2f;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
+}
+</style>
+
 <template>
   <div>
     <button @click="$emit('back')" class="btn-back">Kembali</button>
@@ -39,10 +96,14 @@
                 readonly
                 style="flex: 1"
               />
-              <select v-model="form.jenis_kelamin" class="input-rme" style="width: 100px">
-                <option value="L">L</option>
-                <option value="P">P</option>
-              </select>
+              <div class="col-md-6">
+            <label>Jenis Kelamin :</label>
+            <input
+              type="text"
+              v-model="form.jenis_kelamin"
+              class="input-rme"
+              readonly />
+          </div>
             </div>
           </div>
         </div>
@@ -219,22 +280,55 @@
         </div>
 
         <div class="row mb-3">
-          <div class="col-md-6">
+          <!-- <div class="col-md-6">
             <label>Macam Sayatan (bila perlu dengan gambar) :</label>
             <textarea
               v-model="form.macam_sayatan"
               class="textarea-rme"
               rows="4"
             ></textarea>
+          </div> -->
+          <div class="col-md-6 ">
+            <label class="mb-2 text-left">Macam Sayatan (bila perlu dengan gambar)</label>
+            <!-- Preview TTD yang sudah ada -->
+            <div v-if="form.macam_sayatan && !macamSayatanCleared" class="signature-preview">
+              <img :src="form.macam_sayatan" alt="TTD Dokter" class="img-signature" />
+              <button @click="clearMacamSayatan()" class="btn-clear">
+                Hapus & Gambar Ulang
+              </button>
+            </div>
+
+            <!-- Signature Pad -->
+            <div v-else>
+              <VueSignaturePad
+                ref="macam_sayatan"
+                :options="sigOption"
+                class="signature-box-rme"
+              />
+              <button @click="saveSign('macam_sayatan')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
           </div>
-          <div class="col-md-6">
-            <label>Posisi Penderita (bila perlu dengan gambar) :</label>
-            <textarea
-              v-model="form.posisi_penderita"
-              class="textarea-rme"
-              rows="4"
-            ></textarea>
+          <div class="col-md-6 ">
+            <label class="mb-2 text-left">Posisi Penderita (bila perlu dengan gambar)</label>
+            <!-- Preview TTD yang sudah ada -->
+            <div v-if="form.posisi_penderita && !posisiPenderitaCleared" class="signature-preview">
+              <img :src="form.posisi_penderita" alt="TTD Dokter" class="img-signature" />
+              <button @click="clearPosisiPenderita()" class="btn-clear">
+                Hapus & Gambar Ulang
+              </button>
+            </div>
+
+            <!-- Signature Pad -->
+            <div v-else>
+              <VueSignaturePad
+                ref="macam_sayatan"
+                :options="sigOption"
+                class="signature-box-rme"
+              />
+              <button @click="saveSign('posisi_penderita')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
           </div>
+
         </div>
 
         <div class="row mb-3">
@@ -406,27 +500,44 @@
           </div>
         </div>
 
-        <div class="row mt-3">
+        <div class="row mt-1">
           <div class="col-md-6 text-center">
             <label class="fw-bold mb-2">Operator Bedah</label>
-            <VueSignaturePad
-              ref="operator_bedah_ttd"
-              :options="sigOption"
-              class="signature-box-rme mx-auto"
-            />
-            <button @click="saveSign('operator_bedah_ttd')" class="btn-save mt-2">
-              Simpan ✔
-            </button>
-            <input
-              type="text"
-              v-model="form.nama_operator"
-              class="input-rme mt-2"
-              placeholder="Nama Jelas"
-            />
+            <!-- Preview TTD yang sudah ada -->
+            <div v-if="form.operator_bedah_ttd && !signatureCleared" class="signature-preview">
+              <img :src="form.operator_bedah_ttd" alt="TTD Dokter" class="img-signature" />
+              <button @click="clearSignature()" class="btn-clear">
+                Hapus & Tanda Tangan Ulang
+              </button>
+            </div>
+
+            <!-- Signature Pad -->
+            <div v-else>
+              <VueSignaturePad
+                ref="operator_bedah_ttd"
+                :options="sigOption"
+                class="signature-box-rme"
+              />
+              <button @click="saveSign('operator_bedah_ttd')" class="btn-save">Simpan ✔</button>
+            </div>
+
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_operator" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
           </div>
         </div>
-      </div>
     </div>
+  </div>
 
     <!-- ================= BUTTON BOTTOM ================= -->
     <div class="action-footer">
@@ -440,6 +551,7 @@
       </button>
     </div>
   </div>
+  
 </template>
 
 <script>
@@ -466,9 +578,14 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      listDokter: [],
+      signatureCleared: false,
+      macamSayatanCleared: false,
+      posisiPenderitaCleared: false,
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
+        
       },
       form: {
         uuid: "", // ✨ Tambahkan field uuid
@@ -477,7 +594,7 @@ export default {
         nik: "",
         nama: "",
         tanggal_lahir: "",
-        jenis_kelamin: "L",
+        jenis_kelamin: "",
         ruang_operasi: "",
         kamar: "",
         tanggal_operasi: "",
@@ -525,7 +642,8 @@ export default {
       },
     };
   },
-  mounted() {
+  async mounted() {
+    await this.fetchDokter();
     if (this.isEditMode && this.editData) {
       // ✨ LOAD DATA UNTUK EDIT
       this.loadDataForEdit();
@@ -533,15 +651,48 @@ export default {
       // CREATE MODE
       this.setDataForm();
     }
+    
   },
   methods: {
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
+    clearSignature() {
+      this.signatureCleared = true;
+      this.form.operator_bedah_ttd = "";
+      this.$nextTick(() => {
+        const pad = this.$refs.operator_bedah_ttd;
+        if (pad) pad.clearSignature();
+      });
+    },
+    clearMacamSayatan() {
+      this.macamSayatanCleared = true;
+      this.form.macam_sayatan = "";
+      this.$nextTick(() => {
+        const pad = this.$refs.macam_sayatan;
+        if (pad) pad.clearMacamSayatan();
+      });
+    },
+    clearPosisiPenderita() {
+      this.posisiPenderitaCleared = true;
+      this.form.posisi_penderita = "";
+      this.$nextTick(() => {
+        const pad = this.$refs.posisi_penderita;
+        if (pad) pad.clearPosisiPenderita();
+      });
+    },
     async loadDataForEdit() {
       try {
         // Option 1: Jika data lengkap sudah ada di editData props
         if (this.editData.uuid) {
           // Fetch detail dari server untuk data lengkap
           const response = await axios.get(
-            `/master/pasien/dokumen-form-laser-barbage/${this.editData.uuid}`
+            `/master/pasien/d /${this.editData.uuid}`
           );
 
           if (response.data.status) {
@@ -585,6 +736,7 @@ export default {
         this.form.nik = this.selectedPatient.nik || "";
         this.form.nama = this.selectedPatient.nama;
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
+        this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin;
       }
     },
 
@@ -594,7 +746,7 @@ export default {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-
+      this.signatureCleared = false;
       const { data } = pad.saveSignature();
       this.form[refName] = data;
       console.log("TTD saved:", refName);
@@ -698,10 +850,12 @@ export default {
 }
 
 .signature-box-rme {
-  width: 300px;
-  height: 150px;
+  width: 500px !important;
+  height: 110px !important;
   border: 2px solid #999;
   border-radius: 4px;
+  display: block;
+  margin: 0 auto;
 }
 
 .btn-save {
