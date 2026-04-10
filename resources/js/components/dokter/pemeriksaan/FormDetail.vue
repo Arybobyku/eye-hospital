@@ -1252,9 +1252,8 @@
 
                             <div class="content-tab-in" v-if="tab.content.cppt">
                                 <div class="grid">
-                                    <div class="col-5 form-ml">
-                                        <iframe title="CPPT" width="100%" height="100%" style="border: 0" :src="linkR">
-                                        </iframe>
+                                    <div class="col-5 form-ml" style="overflow-y: auto; max-height: 700px;">
+                                        <RmeSoap v-if="detail.pasien_uuid" :selectedPatient="{ uuid: detail.pasien_uuid }"></RmeSoap>
                                     </div>
 
                                     <div class="col-7 form-ml">
@@ -1396,6 +1395,9 @@ export default {
         ),
         DigitalSignature: defineAsyncComponent(() =>
             import("../../digital-signature/DigitalSignature.vue")
+        ),
+        RmeSoap: defineAsyncComponent(() =>
+            import("../../rme/soap/Soap.vue")
         ),
         ckeditor: CKEditor.component,
     },

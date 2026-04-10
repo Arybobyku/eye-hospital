@@ -1,5 +1,5 @@
 <template>
-	<div class="search-container">	
+	<div class="search-container" v-if="!isEmbedMode">
 		<!-- INPUT -->
 		<input 
 			type="text"
@@ -27,7 +27,7 @@
 	</div>
  <br>
 <!-- DETAIL PASIEN -->
-<div v-if="selectedPatient" class="patient-detail-card">
+<div v-if="selectedPatient && !isEmbedMode" class="patient-detail-card">
 
 	<!-- LEFT FOTO + INFO SINGKAT -->
 	<div class="left-box">
@@ -97,8 +97,7 @@
 <div  v-if="selectedPatient" class="layout-container">
 
     <!-- SIDEBAR -->
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
+  <aside class="sidebar" v-if="!isEmbedMode">
     <div class="sidebar-title">Data Pasien</div>
 
     <ul class="sidebar-menu">
@@ -114,7 +113,7 @@
   </aside>
 
     <!-- CONTENT -->
-    <main class="content">
+    <main class="content" :style="isEmbedMode ? 'margin-left:0; width:100%; padding: 8px;' : ''">
       <component :is="currentComponent" :selectedPatient="selectedPatient"></component>
     </main>
 
@@ -148,6 +147,12 @@ export default {
 		setTimeout(() => {
 			vm.form = vm.formpermintaan();
 		}, 1250);
+
+		// Deteksi embed mode (dimuat sebagai iframe dari FormDetail)
+		const embedParam = this.$route.query.embed;
+		if (embedParam == '1') {
+			vm.isEmbedMode = true;
+		}
 
 		// Auto-load pasien jika dinavigasi dari halaman lain (misal: bedah-pasien, cs-pasien)
 		const rekamMedis = this.$route.query.rekam_medis;
@@ -188,6 +193,9 @@ export default {
 		selectedPatient: null,
 		showDropdown: false,
 		typingTimer: null,
+
+		// Embed mode (iframe dari FormDetail)
+		isEmbedMode: false,
 
     // Handling Sidebar
     activeMenu: "Riwayat Kesehatan",

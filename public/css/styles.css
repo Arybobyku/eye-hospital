@@ -291,6 +291,11 @@ a { text-decoration: none; color: #252525; }
 	position: relative;
 }
 
+.content-embed {
+	margin-top: 0 !important;
+	padding: 0 !important;
+}
+
 .content > .inner {
 	width: 100%;
 	height: auto;

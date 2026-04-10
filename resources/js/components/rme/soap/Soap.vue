@@ -246,7 +246,7 @@ export default {
     selectedPatient: {
       immediate: true,
       handler(newVal) {
-        if (newVal?.id) {
+        if (newVal?.uuid) {
           this.fetchHistory();
         }
       },

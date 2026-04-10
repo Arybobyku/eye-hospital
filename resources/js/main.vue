@@ -1,5 +1,5 @@
 <template>
-	<div class="header">
+	<div class="header" v-if="!isEmbedMode">
 		<div  class="left">
 			<div class="nav-control" v-on:click="tabmenu()"><div class="hamburger"><span class="line"></span><span class="line"></span><span class="line"></span></div></div>
 			<router-link to="/dashboard/profile"><img src="/images/logopanjang.png" /></router-link>
@@ -30,9 +30,9 @@
 			<HeaderRight ref="HeaderRight" :username="username" @repatch="repatch" @reloading="reloading"></HeaderRight>
 		</div>
 	</div>
-	<div class="content">
+	<div class="content" :class="isEmbedMode ? 'content-embed' : ''">
 				<!-- Breadcrumb -->
-		<div class="breadcrumb-bar">
+		<div class="breadcrumb-bar" v-if="!isEmbedMode">
 			<ul class="breadcrumb-list">
 				<li>
 					<router-link to="/dashboard/profile">
@@ -52,7 +52,7 @@
 		<router-view v-slot="{ Component }"><component ref="view" :is="Component" @titletrigger="titletrigger" /></router-view>
 	</div>
 	
-	<div class="footer"></div>
+	<div class="footer" v-if="!isEmbedMode"></div>
 </template>
 
 <script>
@@ -89,7 +89,7 @@ export default {
 			} 
 			catch { console.log('mistmatch'); } });
 	},
-	data: function () { 
+	data: function () {
 		return {
 			attach: { url: '', data: null },
 			title: '',
@@ -99,7 +99,8 @@ export default {
 			menu : { data: null, isactive: false, loading: 'display: none' },
 			showbutton: false,
 			keys: '',
-			breadcrumb: { category: '', page: '' } 
+			breadcrumb: { category: '', page: '' },
+			isEmbedMode: window.location.search.includes('embed=1'),
 		}
 	},
 	methods: {
