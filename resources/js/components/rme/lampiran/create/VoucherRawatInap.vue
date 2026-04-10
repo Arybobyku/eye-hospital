@@ -42,6 +42,12 @@
             <input type="text" v-model="form.lantai_kamar" class="input-rme" readonly />
           </div>
         </div>
+        <div class="form-row-3-3">
+          <div>
+            <label>Jenis Kelamin :</label>
+            <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
+          </div>
+        </div>
       </div>
 
       <!-- ================= INFORMASI DOKTER ================= -->
@@ -386,6 +392,7 @@ export default {
         nama: "",
         tanggal_lahir: "",
         lantai_kamar: "",
+        jenis_kelamin: "",
         
         // Informasi Dokter
         nama_dokter: "",
@@ -566,6 +573,7 @@ export default {
         this.form.no_rm = this.selectedPatient.rekam_medis;
         this.form.nama = this.selectedPatient.nama;
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
+        this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin;
       }
     },
     

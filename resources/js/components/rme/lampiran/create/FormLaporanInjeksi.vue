@@ -41,11 +41,8 @@
 
         <div class="form-row-2">
           <div>
-            <label>Jenis Kelamin :</label>
-            <select v-model="form.jenis_kelamin" class="input-rme" disabled>
-              <option value="L">Laki-laki</option>
-              <option value="P">Perempuan</option>
-            </select>
+              <label>Jenis Kelamin :</label>
+              <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
           </div>
           <div>
             <label>Alamat :</label>

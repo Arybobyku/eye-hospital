@@ -25,22 +25,24 @@
       <div class="box-rme mb-4">
         <h5 class="section-title-rme">Data Pasien</h5>
         <div class="row mb-2">
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label>Nama Pasien :</label>
             <input type="text" v-model="form.nama_pasien" class="input-rme" readonly />
           </div>
-          <div class="col-md-4">
+        
+          <div class="col-md-6">
             <label>Tanggal Lahir :</label>
-            <input
-              type="text"
-              v-model="form.tanggal_lahir_pasien"
-              class="input-rme"
-              readonly
-            />
+            <input type="text" v-model="form.tanggal_lahir_pasien" class="input-rme" readonly />
           </div>
-          <div class="col-md-4">
+        
+          <div class="col-md-6">
             <label>No. RM :</label>
             <input type="text" v-model="form.no_rm_pasien" class="input-rme" readonly />
+          </div>
+        
+          <div class="col-md-6">
+            <label>Jenis Kelamin :</label>
+            <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
           </div>
         </div>
       </div>

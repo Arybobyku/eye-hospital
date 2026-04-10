@@ -44,13 +44,10 @@
       </div>
     
       <div class="form-row-3-3">
-        <div>
+      <div>
           <label>Jenis Kelamin :</label>
-          <select v-model="form.jenis_kelamin" class="input-rme" disabled>
-            <option value="L">Laki-laki</option>
-            <option value="P">Perempuan</option>
-          </select>
-        </div>
+          <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
+      </div>
         <div>
           <label>Alamat :</label>
           <input type="text" v-model="form.alamat" class="input-rme" readonly />

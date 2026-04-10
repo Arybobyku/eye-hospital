@@ -49,6 +49,10 @@
             <label>Tanggal Lahir :</label>
             <input type="date" v-model="form.tanggal_lahir" class="form-control" />
           </div>
+          <div class="col-md-4">
+            <label>Jenis Kelamin :</label>
+            <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
+          </div>
         </div>
       </div>
 

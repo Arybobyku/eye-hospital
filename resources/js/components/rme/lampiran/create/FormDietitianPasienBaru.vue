@@ -40,6 +40,10 @@
             <label>No. RM :</label>
             <input type="text" v-model="form.no_rm_pasien" class="input-rme" readonly />
           </div>
+          <div class="col-md-6">
+            <label>Jenis Kelamin :</label>
+            <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
+          </div>
         </div>
       </div>
 
