@@ -584,13 +584,13 @@ export default {
           description: "Form tindakan laser Fokal medis",
           backendType: "dokumen_form_laser_fokal",
         },
-        {
-          value: "persetujuan_tindakan_kedokteran",
-          label: "Form Persetujuan Tindakan Kedokteran",
-          component: "FormPersetujuanTindakanKedokteran",
-          description: "Form Persetujuan Tindakan Kedokteran",
-          backendType: "persetujuan_tindakan_kedokteran",
-        },
+        // {
+        //   value: "persetujuan_tindakan_kedokteran",
+        //   label: "Form Persetujuan Tindakan Kedokteran",
+        //   component: "FormPersetujuanTindakanKedokteran",
+        //   description: "Form Persetujuan Tindakan Kedokteran",
+        //   backendType: "persetujuan_tindakan_kedokteran",
+        // },
         {
           value: "resume-perawatan-rawat-jalan",
           label: "Form Resume Perawatan Rawat Jalan",

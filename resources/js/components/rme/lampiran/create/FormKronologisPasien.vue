@@ -65,6 +65,10 @@
             />
           </div>
           <div class="col-md-6">
+              <label>Jenis Kelamin :</label>
+              <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
+          </div>
+          <div class="col-md-6">
             <label>NIK Pasien :</label>
             <input type="text" v-model="form.nik_pasien" class="input-rme" readonly />
           </div>

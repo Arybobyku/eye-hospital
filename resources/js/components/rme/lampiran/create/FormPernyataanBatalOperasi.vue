@@ -48,14 +48,10 @@
         </div>
 
         <div class="mb-3">
-          <div class="col-md-6">
-            <label>Jenis Kelamin :</label>
-            <select v-model="form.pernyataan_jenis_kelamin" class="form-control">
-              <option value="">Pilih Jenis Kelamin</option>
-              <option value="L">Laki-laki</option>
-              <option value="P">Perempuan</option>
-            </select>
-          </div>
+        <div class="col-md-6">
+          <label>Jenis Kelamin :</label>
+          <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
+        </div>
 
           <div class="col-md-6">
             <label>Tempat, Tanggal Lahir :</label>

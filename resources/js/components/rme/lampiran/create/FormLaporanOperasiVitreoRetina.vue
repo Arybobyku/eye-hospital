@@ -32,6 +32,10 @@
             <label>NIK</label>
             <input v-model="form.nik" class="input-rme" readonly />
           </div>
+          <div class="col-md-6">
+              <label>Jenis Kelamin :</label>
+              <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
+          </div>
         </div>
       </div>
 
@@ -843,6 +847,7 @@ export default {
         no_surat: "",
         nik: "",
         nama: "",
+        jenis_kelamin:"",
         tanggal_lahir: "",
         
         // Informasi Operasi
@@ -1061,6 +1066,7 @@ export default {
         this.form.no_rm = this.selectedPatient.rekam_medis;
         this.form.nik = this.selectedPatient.no_ktp || "";
         this.form.nama = this.selectedPatient.nama;
+        this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin;
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
       }
       

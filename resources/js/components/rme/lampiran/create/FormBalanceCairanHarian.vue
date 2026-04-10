@@ -33,12 +33,9 @@
             <label>Tanggal Lahir :</label>
             <input type="date" v-model="form.tanggal_lahir" class="input-rme" readonly />
           </div>
-          <div class="col-md-3">
+          <div class="col-md-2">
             <label>Jenis Kelamin :</label>
-            <select v-model="form.jenis_kelamin" class="input-rme" disabled>
-              <option value="L">L</option>
-              <option value="P">P</option>
-            </select>
+            <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
           </div>
         </div>
       </div>
