@@ -148,7 +148,15 @@ export default {
 		setTimeout(() => {
 			vm.form = vm.formpermintaan();
 		}, 1250);
-		window.onclick = function(event) { 
+
+		// Auto-load pasien jika dinavigasi dari halaman lain (misal: bedah-pasien)
+		const rekamMedis = this.$route.query.rekam_medis;
+		if (rekamMedis) {
+			vm.searchQuery = rekamMedis;
+			vm.autoLoadPatient(rekamMedis);
+		}
+
+		window.onclick = function(event) {
 			let a = event.target.className; 
 			
 			try { 
@@ -372,9 +380,30 @@ export default {
 
 		selectPatient(patient) {
 			this.selectedPatient = patient;
-			this.searchQuery = patient.name;
+			this.searchQuery = patient.nama || patient.name || '';
 			this.showDropdown = false;
-      console.log("Selected patient:", patient);
+			console.log("Selected patient:", patient);
+		},
+
+		// Auto-load pasien berdasarkan rekam_medis dari query param URL
+		autoLoadPatient: async function(rekamMedis) {
+			try {
+				const formData = new FormData();
+				formData.append('search', rekamMedis);
+				formData.append('limit', 1);
+				formData.append('page', 1);
+
+				const res = await axios.post('/master/pasien/search', formData, {
+					headers: { 'Content-Type': 'multipart/form-data' }
+				});
+
+				const results = res.data?.data ?? [];
+				if (results.length > 0) {
+					vm.selectPatient(results[0]);
+				}
+			} catch (err) {
+				console.error('Error auto-loading patient from RME:', err);
+			}
 		},
 		
 
