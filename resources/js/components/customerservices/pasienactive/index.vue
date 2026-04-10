@@ -129,6 +129,7 @@ export default {
 		btnhtml:function(_item, _index) {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'General Consent (RME)', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -136,6 +137,7 @@ export default {
 		btnhtmlbelum:function(_item, _index) {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'General Consent (RME)', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -143,6 +145,7 @@ export default {
 		btnhtmlsudah:function(_item, _index) {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'General Consent (RME)', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -290,6 +293,16 @@ export default {
 			}
 			else if (posisi == 'cetakkartu') {
 				window.open(vm.attach.link.printcetakkartu + data.uuid, '_blank');
+			}
+			else if (posisi == 'rme') {
+				vm.$router.push({
+					name: 'RME (Data Pasien)',
+					query: {
+						pasien_uuid: data.pasien_uuid,
+						rekam_medis: data.rekam_medis,
+						menu: 'Persetujuan Umum',
+					}
+				});
 			}
 		},
 

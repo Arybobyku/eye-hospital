@@ -182,11 +182,11 @@ export default {
 			let str = [
 				{ icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
-				{ icon: 'book-open', color: 'btn-info', posisi: 'registrasi', tooltip: 'Registrasi Pasien', item: _item, index: _index, 
+				{ icon: 'book-open', color: 'btn-info', posisi: 'registrasi', tooltip: 'Registrasi Pasien', item: _item, index: _index,
 						show: _item.status == 'Kunjungan' || _item.status == 'Aktif' ? true : false },
-				// { icon: 'book-open', color: 'btn-info', posisi: 'rawatinap', tooltip: 'Data Registrasi (Rawat Inap)', item: _item, index: _index, 
+				// { icon: 'book-open', color: 'btn-info', posisi: 'rawatinap', tooltip: 'Data Registrasi (Rawat Inap)', item: _item, index: _index,
 				// 		show: _item.status == 'Rawat Inap' || _item.status == 'Aktif' ? true : false },
-				// { icon: 'book-open', color: 'btn-info', posisi: 'onedaycare', tooltip: 'Data Registrasi (ODC)', item: _item, index: _index, 
+				// { icon: 'book-open', color: 'btn-info', posisi: 'onedaycare', tooltip: 'Data Registrasi (ODC)', item: _item, index: _index,
 				// 		show: _item.status == 'One Day Care' || _item.status == 'Aktif' ? true : false },
 				{ icon: 'printer', color: 'btn-success', posisi: 'suratpersetujuan', tooltip: 'Surat Persetujuan', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-info', posisi: 'uploadfile', tooltip: 'Upload Surat Persetujuan', item: _item, index: _index, show: true },
@@ -196,6 +196,7 @@ export default {
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratsakit', tooltip: 'Cetak Surat Sakit', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratsehat', tooltip: 'Cetak Surat Sehat', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratro', tooltip: 'Cetak Surat Keterangan Hasil Pemeriksaan Mata', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'General Consent (RME)', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -204,11 +205,11 @@ export default {
 			let str = [
 				{ icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
-				{ icon: 'book-open', color: 'btn-info', posisi: 'registrasi', tooltip: 'Data Registrasi', item: _item, index: _index, 
+				{ icon: 'book-open', color: 'btn-info', posisi: 'registrasi', tooltip: 'Data Registrasi', item: _item, index: _index,
 						show: _item.status == 'Kunjungan' || _item.status == 'Aktif' ? true : false },
-				// { icon: 'book-open', color: 'btn-info', posisi: 'rawatinap', tooltip: 'Data Registrasi (Rawat Inap)', item: _item, index: _index, 
+				// { icon: 'book-open', color: 'btn-info', posisi: 'rawatinap', tooltip: 'Data Registrasi (Rawat Inap)', item: _item, index: _index,
 				// 		show: _item.status == 'Rawat Inap' || _item.status == 'Aktif' ? true : false },
-				// { icon: 'book-open', color: 'btn-info', posisi: 'onedaycare', tooltip: 'Data Registrasi (ODC)', item: _item, index: _index, 
+				// { icon: 'book-open', color: 'btn-info', posisi: 'onedaycare', tooltip: 'Data Registrasi (ODC)', item: _item, index: _index,
 				// 		show: _item.status == 'One Day Care' || _item.status == 'Aktif' ? true : false },
 				{ icon: 'printer', color: 'btn-success', posisi: 'suratpersetujuan', tooltip: 'Surat Persetujuan', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-info', posisi: 'uploadfile', tooltip: 'Upload Surat Persetujuan', item: _item, index: _index, show: true },
@@ -218,6 +219,7 @@ export default {
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratsakit', tooltip: 'Cetak Surat Sakit', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratsehat', tooltip: 'Cetak Surat Sehat', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratro', tooltip: 'Cetak Surat Keterangan Hasil Pemeriksaan Mata', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'General Consent (RME)', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -412,6 +414,16 @@ export default {
 				vm.position = "cetaksuratro";
 				vm.$refs.FormPilihRoSuratRo.show(data.uuid);
 				setTimeout(() => { vm.loadingModal('cetaksuratro'); }, 250, this);
+			}
+			else if (posisi == 'rme') {
+				vm.$router.push({
+					name: 'RME (Data Pasien)',
+					query: {
+						pasien_uuid: data.uuid,
+						rekam_medis: data.rekam_medis,
+						menu: 'Persetujuan Umum',
+					}
+				});
 			}
 		},
 

@@ -149,11 +149,15 @@ export default {
 			vm.form = vm.formpermintaan();
 		}, 1250);
 
-		// Auto-load pasien jika dinavigasi dari halaman lain (misal: bedah-pasien)
+		// Auto-load pasien jika dinavigasi dari halaman lain (misal: bedah-pasien, cs-pasien)
 		const rekamMedis = this.$route.query.rekam_medis;
+		const menuParam  = this.$route.query.menu;
 		if (rekamMedis) {
 			vm.searchQuery = rekamMedis;
 			vm.autoLoadPatient(rekamMedis);
+		}
+		if (menuParam) {
+			vm.activeMenu = menuParam;
 		}
 
 		window.onclick = function(event) {
