@@ -161,7 +161,7 @@ class PasienCtrl extends Controller
 
         if ($request->search != '') {
             $data = Pasien::where('pasien.delete_soft', '=', 1)
-                ->leftJoin('registrasi', 'pasien.uuid', '=', 'registrasi.pasien_uuid')
+                ->leftJoin(DB::raw('(SELECT DISTINCT ON (pasien_uuid) uuid, created_at, photos, status, pasien_uuid FROM registrasi ORDER BY pasien_uuid, id DESC) as registrasi'), 'pasien.uuid', '=', 'registrasi.pasien_uuid')
                 ->select(
                     'pasien.*',
                     'registrasi.uuid as registrasi_uuid',

@@ -185,6 +185,7 @@ export default {
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Histori RO', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-success', posisi: 'historidokter', tooltip: 'Histori Dokter', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'editlayanan', tooltip: 'Edit Layanan Bedah', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'Lihat RME', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -471,8 +472,17 @@ export default {
 				vm.attach.data.append('uuid', data.uuid);
 				vm.attach.url = vm.attach.link.editlayanan;
 				vm.executions();
-				
-			}		
+
+			}
+			else if (posisi == 'rme') {
+				vm.$router.push({
+					name: 'RME (Data Pasien)',
+					query: {
+						pasien_uuid: data.pasien_uuid,
+						rekam_medis: data.rekam_medis,
+					}
+				});
+			}
 		},
 
 		loadingModal: function (position) { 
