@@ -92,6 +92,7 @@ export default {
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detailperawat', tooltip: 'Pemeriksaan Perawat', item: _item, index: _index, show: true },
 				{ icon: 'bell', color: 'btn-info', posisi: 'panggil', tooltip: 'Panggil Pasien', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Log Pemeriksaan RO', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'Informed Consent (RME)', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -165,7 +166,17 @@ export default {
 				vm.attach.data.append('uuid', data.uuid);
 				vm.attach.data.append('pengguna_uuid', data.pengguna_uuid);
 				vm.dialog('Yakin ingin memanggil nomor antrian pasien ini.', 'Ya, panggil', 'call');
-				
+
+			}
+			else if (posisi == 'rme') {
+				vm.$router.push({
+					name: 'RME (Data Pasien)',
+					query: {
+						pasien_uuid: data.pasien_uuid,
+						rekam_medis: data.rekam_medis,
+						menu: 'Informed Consent',
+					}
+				});
 			}
 		},
 
