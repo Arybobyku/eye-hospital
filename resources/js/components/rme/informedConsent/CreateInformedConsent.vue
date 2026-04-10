@@ -1,3 +1,44 @@
+<style scoped>
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
+}
+</style>
+
 <template>
   <button @click="$emit('back')" class="btn-back">Kembali</button>
 
@@ -300,31 +341,61 @@
               (dokter yang memberikan informasi / tindakan).
             </td>
             <td class="text-center">
-              <VueSignaturePad
-                ref="menyatakan_menerangkan_ttd"
-                :options="sigOption"
-                class="signature-box-rme"
-              />
-              <button @click="saveSign('menyatakan_menerangkan_ttd')" class="btn-save">
-                Simpan ✔
-              </button>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+
+                <label class="fw-bold label-small">Dokter</label>
+              
+                <VueSignaturePad
+                  ref="menyatakan_menerangkan_ttd"
+                  :options="sigOption"
+                  class="signature-box-rme"
+                />
+              
+                <!-- GANTI INPUT JADI DROPDOWN -->
+                <div class="dropdown-dokter">
+                  <select v-model="form.yang_menyatakan" class="form-select-dokter">
+                    <option value="" disabled>🩺 Pilih Dokter</option>
+
+                    <option
+                      v-for="dokter in listDokter"
+                      :key="dokter.id"
+                      :value="dokter.nama"
+                    >
+                      {{ dokter.nama }}
+                    </option>
+                  </select>
+                  <span class="dropdown-icon">▾</span>
+                </div>
+              
+                <button @click="saveSign('menyatakan_menerangkan_ttd')" class="btn-save">
+                  Simpan ✔
+                </button>
+              
+              </div>
             </td>
           </tr>
-
           <tr>
             <td colspan="3">
               Dengan ini menyatakan bahwa saya telah menerima informasi sebagaimana di
               atas yang saya beri paraf di kolom kanannya dan telah memahaminya.
             </td>
             <td class="text-center">
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+              <label class="fw-bold label-small">Penerima Informasi</label>
               <VueSignaturePad
                 ref="menyatakan_memahami_ttd"
                 :options="sigOption"
                 class="signature-box-rme"
               />
+              <input
+                v-model="form.yang_menyatakan"
+                class="input-rme"
+                placeholder="Tanda Tangan dan Nama Terang"
+              />
               <button @click="saveSign('menyatakan_memahami_ttd')" class="btn-save">
                 Simpan ✔
               </button>
+               </div>
             </td>
           </tr>
         </tbody>
@@ -545,11 +616,20 @@ export default {
     }
   },
 
-  mounted() {
+  async mounted() {
+    await this.fetchDokter();
     this.setDataForm();
   },
 
   methods: {
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
     async saveData() {
       this.loading = true;
 
@@ -679,6 +759,9 @@ export default {
 .info-table td {
   border: 1px solid #ccc;
   padding: 8px;
+}
+.label-small {
+  font-size: 15px; /* bisa kamu kecilkan lagi misalnya 11px */
 }
 
 /* CHECKBOX PARAF STYLING */

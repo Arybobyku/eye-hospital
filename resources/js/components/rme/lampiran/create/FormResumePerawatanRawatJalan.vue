@@ -79,13 +79,9 @@
                   <select v-model="row.poli" class="input-table">
                     <option value="">-- Pilih Poli --</option>
                     <option value="Poli Mata">Poli Mata</option>
-                    <option value="Poli Umum">Poli Umum</option>
-                    <option value="Poli Gigi">Poli Gigi</option>
-                    <option value="Poli Anak">Poli Anak</option>
-                    <option value="Poli Bedah">Poli Bedah</option>
-                    <option value="Poli Saraf">Poli Saraf</option>
-                    <option value="IGD">IGD</option>
-                    <option value="Lainnya">Lainnya</option>
+                    <option value="Poli Umum">Poli NO</option>
+                    <option value="Poli Gigi">Poli Vitreo Retina</option>
+                    <option value="Poli Anak">Poli KBR</option>
                   </select>
                 </td>
 

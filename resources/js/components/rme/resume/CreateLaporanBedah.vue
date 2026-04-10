@@ -143,12 +143,12 @@
 
         <div class="row mb-3">
           <div class="col-md-6">
-            <label>Diagnosa Pra-Bedah :</label>
-            <textarea v-model="form.diagnosa_pra_bedah" class="textarea-rme" rows="3"></textarea>
-          </div>
-          <div class="col-md-6">
             <label>Indikasi Operasi :</label>
             <textarea v-model="form.indikasi_operasi" class="textarea-rme" rows="3"></textarea>
+          </div>
+          <div class="col-md-6">
+            <label>Diagnosa Pra-Bedah :</label>
+            <textarea v-model="form.diagnosa_pra_bedah" class="textarea-rme" rows="3"></textarea>
           </div>
         </div>
 
