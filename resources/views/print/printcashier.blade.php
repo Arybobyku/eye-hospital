@@ -546,43 +546,44 @@
                         <?php
                         $tglbayar = $registrasi->tanggal_bayar;
                         $data = explode('-', $tglbayar);
-                        $thn = $data[0];
-                        $bln = $data[1];
-                        $tgl = $data[2];
-                        if ($bln == '01') {
-                            $bln = 'Januari';
-                        } elseif ($bln == '02') {
-                            $bln = 'Februari';
-                        } elseif ($bln == '03') {
-                            $bln = 'Maret';
-                        } elseif ($bln == '04') {
-                            $bln = 'April';
-                        } elseif ($bln == '05') {
-                            $bln = 'Mei';
-                        } elseif ($bln == '06') {
-                            $bln = 'Juni';
-                        } elseif ($bln == '07') {
-                            $bln = 'Juli';
-                        } elseif ($bln == '08') {
-                            $bln = 'Agustus';
-                        } elseif ($bln == '09') {
-                            $bln = 'September';
-                        } elseif ($bln == '10') {
-                            $bln = 'Oktober';
-                        } elseif ($bln == '11') {
-                            $bln = 'November';
-                        } else {
-                            $bln = 'Desember';
-                        }
+                        $thn = $data[0]; $bln = $data[1]; $tgl = $data[2];
+                        if ($bln=='01'){$bln='Januari';}elseif($bln=='02'){$bln='Februari';}elseif($bln=='03'){$bln='Maret';}
+                        elseif($bln=='04'){$bln='April';}elseif($bln=='05'){$bln='Mei';}elseif($bln=='06'){$bln='Juni';}
+                        elseif($bln=='07'){$bln='Juli';}elseif($bln=='08'){$bln='Agustus';}elseif($bln=='09'){$bln='September';}
+                        elseif($bln=='10'){$bln='Oktober';}elseif($bln=='11'){$bln='November';}else{$bln='Desember';}
                         ?>
                         {{ $tgl }} {{ $bln }} {{ $thn }}
-                    @else
                     @endif
                     <br />
                     <div style="padding-top: 7px">Kasir</div>
-                    <br /><br /><br /><br /><br />
+                
+                    {{-- TTD Kasir --}}
+                    <div style="position: relative; width: 180px; height: 90px; margin: 8px auto;">
+                        @if (!empty($registrasi->ttd_kasir))
+                            <img src="{{ $registrasi->ttd_kasir }}"
+                                 style="width: 180px; height: 90px; object-fit: contain; display: block;" />
+                        @else
+                            <div style="width: 180px; height: 90px;"></div>
+                        @endif
+                    
+                        {{-- Stempel overlay --}}
+                        @if (!empty($registrasi->stempel) && $registrasi->stempel == '1')
+                            <img src="{{ storage_path('app/public/images/stempel-rs.png') }}"
+                                 style="position: absolute; top: 50%; left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        width: 160px; height: 100px;
+                                        object-fit: contain; opacity: 0.40;" />
+                        @endif
+                    </div>
+                
                     <span style="text-decoration: underline">
-                        <b>{{ \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'Nama')) }}</b>
+                        <b>
+                            @if (!empty($registrasi->nama_kasir_ttd))
+                                {{ $registrasi->nama_kasir_ttd }}
+                            @else
+                                {{ \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER') . 'Nama')) }}
+                            @endif
+                        </b>
                     </span>
                 </td>
             </tr>

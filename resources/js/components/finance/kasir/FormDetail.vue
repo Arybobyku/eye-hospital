@@ -246,6 +246,69 @@
 				    </div>
 				</div>
 			</div>
+			
+						<!-- ===== SECTION TTD & STEMPEL ===== -->
+						<div class="grid ttd-section" v-if="currentposisi != 'editkasir'">
+						    <div class="col-12">
+						        <div class="ttd-wrapper">
+						            <div class="ttd-col">
+						                <div class="ttd-label">Petugas Kasir</div>
+									
+						                <!-- Preview TTD yang sudah ada -->
+						                <div v-if="ttdData && !signatureCleared" class="ttd-preview-wrapper">
+						                    <img :src="ttdData" alt="TTD Kasir" class="ttd-preview-img" />
+						                    <!-- Overlay stempel di atas preview -->
+						                    <transition name="fade-stamp">
+						                        <img
+						                            v-if="stampVisible"
+						                            src="/storage/images/stempel-rs.png"
+						                            class="ttd-stamp-img"
+						                            alt="Stempel RS"
+						                        />
+						                    </transition>
+						                    <button class="btn-ttd-clear mt-2" v-on:click="clearTTD()">
+						                        Hapus & Tanda Tangan Ulang
+						                    </button>
+						                </div>
+									
+						                <!-- Signature Pad jika belum ada / dihapus -->
+						                <div v-else>
+						                    <div class="ttd-canvas-wrapper">
+						                        <VueSignaturePad
+						                            ref="ttd_kasir"
+						                            :options="sigOption"
+						                            class="ttd-canvas"
+						                        />
+						                        <!-- Overlay stempel di atas canvas -->
+						                        <transition name="fade-stamp">
+						                            <img
+						                                v-if="stampVisible"
+						                                src="/storage/images/stempel-rs.png"
+						                                class="ttd-stamp-img"
+						                                alt="Stempel RS"
+						                            />
+						                        </transition>
+						                    </div>
+						                  
+						                </div>
+										<div v-if="!ttdData && signatureCleared">
+									  <button class="btn-ttd-save mt-2" v-on:click="saveTTD()">
+						                        Simpan ✔
+						                    </button>
+											</div>
+						                <!-- Tombol stempel (selalu tampil) -->
+						                <button
+						                    class="btn-ttd-stamp mt-2"
+						                    :class="{ active: stampVisible }"
+						                    v-on:click="toggleStamp()"
+						                >
+						                    🔵 {{ stampVisible ? 'Hapus Stempel' : 'Tambah Stempel' }}
+						                </button>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+						<!-- ===== END TTD & STEMPEL ===== -->
 			<Loader ref="Loader"></Loader>
 		</div>
 	</div>
@@ -331,6 +394,15 @@ export default {
 		form: null, btnlbl: '', arr: null,
 		green: 'Proses Pembayaran', red: 'Cancel', pendings: 'Ubah Menjadi Pending', test: null, cover: '', temporer: null,
 		pemeriksaanro: null,
+		// TTD & Stempel
+		stampVisible: false,
+		ttdNamaKasir: '',
+		ttdData: '',
+		signatureCleared: false,
+		sigOption: {
+		    penColor: 'black',
+		    backgroundColor: 'white',
+		},
 		detail : { uuid: '',
 			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', apakah_paket: '', nama_paket_bedah: '',  
 			kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
@@ -359,6 +431,42 @@ export default {
 	methods: {
 
 		formatrupiah, 
+		// ===== TTD & STEMPEL METHODS =====
+		clearTTD() {
+		    vm.signatureCleared = true;
+		    vm.ttdData = '';
+		    vm.$nextTick(() => {
+		        const pad = vm.$refs.ttd_kasir;
+		        if (pad) pad.clearSignature();
+				pad.resizeCanvas();
+		    });
+		},
+
+		saveTTD() {
+		    const pad = this.$refs.ttd_kasir;
+		    if (!pad) return;
+		    const { isEmpty, data } = pad.saveSignature();
+		    if (isEmpty) {
+		        alert('TTD masih kosong, silakan tanda tangan terlebih dahulu.');
+		        return;
+		    }
+		    vm.ttdData = data;
+		    vm.signatureCleared = false; // kembali ke mode preview
+		    alert('TTD berhasil disimpan.');
+		},
+
+		toggleStamp() {
+			vm.stampVisible = !vm.stampVisible;
+		},
+
+		getTTDData() {
+			// Dipanggil saat submit untuk mendapatkan data TTD + status stempel
+			return {
+				ttd: vm.ttdData,
+				nama_kasir: vm.ttdNamaKasir,
+				stempel: vm.stampVisible,
+			};
+		},
 
 		ubahharga:function(event, item, index) {
 			let value = event.target.value;
@@ -574,9 +682,16 @@ export default {
 		show:function(posisi, title, uuid){ vm.currentposisi = posisi; vm.btnlbl = posisi == 'adddata' ? 'Proses Pembayaran' : 'Update Data'; vm.form.uuid = uuid;
 			vm.form.title = title; vm.form.posisi = posisi; 
 			vm.form.posisi = posisi; body.style.overflowY = 'hidden'; vm.terminate.display = 'display: block'; vm.terminate.show = true;
+			vm.$nextTick(() => {
+    		    setTimeout(() => {
+    		        const pad = vm.$refs.ttd_kasir;
+    		        if (pad) pad.resizeCanvas();
+    		    }, 300);
+    		});
     },
 		aturulang: function () {
 			vm.currentposisi = ''; 
+			vm.signatureCleared = true;
 			vm.form = vm.formkelurahan(); 
 			vm.listdata = [];
 			vm.listobat = [];
@@ -608,15 +723,19 @@ export default {
 		},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
 		parsingForm:function(position = 'main') { 
-			if (position == 'hapus') {
-				vm.$emit('parsingForm', vm.parsehapus(vm.form, vm.detail, vm.globalitem), 'hapus'); 
-			}
-			else if (position == 'perbaharui') {
-				vm.$emit('parsingForm', vm.parseperbaharui(vm.form, vm.detail, vm.globalitem), 'perbaharui'); 
-			}
-			else {
-				vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail, vm.listdata), 'add'); 
-			}
+		    if (position == 'hapus') {
+		        vm.$emit('parsingForm', vm.parsehapus(vm.form, vm.detail, vm.globalitem), 'hapus'); 
+		    }
+		    else if (position == 'perbaharui') {
+		        vm.$emit('parsingForm', vm.parseperbaharui(vm.form, vm.detail, vm.globalitem), 'perbaharui'); 
+		    }
+		    else {
+		        // Sisipkan data TTD ke form sebelum parsing
+		        vm.form.ttd_kasir     = vm.ttdData;
+		        vm.form.stempel       = vm.stampVisible ? '1' : '0';
+			
+		        vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail, vm.listdata), 'add'); 
+		    }
 		},
 
 		loaderprocess:function() { const left = this.$refs.rootmodal.getBoundingClientRect(); vm.$refs.Loader.running(left, 'modal', 250); },
@@ -759,5 +878,141 @@ export default {
 }
 .editkasir-input.focused {
     border-color: #3a5bcc;
+}
+
+/* ===== TTD & STEMPEL ===== */
+.ttd-section {
+	margin-top: 30px;
+	border-top: 1px dashed #ccc;
+	padding-top: 20px;
+}
+.ttd-wrapper {
+	display: flex;
+	justify-content: flex-end; /* rata kanan seperti posisi kasir */
+	padding-right: 10px;
+}
+.ttd-col {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 260px;
+}
+.ttd-label {
+	font-weight: 700;
+	font-size: 14px;
+	color: #333;
+	margin-bottom: 8px;
+	text-align: center;
+}
+.ttd-canvas-wrapper {
+	position: relative;
+	width: 240px;
+	height: 140px;
+	border: 1.5px solid #aaa;
+	border-radius: 6px;
+	overflow: hidden;
+	background: #fff;
+}
+.ttd-canvas {
+	width: 240px !important;
+	height: 140px !important;
+}
+.ttd-stamp-img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 120px;
+	height: 120px;
+	object-fit: contain;
+	opacity: 0.75;
+	pointer-events: none;
+}
+.ttd-actions {
+	display: flex;
+	gap: 6px;
+	margin-top: 8px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.btn-ttd-clear {
+	background: #e53935;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	font-weight: 600;
+}
+.btn-ttd-clear:hover { background: #c62828; }
+
+.btn-ttd-save {
+	background: #1e88e5;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	font-weight: 600;
+}
+.btn-ttd-save:hover { background: #1565c0; }
+
+.btn-ttd-stamp {
+	background: #7b1fa2;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	font-weight: 600;
+}
+.btn-ttd-stamp:hover { background: #6a1b9a; }
+.btn-ttd-stamp.active {
+	background: #4caf50;
+}
+.btn-ttd-stamp.active:hover { background: #388e3c; }
+
+.ttd-nama-input {
+	margin-top: 8px;
+	width: 100%;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 6px 8px;
+	font-size: 13px;
+	text-align: center;
+	background: #f9f9f9;
+	box-sizing: border-box;
+}
+.ttd-nama-input:focus {
+	outline: none;
+	border-color: #1e88e5;
+	background: #fff;
+}
+
+/* Fade animasi stempel */
+.fade-stamp-enter-active, .fade-stamp-leave-active {
+	transition: opacity 0.3s;
+}
+.fade-stamp-enter-from, .fade-stamp-leave-to {
+	opacity: 0;
+}
+
+.ttd-preview-wrapper {
+    position: relative;
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.ttd-preview-img {
+    width: 240px;
+    height: 140px;
+    object-fit: contain;
+    border: 1.5px solid #aaa;
+    border-radius: 6px;
+    background: #fff;
 }
 </style>

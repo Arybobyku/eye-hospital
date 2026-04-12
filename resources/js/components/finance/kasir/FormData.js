@@ -3,6 +3,8 @@ export const formkelurahan = () => {
 		title: '', posisi: '', uuid: '', ispending: '',
 		
 		carabayar_nama: '',
+		ttd_kasir: '',
+		stempel: '0',
 
 		catatan:{
 			title: 'Catatan', for_id: 'form_'+'catatan', type: 'text', required: '', 

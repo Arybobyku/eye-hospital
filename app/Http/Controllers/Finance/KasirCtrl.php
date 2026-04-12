@@ -396,6 +396,8 @@ class KasirCtrl extends Controller
             'metode_pembayaran' => $metode_pembayaran,
             'diskon_persen' => $request->diskon_persen,
             'diskon_rp' => $request->diskon_rp,
+            'ttd_kasir'            => $request->ttd_kasir ?? null,
+            'stempel'              => $request->stempel ?? '0',
         ];
 
         if (!$request->edit_superadmin) {
