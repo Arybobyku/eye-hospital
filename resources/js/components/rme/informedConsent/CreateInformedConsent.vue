@@ -367,9 +367,10 @@
                   <span class="dropdown-icon">▾</span>
                 </div>
 
-                <button @click="saveSign('menyatakan_menerangkan_ttd')" class="btn-save">
-                  Simpan ✔
-                </button>
+                <div style="display:flex; gap:6px;">
+                  <button @click="saveSign('menyatakan_menerangkan_ttd')" class="btn-save">Simpan ✔</button>
+                  <button @click="clearSign('menyatakan_menerangkan_ttd')" class="btn-clear-sign">Bersihkan</button>
+                </div>
 
               </div>
             </td>
@@ -392,9 +393,10 @@
                 class="input-rme"
                 placeholder="Tanda Tangan dan Nama Terang"
               />
-              <button @click="saveSign('menyatakan_memahami_ttd')" class="btn-save">
-                Simpan ✔
-              </button>
+              <div style="display:flex; gap:6px;">
+                <button @click="saveSign('menyatakan_memahami_ttd')" class="btn-save">Simpan ✔</button>
+                <button @click="clearSign('menyatakan_memahami_ttd')" class="btn-clear-sign">Bersihkan</button>
+              </div>
                </div>
             </td>
           </tr>
@@ -457,9 +459,10 @@
             class="signature-box-rme"
           />
 
-          <button @click="saveSign('yang_menyatakan_ttd')" class="btn-save">
-            Simpan ✔
-          </button>
+          <div style="display:flex; gap:6px; justify-content:center;">
+            <button @click="saveSign('yang_menyatakan_ttd')" class="btn-save">Simpan ✔</button>
+            <button @click="clearSign('yang_menyatakan_ttd')" class="btn-clear-sign">Bersihkan</button>
+          </div>
 
           <input
             v-model="form.yang_menyatakan"
@@ -478,7 +481,10 @@
             class="signature-box-rme"
           />
 
-          <button @click="saveSign('saksi_1_ttd')" class="btn-save">Simpan ✔</button>
+          <div style="display:flex; gap:6px; justify-content:center;">
+            <button @click="saveSign('saksi_1_ttd')" class="btn-save">Simpan ✔</button>
+            <button @click="clearSign('saksi_1_ttd')" class="btn-clear-sign">Bersihkan</button>
+          </div>
 
           <input
             v-model="form.saksi_1"
@@ -497,7 +503,10 @@
             class="signature-box-rme"
           />
 
-          <button @click="saveSign('saksi_2_ttd')" class="btn-save">Simpan ✔</button>
+          <div style="display:flex; gap:6px; justify-content:center;">
+            <button @click="saveSign('saksi_2_ttd')" class="btn-save">Simpan ✔</button>
+            <button @click="clearSign('saksi_2_ttd')" class="btn-clear-sign">Bersihkan</button>
+          </div>
 
           <input
             v-model="form.saksi_2"
@@ -528,6 +537,7 @@
 import axios from "axios";
 export default {
   name: "PersetujuanPenolakanTindakan",
+  emits: ["back", "saved"],
   data() {
     return {
       loadingSubmit: false,
@@ -541,6 +551,7 @@ export default {
       },
       data: [],
       form: {
+        id: null,
         uuid_pasien: "",
         date: "",
         time: "",
@@ -594,15 +605,37 @@ export default {
       type: Object,
       required: true,
     },
+    editData: {
+      type: Object,
+      default: null,
+    },
   },
 
   watch: {
-    selectedPatient: {
+    editData: {
       immediate: true,
       handler(newVal) {
-        // if (newVal?.id) {
-        //   this.fetchHistory();
-        // }
+        if (newVal) {
+          // pre-fill form with existing data for edit mode
+          Object.keys(this.form).forEach(key => {
+            if (newVal[key] !== undefined) this.form[key] = newVal[key];
+          });
+          // restore saved signatures visually
+          this.$nextTick(() => {
+            const sigRefs = [
+              'menyatakan_menerangkan_ttd',
+              'menyatakan_memahami_ttd',
+              'yang_menyatakan_ttd',
+              'saksi_1_ttd',
+              'saksi_2_ttd',
+            ];
+            sigRefs.forEach(ref => {
+              if (this.form[ref] && this.$refs[ref]) {
+                this.$refs[ref].fromDataURL(this.form[ref]);
+              }
+            });
+          });
+        }
       },
     },
   },
@@ -662,13 +695,25 @@ export default {
       return d.toTimeString().substring(0, 5);
     },
     setDataForm() {
-      this.form.date = this.formatDate(new Date());
-      this.form.time = this.formatTime(new Date());
-      this.form.uuid_pasien = this.selectedPatient?.uuid;
-      this.form.kodemr = this.selectedPatient?.rekam_medis;
-      this.form.nama = this.selectedPatient?.nama;
-      this.form.usia = this.selectedPatient?.tanggal_lahir;
-      this.form.alamat = this.selectedPatient?.alamat;
+      // only auto-fill patient data if not editing an existing record
+      if (!this.editData) {
+        this.form.date = this.formatDate(new Date());
+        this.form.time = this.formatTime(new Date());
+        this.form.uuid_pasien = this.selectedPatient?.uuid;
+        this.form.kodemr = this.selectedPatient?.rekam_medis;
+        this.form.nama = this.selectedPatient?.nama;
+        this.form.usia = this.selectedPatient?.tanggal_lahir;
+        this.form.alamat = this.selectedPatient?.alamat;
+      }
+    },
+    clearSign(refName) {
+      const pad = this.$refs[refName];
+      if (!pad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
+      pad.clearSignature();
+      this.form[refName] = "";
     },
     saveSign(refName) {
       const pad = this.$refs[refName];
@@ -693,27 +738,24 @@ export default {
 
     async submitForm() {
       this.loadingSubmit = true;
+      const isEdit = !!this.form.id;
 
       try {
-        const fd = new FormData();
+        const url = isEdit
+          ? "/master/pasien/update-dokumen-persetujuan-penolkan"
+          : "/master/pasien/dokumen-pertujuan-penolakan-tindakan-dokter";
 
+        const fd = new FormData();
         Object.keys(this.form).forEach((key) => {
-          fd.append(key, this.form[key]);
+          fd.append(key, this.form[key] ?? "");
         });
 
-        const response = await axios.post(
-          "/master/pasien/dokumen-pertujuan-penolakan-tindakan-dokter",
-          fd,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
+        const response = await axios.post(url, fd, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
 
-        console.log("BERHASIL:", response.data);
-
-        // tampilkan notif
-        alert("Data berhasil disimpan!");
-
-        // kembali ke parent component
-        this.$emit("back");
+        alert(isEdit ? "Data berhasil diperbarui!" : "Data berhasil disimpan!");
+        this.$emit("saved");
       } catch (error) {
         console.error("ERROR:", error.response?.data || error);
         alert("Gagal menyimpan data!");
@@ -867,6 +909,15 @@ export default {
 
 .btn-save {
   background: #1e88e5;
+  color: white;
+  padding: 5px 12px;
+  border: none;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.btn-clear-sign {
+  background: #e53935;
   color: white;
   padding: 5px 12px;
   border: none;
