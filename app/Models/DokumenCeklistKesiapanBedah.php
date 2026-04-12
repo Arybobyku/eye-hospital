@@ -39,6 +39,7 @@ class DokumenCeklistKesiapanBedah extends Model
 
         // ===== Checklist =====
         'check_phaco',
+        'check_phaco_ket',
         'check_anestesi',
         'check_light_source',
         'check_ext_kabel',

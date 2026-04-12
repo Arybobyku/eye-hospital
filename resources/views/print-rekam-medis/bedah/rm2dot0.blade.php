@@ -120,8 +120,8 @@
             <td style="padding-top: 3px; padding-left: 15px;" colspan="2"><b>listrik</b></td>
         </tr>        
         <tr>            
-            <td style="padding-left: 15px;"><input type="checkbox" {{ $ckb->check_phaco?'checked': '' }}></td>
-            <td>Mesin Phaco terhubung dengan sumber listrik, indikator (+)</td>   
+            <td style="padding-left: 15px;"><input type="checkbox" {{ $ckb->check_phaco ? 'checked' : '' }}></td>
+            <td>Mesin {{ $ckb->check_phaco_ket ?? 'Mesin Phaco' }} terhubung dengan sumber listrik, indikator (+)</td>   
         </tr>
         <tr>            
             <td style="padding-left: 15px;" style="padding-left: 15px;"> <input type="checkbox" {{ $ckb->check_anestesi?'checked': ''  }}></td>

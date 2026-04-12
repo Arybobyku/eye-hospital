@@ -42,10 +42,7 @@
         <div class="form-row-3-3">
           <div>
             <label>Jenis Kelamin :</label>
-            <select v-model="form.jenis_kelamin" class="input-rme" disabled>
-              <option value="L">Laki-laki</option>
-              <option value="P">Perempuan</option>
-            </select>
+            <input type="text" v-model="form.jenis_kelamin" class="input-rme" readonly />
           </div>
           <div>
             <label>Alamat :</label>
@@ -100,7 +97,11 @@
 
       <h5 class="mt-3 mb-2">Listrik</h5>
       <div class="form-checklist">
-        <label><input type="checkbox" v-model="form.check_phaco" true-value="1" false-value="0" /> Mesin Phaco terhubung dengan sumber listrik, indikator (+)</label><br>
+      <label class="checkbox-label">
+        <input type="checkbox" v-model="form.check_phaco" true-value="1" false-value="0" />Mesin
+        <input type="text" v-model="form.check_phaco_ket" class="line-input" placeholder="Nama mesin..." />
+        terhubung dengan sumber listrik, indikator (+)
+      </label><br>
         <label><input type="checkbox" v-model="form.check_anestesi" true-value="1" false-value="0" /> Mesin anestesi terhubung dengan sumber listrik, indikator (+)</label><br>
         <label><input type="checkbox" v-model="form.check_light_source" true-value="1" false-value="0" /> Light source, monitor Mata terhubung dengan sumber listrik, indicator (+)</label><br>
         <label><input type="checkbox" v-model="form.check_ext_kabel" true-value="1" false-value="0" /> Extention kabel terhubung dengan sumber listrik, indikator (+)</label><br>
@@ -240,6 +241,7 @@ export default {
         
         // Checklist - Listrik
         check_phaco: "0",
+        check_phaco_ket: "",
         check_anestesi: "0",
         check_light_source: "0",
         check_ext_kabel: "0",
@@ -497,6 +499,30 @@ renderSignature(refName, data) {
   outline: none;
   border-color: #2d74b7;
   background: white;
+}
+.line-input {
+  border: none;
+  border-bottom: 1px solid #333;
+  background: transparent;
+  outline: none;
+  padding: 0 4px;
+  min-width: 180px;
+  font-size: 14px;
+}
+
+.line-input:focus {
+  border-bottom: 2px solid #2d74b7;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 .input-rme:disabled,
