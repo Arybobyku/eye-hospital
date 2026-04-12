@@ -32,9 +32,15 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
 
 		Route::post('dokumen-pertujuan-penolakan-tindakan-dokter', [PasienCtrl::class, 'dokumenPersetujuanPenolakan'])->name('master-pasien-persetujuan-penolkan-tindakan-dokter');
 		Route::post('list-dokumen-persetujuan-penolkan', [PasienCtrl::class, 'listDokumenPersetujuanPenolakan'])->name('master-pasien-list-persetujuan-penolkan-tindakan-dokter');
+		Route::post('get-dokumen-persetujuan-penolkan', [PasienCtrl::class, 'getDokumenPersetujuanPenolakan'])->name('master-pasien-get-persetujuan-penolkan');
+		Route::post('update-dokumen-persetujuan-penolkan', [PasienCtrl::class, 'updateDokumenPersetujuanPenolakan'])->name('master-pasien-update-persetujuan-penolkan');
+		Route::post('delete-dokumen-persetujuan-penolkan', [PasienCtrl::class, 'deleteDokumenPersetujuanPenolakan'])->name('master-pasien-delete-persetujuan-penolkan');
 
 		Route::post('dokumen-persetujuan-umum', [PasienCtrl::class, 'dokumenPersetujuanUmum'])->name('dokumen-persetujuan-umum');
 		Route::post('list-dokumen-persetujuan-umum', [PasienCtrl::class, 'listDokumenPersetujuanUmum'])->name('list-dokumen-pertujuan-umum');
+		Route::post('get-dokumen-persetujuan-umum', [PasienCtrl::class, 'getDokumenPersetujuanUmum'])->name('get-dokumen-persetujuan-umum');
+		Route::post('update-dokumen-persetujuan-umum', [PasienCtrl::class, 'updateDokumenPersetujuanUmum'])->name('update-dokumen-persetujuan-umum');
+		Route::post('delete-dokumen-persetujuan-umum', [PasienCtrl::class, 'deleteDokumenPersetujuanUmum'])->name('delete-dokumen-persetujuan-umum');
 
 		Route::post('dokumen-list', [PasienCtrl::class, 'dokumenList'])->name('master-pasien-dokumen-list');
 		Route::post('dokumen-store', [PasienCtrl::class, 'dokumenStore'])->name('master-pasien-dokumen-store');

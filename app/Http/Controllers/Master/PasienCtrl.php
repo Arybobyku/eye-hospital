@@ -369,6 +369,48 @@ class PasienCtrl extends Controller
         return response()->json(['data' => $data, 'total' => $total]);
     }
 
+    public function getDokumenPersetujuanPenolakan(Request $request)
+    {
+        $data = DokumenPersetujuanPenolakanTindakanDokter::find($request->id);
+        return response()->json(['data' => $data]);
+    }
+
+    public function updateDokumenPersetujuanPenolakan(Request $request)
+    {
+        try {
+            $fields = [
+                'date','time','kodemr','nama','usia','alamat','petugas','pemberi_info','penerima_info',
+                'diagnosis','diagnosis_ttd','dasar_diagnosis','dasar_diagnosis_ttd',
+                'tindakan_kedokteran','tindakan_kedokteran_ttd','indikasi_tindakan','indikasi_tindakan_ttd',
+                'tata_cara','tata_cara_ttd','tujuan','tujuan_ttd','risiko','risiko_ttd',
+                'komplikasi','komplikasi_ttd','prognosis','prognosis_ttd',
+                'alternatif_dan_risiko','alternatif_dan_risiko_ttd',
+                'lainlain','lainlain_ttd',
+                'menyatakan_menerangkan_ttd','menyatakan_memahami_ttd',
+                'yang_bertanda_tangan','berumur','jenis_kelamin','menyatakan','dilakukan_tindakan',
+                'yang_menyatakan','yang_menyatakan_ttd','saksi_1','saksi_1_ttd','saksi_2','saksi_2_ttd',
+            ];
+            $updateData = [];
+            foreach ($fields as $f) {
+                if ($request->has($f)) $updateData[$f] = $request->$f;
+            }
+            DokumenPersetujuanPenolakanTindakanDokter::where('id', $request->id)->update($updateData);
+            return response()->json(['data' => 'berhasil']);
+        } catch (\Exception $e) {
+            return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteDokumenPersetujuanPenolakan(Request $request)
+    {
+        try {
+            DokumenPersetujuanPenolakanTindakanDokter::where('id', $request->id)->delete();
+            return response()->json(['data' => 'berhasil']);
+        } catch (\Exception $e) {
+            return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
+        }
+    }
+
     public function storeLaporanPembedahan(Request $request)
     {
         try {
@@ -2790,6 +2832,42 @@ class PasienCtrl extends Controller
 
         return response()->json(['data' => $data, 'total' => $total]);
     }
+
+    public function getDokumenPersetujuanUmum(Request $request)
+    {
+        $data = DokumenPersetujuanUmum::where('uuid', $request->uuid)->first();
+        return response()->json(['data' => $data]);
+    }
+
+    public function updateDokumenPersetujuanUmum(Request $request)
+    {
+        try {
+            $fields = [
+                'nama_pemberi_informasi','nama_penerima_informasi',
+                'nama_terang_pasien','nama_terang_pemberi_inf',
+                'pasien_ttd','pemberi_inf_ttd',
+            ];
+            $updateData = [];
+            foreach ($fields as $f) {
+                if ($request->has($f)) $updateData[$f] = $request->$f;
+            }
+            DokumenPersetujuanUmum::where('uuid', $request->uuid)->update($updateData);
+            return response()->json(['data' => 'berhasil']);
+        } catch (\Exception $e) {
+            return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteDokumenPersetujuanUmum(Request $request)
+    {
+        try {
+            DokumenPersetujuanUmum::where('uuid', $request->uuid)->delete();
+            return response()->json(['data' => 'berhasil']);
+        } catch (\Exception $e) {
+            return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
+        }
+    }
+
     // public function listBillPembayaran(Request $request)
     // {
     //     $page = $request->page - 1;

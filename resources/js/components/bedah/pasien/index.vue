@@ -40,7 +40,7 @@ import Swal from 'sweetalert2';
 export default {
 	emits: ["titletrigger", "repatch"],
 	beforeUnmount:function() {},
-	components: { toast, Swal, 
+	components: { toast, Swal,
 		FormUnit: defineAsyncComponent(() => import('./FormUnit.vue')),
 		FormObat: defineAsyncComponent(() => import('./FormObat.vue')),
 		FormResep: defineAsyncComponent(() => import('./FormResep.vue')),
@@ -126,8 +126,8 @@ export default {
 				{ value: 'now', label: 'Pasien (Aktif)', class: 'tab-active' },
 				{ value: 'done', label: 'Pasien (Selesai)', class: 'tab-no-active' }
 			],
-			content: { 
-				now: true, 
+			content: {
+				now: true,
 				done: false,
 			}
 		},
@@ -137,8 +137,8 @@ export default {
 
 		changesTab: function (values, index, classes) {
 			if (classes != 'tab-active') {
-				for (let i = 0; i < vm.tab.button.length; i++) { 
-					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; 
+				for (let i = 0; i < vm.tab.button.length; i++) {
+					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';
 				}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
@@ -167,11 +167,11 @@ export default {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detaildokter', tooltip: 'Dokter Bedah', item: _item, index: _index, show: _item.bedah_status == 'Selesai Dioperasi' ? false : true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'editbedah', tooltip: 'Edit Paket Bedah', item: _item, index: _index, show: _item.bedah_status == 'Selesai Dioperasi' ? false : true },
-				{ icon: 'refresh-cw', color: 'btn-info', posisi: 'proses', tooltip: 'Mulai Pembedahan', item: _item, index: _index, 
+				{ icon: 'refresh-cw', color: 'btn-info', posisi: 'proses', tooltip: 'Mulai Pembedahan', item: _item, index: _index,
 					show: _item.bedah_status == '-' ? true : false },
-				{ icon: 'check-circle', color: 'btn-success', posisi: 'selesai', tooltip: 'Selesai Pembedahan', item: _item, index: _index, 
+				{ icon: 'check-circle', color: 'btn-success', posisi: 'selesai', tooltip: 'Selesai Pembedahan', item: _item, index: _index,
 					show: _item.bedah_status == 'Sedang Dioperasi' ? true : false },
-				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'detail', tooltip: 'Detail Paket Bedah', item: _item, index: _index, 
+				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'detail', tooltip: 'Detail Paket Bedah', item: _item, index: _index,
 					show: true },
 				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'inap', tooltip: 'Tambah Kamar Inap', item: _item, index: _index,
 					show: _item.bedah_status == 'Selesai Dioperasi' ? true : false
@@ -185,18 +185,18 @@ export default {
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Histori RO', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-success', posisi: 'historidokter', tooltip: 'Histori Dokter', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'editlayanan', tooltip: 'Edit Layanan Bedah', item: _item, index: _index, show: true },
-				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'Lihat RME', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'Laporan Pembedahan', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
 
 		btnhtmldone:function(_item, _index) {
 			let str = [
-				{ icon: 'refresh-cw', color: 'btn-info', posisi: 'proses', tooltip: 'Mulai Pembedahan', item: _item, index: _index, 
+				{ icon: 'refresh-cw', color: 'btn-info', posisi: 'proses', tooltip: 'Mulai Pembedahan', item: _item, index: _index,
 					show: _item.bedah_status == '-' ? true : false },
-				{ icon: 'check-circle', color: 'btn-success', posisi: 'selesai', tooltip: 'Selesai Pembedahan', item: _item, index: _index, 
+				{ icon: 'check-circle', color: 'btn-success', posisi: 'selesai', tooltip: 'Selesai Pembedahan', item: _item, index: _index,
 					show: _item.bedah_status == 'Sedang Dioperasi' ? true : false },
-				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'detail', tooltip: 'Detail Paket Bedah', item: _item, index: _index, 
+				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'detail', tooltip: 'Detail Paket Bedah', item: _item, index: _index,
 					show: true },
 				{
 					icon: 'arrow-up', color: 'btn-warning', posisi: 'inap', tooltip: 'Tambah Kamar Inap', item: _item, index: _index,
@@ -224,13 +224,13 @@ export default {
 			return '<div class="badge badge-success">'+data.bedah_status+'</div>'
 		},
 		waktuMasuk: function (data) {
-			if (data.waktu_masuk_inap == '') 
+			if (data.waktu_masuk_inap == '')
 			{
 				return "-";
 
 			 } else {
 			return data.waktu_masuk_inap
-			} 
+			}
 			// return '<div class="badge badge-success">' + waktuMasukInap + '</div>'
 		},
 		tanggalMasuk: function (data) {
@@ -244,7 +244,7 @@ export default {
 		},
 		datename2: function (data, istimes = false) {
 			if (data <= '2000-01-01') {
-				return '-'; 
+				return '-';
 			} else {
 			let tmp = data.split(" "),
 				dates = tmp[0].split('-');
@@ -485,7 +485,7 @@ export default {
 			}
 		},
 
-		loadingModal: function (position) { 
+		loadingModal: function (position) {
 			console.log("position loadingmodal")
 			console.log(position)
 			if (position == 'formunit') { vm.$refs.FormUnit.loaderprocess();  }
@@ -553,47 +553,47 @@ export default {
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
 		setDatatabledone: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columndone.length; j++) { col.push(vm.converterdone(data[i], i, data[i][vm.columndone[j].value] ? data[i][vm.columndone[j].value] :vm.columndone[j].value, vm.columndone[j].value)); } temporer.push(col); } vm.moduledone.data = temporer; vm.moduledone.total = total; return temporer; },
-		tableload:function(pos = 'main') { 
+		tableload:function(pos = 'main') {
 
 			if (pos == 'main') {
-				vm.attach.url = vm.attach.link.list; 
-				vm.attach.data = new FormData(); 
-				vm.attach.data.append('search', ''); 
-				vm.attach.data.append('column', ''); 
-				vm.attach.data.append('page', 1); 
+				vm.attach.url = vm.attach.link.list;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
+				vm.attach.data.append('page', 1);
 			}
 			else if (pos == 'done') {
-				vm.attach.url = vm.attach.link.listselesai; 
-				vm.attach.data = new FormData(); 
-				vm.attach.data.append('search', ''); 
-				vm.attach.data.append('column', ''); 
+				vm.attach.url = vm.attach.link.listselesai;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
 				vm.attach.data.append('page', 1);
 			} else {
 				vm.attach.url = vm.attach.link.list;
 				vm.attach.data = new FormData();
 				vm.attach.data.append('search', '');
 				vm.attach.data.append('column', '');
-				vm.attach.data.append('page', 1); 
+				vm.attach.data.append('page', 1);
 			}
 
-			vm.executions(); 
+			vm.executions();
 		},
-		tablereload:function(data = new FormData(), pos = 'main') { 
+		tablereload:function(data = new FormData(), pos = 'main') {
 			if (vm.posisieksternal == 'done') {
 				if (pos == 'outer') {
-					vm.$refs.DatatableDone.skeleton(); 
+					vm.$refs.DatatableDone.skeleton();
 				}
-				vm.attach.url = vm.attach.link.listselesai; 
-				vm.attach.data = data; 
+				vm.attach.url = vm.attach.link.listselesai;
+				vm.attach.data = data;
 			}
 			else {
 				if (pos == 'outer') {
-					vm.$refs.Datatable.skeleton(); 
+					vm.$refs.Datatable.skeleton();
 				}
-				vm.attach.url = vm.attach.link.list; 
-				vm.attach.data = data; 
+				vm.attach.url = vm.attach.link.list;
+				vm.attach.data = data;
 			}
-			vm.position = 'externaltable'; 
+			vm.position = 'externaltable';
 			vm.executions();
 		},
 
@@ -604,8 +604,8 @@ export default {
 		loadmain: () => { vm.position = 'loadmain'; vm.firstloader(); vm.tableload(); },
 
 		loaddone:function() {
-			vm.position = 'loaddone'; 
-			vm.firstloader(); 
+			vm.position = 'loaddone';
+			vm.firstloader();
 			vm.tableload('done');
 		},
 
@@ -614,15 +614,15 @@ export default {
 			vm.message('error', 1);
 			if (vm.position == 'loadmain') { vm.firstloader(); active = 1; }
 			else if (vm.position == 'loaddone') { vm.firstloader(); active = 1; }
-			else if (vm.position == 'externaltable') { 
+			else if (vm.position == 'externaltable') {
 				if (vm.posisieksternal='done') {
-					vm.$refs.DatatableDone.skeleton(); 
-					vm.$refs.DatatableDone.backpage(); 
+					vm.$refs.DatatableDone.skeleton();
+					vm.$refs.DatatableDone.backpage();
 				}
 				else {
-					vm.$refs.Datatable.skeleton(); 
-					vm.$refs.Datatable.backpage(); 
-				} 
+					vm.$refs.Datatable.skeleton();
+					vm.$refs.Datatable.backpage();
+				}
 			}
 			else if (vm.position == 'adddata') { vm.loadingModal('formunit'); }
 			else if (vm.position == 'adddataobat') { vm.loadingModal('formobat'); }
@@ -641,7 +641,7 @@ export default {
 			else if (vm.position == 'historidata') { vm.loadingModal('formhistori'); vm.$refs.FormHistori.hide();  }
 			else if (vm.position == 'historidokter') { vm.loadingModal('formhistoridokter'); vm.$refs.FormHistoriDokter.hide();  }
 			else if (vm.position == 'removedata') { vm.loadingModal('formunit'); }
-			
+
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
 		},
@@ -651,37 +651,37 @@ export default {
 			console.log(vm.position);
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
-	
-			if (vm.position == 'loadmain') { 
+
+			if (vm.position == 'loadmain') {
 				vm.posisieksternal='now';
 				vm.firstloader();
-				vm.$refs.Datatable.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.Datatable.paging(); 
+				vm.$refs.Datatable.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total);
+				vm.$refs.Datatable.paging();
 				active = 0;
 			}
-			else if (vm.position == 'editlayanan') { 
-				vm.$refs.FormEditLayanan.setdataform(response); 
-				active = 0; 
+			else if (vm.position == 'editlayanan') {
+				vm.$refs.FormEditLayanan.setdataform(response);
+				active = 0;
 			}
-			else if (vm.position == 'loaddone') { 
+			else if (vm.position == 'loaddone') {
 				vm.posisieksternal='done';
 				vm.firstloader();
-				vm.$refs.DatatableDone.update(vm.columndone, vm.setDatatabledone(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.DatatableDone.paging(); 
+				vm.$refs.DatatableDone.update(vm.columndone, vm.setDatatabledone(response.data.data, response.data.total), response.data.total);
+				vm.$refs.DatatableDone.paging();
 				active = 0;
 			}
-			else if (vm.position == 'externaltable') { 
+			else if (vm.position == 'externaltable') {
 
 				if (vm.posisieksternal=='done') {
-					vm.$refs.DatatableDone.update('', vm.setDatatabledone(response.data.data, response.data.total), response.data.total); 
-					vm.$refs.DatatableDone.skeleton(); 
-					vm.$refs.DatatableDone.paging(); 
+					vm.$refs.DatatableDone.update('', vm.setDatatabledone(response.data.data, response.data.total), response.data.total);
+					vm.$refs.DatatableDone.skeleton();
+					vm.$refs.DatatableDone.paging();
 					active = 0;
 				}
 				else {
-					vm.$refs.Datatable.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total); 
-					vm.$refs.Datatable.skeleton(); 
-					vm.$refs.Datatable.paging(); 
+					vm.$refs.Datatable.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total);
+					vm.$refs.Datatable.skeleton();
+					vm.$refs.Datatable.paging();
 					active = 0;
 				}
 			}
@@ -709,33 +709,33 @@ export default {
 			else if (vm.position == 'addjadwalkontrol') {
 				vm.$refs.FormJadwalKontrol.hide();
 				vm.loadingModal('formjadwalkontrol');
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this); 
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this);
 			}
 			else if (vm.position == 'loaddata') {
-				vm.$refs.FormUnit.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormUnit.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddataobat') {
-				vm.$refs.FormObat.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormObat.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddataresep') {
-				vm.$refs.FormResep.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormResep.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddatajadwalkontrol') {
-				vm.$refs.FormJadwalKontrol.setdataform(response); 
+				vm.$refs.FormJadwalKontrol.setdataform(response);
 				active = 0; w
 			}
 			else if (vm.position == 'editdata') {
-				vm.$refs.FormUnit.setdataform(response); 
-				vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormUnit.setdataform(response);
+				vm.position = "updatedata";
+				active = 0;
 			}
 			else if (vm.position == 'detaildata') {
-				vm.$refs.FormDetail.setdataform(response); 
-				vm.position = "detaildata"; 
-				active = 0; 
+				vm.$refs.FormDetail.setdataform(response);
+				vm.position = "detaildata";
+				active = 0;
 			}
 			else if (vm.position == 'detaildokterdata') {
 				vm.$refs.FormDetailDokter.setdataform(response);
@@ -754,29 +754,29 @@ export default {
 			}
 			else if (vm.position == 'updatedata') {
 				vm.loadingModal('formunit');
-				vm.$refs.FormUnit.hide(); 
+				vm.$refs.FormUnit.hide();
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'inapadd') {
 				vm.$refs.FormInap.hide();
 				setTimeout(() => { vm.$refs.DatatableDone.skeleton(); vm.tablereload(); }, 500, this);
 			}
-			else if (vm.position == 'prosesdata') { 
-				setTimeout(() => { vm.tablereload(); }, 125, this); 
+			else if (vm.position == 'prosesdata') {
+				setTimeout(() => { vm.tablereload(); }, 125, this);
 			}
-			else if (vm.position == 'selesaidata') { 
-				setTimeout(() => { vm.tablereload(); }, 125, this); 
+			else if (vm.position == 'selesaidata') {
+				setTimeout(() => { vm.tablereload(); }, 125, this);
 			}
 			else if (vm.position == 'historidata') {
-				vm.$refs.FormHistori.setdataform(response); 
-				//vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormHistori.setdataform(response);
+				//vm.position = "updatedata";
+				active = 0;
 			}
 			else if (vm.position == 'historidokter') {
 				vm.loadingModal('formhistoridokter');
-				vm.$refs.FormHistoriDokter.setdataform(response); 
-				//vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormHistoriDokter.setdataform(response);
+				//vm.position = "updatedata";
+				active = 0;
 			}
 			else if (vm.position == 'updatelayanan') {
 				vm.$refs.FormEditLayanan.hide();

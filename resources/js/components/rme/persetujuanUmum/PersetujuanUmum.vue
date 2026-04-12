@@ -5,105 +5,127 @@
       <div class="spinner-rme"></div>
       Loading...
     </div>
+
+    <!-- ===== LIST ===== -->
     <div v-if="state == 'list'">
-    <!-- HEADER -->
+      <div class="header-component-rme">Persetujuan Umum (General Consent)</div>
 
+      <ButtonTambah @click="onAdd" />
 
-    <div class="header-component-rme">Persetujuan Umum (General Consent)</div>
-
-    <ButtonTambah  @click="onAdd" />
-    <!-- <button class="btn-add" @click="onAdd">+ s</button> -->
-
-
-    <!-- FILTER BAR -->
-    <div class="filter-bar">
-      <div class="filter-left">
-        Tampil
-        <select v-model="perPage">
-          <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
-        </select>
-        data
+      <!-- FILTER BAR -->
+      <div class="filter-bar">
+        <div class="filter-left">
+          Tampil
+          <select v-model="perPage">
+            <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
+          </select>
+          data
+        </div>
+        <div class="filter-right">
+          Cari:
+          <input type="text" v-model="searchQuery" class="search-input" />
+        </div>
       </div>
 
-      <div class="filter-right">
-        Cari:
-        <input type="text" v-model="searchQuery" class="search-input" />
+      <!-- TABLE -->
+      <table class="custom-table-rme">
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>TANGGAL & JAM</th>
+            <th>NAMA PASIEN</th>
+            <th>JENIS KELAMIN</th>
+            <th>NIK</th>
+            <th>USER</th>
+            <th>ACTION</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="paginatedData.length === 0">
+            <td colspan="7" style="text-align:center; color:#999;">Tidak ada data.</td>
+          </tr>
+          <tr v-for="(item, index) in paginatedData" :key="item.id">
+            <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
+            <td>{{ item.created_at }}</td>
+            <td>{{ item.nama_pasien }}</td>
+            <td>{{ item.jenis_kelamin }}</td>
+            <td>{{ item.nik }}</td>
+            <td>{{ item.nama_pemberi_informasi }}</td>
+            <td class="action-buttons">
+              <i class="fas fa-eye action-icon" title="Lihat" @click="onView(item)" style="color:#1d72c9; cursor:pointer;"></i>
+              <i class="fas fa-edit action-icon" title="Edit" @click="onEdit(item)" style="color:#5cb85c; cursor:pointer;"></i>
+              <i class="fas fa-trash action-icon" title="Hapus" @click="onDelete(item)" style="color:#d9534f; cursor:pointer;"></i>
+              <i class="fas fa-print action-icon" title="Print" @click="print(item)" style="color:#0275d8; cursor:pointer;"></i>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- FOOTER INFO -->
+      <div class="table-info">
+        Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ filteredData.length }} data
+      </div>
+
+      <!-- PAGINATION -->
+      <div class="pagination-rme">
+        <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
+        <button
+          v-for="page in totalPages"
+          :key="page"
+          :class="['page-btn', { active: currentPage === page }]"
+          @click="currentPage = page"
+        >{{ page }}</button>
+        <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
       </div>
     </div>
 
-    <!-- TABLE -->
-
-    <table class="custom-table-rme">
-      <thead>
-        <tr>
-          <th>NO</th>
-          <th>TANGGAL & JAM</th>
-          <th>NAMA PASIEN</th>
-          <th>JENIS KELAMIN</th>
-          <th>NIK</th>
-          <th>USER</th>
-          <th>ACTION</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(item, index) in paginatedData" :key="item.id">
-          <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-          <td>{{ item.created_at }}</td>
-          <td>{{ item.nama_pasien }}</td>
-          <td>{{ item.jenis_kelamin }}</td>
-          <td>{{ item.nik }}</td>
-          <td>{{ item.nama_pemberi_informasi }}</td>
-          <td class="action-buttons">
-            <i class="fa fa-bookmark action-icon icon-edit" @click="editItem(item)"></i>
-            <i class="fa fa-times action-icon icon-delete" @click="deleteItem(item)"></i>
-            <i class="fa fa-print action-icon icon-print" @click="print(item)"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- FOOTER INFO -->
-    <div class="table-info">
-      Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
+    <!-- ===== VIEW ===== -->
+    <div v-if="state == 'view' && selectedItem">
+      <ViewPersetujuanUmum
+        :item="selectedItem"
+        @back="state = 'list'"
+        @edit="onEdit(selectedItem)"
+      />
     </div>
 
-    <!-- PAGINATION -->
-    <div class="pagination-rme">
-      <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
+    <!-- ===== CREATE ===== -->
+    <div v-if="state == 'create'">
+      <CreatePersetujuanUmum
+        @back="state = 'list'"
+        @saved="onSaved"
+        :selectedPatient="selectedPatient"
+        :editData="null"
+      />
+    </div>
 
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        :class="['page-btn', { active: currentPage === page }]"
-        @click="currentPage = page"
-      >
-        {{ page }}
-      </button>
-
-      <button :disabled="currentPage === totalPages" @click="currentPage++">Next</button>
+    <!-- ===== EDIT ===== -->
+    <div v-if="state == 'edit' && selectedItem">
+      <CreatePersetujuanUmum
+        @back="state = 'list'"
+        @saved="onSaved"
+        :selectedPatient="selectedPatient"
+        :editData="selectedItem"
+      />
     </div>
   </div>
-    <!-- Create Data -->
-  <div v-if="state == 'create'">
-    <CreatePersetujuanUmum @back="state = 'list'" :selectedPatient="selectedPatient" />
-  </div>
-  </div>
-
 </template>
 
 <script>
 import axios from "axios";
 import { defineAsyncComponent } from "vue";
-import ButtonTambah from '../components/ButtonTambah.vue'
-// import CreatePersetujuanUmum from "./CreatePersetujuanUmum.vue";
+import ButtonTambah from '../components/ButtonTambah.vue';
+
 export default {
-  name: "HistoryKunjungan",
-  components: { ButtonTambah,
+  name: "PersetujuanUmum",
+  components: {
+    ButtonTambah,
     CreatePersetujuanUmum: defineAsyncComponent(() =>
       import("./CreatePersetujuanUmum.vue")
     ),
-   },
+    ViewPersetujuanUmum: defineAsyncComponent(() =>
+      import("./ViewPersetujuanUmum.vue")
+    ),
+  },
 
   data() {
     return {
@@ -111,11 +133,12 @@ export default {
       currentPage: 1,
       searchQuery: "",
       state: "list",
-      loading: false, // Loading indicator
-      data: [
-      ],
+      loading: false,
+      data: [],
+      selectedItem: null,
     };
   },
+
   props: {
     selectedPatient: {
       type: Object,
@@ -127,7 +150,7 @@ export default {
     selectedPatient: {
       immediate: true,
       handler(newVal) {
-        if (newVal?.id) {
+        if (newVal?.uuid) {
           this.fetchHistory();
         }
       },
@@ -137,105 +160,95 @@ export default {
   computed: {
     filteredData() {
       if (!this.searchQuery) return this.data;
-
       return this.data.filter((row) =>
         Object.values(row).some((val) =>
           String(val).toLowerCase().includes(this.searchQuery.toLowerCase())
         )
       );
     },
-
     totalPages() {
-      return Math.ceil(this.filteredData.length / this.perPage);
+      return Math.max(1, Math.ceil(this.filteredData.length / this.perPage));
     },
-
     paginatedData() {
       const start = (this.currentPage - 1) * this.perPage;
       return this.filteredData.slice(start, start + this.perPage);
     },
-
     startRow() {
+      if (this.filteredData.length === 0) return 0;
       return (this.currentPage - 1) * this.perPage + 1;
     },
-
     endRow() {
       const end = this.currentPage * this.perPage;
-      return end > this.data.length ? this.data.length : end;
+      return end > this.filteredData.length ? this.filteredData.length : end;
     },
-  },
-  mounted() {
-    // this.fetchHistory();
   },
 
   methods: {
     async fetchHistory() {
       this.loading = true;
-
-
       try {
         const formData = new FormData();
         formData.append("search", this.selectedPatient.uuid);
-        formData.append("limit", 10);
+        formData.append("limit", 100);
         formData.append("page", 1);
 
         const res = await axios.post("/master/pasien/list-dokumen-persetujuan-umum", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         });
-
-        // 👇 pastikan data backend berupa array
         this.data = res.data?.data ?? [];
       } catch (err) {
-        console.error("Gagal memuat history:", err);
-        alert("Gagal memuat data history.");
+        console.error("Gagal memuat data:", err);
+        alert("Gagal memuat data persetujuan umum.");
       } finally {
         this.loading = false;
       }
     },
 
-    editItem(item) {
-      console.log("Edit:", item)
-      // buka modal atau pindah halaman
-      },
-      deleteItem(item) {
-        console.log("Delete:", item)
-        // konfirmasi hapus
-      },
-      printItem(item) {
-        console.log("Print:", item)
-        // buka print atau cetakan PDF
-      },
-      onAdd() {
-        this.state = "create";
-        this.$emit("set-breadcrumb", {
-            docName: "Form Persetujuan"
+    onAdd() {
+      this.selectedItem = null;
+      this.state = "create";
+      this.$emit("set-breadcrumb", { docName: "Form Persetujuan" });
+    },
+
+    onView(item) {
+      this.selectedItem = { ...item };
+      this.state = "view";
+    },
+
+    onEdit(item) {
+      this.selectedItem = { ...item };
+      this.state = "edit";
+    },
+
+    async onDelete(item) {
+      if (!confirm(`Hapus data persetujuan umum tanggal ${item.created_at}? Tindakan ini tidak dapat dibatalkan.`)) return;
+      this.loading = true;
+      try {
+        const fd = new FormData();
+        fd.append("uuid", item.uuid);
+        const res = await axios.post("/master/pasien/delete-dokumen-persetujuan-umum", fd, {
+          headers: { "Content-Type": "multipart/form-data" },
         });
-        console.log("TAMBAH");
-      },
+        if (res.data?.data === "berhasil" || res.data?.message === "berhasil") {
+          await this.fetchHistory();
+        } else {
+          alert("Gagal menghapus data.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Terjadi kesalahan saat menghapus.");
+      } finally {
+        this.loading = false;
+      }
+    },
 
-    mappedStatus(data){
-        if(data?.status_ro != 'Sudah Diperiksa'){
-            return 'Pemriksasan Refraksi Optisi'
-        }
-        if(data?.status_dokter != 'Sudah Diperiksa'){
-            return 'Pemriksasan Dokter'
-        }
-        if(data?.status_dokter != 'Sudah Bayar'){
-            return 'Farmasi'
-        }
-        if(data?.status_dokter != 'Sudah Bayar'){
-            return 'Kasir'
-        }
-
-        return 'Selesai'
+    onSaved() {
+      this.state = "list";
+      this.fetchHistory();
     },
 
     print(item) {
-      window.open(
-        `/print/rekammedis/rawat-jalan/general/`+item.uuid,
-        "_blank"
-      );
+      window.open(`/print/rekammedis/rawat-jalan/general/` + item.uuid, "_blank");
     },
   },
 };
@@ -247,6 +260,7 @@ export default {
   padding: 15px;
   border-radius: 5px;
   border: 1px solid #ddd;
+  position: relative;
 }
 
 .header-component-rme {
@@ -311,6 +325,7 @@ export default {
 .pagination-rme {
   display: flex;
   gap: 5px;
+  margin-top: 8px;
 }
 
 .pagination-rme button {
@@ -330,7 +345,7 @@ export default {
 .loading-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -354,33 +369,21 @@ export default {
     transform: rotate(360deg);
   }
 }
+
 .action-buttons {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .action-icon {
   cursor: pointer;
-  font-size: 20px;
-}
-
-/* warna sesuai gambar */
-.icon-edit {
-  color: #5cb85c;   /* hijau */
-}
-
-.icon-delete {
-  color: #d9534f;   /* merah */
-}
-
-.icon-print {
-  color: #0275d8;   /* biru */
+  font-size: 16px;
 }
 
 .action-icon:hover {
   opacity: 0.7;
 }
-
 </style>

@@ -59,10 +59,10 @@
                     <input type="text" v-model="form.petugas" class="input-rme" />
                 </div>
 
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <label>Pemberi Informasi :</label>
                     <input type="text" v-model="form.nama_pemberi_informasi" class="input-rme" />
-                </div>
+                </div> -->
             </div>
 
             <div class="row mb-2">
@@ -390,13 +390,15 @@
             class="signature-box-rme"
           />
 
-          <button @click="saveSign('pemberi_inf_ttd')" class="btn-save">
-            Simpan ✔
-          </button>
+          <div class="sign-btn-group">
+            <button @click="saveSign('pemberi_inf_ttd')" class="btn-save">Simpan ✔</button>
+            <button @click="clearSign('pemberi_inf_ttd')" class="btn-clear-sign">Bersihkan</button>
+          </div>
 
           <input
             v-model="form.nama_terang_pemberi_inf"
             class="input-rme"
+            readonly
             placeholder="Tanda Tangan dan Nama Terang"
           />
         </div>
@@ -413,11 +415,16 @@
             class="signature-box-rme"
           />
 
-          <button @click="saveSign('pasien_ttd')" class="btn-save">Simpan ✔</button>
+          <div class="sign-btn-group">
+            <button @click="saveSign('pasien_ttd')" class="btn-save">Simpan ✔</button>
+            <button @click="clearSign('pasien_ttd')" class="btn-clear-sign">Bersihkan</button>
+          </div>
 
           <input
             v-model="form.nama_terang_pasien"
             class="input-rme"
+            readonly
+            value="form.nama_penerima_informasi"
             placeholder="Tanda Tangan dan Nama Terang"
           />
         </div>
@@ -461,12 +468,13 @@ export default {
             },
             data: [],
             form: {
+                id: null,
+                uuid: "",
                 uuid_pasien: "",
                 nama_pemberi_informasi: "",
                 nama_penerima_informasi: "",
                 nama_terang_pasien: "",
                 nama_terang_pemberi_inf: "",
-                nama_terang_pasien: "",
                 pasien_ttd: "",
                 pemberi_inf_ttd: "",
                 kodeMR: "",
@@ -477,27 +485,41 @@ export default {
             },
         };
     },
+    emits: ["back", "saved"],
+
     props: {
         selectedPatient: {
             type: Object,
             required: true,
         },
+        editData: {
+            type: Object,
+            default: null,
+        },
     },
 
     watch: {
-        selectedPatient: {
+        editData: {
             immediate: true,
             handler(newVal) {
-                // if (newVal?.id) {
-                //   this.fetchHistory();
-                // }
+                if (newVal) {
+                    this.fillEditData(newVal);
+                }
             },
+        },
+        "form.nama_pemberi_informasi"(val) {
+            this.form.nama_terang_pemberi_inf = val;
+        },
+        "form.nama_penerima_informasi"(val) {
+            this.form.nama_terang_pasien = val;
         },
     },
 
     computed: {},
     mounted() {
-        this.setDataForm();
+        if (!this.editData) {
+            this.setDataForm();
+        }
     },
 
     methods: {
@@ -565,6 +587,48 @@ export default {
 
       console.log("TTD saved:", refName);
     },
+        fillEditData(data) {
+            this.form.id = data.id ?? null;
+            this.form.uuid = data.uuid ?? "";
+            this.form.uuid_pasien = data.uuid_pasien ?? "";
+            this.form.nama_pemberi_informasi = data.nama_pemberi_informasi ?? "";
+            this.form.nama_penerima_informasi = data.nama_penerima_informasi ?? "";
+            this.form.nama_terang_pasien = data.nama_terang_pasien ?? "";
+            this.form.nama_terang_pemberi_inf = data.nama_terang_pemberi_inf ?? "";
+            this.form.pasien_ttd = data.pasien_ttd ?? "";
+            this.form.pemberi_inf_ttd = data.pemberi_inf_ttd ?? "";
+            this.form.kodeMR = data.kodeMR ?? data.kode_rm ?? "";
+            this.form.nama = data.nama ?? data.nama_pasien ?? "";
+            this.form.nik = data.nik ?? "";
+            this.form.tanggal_lahir = data.tanggal_lahir ?? "";
+            this.form.jenis_kelamin = data.jenis_kelamin ?? "";
+
+            // Restore date/time
+            if (data.date) this.form.date = data.date;
+            if (data.time) this.form.time = data.time;
+
+            // Restore signatures after DOM is ready
+            this.$nextTick(() => {
+                setTimeout(() => {
+                    if (data.pemberi_inf_ttd && this.$refs.pemberi_inf_ttd) {
+                        this.$refs.pemberi_inf_ttd.resizeCanvas();
+                        this.$refs.pemberi_inf_ttd.fromDataURL(data.pemberi_inf_ttd);
+                    }
+                    if (data.pasien_ttd && this.$refs.pasien_ttd) {
+                        this.$refs.pasien_ttd.resizeCanvas();
+                        this.$refs.pasien_ttd.fromDataURL(data.pasien_ttd);
+                    }
+                }, 200);
+            });
+        },
+
+        clearSign(refName) {
+            const pad = this.$refs[refName];
+            if (!pad) return;
+            pad.clearSignature();
+            this.form[refName] = "";
+        },
+
         async submitForm() {
             this.loadingSubmit = true;
 
@@ -572,24 +636,22 @@ export default {
                 const fd = new FormData();
 
                 Object.keys(this.form).forEach((key) => {
-                fd.append(key, this.form[key]);
+                    if (this.form[key] !== null) {
+                        fd.append(key, this.form[key]);
+                    }
                 });
 
-                console.log("PERSETUJUAN UMUM: ",fd);
+                const isEdit = !!this.form.uuid;
+                const url = isEdit
+                    ? "/master/pasien/update-dokumen-persetujuan-umum"
+                    : "/master/pasien/dokumen-persetujuan-umum";
 
-                const response = await axios.post(
-                "/master/pasien/dokumen-persetujuan-umum",
-                fd,
-                { headers: { "Content-Type": "multipart/form-data" } }
-                );
+                const response = await axios.post(url, fd, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                });
 
-                console.log("BERHASIL:", response.data);
-
-                // tampilkan notif
                 alert("Data berhasil disimpan!");
-
-                // kembali ke parent component
-                this.$emit("back");
+                this.$emit("saved");
             } catch (error) {
                 console.error("ERROR:", error.response?.data || error);
                 alert("Gagal menyimpan data!");
@@ -722,6 +784,23 @@ export default {
     border: none;
     margin-bottom: 10px;
     cursor: pointer;
+}
+
+.btn-clear-sign {
+    background: #e53935;
+    color: white;
+    padding: 5px 12px;
+    border: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.sign-btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 4px;
 }
 
 .action-footer {
