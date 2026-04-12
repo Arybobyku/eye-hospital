@@ -2832,6 +2832,42 @@ class PasienCtrl extends Controller
 
         return response()->json(['data' => $data, 'total' => $total]);
     }
+
+    public function getDokumenPersetujuanUmum(Request $request)
+    {
+        $data = DokumenPersetujuanUmum::where('uuid', $request->uuid)->first();
+        return response()->json(['data' => $data]);
+    }
+
+    public function updateDokumenPersetujuanUmum(Request $request)
+    {
+        try {
+            $fields = [
+                'nama_pemberi_informasi','nama_penerima_informasi',
+                'nama_terang_pasien','nama_terang_pemberi_inf',
+                'pasien_ttd','pemberi_inf_ttd',
+            ];
+            $updateData = [];
+            foreach ($fields as $f) {
+                if ($request->has($f)) $updateData[$f] = $request->$f;
+            }
+            DokumenPersetujuanUmum::where('uuid', $request->uuid)->update($updateData);
+            return response()->json(['data' => 'berhasil']);
+        } catch (\Exception $e) {
+            return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
+        }
+    }
+
+    public function deleteDokumenPersetujuanUmum(Request $request)
+    {
+        try {
+            DokumenPersetujuanUmum::where('uuid', $request->uuid)->delete();
+            return response()->json(['data' => 'berhasil']);
+        } catch (\Exception $e) {
+            return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
+        }
+    }
+
     // public function listBillPembayaran(Request $request)
     // {
     //     $page = $request->page - 1;

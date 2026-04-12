@@ -38,6 +38,9 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
 
 		Route::post('dokumen-persetujuan-umum', [PasienCtrl::class, 'dokumenPersetujuanUmum'])->name('dokumen-persetujuan-umum');
 		Route::post('list-dokumen-persetujuan-umum', [PasienCtrl::class, 'listDokumenPersetujuanUmum'])->name('list-dokumen-pertujuan-umum');
+		Route::post('get-dokumen-persetujuan-umum', [PasienCtrl::class, 'getDokumenPersetujuanUmum'])->name('get-dokumen-persetujuan-umum');
+		Route::post('update-dokumen-persetujuan-umum', [PasienCtrl::class, 'updateDokumenPersetujuanUmum'])->name('update-dokumen-persetujuan-umum');
+		Route::post('delete-dokumen-persetujuan-umum', [PasienCtrl::class, 'deleteDokumenPersetujuanUmum'])->name('delete-dokumen-persetujuan-umum');
 
 		Route::post('dokumen-list', [PasienCtrl::class, 'dokumenList'])->name('master-pasien-dokumen-list');
 		Route::post('dokumen-store', [PasienCtrl::class, 'dokumenStore'])->name('master-pasien-dokumen-store');
