@@ -4,9 +4,9 @@
 			<div class="nav-control" v-on:click="tabmenu()"><div class="hamburger"><span class="line"></span><span class="line"></span><span class="line"></span></div></div>
 			<router-link to="/dashboard/profile"><img src="/images/logopanjang.png" /></router-link>
 			<span>
-				{{ title }} 
+				{{ title }}
 				<button class="antrian" v-on:click="antrian()" v-if="showbutton">Antrian</button>
-			</span> 
+			</span>
 			<div ref="rootmenu" class="menu-router-link" :class="menu.isactive ? 'slide-to-right' : ''">
 				<ul>
 					<li v-for="(value, key) in menu.data" class="menu-item">
@@ -51,7 +51,7 @@
 		</div>
 		<router-view v-slot="{ Component }"><component ref="view" :is="Component" @titletrigger="titletrigger" /></router-view>
 	</div>
-	
+
 	<div class="footer" v-if="!isEmbedMode"></div>
 </template>
 
@@ -59,9 +59,11 @@
 var vm;
 import { defineAsyncComponent } from 'vue';
 import { createdb } from './module/Indexdb.js';
+
 export default {
 	components: {
-		HeaderRight: defineAsyncComponent(() => import('./section/HeaderRight.vue'))
+		HeaderRight: defineAsyncComponent(() => import('./section/HeaderRight.vue')),
+
 	},
 	mounted: function () {
 		vm = this;
@@ -72,21 +74,21 @@ export default {
 			if (vm.title == 'Customer Service') { vm.showbutton = true; }
 			else { vm.showbutton = false; }
 		}, 750, this);
-		window.addEventListener("click", function(event) { 
-			let a = event.target.className; 
-			
-			try { 
-				if (a.split(" ")) { 
-					a = a.split(" "); 
+		window.addEventListener("click", function(event) {
+			let a = event.target.className;
+
+			try {
+				if (a.split(" ")) {
+					a = a.split(" ");
 					console.log(a);
-					if (a[0] != 'line' && a[0] != 'nav-control' && a[0] != 'hamburger') { 
-						vm.navhide(); 
-					} 
-				} 
-				if (event.target.className == '') { 
-					vm.navhide(); 
-				} 
-			} 
+					if (a[0] != 'line' && a[0] != 'nav-control' && a[0] != 'hamburger') {
+						vm.navhide();
+					}
+				}
+				if (event.target.className == '') {
+					vm.navhide();
+				}
+			}
 			catch { console.log('mistmatch'); } });
 	},
 	data: function () {
@@ -117,11 +119,11 @@ export default {
 			setTimeout(() => { vm.executions('patch'); }, 350, this);
 		},
 
-		reloading: function () { 
+		reloading: function () {
 			if (vm.$refs.view.tablereload) {
-				vm.$refs.view.tablereload(new FormData, 'outer'); 
+				vm.$refs.view.tablereload(new FormData, 'outer');
 			}
-			
+
 		},
 
 		closemenu:function() {
@@ -131,7 +133,7 @@ export default {
 		},
 
 		removeIndexDB:function(response) {
-			
+
 			if (vm.keys == 'all') {
 				window.localStorage.setItem("version", 1);
 				var req = window.indexedDB.deleteDatabase(vm.$dbNameIndexDb);
@@ -140,7 +142,7 @@ export default {
 					if (vm.count < 3) { setTimeout(() => { vm.removeIndexDB(response); }, 350, this); vm.count += 1; }
 					else { vm.ispatch = false; vm.$refs.view.unloadPatch('error'); }
 				};
-				req.onblocked = function () { 
+				req.onblocked = function () {
 					if (vm.count < 3) { setTimeout(() => { vm.removeIndexDB(response); }, 350, this); vm.count += 1; }
 					else { vm.ispatch = false; vm.$refs.view.unloadPatch('error'); }
 				};
@@ -162,24 +164,24 @@ export default {
 					if (vm.count < 3) { setTimeout(() => { vm.removeIndexDB(response); }, 350, this); vm.count += 1; }
 					else { vm.ispatch = false; vm.$refs.view.unloadPatch('error'); }
 				};
-				open.onblocked = function () { 
+				open.onblocked = function () {
 					open.result.close();
 					if (vm.count < 3) { setTimeout(() => { vm.removeIndexDB(response); }, 350, this); vm.count += 1; }
 					else { vm.ispatch = false; vm.$refs.view.unloadPatch('error'); }
 				};
 			}
-			
+
 		},
 
 		setlocalstorage: function () {
 			if (window.localStorage.getItem("version") === null) { window.localStorage.setItem("version", 1); }
 			else { let tmp = window.localStorage.getItem("version"); window.localStorage.setItem("version", (parseInt(tmp)+1)); }
 		},
-		
+
 		createdIndexDb: function (data) {
-			
+
 			vm.setlocalstorage();
-			
+
 			vm.createdb(vm.$dbNameIndexDb, window.localStorage.getItem("version"), data)
 				.then(function(response){
 					if (response == 'berhasil') {
@@ -205,7 +207,7 @@ export default {
 				}
 
 				vm.loaderrun();
-				setTimeout(() => { 
+				setTimeout(() => {
 					vm.attach.url = '/allapi/menu';
 					vm.attach.data = new FormData();
 					vm.attach.data.append('', '');
@@ -234,13 +236,13 @@ export default {
 				vm.loaderrun();
 				let temp = response.data.label;
 				temp.sort((a,b) => (a.label_based > b.label_based) ? 1 : ((b.label_based > a.label_based) ? -1 : 0));
-				
+
 				vm.menu.data = temp.reduce(function (r, a) {
 					r[a.label_based] = r[a.label_based] || [];
 					r[a.label_based].push(a);
 					return r;
 				}, Object.create(null));
-				
+
 				vm.setBreadcrumb();
 			}
 		},

@@ -191,6 +191,9 @@ export default {
     },
     onAdd() {
       this.state = "create";
+      this.$emit("set-breadcrumb", {
+            docName: "Laporan Pembedahan"
+        });
       console.log("TAMBAH");
     },
     mappedStatus(data) {

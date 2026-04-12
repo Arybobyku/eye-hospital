@@ -47,6 +47,59 @@
             text-align: center;
             margin-bottom: 5px;
         }
+
+        .eye-print-item {
+            display: inline-block;
+            width: 45%;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        .eye-print-item img {
+            width: 220px;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+
+
+        .eye-print-wrapper {
+            width: 100%;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .eye-print-single {
+            display: inline-block;
+        }
+
+        .eye-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 12pt;
+        }
+
+        .eye-print-canvas {
+            position: relative;
+            width: 500px;     /* HARUS sama seperti di Vue */
+            height: 250px;
+            border: 1px solid #ccc;
+        }
+
+        .eye-print-canvas img {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .eye-bg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .eye-draw {
+            width: 100%;
+            height: 100%;
+        }
     </style>
 
 </head>
@@ -82,33 +135,55 @@
             </tr>
 
             <tr>
-                <td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify">
-                    Langkah-langkah Tindakan Laser Fokal :
+               <td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px; text-align: justify">
+                    Langkah-langkah Tindakan Laser PRP :
+                    <br>
+                    <br>
+                     1. Pasien diberi obat tetes pelebar pupil mata (Mydriatyl 1%) <br>
+                    2. Perawat mempersiapkan berkas kelengkapan tindakan laser <br>
+                    3. Perawat mengecek pupil mata pasien, jika pupil mata sudah lebar pasien masuk ke ruangan laser
+                    <br>
+                    4. Pasien diberi obat tetes Anestesi (Pantocain 0,5%) <br>
+                    5. Pasien duduk menghadap ke alat laser <br>
+                    6. Pasien menempelkan dagu dan dahi ke peyangga pada alat laser <br>
+                    7. Dokter menyalakan alat Laser Photocoagulation <br>
+                    8. Pasien dipasang marker pada mata yang akan dilaser <br>
+                    9. Dilakukan tindakan laser dengan parameter laser : <br>
+                    {{ $data->parameter_laser_fokal }}. <br>
+                    10. Setelah selesai tindakan laser, pasien diberi obat tetes antibiotik <br>
+                    11. Pasien diberikan resep obat dan surat kontrol
+
                     <br>
                 </td>
-                <br>
-                <br>
-                <br>
             </tr>
             <tr>
                 <td style="width: 100%; font-size: 12pt; line-height: 22px; padding-top: 5px">
-                    1.Pasien diberi obat tetes pelebar pupil mata (Mydriatyl 1%) <br>
-                    2.Perawat mempersiapkan berkas kelengkapan tindakan laser <br>
-                    3.Perawat mengecek pupil mata pasien, jika pupil mata sudah lebar pasien masuk ke ruangan laser <br>
-                    4.Pasien diberi obat tetes Anestesi (Pantocain 0,5%) <br>
-                    5.Pasien duduk menghadap ke alat laser <br>
-                    6.Pasien menempelkan dagu dan dahi ke peyangga pada alat laser <br>
-                    7.Dokter menyalakan alat Laser Photocoagulation <br>
-                    8.Pasien dipasang marker pada mata yang akan dilaser <br>
-                    9.Dilakukan tindakan laser dengan parameter laser : <br>
-                    <br>
-                    {{ $data->parameter_laser_fokal }}
-                    <br>
-                    <br>
-                    10. Setelah selesai tindakan laser, pasien diberi obat tetes antibiotik <br>
-                    11. Pasien diberikan resep obat dan surat kontrol
-                    <br>
-                    <br>
+                    @if($data->diagram_mata)
+                    <div class="eye-print-wrapper">
+
+                        <div class="eye-print-single">
+                            <div class="eye-label">Diagram Tindakan Laser PRP</div>
+
+                            <div class="eye-print-canvas">
+                                {{-- BACKGROUND SVG --}}
+                                <img
+                                    src="{{ public_path('images/eye-prp-background.svg') }}"
+                                    class="eye-bg"
+                                >
+
+                                {{-- CORETAAN DOKTER --}}
+                                <img
+                                    src="{{ $data->diagram_mata }}"
+                                    class="eye-draw"
+                                >
+                            </div>
+                        </div>
+
+                    </div>
+                    @endif
+                </td>
+            </tr>
+            <br>
 
                     <div class="img-wrapper" style="margin-top: 50px">
                         <div class="text-above">Mata Kiri</div>

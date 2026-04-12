@@ -170,9 +170,9 @@
                 placeholder="Masukkan parameter laser yang digunakan:
 - Mata yang dilaser: OD/OS/ODS
 - Power: ... mW
-- Duration: ... ms  
+- Duration: ... ms
 - Spot size: ... μm
-- Total shots: ... 
+- Total shots: ...
 - Area: Superior/Inferior/Nasal/Temporal
 - Komplikasi (jika ada)
 - Catatan tambahan"
@@ -194,120 +194,45 @@
         </div>
       </div>
 
-      <!-- ================= DIAGRAM MATA ================= -->
-      <div class="box-rme mb-4">
-        <h5 class="section-title-rme text-center">Diagram Tindakan</h5>
-        <div class="row">
-          <div class="col-md-6 text-center">
-            <h6 class="fw-bold">Mata Kanan</h6>
-            <div class="eye-diagram">
-              <div class="eye-circle">
-                <div class="pupil"></div>
-                <div class="retina-pattern">
-                  <!-- SVG pattern untuk simulasi retina -->
-                  <svg width="150" height="150" viewBox="0 0 150 150">
-                    <circle
-                      cx="75"
-                      cy="75"
-                      r="70"
-                      fill="none"
-                      stroke="#ccc"
-                      stroke-width="1"
-                    />
-                    <circle
-                      cx="75"
-                      cy="75"
-                      r="55"
-                      fill="none"
-                      stroke="#ccc"
-                      stroke-width="1"
-                    />
-                    <circle
-                      cx="75"
-                      cy="75"
-                      r="40"
-                      fill="none"
-                      stroke="#ccc"
-                      stroke-width="1"
-                    />
-                    <circle
-                      cx="75"
-                      cy="75"
-                      r="25"
-                      fill="none"
-                      stroke="#666"
-                      stroke-width="2"
-                    />
-                    <!-- Optic disc -->
-                    <circle
-                      cx="95"
-                      cy="75"
-                      r="8"
-                      fill="#f0f0f0"
-                      stroke="#999"
-                      stroke-width="1"
-                    />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
+        <!-- ================= DIAGRAM MATA ================= -->
+        <div class="box-rme mb-4">
+            <h5 class="section-title-rme text-center mb-3">
+                Diagram Tindakan
+            </h5>
 
-          <div class="col-md-6 text-center">
-            <h6 class="fw-bold">Mata Kiri</h6>
-            <div class="eye-diagram">
-              <div class="eye-circle">
-                <div class="pupil"></div>
-                <div class="retina-pattern">
-                  <svg width="150" height="150" viewBox="0 0 150 150">
-                    <circle
-                      cx="75"
-                      cy="75"
-                      r="70"
-                      fill="none"
-                      stroke="#ccc"
-                      stroke-width="1"
+            <div class="eye-diagram-container">
+
+                <div class="eye-svg-wrapper">
+                    <!-- BACKGROUND SVG -->
+                    <img
+                        src="/images/eye-prp-background.svg"
+                        alt="Diagram Mata"
+                        class="eye-svg-bg"
                     />
-                    <circle
-                      cx="75"
-                      cy="75"
-                      r="55"
-                      fill="none"
-                      stroke="#ccc"
-                      stroke-width="1"
+
+                    <!-- CORETAAN DOKTER -->
+                    <VueSignaturePad
+                        ref="eyeDiagram"
+                        :options="eyeSigOption"
+                        class="eye-canvas-overlay"
                     />
-                    <circle
-                      cx="75"
-                      cy="75"
-                      r="40"
-                      fill="none"
-                      stroke="#ccc"
-                      stroke-width="1"
-                    />
-                    <circle
-                      cx="75"
-                      cy="75"
-                      r="25"
-                      fill="none"
-                      stroke="#666"
-                      stroke-width="2"
-                    />
-                    <!-- Optic disc (mirrored position for left eye) -->
-                    <circle
-                      cx="55"
-                      cy="75"
-                      r="8"
-                      fill="#f0f0f0"
-                      stroke="#999"
-                      stroke-width="1"
-                    />
-                  </svg>
                 </div>
-              </div>
+
+                <div class="eye-action">
+                    <button
+                        class="btn btn-sm btn-outline-danger"
+                        @click="clearEyeDiagram"
+                    >
+                        Hapus Diagram
+                    </button>
+                </div>
+
             </div>
-          </div>
         </div>
-      </div>
+
+
+
+
 
       <!-- ================= SIGNATURE AREA ================= -->
       <div class="signature-container">
@@ -384,22 +309,11 @@ export default {
   },
 
   data() {
-    return {
-      loadingSubmit: false,
-      loadingData: false,
-      isEditMode: false,
-      disabledSubmit: false,
-      signatureCleared: {
-        ttd_dokter: false,
-      },
-      sigOption: {
-        penColor: "black",
-        backgroundColor: "white",
-      },
-      form: {
-        uuid: "",
-        uuid_pasien: "",
-        tanggal_tindakan: "",
+  return {
+    loadingSubmit: false,
+    loadingData: false,
+    isEditMode: false,
+    disabledSubmit: false,
 
         // Data Default (wajib dikirim ke BE)
         no_rm: "",
@@ -407,23 +321,53 @@ export default {
         jenis_kelamin: "",
         nama: "",
         nik: "",
+    signatureCleared: {
+      ttd_dokter: false,
+    },
 
-        // Data Pasien untuk form
-        nama_pasien: "",
-        no_rm_pasien: "",
-        jenis_kelamin_display: "",
-        tanggal_lahir_display: "",
+    // OPTION TTD (tetap)
+    sigOption: {
+      penColor: "black",
+      backgroundColor: "white",
+    },
 
-        // Form Fields
-        diagnosa: "",
-        parameter_laser: "",
+    // 🔽 OPTION GAMBAR MATA
+    eyeSigOption: {
+      penColor: "#d32f2f", // merah medis
+      backgroundColor: "rgba(0,0,0,0)", // transparan
+      minWidth: 1,
+      maxWidth: 2,
+    },
 
-        // Tanda Tangan
-        ttd_dokter: "",
-        nama_dokter: "",
-      },
-    };
-  },
+    form: {
+      uuid: "",
+      uuid_pasien: "",
+      tanggal_tindakan: "",
+
+      no_rm: "",
+      jenis_kelamin: "",
+      nama: "",
+      nik: "",
+
+      nama_pasien: "",
+      no_rm_pasien: "",
+      jenis_kelamin_display: "",
+      tanggal_lahir_display: "",
+
+      diagnosa: "",
+      parameter_laser: "",
+
+      // TTD
+      ttd_dokter: "",
+      nama_dokter: "",
+
+      // 🔽 HASIL GAMBAR MATA
+      diagram_mata: "",
+
+    },
+  };
+},
+
 
   watch: {
     selectedPatient: {
@@ -457,6 +401,10 @@ export default {
     }
   },
 
+
+
+
+
   methods: {
     async fetchTahunAkreditasi() {
       try {
@@ -480,28 +428,56 @@ export default {
       const today = new Date();
       this.form.tanggal_tindakan = this.formatDate(today);
 
-      // Data default (wajib dikirim ke BE)
-      this.form.uuid_pasien = this.selectedPatient?.uuid || "";
-      this.form.no_rm = this.selectedPatient?.rekam_medis || "";
-      this.form.jenis_kelamin = this.selectedPatient?.jenis_kelamin || "";
-      this.form.nama = this.selectedPatient?.nama || "";
-      this.form.nik = this.selectedPatient?.nik || "";
+    this.form.uuid_pasien = this.selectedPatient?.uuid || "";
+    this.form.no_rm = this.selectedPatient?.rekam_medis || "";
+    this.form.jenis_kelamin = this.selectedPatient?.jenis_kelamin || "";
+    this.form.nama = this.selectedPatient?.nama || "";
+    this.form.nik = this.selectedPatient?.nik || "";
 
-      // Data pasien untuk form
-      this.form.nama_pasien = this.selectedPatient?.nama || "";
-      this.form.no_rm_pasien = this.selectedPatient?.rekam_medis || "";
+    this.form.nama_pasien = this.selectedPatient?.nama || "";
+    this.form.no_rm_pasien = this.selectedPatient?.rekam_medis || "";
 
-      // Jenis kelamin display
-      this.form.jenis_kelamin_display =
-        this.selectedPatient?.jenis_kelamin === "L" ? "Laki-laki" : "Perempuan";
+    this.form.jenis_kelamin_display =
+      this.selectedPatient?.jenis_kelamin === "L"
+        ? "Laki-laki"
+        : "Perempuan";
 
-      // Format tanggal lahir
-      if (this.selectedPatient?.tanggal_lahir) {
-        this.form.tanggal_lahir_display = this.formatTanggal(
-          this.selectedPatient.tanggal_lahir
-        );
-      }
-    },
+    if (this.selectedPatient?.tanggal_lahir) {
+      this.form.tanggal_lahir_display = this.formatTanggal(
+        this.selectedPatient.tanggal_lahir
+      );
+    }
+  },
+
+  clearEyeDiagram() {
+    if (this.$refs.eyeDiagram) {
+      this.$refs.eyeDiagram.clearSignature()
+    }
+  },
+
+  // ======================
+  // BARU – DIAGRAM MATA
+  // ======================
+//   saveEye(ref, targetField) {
+//     const pad = this.$refs[ref];
+
+//     if (!pad || pad.isEmpty()) {
+//       alert("Belum ada gambar pada diagram mata");
+//       return;
+//     }
+
+//     const result = pad.saveSignature();
+//     this.form[targetField] = result.data;
+//   },
+
+//   clearEye(ref, targetField) {
+//     this.$refs[ref].clearSignature();
+//     this.form[targetField] = "";
+//   },
+
+  // method lama lain (submit, fetch, dll) tetap di sini
+
+
 
     async loadEditData() {
       this.loadingData = true;
@@ -533,7 +509,12 @@ export default {
           if (data.tanggal_tindakan) {
             this.form.tanggal_tindakan = this.formatDate(new Date(data.tanggal_tindakan));
           }
-
+          this.$nextTick(() => {
+            if (this.form.diagram_mata && this.$refs.eyeDiagram) {
+                this.$refs.eyeDiagram.clearSignature();
+                this.$refs.eyeDiagram.fromDataURL(this.form.diagram_mata);
+            }
+            });
           console.log("Data loaded for edit:", this.form);
         }
       } catch (error) {
@@ -590,7 +571,19 @@ export default {
       console.log("TTD saved:", refName);
     },
 
+    getEyeDiagramImage() {
+    const pad = this.$refs.eyeDiagram;
+
+    if (!pad || pad.isEmpty()) {
+        return null;
+    }
+
+    return pad.saveSignature().data;
+    },
+
     async submitForm() {
+
+    this.form.diagram_mata = this.getEyeDiagramImage();
       // Validasi
       if (!this.form.tanggal_tindakan) {
         alert("Mohon lengkapi tanggal tindakan!");
@@ -932,51 +925,45 @@ label {
   margin-bottom: 10px;
 }
 
-/* ================= EYE DIAGRAM ================= */
-.eye-diagram {
-  margin: 20px auto;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  display: inline-block;
-  border: 1px solid #e0e0e0;
-}
+/* ================= SINGLE EYE DIAGRAM (FINAL) ================= */
 
-.eye-circle {
-  width: 180px;
-  height: 180px;
-  border: 3px solid #333;
-  border-radius: 50%;
-  position: relative;
-  background: #fff;
-  margin: 0 auto;
+/* CONTAINER UTAMA */
+.eye-diagram-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.pupil {
-  width: 50px;
-  height: 50px;
-  background: #000;
-  border-radius: 50%;
+/* WRAPPER SVG + CANVAS */
+.eye-svg-wrapper {
+  position: relative;
+  width: 500px;        /* HARUS SAMA DENGAN PDF */
+  height: 250px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* SVG BACKGROUND */
+.eye-svg-bg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* CANVAS CORETAAN */
+.eye-canvas-overlay {
   position: absolute;
-  z-index: 10;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
 }
 
-.retina-pattern {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-h6.fw-bold {
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 10px;
-  font-size: 15px;
+/* AREA TOMBOL */
+.eye-action {
+  margin-top: 12px;
 }
 
 /* ================= SIGNATURE SECTION ================= */

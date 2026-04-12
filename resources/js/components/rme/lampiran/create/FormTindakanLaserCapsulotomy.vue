@@ -209,6 +209,44 @@
         </div>
       </div>
 
+
+
+      <!-- ================= DIAGRAM MATA ================= -->
+        <div class="box-rme mb-4">
+            <h5 class="section-title-rme text-center mb-3">
+                Diagram Tindakan
+            </h5>
+
+            <div class="eye-diagram-container">
+
+                <div class="eye-svg-wrapper">
+                    <!-- BACKGROUND SVG -->
+                    <img
+                        src="/images/eye-prp-background.svg"
+                        alt="Diagram Mata"
+                        class="eye-svg-bg"
+                    />
+
+                    <!-- CORETAAN DOKTER -->
+                    <VueSignaturePad
+                        ref="eyeDiagram"
+                        :options="eyeSigOption"
+                        class="eye-canvas-overlay"
+                    />
+                </div>
+
+                <div class="eye-action">
+                    <button
+                        class="btn btn-sm btn-outline-danger"
+                        @click="clearEyeDiagram"
+                    >
+                        Hapus Diagram
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
       <!-- ================= SIGNATURE AREA ================= -->
       <div class="signature-container">
         <h5 class="section-title-rme text-center mb-4">Tanda Tangan DPJP / Dokter</h5>
@@ -293,6 +331,12 @@ export default {
         penColor: "black",
         backgroundColor: "white",
       },
+      eyeSigOption: {
+      penColor: "#d32f2f", // merah medis
+      backgroundColor: "rgba(0,0,0,0)", // transparan
+      minWidth: 1,
+      maxWidth: 2,
+    },
       form: {
         uuid: "",
         uuid_pasien: "",
@@ -322,6 +366,7 @@ export default {
         // Tanda Tangan
         ttd_dokter: "",
         nama_dokter: "",
+        diagram_mata: "",
       },
     };
   },
@@ -405,6 +450,12 @@ export default {
       }
     },
 
+    clearEyeDiagram() {
+    if (this.$refs.eyeDiagram) {
+      this.$refs.eyeDiagram.clearSignature()
+    }
+  },
+
     async loadEditData() {
       this.loadingData = true;
       this.isEditMode = true;
@@ -439,6 +490,12 @@ export default {
             this.form.tanggal = this.formatDate(new Date(data.tanggal));
           }
 
+          this.$nextTick(() => {
+            if (this.form.diagram_mata && this.$refs.eyeDiagram) {
+                this.$refs.eyeDiagram.clearSignature();
+                this.$refs.eyeDiagram.fromDataURL(this.form.diagram_mata);
+            }
+            });
           console.log("Data loaded for edit:", this.form);
         }
       } catch (error) {
@@ -488,8 +545,20 @@ export default {
       console.log("TTD saved: ttd_dokter");
     },
 
+    getEyeDiagramImage() {
+    const pad = this.$refs.eyeDiagram;
+
+    if (!pad || pad.isEmpty()) {
+        return null;
+    }
+
+    return pad.saveSignature().data;
+    },
+
+
     async submitForm() {
       // Validasi
+      this.form.diagram_mata = this.getEyeDiagramImage();
       if (!this.form.tanggal_lahir) {
         alert("Mohon lengkapi Tanggal Lahir!");
         return;
@@ -639,6 +708,50 @@ hr {
   background: #4caf50;
   color: white;
 }
+
+
+/* ================= SINGLE EYE DIAGRAM (FINAL) ================= */
+
+/* CONTAINER UTAMA */
+.eye-diagram-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* WRAPPER SVG + CANVAS */
+.eye-svg-wrapper {
+  position: relative;
+  width: 500px;        /* HARUS SAMA DENGAN PDF */
+  height: 250px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* SVG BACKGROUND */
+.eye-svg-bg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* CANVAS CORETAAN */
+.eye-canvas-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+/* AREA TOMBOL */
+.eye-action {
+  margin-top: 12px;
+}
+
+
 
 /* ================= BOX & SECTIONS ================= */
 .box-rme {

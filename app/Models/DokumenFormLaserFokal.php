@@ -16,19 +16,19 @@ class DokumenFormLaserFokal extends Model
     protected $fillable = [
         'uuid',
         'uuid_pasien',
-        
+
         // Data Default (wajib ada)
         'no_rm',
         'no_surat',
         'jenis_kelamin',
         'nama',
         'nik',
-        
+
         // Data Pasien
         'nama_pasien',
         'no_rm_pasien',
         'jenis_kelamin_display',
-        
+
         // Form Input (7 fields)
         'tanggal_lahir',
         'tanggal',
@@ -36,11 +36,13 @@ class DokumenFormLaserFokal extends Model
         'parameter_laser_fokal',
         'mata_kanan',
         'mata_kiri',
-        
+
         // Tanda Tangan
         'ttd_dokter',
         'nama_dokter',
-        
+
+        'diagram_mata',
+
         'created_by',
         'updated_by',
     ];
@@ -74,7 +76,7 @@ class DokumenFormLaserFokal extends Model
     {
         return $this->belongsTo(Pasien::class, 'uuid_pasien', 'uuid');
     }
-    
+
     /**
      * Accessor untuk mata yang ditindak
      */

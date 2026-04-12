@@ -22,6 +22,7 @@ class DokumenFormLaserBarrage extends Model
         'mata_kanan', 'mata_kiri',
         'ttd_dokter', 'nama_dokter',
         'created_by', 'updated_by',
+        'diagram_mata',
     ];
 
     protected $casts = [

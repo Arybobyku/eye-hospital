@@ -16,33 +16,34 @@ class DokumenTindakanLaserCapsulotomy extends Model
     protected $fillable = [
         'uuid',
         'uuid_pasien',
-        
+
         // Data Default (wajib ada)
         'no_rm',
         'no_surat',
         'jenis_kelamin',
         'nama',
         'nik',
-        
+
         // Data Pasien
         'nama_pasien',
         'no_rm_pasien',
         'jenis_kelamin_display',
-        
+
         // Form Input (5 fields)
         'tanggal_lahir',
         'tanggal',
         'diagnosa',
         'mata_od',
         'mata_os',
-        
+
         // Parameter Laser
         'parameter_laser',
-        
+
+        'diagram_mata',
         // Tanda Tangan
         'ttd_dokter',
         'nama_dokter',
-        
+
         'created_by',
         'updated_by',
     ];

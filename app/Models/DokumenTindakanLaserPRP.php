@@ -17,28 +17,31 @@ class DokumenTindakanLaserPRP extends Model
         'uuid',
         'uuid_pasien',
         'tanggal_tindakan',
-        
+
         // Data Default (wajib ada)
         'no_rm',
         'no_surat',
         'jenis_kelamin',
         'nama',
         'nik',
-        
+
         // Data Pasien
         'nama_pasien',
         'no_rm_pasien',
         'jenis_kelamin_display',
         'tanggal_lahir_display',
-        
+
         // Form Fields
         'diagnosa',
         'parameter_laser',
-        
+
+        // 🔽 HASIL GAMBAR MATA
+        'diagram_mata',
+
         // Tanda Tangan
         'ttd_dokter',
         'nama_dokter',
-        
+
         'created_by',
         'updated_by',
     ];

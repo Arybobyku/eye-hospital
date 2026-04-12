@@ -7,14 +7,14 @@
     </div>
     <div v-if="state == 'list'">
     <!-- HEADER -->
-    
+
 
     <div class="header-component-rme">Persetujuan Umum (General Consent)</div>
 
     <ButtonTambah  @click="onAdd" />
     <!-- <button class="btn-add" @click="onAdd">+ s</button> -->
 
-    
+
     <!-- FILTER BAR -->
     <div class="filter-bar">
       <div class="filter-left">
@@ -32,7 +32,7 @@
     </div>
 
     <!-- TABLE -->
-     
+
     <table class="custom-table-rme">
       <thead>
         <tr>
@@ -208,6 +208,9 @@ export default {
       },
       onAdd() {
         this.state = "create";
+        this.$emit("set-breadcrumb", {
+            docName: "Form Persetujuan"
+        });
         console.log("TAMBAH");
       },
 

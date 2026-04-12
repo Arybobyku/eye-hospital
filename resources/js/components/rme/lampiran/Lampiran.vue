@@ -570,13 +570,13 @@ export default {
           description: "Form untuk mencatat laporan operasi dan pembedahan pasien",
           backendType: "laporan_bedah",
         },
-        {
-          value: "laser-bargage",
-          label: "Form Laser Bargage",
-          component: "FormLaserBargage",
-          description: "Form tindakan laser bargage medis",
-          backendType: "laser_bargage",
-        },
+        // {
+        //   value: "laser-bargage",
+        //   label: "Form Laser Bargage",
+        //   component: "FormLaserBargage",
+        //   description: "Form tindakan laser bargage medis",
+        //   backendType: "laser_bargage",
+        // },
         {
           value: "dokumen_form_laser_fokal",
           label: "Form Laser Fokal",
@@ -860,7 +860,7 @@ export default {
         {
           value: "dokumen_form_laser_barrage",
           label: "Form Laser Barrage",
-          component: "FormLaserBarage",
+          component: "FormLaserBargage",
           description: "Form Laser Barrage",
           backendType: "dokumen_form_laser_barrage",
         },
@@ -1018,12 +1018,23 @@ export default {
     },
 
     onProceedToCreate() {
-      this.editData = null;
-      if (!this.selectedDocumentType) {
-        alert("Silakan pilih jenis dokumen terlebih dahulu!");
-        return;
-      }
-      this.state = "create";
+        this.editData = null;
+
+        if (!this.selectedDocumentType) {
+            alert("Silakan pilih jenis dokumen terlebih dahulu!");
+            return;
+        }
+
+        const doc = this.availableDocuments.find(
+            d => d.value === this.selectedDocumentType
+        );
+        console.log(doc.label, "ini doc")
+
+        this.state = "create";
+
+        this.$emit("set-breadcrumb", {
+            docName: doc.label
+        });
     },
 
     onCancelSelection() {
@@ -1036,6 +1047,9 @@ export default {
       this.state = "list";
       this.selectedDocumentType = "";
       this.editUuid = null;
+      this.$emit("set-breadcrumb", {
+        docName: null
+    });
       this.fetchLampiran();
     },
 
@@ -1060,7 +1074,20 @@ export default {
 
         this.editData = response.data.data;
         this.selectedDocumentType = doc.value;
-        this.$nextTick(() => { this.state = "view"; });
+        this.$emit("set-breadcrumb", {
+            docName: item.document_label
+            });
+
+            this.$nextTick(() => {
+            this.state = "view";
+        });
+
+        console.log("🟡 VIEW - View Data yang dikirim ke component:", this.editData);
+        console.log("🟡 VIEW - Selected Type:", this.selectedDocumentType);
+
+        this.$nextTick(() => {
+          this.state = "view";
+        });
       } catch (error) {
         alert("Error: " + (error.response?.data?.message || "Terjadi kesalahan saat mengambil data"));
       } finally {
@@ -1082,7 +1109,17 @@ export default {
 
         this.editData = response.data.data;
         this.selectedDocumentType = doc.value;
-        this.$nextTick(() => { this.state = "create"; });
+        this.$emit("set-breadcrumb", {
+            docName: item.document_label
+        });
+
+
+        console.log("🟡 EDIT - Edit Data yang dikirim ke component:", this.editData);
+        console.log("🟡 EDIT - Selected Type:", this.selectedDocumentType);
+
+        this.$nextTick(() => {
+          this.state = "create";
+        });
       } catch (error) {
         alert("Error: " + (error.response?.data?.message || "Terjadi kesalahan saat mengambil data"));
       } finally {
