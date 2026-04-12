@@ -233,7 +233,7 @@ export default {
 
     print(item) {
       window.open(
-        `/print/rekammedis/rawat-jalan/rm1dot1/`+item.uuid,
+        `/print/rekammedis/rawat-jalan/general/`+item.uuid,
         "_blank"
       );
     },

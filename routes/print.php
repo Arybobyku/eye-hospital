@@ -40,16 +40,16 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/general/tindakanlaserlpi/{uuid}', [PrintRekamMedisCtrl::class, 'printTindakanLaserLPI']);
     Route::get('rekammedis/general/formlaserprp/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserPRP']);
     Route::get('rekammedis/general/formlasercapsulotomy/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserCapsulotomy']);
-    Route::get('rekammedis/general/suratbalasankonsul/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratBalasanKonsul']);    
+    Route::get('rekammedis/general/suratbalasankonsul/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratBalasanKonsul']);
     Route::get('rekammedis/general/formpermintaanpulang/{uuid}', [PrintRekamMedisCtrl::class, 'printFormPermintaanPulang']);
     Route::get('rekammedis/general/suratpenolakanrujukan/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratPenolakanRujukan']);
-    Route::get('rekammedis/general/suratpengantaruntukdirawatinap/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratPengantarUntukDiRawatInap']);    
+    Route::get('rekammedis/general/suratpengantaruntukdirawatinap/{uuid}', [PrintRekamMedisCtrl::class, 'printSuratPengantarUntukDiRawatInap']);
     Route::get('rekammedis/general/formcpptranap/{uuid}', [PrintRekamMedisCtrl::class, 'printFormCpptRanap']);
-    Route::get('rekammedis/general/pengkajiankeperawatanmata/{uuid}', [PrintRekamMedisCtrl::class, 'printPengkajianKeperawatanMata']);     
-    Route::get('rekammedis/general/pendidikanedukasipasienkeluargaterintegrasirawatinap/{uuid}', [PrintRekamMedisCtrl::class, 'printPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap']);    
-    Route::get('rekammedis/general/catatankeperawatan/{uuid}', [PrintRekamMedisCtrl::class, 'printCatatanKeperawatan']);    
+    Route::get('rekammedis/general/pengkajiankeperawatanmata/{uuid}', [PrintRekamMedisCtrl::class, 'printPengkajianKeperawatanMata']);
+    Route::get('rekammedis/general/pendidikanedukasipasienkeluargaterintegrasirawatinap/{uuid}', [PrintRekamMedisCtrl::class, 'printPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap']);
+    Route::get('rekammedis/general/catatankeperawatan/{uuid}', [PrintRekamMedisCtrl::class, 'printCatatanKeperawatan']);
     Route::get('rekammedis/general/resumemedis/{uuid}', [PrintRekamMedisCtrl::class, 'printResumeMedis']);
-    Route::get('rekammedis/general/laporaneksisichalazion/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanEksisiChalazion']);     
+    Route::get('rekammedis/general/laporaneksisichalazion/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanEksisiChalazion']);
     Route::get('rekammedis/general/laporanoperasitrabekulektomi/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanOperasiTrabekulektomi']);
     Route::get('rekammedis/general/laporanoperasipterygium/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanOperasiPterygium']);
     Route::get('rekammedis/general/laporaneksisipalbera/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanEksisiPalbera']);
@@ -65,12 +65,13 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/general/formreaksitransfusidarah/{uuid}', [PrintRekamMedisCtrl::class, 'printFormReaksiTransfusiDarah']);
     Route::get('rekammedis/general/tindakananestesi/{uuid}', [PrintRekamMedisCtrl::class, 'printPenolakanTindakanAnestesi']);
     Route::get('rekammedis/general/suratpernyataanbataloperasi/{uuid}', [PrintRekamMedisCtrl::class, 'suratpernyataanbataloperasi']);
-    
+
     // REKAM MEDIS RAWAT JALAN
 	Route::get('rekammedis/{uuid}', [PrintRekamMedisCtrl::class, 'print']);
 	Route::get('persetujuan/{uuid}', [PrintBedahCtrl::class, 'print']);
 	Route::get('rekammedis/rawat-jalan/cppt/{uuid}', [PrintRekamMedisCtrl::class, 'cppt']);
 	Route::get('rekammedis/rawat-jalan/rm1dot1/{uuid}', [PrintRekamMedisCtrl::class, 'printRm1dot1']);
+	Route::get('rekammedis/rawat-jalan/general/{uuid}', [PrintRekamMedisCtrl::class, 'printGeneral']);
 	Route::get('rekammedis/rawat-jalan/rm1dot2/{uuid}', [PrintRekamMedisCtrl::class, 'printRm1dot2']);
 	Route::get('rekammedis/rawat-jalan/rm1dot3/{uuid}', [PrintRekamMedisCtrl::class, 'printRm1dot3']);
 	Route::get('rekammedis/rawat-jalan/rm1dot4/{uuid}', [PrintRekamMedisCtrl::class, 'printRm1dot4']);

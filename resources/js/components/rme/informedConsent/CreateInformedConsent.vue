@@ -65,7 +65,7 @@
 
       <div class="row mb-3">
         <div class="col-md-6">
-          <label>Kode RME :</label>
+          <label>Kode RM :</label>
           <input type="text" v-model="form.kodemr" class="input-rme" readonly />
         </div>
 
@@ -136,9 +136,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.diagnosis_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.diagnosis_ttd"
                   id="diagnosis_ttd"
                   class="checkbox-input"
                 />
@@ -154,9 +154,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.dasar_diagnosis_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.dasar_diagnosis_ttd"
                   id="dasar_diagnosis_ttd"
                   class="checkbox-input"
                 />
@@ -175,9 +175,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.tindakan_kedokteran_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.tindakan_kedokteran_ttd"
                   id="tindakan_kedokteran_ttd"
                   class="checkbox-input"
                 />
@@ -193,9 +193,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.indikasi_tindakan_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.indikasi_tindakan_ttd"
                   id="indikasi_tindakan_ttd"
                   class="checkbox-input"
                 />
@@ -211,9 +211,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.tata_cara_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.tata_cara_ttd"
                   id="tata_cara_ttd"
                   class="checkbox-input"
                 />
@@ -229,9 +229,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.tujuan_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.tujuan_ttd"
                   id="tujuan_ttd"
                   class="checkbox-input"
                 />
@@ -247,9 +247,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.risiko_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.risiko_ttd"
                   id="risiko_ttd"
                   class="checkbox-input"
                 />
@@ -265,9 +265,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.komplikasi_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.komplikasi_ttd"
                   id="komplikasi_ttd"
                   class="checkbox-input"
                 />
@@ -283,9 +283,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.prognosis_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.prognosis_ttd"
                   id="prognosis_ttd"
                   class="checkbox-input"
                 />
@@ -304,9 +304,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.alternatif_dan_risiko_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.alternatif_dan_risiko_ttd"
                   id="alternatif_dan_risiko_ttd"
                   class="checkbox-input"
                 />
@@ -324,9 +324,9 @@
             </td>
             <td class="text-center">
               <div class="checkbox-paraf">
-                <input 
-                  type="checkbox" 
-                  v-model="form.lainlain_ttd" 
+                <input
+                  type="checkbox"
+                  v-model="form.lainlain_ttd"
                   id="alternatif_dan_risiko_ttd"
                   class="checkbox-input"
                 />
@@ -344,13 +344,13 @@
               <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
 
                 <label class="fw-bold label-small">Dokter</label>
-              
+
                 <VueSignaturePad
                   ref="menyatakan_menerangkan_ttd"
                   :options="sigOption"
                   class="signature-box-rme"
                 />
-              
+
                 <!-- GANTI INPUT JADI DROPDOWN -->
                 <div class="dropdown-dokter">
                   <select v-model="form.yang_menyatakan" class="form-select-dokter">
@@ -366,11 +366,11 @@
                   </select>
                   <span class="dropdown-icon">▾</span>
                 </div>
-              
+
                 <button @click="saveSign('menyatakan_menerangkan_ttd')" class="btn-save">
                   Simpan ✔
                 </button>
-              
+
               </div>
             </td>
           </tr>
@@ -610,7 +610,7 @@ export default {
   computed: {
     currentDate() {
       const today = new Date();
-      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 
+      const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
                       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
       return `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
     }

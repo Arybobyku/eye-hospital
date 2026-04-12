@@ -38,7 +38,7 @@
   }
 </style>
 <template>
-    
+
     <button @click="$emit('back')" class="btn-back">Kembali</button>
 
     <div class="container py-4">
@@ -65,7 +65,7 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label>Kode RME :</label>
+                    <label>Kode RM :</label>
                     <input type="text" v-model="form.kodeMR" class="input-rme" readonly />
                 </div>
 

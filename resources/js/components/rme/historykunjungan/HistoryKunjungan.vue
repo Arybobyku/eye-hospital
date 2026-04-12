@@ -132,9 +132,9 @@
             <td>{{ item.uploaded_by_nama }}</td>
             <td>
               <span v-if="item.is_verified" class="badge-verified">Terverifikasi</span>
-              <button 
-                v-else-if="isSuperAdmin" 
-                @click="verifyDocument(item)" 
+              <button
+                v-else-if="isSuperAdmin"
+                @click="verifyDocument(item)"
                 class="btn-verify"
               >
                 Verifikasi
@@ -187,15 +187,17 @@
             <label>Jenis Dokumen <span class="required">*</span></label>
             <select v-model="form.jenis_dokumen" class="form-control">
               <option value="">-- Pilih Jenis Dokumen --</option>
-              <option value="DOKUMEN MEDICAL RECORD">DOKUMEN MEDICAL RECORD</option>
+              <option value="Pemeriksaan Penunjang Mata">Pemeriksaan Penunjang Mata</option>
+              <option value="Laboratorium">Laboratorium</option>
+              <option value="Radiologi">Radiologi</option>
             </select>
           </div>
 
           <div class="form-group">
             <label>File <span class="required">*</span></label>
-            <input 
-              type="file" 
-              @change="handleFileChange" 
+            <input
+              type="file"
+              @change="handleFileChange"
               accept=".pdf,.bmp,.jpg,.jpeg,.png"
               class="form-control"
             />
@@ -209,9 +211,9 @@
 
           <div class="form-group">
             <label>Keterangan</label>
-            <textarea 
-              v-model="form.keterangan" 
-              class="form-control" 
+            <textarea
+              v-model="form.keterangan"
+              class="form-control"
               rows="3"
               placeholder="Masukkan keterangan dokumen (opsional)"
             ></textarea>
@@ -411,16 +413,16 @@ export default {
     async checkUserRole() {
       try {
         const res = await axios.get("/master/pasien/user-info");
-        
+
         console.log('👤 User Info:', res.data);
-        
+
         if (res.data.success) {
           this.isSuperAdmin = res.data.is_super_admin;
           console.log('🔐 Is Super Admin:', this.isSuperAdmin);
         } else {
           this.isSuperAdmin = false;
         }
-        
+
       } catch (err) {
         console.error("Gagal cek role user:", err);
         this.isSuperAdmin = false;
