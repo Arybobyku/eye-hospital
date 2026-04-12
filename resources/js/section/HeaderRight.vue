@@ -109,6 +109,8 @@ export default {
 				{ icon: 'arrow-right', value: 'dokter', label: 'Data Dokter Spesialis' },
 				{ icon: 'arrow-right', value: 'dokterumum', label: 'Data Dokter Umum' },
 				{ icon: 'arrow-right', value: 'paketbedah', label: 'Data Paket Bedah' },
+				{ icon: 'arrow-right', value: 'ocularsinistravisus', label: 'Ocular Sinistra Visus' },
+				{ icon: 'arrow-right', value: 'oculardextravisus', label: 'Ocular Dextra Visus' },
 			]
 		}
 	},

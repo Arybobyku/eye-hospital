@@ -158,10 +158,7 @@ export const formkelurahan = () => {
 			title: 'Ketik disini bila pernah dioperasi', for_id: 'form_' + 'pernahdioperasilainnya', type: 'text', required: '',
 			name: 'pernahdioperasilainnya', value: '', disabled: false, show: true, kinds: ''
 		},
-		ocularsinistrakacamatalamasph: {
-			title: 'Sph', for_id: 'form_' + 'ocularsinistrakacamatalamasph', type: 'text', required: '',
-			name: 'ocularsinistrakacamatalamasph', value: '', disabled: false, show: true, kinds: ''
-		},
+
 		riwayatalergimakananlainnya: {
 			title: 'Ketik disini bila memiliki alergi makanan', for_id: 'form_' + 'riwayatalergimakananlainnya', type: 'text', required: '',
 			name: 'riwayatalergimakananlainnya', value: '', disabled: false, show: true, kinds: ''
@@ -179,9 +176,14 @@ export const formkelurahan = () => {
 			name: 'oculardextraautoref', value: '', disabled: false, show: true, kinds: ''
 		},
 
+
 		oculardextrapd: {
 			title: 'PD', for_id: 'form_' + 'oculardextrapd', type: 'text', required: '',
 			name: 'oculardextrapd', value: '', disabled: false, show: true, kinds: ''
+		},
+		oculardextrapd2: {
+			title: 'PD', for_id: 'form_' + 'oculardextrapd2', type: 'text', required: '',
+			name: 'oculardextrapd2', value: '', disabled: false, show: false, kinds: ''
 		},
 
 		oculardextrakeratometrik1: {
@@ -199,50 +201,22 @@ export const formkelurahan = () => {
 			name: 'oculardextratonometri', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		oculardextravisus: {
-			title: 'Visus', for_id: 'form_' + 'oculardextravisus', type: 'text', required: '',
-			name: 'oculardextravisus', value: '', disabled: false, show: true, kinds: ''
-		},
-
-		oculardextraadd: {
-			title: 'Add', for_id: 'form_' + 'oculardextraadd', type: 'text', required: '',
-			name: 'oculardextraadd', value: '', disabled: false, show: true, kinds: ''
-		},
 
 		oculardextraautoref: {
 			title: 'Autoref', for_id: 'form_' + 'oculardextraautoref', type: 'text', required: '',
 			name: 'oculardextraautoref', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		oculardextrabcva1: {
-			title: 'BCVA', for_id: 'form_' + 'oculardextrabcva1', type: 'text', required: '',
-			name: 'oculardextrabcva1', value: '', disabled: false, show: true, kinds: ''
-		},
-
 		oculardextrabcva2: {
 			title: '->', for_id: 'form_' + 'oculardextrabcva2', type: 'text', required: '',
 			name: 'oculardextrabcva2', value: '', disabled: false, show: true, kinds: ''
 		},
-
-		oculardextrakacamatalamasph: {
-			title: 'Kacamata lama sph', for_id: 'form_' + 'oculardextrakacamatalamasph', type: 'text', required: '',
-			name: 'oculardextrakacamatalamasph', value: '', disabled: false, show: true, kinds: ''
+		oculardextraadd: {
+			title: 'Add', for_id: 'form_' + 'oculardextraadd', type: 'text', required: '',
+			name: 'oculardextraadd', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		oculardextrakacamatalamacyl: {
-			title: 'Kacamata lama Cyl', for_id: 'form_' + 'oculardextrakacamatalamacyl', type: 'text', required: '',
-			name: 'oculardextrakacamatalamacyl', value: '', disabled: false, show: true, kinds: ''
-		},
 
-		oculardextrakacamatalamaaddisi: {
-			title: 'Kacamata lama addisi', for_id: 'form_' + 'oculardextrakacamatalamaaddisi', type: 'text', required: '',
-			name: 'oculardextrakacamatalamaaddisi', value: '', disabled: false, show: true, kinds: ''
-		},
-
-		ocularsinistraautoref: {
-			title: 'Autoref', for_id: 'form_' + 'ocularsinistraautoref', type: 'text', required: '',
-			name: 'ocularsinistraautoref', value: '', disabled: false, show: true, kinds: ''
-		},
 
 		ocularsinistraro: {
 			title: 'Nama RO', for_id: 'form_' + 'ocularsinistraro', type: 'text', required: 'required',
@@ -264,23 +238,14 @@ export const formkelurahan = () => {
 			name: 'ocularsinistratonometri', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		ocularsinistravisus: {
-			title: 'Visus', for_id: 'form_' + 'ocularsinistravisus', type: 'text', required: '',
-			name: 'ocularsinistravisus', value: '', disabled: false, show: true, kinds: ''
-		},
-
-		ocularsinistraadd: {
-			title: 'Add', for_id: 'form_' + 'ocularsinistraadd', type: 'text', required: '',
-			name: 'ocularsinistraadd', value: '', disabled: false, show: true, kinds: ''
-		},
-		ocularsinistrabcva1: {
-			title: 'BCVA', for_id: 'form_' + 'ocularsinistrabcva1', type: 'text', required: '',
-			name: 'ocularsinistrabcva1', value: '', disabled: false, show: true, kinds: ''
-		},
 
 		ocularsinistrabcva2: {
 			title: '->', for_id: 'form_' + 'ocularsinistrabcva2', type: 'text', required: '',
 			name: 'ocularsinistrabcva2', value: '', disabled: false, show: true, kinds: ''
+		},
+		ocularsinistraadd: {
+			title: 'Add', for_id: 'form_' + 'ocularsinistraadd', type: 'text', required: '',
+			name: 'ocularsinistraadd', value: '', disabled: false, show: true, kinds: ''
 		},
 
 		// ocularsinistrakacamata_lamasph:{
@@ -288,16 +253,120 @@ export const formkelurahan = () => {
 		// 	name: 'ocularsinistrakacamata_lamasph', value: '', disabled: false, show: true, kinds: ''
 		// },
 
-		ocularsinistrakacamatalamacyl: {
-			title: 'Kacamata lama Cyl', for_id: 'form_' + 'ocularsinistrakacamatalamacyl', type: 'text', required: '',
-			name: 'ocularsinistrakacamatalamacyl', value: '', disabled: false, show: true, kinds: ''
-		},
-
-		ocularsinistrakacamatalamaaddisi: {
-			title: 'Kacamata lama Addisi', for_id: 'form_' + 'ocularsinistrakacamatalamaaddisi', type: 'text', required: '',
-			name: 'ocularsinistrakacamatalamaaddisi', value: '', disabled: false, show: true, kinds: ''
-		},
 		select: {
+			ocularsinistraautoref_s: {
+				key: 'ocularsinistraautoref_s', for_id: 'form_' + 'ocularsinistraautoref_s', name: 'ocularsinistraautoref_s', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistraautoref_s', isrequired: false, html: 'Autoref S', issearch: false, disabled: false,
+			},
+			ocularsinistraautoref_x: {
+				key: 'ocularsinistraautoref_x', for_id: 'form_' + 'ocularsinistraautoref_x', name: 'ocularsinistraautoref_x', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistraautoref_x', isrequired: false, html: 'Autoref X', issearch: false, disabled: false,
+			},
+			ocularsinistraautoref_c: {
+				key: 'ocularsinistraautoref_c', for_id: 'form_' + 'ocularsinistraautoref_c', name: 'ocularsinistraautoref_c', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistraautoref_c', isrequired: false, html: 'Autoref C', issearch: false, disabled: false,
+			},
+
+			oculardextraautoref_s: {
+				key: 'oculardextraautoref_s', for_id: 'form_' + 'oculardextraautoref_s', name: 'oculardextraautoref_s', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextraautoref_s', isrequired: false, html: 'Autoref S', issearch: false, disabled: false,
+			},
+			oculardextraautoref_x: {
+				key: 'oculardextraautoref_x', for_id: 'form_' + 'oculardextraautoref_x', name: 'oculardextraautoref_x', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextraautoref_x', isrequired: false, html: 'Autoref X', issearch: false, disabled: false,
+			},
+			oculardextraautoref_c: {
+				key: 'oculardextraautoref_c', for_id: 'form_' + 'oculardextraautoref_c', name: 'oculardextraautoref_c', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextraautoref_c', isrequired: false, html: 'Autoref C', issearch: false, disabled: false,
+			},
+
+			ocularsinistrabcva1_s: {
+				key: 'ocularsinistrabcva1_s', for_id: 'form_' + 'ocularsinistrabcva1_s', name: 'ocularsinistrabcva1_s', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistrabcva1_s', isrequired: false, html: 'BCVA S', issearch: false, disabled: false,
+			},
+			ocularsinistrabcva1_x: {
+				key: 'ocularsinistrabcva1_x', for_id: 'form_' + 'ocularsinistrabcva1_x', name: 'ocularsinistrabcva1_x', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistrabcva1_x', isrequired: false, html: 'BCVA X', issearch: false, disabled: false,
+			},
+			ocularsinistrabcva1_c: {
+				key: 'ocularsinistrabcva1_c', for_id: 'form_' + 'ocularsinistrabcva1_c', name: 'ocularsinistrabcva1_c', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistrabcva1_c', isrequired: false, html: 'BCVA C', issearch: false, disabled: false,
+			},
+
+			oculardextrabcva1_s: {
+				key: 'oculardextrabcva1_s', for_id: 'form_' + 'oculardextrabcva1_s', name: 'oculardextrabcva1_s', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextrabcva1_s', isrequired: false, html: 'BCVA S', issearch: false, disabled: false,
+			},
+			oculardextrabcva1_x: {
+				key: 'oculardextrabcva1_x', for_id: 'form_' + 'oculardextrabcva1_x', name: 'oculardextrabcva1_x', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextrabcva1_x', isrequired: false, html: 'BCVA X', issearch: false, disabled: false,
+			},
+			oculardextrabcva1_c: {
+				key: 'oculardextrabcva1_c', for_id: 'form_' + 'oculardextrabcva1_c', name: 'oculardextrabcva1_c', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextrabcva1_c', isrequired: false, html: 'BCVA C', issearch: false, disabled: false,
+			},
+			
+			oculardextrakacamatalamasph: {
+				key: 'oculardextrakacamatalamasph', for_id: 'form_' + 'oculardextrakacamatalamasph', name: 'oculardextrakacamatalamasph', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextrakacamatalamasph', isrequired: false, html: 'Sph', issearch: false, disabled: false,
+			},
+	
+			oculardextrakacamatalamacyl: {
+				key: 'oculardextrakacamatalamacyl', for_id: 'form_' + 'oculardextrakacamatalamacyl', name: 'oculardextrakacamatalamacyl', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextrakacamatalamacyl', isrequired: false, html: 'Cyl', issearch: false, disabled: false,
+			},
+	
+			oculardextrakacamatalamaaddisi: {
+				key: 'oculardextrakacamatalamaaddisi', for_id: 'form_' + 'oculardextrakacamatalamaaddisi', name: 'oculardextrakacamatalamaaddisi', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextrakacamatalamaaddisi', isrequired: false, html: 'Addisi', issearch: false, disabled: false,
+			},
+
+			ocularsinistrakacamatalamasph: {
+				key: 'ocularsinistrakacamatalamasph', for_id: 'form_' + 'ocularsinistrakacamatalamasph', name: 'ocularsinistrakacamatalamasph', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistrakacamatalamasph', isrequired: false, html: 'Sph', issearch: false, disabled: false,
+			},
+
+			ocularsinistrakacamatalamacyl: {
+				key: 'ocularsinistrakacamatalamacyl', for_id: 'form_' + 'ocularsinistrakacamatalamacyl', name: 'ocularsinistrakacamatalamacyl', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistrakacamatalamacyl', isrequired: false, html: 'Cyl', issearch: false, disabled: false,
+			},
+	
+			ocularsinistrakacamatalamaaddisi: {
+				key: 'ocularsinistrakacamatalamaaddisi', for_id: 'form_' + 'ocularsinistrakacamatalamaaddisi', name: 'ocularsinistrakacamatalamaaddisi', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistrakacamatalamaaddisi', isrequired: false, html: 'Addisi', issearch: false, disabled: false,
+			},
+
+
+			ocularsinistravisus: { 
+				key : 'ocularsinistravisus', for_id: 'form_'+'ocularsinistravisus', name: 'ocularsinistravisus', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'ocularsinistravisus', isrequired: false, html: 'Visus', issearch: true, disabled: false,
+			},
+
+			oculardextravisus: { 
+				key : 'oculardextravisus', for_id: 'form_'+'oculardextravisus', name: 'oculardextravisus', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'oculardextravisus', isrequired: false, html: 'Visus', issearch: true, disabled: false,
+			},
+			
 			klinik: {
 				key: 'klinik', for_id: 'form_' + 'klinik', name: 'klinik', uuid: '', value: '', label: 'Silahkan Pilih',
 				filter: [], data: [], search: '', option: 'display: none', statics: true,

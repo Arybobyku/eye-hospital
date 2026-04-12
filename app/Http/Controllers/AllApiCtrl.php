@@ -46,7 +46,8 @@ class AllApiCtrl extends Controller
 		$tindakannonbedah = array();
 		$carabayartindakanbedah = array();
 		$tindakanbedah = array();
-		$jeniskamar = array(); $obat = array(); $obat2 = array(); $obat3 = array(); $obat4 = array();  $obatgudang = array(); $hargagudang = array(); $apotek = array(); $supplier = array(); 
+		$jeniskamar = array(); $obat = array(); $obat2 = array(); $obat3 = array(); $obat4 = array();  $obatgudang = array(); $hargagudang = array(); $apotek = array(); $supplier = array();   $ocularsinistravisus = array();
+		$oculardextravisus = array();
 		$dokter = array();
 		$dokterumum = array();
 		$icd9 = array(); $icd10 = array(); $satuan = array(); $ruangans = array();
@@ -70,6 +71,8 @@ class AllApiCtrl extends Controller
 			$asuransi = $this->asuransi(); $layanan = $this->layanan(); $tarif = $this->tarif();
 			$provinsi = $this->provinsi(); $kabkota = $this->kabkota();
 			$kecamatan = $this->kecamatan(); $kelurahan = $this->kelurahan();
+			$ocularsinistravisus = $this->ocularsinistravisus();
+			$oculardextravisus = $this->ocularsinistravisus();
 		}
 		else if ($request->position == 'kamarinap') { $kamarinap = $this->kamarinap(); }
 		else if ($request->position == 'alltindakan') { $alltindakan = $this->alltindakan(); }
@@ -104,6 +107,8 @@ class AllApiCtrl extends Controller
 		else if ($request->position == 'kabkota') { $kabkota = $this->kabkota(); }
 		else if ($request->position == 'kecamatan') { $kecamatan = $this->kecamatan(); }
 		else if ($request->position == 'kelurahan') { $kelurahan = $this->kelurahan(); }
+		else if ($request->position == 'ocularsinistravisus') { $ocularsinistravisus = $this->ocularsinistravisus(); }
+		else if ($request->position == 'oculardextravisus') { $oculardextravisus = $this->ocularsinistravisus(); }
 
 		return response()->json([
 			'kamarinap' => $kamarinap,
@@ -122,6 +127,8 @@ class AllApiCtrl extends Controller
 			'carabayar' => $carabayar, 'asuransi' => $asuransi, 'layanan' => $layanan,
 			'tarif' => $tarif, 'provinsi' => $provinsi, 'kabkota' => $kabkota,
 			'kecamatan' => $kecamatan, 'kelurahan' => $kelurahan,
+			'ocularsinistravisus' => $ocularsinistravisus,
+			'oculardextravisus' => $oculardextravisus,
 		]);
 	}
 
@@ -192,6 +199,9 @@ class AllApiCtrl extends Controller
 	}
 	private function obat3() {
 		return DB::table('obat')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
+	}
+	private function ocularsinistravisus() {
+		return DB::table('master_visus')->orderBy('id','asc')->get();
 	}
 
 	private function obatgudang() {
@@ -445,6 +455,8 @@ class AllApiCtrl extends Controller
 		$obat2 = DB::table('obat')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 		$obat3 = DB::table('obat')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 		$obat4 = DB::table('obat')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
+		$ocularsinistravisus = DB::table('master_visus')->orderBy('id','asc')>get();
+		$oculardextravisus = DB::table('master_visus')->orderBy('id','asc')>get();
 		$supplier = DB::table('supplier')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 		$dokter = DB::table('biodata')->orderBy('id','asc')->where('delete_soft', '=', '1')->where('posisi_pengguna', '=', '8808')->get();
 		$icd_nine = DB::table('icd_nine')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
@@ -481,6 +493,8 @@ class AllApiCtrl extends Controller
 			'obat2' => $obat2,
 			'obat3' => $obat3,
 			'obat4' => $obat4,
+			'ocularsinistravisus' => $ocularsinistravisus,
+			'oculardextravisus' => $oculardextravisus,
 			'supplier' => $supplier,
 			'icd_nine' => $icd_nine,
 			'icd_ten' => $icd_ten,

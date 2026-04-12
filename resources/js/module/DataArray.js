@@ -244,7 +244,59 @@ export const arrpembelian = () => {
 }
 
 export const arrpemeriksaan = () => {
+	const pilihanspheris = [];
+	for (let i = -2500; i <= 2500; i += 25) {
+		let val = (i / 100).toFixed(2);
+		pilihanspheris.push({
+			value: val,
+			label: i > 0 ? `+${val}` : val
+		});
+	}
+	pilihanspheris.push({
+		value: 'Error',
+		label: 'Error'
+	  });
+	const pilihancylinder = [];  
+		for (let i = -1000; i <= 1000; i += 25) {
+			let val = (i / 100).toFixed(2);
+			pilihancylinder.push({
+				value: val,
+				label: i > 0 ? `+${val}` : val
+			});
+		}
+	const pilihanaxis = [];
+		for (let i = 0; i <= 180; i++) {
+			pilihanaxis.push({
+				value: i.toString(),
+				label: i.toString()
+			});
+		}
+
 	return {
+		oculardextraautoref_s: pilihanspheris,
+		oculardextraautoref_c: pilihancylinder,
+		oculardextraautoref_x: pilihanaxis,
+
+		ocularsinistraautoref_s: pilihanspheris,
+		ocularsinistraautoref_c: pilihancylinder,
+		ocularsinistraautoref_x: pilihanaxis,
+		
+		oculardextrabcva1_s: pilihanspheris,
+		oculardextrabcva1_c: pilihancylinder,
+		oculardextrabcva1_x: pilihanaxis,
+
+		ocularsinistrabcva1_s: pilihanspheris,
+		ocularsinistrabcva1_c: pilihancylinder,
+		ocularsinistrabcva1_x: pilihanaxis,
+
+		oculardextrakacamatalamasph: pilihanspheris,
+		oculardextrakacamatalamacyl: pilihancylinder,
+		oculardextrakacamatalamaaddisi: pilihanaxis,
+
+		ocularsinistrakacamatalamacyl: pilihancylinder,
+		ocularsinistrakacamatalamasph: pilihanspheris,
+		ocularsinistrakacamatalamaaddisi: pilihanaxis,
+
 		klinik: [
 			{ value: '1', label: 'Poli 1' },
 			{ value: '2', label: 'Poli 2' },
@@ -340,5 +392,7 @@ export const arrpemeriksaan = () => {
 			{ value: 'Laporan Insisi Chalazion', label: 'Laporan Insisi Chalazion' },
 		],
 	}
+
+
 
 };

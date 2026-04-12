@@ -185,6 +185,30 @@ class PemeriksaanCtrl extends Controller
 				$loop = true;
 			}
 		} while ($loop == false);
+		$ocular_dextra_autoref = 's ' . $request->ocular_dextra_autoref_s;
+		if ($request->ocular_dextra_autoref_c) {
+			$ocular_dextra_autoref .= ' c ' . $request->ocular_dextra_autoref_c;
+		}
+		$ocular_dextra_autoref .= ' x ' . $request->ocular_dextra_autoref_x;
+
+		$ocular_sinistra_autoref = 's ' . $request->ocular_sinistra_autoref_s;
+		if ($request->ocular_sinistra_autoref_c) {
+			$ocular_sinistra_autoref .= ' c ' . $request->ocular_sinistra_autoref_c;
+		}
+		$ocular_sinistra_autoref .= ' x ' . $request->ocular_sinistra_autoref_x;
+
+		$ocular_dextra_bcva = 's ' . $request->ocular_dextra_bcva1_s;
+		if ($request->ocular_dextra_bcva1_c) {
+			$ocular_dextra_bcva .= ' c ' . $request->ocular_dextra_bcva1_c;
+		}
+		$ocular_dextra_bcva .= ' x ' . $request->ocular_dextra_bcva1_x;
+
+		$ocular_sinistra_bcva = 's ' . $request->ocular_sinistra_bcva1_s;
+		if ($request->ocular_sinistra_bcva1_c) {
+			$ocular_sinistra_bcva .= ' c ' . $request->ocular_sinistra_bcva1_c;
+		}
+		$ocular_sinistra_bcva .= ' x ' . $request->ocular_sinistra_bcva1_x;
+
 
 		try {
 			DB::beginTransaction();
@@ -195,24 +219,28 @@ class PemeriksaanCtrl extends Controller
 				$arr = array(
 
 					'ocular_dextra_pd' => $request->ocular_dextra_pd,
-					'ocular_dextra_autoref' => $request->ocular_dextra_autoref,
+					// 'ocular_dextra_autoref' => $request->ocular_dextra_autoref,
+					'ocular_dextra_autoref' => $ocular_dextra_autoref,
 					'ocular_dextra_keratometri_k1' => $request->ocular_dextra_keratometri_k1,
 					'ocular_dextra_keratometri_k2' => $request->ocular_dextra_keratometri_k2,
 					'ocular_dextra_tonometri' => $request->ocular_dextra_tonometri,
 					'ocular_dextra_visus' => $request->ocular_dextra_visus,
-					'ocular_dextra_bcva1' => $request->ocular_dextra_bcva1,
+					// 'ocular_dextra_bcva1' => $request->ocular_dextra_bcva1,
+					'ocular_dextra_bcva1' => $ocular_dextra_bcva,
 					'ocular_dextra_bcva2' => $request->ocular_dextra_bcva2,
 					'ocular_dextra_add' => $request->ocular_dextra_add,
 					'ocular_dextra_kacamata_lama_sph' => $request->ocular_dextra_kacamata_lama_sph,
 					'ocular_dextra_kacamata_lama_cyl' => $request->ocular_dextra_kacamata_lama_cyl,
 					'ocular_dextra_kacamata_lama_addisi' => $request->ocular_dextra_kacamata_lama_addisi,
 					'ocular_sinistra_ro' => $request->ocular_sinistra_ro,
-					'ocular_sinistra_autoref' => $request->ocular_sinistra_autoref,
+					// 'ocular_sinistra_autoref' => $request->ocular_sinistra_autoref,
+					'ocular_sinistra_autoref' => $ocular_sinistra_autoref,
 					'ocular_sinistra_keratometri_k1' => $request->ocular_sinistra_keratometri_k1,
 					'ocular_sinistra_keratometri_k2' => $request->ocular_sinistra_keratometri_k2,
 					'ocular_sinistra_tonometri' => $request->ocular_sinistra_tonometri,
 					'ocular_sinistra_visus' => $request->ocular_sinistra_visus,
-					'ocular_sinistra_bcva1' => $request->ocular_sinistra_bcva1,
+					// 'ocular_sinistra_bcva1' => $request->ocular_sinistra_bcva1,
+					'ocular_sinistra_bcva1' => $ocular_sinistra_bcva,
 					'ocular_sinistra_bcva2' => $request->ocular_sinistra_bcva2,
 					'ocular_sinistra_add' => $request->ocular_sinistra_add,
 					'ocular_sinistra_kacamata_lama_sph' => $request->ocular_sinistra_kacamata_lama_sph,
@@ -255,24 +283,24 @@ class PemeriksaanCtrl extends Controller
 
 
 				$item->ocular_dextra_pd = $request->ocular_dextra_pd;
-				$item->ocular_dextra_autoref = $request->ocular_dextra_autoref;
+				$item->ocular_dextra_autoref = $ocular_dextra_autoref;
 				$item->ocular_dextra_keratometri_k1 = $request->ocular_dextra_keratometri_k1;
 				$item->ocular_dextra_keratometri_k2 = $request->ocular_dextra_keratometri_k2;
 				$item->ocular_dextra_tonometri = $request->ocular_dextra_tonometri;
 				$item->ocular_dextra_visus = $request->ocular_dextra_visus;
-				$item->ocular_dextra_bcva1 = $request->ocular_dextra_bcva1;
+				$item->ocular_dextra_bcva1 = $ocular_dextra_bcva;
 				$item->ocular_dextra_bcva2 = $request->ocular_dextra_bcva2;
 				$item->ocular_dextra_add = $request->ocular_dextra_add;
 				$item->ocular_dextra_kacamata_lama_sph = $request->ocular_dextra_kacamata_lama_sph;
 				$item->ocular_dextra_kacamata_lama_cyl = $request->ocular_dextra_kacamata_lama_cyl;
 				$item->ocular_dextra_kacamata_lama_addisi = $request->ocular_dextra_kacamata_lama_addisi;
 				$item->ocular_sinistra_ro = $request->ocular_sinistra_ro;
-				$item->ocular_sinistra_autoref = $request->ocular_sinistra_autoref;
+				$item->ocular_sinistra_autoref = $ocular_sinistra_autoref;
 				$item->ocular_sinistra_keratometri_k1 = $request->ocular_sinistra_keratometri_k1;
 				$item->ocular_sinistra_keratometri_k2 = $request->ocular_sinistra_keratometri_k2;
 				$item->ocular_sinistra_tonometri = $request->ocular_sinistra_tonometri;
 				$item->ocular_sinistra_visus = $request->ocular_sinistra_visus;
-				$item->ocular_sinistra_bcva1 = $request->ocular_sinistra_bcva1;
+				$item->ocular_sinistra_bcva1 = $ocular_sinistra_bcva;
 				$item->ocular_sinistra_bcva2 = $request->ocular_sinistra_bcva2;
 				$item->ocular_sinistra_add = $request->ocular_sinistra_add;
 				$item->ocular_sinistra_kacamata_lama_sph = $request->ocular_sinistra_kacamata_lama_sph;

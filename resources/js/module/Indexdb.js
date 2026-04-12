@@ -24,6 +24,8 @@ export const initindexdb = (dbName, tableName) => {
 	if (tableName == 'obat2') { tableName = 'obat'; }
 	if (tableName == 'obat3') { tableName = 'obat'; }
 	if (tableName == 'obat4') { tableName = 'obat'; }
+	if (tableName == 'ocularsinistravisus') { tableName = 'ocularsinistravisus'; }
+	if (tableName == 'oculardextravisus') { tableName = 'oculardextravisus'; }
 
 	console.log("table", tableName)
 	return new Promise(function (resolve, reject) {
@@ -181,6 +183,12 @@ export const indexdbprocessing = (data, form, key) => {
 			form.select[key].filter.push(data[i]);
 		}
 		else if (key == 'alltindakan') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'ocularsinistravisus') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'oculardextravisus') {
 			form.select[key].filter.push(data[i]);
 		}
 	}
@@ -385,6 +393,18 @@ export const createdb = (dbName, version, response) => {
 				let tindakanbedah = db.createObjectStore('tindakanbedah', { keyPath: "id", autoIncrement: true });
 				let i = 0, data = response.data.tindakanbedah;
 				while (i < data.length) { tindakanbedah.put(tindakanbedahfunction(data, i)); i++; }
+			}
+			console.log("yudha", response.data)
+
+			if (response.data.ocularsinistravisus.length > 0) {
+				let ocularsinistravisus = db.createObjectStore('ocularsinistravisus', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.ocularsinistravisus;
+				while (i < data.length) { ocularsinistravisus.put(ocularsinistravisusfunction(data, i)); i++; }
+			}
+			if (response.data.oculardextravisus.length > 0) {
+				let oculardextravisus = db.createObjectStore('oculardextravisus', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.oculardextravisus;
+				while (i < data.length) { oculardextravisus.put(oculardextravisusfunction(data, i)); i++; }
 			}
 			
 		};
@@ -976,4 +996,24 @@ const tindakanbedahfunction = (data, i) => {
 		nama: data[i].nama,
 		jenis: data[i].jenis,
 	}
+}
+
+const ocularsinistravisusfunction = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
+}
+
+const oculardextravisusfunction = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
 }
