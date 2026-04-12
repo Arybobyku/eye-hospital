@@ -9,7 +9,7 @@
      <div v-if="disabledSubmit" class="view-overlay"></div>
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
-        <h2 class="fw-bold">LAPORAN INJEKSI ANTI VECF</h2>
+        <h2 class="fw-bold">LAPORAN INJEKSI ANTI VEGF</h2>
         <h4 class="fw-semibold">{{ form.no_surat}} </h4>
       </div>
 
@@ -54,7 +54,7 @@
       <!-- ================= FORM CONTENT ================= -->
       <div class="form-container-rme">
         <div class="header-rme">
-          <h3>LAPORAN INJEKSI ANTI VECF</h3>
+          <h3>LAPORAN INJEKSI ANTI VEGF</h3>
         </div>
 
         <!-- ================= TANGGAL OPERASI ================= -->

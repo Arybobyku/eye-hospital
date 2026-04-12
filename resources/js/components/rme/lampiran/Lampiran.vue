@@ -768,9 +768,9 @@ export default {
         },
         {
           value: "dokumen_laporan_eksisi_palpebra",
-          label: "Form Laporan Eksisi Palebra",
+          label: "Form Laporan Eksisi Palpebra",
           component: "FormLaporanEksisiPalebra",
-          description: "Form Laporan Eksisi Palebra",
+          description: "Form Laporan Eksisi Palpebra",
           backendType: "dokumen_laporan_eksisi_palpebra",
         },
         {
@@ -817,9 +817,9 @@ export default {
         },
         {
           value: "dokumen_tindakan_laser_capsulotomy",
-          label: "Form Tindakan Laser",
+          label: "Form Tindakan Laser YAG",
           component: "FormTindakanLaserCapsulotomy",
-          description: "Form Tindakan Laser Capsulotomy",
+          description: "Form Tindakan Laser YAG",
           backendType: "dokumen_tindakan_laser_capsulotomy",
         },
         {

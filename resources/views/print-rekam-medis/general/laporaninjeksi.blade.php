@@ -3,7 +3,7 @@
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Form Laporan Injeksi Anti VECF</title>
+    <title>Form Laporan Injeksi Anti VEGV</title>
     <style>
         @page {
             margin: 18px;
@@ -78,7 +78,7 @@
 
         <!-- Judul -->
         <div style="font-weight: bold; text-align:center; margin-top:10px; font-size: 14pt;"> 
-            <u>LAPORAN INJEKSI ANTI VECF</u> 
+            <u>LAPORAN INJEKSI ANTI VEGF</u> 
         </div>
         <br>
 
