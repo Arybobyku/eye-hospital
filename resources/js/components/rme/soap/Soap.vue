@@ -206,6 +206,13 @@
           :editor="ClassicEditor"
           @ready="onReady"
         ></ckeditor>
+
+        <h4>Tanda Tangan</h4>
+        <div v-if="selectedItem.ttd" style="margin-top: 8px;">
+          <img :src="selectedItem.ttd" alt="Tanda Tangan Dokter"
+               style="height:100px; max-width:100%; border:1px solid #ccc; border-radius:4px;" />
+        </div>
+        <div v-else style="color:#999; font-size:13px; margin-top:8px;">Tidak ada tanda tangan</div>
       </div>
 
       <div class="modal-footer-rme">

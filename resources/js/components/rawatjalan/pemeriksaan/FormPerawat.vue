@@ -86,6 +86,7 @@
 
 
 				</div>
+				</div><!-- end patient info grid wrapper -->
 
 
 

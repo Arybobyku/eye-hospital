@@ -14,7 +14,7 @@
 	<FormPaket ref="FormPaket" @dialog="dialog" @parsingForm="parsingForm"></FormPaket>
 	<FormDetailPulang ref="FormDetailPulang" @dialog="dialog" @parsingForm="parsingForm"></FormDetailPulang>
 	<FormJadwalKontrol ref="FormJadwalKontrol" @dialog="dialog" @parsingForm="parsingForm"></FormJadwalKontrol>
-	<FormSoapInap ref="FormSoapInap" @saved="tablereload(new FormData(), 'outer')"></FormSoapInap>
+	<FormSoapInap ref="FormSoapInap" @saved="onSoapSaved"></FormSoapInap>
 </template>
 
 <script>
@@ -251,6 +251,7 @@ export default {
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
 		tableload:function() { vm.attach.url = vm.attach.link.list; vm.attach.data = new FormData(); vm.attach.data.append('search', ''); vm.attach.data.append('column', ''); vm.attach.data.append('page', 1); vm.executions(); },
+		onSoapSaved: function() { vm.tablereload(new FormData(), 'outer'); },
 		tablereload:function(data = new FormData(), pos = 'main') { if (pos == 'outer') { vm.$refs.Datatable.skeleton(); } vm.attach.url = vm.attach.link.list; vm.attach.data = data; vm.position = 'externaltable'; vm.executions(); },
 
 		/*************************************************************************************************************************

@@ -167,21 +167,20 @@ export default {
             }
             vm.saving = true;
             try {
-                const fd = new FormData();
-                fd.append('registrasi_uuid', vm.patientData.registrasi_uuid);
-                fd.append('pasien_uuid',     vm.patientData.pasien_uuid);
-                fd.append('nama_pasien',     vm.patientData.nama_pasien);
-                fd.append('nama_dokter',     vm.patientData.nama_dokter);
-                fd.append('rekam_medis',     vm.patientData.rekam_medis);
-                fd.append('subject',         vm.form.subject);
-                fd.append('object',          vm.form.object);
-                fd.append('assessment',      vm.form.assessment);
-                fd.append('plan',            vm.form.plan);
-                fd.append('ttd',             vm.form.ttd);
+                const payload = {
+                    registrasi_uuid: vm.patientData.registrasi_uuid,
+                    pasien_uuid:     vm.patientData.pasien_uuid,
+                    nama_pasien:     vm.patientData.nama_pasien,
+                    nama_dokter:     vm.patientData.nama_dokter,
+                    rekam_medis:     vm.patientData.rekam_medis,
+                    subject:         vm.form.subject,
+                    object:          vm.form.object,
+                    assessment:      vm.form.assessment,
+                    plan:            vm.form.plan,
+                    ttd:             vm.form.ttd,
+                };
 
-                const res = await axios.post('/rawatinap/pasien/save-cppt', fd, {
-                    headers: { 'Content-Type': 'multipart/form-data' },
-                });
+                const res = await axios.post('/rawatinap/pasien/save-cppt', payload);
 
                 if (res.data?.data === 'berhasil') {
                     toast.success('SOAP berhasil disimpan.');
