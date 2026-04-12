@@ -904,4 +904,50 @@ class PasienCtrl extends Controller
 
         return response()->json(['data' => $reg]);
     }
+
+    public function saveCppt(Request $request)
+    {
+        try {
+            \DB::beginTransaction();
+
+            $pengguna_uuid = \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+
+            $cppt = \App\Models\Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
+                ->where('sebagai', '=', 'RAWAT INAP')
+                ->first();
+
+            if ($cppt) {
+                \App\Models\Cppt::where('uuid', '=', $cppt->uuid)->update([
+                    'subjek'       => $request->subject,
+                    'objek'        => $request->object,
+                    'asesmen'      => $request->assessment,
+                    'plan'         => $request->plan,
+                    'pengguna_uuid'=> $pengguna_uuid,
+                    'ttd'          => $request->ttd,
+                ]);
+            } else {
+                $item = new \App\Models\Cppt();
+                $item->uuid          = \Ramsey\Uuid\Uuid::uuid4();
+                $item->registrasi_uuid = $request->registrasi_uuid;
+                $item->pasien_uuid   = $request->pasien_uuid;
+                $item->pengguna_uuid = $pengguna_uuid;
+                $item->nama_pasien   = $request->nama_pasien;
+                $item->nama_dokter   = $request->nama_dokter;
+                $item->rekam_medis   = $request->rekam_medis;
+                $item->subjek        = $request->subject;
+                $item->objek         = $request->object;
+                $item->asesmen       = $request->assessment;
+                $item->plan          = $request->plan;
+                $item->sebagai       = 'RAWAT INAP';
+                $item->ttd           = $request->ttd;
+                $item->save();
+            }
+
+            \DB::commit();
+            return response()->json(['data' => 'berhasil']);
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
+        }
+    }
 }

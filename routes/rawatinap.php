@@ -31,6 +31,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
         Route::post('removeobat', [PasienCtrl::class, 'removeobat'])->name('pemeriksaan-removeobat');
         Route::post('pulang', [PasienCtrl::class, 'pulang'])->name('pemeriksaan-pulang');
         Route::post('detailpulang', [PasienCtrl::class, 'detailpulang'])->name('pemeriksaan-detailpulang');
+        Route::post('save-cppt', [PasienCtrl::class, 'saveCppt'])->name('rawatinap-pasien-save-cppt');
     });
 
         Route::prefix('reqopname')->group(function () {
