@@ -8,6 +8,17 @@
 			<div class="modal-body" v-if="form">
 				<div class="grid">
 					<div class="col-4 form-mr">
+						<!-- Foto Pasien -->
+						<div style="text-align:center; margin-bottom: 12px;">
+							<img
+								:src="detail.photos ? '/' + detail.photos : '/default-avatar.png'"
+								alt="Foto Pasien"
+								@error="$event.target.src='/default-avatar.png'"
+								style="width:100px; height:100px; border-radius:50%; object-fit:cover; border:3px solid #e0e0e0; box-shadow:0 2px 8px rgba(0,0,0,0.12);"
+							/>
+							<div style="margin-top:6px; font-weight:600; font-size:13px; color:#333;">{{ detail.nama_pasien }}</div>
+							<div style="font-size:11px; color:#888;">{{ detail.rekam_medis }}</div>
+						</div>
 						<ul class="list-detail">
 							<li>No Rekam Medis<span><strong>{{ detail.rekam_medis }}</strong></span></li>
 							<li>Nama Lengkap<span><strong>{{ detail.nama_pasien }}</strong></span></li>

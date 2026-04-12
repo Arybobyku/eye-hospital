@@ -7,6 +7,20 @@
                 <h2>Detail Data Pemeriksaan Dokter </h2>
             </div>
             <div class="modal-body">
+                <!-- Foto + Info Singkat Pasien -->
+                <div style="display:flex; align-items:center; gap:16px; padding:12px 0 14px; border-bottom:1px solid #eee; margin-bottom:12px;">
+                    <img
+                        :src="detail.photos ? '/' + detail.photos : '/default-avatar.png'"
+                        alt="Foto Pasien"
+                        @error="$event.target.src='/default-avatar.png'"
+                        style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:3px solid #e0e0e0; box-shadow:0 2px 8px rgba(0,0,0,0.12); flex-shrink:0;"
+                    />
+                    <div>
+                        <div style="font-size:15px; font-weight:700; color:#222;">{{ detail.nama_pasien }}</div>
+                        <div style="font-size:12px; color:#666; margin-top:2px;">{{ detail.rekam_medis }}</div>
+                        <div style="font-size:12px; color:#888;">{{ detail.jenis_kelamin }} &bull; {{ datename(detail.tanggal_lahir) }}</div>
+                    </div>
+                </div>
                 <div class="grid">
                     <div class="col-4 form-mr">
                         <ul class="list-detail">
@@ -1274,14 +1288,43 @@
                                         <ckeditor v-model="form.plan" :editor="editor">
                                         </ckeditor>
                                     </div>
-                                    <div class="col-9"></div>
-                                    <div class="col-3 form-ml form-mt">
-                                        <label for="">Tanda Tangan di Dokuem Ini</label>
-                                        <img v-if="form.ttd" :src="form.ttd" alt="ttd dokter" height="100"
-                                            width="400" />
-                                        <br>
+                                    <div class="col-12 form-ml form-mt">
+                                        <label for="">Tanda Tangan di Dokumen Ini</label>
+
+                                        <!-- Tampilkan TTD jika sudah ada -->
+                                        <div v-if="form.ttd" style="margin-bottom: 8px;">
+                                            <img :src="form.ttd" alt="ttd dokter" height="100" width="360"
+                                                style="border: 1px solid #ccc; border-radius: 4px; display: block;" />
+                                            <div style="margin-top: 6px; display: flex; gap: 8px;">
+                                                <button class="button-modal-page button-modal-green"
+                                                    v-on:click="openCpptSignature()">Ubah TTD</button>
+                                                <button class="button-modal-page button-modal-red"
+                                                    v-on:click="form.ttd = ''">Hapus TTD</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tombol buka signature pad jika belum ada TTD -->
                                         <button v-if="!form.ttd" class="button-modal-page button-modal-green"
-                                            v-on:click="doDigitalSignature()">Tanda Tangan</button>
+                                            v-on:click="openCpptSignature()">Tanda Tangan</button>
+
+                                        <!-- Modal signature pad -->
+                                        <div v-if="showCpptSignature"
+                                            style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;"
+                                            @click.self="showCpptSignature = false">
+                                            <div style="background:#fff;padding:24px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.25);min-width:480px;">
+                                                <h4 style="margin:0 0 12px 0;font-size:15px;font-weight:600;">Tanda Tangan Digital</h4>
+                                                <VueSignaturePad ref="cpptSignaturePad" width="440px" height="200px"
+                                                    style="border:1px solid #ccc;border-radius:4px;display:block;" />
+                                                <div style="margin-top:12px;display:flex;gap:8px;">
+                                                    <button class="button-modal-page button-modal-green"
+                                                        v-on:click="saveCpptSignature()">Simpan TTD</button>
+                                                    <button class="button-modal-page button-modal-red"
+                                                        v-on:click="clearCpptSignature()">Bersihkan</button>
+                                                    <button class="button-modal-page"
+                                                        v-on:click="showCpptSignature = false">Batal</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -1629,6 +1672,7 @@ export default {
             typingTimer: null,
             doneTypingInterval: 5000,
             digitalSignature: "",
+            showCpptSignature: false,
         };
     },
     methods: {
@@ -1675,6 +1719,28 @@ export default {
         },
         doDigitalSignature: function () {
             vm.form.ttd = window.localStorage.getItem("ttd") ?? "";
+        },
+        openCpptSignature: function () {
+            vm.showCpptSignature = true;
+            vm.$nextTick(() => {
+                const pad = vm.$refs.cpptSignaturePad;
+                if (pad) pad.resizeCanvas();
+            });
+        },
+        saveCpptSignature: function () {
+            const pad = vm.$refs.cpptSignaturePad;
+            if (!pad) return;
+            const { isEmpty, data } = pad.saveSignature();
+            if (isEmpty) {
+                alert('Silakan buat tanda tangan terlebih dahulu.');
+                return;
+            }
+            vm.form.ttd = data;
+            vm.showCpptSignature = false;
+        },
+        clearCpptSignature: function () {
+            const pad = vm.$refs.cpptSignaturePad;
+            if (pad) pad.clearSignature();
         },
         setCkEditor: function () {
             console.log('===> SET CK EDITOR', vm.listobat[0]);

@@ -43,8 +43,11 @@
                         <div v-if="form.ttd" style="margin-bottom: 8px;">
                             <img :src="form.ttd" alt="TTD" height="80" width="300" style="border: 1px solid #ccc; border-radius: 4px;" />
                         </div>
-                        <button v-if="!form.ttd" class="button-modal-page button-modal-green" @click="showSignature = true">
+                        <button v-if="!form.ttd" class="button-modal-page button-modal-green" @click="openSignature()">
                             Tanda Tangan
+                        </button>
+                        <button v-if="form.ttd" class="button-modal-page button-modal-green" style="margin-left:8px" @click="openSignature()">
+                            Ubah TTD
                         </button>
                         <button v-if="form.ttd" class="button-modal-page button-modal-red" style="margin-left:8px" @click="form.ttd = ''">
                             Hapus TTD
@@ -136,6 +139,14 @@ export default {
             vm = this;
             vm.show = false;
             vm.showSignature = false;
+        },
+        openSignature() {
+            vm = this;
+            vm.showSignature = true;
+            vm.$nextTick(() => {
+                const pad = vm.$refs.signaturePad;
+                if (pad) pad.resizeCanvas();
+            });
         },
         saveSignature() {
             vm = this;

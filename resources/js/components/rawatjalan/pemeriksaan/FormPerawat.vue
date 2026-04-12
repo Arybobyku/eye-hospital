@@ -7,6 +7,20 @@
 				<h2 v-if="form">{{ form.title }}</h2>
 			</div>
 			<div class="modal-body" v-if="form">
+				<!-- Foto + Info Singkat Pasien -->
+				<div style="display:flex; align-items:center; gap:16px; padding:12px 0 14px; border-bottom:1px solid #eee; margin-bottom:12px;">
+					<img
+						:src="detailperawat.photos ? '/' + detailperawat.photos : '/default-avatar.png'"
+						alt="Foto Pasien"
+						@error="$event.target.src='/default-avatar.png'"
+						style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:3px solid #e0e0e0; box-shadow:0 2px 8px rgba(0,0,0,0.12); flex-shrink:0;"
+					/>
+					<div>
+						<div style="font-size:15px; font-weight:700; color:#222;">{{ detailperawat.nama_pasien }}</div>
+						<div style="font-size:12px; color:#666; margin-top:2px;">{{ detailperawat.rekam_medis }}</div>
+						<div style="font-size:12px; color:#888;">{{ detailperawat.jenis_kelamin }} &bull; {{ datename(detailperawat.tanggal_lahir) }}</div>
+					</div>
+				</div>
 				<div class="grid">
 					<div class="col-4 form-mr">
 						<ul class="list-detail">
