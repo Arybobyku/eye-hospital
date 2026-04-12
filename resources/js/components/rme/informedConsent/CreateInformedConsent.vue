@@ -442,7 +442,7 @@
         dijelaskan di atas.
       </div>
 
-      <div class="tanggal-tempat">BEKASI, {{ currentDate }} WIB</div>
+      <div class="tanggal-tempat">Medan, {{ currentDate }} WIB</div>
 
       <!-- ================= SIGNATURE AREA ================= -->
 

@@ -258,7 +258,7 @@
     <div class="box-rme">
       <h5 class="section-title-rme">Yang Membuat</h5>
 
-      <div class="tanggal-tempat mb-3">BEKASI, {{ currentDate }} WIB</div>
+      <div class="tanggal-tempat mb-3">Medan, {{ currentDate }} WIB</div>
 
       <label>Tanda Tangan Dokter</label>
       <VueSignaturePad
@@ -287,13 +287,13 @@
 
 <script>
   import axios from "axios";
-  
+
   export default {
     name: "ResumeMedisRawatInap",
     props: {
-      selectedPatient: { 
-        type: Object, 
-        required: true 
+      selectedPatient: {
+        type: Object,
+        required: true
       },
       viewData: {
         type: Object,
@@ -368,10 +368,10 @@
       },
       currentDate() {
         const d = new Date();
-        return d.toLocaleDateString("id-ID", { 
-          day: "numeric", 
-          month: "long", 
-          year: "numeric" 
+        return d.toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
         });
       }
     },
@@ -419,21 +419,21 @@
         this.form.nik = p?.no_ktp;
         this.form.jenis_kelamin = p?.jenis_kelamin;
       },
-  
+
       async loadDataForEdit() {
         try {
           const response = await axios.get(
             `/master/rekammedis/lampiran/${this.editUuid}?type=resume_medis_rawat_inap`
           );
-  
+
           if (response.data.status) {
             const data = response.data.data;
-            
+
             Object.keys(this.form).forEach(key => {
               if (key === 'terapi_pulang' && data.terapi_pulang) {
                 // Parse JSON string ke array
-                this.form.terapi_pulang = typeof data.terapi_pulang === 'string' 
-                  ? JSON.parse(data.terapi_pulang) 
+                this.form.terapi_pulang = typeof data.terapi_pulang === 'string'
+                  ? JSON.parse(data.terapi_pulang)
                   : data.terapi_pulang;
               } else if (data[key] !== undefined && key !== 'terapi_pulang') {
                 this.form[key] = data[key];
@@ -451,7 +451,7 @@
           this.$emit('back');
         }
       },
-  
+
       addObat() {
         this.form.terapi_pulang.push({
           nama_obat: "",
@@ -461,13 +461,13 @@
           cara_pemberian: ""
         });
       },
-  
+
       removeObat(idx) {
         if (this.form.terapi_pulang.length > 1) {
           this.form.terapi_pulang.splice(idx, 1);
         }
       },
-  
+
       saveSign(ref) {
         const pad = this.$refs[ref];
         if (!pad) {
@@ -479,27 +479,27 @@
         alert("Tanda Tangan Berhasil Disimpan Silahkan Lanjut Menyimpan Data");
         console.log("TTD saved:", ref);
       },
-  
+
       clearSign(ref) {
         const pad = this.$refs[ref];
         if (!pad) return;
-  
+
         pad.clearSignature();
         this.form.dokter_ttd = ""; // Reset field dokter_ttd
         console.log("TTD cleared");
       },
-  
+
       async submitForm() {
         this.loading = true;
         try {
           const fd = new FormData();
-          
+
           Object.keys(this.form).forEach((k) => {
             // Skip uuid jika kosong (create mode)
             if (k === 'uuid' && !this.form[k]) {
               return;
             }
-            
+
             if (k === "terapi_pulang") {
               // Convert array to JSON string
               fd.append(k, JSON.stringify(this.form[k]));
@@ -507,13 +507,13 @@
               fd.append(k, this.form[k] || '');
             }
           });
-  
+
           const response = await axios.post(
-            "/master/pasien/dokumen-resume-medis-rawat-inap", 
+            "/master/pasien/dokumen-resume-medis-rawat-inap",
             fd,
             { headers: { "Content-Type": "multipart/form-data" } }
           );
-  
+
           if (response.data.status) {
             alert(response.data.message || "Data berhasil disimpan");
             this.$emit("back");
