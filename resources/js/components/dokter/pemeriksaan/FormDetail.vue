@@ -1856,7 +1856,7 @@ export default {
                         </ul>
                     `;
             }
-
+            console.log("TESTING ====>", vm.pemeriksaanro.nadi)
             vm.form.object = `
                     <figure class="table">
                         <table>
@@ -1870,31 +1870,31 @@ export default {
 
 								<tr>
                                     <td>Nadi</td>
-									<td>${vm.form.nadi.value} x/Menit</td>
+									<td>${vm.pemeriksaanro.nadi} x/Menit</td>
                                 </tr>
 								<tr>
                                     <td>Respiratory Rate</td>
-									<td>${vm.pemeriksaanro.respiratory_rate.value} x/Menit</td>
+									<td>${vm.pemeriksaanro.respiratory_rate} x/Menit</td>
                                 </tr>
 								<tr>
                                     <td>Suhu Tubuh</td>
-									<td>${vm.pemeriksaanro.suhu.value} °C</td>
+									<td>${vm.pemeriksaanro.suhu} °C</td>
                                 </tr>
 								<tr>
                                     <td>Berat Badan</td>
-									<td>${vm.pemeriksaanro.berat_badan.value} Kg</td>
+									<td>${vm.pemeriksaanro.berat_badan} Kg</td>
                                 </tr>
 								<tr>
                                     <td>Tinggi Badan</td>
-									<td>${vm.pemeriksaanro.tinggi_badan.value} Cm</td>
+									<td>${vm.pemeriksaanro.tinggi_badan} Cm</td>
                                 </tr>
 								<tr>
                                     <td>Tekanan Darah</td>
-									<td>${vm.pemeriksaanro.tekanan_darah.value} mmHg</td>
+									<td>${vm.pemeriksaanro.tekanan_darah} mmHg</td>
                                 </tr>
 								<tr>
                                     <td>KGD</td>
-									<td>${vm.pemeriksaanro.kgd.value} mg/dL</td>
+									<td>${vm.pemeriksaanro.kgd} mg/dL</td>
                                 </tr>
                             </tbody>
                         </table>
