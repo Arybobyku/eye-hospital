@@ -60,7 +60,7 @@
                                     detail.jenis
                                         }}</strong></span>
                             </li>
-                            
+
                         </ul>
                     </div>
 
@@ -478,7 +478,7 @@
                                             @selectclear="selectclear" :selection="form.select.icd9"
                                             v-on:keyup="selectfilter($event, form.select.icd9.name)">
                                         </Selected>
-                                        <!-- <Selected v-on:click="selectbox($event,form.select.carabayartindakanrawatjalan.name,form.select.carabayartindakanrawatjalan.statics )" 
+                                        <!-- <Selected v-on:click="selectbox($event,form.select.carabayartindakanrawatjalan.name,form.select.carabayartindakanrawatjalan.statics )"
                                         :ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
                                             :selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event,form.select.carabayartindakanrawatjalan.name)
                                             ">
@@ -1791,7 +1791,7 @@ export default {
                             `)}
                             </tbody>
                         </table>
-                        </figure>   
+                        </figure>
                         `;
             }
 
@@ -1819,7 +1819,7 @@ export default {
                             `)}
                             </tbody>
                         </table>
-                        </figure>   
+                        </figure>
                         `;
             }
 
@@ -1827,7 +1827,7 @@ export default {
                 vm.form.plan += `
                     <div>Planning</div>
                         <ul>
-                           <li>${vm.form.select.pilihanplan.value}</li>  
+                           <li>${vm.form.select.pilihanplan.value}</li>
                         </ul>
                     `;
             }
@@ -1835,76 +1835,70 @@ export default {
                 vm.form.plan += `
                     <div>Planning</div>
                         <ul>
-                           <li>${vm.form.select.pilihanplan.value} :</li>  
-                             <li>${vm.form.tanggal_kontrol_selanjutnya.value}</li> 
+                           <li>${vm.form.select.pilihanplan.value} :</li>
+                             <li>${vm.form.tanggal_kontrol_selanjutnya.value}</li>
+                        </ul>
+                    `;
+            }
+            else if (vm.form.select.pilihanplan.value === 'Rawat Inap') {
+                vm.form.plan += `
+                    <div>Planning</div>
+                        <ul>
+                           <li>${vm.form.select.pilihanplan.value}</li>
+                        </ul>
+                    `;
+            }
+            else if (vm.form.select.pilihanplan.value === 'Operasi') {
+                vm.form.plan += `
+                    <div>Planning</div>
+                        <ul>
+                           <li>${vm.form.select.pilihanplan.value} ${vm.form.penjadwalanodc.value} ${vm.form.waktuodc.value}</li>
                         </ul>
                     `;
             }
 
             vm.form.object = `
                     <figure class="table">
-                    <table>
-                        <thead>
+                        <table>
+							<thead>
                             <tr>
-                                <td>&nbsp;</td>
-                                <td>Ocular Dextra</td>
-                                <td>Ocular Sinistra</td>
+                                <td>Nama Obat</td>
+                                <td>Nilai</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Autoref</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_autoref || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_autoref || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Add</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_add || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_add || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>BCVA</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_bcva1 || ''} => ${vm.pemeriksaanro.ocular_dextra_bcva2 || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_bcva1 || ''} => ${vm.pemeriksaanro.ocular_sinistra_bcva2 || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Keratometri K1</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_keratometri_k1 || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_keratometri_k1 || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Keratometri K2</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_keratometri_k2 || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_keratometri_k2 || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Tonometri</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_tonometri || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_tonometri || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Visus</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_visus || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_visus || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Kacamata Sph</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_sph || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_sph || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Kacamata Cyl</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_cyl || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_cyl || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Kacamata Add</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_addisi || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_addisi || ''}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    </figure>
+							</thead>
+                            <tbody>
+
+								<tr>
+                                    <td>Nadi</td>
+									<td>${vm.form.nadi.value} x/Menit</td>
+                                </tr>
+								<tr>
+                                    <td>Respiratory Rate</td>
+									<td>${vm.pemeriksaanro.respiratory_rate.value} x/Menit</td>
+                                </tr>
+								<tr>
+                                    <td>Suhu Tubuh</td>
+									<td>${vm.pemeriksaanro.suhu.value} °C</td>
+                                </tr>
+								<tr>
+                                    <td>Berat Badan</td>
+									<td>${vm.pemeriksaanro.berat_badan.value} Kg</td>
+                                </tr>
+								<tr>
+                                    <td>Tinggi Badan</td>
+									<td>${vm.pemeriksaanro.tinggi_badan.value} Cm</td>
+                                </tr>
+								<tr>
+                                    <td>Tekanan Darah</td>
+									<td>${vm.pemeriksaanro.tekanan_darah.value} mmHg</td>
+                                </tr>
+								<tr>
+                                    <td>KGD</td>
+									<td>${vm.pemeriksaanro.kgd.value} mg/dL</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </figure>
             `;
 
 
@@ -2899,7 +2893,7 @@ export default {
                         } else {
                             vm.form.tanggal_kontrol_selanjutnya.value = '';
                         }
-                    } 
+                    }
                     else if (planning === "Operasi pada jadwal yang ditentukan") {
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'
