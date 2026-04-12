@@ -21,15 +21,15 @@
 							<li>Alamat<span><strong>{{ detail.alamat }}</strong></span></li>
 							<li>Triase<span><strong>{{ detail.berkebutuhan_khusus }}</strong></span></li>
 							<li v-if="detail.berkebutuhan_khusus!='Tidak'">Keterangan<span><strong>{{ detail.keterangan_berkebutuhan }}</strong></span></li>
-							
+
 							<li><Inputed :ref="form.ocularsinistraro.name" :form="form.ocularsinistraro"></Inputed></li>
 							<!-- <li><Inputed :ref="form.nama_pemeriksa.name" :form="form.nama_pemeriksa"></Inputed></li> -->
 						</ul>
 					</div>
 					<div class="col-8">
-						
+
 						<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
-		
+
 						<div class="tab-content">
 
 							<div style="position: relative;" class="content-tab-in" v-if="tab.content.ocular_dextra">
@@ -120,7 +120,7 @@
 
 								</div>
 							</div>
-							
+
 							<div style="position: relative" class="content-tab-in" v-if="tab.content.cppt">
 
 
@@ -149,7 +149,7 @@
 									</div>
 
 									<div class="col-9"></div>
-									<div class="col-3 form-ml form-mt">
+									<!-- <div class="col-3 form-ml form-mt">
 											<label for="">Tanda Tangan di Dokumen Ini</label>
 												<img
 													v-if="form.ttd"
@@ -160,8 +160,8 @@
 												/>
 												<br>
 											<button v-if="!form.ttd" class="button-modal-page button-modal-green" v-on:click="doDigitalSignature()">Tanda Tangan</button>
-									</div>
-						
+									</div> -->
+
 								</div>
 							</div>
 						</div>
@@ -216,14 +216,14 @@ export default {
 			return vm.test ? false : true;
 		},
 	},
-	mounted:function() { 
+	mounted:function() {
 		vm = this; body = document.body;
 		vm.form = vm.formkelurahan();
 		vm.arr = vm.arrpemeriksaan();
 		window.onclick = function(event) { let a = event.target.className; try { if (a.split(" ")) { a = a.split(" "); if (a[0] != 'hospitals') { vm.selecthide(); } } if (event.target.className == '') { vm.selecthide(); } } catch { console.log('mistmatch'); } }
 	},
 	created:function() {},
-	data:function() { return { 
+	data:function() { return {
 		linkR: "/print/rekammedis/rawat-jalan/cppt/",
 		editor: ClassicEditor,
 		terminate: { show: false, display: 'display: none' },
@@ -231,9 +231,9 @@ export default {
 		cpptResponse: null,
 		green: 'Save Data', red: 'Clear Form', test: null, cover: '', temporer: null,
 		detail : { uuid: '',
-			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
-			kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
-			nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
+			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '',
+			kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '',
+			nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '',
 			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: ''
 		},
 		tab: {
@@ -248,11 +248,11 @@ export default {
 	methods: {
 
 		datename,
-		doDigitalSignature: function () { 
+		doDigitalSignature: function () {
 			vm.form.ttd = window.localStorage.getItem("ttd") ?? "";
 		},
 		greenbutton:function() {
-			if (vm.green == 'Save Data') { 
+			if (vm.green == 'Save Data') {
 				console.log(vm.form, 'dfdf')
 				vm.action();
 			}
@@ -265,7 +265,7 @@ export default {
 
 		changesTab: function (values, index, classes) {
 			if (classes != 'tab-active') {
-				for (let i = 0; i < vm.tab.button.length; i++) { 
+				for (let i = 0; i < vm.tab.button.length; i++) {
 					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; }
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
@@ -386,7 +386,7 @@ export default {
 			//- 		}
 			//- 	}
 			//- }
-			
+
 			if (next) { vm.parsingForm(); vm.dialog(); }
 		},
 
@@ -396,7 +396,7 @@ export default {
 		},
 
 		show:function(posisi, title, uuid){ vm.btnlbl = posisi == 'adddata' ? 'Save Data' : 'Update Data'; vm.form.uuid = uuid;
-			vm.form.title = title; vm.form.posisi = posisi; 
+			vm.form.title = title; vm.form.posisi = posisi;
 			vm.form.posisi = posisi; body.style.overflowY = 'hidden'; vm.terminate.display = 'display: block'; vm.terminate.show = true;
     },
 		aturulang: function () {
@@ -410,7 +410,7 @@ export default {
 			],
 			content: { ocular_dextra: true, ocular_sinistra: false, cppt: false, }
 			};
-			
+
 		},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
 		parsingForm:function() { vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail), 'add'); },
@@ -422,8 +422,8 @@ export default {
 			vm.histori = response.data.histori;
 			vm.linkR = vm.linkR + vm.detail.pasien_uuid;
 
-			
-			
+
+
 			vm.form.cppt_sebagai = 'RO';
 
 			let cppt = response.data.cppt;
@@ -488,7 +488,7 @@ export default {
 				vm.form.ocularsinistrakacamatalamaaddisi.value = vm.nullcheck(temps.ocular_sinistra_kacamata_lama_addisi);
 
 				// vm.form.select.klinik.value = vm.nullcheck(temps.klinik)
-				
+
 				// if (vm.nullcheck(temps.kasus_urgent) == '') {
 				// 	vm.form.select.kasusurgent.value = '';
 				// 	vm.form.select.kasusurgent.label = 'Silahkan Pilih';
@@ -498,7 +498,7 @@ export default {
 				// 	vm.form.select.kasusurgent.label = vm.nullcheck(temps.kasus_urgent);
 				// }
 
-			
+
 
 				// if (vm.nullcheck(temps.status_psikologi) == '') {
 				// 	vm.form.select.statuspsikologis.value = '';
@@ -509,7 +509,7 @@ export default {
 				// 	vm.form.select.statuspsikologis.label = vm.nullcheck(temps.status_psikologi);
 				// }
 
-				
+
 				// if (vm.nullcheck(temps.status_fungsional) == '') {
 				// 	vm.form.select.statusfungsional.value = '';
 				// 	vm.form.select.statusfungsional.label = 'Silahkan Pilih';
@@ -591,7 +591,7 @@ export default {
 				// 	vm.form.select.penilaianresikojatuh.value = vm.nullcheck(temps.penilaian_resiko_jatuh);
 				// 	vm.form.select.penilaianresikojatuh.label = vm.nullcheck(temps.penilaian_resiko_jatuh);
 				// }
-			
+
 			}
 			else {
 				vm.form.uuid = '';

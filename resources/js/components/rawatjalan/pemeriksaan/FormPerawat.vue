@@ -857,14 +857,14 @@
 										</ckeditor>
 									</div>
 									<div class="col-9"></div>
-									<div class="col-3 form-ml form-mt">
+									<!-- <div class="col-3 form-ml form-mt">
 										<label for="">Tanda Tangan di Dokumen Ini</label>
 										<img v-if="form.ttd" :src="form.ttd" alt="ttd dokter" height="100"
 											width="400" />
 										<br>
 										<button v-if="!form.ttd" class="button-modal-page button-modal-green"
 											v-on:click="doDigitalSignature()">Tanda Tangan</button>
-									</div>
+									</div> -->
 								</div>
 							</div>
 						</div>
@@ -1182,8 +1182,8 @@ export default {
 
 
 		hide: function () { vm.terminate.show = false; setTimeout(function () { vm.terminate.display = 'display= none'; body.style.overflowY = 'auto'; }, 250, this); },
-		// parsingForm: function () { 
-		// 	vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detailperawat), 'addperawat'); 
+		// parsingForm: function () {
+		// 	vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detailperawat), 'addperawat');
 		// },
 		setCkEditor: function (val, title) {
 			vm.form.subject = `${vm.form.keluhanutama.value}`;
@@ -1197,7 +1197,7 @@ export default {
                             </tr>
 							</thead>
                             <tbody>
-    
+
 								<tr>
                                     <td>Nadi</td>
 									<td>${vm.form.nadi.value} x/Menit</td>
@@ -1228,7 +1228,7 @@ export default {
                                 </tr>
                             </tbody>
                         </table>
-                        </figure>   
+                        </figure>
 			`;
 		},
 
