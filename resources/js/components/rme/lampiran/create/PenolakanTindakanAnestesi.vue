@@ -119,14 +119,26 @@
 
         <!-- ================= Diagnosis (WD & DD)   ================= -->
         <div class="box-rme mb-4">
-        <h5 class="section-title-rme">Diagnosis (WD & DD)  </h5>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #2d74b7; padding-bottom: 8px;">
+            <h5 style="margin: 0; font-weight: bold; color: #2d74b7;">Diagnosis (WD & DD)</h5>
+            <label style="display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px;">
+              <input type="checkbox" v-model="form.tandai_diagnosis" />
+              Tandai (X)
+            </label>
+          </div>
             <div class="form-row-2">
                 <div>
                   <label>Status Fisik ASA :</label>
                   <input type="text" v-model="form.status_fisik_asa" class="input-rme" />
                 </div>
             </div>
-            <h5 class="section-title-rme">Dasar Diagnosis</h5>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #2d74b7; padding-bottom: 8px;">
+              <h5 style="margin: 0; font-weight: bold; color: #2d74b7;">Dasar Diagnosis</h5>
+              <label style="display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px;">
+                <input type="checkbox" v-model="form.tandai_dasar_diagnosis" />
+                Tandai (X)
+              </label>
+            </div>
             <div class="form-row-2">
                 <div>
                   <label>Klinis :</label>
@@ -150,7 +162,13 @@
         <!-- ================= Tindakan Kedokteran   ================= -->
         <div class="form-section">
           <div class="box-rme mb-4">
-            <h5 class="section-title-rme">Tindakan Kedokteran</h5>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #2d74b7; padding-bottom: 8px;">
+              <h5 style="margin: 0; font-weight: bold; color: #2d74b7;">Tindakan Kedokteran</h5>
+              <label style="display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px;">
+                <input type="checkbox" v-model="form.tandai_tindakan_kedokteran" />
+                Tandai (X)
+              </label>
+            </div>
             
             <div class="form-row-2">
               <label>Anestesi / Pembiusan :</label>
@@ -193,14 +211,22 @@
             </div>
             <div class="form-row-2">
               <div style="display: flex; flex-direction: column;">
-                <label>Indikasi Tindakan & Tujuan :</label>
+                <label style="margin: 0;">Indikasi Tindakan & Tujuan :</label>
+                <label style="display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px;">
+                  <input type="checkbox" v-model="form.tandai_indikasi_tindakan" />
+                  Tandai (X)
+                </label>
                 <input type="text" v-model="form.indikasi_tindakan" class="input-rme" />
               </div>
             </div>
             <div class="form-row-2">
               <div style="display: flex; flex-direction: column;">
-                <label>Tata Cara Tindakan :</label>
-                <input type="text" v-model="form.tata_cara_tindakan" class="input-rme" />
+                  <label style="margin: 0;">Tata Cara Tindakan :</label>
+                    <label style="display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px;">
+                      <input type="checkbox" v-model="form.tandai_tata_cara_tindakan" />
+                      Tandai (X)
+                    </label>
+                  <input type="text" v-model="form.tata_cara_tindakan" class="input-rme" />
               </div>
             </div>
           </div>
@@ -208,7 +234,13 @@
 
         <!-- ================= Risiko  ================= -->
         <div class="box-rme mb-4">
-            <h5 class="section-title-rme">Risiko</h5>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #2d74b7; padding-bottom: 8px;">
+              <h5 style="margin: 0; font-weight: bold; color: #2d74b7;">Risiko</h5>
+              <label style="display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px;">
+                <input type="checkbox" v-model="form.tandai_risiko" />
+                Tandai (X)
+              </label>
+            </div>
             <div class="form-row-2">
                 <div>
                   <label>
@@ -234,7 +266,13 @@
         <!-- ================= Komplikasi   ================= -->
         <div class="form-section">
           <div class="box-rme mb-4">
-            <h5 class="section-title-rme">Komplikasi</h5>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 2px solid #2d74b7; padding-bottom: 8px;">
+              <h5 style="margin: 0; font-weight: bold; color: #2d74b7;">Komplikasi</h5>
+              <label style="display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px;">
+                <input type="checkbox" v-model="form.tandai_komplikasi" />
+                Tandai (X)
+              </label>
+            </div>
             
             <div class="form-row-2">
               <label>1. Anestesi Umum :</label>
@@ -265,22 +303,26 @@
                 <input type="checkbox" v-model="form.anestesi_umum_suhu" style="margin-top: 3px;" />
                 <span>Suhu tubuh naik/turun.</span>
               </label>
+              <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
+                <input type="checkbox" v-model="form.anestesi_umum_obat" style="margin-top: 3px;" />
+                <span>Efek merugikan obat dan alergi (syok anafiatik sampai meninggal dunia).</span>
+              </label>
                 <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer;">
                   <input type="checkbox" v-model="form.anestesi_umum_posisi" style="margin-top: 3px;" />
                   <div style="display: flex; flex-direction: column; gap: 5px; width: 100%;">
-                    <span>Cedera akibat posisi saat operasi</span>
+                    <span>Cedera akibat posisi saat operasi :</span>
                     <div style="padding-left: 20px; display: flex; gap: 20px; flex-wrap: wrap;">
                       <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
                         <input type="checkbox" v-model="form.posisi_cedera_mata" />
-                        <span>Cedera mata</span>
+                        <span>Muntah</span>
                       </label>
                       <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
                         <input type="checkbox" v-model="form.posisi_cedera_saraf" />
-                        <span>Cedera saraf</span>
+                        <span>Perut kembung</span>
                       </label>
                       <label style="display: flex; align-items: center; gap: 5px; cursor: pointer;">
                         <input type="checkbox" v-model="form.posisi_cedera_kulit" />
-                        <span>Cedera kulit/jaringan lunak</span>
+                        <span>Tenggorokan serak</span>
                       </label>
                     </div>
                   </div>
@@ -355,19 +397,31 @@
             </div>
             <div class="form-row-2">
               <div style="display: flex; flex-direction: column;">
-                <label>Prognosis  :</label>
+                <label style="margin: 0;">Prognosis :</label>
+                <label style="display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px;">
+                  <input type="checkbox" v-model="form.tandai_prognosis" />
+                  Tandai (X)
+                </label>
                 <input type="text" v-model="form.prognosis" class="input-rme" />
               </div>
             </div>
             <div class="form-row-2">
               <div style="display: flex; flex-direction: column;">
-                <label>Alternatif tindakan :</label>
+                  <label style="margin: 0;">Alternatif tindakan :</label>
+                  <label style="display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px;">
+                    <input type="checkbox" v-model="form.tandai_alternatif_tindakan" />
+                    Tandai (X)
+                  </label>
                 <input type="text" v-model="form.alternatif_tindakan" class="input-rme" />
               </div>
             </div>
             <div class="form-row-2">
               <div style="display: flex; flex-direction: column;">
-                <label>Lain-lain :</label>
+                <label style="margin: 0;">Lain-lain :</label>
+                <label style="display: flex; align-items: center; gap: 6px; margin: 0; font-size: 13px;">
+                  <input type="checkbox" v-model="form.tandai_lain_lain" />
+                  Tandai (X)
+                </label>
                 <input type="text" v-model="form.lain_lain" class="input-rme" />
               </div>
             </div>
@@ -637,6 +691,18 @@ export default {
         
         indikasi_tindakan: "",
         tata_cara_tindakan: "",
+
+        // Tandai Manual (X) - untuk kolom TANDAI di print
+        tandai_diagnosis: false,
+        tandai_dasar_diagnosis: false,
+        tandai_tindakan_kedokteran: false,
+        tandai_indikasi_tindakan: false,
+        tandai_tata_cara_tindakan: false,
+        tandai_risiko: false,
+        tandai_komplikasi: false,
+        tandai_prognosis: false,
+        tandai_alternatif_tindakan: false,
+        tandai_lain_lain: false,
         
         // Risiko
         shock: false,
@@ -649,6 +715,7 @@ export default {
         anestesi_umum_saraf: false,
         anestesi_umum_intubasi: false,
         anestesi_umum_suhu: false,
+        anestesi_umum_obat: false,
         anestesi_umum_posisi: false,
         posisi_cedera_mata: false,
         posisi_cedera_saraf: false,
@@ -834,14 +901,17 @@ loadDataForEdit() {
       'regional_spinal1', 'regional_spinal2', 'regional_blok_perifer',
       'shock', 'henti_jantung', 'meninggal_dunia',
       'anestesi_umum_pernafasan', 'anestesi_umum_jantung', 'anestesi_umum_saraf',
-      'anestesi_umum_intubasi', 'anestesi_umum_suhu', 'anestesi_umum_posisi',
+      'anestesi_umum_intubasi', 'anestesi_umum_suhu','anestesi_umum_obat', 'anestesi_umum_posisi',
       'posisi_cedera_mata', 'posisi_cedera_saraf', 'posisi_cedera_kulit',
       'anestesi_regional_komplikasi_segera', 'komplikasi_penurunan_tekanan',
       'komplikasi_anestesi_spinal', 'komplikasi_reaksi_toksik', 'komplikasi_reaksi_alergi',
       'anestesi_regional_komplikasi_lanjutan', 'anestesi_regional_nyeri_kepala',
       'anestesi_regional_nyeri_punggung', 'anestesi_regional_infeksi',
       'anestesi_regional_tidak_bisa_berkemih', 'anestesi_regional_cedera_saraf',
-      'anestesi_regional_pendarahan'
+      'tandai_diagnosis', 'tandai_dasar_diagnosis', 'tandai_tindakan_kedokteran',
+      'tandai_indikasi_tindakan', 'tandai_tata_cara_tindakan', 'tandai_risiko',
+      'tandai_komplikasi', 'tandai_prognosis', 'tandai_alternatif_tindakan',
+      'tandai_lain_lain',
     ];
 
     // ✅ Populate form dari sourceData

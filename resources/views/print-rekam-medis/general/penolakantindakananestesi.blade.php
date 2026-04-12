@@ -169,7 +169,7 @@
                 <td>Diagnosis (WD & DD)</td>
                 <td><strong>{{ $penolakan->status_fisik_asa }}</strong></td>
                 <td style="text-align:center;">
-                    <div class="tandai-checkbox {{ $penolakan->status_fisik_asa ? 'checked' : '' }}"></div>
+                    <div class="tandai-checkbox {{ $penolakan->tandai_diagnosis ? 'checked' : '' }}"></div>
                 </td>
 
             </tr>
@@ -198,12 +198,9 @@
                         </tr>
                     </table>
                 </td>
-<td style="text-align:center;">
-    <div class="tandai-checkbox {{
-        ($penolakan->klinis || $penolakan->radiologi || $penolakan->ekg || $penolakan->laboratorium)
-        ? 'checked' : '' }}">
-    </div>
-</td>
+                <td style="text-align:center;">
+                    <div class="tandai-checkbox {{ $penolakan->tandai_dasar_diagnosis ? 'checked' : '' }}"></div>
+                </td>
             </tr>
             
             <!-- 3. TINDAKAN KEDOKTERAN -->
@@ -252,16 +249,7 @@
                     </table>
                 </td>
                 <td style="text-align:center;">
-                    <div class="tandai-checkbox {{
-                        ($penolakan->umum_intubasi ||
-                         $penolakan->umum_lma ||
-                         $penolakan->umum_fm ||
-                         $penolakan->umum_tiva ||
-                         $penolakan->regional_spinal1 ||
-                         $penolakan->regional_spinal2 ||
-                         $penolakan->regional_blok_perifer)
-                        ? 'checked' : '' }}">
-                    </div>
+                    <div class="tandai-checkbox {{ $penolakan->tandai_tindakan_kedokteran ? 'checked' : '' }}"></div>
                 </td>
             </tr>
             
@@ -271,7 +259,7 @@
                 <td>Indikasi Tindakan & Tujuan</td>
                 <td><strong>{{ $penolakan->indikasi_tindakan }}</strong></td>
                 <td style="text-align:center;">
-                    <div class="tandai-checkbox {{ $penolakan->indikasi_tindakan ? 'checked' : '' }}"></div>
+                    <div class="tandai-checkbox {{ $penolakan->tandai_indikasi_tindakan ? 'checked' : '' }}"></div>
                 </td>
             </tr>
 
@@ -281,7 +269,7 @@
                <td>Tata Cara Tindakan</td>
                <td><strong>{{ $penolakan->tata_cara_tindakan }}</strong></td>
                <td style="text-align:center;">
-                   <div class="tandai-checkbox {{ $penolakan->tata_cara_tindakan ? 'checked' : '' }}"></div>
+                   <div class="tandai-checkbox {{ $penolakan->tandai_tata_cara_tindakan ? 'checked' : '' }}"></div>
                </td>
             </tr>
 
@@ -310,14 +298,10 @@
                         </tr>
                     </table>
                 </td>
-<td style="text-align:center;">
-    <div class="tandai-checkbox {{
-        ($penolakan->shock ||
-         $penolakan->henti_jantung ||
-         $penolakan->meninggal_dunia)
-        ? 'checked' : '' }}">
-    </div>
-</td>
+                <td style="text-align:center;">
+                    <div class="tandai-checkbox {{ $penolakan->tandai_risiko ? 'checked' : '' }}"></div>
+                </td>
+            </tr>
 
             
             <!-- 7. KOMPLIKASI -->
@@ -355,7 +339,13 @@
                             <td style="text-align: center;">
                                 <input type="checkbox" {{ $penolakan->anestesi_umum_suhu ? 'checked' : '' }}>
                             </td>
-                            <td>Suhu tubuh meningkat/turun.</td>
+                            <td>Suhu tubuh naik/turun.</td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">
+                                <input type="checkbox" {{ $penolakan->anestesi_umum_obat ? 'checked' : '' }}>
+                            </td>
+                            <td>Efek merugikan obat dan alergi (syok anafiatik sampai meninggal dunia).</td>
                         </tr>
                         <tr>
                             <td style="text-align: center;">
@@ -371,15 +361,15 @@
                                         <td style="width: 5%; text-align: center;">
                                             <input type="checkbox" {{ $penolakan->posisi_cedera_mata ? 'checked' : '' }}>
                                         </td>
-                                        <td style="width: 28%;">Cedera mata</td>
+                                        <td style="width: 28%;">Muntah</td>
                                         <td style="width: 5%; text-align: center;">
                                             <input type="checkbox" {{ $penolakan->posisi_cedera_saraf ? 'checked' : '' }}>
                                         </td>
-                                        <td style="width: 28%;">Cedera saraf</td>
+                                        <td style="width: 28%;">Perut Kembung</td>
                                         <td style="width: 5%; text-align: center;">
                                             <input type="checkbox" {{ $penolakan->posisi_cedera_kulit ? 'checked' : '' }}>
                                         </td>
-                                        <td>Cedera kulit/jaringan lunak</td>
+                                        <td>Tenggorokan serak</td>
                                     </tr>
                                 </table>
                             </td>
@@ -450,30 +440,7 @@
                     </table>
                 </td>
                 <td style="text-align:center;">
-                    <div class="tandai-checkbox {{
-                        (
-                            $penolakan->anestesi_umum_pernafasan ||
-                            $penolakan->anestesi_umum_jantung ||
-                            $penolakan->anestesi_umum_saraf ||
-                            $penolakan->anestesi_umum_intubasi ||
-                            $penolakan->anestesi_umum_suhu ||
-                            $penolakan->anestesi_umum_posisi ||
-                            $penolakan->posisi_cedera_mata ||
-                            $penolakan->posisi_cedera_saraf ||
-                            $penolakan->posisi_cedera_kulit ||
-                            $penolakan->komplikasi_penurunan_tekanan ||
-                            $penolakan->komplikasi_anestesi_spinal ||
-                            $penolakan->komplikasi_reaksi_toksik ||
-                            $penolakan->komplikasi_reaksi_alergi ||
-                            $penolakan->anestesi_regional_komplikasi_lanjutan ||
-                            $penolakan->anestesi_regional_nyeri_kepala ||
-                            $penolakan->anestesi_regional_nyeri_punggung ||
-                            $penolakan->anestesi_regional_infeksi ||
-                            $penolakan->anestesi_regional_tidak_bisa_berkemih ||
-                            $penolakan->anestesi_regional_cedera_saraf ||
-                            $penolakan->anestesi_regional_pendarahan
-                        ) ? 'checked' : ''
-                    }}"></div>
+                    <div class="tandai-checkbox {{ $penolakan->tandai_komplikasi ? 'checked' : '' }}"></div>
                 </td>
 
             </tr>
@@ -483,9 +450,9 @@
                 <td style="text-align: center;">8</td>
                 <td>Prognosis</td>
                 <td><strong>{{ $penolakan->prognosis }}</strong></td>
-<td style="text-align:center;">
-    <div class="tandai-checkbox {{ $penolakan->prognosis ? 'checked' : '' }}"></div>
-</td>
+                <td style="text-align:center;">
+                    <<div class="tandai-checkbox {{ $penolakan->tandai_prognosis ? 'checked' : '' }}"></div>
+                </td>
             </tr>
             
             <!-- 9. ALTERNATIF -->
@@ -494,7 +461,7 @@
                 <td>Alternatif tindakan</td>
                 <td><strong>{{ $penolakan->alternatif_tindakan }}</strong></td>
                 <td style="text-align:center;">
-                    <div class="tandai-checkbox {{ $penolakan->alternatif_tindakan ? 'checked' : '' }}"></div>
+                    <div class="tandai-checkbox {{ $penolakan->tandai_alternatif_tindakan ? 'checked' : '' }}"></div>
                 </td>
             </tr>
 
@@ -505,7 +472,7 @@
                 <td>Lain-lain</td>
                 <td><strong>{{ $penolakan->lain_lain }}</strong></td>
                 <td style="text-align:center;">
-                    <div class="tandai-checkbox {{ $penolakan->lain_lain ? 'checked' : '' }}"></div>
+                    <div class="tandai-checkbox {{ $penolakan->tandai_lain_lain ? 'checked' : '' }}"></div>
                 </td>
             </tr>
         </table>

@@ -67,6 +67,7 @@ class PenolakanTindakanAnestesi extends Model
         'anestesi_umum_saraf',
         'anestesi_umum_intubasi',
         'anestesi_umum_suhu',
+        'anestesi_umum_obat',
         'anestesi_umum_posisi',
         'posisi_cedera_mata',
         'posisi_cedera_saraf',
@@ -128,6 +129,17 @@ class PenolakanTindakanAnestesi extends Model
         'nama_keluarga_ttd',
         'ttd_perawat',
         'nama_perawat_ttd',
+        
+        'tandai_diagnosis',
+        'tandai_dasar_diagnosis',
+        'tandai_tindakan_kedokteran',
+        'tandai_indikasi_tindakan',
+        'tandai_tata_cara_tindakan',
+        'tandai_risiko',
+        'tandai_komplikasi',
+        'tandai_prognosis',
+        'tandai_alternatif_tindakan',
+        'tandai_lain_lain',
         
         // ===== Audit =====
         'created_by',
