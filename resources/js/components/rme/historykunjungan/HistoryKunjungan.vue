@@ -123,7 +123,7 @@
             <td>{{ index + 1 + (currentPageDokumen - 1) * perPageDokumen }}</td>
             <td>{{ item.jenis_dokumen }}</td>
             <td>
-              <a @click.prevent="printFile(item)" class="file-link">
+              <a @click.prevent="openFilePreview(item)" class="file-link">
                 {{ item.nama_file }}
               </a>
             </td>
@@ -171,6 +171,49 @@
         </button>
 
         <button :disabled="currentPageDokumen === totalPagesDokumen" @click="currentPageDokumen++">Next</button>
+      </div>
+    </div>
+
+    <!-- MODAL PREVIEW FILE -->
+    <div v-if="showFileModal" class="modal-overlay" @click.self="showFileModal = false">
+      <div class="modal-content modal-preview">
+        <div class="modal-header">
+          <h3 style="font-size:15px; max-width:80%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+            {{ previewItem && previewItem.nama_file }}
+          </h3>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <button @click="openInNewTab" class="btn-open-tab" title="Buka di tab baru">
+              <i class="fas fa-external-link-alt"></i> Buka
+            </button>
+            <button @click="showFileModal = false" class="btn-close">×</button>
+          </div>
+        </div>
+        <div class="modal-body preview-body">
+          <!-- Gambar -->
+          <img
+            v-if="previewItem && isImageFile(previewItem.nama_file)"
+            :src="previewFileUrl"
+            class="preview-image"
+            alt="Preview"
+          />
+          <!-- PDF -->
+          <iframe
+            v-else-if="previewItem && isPdfFile(previewItem.nama_file)"
+            :src="previewFileUrl"
+            class="preview-iframe"
+            frameborder="0"
+          ></iframe>
+          <!-- Tidak dikenal -->
+          <div v-else class="preview-unsupported">
+            <i class="fas fa-file fa-4x" style="color:#ccc;"></i>
+            <p style="margin-top:12px; color:#666;">
+              Format file tidak dapat ditampilkan secara langsung.
+            </p>
+            <button @click="openInNewTab" class="btn-primary" style="margin-top:8px;">
+              Buka File
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -256,7 +299,9 @@ export default {
         nama_file: '',
         keterangan: ''
       },
-      isSuperAdmin: false
+      isSuperAdmin: false,
+      showFileModal: false,
+      previewItem: null,
     };
   },
 
@@ -332,7 +377,11 @@ export default {
         return this.form.jenis_dokumen !== '';
       }
       return this.form.jenis_dokumen !== '' && this.form.file !== null;
-    }
+    },
+    previewFileUrl() {
+      if (!this.previewItem) return '';
+      return `/print/rekammedis/dokumen/${this.previewItem.uuid}`;
+    },
   },
 
   methods: {
@@ -573,12 +622,22 @@ export default {
       }
     },
 
-    printFile(item) {
-      window.open(
-        `/print/rekammedis/dokumen/${item.uuid}`,
-        "_blank"
-      );
-    }
+    openFilePreview(item) {
+      this.previewItem = item;
+      this.showFileModal = true;
+    },
+    openInNewTab() {
+      if (!this.previewItem) return;
+      window.open(`/print/rekammedis/dokumen/${this.previewItem.uuid}`, '_blank');
+    },
+    isImageFile(filename) {
+      if (!filename) return false;
+      return /\.(jpg|jpeg|png|bmp|gif|webp)$/i.test(filename);
+    },
+    isPdfFile(filename) {
+      if (!filename) return false;
+      return /\.pdf$/i.test(filename);
+    },
   },
 };
 </script>
@@ -935,5 +994,53 @@ export default {
 .btn-primary:disabled {
   background: #ccc;
   cursor: not-allowed;
+}
+
+/* Preview modal */
+.modal-preview {
+  max-width: 900px;
+  width: 95vw;
+  max-height: 92vh;
+  display: flex;
+  flex-direction: column;
+}
+.preview-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: #f5f5f5;
+  min-height: 500px;
+}
+.preview-image {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 4px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+.preview-iframe {
+  width: 100%;
+  height: 70vh;
+  border: none;
+  border-radius: 4px;
+}
+.preview-unsupported {
+  text-align: center;
+  padding: 40px;
+}
+.btn-open-tab {
+  background: #17a2b8;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn-open-tab:hover {
+  background: #138496;
 }
 </style>
