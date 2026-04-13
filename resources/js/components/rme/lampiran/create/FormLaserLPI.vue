@@ -327,7 +327,7 @@ export default {
       this.form.no_rm = this.selectedPatient?.rekam_medis || "";
       this.form.jenis_kelamin = this.selectedPatient?.jenis_kelamin || "";
       this.form.nama = this.selectedPatient?.nama || "";
-      this.form.nik = this.selectedPatient?.nik || "";
+      this.form.nik = this.selectedPatient?.no_identitas || "";
 
       // Data pasien untuk form
       this.form.nama_pasien = this.selectedPatient?.nama || "";

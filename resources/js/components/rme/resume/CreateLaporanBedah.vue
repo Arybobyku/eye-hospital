@@ -465,7 +465,7 @@ export default {
       if (this.selectedPatient) {
         this.form.uuid_pasien = this.selectedPatient.uuid;
         this.form.no_rm = this.selectedPatient.rekam_medis;
-        this.form.nik = this.selectedPatient.nik || "";
+        this.form.nik = this.selectedPatient.no_identitas || "";
         this.form.nama = this.selectedPatient.nama;
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
       }

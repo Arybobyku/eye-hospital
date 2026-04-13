@@ -18,7 +18,7 @@
             <strong>No. RM:</strong> {{ selectedPatient?.rekam_medis }}
           </div>
           <div class="col-md-4"><strong>Nama:</strong> {{ selectedPatient?.nama }}</div>
-          <div class="col-md-3"><strong>NIK:</strong> {{ selectedPatient?.nik }}</div>
+          <div class="col-md-3"><strong>NIK:</strong> {{ selectedPatient?.no_identitas }}</div>
           <div class="col-md-2">
             <strong>JK:</strong> {{ selectedPatient?.jenis_kelamin }}
           </div>

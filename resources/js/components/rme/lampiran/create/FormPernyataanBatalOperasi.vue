@@ -380,7 +380,7 @@ export default {
       this.form.no_rm = this.selectedPatient?.rekam_medis || "";
       this.form.jenis_kelamin = this.selectedPatient?.jenis_kelamin || "";
       this.form.nama = this.selectedPatient?.nama || "";
-      this.form.nik = this.selectedPatient?.nik || "";
+      this.form.nik = this.selectedPatient?.no_identitas || "";
 
       // Data yang bertandatangan (default dari data pasien)
       this.form.pernyataan_nama = this.selectedPatient?.nama || "";

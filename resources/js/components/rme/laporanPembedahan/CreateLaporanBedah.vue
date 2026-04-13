@@ -193,11 +193,33 @@
         <div class="row mb-3">
           <div class="col-md-6">
             <label>Macam Sayatan (bila perlu dengan gambar) :</label>
-            <textarea v-model="form.macam_sayatan" class="textarea-rme" rows="4"></textarea>
+            <textarea v-model="form.macam_sayatan" class="textarea-rme" rows="3"></textarea>
+            <div class="gambar-pad-wrap mt-2">
+              <VueSignaturePad
+                ref="macam_sayatan_gambar"
+                :options="sigOption"
+                class="gambar-pad"
+              />
+              <div class="sign-btn-group mt-1">
+                <button type="button" @click="saveSign('macam_sayatan_gambar')" class="btn-save">Simpan ✔</button>
+                <button type="button" @click="clearSign('macam_sayatan_gambar')" class="btn-clear-sign">Bersihkan</button>
+              </div>
+            </div>
           </div>
           <div class="col-md-6">
             <label>Posisi Penderita (bila perlu dengan gambar) :</label>
-            <textarea v-model="form.posisi_penderita" class="textarea-rme" rows="4"></textarea>
+            <textarea v-model="form.posisi_penderita" class="textarea-rme" rows="3"></textarea>
+            <div class="gambar-pad-wrap mt-2">
+              <VueSignaturePad
+                ref="posisi_penderita_gambar"
+                :options="sigOption"
+                class="gambar-pad"
+              />
+              <div class="sign-btn-group mt-1">
+                <button type="button" @click="saveSign('posisi_penderita_gambar')" class="btn-save">Simpan ✔</button>
+                <button type="button" @click="clearSign('posisi_penderita_gambar')" class="btn-clear-sign">Bersihkan</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -353,9 +375,14 @@
               :options="sigOption"
               class="signature-box-rme mx-auto"
             />
-            <button @click="saveSign('operator_bedah_ttd')" class="btn-save mt-2">
-              Simpan ✔
-            </button>
+            <div class="sign-btn-group mt-2">
+              <button @click="saveSign('operator_bedah_ttd')" class="btn-save">
+                Simpan ✔
+              </button>
+              <button @click="clearSign('operator_bedah_ttd')" class="btn-clear-sign">
+                Bersihkan
+              </button>
+            </div>
             <input
               type="text"
               v-model="form.nama_operator"
@@ -430,7 +457,9 @@ export default {
         jam_selesai: "",
         lama_operasi: "",
         macam_sayatan: "",
+        macam_sayatan_gambar: "",
         posisi_penderita: "",
+        posisi_penderita_gambar: "",
         teknik_operasi: "",
         jenis_bahan_lab: "",
         pemeriksaan_lab: "",
@@ -465,7 +494,7 @@ export default {
       if (this.selectedPatient) {
         this.form.uuid_pasien = this.selectedPatient.uuid;
         this.form.no_rm = this.selectedPatient.rekam_medis;
-        this.form.nik = this.selectedPatient.nik || "";
+        this.form.nik = this.selectedPatient.no_identitas || "";
         this.form.nama = this.selectedPatient.nama;
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
       }
@@ -478,9 +507,19 @@ export default {
         return;
       }
 
-      const { data } = pad.saveSignature();
+      const { isEmpty, data } = pad.saveSignature();
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
       this.form[refName] = data;
-      console.log("TTD saved:", refName);
+    },
+
+    clearSign(refName) {
+      const pad = this.$refs[refName];
+      if (!pad) return;
+      pad.clearSignature();
+      this.form[refName] = "";
     },
 
     async submitForm() {
@@ -587,6 +626,29 @@ export default {
   border-radius: 4px;
 }
 
+.gambar-pad-wrap {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px;
+  background: #fafafa;
+}
+
+.gambar-pad {
+  width: 100%;
+  height: 160px;
+  border: 1px dashed #aaa;
+  border-radius: 4px;
+  background: white;
+  cursor: crosshair;
+}
+
+.sign-btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
 .btn-save {
   background: #1e88e5;
   color: white;
@@ -599,6 +661,20 @@ export default {
 
 .btn-save:hover {
   background: #1565c0;
+}
+
+.btn-clear-sign {
+  background: #e53935;
+  color: white;
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-clear-sign:hover {
+  background: #b71c1c;
 }
 
 .action-footer {

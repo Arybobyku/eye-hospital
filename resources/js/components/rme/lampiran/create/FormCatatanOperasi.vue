@@ -905,10 +905,10 @@ export default {
       this.form.no_rm = this.selectedPatient?.rekam_medis || "";
       this.form.jenis_kelamin = this.selectedPatient?.jenis_kelamin || "";
       this.form.nama = this.selectedPatient?.nama || "";
-      this.form.nik = this.selectedPatient?.nik || "";
+      this.form.nik = this.selectedPatient?.no_identitas || "";
       this.form.nama_pasien = this.selectedPatient?.nama || "";
       this.form.no_rm_pasien = this.selectedPatient?.rekam_medis || "";
-      this.form.nik_pasien = this.selectedPatient?.nik || "";
+      this.form.nik_pasien = this.selectedPatient?.no_identitas || "";
       if (this.selectedPatient?.tanggal_lahir) {
         this.form.tanggal_lahir_display = this.formatTanggalIndo(
           this.selectedPatient.tanggal_lahir

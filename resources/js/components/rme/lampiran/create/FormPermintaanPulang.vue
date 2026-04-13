@@ -342,7 +342,7 @@ renderSignature(refName, data) {
         this.form.uuid_pasien = this.selectedPatient.uuid;
         this.form.no_rm = this.selectedPatient.rekam_medis;
         this.form.nama = this.selectedPatient.nama;
-        this.form.nik = this.selectedPatient.nik || "";                    // DITAMBAHKAN
+        this.form.nik = this.selectedPatient.no_identitas || "";                    // DITAMBAHKAN
         this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin || ""; // DITAMBAHKAN
         this.form.tempat_lahir = this.selectedPatient.tempat_lahir || "";
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;

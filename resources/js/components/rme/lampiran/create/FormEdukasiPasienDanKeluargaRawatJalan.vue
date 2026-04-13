@@ -934,7 +934,7 @@ export default {
         this.form.uuid_pasien = this.selectedPatient.uuid;
         this.form.no_rm = this.selectedPatient.rekam_medis;
         this.form.nama_pasien = this.selectedPatient.nama;
-        this.form.nik = this.selectedPatient.nik || ""; 
+        this.form.nik = this.selectedPatient.no_identitas || ""; 
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
         this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin || "L";
         this.form.alamat = this.selectedPatient.alamat || "";

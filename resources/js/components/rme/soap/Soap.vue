@@ -27,9 +27,10 @@
       <thead>
         <tr>
           <th>NO</th>
-          <th>REG</th>
+          <!-- <th>REG</th> -->
           <th>REKAM MEDIS</th>
           <th>TGL MASUK</th>
+          <th>SEBAGAI</th>
           <th>DOKTER</th>
           <th>ACTION</th>
         </tr>
@@ -37,9 +38,10 @@
       <tbody>
         <tr v-for="(item, index) in paginatedData" :key="item.id">
           <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-          <td>{{ item?.registrasi?.nomor }}</td>
+          <!-- <td>{{ item?.registrasi?.nomor }}</td> -->
           <td>{{ item?.rekam_medis }}</td>
           <td>{{ item?.registrasi?.tanggal }}</td>
+          <td>{{ item?.sebagai }}</td>
           <td>{{ item?.nama_dokter }}</td>
           <td class="text-center">
             <i class="fas fa-book action-icon" @click="openModal('detail', item)"></i>
@@ -228,18 +230,30 @@
         </div>
       </div>
       <div class="modal-body-dokumen preview-body">
-        <img
-          v-if="previewItem && isImageFile(previewItem.nama_file)"
-          :src="previewFileUrl"
-          class="preview-image"
-          alt="Preview"
-        />
+        <!-- IMAGE: coba img (storage URL) dulu, fallback ke route backend via iframe jika gagal -->
+        <template v-if="previewItem && isImageFile(previewItem.nama_file)">
+          <img
+            v-if="!imgLoadError"
+            :src="previewFileUrl"
+            class="preview-image"
+            alt="Preview"
+            @error="imgLoadError = true"
+          />
+          <iframe
+            v-else
+            :src="previewFileUrlFallback"
+            class="preview-iframe"
+            frameborder="0"
+          ></iframe>
+        </template>
+        <!-- PDF -->
         <iframe
           v-else-if="previewItem && isPdfFile(previewItem.nama_file)"
           :src="previewFileUrl"
           class="preview-iframe"
           frameborder="0"
         ></iframe>
+        <!-- FORMAT LAIN -->
         <div v-else class="preview-unsupported">
           <i class="fas fa-file fa-4x" style="color:#ccc;"></i>
           <p style="margin-top:12px; color:#666;">Format file tidak dapat ditampilkan secara langsung.</p>
@@ -333,6 +347,7 @@ export default {
       // ---- FILE PREVIEW ----
       showFileModal: false,
       previewItem: null,
+      imgLoadError: false,
     };
   },
 
@@ -401,6 +416,16 @@ export default {
       return this.formDokumen.jenis_dokumen !== '' && this.formDokumen.file !== null;
     },
     previewFileUrl() {
+      if (!this.previewItem) return '';
+      // Untuk gambar: gunakan URL storage publik langsung (tidak butuh auth, lebih reliable untuk <img>)
+      if (this.isImageFile(this.previewItem.nama_file) && this.previewItem.file_path) {
+        return `/storage/${this.previewItem.file_path}`;
+      }
+      // Untuk PDF dan file lain: gunakan route backend
+      return `/print/rekammedis/dokumen/${this.previewItem.uuid}`;
+    },
+    // Fallback URL jika storage langsung gagal (gunakan route backend)
+    previewFileUrlFallback() {
       if (!this.previewItem) return '';
       return `/print/rekammedis/dokumen/${this.previewItem.uuid}`;
     },
@@ -596,6 +621,7 @@ export default {
     // ---- FILE PREVIEW methods ----
     openFilePreview(item) {
       this.previewItem = item;
+      this.imgLoadError = false;
       this.showFileModal = true;
     },
     openInNewTab() {

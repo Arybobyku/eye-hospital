@@ -372,7 +372,7 @@ renderSignature(refName, data) {
         this.form.no_rm = this.selectedPatient.rekam_medis;
         this.form.nama = this.selectedPatient.nama; 
         this.form.no_rm_pasien = this.selectedPatient.rekam_medis;
-        this.form.nik = this.selectedPatient.nik || "";
+        this.form.nik = this.selectedPatient.no_identitas || "";
         this.form.nama = this.selectedPatient.nama;
         this.form.nama_pasien = this.selectedPatient.nama;
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;

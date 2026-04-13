@@ -3057,10 +3057,33 @@ class PasienCtrl extends Controller
 
             PenggunaHelp::log('Membuka dokumen pasien: ' . $dokumen->nama_file);
 
+            // Mapping MIME type berbasis ekstensi (lebih reliable dari mime_content_type)
+            $ext = strtolower(pathinfo($dokumen->nama_file, PATHINFO_EXTENSION));
+            $mimeMap = [
+                'jpg'  => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'png'  => 'image/png',
+                'gif'  => 'image/gif',
+                'bmp'  => 'image/bmp',
+                'webp' => 'image/webp',
+                'tiff' => 'image/tiff',
+                'tif'  => 'image/tiff',
+                'svg'  => 'image/svg+xml',
+                'pdf'  => 'application/pdf',
+                'doc'  => 'application/msword',
+                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'xls'  => 'application/vnd.ms-excel',
+                'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ];
+            $contentType = $mimeMap[$ext] ?? (mime_content_type($filePath) ?: 'application/octet-stream');
+
+            // Sanitize filename untuk header Content-Disposition
+            $safeFilename = rawurlencode($dokumen->nama_file);
+
             // Return file untuk ditampilkan di browser (bukan download)
             return response()->file($filePath, [
-                'Content-Type' => mime_content_type($filePath),
-                'Content-Disposition' => 'inline; filename="' . $dokumen->nama_file . '"'
+                'Content-Type'        => $contentType,
+                'Content-Disposition' => "inline; filename*=UTF-8''{$safeFilename}",
             ]);
         } catch (\Exception $e) {
             abort(500, 'Gagal membuka dokumen: ' . $e->getMessage());
