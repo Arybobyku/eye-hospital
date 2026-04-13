@@ -117,7 +117,7 @@ class RekamMedisCtrl extends Controller
         /**
          * 1. Pasien lama harus memiliki lebih dari satu record registrasi.
          * 2. Harus ada cara untuk mendeteksi suatu record registrasi merupakan kunjungan lama atau baru.
-         * 
+         *
          * Simpan kodingan sementara yang dapat dipakai sebagai validasi data
          * select(['registrasi.uuid', 'registrasi.tanggal', 'registrasi.nama_pasien'])
          *  ->selectRaw('CASE WHEN r.urutan = 1 THEN TRUE ELSE FALSE END as kunjungan_baru')
@@ -682,13 +682,13 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-            'dokumen_surat_pernyataan_batal_operasi' => [     
+            'dokumen_surat_pernyataan_batal_operasi' => [
                 'tanggal' => "$table.created_at",
                 'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-            'dokumen_surat_pernyataan_pasien_umum' => [                
+            'dokumen_surat_pernyataan_pasien_umum' => [
                 'tanggal' => "$table.created_at",
                 'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
@@ -706,13 +706,13 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-            'form_edukasi_pasien_dan_keluarga_rawat_jalan' => [               
+            'form_edukasi_pasien_dan_keluarga_rawat_jalan' => [
                 'tanggal' => "$table.created_at",
                 'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-            'form_persetujuan_umum_pasien_keluarga' => [       
+            'form_persetujuan_umum_pasien_keluarga' => [
                 'tanggal' => "$table.created_at",
                 'waktu'   => "$table.created_at"
                 // 'user_pelaksana' => 'pembedahan',
@@ -863,7 +863,7 @@ class RekamMedisCtrl extends Controller
                 'tanggal' => "$table.created_at",
                 'waktu'   => "$table.created_at",
                 // 'user_pelaksana' => 'pembedahan',
-                // 'detail_info' => 'jenis_operasi_detail'      
+                // 'detail_info' => 'jenis_operasi_detail'
             ],
             'dokumen_laporan_operasi_vitreo_retina' => [
                 'tanggal' => "$table.created_at",
@@ -894,7 +894,7 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-            
+
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -926,7 +926,7 @@ class RekamMedisCtrl extends Controller
             $tableMap = [
                 'laser_bargage' => 'dokumen_form_laser_bargage',
                 'dokumen_form_laser_barrage' => 'dokumen_form_laser_barrage',
-                'laporan_bedah' => 'laporan_pembedahan',
+                'laporan_bedah' => 'dokumen_laporan_pembedahan',
                 'informed_consent' => 'dokumen_informed_consent',
                 'surat_pernyataan_pasien_umum' => 'dokumen_surat_pernyataan_pasien_umum',
                 'surat_balasan_konsul' => 'dokumen_surat_balasan_konsul',
@@ -1020,7 +1020,7 @@ class RekamMedisCtrl extends Controller
             $tableMap = [
                 'laser_bargage' => 'dokumen_form_laser_bargage',
                 'dokumen_form_laser_barrage' => 'dokumen_form_laser_barrage',
-                'laporan_bedah' => 'laporan_pembedahan',
+                'laporan_bedah' => 'dokumen_laporan_pembedahan',
                 'informed_consent' => 'dokumen_informed_consent',
                 'surat_pernyataan_pasien_umum' => 'dokumen_surat_pernyataan_pasien_umum',
                 'surat_balasan_konsul' => 'dokumen_surat_balasan_konsul',
@@ -1277,7 +1277,7 @@ class RekamMedisCtrl extends Controller
                 'message' => 'Gagal mengambil data dokter',
                 'error'   => $e->getMessage()
             ], 500);
-        }    
+        }
     }
 
 
@@ -1323,7 +1323,7 @@ class RekamMedisCtrl extends Controller
 
             if($dokter_uuid != '49e7cf52-9bfd-4933-b42e-0444af1eaeb7'){
                 $query->where('lad.dokter_uuid', $dokter_uuid);
-            }    
+            }
             // Filter status
             if (!empty($status)) {
                 $query->where('lad.status', $status);
