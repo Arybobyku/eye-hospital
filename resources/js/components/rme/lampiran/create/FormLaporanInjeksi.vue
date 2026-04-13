@@ -88,7 +88,19 @@
 
   <div>
     <label>Operator :</label>
-    <input type="text" v-model="form.operator" class="input-rme" />
+      <div class="dropdown-dokter">
+        <select v-model="form.operator" class="form-select-dokter">
+          <option value="" disabled>🩺 Pilih Operator</option>
+            <option
+              v-for="dokter in listDokter"
+              :key="dokter.id"
+              :value="dokter.nama"
+            >
+              {{ dokter.nama }}
+            </option>
+          </select>
+        <span class="dropdown-icon">▾</span>
+    </div>
   </div>
 </div>
 
@@ -124,9 +136,6 @@
               <label>Anesthesia :</label>
               <input type="text" v-model="form.anesthesia" class="input-rme" />
             </div>
-          </div>
-
-          <div class="form-row-2">
             <div>
               <label>Anesthesiologist :</label>
               <input type="text" v-model="form.anesthesiologist" class="input-rme" />
@@ -192,9 +201,9 @@
               <span>/</span>
               <label class="radio-label">
                 <input type="radio" v-model="form.jarak_ukur" value="4" />
-                4 mm dari limbus di kuadran
-              </label>
-              <label class="radio-label ml-2">
+                4 mm dari limbus 
+              </label> <br>
+              <label class="radio-label ml-2"> Di kuadran 
                 <input type="radio" v-model="form.kuadran" value="superior" />
                 superior /
               </label>
@@ -209,13 +218,11 @@
             <span class="prosedur-number">6.</span>
             <div class="prosedur-content">
               <span>Dilakukan injeksi</span>
-              <label class="radio-label ml-2">
+              <!-- <label class="radio-label ml-2">
                 <input type="radio" v-model="form.jenis_injeksi" value="avastin" />
                 avastin
-              </label>
-              <span>/</span>
+              </label> -->
               <label class="radio-label">
-                <input type="radio" v-model="form.jenis_injeksi" value="intravitreal" />
                 intravitreal sebanyak
               </label>
               <input type="text" v-model="form.jumlah_injeksi" class="input-inline-small" placeholder="0.00" /> ml
@@ -256,7 +263,19 @@
                     Simpan ✔
                   </button>
                 </div>
-                <input type="text" v-model="form.nama_dokter" class="input-rme mt-2" placeholder="Nama Lengkap Dokter" />
+                  <div class="dropdown-dokter mt-2">
+                    <select v-model="form.nama_dokter" class="form-select-dokter">
+                      <option value="" disabled>🩺 Pilih Dokter</option>
+                      <option
+                        v-for="dokter in listDokter"
+                        :key="dokter.id"
+                        :value="dokter.nama"
+                      >
+                        {{ dokter.nama }}
+                      </option>
+                    </select>
+                    <span class="dropdown-icon">▾</span>
+                  </div>
               </div>
             </div>
           </div>
@@ -356,6 +375,7 @@ async mounted() {
   console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
 
   await this.fetchTahunAkreditasi();
+  await this.fetchDokter();
   
     this.disabledSubmit = false;
   if(this.viewData){
@@ -370,6 +390,14 @@ async mounted() {
   }
 },
   methods: {
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
   async fetchTahunAkreditasi() {
     try {
       const response = await axios.get('/api/tahun-akreditasi');
@@ -842,7 +870,54 @@ label {
   font-weight: 500;
   margin-left: 10px;
 }
+.form-row-3 {
+  display: flex;
+  gap: 1rem;
+}
 
+.form-row-3 > div {
+  flex: 1;
+  padding: 0.5rem;
+}
+
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
+}
 
 
 @media (max-width: 768px) {

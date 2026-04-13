@@ -725,13 +725,6 @@ export default {
           backendType: "form_laporan_injeksi",
         },
         {
-          value: "form_permintaan_pulang",
-          label: "Form Permintaan Pulang",
-          component: "FormPermintaanPulang",
-          description: "Form Permintaan Pulang",
-          backendType: "form_permintaan_pulang",
-        },
-        {
           value: "voucher_rawat_inap",
           label: "Voucher Rawat Inap",
           component: "VoucherRawatInap",
@@ -808,12 +801,20 @@ export default {
           description: "Form Laporan Eksisi Chalazion",
           backendType: "dokumen_laporan_eksisi_chalazion",
         },
+        // {
+        //   value: "dokumen_pulang_atas_permintaan_sendiri",
+        //   label: "Form Pulang Atas Permintaan Sendiri",
+        //   component: "FormPulangAtasPermintaanSendiri",
+        //   description: "Form Pulang Atas Permintaan Sendiri",
+        //   backendType: "dokumen_pulang_atas_permintaan_sendiri",
+        // },
+
         {
-          value: "dokumen_pulang_atas_permintaan_sendiri",
+          value: "form_permintaan_pulang",
           label: "Form Pulang Atas Permintaan Sendiri",
-          component: "FormPulangAtasPermintaanSendiri",
+          component: "FormPermintaanPulang",
           description: "Form Pulang Atas Permintaan Sendiri",
-          backendType: "dokumen_pulang_atas_permintaan_sendiri",
+          backendType: "form_permintaan_pulang",
         },
         {
           value: "dokumen_tindakan_laser_capsulotomy",

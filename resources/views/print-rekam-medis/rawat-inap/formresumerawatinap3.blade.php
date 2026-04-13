@@ -341,13 +341,13 @@
         </div>
 
         <div class="field-row">
-            <div class="field-label">Didiagnosa Masuk</div>
+            <div class="field-label">Diagnosa Masuk</div>
             <div class="field-value textarea">{{ $data->diagnosa_masuk ?? '' }}</div>
         </div>
 
         <div class="inline-fields">
             <div class="inline-field" style="width: 75%;">
-                <div class="field-label">Didiagnosa Keluar (Diagnosa Utama)</div>
+                <div class="field-label">Diagnosa Keluar (Diagnosa Utama)</div>
                 <div class="field-value">{{ $data->diagnosa_keluar ?? '' }}</div>
             </div>
             <div class="inline-field" style="width: 25%;">

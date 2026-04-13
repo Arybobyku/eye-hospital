@@ -103,10 +103,10 @@
         <td colspan="3" class="tablee">Alasan Dirawat : </td>
       </tr>
       <tr>
-        <td colspan="3" class="tablee">Didiagnosa Masuk : </td>
+        <td colspan="3" class="tablee">Diagnosa Masuk : </td>
       </tr>
       <tr>
-        <td class="tablee">Didiagnosa Keluar (Diagnosa Utama) </td>
+        <td class="tablee">Diagnosa Keluar (Diagnosa Utama) </td>
         <td class="tablee"></td>
         <td class="tablee">ICD</td>
       </tr>

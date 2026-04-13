@@ -107,12 +107,19 @@
 
                 <!-- Dokter -->
                 <td>
-                  <input 
-                    type="text" 
-                    v-model="row.dokter" 
-                    class="input-table"
-                    placeholder="Nama Dokter"
-                  />
+                  <div class="dropdown-dokter mt-2">
+                    <select v-model="form.nama_dokter_verifikasi" class="form-select-dokter">
+                      <option value="" disabled>🩺 Pilih Dokter</option>
+                      <option
+                        v-for="dokter in listDokter"
+                        :key="dokter.id"
+                        :value="dokter.nama"
+                      >
+                        {{ dokter.nama }}
+                      </option>
+                    </select>
+                    <span class="dropdown-icon">▾</span>
+                  </div>
                 </td>
 
                 <!-- Aksi -->
@@ -160,7 +167,7 @@
       </div>
 
       <!-- ================= TANDA TANGAN ================= -->
-      <div class="box-rme mb-4">
+      <!-- <div class="box-rme mb-4">
         <h5 class="section-title-rme">Verifikasi</h5>
 
         <div class="row">
@@ -182,7 +189,7 @@
             />
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- ================= BUTTON BOTTOM ================= -->
@@ -258,6 +265,7 @@ export default {
   },
   async mounted() {
     await this.fetchTahunAkreditasi();
+    await this.fetchDokter();
     if(this.viewData) {
       console.log(this.editUuid);
       this.editUuid = this.editData.uuid;
@@ -273,6 +281,14 @@ export default {
     }
   },
   methods: {
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
     async fetchTahunAkreditasi() {
       try {
         const response = await axios.get('/api/tahun-akreditasi');
@@ -736,5 +752,44 @@ export default {
     font-size: 11px;
     padding: 4px 6px;
   }
+}
+
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
 }
 </style>

@@ -115,12 +115,12 @@
       <label>Alasan Dirawat</label>
       <textarea v-model="form.alasan_dirawat" class="textarea-rme"></textarea>
 
-      <label>Didiagnosa Masuk</label>
+      <label>Diagnosa Masuk</label>
       <textarea v-model="form.diagnosa_masuk" class="textarea-rme"></textarea>
 
       <div class="row mb-3">
         <div class="col-md-9">
-          <label>Didiagnosa Keluar (Diagnosa Utama)</label>
+          <label>Diagnosa Keluar (Diagnosa Utama)</label>
           <textarea v-model="form.diagnosa_keluar" class="textarea-rme"></textarea>
         </div>
         <div class="col-md-3">

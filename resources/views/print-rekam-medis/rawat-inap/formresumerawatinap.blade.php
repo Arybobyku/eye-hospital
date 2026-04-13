@@ -103,10 +103,10 @@
         <td colspan="3" class="tablee">Alasan Dirawat : {{ $data->alasan_dirawat ?? '' }}</td>
       </tr>
       <tr>
-        <td colspan="3" class="tablee">Didiagnosa Masuk : {{ $data->diagnosa_masuk ?? '' }}</td>
+        <td colspan="3" class="tablee">Diagnosa Masuk : {{ $data->diagnosa_masuk ?? '' }}</td>
       </tr>
       <tr>
-        <td class="tablee">Didiagnosa Keluar (Diagnosa Utama) </td>
+        <td class="tablee">Diagnosa Keluar (Diagnosa Utama) </td>
         <td class="tablee">{{ $data->diagnosa_keluar ?? '' }}</td>
         <td class="tablee">ICD: {{ $data->icd_utama ?? '' }}</td>
       </tr>

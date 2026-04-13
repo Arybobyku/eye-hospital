@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <button @click="$emit('back')" class="btn-back">Kembali</button>
 
   <div class="container py-4">
@@ -817,4 +817,4 @@ hr {
 .text-danger {
   color: #dc3545;
 }
-</style>
+</style> -->
