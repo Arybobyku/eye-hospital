@@ -54,15 +54,15 @@
             <h5 class="section-title-rme">Pemberian Informasi</h5>
 
             <div class="row mb-3">
-                <div class="col-md-6">
+                <!-- <div class="col-md-6">
                     <label>Petugas Pelaksana Tindakan :</label>
                     <input type="text" v-model="form.petugas" class="input-rme" />
-                </div>
+                </div> -->
 
-                <!-- <div class="col-md-6">
+                <div class="col-md-6">
                     <label>Pemberi Informasi :</label>
                     <input type="text" v-model="form.nama_pemberi_informasi" class="input-rme" />
-                </div> -->
+                </div>
             </div>
 
             <div class="row mb-2">
@@ -421,10 +421,9 @@
           </div>
 
           <input
-            v-model="form.nama_terang_pasien"
             class="input-rme"
             readonly
-            value="form.nama_penerima_informasi"
+            :value="form.nama_penerima_informasi"
             placeholder="Tanda Tangan dan Nama Terang"
           />
         </div>
