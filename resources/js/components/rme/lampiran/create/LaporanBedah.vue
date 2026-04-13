@@ -290,42 +290,48 @@
           </div> -->
           <div class="col-md-6 ">
             <label class="mb-2 text-left">Macam Sayatan (bila perlu dengan gambar)</label>
-            <!-- Preview TTD yang sudah ada -->
+            <!-- Preview setelah disimpan -->
             <div v-if="form.macam_sayatan && !macamSayatanCleared" class="signature-preview">
-              <img :src="form.macam_sayatan" alt="TTD Dokter" class="img-signature" />
+              <img :src="form.macam_sayatan" alt="Gambar Macam Sayatan" class="img-signature" />
               <button @click="clearMacamSayatan()" class="btn-clear">
                 Hapus & Gambar Ulang
               </button>
             </div>
 
-            <!-- Signature Pad -->
+            <!-- Pad aktif -->
             <div v-else>
               <VueSignaturePad
                 ref="macam_sayatan"
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button @click="saveSign('macam_sayatan')" class="btn-save mt-2">Simpan ✔</button>
+              <div class="sign-btn-group mt-2">
+                <button type="button" @click="saveSign('macam_sayatan')" class="btn-save">Simpan ✔</button>
+                <button type="button" @click="clearPadOnly('macam_sayatan')" class="btn-clear-sign">Bersihkan</button>
+              </div>
             </div>
           </div>
           <div class="col-md-6 ">
             <label class="mb-2 text-left">Posisi Penderita (bila perlu dengan gambar)</label>
-            <!-- Preview TTD yang sudah ada -->
+            <!-- Preview setelah disimpan -->
             <div v-if="form.posisi_penderita && !posisiPenderitaCleared" class="signature-preview">
-              <img :src="form.posisi_penderita" alt="TTD Dokter" class="img-signature" />
+              <img :src="form.posisi_penderita" alt="Gambar Posisi Penderita" class="img-signature" />
               <button @click="clearPosisiPenderita()" class="btn-clear">
                 Hapus & Gambar Ulang
               </button>
             </div>
 
-            <!-- Signature Pad -->
+            <!-- Pad aktif — ref diperbaiki dari macam_sayatan ke posisi_penderita -->
             <div v-else>
               <VueSignaturePad
-                ref="macam_sayatan"
+                ref="posisi_penderita"
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button @click="saveSign('posisi_penderita')" class="btn-save mt-2">Simpan ✔</button>
+              <div class="sign-btn-group mt-2">
+                <button type="button" @click="saveSign('posisi_penderita')" class="btn-save">Simpan ✔</button>
+                <button type="button" @click="clearPadOnly('posisi_penderita')" class="btn-clear-sign">Bersihkan</button>
+              </div>
             </div>
           </div>
 
@@ -670,12 +676,13 @@ export default {
         if (pad) pad.clearSignature();
       });
     },
+    // Hapus gambar yang sudah tersimpan → tampilkan pad kosong kembali
     clearMacamSayatan() {
       this.macamSayatanCleared = true;
       this.form.macam_sayatan = "";
       this.$nextTick(() => {
         const pad = this.$refs.macam_sayatan;
-        if (pad) pad.clearMacamSayatan();
+        if (pad) pad.clearSignature();
       });
     },
     clearPosisiPenderita() {
@@ -683,8 +690,14 @@ export default {
       this.form.posisi_penderita = "";
       this.$nextTick(() => {
         const pad = this.$refs.posisi_penderita;
-        if (pad) pad.clearPosisiPenderita();
+        if (pad) pad.clearSignature();
       });
+    },
+    // Bersihkan canvas saja (tanpa mengubah state preview) — tombol Bersihkan di pad aktif
+    clearPadOnly(refName) {
+      const pad = this.$refs[refName];
+      if (!pad) return;
+      pad.clearSignature();
     },
     async loadDataForEdit() {
       try {
@@ -856,6 +869,26 @@ export default {
   border-radius: 4px;
   display: block;
   margin: 0 auto;
+}
+
+.sign-btn-group {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-clear-sign {
+  background: #e53935;
+  color: white;
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-clear-sign:hover {
+  background: #b71c1c;
 }
 
 .btn-save {
