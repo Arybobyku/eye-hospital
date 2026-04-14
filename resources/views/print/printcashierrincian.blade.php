@@ -106,7 +106,7 @@
                     <tr>
                         <td>Tanggal Selesai Periksa</td>
                         <td>:
-                            @if (!empty($registrasi->tanggal_selesai_periksa))
+                            @if (!empty($registrasi->tanggal_selesai_periksa) && $registrasi->tanggal_selesai_periksa != '1990-01-01')
                                 {{ tglse($registrasi->tanggal_selesai_periksa) }}
                             @else
                                 {{ !empty($honor[0]->created_at) ? ubahDate($honor[0]->created_at) : (!empty($rawatjalan[0]->created_at) ? ubahDate($rawatjalan[0]->created_at) : (!empty($resep_alkes[0]->created_at) ? ubahDate($resep_alkes[0]->created_at) : 'Date not available')) }}
@@ -204,7 +204,7 @@
                             @elseif($item->nama_layanan == 'Administrasi Rawat Jalan (pb)')
                                 Biaya Pendaftaran + Adm Rawat Jalan (pb)
                             @else
-                                Biaya {{ $item->nama_layanan }}    
+                                Biaya {{ $item->nama_layanan }}
                             @endif
                         </td>
                         <td align="center" style="padding: 10px 2px; width: 17%" valign="top">
@@ -449,7 +449,7 @@
 				<tr>
 					<td colspan="7" style="padding: 10px 8px"><b>Biaya Rawat Inap</b></td>
 				</tr>
-				
+
 				@foreach ($rawatinap as $item)
 					<tr>
 						<td align="center" style="padding: 5px 7px; width: 5%">{{ $nomor }}.</td>
@@ -474,7 +474,7 @@
 				<tr>
 					<td colspan="7" style="padding: 10px 8px"><b>Biaya Operasi/Bedah</b></td>
 				</tr>
-				
+
 				@foreach ($bedah as $item)
 					<tr>
 						<td align="center" style="padding: 5px 7px; width: 5%">{{ $nomor }}.</td>
@@ -549,7 +549,7 @@
                             if ($diskon_rp > 0) {
                                 $sementara = $sementara - $diskon_rp;
                             }
-                            
+
                             if ($diskon_persen > 0) {
                                 $n_persen = (int) ($subtotal * ($diskon_persen / 100));
                                 $sementara = $sementara - $n_persen;
@@ -617,7 +617,7 @@
                         if ($diskon_rp > 0) {
                             $sementara = $sementara - $diskon_rp;
                         }
-                        
+
                         if ($diskon_persen > 0) {
                             $n_persen = (int) ($subtotal * ($diskon_persen / 100));
                             $sementara = $sementara - $n_persen;
@@ -735,7 +735,7 @@
                             if ($diskon_rp > 0) {
                                 $sementara = $sementara - $diskon_rp;
                             }
-                            
+
                             if ($diskon_persen > 0) {
                                 $n_persen = (int) ($subtotal * ($diskon_persen / 100));
                                 $sementara = $sementara - $n_persen;
@@ -801,7 +801,7 @@
                         if ($diskon_rp > 0) {
                             $sementara = $sementara - $diskon_rp;
                         }
-                        
+
                         if ($diskon_persen > 0) {
                             $n_persen = (int) ($subtotal * ($diskon_persen / 100));
                             $sementara = $sementara - $n_persen;
@@ -919,7 +919,7 @@
                             if ($diskon_rp > 0) {
                                 $sementara = $sementara - $diskon_rp;
                             }
-                            
+
                             if ($diskon_persen > 0) {
                                 $n_persen = (int) ($subtotal * ($diskon_persen / 100));
                                 $sementara = $sementara - $n_persen;
@@ -985,7 +985,7 @@
                         if ($diskon_rp > 0) {
                             $sementara = $sementara - $diskon_rp;
                         }
-                        
+
                         if ($diskon_persen > 0) {
                             $n_persen = (int) ($subtotal * ($diskon_persen / 100));
                             $sementara = $sementara - $n_persen;
@@ -1027,7 +1027,7 @@
                     <td colspan="6" align="left" style="padding: 6px 5px; width: 65%;"><b>Grand Total</b></td>
                     <td colspan="2" align="right" style="padding: 6px 5px;"><b>Rp.
                             {{ number_format($last) }}</b></td>
-                </tr> 
+                </tr>
             @endif
 
 
@@ -1189,7 +1189,7 @@
                     @endif
                     <br />
                     <div style="padding-top: 7px; font-size: 10pt">Kasir</div>
-                
+
                     {{-- TTD Kasir --}}
                     <div style="position: relative; width: 180px; height: 90px; margin: 8px auto;">
                         @if (!empty($registrasi->ttd_kasir))
@@ -1198,7 +1198,7 @@
                         @else
                             <div style="width: 180px; height: 90px;"></div>
                         @endif
-                    
+
                         {{-- Stempel overlay --}}
                         @if (!empty($registrasi->stempel) && $registrasi->stempel == '1')
                             <img src="{{ storage_path('app/public/images/stempel-rs.png') }}"
@@ -1208,7 +1208,7 @@
                                         object-fit: contain; opacity: 0.4;" />
                         @endif
                     </div>
-                
+
                     <span style="text-decoration: underline; font-size: 10pt">
                         <b>
                             @if (!empty($registrasi->nama_kasir_ttd))
@@ -1289,21 +1289,21 @@
         $tgllahir = $tgl[2];
         $blnlahir = bulans($tgl[1]);
         $thnlahir = $tgl[0];
-    
+
         return $tgllahir . ' ' . $blnlahir . ' ' . $thnlahir;
     }
-    
+
     function ubahs($created)
     {
         $data = explode(' ', $created);
         $dates = $data[0];
         $times = $data[1];
-    
+
         $tgl_ = explode('-', $dates);
         $thn = $tgl_[0];
         $bln = $tgl_[1];
         $tgl = $tgl_[2];
-    
+
         $times_ = explode(':', $times);
         $jam = $times_[0];
         $menit = $times_[1];
@@ -1334,7 +1334,7 @@
         } else {
             $bln = 'Desember';
         }
-    
+
         return $tgl . ' ' . $bln . ' ' . $thn . ' ' . $jam . ':' . $menit . ':' . $detik;
     }
 
@@ -1363,18 +1363,18 @@
         return (int)$tgl . ' ' . $bulan[$bln] . ' ' . $tahun;
     }
 
-    
+
     function ubahDate($created)
     {
         $data = explode(' ', $created);
         $dates = $data[0];
         $times = $data[1];
-    
+
         $tgl_ = explode('-', $dates);
         $thn = $tgl_[0];
         $bln = $tgl_[1];
         $tgl = $tgl_[2];
-    
+
         $times_ = explode(':', $times);
         $jam = $times_[0];
         $menit = $times_[1];
@@ -1405,21 +1405,21 @@
         } else {
             $bln = 'Desember';
         }
-    
+
         return $tgl . ' ' . $bln . ' ' . $thn;
     }
-    
+
     // function umurs($tanggal)
     // {
     //     $tglnow = date('d');
     //     $blnnow = (int) date('m');
     //     $thnnow = (int) date('Y');
-    
+
     //     $tgl = explode('-', $tanggal);
     //     $tgllahir = $tgl[2];
     //     $blnlahir = (int) $tgl[1];
     //     $thnlahir = (int) $tgl[0];
-    
+
     //     $thnlahir = $thnnow - $thnlahir;
     //     if ($blnnow < $blnlahir) {
     //         $blnnow += 2 + 10;
@@ -1449,14 +1449,14 @@
 
     return $diff->m . ' bulan';
 }
-    
+
     function tglse($created)
     {
         $tgl_ = explode('-', $created);
         $thn = $tgl_[0];
         $bln = $tgl_[1];
         $tgl = $tgl_[2];
-    
+
         if ($bln == '01') {
             $bln = 'Januari';
         } elseif ($bln == '02') {
@@ -1482,10 +1482,10 @@
         } else {
             $bln = 'Desember';
         }
-    
+
         return $tgl . ' ' . $bln . ' ' . $thn . ' ';
     }
-    
+
     function penyebut($nilai)
     {
         $nilai = abs($nilai);
@@ -1494,7 +1494,7 @@
         // if($nilai == 0){
         // 	return "Nol";
         // }
-    
+
         if ($nilai < 12) {
             $temp = ' ' . $huruf[$nilai];
         } elseif ($nilai < 20) {
@@ -1518,7 +1518,7 @@
         }
         return $temp;
     }
-    
+
     function terbilang($nilai)
     {
         if ($nilai < 0) {
