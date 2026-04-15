@@ -398,9 +398,23 @@
         <h5 class="section-title-rme">Dokter Pengirim</h5>
         
         <div class="form-row-3-3">
-          <div>
+          <!-- <div>
             <label>Nama :</label>
             <input type="text" v-model="form.dokter_nama" class="input-rme" />
+          </div> -->
+          <div>
+            <label>Nama :</label>
+            <select v-model="form.dokter_nama" class="form-select-dokter">
+              <option value="" disabled>🩺 Pilih Dokter</option>
+              <option
+                v-for="dokter in listDokter"
+                :key="dokter.id"
+                :value="dokter.nama"
+              >
+                {{ dokter.nama }}
+              </option>
+            </select>
+            <span class="dropdown-icon">▾</span>
           </div>
           <div>
             <label>Telp. HP :</label>
@@ -418,6 +432,19 @@
         <div style="margin-top: 20px;">
           <label class="fw-bold mb-2">Tanda Tangan Dokter</label>
           <VueSignaturePad ref="ttd_dokter" :options="sigOption" class="signature-box-rme mx-auto" />
+          <div class="dropdown-dokter mt-2">
+              <select v-model="form.dokter_nama" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
           <div class="signature-actions mt-2">
           <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Clear ↻</button>
           <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">Simpan ✔</button>
@@ -603,6 +630,7 @@ async mounted() {
   console.log("🟢 COMPONENT - editData:", this.editData);
   console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
 
+  await this.fetchDokter();
   await this.fetchTahunAkreditasi();
   
 this.disabledSubmit = false;
@@ -618,6 +646,15 @@ this.disabledSubmit = false;
   }
 },
   methods: {
+
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
 
   async fetchTahunAkreditasi() {
     try {
@@ -1014,6 +1051,46 @@ body {
 
 .btn-delete:hover {
   background: #d32f2f;
+}
+
+.dropdown-dokter {
+  position: relative;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
 }
 
 .action-footer {

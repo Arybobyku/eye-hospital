@@ -91,108 +91,57 @@
             <tbody>
               <tr>
                 <td class="label-cell" style="width: 15%">Mata :</td>
-                <td style="width: 35%">
+                <td style="width: 2%">
                   <div class="d-flex gap-4">
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        v-model="form.mata_od"
-                        id="mataOD"
-                      />
+                      <input class="form-check-input" type="checkbox" v-model="form.mata_od" id="mataOD" />
                       <label class="form-check-label" for="mataOD">OD</label>
                     </div>
                     <div class="form-check">
-                      <input
-                        class="form-check-input"
-                        type="checkbox"
-                        v-model="form.mata_os"
-                        id="mataOS"
-                      />
+                      <input class="form-check-input" type="checkbox" v-model="form.mata_os" id="mataOS" />
                       <label class="form-check-label" for="mataOS">OS</label>
                     </div>
                   </div>
                 </td>
-                <td class="label-cell" style="width: 15%">Operator :</td>
-                <td style="width: 35%">
-                  <input
-                    type="text"
-                    v-model="form.operator"
-                    class="form-control form-control-sm"
-                    placeholder="Nama Operator/Dokter"
-                  />
+                <td class="label-cell" style="width: 13%">Operator :</td>
+                <td colspan="3" style="width: 47%">
+                  <input type="text" v-model="form.operator" class="form-control form-control-sm" placeholder="Nama Operator/Dokter" />
                 </td>
               </tr>
               <tr>
                 <td class="label-cell">Jam Operasi :</td>
                 <td>
-                  <input
-                    type="time"
-                    v-model="form.jam_operasi"
-                    class="form-control form-control-sm"
-                  />
+                  <input type="time" v-model="form.jam_operasi" class="form-control form-control-sm" />
                 </td>
                 <td class="label-cell">Lama Operasi :</td>
-                <td>
-                  <input
-                    type="text"
-                    v-model="form.lama_operasi"
-                    class="form-control form-control-sm"
-                    placeholder="Contoh: 30 menit"
-                  />
+                <td colspan="3">
+                  <input type="text" v-model="form.lama_operasi" class="form-control form-control-sm" placeholder="Contoh: 30 menit" />
                 </td>
               </tr>
               <tr>
                 <td class="label-cell">Diagnosis :</td>
-                <td colspan="3">
-                  <input
-                    type="text"
-                    v-model="form.diagnosis"
-                    class="form-control form-control-sm"
-                    placeholder="Diagnosis pasien"
-                  />
+                <td colspan="5">
+                  <input type="text" v-model="form.diagnosis" class="form-control form-control-sm" placeholder="Diagnosis pasien" />
                 </td>
               </tr>
               <tr>
                 <td class="label-cell">Asisten :</td>
-                <td colspan="3">
-                  <input
-                    type="text"
-                    v-model="form.asisten"
-                    class="form-control form-control-sm"
-                    placeholder="Nama Asisten"
-                  />
+                <td colspan="5">
+                  <input type="text" v-model="form.asisten" class="form-control form-control-sm" placeholder="Nama Asisten" />
                 </td>
               </tr>
               <tr>
                 <td class="label-cell">Jenis Operasi :</td>
                 <td>
-                  <input
-                    type="text"
-                    v-model="form.jenis_operasi"
-                    class="form-control form-control-sm"
-                    placeholder="Jenis Operasi"
-                  />
+                  <input type="text" v-model="form.jenis_operasi" class="form-control form-control-sm" placeholder="Jenis Operasi" />
                 </td>
                 <td class="label-cell">Anesthesia :</td>
                 <td>
-                  <input
-                    type="text"
-                    v-model="form.anesthesia"
-                    class="form-control form-control-sm"
-                    placeholder="Jenis Anestesi"
-                  />
+                  <input type="text" v-model="form.anesthesia" class="form-control form-control-sm" placeholder="Jenis Anestesi" />
                 </td>
-              </tr>
-              <tr>
                 <td class="label-cell">Anesthesiologist :</td>
-                <td colspan="3">
-                  <input
-                    type="text"
-                    v-model="form.anesthesiologist"
-                    class="form-control form-control-sm"
-                    placeholder="Nama Dokter Anestesi"
-                  />
+                <td>
+                  <input type="text" v-model="form.anesthesiologist" class="form-control form-control-sm" placeholder="Nama Dokter Anestesi" />
                 </td>
               </tr>
             </tbody>
@@ -333,11 +282,25 @@
               <button @click="saveSign('ttd_operator')" class="btn-save">Simpan ✔</button>
             </div>
 
-            <input
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_operator" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
+
+            <!-- <input
               v-model="form.nama_operator"
               class="input-rme mt-2"
               placeholder="Nama Operator/Dokter"
-            />
+            /> -->
           </div>
         </div>
       </div>
@@ -453,6 +416,7 @@ export default {
   },
 
   async mounted() {
+  await this.fetchDokter();
   await this.fetchTahunAkreditasi();
     this.disabledSubmit = false;
     if (this.viewData) {
@@ -466,6 +430,14 @@ export default {
   },
 
   methods: {
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
     async fetchTahunAkreditasi() {
       try {
         const response = await axios.get('/api/tahun-akreditasi');
@@ -953,6 +925,45 @@ label {
 
 .info-table tbody tr:hover {
   background: #f9fafb;
+}
+
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
 }
 
 /* ================= PROCEDURE STEPS ================= */
