@@ -223,7 +223,7 @@ export default {
         const tahun = response.data.tahun || '22';
         
         if (!this.form.no_surat) {
-          this.form.no_surat = `RRM 3.0/CP/${tahun}`;
+          this.form.no_surat = `RM 3.0/CP/${tahun}`;
         }
         
         console.log("✅ Tahun akreditasi:", tahun);

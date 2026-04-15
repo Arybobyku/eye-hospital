@@ -63,7 +63,7 @@
     <?php $fullpath = storage_path('app/public/images/header_rme.png'); ?>
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
-            {{ $data->no_surat ?? 'RM 3.2/KADPPB/' . config('app.tahun_akreditasi', '22') }}
+            {{ $data->no_surat ?? 'RM 9.7/FKP/' . config('app.tahun_akreditasi', '22') }}
         </div>
         @include('print-rekam-medis.partials.header')
         <table style="width: 100%;  border: 1px solid black;" cellpadding="0" cellspacing="0">

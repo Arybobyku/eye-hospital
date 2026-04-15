@@ -83,7 +83,7 @@ class DokumenKronologisPasien extends Model
             }
             if (empty($model->no_surat)) {
                 $tahun = config('app.tahun_akreditasi', '22');
-                $model->no_surat = "RM 3.2/KADPPB/{$tahun}";
+                $model->no_surat = "RM 9.7/FKP/{$tahun}";
             }
         });
     }

@@ -546,7 +546,7 @@ export default {
         const tahun = response.data.tahun || '22';
 
         if (!this.form.no_surat) {
-          this.form.no_surat = `RM 3.2/KADPPB/${tahun}`;
+          this.form.no_surat = `RM 9.7/FKP/${tahun}`;
         }
 
         console.log("✅ Tahun akreditasi:", tahun);
@@ -554,7 +554,7 @@ export default {
       } catch (error) {
         console.error("❌ Error fetch tahun:", error);
         if (!this.form.no_surat) {
-          this.form.no_surat = 'RM 3.2/KADPPB/22';
+          this.form.no_surat = 'RM 9.7/FKP/22';
         }
       }
     },

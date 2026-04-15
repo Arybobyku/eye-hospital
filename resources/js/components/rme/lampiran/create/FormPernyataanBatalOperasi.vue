@@ -340,7 +340,6 @@ export default {
     console.log("🟢 COMPONENT - Mounted");
     console.log("🟢 COMPONENT - editData:", this.editData);
     console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
-    await this.fetchTahunAkreditasi();
     this.disabledSubmit = false;
     if (this.viewData) {
       this.disabledSubmit = true;
@@ -353,24 +352,6 @@ export default {
   },
 
   methods: {
-    async fetchTahunAkreditasi() {
-      try {
-        const response = await axios.get('/api/tahun-akreditasi');
-        const tahun = response.data.tahun || '22';
-
-        if (!this.form.no_surat) {
-          this.form.no_surat = `RM 9.5/SPPR/${tahun}`;
-        }
-
-        console.log("✅ Tahun akreditasi:", tahun);
-        console.log("✅ No surat:", this.form.no_surat);
-      } catch (error) {
-        console.error("❌ Error fetch tahun:", error);
-        if (!this.form.no_surat) {
-          this.form.no_surat = 'RM 9.5/SPPR/22';
-        }
-      }
-    },
     setDataForm() {
       const today = new Date();
       this.form.tanggal_surat = this.formatDate(today);
