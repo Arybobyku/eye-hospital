@@ -2249,7 +2249,7 @@ ul.list-detail > li > span {
     flex-shrink: 0;
 }
 
-/* Tampilkan submenu saat hover pada parent li */
+/* Tampilkan submenu saat hover pada parent li (desktop) */
 .menu-item:hover .submenu {
     display: block;
 }
@@ -2261,6 +2261,80 @@ ul.list-detail > li > span {
 
 .menu-item:hover .chevron-icon {
     transform: rotate(90deg);
+}
+
+/* Tampilkan submenu saat diklik (semua device) */
+.menu-item-active .submenu {
+    display: block;
+}
+
+.menu-item-active .menu-category {
+    background: #f0f7f0;
+    border-left: 3px solid #1a6f1d;
+}
+
+.menu-item-active .chevron-icon {
+    transform: rotate(90deg);
+}
+
+/* =============================================
+   TABLET & HANDPHONE: submenu muncul ke bawah
+   ============================================= */
+@media (max-width: 960px) {
+    /* Aktifkan scroll vertikal pada sidebar */
+    .menu-router-link {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Matikan hover (tidak ada hover di touch device) */
+    .menu-item:hover .submenu {
+        display: none;
+    }
+    .menu-item:hover .menu-category {
+        background: transparent;
+        border-left: 3px solid transparent;
+    }
+    .menu-item:hover .chevron-icon {
+        transform: rotate(0deg);
+    }
+
+    /* Submenu tampil di bawah, bukan ke kanan */
+    .submenu {
+        position: static !important;
+        width: 100% !important;
+        left: auto !important;
+        top: auto !important;
+        box-shadow: none !important;
+        border-radius: 0 0 6px 6px !important;
+        border-top: 1px solid #e8f5e9;
+        background: #f9fdf9 !important;
+        display: none;
+    }
+
+    /* Header label submenu tetap tampil tapi lebih compact */
+    .submenu::before {
+        border-radius: 0 !important;
+        font-size: 10px;
+        padding: 6px 15px;
+    }
+
+    /* Submenu item sedikit menjorok ke kanan */
+    .submenu li a {
+        padding-left: 25px;
+    }
+
+    /* Active: tampilkan submenu inline */
+    .menu-item-active .submenu {
+        display: block !important;
+    }
+    .menu-item-active .menu-category {
+        background: #f0f7f0 !important;
+        border-left: 3px solid #1a6f1d !important;
+    }
+    .menu-item-active .chevron-icon {
+        transform: rotate(90deg) !important;
+    }
 }
 button.antrian {
 	width: auto;

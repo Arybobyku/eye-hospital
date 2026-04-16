@@ -9,8 +9,8 @@
 			</span>
 			<div ref="rootmenu" class="menu-router-link" :class="menu.isactive ? 'slide-to-right' : ''">
 				<ul>
-					<li v-for="(value, key) in menu.data" class="menu-item">
-						<div class="menu-category">
+					<li v-for="(value, key) in menu.data" class="menu-item" :class="{ 'menu-item-active': activeMenuKey === key }">
+						<div class="menu-category" @click.stop="toggleMenu(key)">
 							<span>{{key}}</span>
 							<vue-feather type="chevron-right" class="chevron-icon"></vue-feather>
 						</div>
@@ -99,6 +99,7 @@ export default {
 			showbutton: false,
 			username: document.querySelector('meta[name="usernametitle"]').content,
 			menu : { data: null, isactive: false, loading: 'display: none' },
+			activeMenuKey: null,
 			showbutton: false,
 			keys: '',
 			breadcrumb: { category: '', page: '' },
@@ -109,6 +110,7 @@ export default {
 		createdb,
 		navhide: function () {
 			vm.menu.isactive = false;
+			vm.activeMenuKey = null;
 		},
 		repatch: function (url, data, key) {
 			vm.keys = key;
@@ -127,9 +129,14 @@ export default {
 		},
 
 		closemenu:function() {
-			vm.menu.isactive =false;
+			vm.menu.isactive = false;
+			vm.activeMenuKey = null;
 			// vm.menu.data = null;
 			setTimeout(() => { vm.setBreadcrumb(); }, 300, this);
+		},
+
+		toggleMenu: function(key) {
+			vm.activeMenuKey = vm.activeMenuKey === key ? null : key;
 		},
 
 		removeIndexDB:function(response) {
