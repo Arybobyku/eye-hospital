@@ -44,7 +44,9 @@ class DokumenSuratPernyataanBatalOperasi extends Model
         'nama_pembuat_pernyataan',
         'ttd_saksi',
         'nama_saksi',
-        
+        'ttd_dokter',
+        'nama_dokter',
+
         'created_by',
         'updated_by',
     ];

@@ -160,10 +160,9 @@
         <div class="signature-section">
           <!-- Pasien/Keluarga yang menyatakan -->
           <div class="sign-box">
-            <label>Yang Menyatakan</label>
-            <label class="mt-2">(Pasien / Keluarga Pasien)</label>
-
-            <!-- Preview TTD yang sudah ada -->
+            <label>Pasien / Keluarga Pasien</label>
+            <!-- <label class="mt-2"></label> -->
+          
             <div
               v-if="form.ttd_pernyataan && !signatureCleared.ttd_pernyataan"
               class="signature-preview"
@@ -177,8 +176,7 @@
                 Hapus & Tanda Tangan Ulang
               </button>
             </div>
-
-            <!-- Signature Pad -->
+          
             <div v-else>
               <VueSignaturePad
                 ref="ttd_pernyataan"
@@ -189,19 +187,18 @@
                 Simpan ✔
               </button>
             </div>
-
+          
             <input
               v-model="form.nama_pembuat_pernyataan"
               class="input-rme mt-2"
               placeholder="Nama Jelas"
             />
           </div>
-
-          <!-- Saksi/Dokter -->
+        
+          <!-- Saksi -->
           <div class="sign-box">
-            <label>Saksi / Dokter</label>
-
-            <!-- Preview TTD yang sudah ada -->
+            <label>Saksi</label>
+          
             <div
               v-if="form.ttd_saksi && !signatureCleared.ttd_saksi"
               class="signature-preview"
@@ -211,8 +208,7 @@
                 Hapus & Tanda Tangan Ulang
               </button>
             </div>
-
-            <!-- Signature Pad -->
+          
             <div v-else>
               <VueSignaturePad
                 ref="ttd_saksi"
@@ -221,12 +217,49 @@
               />
               <button @click="saveSign('ttd_saksi')" class="btn-save">Simpan ✔</button>
             </div>
-
+          
             <input
               v-model="form.nama_saksi"
               class="input-rme mt-2"
-              placeholder="Nama Jelas Saksi/Dokter"
+              placeholder="Nama Jelas Saksi"
             />
+          </div>
+        
+          <!-- Dokter -->
+          <div class="sign-box">
+            <label>Dokter</label>
+          
+            <div
+              v-if="form.ttd_dokter && !signatureCleared.ttd_dokter"
+              class="signature-preview"
+            >
+              <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+              <button @click="clearSignature('ttd_dokter')" class="btn-clear">
+                Hapus & Tanda Tangan Ulang
+              </button>
+            </div>
+          
+            <div v-else>
+              <VueSignaturePad
+                ref="ttd_dokter"
+                :options="sigOption"
+                class="signature-box-rme"
+              />
+              <button @click="saveSign('ttd_dokter')" class="btn-save">Simpan ✔</button>
+            </div>
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_dokter" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
           </div>
         </div>
       </div>
@@ -276,6 +309,7 @@ export default {
       disabledSubmit: false,
       signatureCleared: {
         ttd_pernyataan: false,
+        ttd_dokter: false,
         ttd_saksi: false,
       },
       sigOption: {
@@ -313,6 +347,8 @@ export default {
         nama_pembuat_pernyataan: "",
         ttd_saksi: "",
         nama_saksi: "",
+        ttd_dokter: "",
+        nama_dokter:"",
       },
     };
   },
@@ -340,6 +376,7 @@ export default {
     console.log("🟢 COMPONENT - Mounted");
     console.log("🟢 COMPONENT - editData:", this.editData);
     console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
+    await this.fetchDokter();
     this.disabledSubmit = false;
     if (this.viewData) {
       this.disabledSubmit = true;
@@ -352,6 +389,14 @@ export default {
   },
 
   methods: {
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
     setDataForm() {
       const today = new Date();
       this.form.tanggal_surat = this.formatDate(today);
@@ -883,6 +928,46 @@ select.form-control {
 .btn-save-form:disabled {
   background: #b0bec5;
   cursor: not-allowed;
+}
+
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
 }
 
 /* ================= ACTION FOOTER ================= */
