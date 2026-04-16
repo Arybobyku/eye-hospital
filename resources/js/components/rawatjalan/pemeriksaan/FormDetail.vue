@@ -72,14 +72,20 @@
 											:form="form.oculardextrakeratometrik2"></Inputed>
 										<Inputed :ref="form.oculardextratonometri.name"
 											:form="form.oculardextratonometri"></Inputed>
-											<div class="grid">
-												<div class="col-6">
-												<Selected v-on:click="selectbox($event, form.select.oculardextravisus.name, form.select.oculardextravisus.statics)" 
-														:ref="form.select.oculardextravisus.name" @selecteditem="selecteditem" @selectclear="selectclear"
-														:selection="form.select.oculardextravisus" v-on:keyup="selectfilter($event, form.select.oculardextravisus.name)"></Selected>
-												</div>
+										<div class="grid">
+											<div class="col-6">
+											<Selected v-on:click="selectbox($event, form.select.oculardextravisus.name, form.select.oculardextravisus.statics)" 
+													:ref="form.select.oculardextravisus.name" @selecteditem="selecteditem" @selectclear="selectclear"
+													:selection="form.select.oculardextravisus" v-on:keyup="selectfilter($event, form.select.oculardextravisus.name)"></Selected>
 											</div>
-
+										</div>
+										<div class="grid">
+											<div class="col-6">
+											<Selected v-on:click="selectbox($event, form.select.oculardextrapinhole.name, form.select.oculardextrapinhole.statics)" 
+													:ref="form.select.oculardextrapinhole.name" @selecteditem="selecteditem" @selectclear="selectclear"
+													:selection="form.select.oculardextrapinhole" v-on:keyup="selectfilter($event, form.select.oculardextrapinhole.name)"></Selected>
+											</div>
+										</div>
 										<div class="grid">
 											<div class="col-4">
 												<Selected v-on:click="selectbox($event, form.select.oculardextrabcva1_s.name, form.select.oculardextrabcva1_s.statics)" 
@@ -97,8 +103,16 @@
 												:selection="form.select.oculardextrabcva1_x"></Selected>
 											</div>
 										</div>
-										<Inputed :ref="form.oculardextrabcva2.name" :form="form.oculardextrabcva2">
-										</Inputed>
+										<!-- <Inputed :ref="form.oculardextrabcva2.name" :form="form.oculardextrabcva2">
+										</Inputed> -->
+										<div class="grid">
+											<div class="col-6">
+												<Selected v-on:click="selectbox($event, form.select.oculardextrabcva2.name, form.select.oculardextrabcva2.statics)" 
+														:ref="form.select.oculardextrabcva2.name" @selecteditem="selecteditem" @selectclear="selectclear"
+														:selection="form.select.oculardextrabcva2" v-on:keyup="selectfilter($event, form.select.oculardextrabcva2.name)"></Selected>
+											</div>
+										</div>
+
 										<Inputed :ref="form.oculardextraadd.name" :form="form.oculardextraadd">
 										</Inputed>
 										<h4>Kacamata lama</h4>
@@ -158,6 +172,13 @@
 														:selection="form.select.ocularsinistravisus" v-on:keyup="selectfilter($event, form.select.ocularsinistravisus.name)"></Selected>
 												</div>
 											</div>
+											<div class="grid">
+												<div class="col-6">
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistrapinhole.name, form.select.ocularsinistrapinhole.statics)" 
+														:ref="form.select.ocularsinistrapinhole.name" @selecteditem="selecteditem" @selectclear="selectclear"
+														:selection="form.select.ocularsinistrapinhole" v-on:keyup="selectfilter($event, form.select.ocularsinistrapinhole.name)"></Selected>
+												</div>
+											</div>
 											
 										<div class="grid">
 											<div class="col-4">
@@ -176,9 +197,15 @@
 												:selection="form.select.ocularsinistrabcva1_x"></Selected>
 											</div>
 										</div>
-					
-										<Inputed :ref="form.ocularsinistrabcva2.name" :form="form.ocularsinistrabcva2">
-										</Inputed>
+										<!-- <Inputed :ref="form.ocularsinistrabcva2.name" :form="form.ocularsinistrabcva2">
+										</Inputed> -->
+										<div class="grid">
+											<div class="col-6">
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistrabcva2.name, form.select.ocularsinistrabcva2.statics)" 
+															:ref="form.select.ocularsinistrabcva2.name" @selecteditem="selecteditem" @selectclear="selectclear"
+															:selection="form.select.ocularsinistrabcva2" v-on:keyup="selectfilter($event, form.select.ocularsinistrabcva2.name)"></Selected>
+											</div>
+										</div>
 										<Inputed :ref="form.ocularsinistraadd.name" :form="form.ocularsinistraadd">
 										</Inputed>
 										<h4>Kacamata lama</h4>
@@ -422,6 +449,8 @@ export default {
 			if (osbcva1_c) osbcva1 += ' c ' + osbcva1_c + ' ';
 			if (osbcva1_x) osbcva1 += ' x ' + osbcva1_x;
 			osbcva1 = osbcva1.trim();
+			var odbcva2 = vm.form.select.oculardextrabcva2.label;
+			var osbcva2 = vm.form.select.ocularsinistrabcva2.label;
 
 
 				vm.form.object = `
@@ -445,8 +474,8 @@ export default {
 					</tr>
 					<tr>
 						<td>BCVA</td>
-						<td>${odbcva1} => ${vm.form.oculardextrabcva2.value}</td>
-						<td>${osbcva1} => ${vm.form.ocularsinistrabcva2.value}</td>
+						<td>${odbcva1} => ${odbcva2}</td>
+						<td>${osbcva1} => ${osbcva2}</td>
 					</tr>
 					<tr>
 						<td>Keratometri K1</td>
@@ -652,13 +681,17 @@ export default {
 				vm.form.select.oculardextraautoref_x.label = parsed.x;
 				if (parsed.s == '') {
 					vm.form.select.oculardextraautoref_s.label = 'Silahkan Pilih';
+					vm.form.select.oculardextraautoref_s.value = '';
 				}
 				if (parsed.c == '') {
 					vm.form.select.oculardextraautoref_c.label = 'Silahkan Pilih';
+					vm.form.select.oculardextraautoref_c.value = '';
 				}
 				console.log('parsed', parsed.x);
 				if (parsed.x == '') {
 					vm.form.select.oculardextraautoref_x.label = 'Silahkan Pilih';
+					vm.form.select.oculardextraautoref_x.value = '';
+
 				}
 				vm.form.oculardextrapd.value = vm.nullcheck(temps.ocular_dextra_pd);
 				vm.form.oculardextrakeratometrik1.value = vm.nullcheck(temps.ocular_dextra_keratometri_k1);
@@ -681,14 +714,22 @@ export default {
 				vm.form.select.oculardextrabcva1_x.label = parsed1.x;
 				if (parsed1.s == '') {
 					vm.form.select.oculardextrabcva1_s.label = 'Silahkan Pilih';
+					vm.form.select.oculardextrabcva1_s.value = '';
 				}
 				if (parsed1.c == '') {
 					vm.form.select.oculardextrabcva1_c.label = 'Silahkan Pilih';
+					vm.form.select.oculardextrabcva1_c.value = '';
 				}
 				if (parsed1.x == '') {
 					vm.form.select.oculardextrabcva1_x.label = 'Silahkan Pilih';
+					vm.form.select.oculardextrabcva1_x.value = '';
 				}
-				vm.form.oculardextrabcva2.value = vm.nullcheck(temps.ocular_dextra_bcva2);
+				vm.form.select.oculardextrabcva2.label = temps.ocular_dextra_bcva2;
+				vm.form.select.oculardextrabcva2.value = temps.ocular_dextra_bcva2;
+				if (temps.ocular_dextra_bcva2  == '' || temps.ocular_dextra_bcva2  == null) {
+					vm.form.select.oculardextrabcva2.label = 'Silahkan Pilih';
+					vm.form.select.oculardextrabcva2.value = '';
+				}
 				vm.form.select.oculardextrakacamatalamasph.value = temps.ocular_dextra_kacamata_lama_sph;
 				vm.form.select.oculardextrakacamatalamasph.label = temps.ocular_dextra_kacamata_lama_sph;
 				if (temps.ocular_dextra_kacamata_lama_sph  == '' || temps.ocular_dextra_kacamata_lama_sph  == null) {
@@ -718,12 +759,16 @@ export default {
 				vm.form.select.ocularsinistraautoref_x.label = parsed2.x;
 				if (parsed2.s == '') {
 					vm.form.select.ocularsinistraautoref_s.label = 'Silahkan Pilih';
+					vm.form.select.ocularsinistraautoref_s.value = '';
 				}
 				if (parsed2.c == '') {
 					vm.form.select.ocularsinistraautoref_c.label = 'Silahkan Pilih';
+					vm.form.select.ocularsinistraautoref_c.value = '';
 				}
 				if (parsed2.x == '') {
 					vm.form.select.ocularsinistraautoref_x.label = 'Silahkan Pilih';
+					vm.form.select.ocularsinistraautoref_x.value = '';
+
 				}
 				vm.form.ocularsinistraro.value = vm.nullcheck(temps.ocular_sinistra_ro);
 				vm.form.ocularsinistraro.disabled = true; // ✅ tambahkan ini
@@ -746,14 +791,23 @@ export default {
 				vm.form.select.ocularsinistrabcva1_x.label = parsed3.x;
 				if (parsed3.s == '') {
 					vm.form.select.ocularsinistrabcva1_s.label = 'Silahkan Pilih';
+					vm.form.select.ocularsinistrabcva1_s.value = '';
 				}
 				if (parsed3.x == '') {
 					vm.form.select.ocularsinistrabcva1_x.label = 'Silahkan Pilih';
+					vm.form.select.ocularsinistrabcva1_x.value = '';
 				}
 				if (parsed3.c == '') {
 					vm.form.select.ocularsinistrabcva1_c.label = 'Silahkan Pilih';
+					vm.form.select.ocularsinistrabcva1_c.value = '';
 				}
-				vm.form.ocularsinistrabcva2.value = vm.nullcheck(temps.ocular_sinistra_bcva2);
+				// vm.form.ocularsinistrabcva2.value = vm.nullcheck(temps.ocular_sinistra_bcva2);
+				vm.form.select.ocularsinistrabcva2.label = temps.ocular_sinistra_bcva2;
+				vm.form.select.ocularsinistrabcva2.value = temps.ocular_sinistra_bcva2;
+				if (temps.ocular_dextra_bcva2  == '' || temps.ocular_sinistra_bcva2  == null) {
+					vm.form.select.ocularsinistrabcva2.label = 'Silahkan Pilih';
+					vm.form.select.ocularsinistrabcva2.value = '';
+				}
 
 
 				vm.form.select.ocularsinistrakacamatalamasph.value = temps.ocular_sinistra_kacamata_lama_sph;

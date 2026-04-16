@@ -265,7 +265,7 @@ export const arrpemeriksaan = () => {
 			});
 		}
 	const pilihanaxis = [];
-		for (let i = 0; i <= 180; i++) {
+		for (let i = 0; i <= 180; i += 5) {
 			pilihanaxis.push({
 				value: i.toString(),
 				label: i.toString()

@@ -81,6 +81,18 @@ class SearchingCtrl extends Controller
 		else if ($key == 'oculardextravisus') {
 			$data = $this->ocularsinistravisus($request);
 		}
+		else if ($key == 'oculardextrabcva2') {
+			$data = $this->ocularsinistravisus($request);
+		}
+		else if ($key == 'oculardextrabcva2') {
+			$data = $this->ocularsinistravisus($request);
+		}
+		else if ($key == 'oculardextrapinhole') {
+			$data = $this->ocularsinistrapinhole($request);
+		}
+		else if ($key == 'oculardextrapinhole') {
+			$data = $this->ocularsinistrapinhole($request);
+		}
 		else if ($key == 'obatgudang') {
 			$data = $this->obatgudang($request);
 		}
@@ -413,6 +425,29 @@ class SearchingCtrl extends Controller
 		$key = $request->key;
 		$search = $request->search;
 		$data = DB::table('master_visus')
+			->orderBy('id', 'asc')
+			->where('nilai', 'ilike', '%'.$search.'%')
+			->chunk(25, function ($data) use ($collection, $key) {
+				foreach ($data as $row) {
+					$collection->push(
+						(object) [
+							'value' => $row->nilai,
+							'label' => $row->nilai,
+
+							'id' => $row->id,
+							'uuid' => $row->uuid,
+							'nilai' => $row->nilai
+						]
+					);
+				}
+			});
+		return $collection;
+	}
+	private function ocularsinistrapinhole() {
+		$collection = new Collection;
+		$key = $request->key;
+		$search = $request->search;
+		$data = DB::table('master_pinhole')
 			->orderBy('id', 'asc')
 			->where('nilai', 'ilike', '%'.$search.'%')
 			->chunk(25, function ($data) use ($collection, $key) {

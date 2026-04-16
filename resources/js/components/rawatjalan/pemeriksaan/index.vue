@@ -1,10 +1,20 @@
 <template>
 <div class="inner" ref="roottable">
-	<div class="grid">
+	<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
+		
+		<div class="tab-content">
+			<div class="content-tab-in" v-if="tab.content.ro">
+				<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+			</div>
+			<div class="content-tab-in" v-else-if="tab.content.perawat">
+				<Datatable ref="DatatablePerawat" :module="moduleperawat" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+			</div>
+		</div>
+	<!-- <div class="grid">
 		<div class="col-12">
 			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
 		</div>
-	</div>
+	</div> -->
 	<Loader ref="Loader"></Loader>
 </div>
 <FormPerawat ref="FormPerawat" @dialog="dialog" @parsingForm="parsingForm"></FormPerawat>
@@ -47,6 +57,7 @@ export default {
 		attach: {
 			link : {
 				list: '/rawatjalan/pemeriksaan/list',
+				listperawat: '/rawatjalan/pemeriksaan/listperawat',
 				add: '/rawatjalan/pemeriksaan/add',
 				addperawat: '/rawatjalan/pemeriksaan/addperawat',
 				detail: '/rawatjalan/pemeriksaan/detail',
@@ -66,7 +77,29 @@ export default {
 			{ value: 'status_ro', label: 'status', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }
 		],
+		columnperawat: [
+			{ value: 'no_pendaftaran', label: 'No Pendaftaran', type: 'text', search: true, close: false, button: false },
+			{ value: 'rekam_medis', label: 'Rekam Medis', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
+			{ value: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'text', search: true, close: false, button: false },
+			{ value: 'tanggal_lahir', label: 'Tanggal Lahir', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
+			{ value: 'berkebutuhan_khusus', label: 'Triase?', type: 'text', search: false, close: false, button: false },
+			{ value: 'status_ro', label: 'status', type: 'text', search: false, close: false, button: false },
+			{ value: 'btnhtmlperawat', label: '', type: 'text', search: false, close: false, button: false }
+		],
 		module: { data: [], column: [], total: 0, ispaging: true },
+		moduleperawat: { data: [], column: [], total: 0, ispaging: true },
+		tab: {
+			button: [
+				{ value: 'ro', label: 'RO', class: 'tab-active' },
+				{ value: 'perawat', label: 'Perawat', class: 'tab-no-active' },
+			],
+			content: { 
+				ro: true, 
+				perawat: false, 
+			}
+		},
 	}},
 	methods: {
 		bunyibell:function() {
@@ -81,7 +114,26 @@ export default {
 		* Bagian fungsi yang opsional untuk manipulasi data dan string
 		*************************************************************************************************************************/
 		nullAndZero, datename,
-
+		changesTab: function (values, index, classes) {
+			if (classes != 'tab-active') {
+				for (let i = 0; i < vm.tab.button.length; i++) { 
+					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; 
+				}
+				vm.tab.button[index].class = 'tab-active';
+				vm.tab.content[values] = true;
+				
+				vm.module.data = [];
+				
+				if (values == 'perawat') {
+					vm.posisieksternal = 'antrian';
+					vm.loadperawat();
+				}
+				else {
+					vm.posisieksternal = 'ro';
+					vm.loadmain();
+				}
+			}
+		},
 		/*************************************************************************************************************************
 		* Bagian fungsi untuk pemrosesan table
 		*************************************************************************************************************************/
@@ -89,6 +141,17 @@ export default {
 		btnhtml:function(_item, _index) {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Pemeriksaan RO', item: _item, index: _index, show: true },
+				// { icon: 'arrow-up', color: 'btn-success', posisi: 'detailperawat', tooltip: 'Pemeriksaan Perawat', item: _item, index: _index, show: true },
+				{ icon: 'bell', color: 'btn-info', posisi: 'panggil', tooltip: 'Panggil Pasien', item: _item, index: _index, show: true },
+				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Log Pemeriksaan RO', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'Informed Consent (RME)', item: _item, index: _index, show: true },
+			]
+			return str;
+		},
+		
+		btnhtmlperawat:function(_item, _index) {
+			let str = [
+				// { icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Pemeriksaan RO', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detailperawat', tooltip: 'Pemeriksaan Perawat', item: _item, index: _index, show: true },
 				{ icon: 'bell', color: 'btn-info', posisi: 'panggil', tooltip: 'Panggil Pasien', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Log Pemeriksaan RO', item: _item, index: _index, show: true },
@@ -96,6 +159,7 @@ export default {
 			]
 			return str;
 		},
+
 
 		statusro:function(data) {
 			if (data.status_ro == 'Belum Diperiksa') {
@@ -116,6 +180,7 @@ export default {
 		converter: function (data, index, column, identity) {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
+			else if (identity == 'btnhtmlperawat') { _tmp = { value: vm.btnhtmlperawat(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
 			else if (identity == 'no_pendaftaran') { _tmp = { value: vm.nopendaftaran(data), ishtml: 'html', style: '' }; }
@@ -193,26 +258,96 @@ export default {
 		},
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
-		tableload:function() { vm.attach.url = vm.attach.link.list; vm.attach.data = new FormData(); vm.attach.data.append('search', ''); vm.attach.data.append('column', ''); vm.attach.data.append('page', 1); vm.executions(); },
-		tablereload:function(data = new FormData(), pos = 'main') { if (pos == 'outer') { vm.$refs.Datatable.skeleton(); } vm.attach.url = vm.attach.link.list; vm.attach.data = data; vm.position = 'externaltable'; vm.executions(); },
+		setDatatablePerawat: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnperawat.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.columnperawat[j].value] ? data[i][vm.columnperawat[j].value] :vm.columnperawat[j].value, vm.columnperawat[j].value)); } temporer.push(col); } vm.moduleperawat.data = temporer; vm.moduleperawat.total = total; return temporer; },
+		// tableload:function() { vm.attach.url = vm.attach.link.list; vm.attach.data = new FormData(); vm.attach.data.append('search', ''); vm.attach.data.append('column', ''); vm.attach.data.append('page', 1); vm.executions(); },
+		tableload:function(pos = 'main') { 
+			if (pos == 'main') {
+				vm.attach.url = vm.attach.link.list; 
+				vm.attach.data = new FormData(); 
+				vm.attach.data.append('search', ''); 
+				vm.attach.data.append('column', ''); 
+				vm.attach.data.append('page', 1); 
+			}
+			else if (pos == 'perawat') {
+				vm.attach.url = vm.attach.link.listperawat; 
+				vm.attach.data = new FormData(); 
+				vm.attach.data.append('search', ''); 
+				vm.attach.data.append('column', ''); 
+				vm.attach.data.append('page', 1); 
+			}
+			else {
+				vm.attach.url = vm.attach.link.list; 
+				vm.attach.data = new FormData(); 
+				vm.attach.data.append('search', ''); 
+				vm.attach.data.append('column', ''); 
+				vm.attach.data.append('page', 1); 
+			
+			}
+			
+			vm.executions(); 
+		},
+		tablereload: function (data = new FormData(), pos = 'main') {
+			if (vm.posisieksternal == 'perawat') {
+				if (pos == 'outer') {
+					vm.$refs.DatatablePerawat.skeleton(); 
+				}
+				vm.attach.url = vm.attach.link.listperawat; 
+				vm.attach.data = data; 
+			} else {
+				if (pos === 'outer') {
+					vm.$refs.Datatable.skeleton();
+				}
+				vm.attach.url  = vm.attach.link.list;
+				vm.attach.data = data;
+			}
+			vm.position = 'externaltable';
+
+			vm.executions();
+		},
 
 		/*************************************************************************************************************************
 		* Bagian fungsi untuk pemrosesan message, fungsi untuk error dan success
 		*************************************************************************************************************************/
 
 		loadmain: () => { vm.position = 'loadmain'; vm.firstloader(); vm.tableload(); },
+		loadperawat:function() {
+			vm.position = 'loadperawat'; 
+			vm.firstloader(); 
+			vm.tableload('perawat');
+		},
 
 		gagal: function (error) {
 			if (vm.$debugs) { console.log(error.response); } let active = 0;
 			vm.message('error', 1);
 			if (vm.position == 'loadmain') { vm.firstloader(); active = 1; }
-			else if (vm.position == 'externaltable') { vm.$refs.Datatable.skeleton(); vm.$refs.Datatable.backpage(); }
+			else if (vm.position == 'loadperawat') { vm.firstloader(); active = 1; }
+			// else if (vm.position == 'externaltable') { vm.$refs.Datatable.skeleton(); vm.$refs.Datatable.backpage(); }
+			else if (vm.position == 'externaltable') { 
+				if (vm.posisieksternal='perawat') {
+					vm.$refs.DatatablePerawat.skeleton(); 
+					vm.$refs.DatatablePerawat.backpage(); 
+				}
+				else {
+					vm.$refs.Datatable.skeleton(); 
+					vm.$refs.Datatable.backpage(); 
+				}
+			}
 			else if (vm.position == 'adddata') { vm.loadingModal('formdetail'); }
 			else if (vm.position == 'detaildata') { vm.loadingModal('formdetail'); vm.$refs.FormDetail.hide();  }
 			else if (vm.position == 'adddataperawat') { vm.loadingModal('formdetailperawat'); }
 			else if (vm.position == 'detaildataperawat') { vm.loadingModal('formdetailperawat'); vm.$refs.FormPerawat.hide();  }
 			else if (vm.position == 'historidata') { vm.loadingModal('formhistori'); vm.$refs.FormHistori.hide();  }
-			else if (vm.position == 'call') { vm.$refs.Datatable.skeleton(); }
+			// else if (vm.position == 'call') { vm.$refs.Datatable.skeleton(); }
+			else if (vm.position == 'call') { 
+				if (vm.posisieksternal='perawat') {
+					vm.$refs.DatatablePerawat.skeleton(); 
+					vm.$refs.DatatablePerawat.backpage(); 
+				}
+				else {
+					vm.$refs.Datatable.skeleton(); 
+					vm.$refs.Datatable.backpage(); 
+				}
+			}
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
 		},
@@ -222,16 +357,31 @@ export default {
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
 	
 			if (vm.position == 'loadmain') { 
+				vm.posisieksternal='ro';
 				vm.firstloader();
 				vm.$refs.Datatable.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total); 
 				vm.$refs.Datatable.paging(); 
 				active = 0;
 			}
-			else if (vm.position == 'externaltable') { 
-				vm.$refs.Datatable.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.Datatable.skeleton(); 
-				vm.$refs.Datatable.paging(); 
+			else if (vm.position == 'loadperawat') { 
+				vm.posisieksternal='perawat';
+				vm.firstloader();
+				vm.$refs.DatatablePerawat.update(vm.columnperawat, vm.setDatatablePerawat(response.data.data, response.data.total), response.data.total); 
+				vm.$refs.DatatablePerawat.paging(); 
 				active = 0;
+			}
+			else if (vm.position == 'externaltable') { 
+				if (vm.posisieksternal=='perawat') {
+					vm.$refs.DatatablePerawat.update('', vm.setDatatablePerawat(response.data.data, response.data.total), response.data.total); 
+					vm.$refs.DatatablePerawat.skeleton(); 
+					vm.$refs.DatatablePerawat.paging(); 
+					active = 0;
+				} else {
+					vm.$refs.Datatable.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total); 
+					vm.$refs.Datatable.skeleton(); 
+					vm.$refs.Datatable.paging(); 
+					active = 0;
+				}
 			}
 			else if (vm.position == 'detaildata') {
 				vm.$refs.FormDetail.setdataform(response); 
@@ -252,7 +402,7 @@ export default {
 				vm.loadingModal('formdetailperawat');
 				vm.$refs.FormPerawat.aturulang();
 				vm.$refs.FormPerawat.hide(); 
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
+				setTimeout(() => { vm.$refs.DatatablePerawat.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'updatedata') {
 				vm.loadingModal('formdetail');
@@ -268,6 +418,7 @@ export default {
 		message: function (position, active) {
 			if (position == 'error') {
 				if (vm.position == 'loadmain') { vm.notification('Data gagal dimuat.', 3000, position); }
+				else if (vm.position == 'loadperawat') { vm.notification('Datalist tabel gagal dimuat.', 3000, position); }
 				else if (vm.position == 'externaltable') { vm.notification('Datalist tabel gagal dimuat.', 3000, position); }
 				else if (vm.position == 'adddata') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'adddataperawat') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
@@ -290,7 +441,16 @@ export default {
 			if (posisi == 'formdetail') { vm.loadingModal('formdetail'); }
 			else if (posisi == 'formdetailperawat') { vm.loadingModal('formdetailperawat'); }
 			else if (posisi == 'removedata') { vm.$refs.Datatable.skeleton(); }
-			else if (posisi == 'call') { vm.$refs.Datatable.skeleton(); }
+			else if (posisi == 'call') { 				
+				if (vm.posisieksternal == 'perawat') {
+					vm.$refs.DatatablePerawat.skeleton(); 
+					vm.$refs.DatatablePerawat.backpage(); 
+				}
+				else {
+					vm.$refs.Datatable.skeleton(); 
+					vm.$refs.Datatable.backpage(); 
+				}
+			}
 			vm.executions();
 		},
 
