@@ -699,8 +699,14 @@ export default {
 				vm.form.oculardextratonometri.value = vm.nullcheck(temps.ocular_dextra_tonometri);
 				vm.form.select.oculardextravisus.value = temps.ocular_dextra_visus;
 				vm.form.select.oculardextravisus.label =  temps.ocular_dextra_visus;
-				if (temps.ocular_dextra_visus == '') {
+				if (temps.ocular_dextra_visus == '' || temps.ocular_dextra_visus == null) {
 					vm.form.select.oculardextravisus.label = 'Silahkan Pilih';
+				}
+				vm.form.select.oculardextrapinhole.value = temps.ocular_dextra_pinhole;
+				vm.form.select.oculardextrapinhole.label =  temps.ocular_dextra_pinhole;
+				if (temps.ocular_dextra_pinhole == '' || temps.ocular_dextra_pinhole == null) {
+					vm.form.select.oculardextrapinhole.label = 'Silahkan Pilih';
+					vm.form.select.oculardextrapinhole.value = '';
 				}
 				vm.form.oculardextraadd.value = vm.nullcheck(temps.ocular_dextra_add);
 				vm.form.oculardextraautoref.value = vm.nullcheck(temps.ocular_dextra_autoref);
@@ -779,6 +785,13 @@ export default {
 				vm.form.select.ocularsinistravisus.label = temps.ocular_sinistra_visus;
 				if (temps.ocular_sinistra_visus == '' || temps.ocular_sinistra_visus == null) {
 					vm.form.select.ocularsinistravisus.label = 'Silahkan Pilih';
+					vm.form.select.ocularsinistravisus.value = '';
+				}
+				vm.form.select.ocularsinistrapinhole.value = temps.ocular_sinistra_pinhole;
+				vm.form.select.ocularsinistrapinhole.label = temps.ocular_sinistra_pinhole;
+				if (temps.ocular_sinistra_pinhole == '' || temps.ocular_sinistra_pinhole == null) {
+					vm.form.select.ocularsinistrapinhole.label = 'Silahkan Pilih';
+					vm.form.select.ocularsinistrapinhole.value = '';
 				}
 				vm.form.ocularsinistraadd.value = vm.nullcheck(temps.ocular_sinistra_add);
 				// vm.form.ocularsinistrabcva1.value = vm.nullcheck(temps.ocular_sinistra_bcva1);
