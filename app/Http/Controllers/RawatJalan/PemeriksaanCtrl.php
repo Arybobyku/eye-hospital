@@ -799,7 +799,9 @@ class PemeriksaanCtrl extends Controller
 			->where('sebagai', '=', 'RO')
 			->orderBy('id', 'desc')->first();
 
-		return response()->json(['data' => $data, 'histori' => $histori, 'kunjungan' => $kunjungan, 'cppt'=>$cppt]);
+		$nama_login = \Illuminate\Support\Facades\Crypt::decrypt(\Illuminate\Support\Facades\Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+		return response()->json(['data' => $data, 'histori' => $histori, 'kunjungan' => $kunjungan, 'cppt'=>$cppt, 'nama_login' => $nama_login]);
 	}
 	public function detailperawat(Request $request)
 	{

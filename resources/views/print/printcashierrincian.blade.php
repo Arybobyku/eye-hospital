@@ -98,7 +98,13 @@
                 <table class="header-top">
                     <tr>
                         <td>Tanggal Cetak</td>
-                        <td>: {{ tglse($registrasi->tanggal_bayar) }}</td>
+                        <td>: 
+                            @if (!empty($registrasi->tanggal_bayar) && $registrasi->tanggal_bayar != '1990-01-01')
+                                {{ tglse($registrasi->tanggal_bayar) }}
+                            @else
+                                {{ tglse(date('Y-m-d')) }}
+                            @endif
+                        </td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>

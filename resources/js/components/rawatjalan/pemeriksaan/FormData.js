@@ -219,8 +219,8 @@ export const formkelurahan = () => {
 
 
 		ocularsinistraro: {
-			title: 'Nama RO', for_id: 'form_' + 'ocularsinistraro', type: 'text', required: 'required',
-			name: 'ocularsinistraro', value: '', disabled: false, show: true, kinds: ''
+			title: 'Nama RO', for_id: 'form_' + 'ocularsinistraro', type: 'text',
+			name: 'ocularsinistraro', value: '', disabled: true, show: true, kinds: ''
 		},
 
 		ocularsinistrakeratometrik1: {

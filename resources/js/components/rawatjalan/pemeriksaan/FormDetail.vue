@@ -33,7 +33,6 @@
 							<li>Alamat<span><strong>{{ detail.alamat }}</strong></span></li>
 							<li>Triase<span><strong>{{ detail.berkebutuhan_khusus }}</strong></span></li>
 							<li v-if="detail.berkebutuhan_khusus!='Tidak'">Keterangan<span><strong>{{ detail.keterangan_berkebutuhan }}</strong></span></li>
-
 							<li><Inputed :ref="form.ocularsinistraro.name" :form="form.ocularsinistraro"></Inputed></li>
 							<!-- <li><Inputed :ref="form.nama_pemeriksa.name" :form="form.nama_pemeriksa"></Inputed></li> -->
 						</ul>
@@ -51,17 +50,17 @@
 										<h4>Ocular Dextra</h4>
 										<div class="grid">
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.oculardextraautoref_s.name, form.select.oculardextraautoref_s.statics)"
+												<Selected v-on:click="selectbox($event, form.select.oculardextraautoref_s.name, form.select.oculardextraautoref_s.statics)" 
 												:ref="form.select.oculardextraautoref_s.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.oculardextraautoref_s"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.oculardextraautoref_c.name, form.select.oculardextraautoref_c.statics)"
+												<Selected v-on:click="selectbox($event, form.select.oculardextraautoref_c.name, form.select.oculardextraautoref_c.statics)" 
 												:ref="form.select.oculardextraautoref_c.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.oculardextraautoref_c"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.oculardextraautoref_x.name, form.select.oculardextraautoref_x.statics)"
+												<Selected v-on:click="selectbox($event, form.select.oculardextraautoref_x.name, form.select.oculardextraautoref_x.statics)" 
 												:ref="form.select.oculardextraautoref_x.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.oculardextraautoref_x"></Selected>
 											</div>
@@ -75,7 +74,7 @@
 											:form="form.oculardextratonometri"></Inputed>
 											<div class="grid">
 												<div class="col-6">
-												<Selected v-on:click="selectbox($event, form.select.oculardextravisus.name, form.select.oculardextravisus.statics)"
+												<Selected v-on:click="selectbox($event, form.select.oculardextravisus.name, form.select.oculardextravisus.statics)" 
 														:ref="form.select.oculardextravisus.name" @selecteditem="selecteditem" @selectclear="selectclear"
 														:selection="form.select.oculardextravisus" v-on:keyup="selectfilter($event, form.select.oculardextravisus.name)"></Selected>
 												</div>
@@ -83,17 +82,17 @@
 
 										<div class="grid">
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.oculardextrabcva1_s.name, form.select.oculardextrabcva1_s.statics)"
+												<Selected v-on:click="selectbox($event, form.select.oculardextrabcva1_s.name, form.select.oculardextrabcva1_s.statics)" 
 												:ref="form.select.oculardextrabcva1_s.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.oculardextrabcva1_s"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.oculardextrabcva1_c.name, form.select.oculardextrabcva1_c.statics)"
+												<Selected v-on:click="selectbox($event, form.select.oculardextrabcva1_c.name, form.select.oculardextrabcva1_c.statics)" 
 												:ref="form.select.oculardextrabcva1_c.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.oculardextrabcva1_c"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.oculardextrabcva1_x.name, form.select.oculardextrabcva1_x.statics)"
+												<Selected v-on:click="selectbox($event, form.select.oculardextrabcva1_x.name, form.select.oculardextrabcva1_x.statics)" 
 												:ref="form.select.oculardextrabcva1_x.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.oculardextrabcva1_x"></Selected>
 											</div>
@@ -105,17 +104,17 @@
 										<h4>Kacamata lama</h4>
 										<div class="grid">
 											<div class="col-4">
-										<Selected v-on:click="selectbox($event, form.select.oculardextrakacamatalamasph.name, form.select.oculardextrakacamatalamasph.statics)"
+										<Selected v-on:click="selectbox($event, form.select.oculardextrakacamatalamasph.name, form.select.oculardextrakacamatalamasph.statics)" 
 												:ref="form.select.oculardextrakacamatalamasph.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.oculardextrakacamatalamasph"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.oculardextrakacamatalamacyl.name, form.select.oculardextrakacamatalamacyl.statics)"
+												<Selected v-on:click="selectbox($event, form.select.oculardextrakacamatalamacyl.name, form.select.oculardextrakacamatalamacyl.statics)" 
 												:ref="form.select.oculardextrakacamatalamacyl.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.oculardextrakacamatalamacyl"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.oculardextrakacamatalamaaddisi.name, form.select.oculardextrakacamatalamaaddisi.statics)"
+												<Selected v-on:click="selectbox($event, form.select.oculardextrakacamatalamaaddisi.name, form.select.oculardextrakacamatalamaaddisi.statics)" 
 												:ref="form.select.oculardextrakacamatalamaaddisi.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.oculardextrakacamatalamaaddisi"></Selected>
 											</div>
@@ -129,17 +128,17 @@
 										<!-- <Inputed :ref="form.oculardextrapd.name" :form="form.oculardextrapd"></Inputed> -->
 										<div class="grid">
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.ocularsinistraautoref_s.name, form.select.ocularsinistraautoref_s.statics)"
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistraautoref_s.name, form.select.ocularsinistraautoref_s.statics)" 
 												:ref="form.select.ocularsinistraautoref_s.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.ocularsinistraautoref_s"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.ocularsinistraautoref_c.name, form.select.ocularsinistraautoref_c.statics)"
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistraautoref_c.name, form.select.ocularsinistraautoref_c.statics)" 
 												:ref="form.select.ocularsinistraautoref_c.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.ocularsinistraautoref_c"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.ocularsinistraautoref_x.name, form.select.ocularsinistraautoref_x.statics)"
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistraautoref_x.name, form.select.ocularsinistraautoref_x.statics)" 
 												:ref="form.select.ocularsinistraautoref_x.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.ocularsinistraautoref_x"></Selected>
 											</div>
@@ -154,30 +153,30 @@
 										<!-- <Inputed :ref="form.ocularsinistravisus.name" :form="form.ocularsinistravisus"> -->
 											<div class="grid">
 												<div class="col-6">
-												<Selected v-on:click="selectbox($event, form.select.ocularsinistravisus.name, form.select.ocularsinistravisus.statics)"
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistravisus.name, form.select.ocularsinistravisus.statics)" 
 														:ref="form.select.ocularsinistravisus.name" @selecteditem="selecteditem" @selectclear="selectclear"
 														:selection="form.select.ocularsinistravisus" v-on:keyup="selectfilter($event, form.select.ocularsinistravisus.name)"></Selected>
 												</div>
 											</div>
-
+											
 										<div class="grid">
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.ocularsinistrabcva1_s.name, form.select.ocularsinistrabcva1_s.statics)"
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistrabcva1_s.name, form.select.ocularsinistrabcva1_s.statics)" 
 												:ref="form.select.ocularsinistrabcva1_s.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.ocularsinistrabcva1_s"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.ocularsinistrabcva1_c.name, form.select.ocularsinistrabcva1_c.statics)"
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistrabcva1_c.name, form.select.ocularsinistrabcva1_c.statics)" 
 												:ref="form.select.ocularsinistrabcva1_c.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.ocularsinistrabcva1_c"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.ocularsinistrabcva1_x.name, form.select.ocularsinistrabcva1_x.statics)"
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistrabcva1_x.name, form.select.ocularsinistrabcva1_x.statics)" 
 												:ref="form.select.ocularsinistrabcva1_x.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.ocularsinistrabcva1_x"></Selected>
 											</div>
 										</div>
-
+					
 										<Inputed :ref="form.ocularsinistrabcva2.name" :form="form.ocularsinistrabcva2">
 										</Inputed>
 										<Inputed :ref="form.ocularsinistraadd.name" :form="form.ocularsinistraadd">
@@ -185,17 +184,17 @@
 										<h4>Kacamata lama</h4>
 										<div class="grid">
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.ocularsinistrakacamatalamasph.name, form.select.ocularsinistrakacamatalamasph.statics)"
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistrakacamatalamasph.name, form.select.ocularsinistrakacamatalamasph.statics)" 
 												:ref="form.select.ocularsinistrakacamatalamasph.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.ocularsinistrakacamatalamasph"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.ocularsinistrakacamatalamacyl.name, form.select.ocularsinistrakacamatalamacyl.statics)"
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistrakacamatalamacyl.name, form.select.ocularsinistrakacamatalamacyl.statics)" 
 												:ref="form.select.ocularsinistrakacamatalamacyl.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.ocularsinistrakacamatalamacyl"></Selected>
 											</div>
 											<div class="col-4">
-												<Selected v-on:click="selectbox($event, form.select.ocularsinistrakacamatalamaaddisi.name, form.select.ocularsinistrakacamatalamaaddisi.statics)"
+												<Selected v-on:click="selectbox($event, form.select.ocularsinistrakacamatalamaaddisi.name, form.select.ocularsinistrakacamatalamaaddisi.statics)" 
 												:ref="form.select.ocularsinistrakacamatalamaaddisi.name" @selecteditem="selecteditem" @selectclear="selectclear"
 												:selection="form.select.ocularsinistrakacamatalamaaddisi"></Selected>
 									</div>
@@ -288,7 +287,10 @@ import { arrpemeriksaan } from '../../../module/DataArray.js';
 import { datename } from '../../../module/Manipulation.js';
 import CKEditor from '@ckeditor/ckeditor5-vue';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
+function getUserNama() {
+    const meta = document.querySelector('meta[name="user-nama"]');
+    return meta ? meta.getAttribute('content') : '';
+}
 
 var vm, body;
 export default {
@@ -308,6 +310,9 @@ export default {
 		vm = this; body = document.body;
 		vm.form = vm.formkelurahan();
 		vm.arr = vm.arrpemeriksaan();
+    const namaLogin = getUserNama();
+    vm.form.ocularsinistraro.value = namaLogin;
+    vm.form.ocularsinistraro.disabled = true;
 		window.onclick = function(event) { let a = event.target.className; try { if (a.split(" ")) { a = a.split(" "); if (a[0] != 'hospitals') { vm.selecthide(); } } if (event.target.className == '') { vm.selecthide(); } } catch { console.log('mistmatch'); } }
 	},
 	created:function() {},
@@ -419,74 +424,74 @@ export default {
 			osbcva1 = osbcva1.trim();
 
 
-				// vm.form.object = `
-				// <figure class="table">
-				// <table>
-				// 	<tbody>
-				// 	<tr>
-				// 		<td>&nbsp;</td>
-				// 		<td>Ocular Dextra</td>
-				// 		<td>Ocular Sinistra</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>Autoref</td>
-				// 		<td>${odautoref}</td>
-				// 		<td>${osautoref}</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>Add</td>
-				// 		<td>${vm.form.oculardextraadd.value}</td>
-				// 		<td>${vm.form.ocularsinistraadd.value}</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>BCVA</td>
-				// 		<td>${odbcva1} => ${vm.form.oculardextrabcva2.value}</td>
-				// 		<td>${osbcva1} => ${vm.form.ocularsinistrabcva2.value}</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>Keratometri K1</td>
-				// 		<td>${vm.form.oculardextrakeratometrik1.value}</td>
-				// 		<td>${vm.form.ocularsinistrakeratometrik1.value}</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>Keratometri K2</td>
-				// 		<td>${vm.form.oculardextrakeratometrik2.value}</td>
-				// 		<td>${vm.form.ocularsinistrakeratometrik2.value}</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>Tonometri</td>
-				// 		<td>${vm.form.oculardextratonometri.value}</td>
-				// 		<td>${vm.form.ocularsinistratonometri.value}</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>Visus</td>
-				// 		<td>${vm.form.select.oculardextravisus.label}</td>
-				// 		<td>${vm.form.select.ocularsinistravisus.label}</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>Kacamata Sph</td>
-				// 		<td>${vm.form.select.oculardextrakacamatalamasph.value}</td>
-				// 		<td>${vm.form.select.ocularsinistrakacamatalamasph.value}</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>Kacamata Cyl</td>
-				// 		<td>${vm.form.select.oculardextrakacamatalamacyl.value}</td>
-				// 		<td>${vm.form.select.ocularsinistrakacamatalamacyl.value}</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>Kacamata Add</td>
-				// 		<td>${vm.form.select.oculardextrakacamatalamaaddisi.value}</td>
-				// 		<td>${vm.form.select.ocularsinistrakacamatalamaaddisi.value}</td>
-				// 	</tr>
-				// 	<tr>
-				// 		<td>PD</td>
-				// 		<td>${vm.form.oculardextrapd.value}</td>
-				// 		<td></td>
-				// 	</tr>
-				// 	</tbody>
-				// </table>
-				// </figure>
-				// `;
+				vm.form.object = `
+				<figure class="table">
+				<table>
+					<tbody>
+					<tr>
+						<td>&nbsp;</td>
+						<td>Ocular Dextra</td>
+						<td>Ocular Sinistra</td>
+					</tr>
+					<tr>
+						<td>Autoref</td>
+						<td>${odautoref}</td>
+						<td>${osautoref}</td>
+					</tr>
+					<tr>
+						<td>Add</td>
+						<td>${vm.form.oculardextraadd.value}</td>
+						<td>${vm.form.ocularsinistraadd.value}</td>
+					</tr>
+					<tr>
+						<td>BCVA</td>
+						<td>${odbcva1} => ${vm.form.oculardextrabcva2.value}</td>
+						<td>${osbcva1} => ${vm.form.ocularsinistrabcva2.value}</td>
+					</tr>
+					<tr>
+						<td>Keratometri K1</td>
+						<td>${vm.form.oculardextrakeratometrik1.value}</td>
+						<td>${vm.form.ocularsinistrakeratometrik1.value}</td>
+					</tr>
+					<tr>
+						<td>Keratometri K2</td>
+						<td>${vm.form.oculardextrakeratometrik2.value}</td>
+						<td>${vm.form.ocularsinistrakeratometrik2.value}</td>
+					</tr>
+					<tr>
+						<td>Tonometri</td>
+						<td>${vm.form.oculardextratonometri.value}</td>
+						<td>${vm.form.ocularsinistratonometri.value}</td>
+					</tr>
+					<tr>
+						<td>Visus</td>
+						<td>${vm.form.select.oculardextravisus.label}</td>
+						<td>${vm.form.select.ocularsinistravisus.label}</td>
+					</tr>
+					<tr>
+						<td>Kacamata Sph</td>
+						<td>${vm.form.select.oculardextrakacamatalamasph.value}</td>
+						<td>${vm.form.select.ocularsinistrakacamatalamasph.value}</td>
+					</tr>
+					<tr>
+						<td>Kacamata Cyl</td>
+						<td>${vm.form.select.oculardextrakacamatalamacyl.value}</td>
+						<td>${vm.form.select.ocularsinistrakacamatalamacyl.value}</td>
+					</tr>
+					<tr>
+						<td>Kacamata Add</td>
+						<td>${vm.form.select.oculardextrakacamatalamaaddisi.value}</td>
+						<td>${vm.form.select.ocularsinistrakacamatalamaaddisi.value}</td>
+					</tr>
+					<tr>
+						<td>PD</td>
+						<td>${vm.form.oculardextrapd.value}</td>
+						<td></td>
+					</tr>
+					</tbody>
+				</table>
+				</figure>
+				`;
 
 
 		console.log("====>", vm.form.object)
@@ -512,9 +517,9 @@ export default {
 			console.log(key);
 			if (result._position == 'stop') { return; }
 			else if (result._position == 'nextstop') { vm.form = result._form; }
-			else {
-				vm.selecthide();
-				vm.getIndexDB(key, statics);
+			else { 
+				vm.selecthide(); 
+				vm.getIndexDB(key, statics); 
 				vm.form.select[key].option = 'display: block';
 
 				// Scroll ke item 0.00
@@ -532,7 +537,7 @@ export default {
 				});
 			}
 		},
-
+		
 
 		getIndexDB:function(key, statics) {
 			vm.form.select[key].data = []; vm.form.select[key].filter = [];
@@ -569,6 +574,9 @@ export default {
     },
 		aturulang: function () {
 			vm.form = vm.formkelurahan();
+    const namaLogin = getUserNama();
+    vm.form.ocularsinistraro.value = namaLogin;
+    vm.form.ocularsinistraro.disabled = true;
 			vm.linkR = '/print/rekammedis/rawat-jalan/cppt/';
 			vm.tab= {
 			button: [
@@ -590,6 +598,10 @@ export default {
 			vm.histori = response.data.histori;
 			vm.linkR = vm.linkR + vm.detail.pasien_uuid;
 
+			const namaLogin = response.data.nama_login ?? '';
+    		vm.form.ocularsinistraro.value = namaLogin;
+    		vm.form.ocularsinistraro.disabled = true;
+
 
 
 			vm.form.cppt_sebagai = 'RO';
@@ -606,7 +618,7 @@ export default {
 			let temps = response.data.kunjungan;
 
 			if (temps) {
-
+				
 				vm.form.uuid = temps.uuid;
 				// vm.form.penetesanobat.value = vm.nullcheck(temps.penetesan_obat);
 				vm.form.nama_pemeriksa.value = vm.nullcheck(temps.nama_pemeriksa);
@@ -714,6 +726,7 @@ export default {
 					vm.form.select.ocularsinistraautoref_x.label = 'Silahkan Pilih';
 				}
 				vm.form.ocularsinistraro.value = vm.nullcheck(temps.ocular_sinistra_ro);
+				vm.form.ocularsinistraro.disabled = true; // ✅ tambahkan ini
 				vm.form.ocularsinistrakeratometrik1.value = vm.nullcheck(temps.ocular_sinistra_keratometri_k1);
 				vm.form.ocularsinistrakeratometrik2.value = vm.nullcheck(temps.ocular_sinistra_keratometri_k2);
 				vm.form.ocularsinistratonometri.value = vm.nullcheck(temps.ocular_sinistra_tonometri);
