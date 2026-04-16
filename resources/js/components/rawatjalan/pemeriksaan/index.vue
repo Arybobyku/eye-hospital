@@ -3,11 +3,17 @@
 	<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
 		
 		<div class="tab-content">
-			<div class="content-tab-in" v-if="tab.content.ro">
-				<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+			<div class="content-tab-in" v-if="tab.content.ro_bpjs">
+				<Datatable ref="DatatableRoBpjs" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
 			</div>
-			<div class="content-tab-in" v-else-if="tab.content.perawat">
-				<Datatable ref="DatatablePerawat" :module="moduleperawat" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+			<div class="content-tab-in" v-else-if="tab.content.ro_nonbpjs">
+				<Datatable ref="DatatableRoNonBpjs" :module="moduleRoNonBpjs" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+			</div>
+			<div class="content-tab-in" v-else-if="tab.content.perawat_bpjs">
+				<Datatable ref="DatatablePerawatBpjs" :module="moduleperawat" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+			</div>
+			<div class="content-tab-in" v-else-if="tab.content.perawat_nonbpjs">
+				<Datatable ref="DatatablePerawatNonBpjs" :module="modulePerawatNonBpjs" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
 			</div>
 		</div>
 	<!-- <div class="grid">
@@ -44,7 +50,7 @@ export default {
 		
 		vm = this;
 		setTimeout(() => { this.titletrigger(); }, 250);
-		vm.loadmain();
+		vm.loadRoBpjs();
 		Echo.channel('rotrades')
 				.listen('NewTradeRo', (e) => {
 					vm.triggercall(e.trade);
@@ -89,15 +95,21 @@ export default {
 			{ value: 'btnhtmlperawat', label: '', type: 'text', search: false, close: false, button: false }
 		],
 		module: { data: [], column: [], total: 0, ispaging: true },
+		moduleRoNonBpjs: { data: [], column: [], total: 0, ispaging: true },
 		moduleperawat: { data: [], column: [], total: 0, ispaging: true },
+		modulePerawatNonBpjs: { data: [], column: [], total: 0, ispaging: true },
 		tab: {
 			button: [
-				{ value: 'ro', label: 'RO', class: 'tab-active' },
-				{ value: 'perawat', label: 'Perawat', class: 'tab-no-active' },
+				{ value: 'ro_bpjs', label: 'RO (BPJS)', class: 'tab-active' },
+				{ value: 'ro_nonbpjs', label: 'RO (Non BPJS)', class: 'tab-no-active' },
+				{ value: 'perawat_bpjs', label: 'Perawat (BPJS)', class: 'tab-no-active' },
+				{ value: 'perawat_nonbpjs', label: 'Perawat (Non BPJS)', class: 'tab-no-active' },
 			],
-			content: { 
-				ro: true, 
-				perawat: false, 
+			content: {
+				ro_bpjs: true,
+				ro_nonbpjs: false,
+				perawat_bpjs: false,
+				perawat_nonbpjs: false,
 			}
 		},
 	}},
@@ -122,15 +134,21 @@ export default {
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
 				
-				vm.module.data = [];
-				
-				if (values == 'perawat') {
-					vm.posisieksternal = 'antrian';
-					vm.loadperawat();
+				if (values == 'ro_nonbpjs') {
+					vm.posisieksternal = 'ro_nonbpjs';
+					vm.loadRoNonBpjs();
+				}
+				else if (values == 'perawat_bpjs') {
+					vm.posisieksternal = 'perawat_bpjs';
+					vm.loadPerawatBpjs();
+				}
+				else if (values == 'perawat_nonbpjs') {
+					vm.posisieksternal = 'perawat_nonbpjs';
+					vm.loadPerawatNonBpjs();
 				}
 				else {
-					vm.posisieksternal = 'ro';
-					vm.loadmain();
+					vm.posisieksternal = 'ro_bpjs';
+					vm.loadRoBpjs();
 				}
 			}
 		},
@@ -258,50 +276,70 @@ export default {
 		},
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
+		setDatatableRoNonBpjs: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.moduleRoNonBpjs.data = temporer; vm.moduleRoNonBpjs.total = total; return temporer; },
 		setDatatablePerawat: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnperawat.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.columnperawat[j].value] ? data[i][vm.columnperawat[j].value] :vm.columnperawat[j].value, vm.columnperawat[j].value)); } temporer.push(col); } vm.moduleperawat.data = temporer; vm.moduleperawat.total = total; return temporer; },
-		// tableload:function() { vm.attach.url = vm.attach.link.list; vm.attach.data = new FormData(); vm.attach.data.append('search', ''); vm.attach.data.append('column', ''); vm.attach.data.append('page', 1); vm.executions(); },
-		tableload:function(pos = 'main') { 
-			if (pos == 'main') {
-				vm.attach.url = vm.attach.link.list; 
-				vm.attach.data = new FormData(); 
-				vm.attach.data.append('search', ''); 
-				vm.attach.data.append('column', ''); 
-				vm.attach.data.append('page', 1); 
+		setDatatablePerawatNonBpjs: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnperawat.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.columnperawat[j].value] ? data[i][vm.columnperawat[j].value] :vm.columnperawat[j].value, vm.columnperawat[j].value)); } temporer.push(col); } vm.modulePerawatNonBpjs.data = temporer; vm.modulePerawatNonBpjs.total = total; return temporer; },
+		tableload:function(pos = 'ro_bpjs') {
+			if (pos == 'ro_bpjs') {
+				vm.attach.url = vm.attach.link.list;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
+				vm.attach.data.append('page', 1);
+				vm.attach.data.append('carabayar_filter', 'bpjs');
 			}
-			else if (pos == 'perawat') {
-				vm.attach.url = vm.attach.link.listperawat; 
-				vm.attach.data = new FormData(); 
-				vm.attach.data.append('search', ''); 
-				vm.attach.data.append('column', ''); 
-				vm.attach.data.append('page', 1); 
+			else if (pos == 'ro_nonbpjs') {
+				vm.attach.url = vm.attach.link.list;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
+				vm.attach.data.append('page', 1);
+				vm.attach.data.append('carabayar_filter', 'nonbpjs');
+			}
+			else if (pos == 'perawat_bpjs') {
+				vm.attach.url = vm.attach.link.listperawat;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
+				vm.attach.data.append('page', 1);
+				vm.attach.data.append('carabayar_filter', 'bpjs');
 			}
 			else {
-				vm.attach.url = vm.attach.link.list; 
-				vm.attach.data = new FormData(); 
-				vm.attach.data.append('search', ''); 
-				vm.attach.data.append('column', ''); 
-				vm.attach.data.append('page', 1); 
-			
+				vm.attach.url = vm.attach.link.listperawat;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
+				vm.attach.data.append('page', 1);
+				vm.attach.data.append('carabayar_filter', 'nonbpjs');
 			}
-			
-			vm.executions(); 
+			vm.executions();
 		},
 		tablereload: function (data = new FormData(), pos = 'main') {
-			if (vm.posisieksternal == 'perawat') {
-				if (pos == 'outer') {
-					vm.$refs.DatatablePerawat.skeleton(); 
-				}
-				vm.attach.url = vm.attach.link.listperawat; 
-				vm.attach.data = data; 
-			} else {
-				if (pos === 'outer') {
-					vm.$refs.Datatable.skeleton();
-				}
-				vm.attach.url  = vm.attach.link.list;
+			if (vm.posisieksternal == 'ro_bpjs') {
+				if (pos == 'outer') { vm.$refs.DatatableRoBpjs.skeleton(); }
+				vm.attach.url = vm.attach.link.list;
+				data.append('carabayar_filter', 'bpjs');
+				vm.attach.data = data;
+			}
+			else if (vm.posisieksternal == 'ro_nonbpjs') {
+				if (pos == 'outer') { vm.$refs.DatatableRoNonBpjs.skeleton(); }
+				vm.attach.url = vm.attach.link.list;
+				data.append('carabayar_filter', 'nonbpjs');
+				vm.attach.data = data;
+			}
+			else if (vm.posisieksternal == 'perawat_bpjs') {
+				if (pos == 'outer') { vm.$refs.DatatablePerawatBpjs.skeleton(); }
+				vm.attach.url = vm.attach.link.listperawat;
+				data.append('carabayar_filter', 'bpjs');
+				vm.attach.data = data;
+			}
+			else {
+				if (pos == 'outer') { vm.$refs.DatatablePerawatNonBpjs.skeleton(); }
+				vm.attach.url = vm.attach.link.listperawat;
+				data.append('carabayar_filter', 'nonbpjs');
 				vm.attach.data = data;
 			}
 			vm.position = 'externaltable';
-
 			vm.executions();
 		},
 
@@ -309,44 +347,35 @@ export default {
 		* Bagian fungsi untuk pemrosesan message, fungsi untuk error dan success
 		*************************************************************************************************************************/
 
-		loadmain: () => { vm.position = 'loadmain'; vm.firstloader(); vm.tableload(); },
-		loadperawat:function() {
-			vm.position = 'loadperawat'; 
-			vm.firstloader(); 
-			vm.tableload('perawat');
+		loadRoBpjs: () => { vm.position = 'loadRoBpjs'; vm.firstloader(); vm.tableload('ro_bpjs'); },
+		loadRoNonBpjs: () => { vm.position = 'loadRoNonBpjs'; vm.firstloader(); vm.tableload('ro_nonbpjs'); },
+		loadPerawatBpjs: () => { vm.position = 'loadPerawatBpjs'; vm.firstloader(); vm.tableload('perawat_bpjs'); },
+		loadPerawatNonBpjs: () => { vm.position = 'loadPerawatNonBpjs'; vm.firstloader(); vm.tableload('perawat_nonbpjs'); },
+		getCurrentDatatableRef: function() {
+			if (vm.posisieksternal == 'ro_nonbpjs') return vm.$refs.DatatableRoNonBpjs;
+			if (vm.posisieksternal == 'perawat_bpjs') return vm.$refs.DatatablePerawatBpjs;
+			if (vm.posisieksternal == 'perawat_nonbpjs') return vm.$refs.DatatablePerawatNonBpjs;
+			return vm.$refs.DatatableRoBpjs;
 		},
 
 		gagal: function (error) {
 			if (vm.$debugs) { console.log(error.response); } let active = 0;
 			vm.message('error', 1);
-			if (vm.position == 'loadmain') { vm.firstloader(); active = 1; }
-			else if (vm.position == 'loadperawat') { vm.firstloader(); active = 1; }
-			// else if (vm.position == 'externaltable') { vm.$refs.Datatable.skeleton(); vm.$refs.Datatable.backpage(); }
-			else if (vm.position == 'externaltable') { 
-				if (vm.posisieksternal='perawat') {
-					vm.$refs.DatatablePerawat.skeleton(); 
-					vm.$refs.DatatablePerawat.backpage(); 
-				}
-				else {
-					vm.$refs.Datatable.skeleton(); 
-					vm.$refs.Datatable.backpage(); 
-				}
+			if (vm.position == 'loadRoBpjs') { vm.firstloader(); active = 1; }
+			else if (vm.position == 'loadRoNonBpjs') { vm.firstloader(); active = 1; }
+			else if (vm.position == 'loadPerawatBpjs') { vm.firstloader(); active = 1; }
+			else if (vm.position == 'loadPerawatNonBpjs') { vm.firstloader(); active = 1; }
+			else if (vm.position == 'externaltable') {
+				vm.getCurrentDatatableRef().skeleton();
+				vm.getCurrentDatatableRef().backpage();
 			}
 			else if (vm.position == 'adddata') { vm.loadingModal('formdetail'); }
 			else if (vm.position == 'detaildata') { vm.loadingModal('formdetail'); vm.$refs.FormDetail.hide();  }
 			else if (vm.position == 'adddataperawat') { vm.loadingModal('formdetailperawat'); }
 			else if (vm.position == 'detaildataperawat') { vm.loadingModal('formdetailperawat'); vm.$refs.FormPerawat.hide();  }
 			else if (vm.position == 'historidata') { vm.loadingModal('formhistori'); vm.$refs.FormHistori.hide();  }
-			// else if (vm.position == 'call') { vm.$refs.Datatable.skeleton(); }
-			else if (vm.position == 'call') { 
-				if (vm.posisieksternal='perawat') {
-					vm.$refs.DatatablePerawat.skeleton(); 
-					vm.$refs.DatatablePerawat.backpage(); 
-				}
-				else {
-					vm.$refs.Datatable.skeleton(); 
-					vm.$refs.Datatable.backpage(); 
-				}
+			else if (vm.position == 'call') {
+				vm.getCurrentDatatableRef().skeleton();
 			}
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
@@ -356,30 +385,57 @@ export default {
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
 	
-			if (vm.position == 'loadmain') { 
-				vm.posisieksternal='ro';
+			if (vm.position == 'loadRoBpjs') {
+				vm.posisieksternal='ro_bpjs';
 				vm.firstloader();
-				vm.$refs.Datatable.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.Datatable.paging(); 
+				vm.$refs.DatatableRoBpjs.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total);
+				vm.$refs.DatatableRoBpjs.paging();
 				active = 0;
 			}
-			else if (vm.position == 'loadperawat') { 
-				vm.posisieksternal='perawat';
+			else if (vm.position == 'loadRoNonBpjs') {
+				vm.posisieksternal='ro_nonbpjs';
 				vm.firstloader();
-				vm.$refs.DatatablePerawat.update(vm.columnperawat, vm.setDatatablePerawat(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.DatatablePerawat.paging(); 
+				vm.$refs.DatatableRoNonBpjs.update(vm.column, vm.setDatatableRoNonBpjs(response.data.data, response.data.total), response.data.total);
+				vm.$refs.DatatableRoNonBpjs.paging();
 				active = 0;
 			}
-			else if (vm.position == 'externaltable') { 
-				if (vm.posisieksternal=='perawat') {
-					vm.$refs.DatatablePerawat.update('', vm.setDatatablePerawat(response.data.data, response.data.total), response.data.total); 
-					vm.$refs.DatatablePerawat.skeleton(); 
-					vm.$refs.DatatablePerawat.paging(); 
+			else if (vm.position == 'loadPerawatBpjs') {
+				vm.posisieksternal='perawat_bpjs';
+				vm.firstloader();
+				vm.$refs.DatatablePerawatBpjs.update(vm.columnperawat, vm.setDatatablePerawat(response.data.data, response.data.total), response.data.total);
+				vm.$refs.DatatablePerawatBpjs.paging();
+				active = 0;
+			}
+			else if (vm.position == 'loadPerawatNonBpjs') {
+				vm.posisieksternal='perawat_nonbpjs';
+				vm.firstloader();
+				vm.$refs.DatatablePerawatNonBpjs.update(vm.columnperawat, vm.setDatatablePerawatNonBpjs(response.data.data, response.data.total), response.data.total);
+				vm.$refs.DatatablePerawatNonBpjs.paging();
+				active = 0;
+			}
+			else if (vm.position == 'externaltable') {
+				if (vm.posisieksternal=='ro_bpjs') {
+					vm.$refs.DatatableRoBpjs.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total);
+					vm.$refs.DatatableRoBpjs.skeleton();
+					vm.$refs.DatatableRoBpjs.paging();
 					active = 0;
-				} else {
-					vm.$refs.Datatable.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total); 
-					vm.$refs.Datatable.skeleton(); 
-					vm.$refs.Datatable.paging(); 
+				}
+				else if (vm.posisieksternal=='ro_nonbpjs') {
+					vm.$refs.DatatableRoNonBpjs.update('', vm.setDatatableRoNonBpjs(response.data.data, response.data.total), response.data.total);
+					vm.$refs.DatatableRoNonBpjs.skeleton();
+					vm.$refs.DatatableRoNonBpjs.paging();
+					active = 0;
+				}
+				else if (vm.posisieksternal=='perawat_bpjs') {
+					vm.$refs.DatatablePerawatBpjs.update('', vm.setDatatablePerawat(response.data.data, response.data.total), response.data.total);
+					vm.$refs.DatatablePerawatBpjs.skeleton();
+					vm.$refs.DatatablePerawatBpjs.paging();
+					active = 0;
+				}
+				else {
+					vm.$refs.DatatablePerawatNonBpjs.update('', vm.setDatatablePerawatNonBpjs(response.data.data, response.data.total), response.data.total);
+					vm.$refs.DatatablePerawatNonBpjs.skeleton();
+					vm.$refs.DatatablePerawatNonBpjs.paging();
 					active = 0;
 				}
 			}
@@ -401,13 +457,13 @@ export default {
 			else if (vm.position == 'updatedataperawat') {
 				vm.loadingModal('formdetailperawat');
 				vm.$refs.FormPerawat.aturulang();
-				vm.$refs.FormPerawat.hide(); 
-				setTimeout(() => { vm.$refs.DatatablePerawat.skeleton(); vm.tablereload(); }, 500, this);
+				vm.$refs.FormPerawat.hide();
+				setTimeout(() => { vm.getCurrentDatatableRef().skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'updatedata') {
 				vm.loadingModal('formdetail');
-				vm.$refs.FormDetail.hide(); 
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
+				vm.$refs.FormDetail.hide();
+				setTimeout(() => { vm.getCurrentDatatableRef().skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'call') { 
 				setTimeout(() => { vm.tablereload(); }, 500, this);
@@ -417,8 +473,10 @@ export default {
 
 		message: function (position, active) {
 			if (position == 'error') {
-				if (vm.position == 'loadmain') { vm.notification('Data gagal dimuat.', 3000, position); }
-				else if (vm.position == 'loadperawat') { vm.notification('Datalist tabel gagal dimuat.', 3000, position); }
+				if (vm.position == 'loadRoBpjs') { vm.notification('Data gagal dimuat.', 3000, position); }
+				else if (vm.position == 'loadRoNonBpjs') { vm.notification('Data gagal dimuat.', 3000, position); }
+				else if (vm.position == 'loadPerawatBpjs') { vm.notification('Datalist tabel gagal dimuat.', 3000, position); }
+				else if (vm.position == 'loadPerawatNonBpjs') { vm.notification('Datalist tabel gagal dimuat.', 3000, position); }
 				else if (vm.position == 'externaltable') { vm.notification('Datalist tabel gagal dimuat.', 3000, position); }
 				else if (vm.position == 'adddata') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'adddataperawat') { vm.notification('Penambahan data gagal diproses.', 3000, position); }
@@ -440,17 +498,8 @@ export default {
 		runconfirm: function (posisi) {
 			if (posisi == 'formdetail') { vm.loadingModal('formdetail'); }
 			else if (posisi == 'formdetailperawat') { vm.loadingModal('formdetailperawat'); }
-			else if (posisi == 'removedata') { vm.$refs.Datatable.skeleton(); }
-			else if (posisi == 'call') { 				
-				if (vm.posisieksternal == 'perawat') {
-					vm.$refs.DatatablePerawat.skeleton(); 
-					vm.$refs.DatatablePerawat.backpage(); 
-				}
-				else {
-					vm.$refs.Datatable.skeleton(); 
-					vm.$refs.Datatable.backpage(); 
-				}
-			}
+			else if (posisi == 'removedata') { vm.getCurrentDatatableRef().skeleton(); }
+			else if (posisi == 'call') { vm.getCurrentDatatableRef().skeleton(); }
 			vm.executions();
 		},
 

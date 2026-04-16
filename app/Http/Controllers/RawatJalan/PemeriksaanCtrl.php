@@ -44,6 +44,7 @@ class PemeriksaanCtrl extends Controller
 		$skip = $page * $this->take;
 		$search = $request->search;
 		$column = $request->column;
+		$carabayar_filter = $request->carabayar_filter ?? '';
 
 		if ($request->search != "") {
 			$data = Registrasi::where('delete_soft', '=', 1)
@@ -73,37 +74,30 @@ class PemeriksaanCtrl extends Controller
 				// ->where('carabayar_nama', '!=', 'bpjs sehat')
 				// ->where('carabayar_nama', '!=', 'bpjs-sehat')
 				// ->where('carabayar_nama', '!=', 'bpjs_sehat')
-				->whereDate('tanggal', '=', date('Y-m-d'))
-				->skip($skip)->take($this->take)
-				->get();
+				->whereDate('tanggal', '=', date('Y-m-d'));
+			if ($carabayar_filter == 'bpjs') {
+				$data = $data->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$data = $data->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$data = $data->skip($skip)->take($this->take)->get();
+
 			$total = Registrasi::where('delete_soft', '=', 1)
 				->where(function ($q) {
 					$q->where('status', 'Kunjungan')
 						->orWhere('status', 'Rawat Inap')
 						->orWhere('status', 'Selesai');
 				})
-				// ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
-				// ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
-				// ->where('carabayar_nama', '!=', 'bpjs kesehatan')
-				// ->where('carabayar_nama', '!=', 'bpjs Kesehatan')
-				// ->where('carabayar_nama', '!=', 'bpjs_kesehatan')
-				// ->where('carabayar_nama', '!=', 'bpjs-kesehatan')
-				// ->where('carabayar_nama', '!=', 'BPJS KESEHATAN')
-				// ->where('carabayar_nama', '!=', 'BPJS_KESEHATAN')
-				// ->where('carabayar_nama', '!=', 'BPJS-KESEHATAN')
-				// ->where('carabayar_nama', '!=', 'BPJS Sehat')
-				// ->where('carabayar_nama', '!=', 'BPJS-Sehat')
-				// ->where('carabayar_nama', '!=', 'BPJS_Sehat')
-				// ->where('carabayar_nama', '!=', 'BPJS SEHAT')
-				// ->where('carabayar_nama', '!=', 'BPJS-SEHAT')
-				// ->where('carabayar_nama', '!=', 'BPJS_SEHAT')
-				// ->where('carabayar_nama', '!=', 'bpjs sehat')
-				// ->where('carabayar_nama', '!=', 'bpjs-sehat')
-				// ->where('carabayar_nama', '!=', 'bpjs_sehat')
 				->where($column, 'ilike', '%' . $search . '%')
 				->whereDate('tanggal', '=', date('Y-m-d'))
 				->orderBy('status_ro', 'asc')
-				->orderBy('id', 'asc')->count();
+				->orderBy('id', 'asc');
+			if ($carabayar_filter == 'bpjs') {
+				$total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$total = $total->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$total = $total->count();
 		} else {
 			$data = Registrasi::where('delete_soft', '=', 1)
 				->orderBy('status_ro', 'asc')
@@ -131,37 +125,29 @@ class PemeriksaanCtrl extends Controller
 				// ->where('carabayar_nama', '!=', 'bpjs sehat')
 				// ->where('carabayar_nama', '!=', 'bpjs-sehat')
 				// ->where('carabayar_nama', '!=', 'bpjs_sehat')
-				->whereDate('tanggal', '=', date('Y-m-d'))
-				->skip($skip)->take($this->take)
-				->get();
+				->whereDate('tanggal', '=', date('Y-m-d'));
+			if ($carabayar_filter == 'bpjs') {
+				$data = $data->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$data = $data->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$data = $data->skip($skip)->take($this->take)->get();
 
 			$total = Registrasi::where('delete_soft', '=', 1)
 				->whereDate('tanggal', '=', date('Y-m-d'))
-				// ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
-				// 		->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
-				// 		->where('carabayar_nama', '!=', 'bpjs kesehatan')
-				// 		->where('carabayar_nama', '!=', 'bpjs Kesehatan')
-				// 		->where('carabayar_nama', '!=', 'bpjs_kesehatan')
-				// 		->where('carabayar_nama', '!=', 'bpjs-kesehatan')
-				// 		->where('carabayar_nama', '!=', 'BPJS KESEHATAN')
-				// 		->where('carabayar_nama', '!=', 'BPJS_KESEHATAN')
-				// 		->where('carabayar_nama', '!=', 'BPJS-KESEHATAN')
-				// 		->where('carabayar_nama', '!=', 'BPJS Sehat')
-				// 		->where('carabayar_nama', '!=', 'BPJS-Sehat')
-				// 		->where('carabayar_nama', '!=', 'BPJS_Sehat')
-				// 		->where('carabayar_nama', '!=', 'BPJS SEHAT')
-				// 		->where('carabayar_nama', '!=', 'BPJS-SEHAT')
-				// 		->where('carabayar_nama', '!=', 'BPJS_SEHAT')
-				// 		->where('carabayar_nama', '!=', 'bpjs sehat')
-				// 		->where('carabayar_nama', '!=', 'bpjs-sehat')
-				// 		->where('carabayar_nama', '!=', 'bpjs_sehat')
 				->where(function ($q) {
 					$q->where('status', 'Kunjungan')
 						->orWhere('status', 'Rawat Inap')
 						->orWhere('status', 'Selesai');
 				})
 				->orderBy('status_ro', 'asc')
-				->orderBy('id', 'asc')->count();
+				->orderBy('id', 'asc');
+			if ($carabayar_filter == 'bpjs') {
+				$total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$total = $total->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$total = $total->count();
 		}
 
 		return response()->json(['data' => $data, 'total' => $total]);
@@ -181,6 +167,7 @@ class PemeriksaanCtrl extends Controller
 		$skip = $page * $this->take;
 		$search = $request->search;
 		$column = $request->column;
+		$carabayar_filter = $request->carabayar_filter ?? '';
 
 		if ($request->search != "") {
 			$data = Registrasi::where('delete_soft', '=', 1)
@@ -192,9 +179,14 @@ class PemeriksaanCtrl extends Controller
 						->orWhere('status', 'Rawat Inap')
 						->orWhere('status', 'Selesai');
 				})
-				->whereDate('tanggal', '=', date('Y-m-d'))
-				->skip($skip)->take($this->take)
-				->get();
+				->whereDate('tanggal', '=', date('Y-m-d'));
+			if ($carabayar_filter == 'bpjs') {
+				$data = $data->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$data = $data->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$data = $data->skip($skip)->take($this->take)->get();
+
 			$total = Registrasi::where('delete_soft', '=', 1)
 				->where(function ($q) {
 					$q->where('status', 'Kunjungan')
@@ -203,8 +195,13 @@ class PemeriksaanCtrl extends Controller
 				})
 				->where($column, 'ilike', '%' . $search . '%')
 				->whereDate('tanggal', '=', date('Y-m-d'))
-				// ->orderBy('status_ro', 'asc')
-				->orderBy('id', 'asc')->count();
+				->orderBy('id', 'asc');
+			if ($carabayar_filter == 'bpjs') {
+				$total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$total = $total->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$total = $total->count();
 		} else {
 			$data = Registrasi::where('delete_soft', '=', 1)
 				// ->orderBy('status_ro', 'asc')
@@ -214,9 +211,13 @@ class PemeriksaanCtrl extends Controller
 						->orWhere('status', 'Rawat Inap')
 						->orWhere('status', 'Selesai');
 				})
-				->whereDate('tanggal', '=', date('Y-m-d'))
-				->skip($skip)->take($this->take)
-				->get();
+				->whereDate('tanggal', '=', date('Y-m-d'));
+			if ($carabayar_filter == 'bpjs') {
+				$data = $data->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$data = $data->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$data = $data->skip($skip)->take($this->take)->get();
 
 			$total = Registrasi::where('delete_soft', '=', 1)
 				->whereDate('tanggal', '=', date('Y-m-d'))
@@ -225,8 +226,13 @@ class PemeriksaanCtrl extends Controller
 						->orWhere('status', 'Rawat Inap')
 						->orWhere('status', 'Selesai');
 				})
-				// ->orderBy('status_ro', 'asc')
-				->orderBy('id', 'asc')->count();
+				->orderBy('id', 'asc');
+			if ($carabayar_filter == 'bpjs') {
+				$total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$total = $total->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$total = $total->count();
 		}
 
 		return response()->json(['data' => $data, 'total' => $total]);
