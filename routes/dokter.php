@@ -47,6 +47,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('add', [PemeriksaanCtrl::class, 'add'])->name('pemeriksaan-add');
 		Route::post('histori', [PemeriksaanCtrl::class, 'histori'])->name('pemeriksaan-histori');
 		Route::post('call', [PemeriksaanCtrl::class, 'call'])->name('pemeriksaan-call');
+		Route::post('allcppt', [PemeriksaanCtrl::class, 'allcppt'])->name('pemeriksaan-allcppt');
 
 		Route::post('adddatatransfer', [PemeriksaanTransferCtrl::class, 'add'])->name('pemeriksaan-adddatatransfer');
 

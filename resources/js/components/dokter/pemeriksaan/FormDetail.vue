@@ -1265,6 +1265,32 @@
                             </div>
 
                             <div class="content-tab-in" v-if="tab.content.cppt">
+                                <!-- Tombol VIEW ALL CPPT -->
+                                <div style="margin-bottom: 12px;">
+                                    <button class="button-modal-page button-modal-green" style="background:#1a6f1d; border-color:#1a6f1d;" @click="openAllCppt()">
+                                        <vue-feather type="list" style="width:14px;height:14px;margin-right:5px;vertical-align:middle;"></vue-feather>
+                                        VIEW ALL CPPT
+                                    </button>
+                                </div>
+
+                                <!-- Modal popup VIEW ALL CPPT — iframe sederhana -->
+                                <div v-if="showAllCppt" style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99998;display:flex;align-items:center;justify-content:center;" @click.self="showAllCppt=false">
+                                    <div style="background:#fff;border-radius:10px;box-shadow:0 6px 32px rgba(0,0,0,0.22);width:92%;max-width:1150px;height:88vh;display:flex;flex-direction:column;overflow:hidden;">
+                                        <!-- Header -->
+                                        <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 20px;background:#1a6f1d;border-radius:10px 10px 0 0;flex-shrink:0;">
+                                            <span style="color:#fff;font-weight:700;font-size:15px;">
+                                                <vue-feather type="list" style="width:16px;height:16px;margin-right:7px;vertical-align:middle;"></vue-feather>
+                                                Semua CPPT — {{ detail.nama_pasien }}
+                                            </span>
+                                            <span @click="showAllCppt=false" style="color:#fff;font-size:24px;cursor:pointer;line-height:1;padding:0 4px;">&times;</span>
+                                        </div>
+                                        <!-- Body: iframe penuh -->
+                                        <div style="flex:1;overflow:hidden;">
+                                            <iframe title="All CPPT" width="100%" height="100%" style="border:0;display:block;" :src="linkR"></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="grid">
                                     <div class="col-5 form-ml" style="overflow-y: auto; max-height: 700px;">
                                         <RmeSoap v-if="detail.pasien_uuid" :selectedPatient="{ uuid: detail.pasien_uuid }"></RmeSoap>
@@ -1673,11 +1699,17 @@ export default {
             doneTypingInterval: 5000,
             digitalSignature: "",
             showCpptSignature: false,
+            showAllCppt: false,
         };
     },
     methods: {
         updatedbdokter,
         formatrupiah,
+
+        openAllCppt: function () {
+            vm.showAllCppt = true;
+        },
+
         saveDigitalSignature: function (svg) {
             vm.digitalSignature = svg;
         },
@@ -2472,7 +2504,8 @@ export default {
             }
             vm.tab.button[0].class = "tab-active";
             vm.tab.content.ro = true;
-            vm.linkR = "/print/rekammedis/rawat-jalan/cppt/";
+            vm.linkR = "/print/rekammedis/rawat-jalan/cpptpoli/";
+            vm.showAllCppt = false;
         },
         hide: function () {
             vm.terminate.show = false;

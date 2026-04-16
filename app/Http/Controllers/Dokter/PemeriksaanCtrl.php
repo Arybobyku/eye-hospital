@@ -2092,6 +2092,36 @@ class PemeriksaanCtrl extends Controller
         ]);
     }
 
+    public function allcppt(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        $cpptList = \DB::table('cppt')
+            ->leftJoin('pengguna', 'cppt.pengguna_uuid', '=', 'pengguna.uuid')
+            ->leftJoin('registrasi', 'cppt.registrasi_uuid', '=', 'registrasi.uuid')
+            ->where('cppt.pasien_uuid', '=', $request->pasien_uuid)
+            ->select(
+                'cppt.uuid',
+                'cppt.subjek',
+                'cppt.objek',
+                'cppt.asesmen',
+                'cppt.plan',
+                'cppt.sebagai',
+                'cppt.ttd',
+                'cppt.nama_pengguna',
+                'cppt.nama_dokter',
+                \DB::raw('pengguna.nama as pengguna_nama'),
+                \DB::raw('registrasi.tanggal as tanggal_kunjungan'),
+                \DB::raw('registrasi.no_pendaftaran as no_pendaftaran'),
+            )
+            ->orderBy('cppt.id', 'desc')
+            ->get();
+
+        return response()->json(['data' => $cpptList]);
+    }
+
     public function histori(Request $request)
     {
         if ($this->error != 'next') {

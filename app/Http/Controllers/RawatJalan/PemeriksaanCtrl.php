@@ -247,7 +247,7 @@ class PemeriksaanCtrl extends Controller
 					'ocular_sinistra_kacamata_lama_cyl' => $request->ocular_sinistra_kacamata_lama_cyl,
 					'ocular_sinistra_kacamata_lama_addisi' => $request->ocular_sinistra_kacamata_lama_addisi,
 				);
-			
+
 
 				$update = PemeriksaanRo::where("uuid", '=', $request->uuid)->update($arr);
 				$arr = array(
@@ -329,47 +329,46 @@ class PemeriksaanCtrl extends Controller
 
 				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 
-				
+
 			}
-			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
+            if($request->subject != null || $request->object != null || $request->assessment != null || $request->plan != null){
+                	$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
 						->where('sebagai','=', $request->cppt_sebagai)
 						->first();
-
-			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
-			if ($cppt != null) {
-				$arr = array(
-					'subjek' => $request->subject,
-					'objek' => $request->object,
-					'asesmen' => $request->assessment,
-					'plan' => $request->plan,
-					'ttd' => $request->ttd,
-					'sebagai' => $request->cppt_sebagai,
-					'pengguna_uuid' => $pengguna_uuid,
-				);
-					$update = Cppt::where('uuid', '=', $request->uuid)
-								->where('sebagai', '=', $request->cppt_sebagai)
-								->update($arr);
-			}
-			else{
-			$item = new Cppt();
-				$item->uuid = Uuid::uuid4();
-				$item->registrasi_uuid = $request->registrasi_uuid;
-				$item->pasien_uuid = $request->pasien_uuid;
-				$item->pengguna_uuid = $pengguna_uuid;
-				$item->nama_pengguna = $request->nama_penggunna;
-				$item->nama_pasien = $request->nama_pasien;
-				$item->nama_dokter = $request->nama_dokter;
-				$item->rekam_medis = $request->rekam_medis;
-				$item->subjek = $request->subject;
-				$item->objek = $request->object;
-				$item->asesmen = $request->assessment;
-				$item->plan = $request->plan;
-				$item->sebagai = $request->cppt_sebagai;
-				$item->ttd = $request->ttd;
-				$item->save();
-
-			
-			}
+                    $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+                    if ($cppt != null) {
+                        $arr = array(
+                            'subjek' => $request->subject,
+                            'objek' => $request->object,
+                            'asesmen' => $request->assessment,
+                            'plan' => $request->plan,
+                            'ttd' => $request->ttd,
+                            'sebagai' => $request->cppt_sebagai,
+                            'pengguna_uuid' => $pengguna_uuid,
+                        );
+                            $update = Cppt::where('uuid', '=', $request->uuid)
+                                        ->where('sebagai', '=', $request->cppt_sebagai)
+                                        ->update($arr);
+                    }
+                    else{
+                    $item = new Cppt();
+                        $item->uuid = Uuid::uuid4();
+                        $item->registrasi_uuid = $request->registrasi_uuid;
+                        $item->pasien_uuid = $request->pasien_uuid;
+                        $item->pengguna_uuid = $pengguna_uuid;
+                        $item->nama_pengguna = $request->nama_penggunna;
+                        $item->nama_pasien = $request->nama_pasien;
+                        $item->nama_dokter = $request->nama_dokter;
+                        $item->rekam_medis = $request->rekam_medis;
+                        $item->subjek = $request->subject;
+                        $item->objek = $request->object;
+                        $item->asesmen = $request->assessment;
+                        $item->plan = $request->plan;
+                        $item->sebagai = $request->cppt_sebagai;
+                        $item->ttd = $request->ttd;
+                        $item->save();
+                    }
+            }
 
 
 			DB::commit();
@@ -474,7 +473,7 @@ class PemeriksaanCtrl extends Controller
 					$arr = array(
 						'ruang_poliklinik' => $request->ruang_poliklinik,
 						'posisi_antrian_dokter' => $posisi_antrian_dokter,
-						
+
 					);
 					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 				} else {
@@ -555,11 +554,11 @@ class PemeriksaanCtrl extends Controller
 
 				$item->save();
 			}
-			
+
 
 
 			$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
-			
+
 			if ($edukasi_pasien != null) {
 				$arr = array(
 					'ph_bahasa' => $request->ph_bahasa,
@@ -623,9 +622,9 @@ class PemeriksaanCtrl extends Controller
 					'bs_lainnya' => $request->bs_lainnya,
 					'kmi_alasan' => $request->kmi_alasan,
 					'rpk_jelaskan' => $request->rpk_jelaskan,
-	
+
 				);
-	
+
 				$update = EdukasiPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
 			} else {
 				$item = new EdukasiPasien();
@@ -639,7 +638,7 @@ class PemeriksaanCtrl extends Controller
 				$item->nama_pasien = $request->nama_pasien;
 				$item->pengguna_uuid = $request->pengguna_uuid;
 				$item->nama_dokter = $request->nama_dokter;
-	
+
 				$item->ph_bahasa = $request->ph_bahasa;
 				$item->ph_pendengaran = $request->ph_pendengaran;
 				$item->ph_masalah_penglihatan = $request->ph_masalah_penglihatan;
@@ -701,54 +700,55 @@ class PemeriksaanCtrl extends Controller
 				$item->bs_lainnya = $request->bs_lainnya;
 				$item->kmi_alasan = $request->kmi_alasan;
 				$item->rpk_jelaskan = $request->rpk_jelaskan;
-	
-	
+
+
 				$item->save();
 			}
 
-			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
-			->where('sebagai','=', $request->cppt_sebagai)
-			->first();
+            if($request->subject != null || $request->object != null || $request->assessment != null || $request->plan != null){
+                    $cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
+                    ->where('sebagai','=', $request->cppt_sebagai)
+                    ->first();
 
-$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
-if ($cppt != null) {
-	$arr = array(
-		'subjek' => $request->subject,
-		'objek' => $request->object,
-		'asesmen' => $request->assessment,
-		'plan' => $request->plan,
-		'ttd' => $request->ttd,
-		'sebagai' => $request->cppt_sebagai,
-		'pengguna_uuid' => $pengguna_uuid,
-	);
-		$update = Cppt::where('uuid', '=', $request->uuid)
-					->where('sebagai', '=', $request->cppt_sebagai)
-					->update($arr);
-}
-else{
-$item = new Cppt();
-	$item->uuid = Uuid::uuid4();
-	$item->registrasi_uuid = $request->registrasi_uuid;
-	$item->pasien_uuid = $request->pasien_uuid;
-	$item->pengguna_uuid = $pengguna_uuid;
-	$item->nama_pengguna = $request->nama_penggunna;
-	$item->nama_pasien = $request->nama_pasien;
-	$item->nama_dokter = $request->nama_dokter;
-	$item->rekam_medis = $request->rekam_medis;
-	$item->subjek = $request->subject;
-	$item->objek = $request->object;
-	$item->asesmen = $request->assessment;
-	$item->plan = $request->plan;
-	$item->sebagai = $request->cppt_sebagai;
-	$item->ttd = $request->ttd;
-	$item->save();
+                    $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+                    if ($cppt != null) {
+                        $arr = array(
+                            'subjek' => $request->subject,
+                            'objek' => $request->object,
+                            'asesmen' => $request->assessment,
+                            'plan' => $request->plan,
+                            'ttd' => $request->ttd,
+                            'sebagai' => $request->cppt_sebagai,
+                            'pengguna_uuid' => $pengguna_uuid,
+                        );
+                            $update = Cppt::where('uuid', '=', $request->uuid)
+                                        ->where('sebagai', '=', $request->cppt_sebagai)
+                                        ->update($arr);
+                    }
+                    else{
+                    $item = new Cppt();
+                        $item->uuid = Uuid::uuid4();
+                        $item->registrasi_uuid = $request->registrasi_uuid;
+                        $item->pasien_uuid = $request->pasien_uuid;
+                        $item->pengguna_uuid = $pengguna_uuid;
+                        $item->nama_pengguna = $request->nama_penggunna;
+                        $item->nama_pasien = $request->nama_pasien;
+                        $item->nama_dokter = $request->nama_dokter;
+                        $item->rekam_medis = $request->rekam_medis;
+                        $item->subjek = $request->subject;
+                        $item->objek = $request->object;
+                        $item->asesmen = $request->assessment;
+                        $item->plan = $request->plan;
+                        $item->sebagai = $request->cppt_sebagai;
+                        $item->ttd = $request->ttd;
+                        $item->save();
+                    }
 
+            }
 
-}
-			
 		//	$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $registrasi->registrasi_uuid)->first();
-	
-	
+
+
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
@@ -757,7 +757,7 @@ $item = new Cppt();
 			return response()->json(['hasil' => 'gagal']);
 		}
 
-	
+
 	}
 
 	public function detail(Request $request)
@@ -842,7 +842,7 @@ $item = new Cppt();
 		$cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
 			->where('sebagai','=','PERAWAT')
 			->orderBy('id', 'desc')->first();
-		
+
 
 		if ($edukasi_pasien != null){
 		$kunjungan->edukasi_pasien=$edukasi_pasien;
