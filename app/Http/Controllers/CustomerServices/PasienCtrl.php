@@ -28,7 +28,7 @@ class PasienCtrl extends Controller
 
 	public function __construct() {
 		date_default_timezone_set("Asia/Jakarta");
-		$this->error = PenggunaHelp::acl(); 
+		$this->error = PenggunaHelp::acl();
 	}
 
 	public function list(Request $request) {
@@ -109,9 +109,9 @@ class PasienCtrl extends Controller
 									->orderBy('rekam_medis', 'desc')->count();
 
 		}
-		
+
 		return response()->json(['data' => $data, 'total' => $total]);
-	
+
 	}
 
 	public function listkunjungan(Request $request) {
@@ -245,9 +245,9 @@ class PasienCtrl extends Controller
 									->count();
 
 		}
-		
+
 		return response()->json(['data' => $data, 'total' => $total]);
-	
+
 	}
 
 	public function listkunjunganbpjs(Request $request) {
@@ -362,6 +362,7 @@ class PasienCtrl extends Controller
 									->where('pasien.rekam_medis', '!=', 'AP026418')
 									->where('pasien.status', '!=', 'Aktif')
 									->where('registrasi.carabayar_nama', '=', 'BPJS Kesehatan')
+									->where('registrasi.status_kasir', '=', 'Belum Bayar')
 									->skip($skip)->take($this->take)
 									->select('pasien.*', 'registrasi.nomor')
 									->orderBy('registrasi.nomor', 'desc')
@@ -376,14 +377,15 @@ class PasienCtrl extends Controller
 									->where('pasien.rekam_medis', '!=', 'AP026418')
 									->where('pasien.status', '!=', 'Aktif')
 									->where('registrasi.carabayar_nama', '=', 'BPJS Kesehatan')
+									->where('registrasi.status_kasir', '=', 'Belum Bayar')
 									->select('pasien.*', 'registrasi.nomor')
 									->orderBy('registrasi.nomor', 'desc')
 									->count();
 
 		}
-		
+
 		return response()->json(['data' => $data, 'total' => $total]);
-	
+
 	}
 
 	public function uploadfile(Request $request) {
@@ -409,7 +411,7 @@ class PasienCtrl extends Controller
 		return response()->json(['data' => 'berhasil']);
 	}
 
-	public function suratpersetujuan(Request $request) { 
+	public function suratpersetujuan(Request $request) {
 
 		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
 
@@ -449,8 +451,8 @@ class PasienCtrl extends Controller
 
 			return response()->json(['data' => $data]);
 		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		catch(Exception $e){
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
@@ -459,14 +461,14 @@ class PasienCtrl extends Controller
   {
     $pdf = \App::make('dompdf.wrapper');
 		$surat = suratpersetujuan::where('pasien_uuid', '=', $uuid)->orderBy('id', 'desc')->first();
-    
+
     $pdf->loadView('print.printpersetujuan', compact('surat'))->setPaper('a4', 'potrait');
 
-		
+
     return $pdf->stream();
   }
 
-	public function add(Request $request) { 
+	public function add(Request $request) {
 
 		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
 
@@ -570,8 +572,8 @@ class PasienCtrl extends Controller
 
 			return response()->json(['data' => 'berhasil']);
 		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		catch(Exception $e){
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
@@ -579,7 +581,7 @@ class PasienCtrl extends Controller
 	private function hitung_umur($tanggal_lahir){
 		$birthDate = new DateTime($tanggal_lahir);
 		$today = new DateTime("today");
-		if ($birthDate > $today) { 
+		if ($birthDate > $today) {
 				exit("0 tahun 0 bulan 0 hari");
 		}
 		$y = $today->diff($birthDate)->y;
@@ -597,7 +599,7 @@ class PasienCtrl extends Controller
 		if ($data) {
 			PenggunaHelp::log('Mengambil data pasien dengan nama pasien "'.$data->nama.'" dan id "'.$data->id.'" untuk ditampilkan dihalaman edit pasien');
 		}
-		
+
 		return response()->json(['data' => $data]);
 	}
 
@@ -611,7 +613,7 @@ class PasienCtrl extends Controller
 		}
 
 		$registrasi = Registrasi::where('pasien_uuid', '=', $request->uuid)->orderBy('id', 'desc')->limit(12)->get();
-		
+
 		return response()->json(['data' => $data, 'registrasi' => $registrasi]);
 	}
 
@@ -696,13 +698,13 @@ class PasienCtrl extends Controller
 			DB::beginTransaction();
 
 			$update = Pasien::where('uuid', '=', $request->uuid)->update($arr);
-			
+
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
 		}
-		catch(Exception $e){ 
-			DB::rollback(); 
+		catch(Exception $e){
+			DB::rollback();
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
@@ -747,7 +749,7 @@ class PasienCtrl extends Controller
 		$registrasi = Registrasi::select([
 			DB::raw("CONCAT(registrasi.kode, registrasi.nomor) as kode"), 'registrasi.tanggal', 'registrasi.uuid',
 			'registrasi.nama_dokter',
-			'p_ro.tekanan_darah', 'p_ro.berat_badan', 'p_ro.tinggi_badan', 'p_ro.suhu', 
+			'p_ro.tekanan_darah', 'p_ro.berat_badan', 'p_ro.tinggi_badan', 'p_ro.suhu',
 			'p_ro.ocular_dextra_autoref', 'p_ro.ocular_dextra_visus', 'p_ro.ocular_dextra_tonometri',
 			'p_ro.ocular_sinistra_autoref', 'p_ro.ocular_sinistra_visus', 'p_ro.ocular_sinistra_tonometri',
 		])->where('registrasi.pasien_uuid', $uuid)
