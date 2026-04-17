@@ -26,6 +26,10 @@ export const initindexdb = (dbName, tableName) => {
 	if (tableName == 'obat4') { tableName = 'obat'; }
 	if (tableName == 'ocularsinistravisus') { tableName = 'ocularsinistravisus'; }
 	if (tableName == 'oculardextravisus') { tableName = 'oculardextravisus'; }
+	if (tableName == 'oculardextrabcva2') { tableName = 'oculardextrabcva2'; }
+	if (tableName == 'ocularsinistrabcva2') { tableName = 'ocularsinistrabcva2'; }
+	if (tableName == 'oculardextrapinhole') { tableName = 'oculardextrapinhole'; }
+	if (tableName == 'ocularsinistrapinhole') { tableName = 'ocularsinistrapinhole'; }
 
 	console.log("table", tableName)
 	return new Promise(function (resolve, reject) {
@@ -189,6 +193,18 @@ export const indexdbprocessing = (data, form, key) => {
 			form.select[key].filter.push(data[i]);
 		}
 		else if (key == 'oculardextravisus') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'oculardextrabcva2') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'ocularsinistrabcva2') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'oculardextrapinhole') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'ocularsinistrapinhole') {
 			form.select[key].filter.push(data[i]);
 		}
 	}
@@ -405,6 +421,26 @@ export const createdb = (dbName, version, response) => {
 				let oculardextravisus = db.createObjectStore('oculardextravisus', { keyPath: "id", autoIncrement: true });
 				let i = 0, data = response.data.oculardextravisus;
 				while (i < data.length) { oculardextravisus.put(oculardextravisusfunction(data, i)); i++; }
+			}
+			if (response.data.oculardextrabcva2.length > 0) {
+				let oculardextrabcva2 = db.createObjectStore('oculardextrabcva2', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.oculardextrabcva2;
+				while (i < data.length) { oculardextrabcva2.put(oculardextrabcva2function(data, i)); i++; }
+			}
+			if (response.data.ocularsinistrabcva2.length > 0) {
+				let ocularsinistrabcva2 = db.createObjectStore('ocularsinistrabcva2', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.ocularsinistrabcva2;
+				while (i < data.length) { ocularsinistrabcva2.put(ocularsinistrabcva2function(data, i)); i++; }
+			}
+			if (response.data.oculardextrapinhole.length > 0) {
+				let oculardextrapinhole = db.createObjectStore('oculardextrapinhole', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.oculardextrapinhole;
+				while (i < data.length) { oculardextrapinhole.put(oculardextrapinholefunction(data, i)); i++; }
+			}
+			if (response.data.ocularsinistrapinhole.length > 0) {
+				let ocularsinistrapinhole = db.createObjectStore('ocularsinistrapinhole', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.ocularsinistrapinhole;
+				while (i < data.length) { ocularsinistrapinhole.put(ocularsinistrapinholefunction(data, i)); i++; }
 			}
 			
 		};
@@ -1009,6 +1045,42 @@ const ocularsinistravisusfunction = (data, i) => {
 }
 
 const oculardextravisusfunction = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
+}
+const oculardextrabcva2function = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
+}
+const ocularsinistrabcva2function = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
+}
+const oculardextrapinholefunction = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
+}
+const ocularsinistrapinholefunction = (data, i) => {
 	return {
 		value: data[i].uuid,
 		label: data[i].nilai,

@@ -48,6 +48,10 @@ class AllApiCtrl extends Controller
 		$tindakanbedah = array();
 		$jeniskamar = array(); $obat = array(); $obat2 = array(); $obat3 = array(); $obat4 = array();  $obatgudang = array(); $hargagudang = array(); $apotek = array(); $supplier = array();   $ocularsinistravisus = array();
 		$oculardextravisus = array();
+		$oculardextrabcva2= array();
+		$ocularsinistrabcva2 = array();
+		$oculardextrapinhole = array();
+		$ocularsinistrapinhole = array();
 		$dokter = array();
 		$dokterumum = array();
 		$icd9 = array(); $icd10 = array(); $satuan = array(); $ruangans = array();
@@ -73,6 +77,10 @@ class AllApiCtrl extends Controller
 			$kecamatan = $this->kecamatan(); $kelurahan = $this->kelurahan();
 			$ocularsinistravisus = $this->ocularsinistravisus();
 			$oculardextravisus = $this->ocularsinistravisus();
+			$ocularsinistrabcva2 = $this->ocularsinistravisus();
+			$oculardextrabcva2 = $this->ocularsinistravisus();
+			$oculardextrapinhole = $this->ocularsinistrapinhole();
+			$ocularsinistrapinhole = $this->ocularsinistrapinhole();
 		}
 		else if ($request->position == 'kamarinap') { $kamarinap = $this->kamarinap(); }
 		else if ($request->position == 'alltindakan') { $alltindakan = $this->alltindakan(); }
@@ -109,6 +117,10 @@ class AllApiCtrl extends Controller
 		else if ($request->position == 'kelurahan') { $kelurahan = $this->kelurahan(); }
 		else if ($request->position == 'ocularsinistravisus') { $ocularsinistravisus = $this->ocularsinistravisus(); }
 		else if ($request->position == 'oculardextravisus') { $oculardextravisus = $this->ocularsinistravisus(); }
+		else if ($request->position == 'oculardextrabcva2') { $oculardextrabcva2 = $this->ocularsinistravisus(); }
+		else if ($request->position == 'ocularsinistrabcva2') { $ocularsinistrabcva2 = $this->ocularsinistravisus(); }
+		else if ($request->position == 'oculardextrapinhole') { $oculardextrabcva2 = $this->ocularsinistrapinhole(); }
+		else if ($request->position == 'ocularsinistrapinhole') { $ocularsinistrabcva2 = $this->ocularsinistrapinhole(); }
 
 		return response()->json([
 			'kamarinap' => $kamarinap,
@@ -129,6 +141,10 @@ class AllApiCtrl extends Controller
 			'kecamatan' => $kecamatan, 'kelurahan' => $kelurahan,
 			'ocularsinistravisus' => $ocularsinistravisus,
 			'oculardextravisus' => $oculardextravisus,
+			'oculardextrabcva2' => $oculardextrabcva2,
+			'ocularsinistrabcva2' => $ocularsinistrabcva2,
+			'oculardextrapinhole' => $oculardextrapinhole,
+			'ocularsinistrapinhole' => $ocularsinistrapinhole,
 		]);
 	}
 
@@ -202,6 +218,9 @@ class AllApiCtrl extends Controller
 	}
 	private function ocularsinistravisus() {
 		return DB::table('master_visus')->orderBy('id','asc')->get();
+	}
+	private function ocularsinistrapinhole() {
+		return DB::table('master_pinhole')->orderBy('id','asc')->get();
 	}
 
 	private function obatgudang() {
@@ -457,6 +476,10 @@ class AllApiCtrl extends Controller
 		$obat4 = DB::table('obat')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 		$ocularsinistravisus = DB::table('master_visus')->orderBy('id','asc')>get();
 		$oculardextravisus = DB::table('master_visus')->orderBy('id','asc')>get();
+		$oculardextrabcva2 = DB::table('master_visus')->orderBy('id','asc')>get();
+		$ocularsinistrabcva2 = DB::table('master_visus')->orderBy('id','asc')>get();
+		$oculardextrapinhole = DB::table('master_pinhole')->orderBy('id','asc')>get();
+		$ocularsinistrapinhole = DB::table('master_pinhole')->orderBy('id','asc')>get();
 		$supplier = DB::table('supplier')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 		$dokter = DB::table('biodata')->orderBy('id','asc')->where('delete_soft', '=', '1')->where('posisi_pengguna', '=', '8808')->get();
 		$icd_nine = DB::table('icd_nine')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
@@ -495,6 +518,10 @@ class AllApiCtrl extends Controller
 			'obat4' => $obat4,
 			'ocularsinistravisus' => $ocularsinistravisus,
 			'oculardextravisus' => $oculardextravisus,
+			'oculardextrabcva2' => $oculardextrabcva2,
+			'ocularsinistrabcva2' => $ocularsinistrabcva2,
+			'oculardextrapinhole' => $oculardextrapinhole,
+			'ocularsinistrapinhole' => $ocularsinistrapinhole,
 			'supplier' => $supplier,
 			'icd_nine' => $icd_nine,
 			'icd_ten' => $icd_ten,

@@ -111,6 +111,10 @@ export default {
 				{ icon: 'arrow-right', value: 'paketbedah', label: 'Data Paket Bedah' },
 				{ icon: 'arrow-right', value: 'ocularsinistravisus', label: 'Ocular Sinistra Visus' },
 				{ icon: 'arrow-right', value: 'oculardextravisus', label: 'Ocular Dextra Visus' },
+				{ icon: 'arrow-right', value: 'oculardextrabcva2', label: 'Ocular Dextra BCVA2' },
+				{ icon: 'arrow-right', value: 'ocularsinistrabcva2', label: 'Ocular Sinistra BCVA2' },
+				{ icon: 'arrow-right', value: 'oculardextrapinhole', label: 'Ocular Dextra Pinhole' },
+				{ icon: 'arrow-right', value: 'ocularsinistrapinhole', label: 'Ocular Sinistra Pinhole' },
 			]
 		}
 	},

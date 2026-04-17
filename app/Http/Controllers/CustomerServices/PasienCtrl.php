@@ -138,6 +138,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('pasien.status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '!=', 'BPJS Kesehatan')
 								->select('pasien.*', 'registrasi.nomor')
 								->orderBy('registrasi.nomor', 'desc')
 								->skip($skip)->take($this->take)
@@ -151,6 +152,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('pasien.status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '!=', 'BPJS Kesehatan')
 								->select('pasien.*', 'registrasi.nomor')
 								->orderBy('registrasi.nomor', 'desc')
 								->count();
@@ -165,6 +167,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('pasien.status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '!=', 'BPJS Kesehatan')
 								->select('pasien.*', 'registrasi.nomor')
 								->orderBy('registrasi.nomor', 'desc')
 								->skip($skip)->take($this->take)
@@ -178,6 +181,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '!=', 'BPJS Kesehatan')
 								->select('pasien.*', 'registrasi.nomor')
 								->orderBy('registrasi.nomor', 'desc')
 								->count();
@@ -192,6 +196,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('pasien.status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '!=', 'BPJS Kesehatan')
 								->select('pasien.*', 'registrasi.nomor')
 								->orderBy('registrasi.nomor', 'desc')
 								->skip($skip)->take($this->take)
@@ -205,6 +210,7 @@ class PasienCtrl extends Controller
 								->where('pasien.rekam_medis', '!=', 'AP020739')
 								->where('pasien.rekam_medis', '!=', 'AP026418')
 								->where('pasien.status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '!=', 'BPJS Kesehatan')
 								->select('pasien.*', 'registrasi.nomor')
 								->orderBy('registrasi.nomor', 'desc')
 								->count();
@@ -219,6 +225,7 @@ class PasienCtrl extends Controller
 									->where('pasien.rekam_medis', '!=', 'AP020739')
 									->where('pasien.rekam_medis', '!=', 'AP026418')
 									->where('pasien.status', '!=', 'Aktif')
+									->where('registrasi.carabayar_nama', '!=', 'BPJS Kesehatan')
 									->skip($skip)->take($this->take)
 									->select('pasien.*', 'registrasi.nomor')
 									->orderBy('registrasi.nomor', 'desc')
@@ -232,6 +239,143 @@ class PasienCtrl extends Controller
 									->where('pasien.rekam_medis', '!=', 'AP020739')
 									->where('pasien.rekam_medis', '!=', 'AP026418')
 									->where('pasien.status', '!=', 'Aktif')
+									->where('registrasi.carabayar_nama', '!=', 'BPJS Kesehatan')
+									->select('pasien.*', 'registrasi.nomor')
+									->orderBy('registrasi.nomor', 'desc')
+									->count();
+
+		}
+		
+		return response()->json(['data' => $data, 'total' => $total]);
+	
+	}
+
+	public function listkunjunganbpjs(Request $request) {
+
+		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
+
+		PenggunaHelp::log('Melihat data list table pada halaman data pasien');
+
+		$list = ''; $total = '';
+		$page = $request->page - 1; $skip = $page * $this->take;
+		$search = $request->search; $column = $request->column;
+
+		if ($request->search != "") {
+			if ($column == 'usia') {
+				$tahun = date('Y');
+				$tahun = $tahun - $search;
+
+				$data = Pasien::leftJoin('registrasi', function($query) {
+									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
+										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+								})
+								->where('pasien.delete_soft', '=', 1)
+								->whereYear('pasien.tanggal_lahir', '=', $tahun)
+								->where('pasien.rekam_medis', '!=', 'AP020739')
+								->where('pasien.rekam_medis', '!=', 'AP026418')
+								->where('pasien.status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '=', 'BPJS Kesehatan')
+								->select('pasien.*', 'registrasi.nomor')
+								->orderBy('registrasi.nomor', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+				$total = Pasien::leftJoin('registrasi', function($query) {
+									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
+										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+								})
+								->where('pasien.delete_soft', '=', 1)
+								->whereYear('pasien.tanggal_lahir', '=', $tahun)
+								->where('pasien.rekam_medis', '!=', 'AP020739')
+								->where('pasien.rekam_medis', '!=', 'AP026418')
+								->where('pasien.status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '=', 'BPJS Kesehatan')
+								->select('pasien.*', 'registrasi.nomor')
+								->orderBy('registrasi.nomor', 'desc')
+								->count();
+			}
+			else if ($column == 'tanggal_lahir') {
+				$data = Pasien::leftJoin('registrasi', function($query) {
+									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
+										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+								})
+								->where('pasien.delete_soft', '=', 1)
+								->whereDate('pasien.'.$column, '=', $search)
+								->where('pasien.rekam_medis', '!=', 'AP020739')
+								->where('pasien.rekam_medis', '!=', 'AP026418')
+								->where('pasien.status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '=', 'BPJS Kesehatan')
+								->select('pasien.*', 'registrasi.nomor')
+								->orderBy('registrasi.nomor', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+				$total = Pasien::leftJoin('registrasi', function($query) {
+									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
+										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+								})
+								->where('pasien.delete_soft', '=', 1)
+								->whereDate('pasien.'.$column, '=', $search)
+								->where('pasien.rekam_medis', '!=', 'AP020739')
+								->where('pasien.rekam_medis', '!=', 'AP026418')
+								->where('status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '=', 'BPJS Kesehatan')
+								->select('pasien.*', 'registrasi.nomor')
+								->orderBy('registrasi.nomor', 'desc')
+								->count();
+			}
+			else {
+				$data = Pasien::leftJoin('registrasi', function($query) {
+									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
+										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+								})
+								->where('pasien.delete_soft', '=', 1)
+								->where('pasien.'.$column, 'ilike', '%'.$search.'%')
+								->where('pasien.rekam_medis', '!=', 'AP020739')
+								->where('pasien.rekam_medis', '!=', 'AP026418')
+								->where('pasien.status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '=', 'BPJS Kesehatan')
+								->select('pasien.*', 'registrasi.nomor')
+								->orderBy('registrasi.nomor', 'desc')
+								->skip($skip)->take($this->take)
+								->get();
+				$total = Pasien::leftJoin('registrasi', function($query) {
+									$query->on('registrasi.pasien_uuid','=','pasien.uuid')
+										->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+								})
+								->where('pasien.delete_soft', '=', 1)
+								->where('pasien.'.$column, 'ilike', '%'.$search.'%')
+								->where('pasien.rekam_medis', '!=', 'AP020739')
+								->where('pasien.rekam_medis', '!=', 'AP026418')
+								->where('pasien.status', '!=', 'Aktif')
+								->where('registrasi.carabayar_nama', '=', 'BPJS Kesehatan')
+								->select('pasien.*', 'registrasi.nomor')
+								->orderBy('registrasi.nomor', 'desc')
+								->count();
+			}
+		}
+		else {
+			$data = Pasien::leftJoin('registrasi', function($query) {
+											$query->on('registrasi.pasien_uuid','=','pasien.uuid')
+												->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+									})
+									->where('pasien.delete_soft', '=', 1)
+									->where('pasien.rekam_medis', '!=', 'AP020739')
+									->where('pasien.rekam_medis', '!=', 'AP026418')
+									->where('pasien.status', '!=', 'Aktif')
+									->where('registrasi.carabayar_nama', '=', 'BPJS Kesehatan')
+									->skip($skip)->take($this->take)
+									->select('pasien.*', 'registrasi.nomor')
+									->orderBy('registrasi.nomor', 'desc')
+									->get();
+
+			$total = Pasien::leftJoin('registrasi', function($query) {
+										$query->on('registrasi.pasien_uuid','=','pasien.uuid')
+											->whereRaw('registrasi.uuid IN (select MAX(a2.uuid) from registrasi as a2 join pasien as u2 on u2.uuid = a2.pasien_uuid group by u2.uuid)');
+									})
+									->where('pasien.delete_soft', '=', 1)
+									->where('pasien.rekam_medis', '!=', 'AP020739')
+									->where('pasien.rekam_medis', '!=', 'AP026418')
+									->where('pasien.status', '!=', 'Aktif')
+									->where('registrasi.carabayar_nama', '=', 'BPJS Kesehatan')
 									->select('pasien.*', 'registrasi.nomor')
 									->orderBy('registrasi.nomor', 'desc')
 									->count();

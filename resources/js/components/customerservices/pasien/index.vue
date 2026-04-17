@@ -12,6 +12,9 @@
 		<div class="content-tab-in" v-else-if="tab.content.kunjungan">
 			<Datatable ref="DatatableKunjungan" :module="modulekunjungan" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
 		</div>
+		<div class="content-tab-in" v-else-if="tab.content.kunjunganbpjs">
+			<Datatable ref="DatatableKunjunganBpjs" :module="modulekunjunganbpjs" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
+		</div>
 		<div class="content-tab-in" v-else="tab.content.pending">
 			<Datatable ref="DatatablePending" :module="modulepending"></Datatable>
 		</div>
@@ -84,24 +87,28 @@ export default {
 				finish: '/customerservices/antrian/finish',
 				listpending: '/customerservices/pasien/pending',
 				listkunjungan: '/customerservices/pasien/listkunjungan',
+				listkunjunganbpjs: '/customerservices/pasien/listkunjunganbpjs',
 			}, url: '', data: null
 		},
 		tab: {
 			button: [
 				{ value: 'pasien', label: 'Data Pasien', class: 'tab-active' },
 				{ value: 'antrian', label: 'Daftar Antrian', class: 'tab-no-active' },
-				{ value: 'kunjungan', label: 'Pasien yang Berkunjung', class: 'tab-no-active' },
+				{ value: 'kunjungan', label: 'Kunjungan Pasien Umum', class: 'tab-no-active' },
+				{ value: 'kunjunganbpjs', label: 'Kunjungan Pasien BPJS', class: 'tab-no-active' },
 			],
 			content: { 
 				pasien: true, 
 				antrian: false, 
-				kunjungan: false 
+				kunjungan: false ,
+				kunjunganbpjs: false ,
 			}
 		},
 		moduleantrian: { data: [], column: [], total: 0, ispaging: true },
 		modulepending: { data: [], column: [], total: 0, ispaging: true },
 		module: { data: [], column: [], total: 0, ispaging: true },
 		modulekunjungan: { data: [], column: [], total: 0, ispaging: true },
+		modulekunjunganbpjs: { data: [], column: [], total: 0, ispaging: true },
 		column: [
 			{ value: 'is_printer_card', label: 'Cetak Kartu?', type: 'text', search: false, close: false, button: false },
 			{ value: 'rekam_medis', label: 'No Rekam Medis', type: 'text', search: true, close: false, button: false },
@@ -115,6 +122,18 @@ export default {
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
 		],
 		columnkunjungan: [
+			{ value: 'is_printer_card', label: 'Cetak Kartu?', type: 'text', search: false, close: false, button: false },
+			{ value: 'rekam_medis', label: 'No Rekam Medis', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
+			{ value: 'tanggal_lahir', label: 'Tanggal Lahir', type: 'date', search: true, close: false, button: false },
+			{ value: 'alamat', label: 'Alamat', type: 'text', search: true, close: false, button: false },
+			{ value: 'usia', label: 'Usia', type: 'number', search: false, close: false, button: false },
+			{ value: 'jenis_kelamin', label: 'Jenis Kelamin', type: 'text', search: true, close: false, button: false },
+			{ value: 'no_handphone', label: 'No Handphone', type: 'text', search: true, close: false, button: false },
+			{ value: 'status', label: 'status', type: 'text', search: false, close: false, button: false },
+			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
+		],
+		columnkunjunganbpjs: [
 			{ value: 'is_printer_card', label: 'Cetak Kartu?', type: 'text', search: false, close: false, button: false },
 			{ value: 'rekam_medis', label: 'No Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
@@ -172,6 +191,10 @@ export default {
 					vm.posisieksternal = 'kunjungan';
 					vm.loadkunjungan();
 				}
+				else if (values == 'kunjunganbpjs') {
+					vm.posisieksternal = 'kunjunganbpjs';
+					vm.loadkunjunganbpjs();
+				}
 				else {
 					vm.posisieksternal = 'pasien';
 					vm.loadmain();
@@ -202,6 +225,28 @@ export default {
 		},
 
 		btnhtmlkunjungan:function(_item, _index) {
+			let str = [
+				{ icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'book-open', color: 'btn-info', posisi: 'registrasi', tooltip: 'Data Registrasi', item: _item, index: _index,
+						show: _item.status == 'Kunjungan' || _item.status == 'Aktif' ? true : false },
+				// { icon: 'book-open', color: 'btn-info', posisi: 'rawatinap', tooltip: 'Data Registrasi (Rawat Inap)', item: _item, index: _index,
+				// 		show: _item.status == 'Rawat Inap' || _item.status == 'Aktif' ? true : false },
+				// { icon: 'book-open', color: 'btn-info', posisi: 'onedaycare', tooltip: 'Data Registrasi (ODC)', item: _item, index: _index,
+				// 		show: _item.status == 'One Day Care' || _item.status == 'Aktif' ? true : false },
+				{ icon: 'printer', color: 'btn-success', posisi: 'suratpersetujuan', tooltip: 'Surat Persetujuan', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-info', posisi: 'uploadfile', tooltip: 'Upload Surat Persetujuan', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetakkartu', tooltip: 'Cetak Kartu', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaklabel', tooltip: 'Cetak Label', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetakidentitas', tooltip: 'Cetak Identitas', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratsakit', tooltip: 'Cetak Surat Sakit', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratsehat', tooltip: 'Cetak Surat Sehat', item: _item, index: _index, show: true },
+				{ icon: 'printer', color: 'btn-warning', posisi: 'cetaksuratro', tooltip: 'Cetak Surat Keterangan Hasil Pemeriksaan Mata', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'General Consent (RME)', item: _item, index: _index, show: true },
+			]
+			return str;
+		},
+		btnhtmlkunjunganbpjs:function(_item, _index) {
 			let str = [
 				{ icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
@@ -270,6 +315,17 @@ export default {
 		},
 
 		converterkunjungan: function (data, index, column, identity) {
+			let _tmp = '';
+			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
+			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column), ishtml: 'html', style: '' }; }
+			else if (identity == 'usia') { _tmp = { value: vm.usia(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'status') { _tmp = { value: vm.status(data), ishtml: 'html', style: '' }; }
+			else if (identity == 'is_printer_card') { _tmp = { value: vm.is_printer_card(data), ishtml: 'html', style: '' }; }
+			else { _tmp = { value: column, ishtml: 'text', style: '' } }
+			return _tmp != '' ? _tmp : 'empty';
+		},
+		
+		converterkunjunganbpjs: function (data, index, column, identity) {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'tanggal_lahir') { _tmp = { value: vm.datename(column), ishtml: 'html', style: '' }; }
@@ -450,6 +506,8 @@ export default {
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
 
 		setDatatablekunjungan: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnkunjungan.length; j++) { col.push(vm.converterkunjungan(data[i], i, data[i][vm.columnkunjungan[j].value] ? data[i][vm.columnkunjungan[j].value] :vm.columnkunjungan[j].value, vm.columnkunjungan[j].value)); } temporer.push(col); } vm.modulekunjungan.data = temporer; vm.modulekunjungan.total = total; return temporer; },
+		
+		setDatatablekunjunganbpjs: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnkunjunganbpjs.length; j++) { col.push(vm.converterkunjunganbpjs(data[i], i, data[i][vm.columnkunjunganbpjs[j].value] ? data[i][vm.columnkunjunganbpjs[j].value] :vm.columnkunjunganbpjs[j].value, vm.columnkunjunganbpjs[j].value)); } temporer.push(col); } vm.modulekunjunganbpjs.data = temporer; vm.modulekunjunganbpjs.total = total; return temporer; },
 
 		setDatatableantrian: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columnantrian.length; j++) { col.push(vm.converterantrian(data[i], i, data[i][vm.columnantrian[j].value] ? data[i][vm.columnantrian[j].value] :vm.columnantrian[j].value, vm.columnantrian[j].value)); } temporer.push(col); } vm.moduleantrian.data = temporer; vm.moduleantrian.total = total; return temporer; },
 
@@ -472,6 +530,13 @@ export default {
 			}
 			else if (pos == 'kunjungan') {
 				vm.attach.url = vm.attach.link.listkunjungan; 
+				vm.attach.data = new FormData(); 
+				vm.attach.data.append('search', ''); 
+				vm.attach.data.append('column', ''); 
+				vm.attach.data.append('page', 1); 
+			}
+			else if (pos == 'kunjunganbpjs') {
+				vm.attach.url = vm.attach.link.listkunjunganbpjs; 
 				vm.attach.data = new FormData(); 
 				vm.attach.data.append('search', ''); 
 				vm.attach.data.append('column', ''); 
@@ -505,6 +570,13 @@ export default {
 					vm.$refs.DatatableKunjungan.skeleton(); 
 				}
 				vm.attach.url = vm.attach.link.listkunjungan; 
+				vm.attach.data = data; 
+			}
+			else if (vm.posisieksternal == 'kunjunganbpjs') {
+				if (pos == 'outer') {
+					vm.$refs.DatatableKunjunganBpjs.skeleton(); 
+				}
+				vm.attach.url = vm.attach.link.listkunjunganbpjs; 
 				vm.attach.data = data; 
 			}
 			else {
@@ -547,6 +619,12 @@ export default {
 			vm.tableload('kunjungan');
 			
 		},
+		loadkunjunganbpjs:function() {
+			vm.position = 'loadkunjunganbpjs'; 
+			vm.firstloader(); 
+			vm.tableload('kunjunganbpjs');
+			
+		},
 
 		gagal: function (error) {
 			if (vm.$debugs) { console.log(error.response); } let active = 0;
@@ -555,6 +633,7 @@ export default {
 			else if (vm.position == 'loadantrian') { vm.firstloader(); active = 1; }
 			else if (vm.position == 'loadpending') { vm.firstloader(); active = 1; }
 			else if (vm.position == 'loadkunjungan') { vm.firstloader(); active = 1; }
+			else if (vm.position == 'loadkunjunganbpjs') { vm.firstloader(); active = 1; }
 			else if (vm.position == 'panggil') { vm.$refs.DatatableAntrian.skeleton(); }
 			else if (vm.position == 'selesai') { vm.$refs.DatatableAntrian.skeleton(); }
 			else if (vm.position == 'externaltable') { 
@@ -565,6 +644,10 @@ export default {
 				else if (vm.posisieksternal='kunjungan') {
 					vm.$refs.DatatableKunjungan.skeleton(); 
 					vm.$refs.DatatableKunjungan.backpage(); 
+				}
+				else if (vm.posisieksternal='kunjunganbpjs') {
+					vm.$refs.DatatableKunjunganBpjs.skeleton(); 
+					vm.$refs.DatatableKunjunganBpjs.backpage(); 
 				}
 				else {
 					vm.$refs.Datatable.skeleton(); 
@@ -622,6 +705,13 @@ export default {
 					vm.$refs.DatatableKunjungan.paging(); 
 					active = 0;
 				}
+				else if (vm.position == 'loadkunjunganbpjs') { 
+					vm.posisieksternal='kunjunganbpjs';
+					vm.firstloader();
+					vm.$refs.DatatableKunjunganBpjs.update(vm.columnkunjunganbpjs, vm.setDatatablekunjunganbpjs(response.data.data, response.data.total), response.data.total); 
+					vm.$refs.DatatableKunjunganBpjs.paging(); 
+					active = 0;
+				}
 				else if (vm.position == 'panggil') {
 					setTimeout(() => { vm.posisieksternal='antrian'; vm.tablereload(); }, 500, this);
 				}
@@ -645,6 +735,12 @@ export default {
 						vm.$refs.DatatableKunjungan.update('', vm.setDatatablekunjungan(response.data.data, response.data.total), response.data.total); 
 						vm.$refs.DatatableKunjungan.skeleton(); 
 						vm.$refs.DatatableKunjungan.paging(); 
+						active = 0;
+					}
+					else if (vm.posisieksternal=='kunjunganbpjs') {
+						vm.$refs.DatatableKunjunganBpjs.update('', vm.setDatatablekunjunganbpjs(response.data.data, response.data.total), response.data.total); 
+						vm.$refs.DatatableKunjunganBpjs.skeleton(); 
+						vm.$refs.DatatableKunjunganBpjs.paging(); 
 						active = 0;
 					}
 					else {
@@ -729,6 +825,7 @@ export default {
 				else if (vm.position == 'loadantrian') { vm.notification('Data gagal dimuat.', 3000, position); }
 				else if (vm.position == 'loadpending') { vm.notification('Data gagal dimuat.', 3000, position); }
 				else if (vm.position == 'loadkunjungan') { vm.notification('Data gagal dimuat.', 3000, position); }
+				else if (vm.position == 'loadkunjunganbpjs') { vm.notification('Data gagal dimuat.', 3000, position); }
 				else if (vm.position == 'panggil') { vm.notification('Gagal memanggil pasien.', 3000, position); }
 				else if (vm.position == 'cetakandata') { vm.notification('Gagal mencetak surat persetujuan pasien.', 3000, position); }
 				else if (vm.position == 'selesai') { vm.notification('Proses pendaftaran kunjungan pasien gagal disudahi.', 3000, position); }

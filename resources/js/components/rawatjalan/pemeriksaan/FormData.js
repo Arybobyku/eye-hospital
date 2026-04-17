@@ -207,16 +207,10 @@ export const formkelurahan = () => {
 			name: 'oculardextraautoref', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		oculardextrabcva2: {
-			title: '->', for_id: 'form_' + 'oculardextrabcva2', type: 'text', required: '',
-			name: 'oculardextrabcva2', value: '', disabled: false, show: true, kinds: ''
-		},
 		oculardextraadd: {
 			title: 'Add', for_id: 'form_' + 'oculardextraadd', type: 'text', required: '',
 			name: 'oculardextraadd', value: '', disabled: false, show: true, kinds: ''
 		},
-
-
 
 		ocularsinistraro: {
 			title: 'Nama RO', for_id: 'form_' + 'ocularsinistraro', type: 'text',
@@ -238,11 +232,6 @@ export const formkelurahan = () => {
 			name: 'ocularsinistratonometri', value: '', disabled: false, show: true, kinds: ''
 		},
 
-
-		ocularsinistrabcva2: {
-			title: '->', for_id: 'form_' + 'ocularsinistrabcva2', type: 'text', required: '',
-			name: 'ocularsinistrabcva2', value: '', disabled: false, show: true, kinds: ''
-		},
 		ocularsinistraadd: {
 			title: 'Add', for_id: 'form_' + 'ocularsinistraadd', type: 'text', required: '',
 			name: 'ocularsinistraadd', value: '', disabled: false, show: true, kinds: ''
@@ -333,7 +322,7 @@ export const formkelurahan = () => {
 			oculardextrakacamatalamaaddisi: {
 				key: 'oculardextrakacamatalamaaddisi', for_id: 'form_' + 'oculardextrakacamatalamaaddisi', name: 'oculardextrakacamatalamaaddisi', uuid: '', value: '', label: 'Silahkan Pilih',
 				filter: [], data: [], search: '', option: 'display: none', statics: true,
-				class: 'oculardextrakacamatalamaaddisi', isrequired: false, html: 'Addisi', issearch: false, disabled: false,
+				class: 'oculardextrakacamatalamaaddisi', isrequired: false, html: 'Axis', issearch: false, disabled: false,
 			},
 
 			ocularsinistrakacamatalamasph: {
@@ -351,7 +340,7 @@ export const formkelurahan = () => {
 			ocularsinistrakacamatalamaaddisi: {
 				key: 'ocularsinistrakacamatalamaaddisi', for_id: 'form_' + 'ocularsinistrakacamatalamaaddisi', name: 'ocularsinistrakacamatalamaaddisi', uuid: '', value: '', label: 'Silahkan Pilih',
 				filter: [], data: [], search: '', option: 'display: none', statics: true,
-				class: 'ocularsinistrakacamatalamaaddisi', isrequired: false, html: 'Addisi', issearch: false, disabled: false,
+				class: 'ocularsinistrakacamatalamaaddisi', isrequired: false, html: 'Axis', issearch: false, disabled: false,
 			},
 
 
@@ -365,6 +354,30 @@ export const formkelurahan = () => {
 				key : 'oculardextravisus', for_id: 'form_'+'oculardextravisus', name: 'oculardextravisus', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'oculardextravisus', isrequired: false, html: 'Visus', issearch: true, disabled: false,
+			},
+			
+			oculardextrabcva2: {
+				key : 'oculardextrabcva2', for_id: 'form_'+'oculardextrabcva2', name: 'oculardextrabcva2', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'oculardextrabcva2', isrequired: false, html: '->', issearch: true, disabled: false,
+			},
+
+			ocularsinistrabcva2: {
+				key : 'ocularsinistrabcva2', for_id: 'form_'+'ocularsinistrabcva2', name: 'ocularsinistrabcva2', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'ocularsinistrabcva2', isrequired: false, html: '->', issearch: true, disabled: false,
+			},
+
+			oculardextrapinhole: {
+				key : 'oculardextrapinhole', for_id: 'form_'+'oculardextrapinhole', name: 'oculardextrapinhole', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'oculardextrapinhole', isrequired: false, html: 'Pinhole', issearch: true, disabled: false,
+			},
+
+			ocularsinistrapinhole: {
+				key : 'ocularsinistrapinhole', for_id: 'form_'+'ocularsinistrapinhole', name: 'ocularsinistrapinhole', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'ocularsinistrapinhole', isrequired: false, html: 'Pinhole', issearch: true, disabled: false,
 			},
 			
 			klinik: {
