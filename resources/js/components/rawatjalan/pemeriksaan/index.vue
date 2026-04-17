@@ -1,7 +1,7 @@
 <template>
 <div class="inner" ref="roottable">
 	<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
-		
+
 		<div class="tab-content">
 			<div class="content-tab-in" v-if="tab.content.ro_bpjs">
 				<Datatable ref="DatatableRoBpjs" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
@@ -39,7 +39,7 @@ import Swal from 'sweetalert2';
 export default {
 	emits: ["titletrigger", "repatch"],
 	beforeUnmount:function() {},
-	components: { toast, Swal, 
+	components: { toast, Swal,
 		FormPerawat: defineAsyncComponent(() => import('./FormPerawat.vue')),
 		FormDetail: defineAsyncComponent(() => import('./FormDetail.vue')),
 		FormHistori: defineAsyncComponent(() => import('./FormHistori.vue')),
@@ -47,7 +47,7 @@ export default {
 	},
 	created: function () {},
 	mounted: function () {
-		
+
 		vm = this;
 		setTimeout(() => { this.titletrigger(); }, 250);
 		vm.loadRoBpjs();
@@ -128,12 +128,12 @@ export default {
 		nullAndZero, datename,
 		changesTab: function (values, index, classes) {
 			if (classes != 'tab-active') {
-				for (let i = 0; i < vm.tab.button.length; i++) { 
-					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; 
+				for (let i = 0; i < vm.tab.button.length; i++) {
+					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';
 				}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
-				
+
 				if (values == 'ro_nonbpjs') {
 					vm.posisieksternal = 'ro_nonbpjs';
 					vm.loadRoNonBpjs();
@@ -166,7 +166,7 @@ export default {
 			]
 			return str;
 		},
-		
+
 		btnhtmlperawat:function(_item, _index) {
 			let str = [
 				// { icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Pemeriksaan RO', item: _item, index: _index, show: true },
@@ -182,6 +182,9 @@ export default {
 		statusro:function(data) {
 			if (data.status_ro == 'Belum Diperiksa') {
 				return '<div class="badge badge-danger">'+data.status_ro+'</div>';
+			}
+			if (data.status_ro == 'Sudah Diperiksa Perawat' || data.status_ro == 'Sudah Diperiksa RO') {
+				return '<div class="badge badge-warning">'+data.status_ro+'</div>';
 			}
 			return '<div class="badge badge-success">'+data.status_ro+'</div>'
 		},
@@ -263,7 +266,7 @@ export default {
 			}
 		},
 
-		loadingModal: function (position) { 
+		loadingModal: function (position) {
 			if (position == 'formdetail') { vm.$refs.FormDetail.loaderprocess();  }
 			else if (position == 'formdetailperawat') { vm.$refs.FormPerawat.loaderprocess();  }
 			else if (position == 'formhistori') { vm.$refs.FormHistori.loaderprocess();  }
@@ -384,7 +387,7 @@ export default {
 		berhasil: function (response) {
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
-	
+
 			if (vm.position == 'loadRoBpjs') {
 				vm.posisieksternal='ro_bpjs';
 				vm.firstloader();
@@ -440,19 +443,19 @@ export default {
 				}
 			}
 			else if (vm.position == 'detaildata') {
-				vm.$refs.FormDetail.setdataform(response); 
-				vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormDetail.setdataform(response);
+				vm.position = "updatedata";
+				active = 0;
 			}
 			else if (vm.position == 'detaildataperawat') {
-				vm.$refs.FormPerawat.setdataform(response); 
-				vm.position = "updatedataperawat"; 
-				active = 0; 
+				vm.$refs.FormPerawat.setdataform(response);
+				vm.position = "updatedataperawat";
+				active = 0;
 			}
 			else if (vm.position == 'historidata') {
-				vm.$refs.FormHistori.setdataform(response); 
-				//vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormHistori.setdataform(response);
+				//vm.position = "updatedata";
+				active = 0;
 			}
 			else if (vm.position == 'updatedataperawat') {
 				vm.loadingModal('formdetailperawat');
@@ -465,7 +468,7 @@ export default {
 				vm.$refs.FormDetail.hide();
 				setTimeout(() => { vm.getCurrentDatatableRef().skeleton(); vm.tablereload(); }, 500, this);
 			}
-			else if (vm.position == 'call') { 
+			else if (vm.position == 'call') {
 				setTimeout(() => { vm.tablereload(); }, 500, this);
 			}
 			vm.message('success', active);

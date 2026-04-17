@@ -338,18 +338,18 @@ class PemeriksaanCtrl extends Controller
 
 
 				$update = PemeriksaanRo::where("uuid", '=', $request->uuid)->update($arr);
+
+                $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+                $status_ro = 'Sudah Diperiksa RO';
+                if($registrasi->status_ro == 'Sudah Diperiksa Perawat') {
+                    $status_ro = 'Sudah Diperiksa';
+                }
 				$arr = array(
-					'ruang_poliklinik' => $request->ruang_poliklinik,
-					'status_ro' => 'Sudah Diperiksa RO',
+					// 'ruang_poliklinik' => $request->ruang_poliklinik,
+					'status_ro' => $status_ro,
 				);
 
 				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
-
-
-
-
-				$registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
-
 
 			} else {
 				$item = new PemeriksaanRo();
@@ -409,9 +409,15 @@ class PemeriksaanCtrl extends Controller
 					$posisi_antrian_dokter += $registrasi_poli->posisi_antrian_dokter;
 				}
 
-				$arr = array(
+
+                $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+                $status_ro = 'Sudah Diperiksa RO';
+                if($registrasi->status_ro == 'Sudah Diperiksa Perawat') {
+                    $status_ro = 'Sudah Diperiksa';
+                }
+					$arr = array(
 					'ruang_poliklinik' => $request->ruang_poliklinik,
-					'status_ro' => 'Sudah Diperiksa RO',
+					'status_ro' => $status_ro,
 					'posisi_antrian_dokter' => $posisi_antrian_dokter,
 					'ro_jam_selesai' => date('H:i'),
 					'last_position' => 'Pemeriksaan RO (Selesai)'
@@ -570,11 +576,16 @@ class PemeriksaanCtrl extends Controller
 					$arr = array('ro_jam_update' => date('H:i'));
 					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 				}
+
+                $status_ro = 'Sudah Diperiksa Perawat';
+                if($registrasi->status_ro == 'Sudah Diperiksa RO') {
+                    $status_ro = 'Sudah Diperiksa';
+                }
 				$arr = array(
 					'ruang_poliklinik' => $request->ruang_poliklinik,
 					'ro_jam_selesai' => date('H:i'),
-					'status_ro' => 'Sudah Diperiksa',
-					'last_position' => 'Pemeriksaan RO (Selesai)'
+					'status_ro' => $status_ro,
+					'last_position' => 'Pemeriksaan Perawat (Selesai)'
 				);
 
 				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
@@ -643,6 +654,20 @@ class PemeriksaanCtrl extends Controller
 				$item->penilaian_resiko_jatuh = $request->penilaian_resiko_jatuh;
 
 				$item->save();
+
+                $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+                $status_ro = 'Sudah Diperiksa Perawat';
+                if($registrasi->status_ro == 'Sudah Diperiksa RO') {
+                    $status_ro = 'Sudah Diperiksa';
+                }
+				$arr = array(
+					'ruang_poliklinik' => $request->ruang_poliklinik,
+					'ro_jam_selesai' => date('H:i'),
+					'status_ro' => $status_ro,
+					'last_position' => 'Pemeriksaan Perawat (Selesai)'
+				);
+
+				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 			}
 
 

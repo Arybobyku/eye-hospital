@@ -121,13 +121,13 @@ a { text-decoration: none; color: #252525; }
 }
 
 .patch {
-	width: 98px; 
-	padding: 14px 28px; 
-	border-radius: 50px; 
-	font-weight: bold; 
+	width: 98px;
+	padding: 14px 28px;
+	border-radius: 50px;
+	font-weight: bold;
 	float: left;
-	color: #fff; 
-	height: auto; 
+	color: #fff;
+	height: auto;
 	border: 1px solid #b41828;
 	background: #c01d2e;
 	cursor: pointer;
@@ -136,9 +136,9 @@ a { text-decoration: none; color: #252525; }
 
 .reload {
 	width:50px;
-	height: 49px; 
-	border-radius: 50px; 
-	font-weight: bold; 
+	height: 49px;
+	border-radius: 50px;
+	font-weight: bold;
 	float: left;
 	color: #fff;
 	border: 1px solid #0e64af;
@@ -324,7 +324,7 @@ a { text-decoration: none; color: #252525; }
 
 .not-found > .wrapper {
   max-width: 960px;
-  width: 100%; 
+  width: 100%;
   margin: 30px auto;
   transform: scale(0.8);
 }
@@ -338,7 +338,7 @@ a { text-decoration: none; color: #252525; }
   align-items: center;
 }
 .not-found > .wrapper > .landing-page > .icon__download > svg {
- 
+
   max-height: 325px;
   height: auto;
   margin: 0 0 15px;
@@ -349,7 +349,7 @@ a { text-decoration: none; color: #252525; }
 }
 .not-found > .wrapper > .landing-page > p {
   font-size: 16px;
-  width: 35%; 
+  width: 35%;
   margin: 16px auto 24px;
   text-align: center;
 }
@@ -395,9 +395,9 @@ table.table thead tr th {
 
 table.table thead tr th span.closed {
 	position: absolute;
-	font-size: 23px; 
-	right: 20px; 
-	top: 10.5px; 
+	font-size: 23px;
+	right: 20px;
+	top: 10.5px;
 	cursor: pointer;
 	color: #757575;
 	font-family: "Roboto Regular";
@@ -488,9 +488,9 @@ table.table thead tr th button.table-add:hover {
 
 .tooltip .tooltiptext:after {
 	content: "";
-    width: 0; 
+    width: 0;
 		position: absolute;
-    height: 0; 
+    height: 0;
 		top: -4px;
 		left: 60px;
     border-left: 5px solid transparent;
@@ -517,9 +517,9 @@ table.table thead tr th button.table-add:hover {
 
 .tooltiptext-mini:after {
 	content: "";
-    width: 0; 
+    width: 0;
 		position: absolute;
-    height: 0; 
+    height: 0;
 		top: -4px;
 		left: 20px;
     border-left: 5px solid transparent;
@@ -643,7 +643,7 @@ table.table thead tr th button.table-add:hover {
 	border-radius: 4px;
 }
 
-.pagination a:hover:not(.active) { 
+.pagination a:hover:not(.active) {
 	background-color: #ddd;
 	border: 1px solid #c0c0c0;
 	border-radius: 4px;
@@ -706,7 +706,7 @@ table.table thead tr th button.table-add:hover {
 }
 
 @-webkit-keyframes animatetop {
-  from {top:-150px; opacity:0} 
+  from {top:-150px; opacity:0}
   to {top:0; opacity:1}
 }
 
@@ -717,12 +717,12 @@ table.table thead tr th button.table-add:hover {
 
 /* Add Animation */
 @-webkit-keyframes animatebottom {
-  from {top: 0; opacity:1} 
+  from {top: 0; opacity:1}
   to {top:-150px; opacity:0}
 }
 
 @keyframes animatebottom {
-  from {top: 0; opacity:1} 
+  from {top: 0; opacity:1}
   to {top:-150px; opacity:0}
 }
 
@@ -737,12 +737,12 @@ table.table thead tr th button.table-add:hover {
 }
 
 .modal-loading {
-	margin: auto; 
-	background: #ffffff; 
-	position: absolute; 
-	top: 25px; 
+	margin: auto;
+	background: #ffffff;
+	position: absolute;
+	top: 25px;
 	left:0;
-	right:0; 
+	right:0;
 	margin-left: auto;
 	margin-right: auto;
 	border-radius: 10px
@@ -789,12 +789,12 @@ table.table thead tr th button.table-add:hover {
 .modal-body {padding: 5px 10px;}
 
 .wrap-loading-main {
-	border-radius: 12px; 
-	left: 0px; 
-	top: 0px; 
-	position: absolute; 
-	background: #ffffff; 
-	z-index: 999; 
+	border-radius: 12px;
+	left: 0px;
+	top: 0px;
+	position: absolute;
+	background: #ffffff;
+	z-index: 999;
 }
 
 .loading-main {
@@ -992,7 +992,7 @@ table.table thead tr th button.table-add:hover {
   flex-direction: column;
 }
 .error-page > .main-error-page > .error-title {
-  max-width: 529px; 
+  max-width: 529px;
   font-family: Roboto;
   font-size: 38px;
   font-weight: bold;
@@ -1006,7 +1006,7 @@ table.table thead tr th button.table-add:hover {
 }
 
 .error-page > .main-error-page > .error-subtitle {
-  max-width: 568px; 
+  max-width: 568px;
   font-family: Roboto;
   font-size: 16px;
   font-weight: normal;
@@ -1043,13 +1043,13 @@ table.table thead tr th button.table-add:hover {
 }
 
 .olho-esq {
-  
+
     animation: sad 2s alternate infinite;
   transform-origin: center;
 }
 
 .olho-dir {
-  
+
     animation: sad 2s alternate infinite;
   transform-origin: center;
 }
@@ -1069,7 +1069,7 @@ table.table thead tr th button.table-add:hover {
   -webkit-animation: vibrate-1 3s linear infinite both;
 	        animation: vibrate-1 3s linear infinite both;
 }
-.fio{ 
+.fio{
   -webkit-animation: vibrate-1 3s linear infinite both;
 	        animation: vibrate-1 3s linear infinite both;
 }
@@ -1322,7 +1322,7 @@ table.table thead tr th button.table-add:hover {
             transform: translateY(-6px) rotate(1.2deg);
   }
 }
- 
+
 
 @keyframes sad {
   0% {
@@ -1334,7 +1334,7 @@ table.table thead tr th button.table-add:hover {
 }
 
 @keyframes leftright{
-  
+
   0%{
     transform: rotateZ( 0deg)
   }
@@ -1368,7 +1368,7 @@ table.table thead tr th button.table-add:hover {
 }
 
 /**********************************************************
-* Bagian Grid 
+* Bagian Grid
 **********************************************************/
 
 .grid {
@@ -1533,8 +1533,8 @@ h3.label-form-in {
 
 .form-self-group > .arrow-down-select > .triangle-down {
 	position: absolute;
-	width: 0; 
-  height: 0; 
+	width: 0;
+  height: 0;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
@@ -1940,8 +1940,8 @@ table.table-info td:nth-child(2) {
 
 .badge-warning {
 	color: #ffffff;
-	background: #6b7c02;
-	border: 1px solid #626f0b;
+	background: #efc802;
+	border: 1px solid #efc802;
 }
 
 .badge-danger {
@@ -2480,7 +2480,7 @@ button.button-modal-blue:hover {
 }
 
 @-webkit-keyframes animatetop-top {
-  from {top:-150px; opacity:0} 
+  from {top:-150px; opacity:0}
   to {top:0; opacity:1}
 }
 
@@ -2491,12 +2491,12 @@ button.button-modal-blue:hover {
 
 /* Add Animation */
 @-webkit-keyframes animatebottom-top {
-  from {top: 0; opacity:1} 
+  from {top: 0; opacity:1}
   to {top:-150px; opacity:0}
 }
 
 @keyframes animatebottom-top {
-  from {top: 0; opacity:1} 
+  from {top: 0; opacity:1}
   to {top:-150px; opacity:0}
 }
 

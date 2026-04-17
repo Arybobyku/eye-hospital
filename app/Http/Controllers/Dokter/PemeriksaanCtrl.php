@@ -74,6 +74,7 @@ class PemeriksaanCtrl extends Controller
                 // ->where('carabayar_nama', '!=', 'bpjs-sehat')
                 // ->where('carabayar_nama', '!=', 'bpjs_sehat')
                 // ->where('berkebutuhan_khusus', '=', 'Tidak')
+                ->where('status_ro', 'Sudah Diperiksa')
                 ->where('berkebutuhan_khusus', '!=', 'Ya');
                 // ->where('apakah_paket', '=', 'Tidak')
                 // ->whereDate('tanggal', '=', date('Y-m-d'));
@@ -104,6 +105,7 @@ class PemeriksaanCtrl extends Controller
                 // 		->orWhere('status', 'Rawat Inap');
                 // })
                 ->where('status_dokter', 'Belum Diperiksa')
+                ->where('status_ro', 'Sudah Diperiksa')
                 // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
                 // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
                 // ->where('carabayar_nama', '!=', 'bpjs kesehatan')
@@ -129,6 +131,7 @@ class PemeriksaanCtrl extends Controller
             }
 
             $total = $total->where('berkebutuhan_khusus', '=', 'Tidak')
+                ->where('status_ro', 'Sudah Diperiksa')
                 ->where($column, 'ilike', '%'.$search.'%')
                 ->whereDate('tanggal', '=', date('Y-m-d'))
                 ->orderBy('tanggal', 'desc')
@@ -176,6 +179,7 @@ class PemeriksaanCtrl extends Controller
             }
 
             $data = $data->where('ruang_poliklinik', '!=', '0')
+                ->where('status_ro', 'Sudah Diperiksa')
                 // ->where('berkebutuhan_khusus', '=', 'Tidak')
                 ->where('berkebutuhan_khusus', '!=', 'Ya');
             if ($carabayar_filter == 'bpjs') {
@@ -186,6 +190,7 @@ class PemeriksaanCtrl extends Controller
             $data = $data->skip($skip)->take($this->take)->get();
 
             $total = Registrasi::where('delete_soft', '=', 1)
+                ->where('status_ro', 'Sudah Diperiksa')
                 ->where('ruang_poliklinik', '!=', '0');
             // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
             // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
@@ -218,6 +223,7 @@ class PemeriksaanCtrl extends Controller
                 // 		->orWhere('status', 'Selesai')
                 // 		->orWhere('status', 'Rawat Inap');
                 // })
+                ->where('status_ro', 'Sudah Diperiksa')
                 ->where('status_dokter', 'Belum Diperiksa')
                 ->orderBy('posisi_antrian_dokter', 'asc')
                 ->orderBy('status_dokter', 'asc');
