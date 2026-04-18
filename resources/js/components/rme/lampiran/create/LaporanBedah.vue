@@ -288,50 +288,39 @@
               rows="4"
             ></textarea>
           </div> -->
-          <div class="col-md-6 ">
+          <div class="col-md-6">
             <label class="mb-2 text-left">Macam Sayatan (bila perlu dengan gambar)</label>
-            <!-- Preview setelah disimpan -->
-            <div v-if="form.macam_sayatan && !macamSayatanCleared" class="signature-preview">
+            <div v-if="form.macam_sayatan && !macamSayatanCleared" class="signature-preview text-center">
               <img :src="form.macam_sayatan" alt="Gambar Macam Sayatan" class="img-signature" />
               <button @click="clearMacamSayatan()" class="btn-clear">
                 Hapus & Gambar Ulang
               </button>
             </div>
-
-            <!-- Pad aktif -->
-            <div v-else>
+            <div v-else class="text-center">
               <VueSignaturePad
                 ref="macam_sayatan"
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <div class="sign-btn-group mt-2">
-                <button type="button" @click="saveSign('macam_sayatan')" class="btn-save">Simpan ✔</button>
-                <button type="button" @click="clearPadOnly('macam_sayatan')" class="btn-clear-sign">Bersihkan</button>
-              </div>
+              <button type="button" @click="saveSign('macam_sayatan')" class="btn-save mt-2">Simpan ✔</button>
             </div>
           </div>
-          <div class="col-md-6 ">
+
+          <div class="col-md-6">
             <label class="mb-2 text-left">Posisi Penderita (bila perlu dengan gambar)</label>
-            <!-- Preview setelah disimpan -->
-            <div v-if="form.posisi_penderita && !posisiPenderitaCleared" class="signature-preview">
+            <div v-if="form.posisi_penderita && !posisiPenderitaCleared" class="signature-preview text-center">
               <img :src="form.posisi_penderita" alt="Gambar Posisi Penderita" class="img-signature" />
               <button @click="clearPosisiPenderita()" class="btn-clear">
                 Hapus & Gambar Ulang
               </button>
             </div>
-
-            <!-- Pad aktif — ref diperbaiki dari macam_sayatan ke posisi_penderita -->
-            <div v-else>
+            <div v-else class="text-center">
               <VueSignaturePad
                 ref="posisi_penderita"
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <div class="sign-btn-group mt-2">
-                <button type="button" @click="saveSign('posisi_penderita')" class="btn-save">Simpan ✔</button>
-                <button type="button" @click="clearPadOnly('posisi_penderita')" class="btn-clear-sign">Bersihkan</button>
-              </div>
+              <button type="button" @click="saveSign('posisi_penderita')" class="btn-save mt-2">Simpan ✔</button>
             </div>
           </div>
 
@@ -694,18 +683,13 @@ export default {
       });
     },
     // Bersihkan canvas saja (tanpa mengubah state preview) — tombol Bersihkan di pad aktif
-    clearPadOnly(refName) {
-      const pad = this.$refs[refName];
-      if (!pad) return;
-      pad.clearSignature();
-    },
     async loadDataForEdit() {
       try {
         // Option 1: Jika data lengkap sudah ada di editData props
         if (this.editData.uuid) {
           // Fetch detail dari server untuk data lengkap
           const response = await axios.get(
-            `/master/pasien/d /${this.editData.uuid}`
+            `/master/pasien/dokumen-laporan-pembedahan/${this.editData.uuid}`
           );
 
           if (response.data.status) {
@@ -714,6 +698,13 @@ export default {
               if (response.data.data[key] !== undefined) {
                 this.form[key] = response.data.data[key];
               }
+            });
+
+            // Reset semua flag — WAJIB di luar kondisi ttd_dokter
+            this.$nextTick(() => {
+              if (this.form.macam_sayatan) this.macamSayatanCleared = false;
+              if (this.form.posisi_penderita) this.posisiPenderitaCleared = false;
+              if (this.form.operator_bedah_ttd) this.signatureCleared = false;
             });
 
             // ✨ Load signature jika ada
@@ -759,10 +750,25 @@ export default {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-      this.signatureCleared = false;
-      const { data } = pad.saveSignature();
+    
+      const { isEmpty, data } = pad.saveSignature();
+    
+      if (isEmpty) {
+        alert("Gambar masih kosong!");
+        return;
+      }
+    
+      // Reset flag cleared sesuai refName masing-masing
+      if (refName === 'operator_bedah_ttd') {
+        this.signatureCleared = false;
+      } else if (refName === 'macam_sayatan') {
+        this.macamSayatanCleared = false;
+      } else if (refName === 'posisi_penderita') {
+        this.posisiPenderitaCleared = false;
+      }
+    
       this.form[refName] = data;
-      console.log("TTD saved:", refName);
+      console.log("Saved:", refName);
     },
 
     async submitForm() {

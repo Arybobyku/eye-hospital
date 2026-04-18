@@ -431,8 +431,15 @@
         
         <div style="margin-top: 20px;">
           <label class="fw-bold mb-2">Tanda Tangan Dokter</label>
-          <VueSignaturePad ref="ttd_dokter" :options="sigOption" class="signature-box-rme mx-auto" />
-          <div class="dropdown-dokter mt-2">
+            <div v-if="form.ttd_dokter && !ttdDokterCleared" class="signature-preview text-center">
+              <img :src="form.ttd_dokter" alt="TTD Perawat Ruangan" class="img-signature" />
+              <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_dokter" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
+            <div class="dropdown-dokter mt-2">
               <select v-model="form.dokter_nama" class="form-select-dokter">
                 <option value="" disabled>🩺 Pilih Dokter</option>
                 <option
@@ -445,10 +452,6 @@
               </select>
               <span class="dropdown-icon">▾</span>
             </div>
-          <div class="signature-actions mt-2">
-          <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Clear ↻</button>
-          <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">Simpan ✔</button>
-          </div>
         </div>
       </div>
 
@@ -503,6 +506,7 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      ttdDokterCleared: false,
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -675,22 +679,47 @@ this.disabledSubmit = false;
     }
   },
 
-saveSign(refName) {
-  const pad = this.$refs[refName];
-  if (!pad) {
-    console.error("REF tidak ditemukan:", refName);
-    return;
-  }
-
-  const { data } = pad.saveSignature();
-  
-  if (refName === "ttd_dokter") {
-    this.form.ttd_dokter = data;
-  }
-  
-  console.log("TTD saved:", refName);
-  alert("Tanda tangan berhasil disimpan!");
-},
+    saveSign(refName) {
+      const pad = this.$refs[refName];
+      if (!pad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
+    
+      const { isEmpty, data } = pad.saveSignature();
+    
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+    
+      const flagMap = {
+        ttd_dokter: 'ttdDokterCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
+      this.form[refName] = data;
+      console.log("TTD saved:", refName);
+    },
+    
+    clearSign(refName) {
+      const flagMap = {
+        ttd_dokter: 'ttdDokterCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
+        this.form[refName] = "";
+      }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
+    },
 
 loadDataForEdit() {
   console.log("🟢 LOAD EDIT - Mulai load data");
@@ -741,6 +770,18 @@ loadDataForEdit() {
         
         console.log(`🟢 Set ${key}:`, this.form[key]);
       }
+    });
+
+    this.$nextTick(() => {
+      const flagMap = {
+        ttd_dokter: 'ttdDokterCleared',
+      };
+
+      Object.keys(flagMap).forEach(refName => {
+        if (this.form[refName]) {
+          this[flagMap[refName]] = false;
+        }
+      });
     });
 
     // ✅ PENTING: Pastikan pemberian_darah minimal ada 1 row
@@ -814,16 +855,6 @@ renderSignature(refName, data) {
         this.form.pemberian_darah.splice(index, 1);
       }
     },
-
-clearSign(refName) {
-  const pad = this.$refs[refName];
-  if (pad) {
-    pad.clearSignature();
-    if (refName === "ttd_dokter") {
-      this.form.ttd_dokter = "";
-    }
-  }
-},
 
 
     validateForm() {
@@ -1091,6 +1122,24 @@ body {
   color: #718096;
   font-size: 16px;
   pointer-events: none;
+}
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
 }
 
 .action-footer {

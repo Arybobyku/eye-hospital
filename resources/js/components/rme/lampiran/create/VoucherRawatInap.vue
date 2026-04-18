@@ -57,7 +57,19 @@
         <div class="form-row-3-3">
           <div>
             <label>Nama Dokter :</label>
-            <input type="text" v-model="form.nama_dokter" class="input-rme" />
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_dokter" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
           </div>
           <div>
             <label>Admission Date :</label>
@@ -104,66 +116,65 @@
               </td>
               <td>
                 <div class="text-center">
-                  <VueSignaturePad 
-                    :ref="`ttd_dokter_${index}`" 
-                    :options="sigOption" 
-                    class="signature-box-rme-small mx-auto" 
-                  />
-                  <input 
-                    type="text" 
-                    v-model="item.nama_dokter" 
-                    class="input-rme mt-2" 
-                    placeholder="Nama Dokter"
-                    :disabled="disabledSubmit"
-                  />
-                  <div class="signature-actions mt-2" v-if="!disabledSubmit">
-                    <button 
-                      @click="clearSignKunjungan(index, 'dokter')" 
-                      class="btn-clear"
-                      type="button"
-                    >
-                      Ulang ↻
-                    </button>
-                    <button 
-                      @click="saveSignKunjungan(index, 'dokter')" 
-                      class="btn-save"
-                      type="button"
-                    >
-                      Simpan ✔
+                  <div v-if="item.paraf_dokter && !ttdDokterKunjunganCleared[index]" class="signature-preview text-center">
+                    <img :src="item.paraf_dokter" style="width:150px; height:80px; object-fit:contain; border:1px dashed #ccc;" />
+                    <br>
+                    <button @click="clearSignKunjungan(index, 'dokter')" class="btn-clear mt-2" type="button" v-if="!disabledSubmit">
+                      Hapus & TTD Ulang
                     </button>
                   </div>
+                  <div v-else>
+                    <VueSignaturePad
+                      :ref="`ttd_dokter_${index}`"
+                      :options="sigOption"
+                      class="signature-box-rme-small mx-auto"
+                    />
+                    <div class="signature-actions mt-2" v-if="!disabledSubmit">
+                      <button @click="saveSignKunjungan(index, 'dokter')" class="btn-save" type="button">Simpan ✔</button>
+                    </div>
+                  </div>
+
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_dokter" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
                 </div>
               </td>
               <td>
                 <div class="text-center">
-                  <VueSignaturePad 
-                    :ref="`ttd_perawat_${index}`" 
-                    :options="sigOption" 
-                    class="signature-box-rme-small mx-auto" 
-                  />
-                  <input 
-                    type="text" 
-                    v-model="item.nama_perawat" 
-                    class="input-rme mt-2" 
+                  <div v-if="item.paraf_perawat && !ttdPerawatKunjunganCleared[index]" class="signature-preview text-center">
+                    <img :src="item.paraf_perawat" style="width:150px; height:80px; object-fit:contain; border:1px dashed #ccc;" />
+                    <br>
+                    <button @click="clearSignKunjungan(index, 'perawat')" class="btn-clear mt-2" type="button" v-if="!disabledSubmit">
+                      Hapus & TTD Ulang
+                    </button>
+                  </div>
+                  <div v-else>
+                    <VueSignaturePad
+                      :ref="`ttd_perawat_${index}`"
+                      :options="sigOption"
+                      class="signature-box-rme-small mx-auto"
+                    />
+                    <div class="signature-actions mt-2" v-if="!disabledSubmit">
+                      <button @click="saveSignKunjungan(index, 'perawat')" class="btn-save" type="button">Simpan ✔</button>
+                    </div>
+                  </div>
+                  <input
+                    type="text"
+                    v-model="item.nama_perawat"
+                    class="input-rme mt-2"
                     placeholder="Nama Perawat"
                     :disabled="disabledSubmit"
                   />
-                  <div class="signature-actions mt-2" v-if="!disabledSubmit">
-                    <button 
-                      @click="clearSignKunjungan(index, 'perawat')" 
-                      class="btn-clear"
-                      type="button"
-                    >
-                      Ulang ↻
-                    </button>
-                    <button 
-                      @click="saveSignKunjungan(index, 'perawat')" 
-                      class="btn-save"
-                      type="button"
-                    >
-                      Simpan ✔
-                    </button>
-                  </div>
                 </div>
               </td>
               <td style="text-align: center;">
@@ -315,18 +326,39 @@
           <div>
             <label class="fw-bold mb-2">Dibuat Oleh :</label>
             <input type="text" v-model="form.dibuat_oleh" class="input-rme" placeholder="Kepala Keperawatan" />
-            <VueSignaturePad ref="ttd_dibuat_oleh" :options="sigOption" class="signature-box-rme mx-auto mt-2" />
-            <div class="signature-actions mt-2">
-            <button @click="clearSign('ttd_dibuat_oleh')" class="btn-clear mt-2">Clear ↻</button>
-            <button @click="saveSign('ttd_dibuat_oleh')" class="btn-save mt-2">Simpan ✔</button></div>
+            <div v-if="form.ttd_dibuat_oleh && !ttdDibuatOlehCleared" class="signature-preview text-center">
+              <img :src="form.ttd_dibuat_oleh" alt="TTD Dibuat Oleh" class="img-signature" />
+              <button @click="clearSign('ttd_dibuat_oleh')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_dibuat_oleh" :options="sigOption" class="signature-box-rme mx-auto mt-2" />
+              <button @click="saveSign('ttd_dibuat_oleh')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
           </div>
+        
           <div>
             <label class="fw-bold mb-2">Dokter (Tanda Tangan & Nama Jelas) :</label>
-            <input type="text" v-model="form.nama_dokter_voucher" class="input-rme" placeholder="Dr. ................" />
-            <VueSignaturePad ref="ttd_dokter" :options="sigOption" class="signature-box-rme mx-auto mt-2" />
-                        <div class="signature-actions mt-2">
-            <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Clear ↻</button>
-            <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">Simpan ✔</button> </div>
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_dokter_voucher" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
+            <div v-if="form.ttd_dokter && !ttdDokterCleared" class="signature-preview text-center">
+              <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+              <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_dokter" :options="sigOption" class="signature-box-rme mx-auto mt-2" />
+              <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
           </div>
         </div>
 
@@ -379,6 +411,11 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      disabledSubmit: false, // ← ini juga belum ada!
+      ttdDibuatOlehCleared: false,
+      ttdDokterCleared: false,
+      ttdDokterKunjunganCleared: [],
+      ttdPerawatKunjunganCleared: [],
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -447,7 +484,8 @@ export default {
     };
   },
   
-  mounted() {
+  async mounted() {
+    await this.fetchDokter();
     console.log("🟢 COMPONENT - Mounted");
     console.log("🟢 COMPONENT - editData:", this.editData);
     console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
@@ -466,6 +504,14 @@ export default {
   },
   
   methods: {
+      async fetchDokter() {
+        try {
+          const response = await axios.get('/master/pasien/master-dokter-all');
+          this.listDokter = response.data.data;
+        } catch (error) {
+          console.error('Gagal memuat data dokter:', error);
+        }
+      },
     loadDataForEdit() {
       console.log("🟢 LOAD EDIT - Mulai load data");
       console.log("🟢 LOAD EDIT - editData yang diterima:", this.editData);
@@ -529,37 +575,11 @@ export default {
 
     // ✅ METHOD BARU
     loadSignaturesToCanvas() {
-      if (this.form.tabel_kunjungan) {
-        this.form.tabel_kunjungan.forEach((item, index) => {
-          if (item.paraf_dokter) {
-            const refDokter = this.$refs[`ttd_dokter_${index}`];
-            const padDokter = Array.isArray(refDokter) ? refDokter[0] : refDokter;
-            if (padDokter && padDokter.fromDataURL) {
-              padDokter.fromDataURL(item.paraf_dokter);
-            }
-          }
-          if (item.paraf_perawat) {
-            const refPerawat = this.$refs[`ttd_perawat_${index}`];
-            const padPerawat = Array.isArray(refPerawat) ? refPerawat[0] : refPerawat;
-            if (padPerawat && padPerawat.fromDataURL) {
-              padPerawat.fromDataURL(item.paraf_perawat);
-            }
-          }
-        });
-      }
-      
-      if (this.form.ttd_dibuat_oleh) {
-        const pad = this.$refs.ttd_dibuat_oleh;
-        if (pad && pad.fromDataURL) {
-          pad.fromDataURL(this.form.ttd_dibuat_oleh);
-        }
-      }
-      if (this.form.ttd_dokter) {
-        const pad = this.$refs.ttd_dokter;
-        if (pad && pad.fromDataURL) {
-          pad.fromDataURL(this.form.ttd_dokter);
-        }
-      }
+      if (this.form.ttd_dibuat_oleh) this.ttdDibuatOlehCleared = false;
+      if (this.form.ttd_dokter) this.ttdDokterCleared = false;
+    
+      this.ttdDokterKunjunganCleared = this.form.tabel_kunjungan.map(item => !item.paraf_dokter);
+      this.ttdPerawatKunjunganCleared = this.form.tabel_kunjungan.map(item => !item.paraf_perawat);
     },
 
     setDataForm() {
@@ -580,18 +600,18 @@ export default {
     // ✅ METHOD BARU untuk tabel dinamis
     tambahTabelKunjungan() {
       this.form.tabel_kunjungan.push({
-        hari: "",
-        tanggal_jam: "",
-        paraf_dokter: "",
-        nama_dokter: "",
-        paraf_perawat: "",
-        nama_perawat: "",
+        hari: "", tanggal_jam: "", paraf_dokter: "",
+        nama_dokter: "", paraf_perawat: "", nama_perawat: "",
       });
+      this.ttdDokterKunjunganCleared.push(false);
+      this.ttdPerawatKunjunganCleared.push(false);
     },
 
     hapusTabelKunjungan(index) {
       if (this.form.tabel_kunjungan.length > 1) {
         this.form.tabel_kunjungan.splice(index, 1);
+        this.ttdDokterKunjunganCleared.splice(index, 1);
+        this.ttdPerawatKunjunganCleared.splice(index, 1);
       }
     },
 
@@ -599,36 +619,33 @@ export default {
       const refName = `ttd_${type}_${index}`;
       const pad = this.$refs[refName];
       const signaturePad = Array.isArray(pad) ? pad[0] : pad;
-      
-      if (!signaturePad) {
-        console.error("REF tidak ditemukan:", refName);
-        return;
-      }
+      if (!signaturePad) return;
     
-      if (signaturePad.isEmpty()) {
-        alert("Silakan buat tanda tangan terlebih dahulu!");
-        return;
-      }
+      const { isEmpty, data } = signaturePad.saveSignature();
+      if (isEmpty) { alert("Tanda tangan masih kosong!"); return; }
     
-      const { data } = signaturePad.saveSignature();
       this.form.tabel_kunjungan[index][`paraf_${type}`] = data;
-      
-      console.log(`TTD ${type} index ${index} saved`);
-      alert(`Tanda tangan ${type} berhasil disimpan!`);
+    
+      if (type === 'dokter') this.ttdDokterKunjunganCleared[index] = false;
+      else this.ttdPerawatKunjunganCleared[index] = false;
     },
 
     clearSignKunjungan(index, type) {
-      const refName = `ttd_${type}_${index}`;
-      const pad = this.$refs[refName];
-      const signaturePad = Array.isArray(pad) ? pad[0] : pad;
-
-      if (!signaturePad) {
-        console.error("REF tidak ditemukan:", refName);
-        return;
+      if (type === 'dokter') {
+        this.ttdDokterKunjunganCleared[index] = true;
+        this.form.tabel_kunjungan[index].paraf_dokter = "";
+      } else {
+        this.ttdPerawatKunjunganCleared[index] = true;
+        this.form.tabel_kunjungan[index].paraf_perawat = "";
       }
-
-      signaturePad.clearSignature();
-      this.form.tabel_kunjungan[index][`paraf_${type}`] = "";
+    
+      this.$nextTick(() => {
+        this.$nextTick(() => {
+          const pad = this.$refs[`ttd_${type}_${index}`];
+          const signaturePad = Array.isArray(pad) ? pad[0] : pad;
+          if (signaturePad) signaturePad.clearSignature();
+        });
+      });
     },
     
     // ✅ SEMUA METHOD LAMA TIDAK DIUBAH SAMA SEKALI
@@ -656,12 +673,22 @@ export default {
       alert(`Tanda tangan ${type} berhasil disimpan!`);
     },
 
-    clearSign(refName) {
-      const pad = this.$refs[refName];
-      if (pad) {
-        pad.clearSignature();
-      }
-    },
+clearSign(refName) {
+  const flagMap = {
+    ttd_dibuat_oleh: 'ttdDibuatOlehCleared',
+    ttd_dokter: 'ttdDokterCleared',
+  };
+
+  if (flagMap[refName] !== undefined) {
+    this[flagMap[refName]] = true;
+    this.form[refName] = "";
+  }
+
+  this.$nextTick(() => {
+    const pad = this.$refs[refName];
+    if (pad) pad.clearSignature();
+  });
+},
 
     clearSignRow(rowNum, type) {
       const refName = `ttd_${type}_${rowNum}`;
@@ -676,21 +703,26 @@ export default {
       signaturePad.clearSignature();
     },
 
-    saveSign(refName) {
-      const pad = this.$refs[refName];
-      
-      // Handle array refs (untuk signature pad di loop)
-      const signaturePad = Array.isArray(pad) ? pad[0] : pad;
-      
-      if (!signaturePad) {
-        console.error("REF tidak ditemukan:", refName);
-        return;
-      }
+saveSign(refName) {
+  const pad = this.$refs[refName];
+  const signaturePad = Array.isArray(pad) ? pad[0] : pad;
+  if (!signaturePad) {
+    console.error("REF tidak ditemukan:", refName);
+    return;
+  }
 
-      const { data } = signaturePad.saveSignature();
-      this.form[refName] = data;
-      console.log("TTD saved:", refName);
-    },
+  const { isEmpty, data } = signaturePad.saveSignature();
+  if (isEmpty) { alert("Tanda tangan masih kosong!"); return; }
+
+  const flagMap = {
+    ttd_dibuat_oleh: 'ttdDibuatOlehCleared',
+    ttd_dokter: 'ttdDokterCleared',
+  };
+  if (flagMap[refName] !== undefined) this[flagMap[refName]] = false;
+
+  this.form[refName] = data;
+  console.log("TTD saved:", refName);
+},
 
     async submitForm() {
       this.loadingSubmit = true;
@@ -834,6 +866,45 @@ export default {
   background: #45a049;
 }
 
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
+}
+
 .btn-delete-small {
   background: #f44336;
   color: white;
@@ -919,6 +990,24 @@ export default {
   height: 220px !important;
   border: 2px solid #ccc;
   border-radius: 6px;
+  margin: 0 auto;
+}
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
   margin: 0 auto;
 }
 

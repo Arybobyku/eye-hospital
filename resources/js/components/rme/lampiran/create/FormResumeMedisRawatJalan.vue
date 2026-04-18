@@ -91,7 +91,19 @@
         </div>
         <div class="col-md-6">
           <label>Dokter yang Merawat</label>
-          <input v-model="form.dokter" class="input-rme" />
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.dokter" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
         </div>
       </div>
 
@@ -154,16 +166,15 @@
         </div>
       </div>
 
-      <label>Dokter yang Memeriksa</label>
-      <VueSignaturePad
-        ref="ttd_dokter"
-        :options="sigOption"
-        class="signature-box-rme"
-      />
-      <button class="btn-save" @click="saveSign('ttd_dokter')">Simpan ✔</button>
-      <button class="btn-clear" @click="clearSign('ttd_dokter')">
-        Clear ✖
-      </button>
+      <label class="fw-bold mb-2">Dokter yang Memeriksa</label>
+            <div v-if="form.ttd_dokter && !ttdDokterCleared" class="signature-preview text-center">
+              <img :src="form.ttd_dokter" alt="TTD Perawat Ruangan" class="img-signature" />
+              <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_dokter" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
       <div class="dropdown-dokter mt-2">
         <select v-model="form.nama_dokter" class="form-select-dokter">
           <option value="" disabled>🩺 Pilih Dokter</option>
@@ -212,6 +223,7 @@
       return {
         loading: false,
         disabledSubmit: false,
+        ttdDokterCleared: false,
         editUuid: "",
         sigOption: { 
           penColor: "black", 
@@ -327,6 +339,15 @@
         if (this.form.ttd_dokter && this.$refs.ttd_dokter) {
           this.$refs.ttd_dokter.fromDataURL(this.form.ttd_dokter);
         }
+        const flagMap = {
+          ttd_dokter: 'ttdDokterCleared',
+        };
+
+        Object.keys(flagMap).forEach(refName => {
+          if (this.form[refName]) {
+            this[flagMap[refName]] = false;
+          }
+        });
       });
           }
         } catch (error) {
@@ -336,23 +357,46 @@
         }
       },
   
-      saveSign(ref) {
-        const pad = this.$refs[ref];
-        if (!pad) {
-          console.error("REF tidak ditemukan:", ref);
-          return;
-        }
-        const { data } = pad.saveSignature();
-        this.form[ref] = data;
-        alert("Tanda Tangan Berhasil Disimpan Silahkan Lanjut Menyimpan Data");
-        console.log("TTD saved:", ref);
-      },
-      clearSign(ref) {
-      const pad = this.$refs[ref];
-      if (!pad) return;
-
-      pad.clearSignature();
-      this.form[ref] = ""; // penting supaya DB ikut kosong
+    saveSign(refName) {
+      const pad = this.$refs[refName];
+      if (!pad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
+    
+      const { isEmpty, data } = pad.saveSignature();
+    
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+    
+      const flagMap = {
+        ttd_dokter: 'ttdDokterCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
+      this.form[refName] = data;
+      console.log("TTD saved:", refName);
+    },
+    
+    clearSign(refName) {
+      const flagMap = {
+        ttd_dokter: 'ttdDokterCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
+        this.form[refName] = "";
+      }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
     },
   
       async submitForm() {
@@ -413,10 +457,31 @@
   min-height: 90px;
 }
 .signature-box-rme {
-  width: 100%;
+  width: 120%;
   height: 160px;
   border: 1px solid #999;
   margin-bottom: 10px;
+}
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
+}
+.text-center {
+  text-align: center;
 }
 .btn-save {
   background: #1e88e5;

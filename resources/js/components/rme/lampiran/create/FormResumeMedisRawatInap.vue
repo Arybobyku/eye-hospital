@@ -68,7 +68,19 @@
       <div class="row mb-3">
         <div class="col-md-12">
           <label>Dokter Penanggung Jawab (DPJP)</label>
-          <input v-model="form.dpjp" class="input-rme" placeholder="dr. ..." />
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.dpjp" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
         </div>
       </div>
 
@@ -261,18 +273,28 @@
       <div class="tanggal-tempat mb-3">Medan, {{ currentDate }} WIB</div>
 
       <label>Tanda Tangan Dokter</label>
-      <VueSignaturePad
-        ref="dokter_ttd"
-        :options="sigOption"
-        class="signature-box-rme"
-      />
-      <button class="btn-save" @click="saveSign('dokter_ttd')">Simpan ✔</button>
-      <button class="btn-clear" @click="clearSign('dokter_ttd')">
-        Clear ✖
-      </button>
+            <div v-if="form.dokter_ttd && !ttdDokterCleared" class="signature-preview text-center">
+              <img :src="form.dokter_ttd" alt="TTD Perawat Ruangan" class="img-signature" />
+              <button @click="clearSign('dokter_ttd')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="dokter_ttd" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('dokter_ttd')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
 
-      <label>Nama Jelas Dokter</label>
-      <input v-model="form.nama_dokter" class="input-rme" placeholder="Nama Jelas dan Tanda Tangan" />
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_dokter" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
     </div>
   </div>
 
@@ -308,6 +330,7 @@
       return {
         loading: false,
         disabledSubmit: false,
+        ttdDokterCleared: false,
         editUuid: "",
         sigOption: { penColor: "black", backgroundColor: "white" },
         form: {
@@ -376,6 +399,7 @@
       }
     },
     async mounted() {
+      await this.fetchDokter();
       await this.fetchTahunAkreditasi();
       if(this.viewData) {
         console.log(this.editUuid);
@@ -392,6 +416,14 @@
       }
     },
     methods: {
+      async fetchDokter() {
+        try {
+          const response = await axios.get('/master/pasien/master-dokter-all');
+          this.listDokter = response.data.data;
+        } catch (error) {
+          console.error('Gagal memuat data dokter:', error);
+        }
+      },
       async fetchTahunAkreditasi() {
         try {
           const response = await axios.get('/api/tahun-akreditasi');
@@ -443,6 +475,15 @@
               if (this.form.dokter_ttd && this.$refs.dokter_ttd) {
                 this.$refs.dokter_ttd.fromDataURL(this.form.dokter_ttd);
               }
+              const flagMap = {
+                dokter_ttd: 'ttdDokterCleared',
+              };
+            
+              Object.keys(flagMap).forEach(refName => {
+                if (this.form[refName]) {
+                  this[flagMap[refName]] = false;
+                }
+              });
             });
           }
         } catch (error) {
@@ -468,26 +509,47 @@
         }
       },
 
-      saveSign(ref) {
-        const pad = this.$refs[ref];
-        if (!pad) {
-          console.error("REF tidak ditemukan:", ref);
-          return;
-        }
-        const { data } = pad.saveSignature();
-        this.form.dokter_ttd = data; // Simpan ke field dokter_ttd
-        alert("Tanda Tangan Berhasil Disimpan Silahkan Lanjut Menyimpan Data");
-        console.log("TTD saved:", ref);
-      },
-
-      clearSign(ref) {
-        const pad = this.$refs[ref];
-        if (!pad) return;
-
-        pad.clearSignature();
-        this.form.dokter_ttd = ""; // Reset field dokter_ttd
-        console.log("TTD cleared");
-      },
+    saveSign(refName) {
+      const pad = this.$refs[refName];
+      if (!pad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
+    
+      const { isEmpty, data } = pad.saveSignature();
+    
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+    
+      const flagMap = {
+        dokter_ttd: 'ttdDokterCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
+      this.form[refName] = data;
+      console.log("TTD saved:", refName);
+    },
+    
+    clearSign(refName) {
+      const flagMap = {
+        dokter_ttd: 'ttdDokterCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
+        this.form[refName] = "";
+      }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
+    },
 
       async submitForm() {
         this.loading = true;
@@ -568,6 +630,9 @@
   cursor: pointer;
   margin-bottom: 10px;
 }
+.text-center {
+  text-align: center;
+}
 .action-footer {
   margin-top: 30px;
   padding: 20px;
@@ -632,6 +697,62 @@
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
+}
+
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
 }
 .btn-remove {
   background: #f44336;

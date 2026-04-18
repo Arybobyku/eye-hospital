@@ -983,13 +983,14 @@
         <div class="row mb-4">
           <div class="col-md-6">
             <label>dr. Anestesi</label>
-            <VueSignaturePad
-              ref="ttd_dr_anestesi"
-              :options="sigOption"
-              class="signature2-box-rme"
-            />
-            <button class="btn-save" @click="saveSign('ttd_dr_anestesi')">Simpan ✔</button>
-            <button class="btn-clear" @click="clearSign('ttd_dr_anestesi')">Clear ✖</button>
+            <div v-if="form.ttd_dr_anestesi && !ttdDokterCleared" class="signature-preview text-center">
+              <img :src="form.ttd_dr_anestesi" alt="TTD Perawat Ruangan" class="img-signature" />
+              <button @click="clearSign('ttd_dr_anestesi')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_dr_anestesi" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_dr_anestesi')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
             <div class="dropdown-dokter mt-2">
               <select v-model="form.nama_dr_anestesi" class="form-select-dokter">
                 <option value="" disabled>🩺 Pilih Dokter</option>
@@ -1007,13 +1008,14 @@
 
           <div class="col-md-6">
             <label>Perawat Anestesi</label>
-            <VueSignaturePad
-              ref="ttd_perawat_anestesi"
-              :options="sigOption"
-              class="signature2-box-rme"
-            />
-            <button class="btn-save" @click="saveSign('ttd_perawat_anestesi')">Simpan ✔</button>
-            <button class="btn-clear" @click="clearSign('ttd_perawat_anestesi')">Clear ✖</button>
+            <div v-if="form.ttd_perawat_anestesi && !ttdPerawatCleared" class="signature-preview text-center">
+              <img :src="form.ttd_perawat_anestesi" alt="TTD Perawat Ruangan" class="img-signature" />
+              <button @click="clearSign('ttd_perawat_anestesi')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_perawat_anestesi" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_perawat_anestesi')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
             <input v-model="form.nama_perawat_anestesi" class="input-rme mt-2" placeholder="Nama Jelas Perawat Anestesi" />
           </div>
         </div>
@@ -1067,6 +1069,8 @@ export default {
     return {
       currentTab: 1,
       loading: false,
+      ttdDokterCleared: false,
+      ttdPerawatCleared: false,
       sigOption: { penColor: "black", backgroundColor: "white" },
       form: {
         uuid: "",
@@ -1342,6 +1346,16 @@ export default {
             if (this.form.ttd_perawat_anestesi && this.$refs.ttd_perawat_anestesi) {
               this.$refs.ttd_perawat_anestesi.fromDataURL(this.form.ttd_perawat_anestesi);
             }
+            const flagMap = {
+              ttd_dr_anestesi: 'ttdDokterCleared',
+              ttd_perawat_anestesi: 'ttdPerawatCleared',
+            };
+          
+            Object.keys(flagMap).forEach(refName => {
+              if (this.form[refName]) {
+                this[flagMap[refName]] = false;
+              }
+            });
           });
         }
       } catch (error) {
@@ -1378,24 +1392,50 @@ export default {
       });
     },
 
-    saveSign(ref) {
-      const pad = this.$refs[ref];
+    saveSign(refName) {
+      const pad = this.$refs[refName];
       if (!pad) {
-        console.error("REF tidak ditemukan:", ref);
+        console.error("REF tidak ditemukan:", refName);
         return;
       }
-      const { data } = pad.saveSignature();
-      this.form[ref] = data;
-      alert("Tanda Tangan Berhasil Disimpan");
-      console.log("TTD saved:", ref);
+    
+      const { isEmpty, data } = pad.saveSignature();
+    
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+    
+      const flagMap = {
+        ttd_dr_anestesi: 'ttdDokterCleared',
+        ttd_perawat_anestesi: 'ttdPerawatCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
+      this.form[refName] = data;
+      console.log("TTD saved:", refName);
+    },
+    
+    clearSign(refName) {
+      const flagMap = {
+        ttd_dr_anestesi: 'ttdDokterCleared',
+        ttd_perawat_anestesi: 'ttdPerawatCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
+        this.form[refName] = "";
+      }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
     },
 
-    clearSign(ref) {
-      const pad = this.$refs[ref];
-      if (!pad) return;
-      pad.clearSignature();
-      this.form[ref] = "";
-    },
 
     async submitForm() {
       this.loading = true;
@@ -1495,6 +1535,28 @@ export default {
   align-items: center;
   margin-bottom: 8px;
   font-weight: 500;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
 }
 
 /* SIGNATURE */

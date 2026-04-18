@@ -277,16 +277,20 @@
 
       <!-- ================= TANDA TANGAN ================= -->
       <div class="box-rme mb-4">
-        <h5 class="section-title-rme">Diperiksa Oleh </h5>
+        <h5 class="section-title-rme">Diperiksa Oleh</h5>
       
         <div class="signature-row-3">
-          <!-- KOLOM 1 -->
+          <!-- KOLOM 1 - PERAWAT RUANGAN -->
           <div>
-            <label class="fw-bold mb-2">Perawat Ruangan </label>
-            <VueSignaturePad ref="ttd_perawat_ruangan" :options="sigOption" class="signature-box-rme mx-auto" />
-            <div class="signature-actions mt-2" style="margin-top: 8px;">
-            <button @click="clearSign('ttd_perawat_ruangan')" class="btn-clear mt-2">Ulang ↻</button>
-            <button @click="saveSign('ttd_perawat_ruangan')" class="btn-save mt-2">Simpan ✔</button> </div>
+            <label class="fw-bold mb-2">Perawat Ruangan</label>
+            <div v-if="form.ttd_perawat_ruangan && !ttdPerawatRuanganCleared" class="signature-preview text-center">
+              <img :src="form.ttd_perawat_ruangan" alt="TTD Perawat Ruangan" class="img-signature" />
+              <button @click="clearSign('ttd_perawat_ruangan')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_perawat_ruangan" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_perawat_ruangan')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
             <div>
               <input type="time" v-model="form.ttd_perawat_ruangan_waktu" class="input-rme" />
             </div>
@@ -296,13 +300,17 @@
             <input type="text" v-model="form.nama_perawat_ruangan" class="input-rme mt-2" placeholder="Nama Lengkap Perawat Ruangan" />
           </div>
         
-          <!-- KOLOM 2 -->  
+          <!-- KOLOM 2 - PERAWAT KAMAR BEDAH -->
           <div>
-            <label class="fw-bold mb-2"> Perawat Kamar Bedah</label>
-            <VueSignaturePad ref="ttd_perawat_kamar_bedah" :options="sigOption" class="signature-box-rme mx-auto" />
-            <div class="signature-actions mt-2" style="margin-top: 8px;">
-            <button @click="clearSign('ttd_perawat_kamar_bedah')" class="btn-clear mt-2">Ulang ↻</button>
-            <button @click="saveSign('ttd_perawat_kamar_bedah')" class="btn-save mt-2">Simpan ✔</button> </div>
+            <label class="fw-bold mb-2">Perawat Kamar Bedah</label>
+            <div v-if="form.ttd_perawat_kamar_bedah && !ttdPerawatKamarBedahCleared" class="signature-preview text-center">
+              <img :src="form.ttd_perawat_kamar_bedah" alt="TTD Perawat Kamar Bedah" class="img-signature" />
+              <button @click="clearSign('ttd_perawat_kamar_bedah')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_perawat_kamar_bedah" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_perawat_kamar_bedah')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
             <div>
               <input type="time" v-model="form.ttd_perawat_kamar_bedah_waktu" class="input-rme" />
             </div>
@@ -356,6 +364,8 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      ttdPerawatRuanganCleared: false,
+      ttdPerawatKamarBedahCleared: false,
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -557,31 +567,25 @@ loadDataForEdit() {
     
 
     // ⬇⬇ TAMBAHKAN DI SINI
-this.renderSignature(
-  "ttd_perawat_ruangan",
-  this.form.ttd_perawat_ruangan
-);
-this.renderSignature(
-  "ttd_perawat_kamar_bedah",
-  this.form.ttd_perawat_kamar_bedah
-);
+    this.$nextTick(() => {
+      const flagMap = {
+        ttd_perawat_ruangan: 'ttdPerawatRuanganCleared',
+        ttd_perawat_kamar_bedah: 'ttdPerawatKamarBedahCleared',
+      };
+    
+      Object.keys(flagMap).forEach(refName => {
+        if (this.form[refName]) {
+          this[flagMap[refName]] = false;
+        }
+      });
+    });
 
-  } catch (error) {
-    console.error("🟢 LOAD EDIT - Error:", error);
-    alert("Gagal memuat data untuk edit!");
-    this.$emit("back");
-  }
-},
-
-renderSignature(refName, data) {
-  this.$nextTick(() => {
-    const pad = this.$refs[refName];
-    if (pad && data) {
-      pad.clearSignature();
-      pad.fromDataURL(data);
-    }
-  });
-},
+      } catch (error) {
+        console.error("🟢 LOAD EDIT - Error:", error);
+        alert("Gagal memuat data untuk edit!");
+        this.$emit("back");
+      }
+    },
 
     
     setDataForm() {
@@ -606,21 +610,42 @@ renderSignature(refName, data) {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-
+    
       const { isEmpty, data } = pad.saveSignature();
-      if (!isEmpty) {
-        this.form[refName] = data;
-        alert("Tanda tangan berhasil disimpan!");
-      } else {
+    
+      if (isEmpty) {
         alert("Tanda tangan masih kosong!");
+        return;
       }
+    
+      const flagMap = {
+        ttd_perawat_ruangan: 'ttdPerawatRuanganCleared',
+        ttd_perawat_kamar_bedah: 'ttdPerawatKamarBedahCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
+      this.form[refName] = data;
+      console.log("TTD saved:", refName);
     },
-
+    
     clearSign(refName) {
-      const pad = this.$refs[refName];
-      if (pad) {
-        pad.clearSignature();
+      const flagMap = {
+        ttd_perawat_ruangan: 'ttdPerawatRuanganCleared',
+        ttd_perawat_kamar_bedah: 'ttdPerawatKamarBedahCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
+        this.form[refName] = "";
       }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
     },
 
     async submitForm() {
@@ -768,7 +793,23 @@ renderSignature(refName, data) {
   flex: 1;
   white-space: nowrap;
 }
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
 
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
+}
 .container {
   max-width: 1200px;
   margin: 0 auto;

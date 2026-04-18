@@ -573,21 +573,21 @@
         <div>
     <label class="fw-bold mb-2">Perawat Yang Melakukan Pengkajian</label>
 
-    <VueSignaturePad
+    <!-- <VueSignaturePad
       ref="ttd_perawat"
       :options="sigOption"
       class="signature-box-rme mx-auto"
-    />
+    /> -->
 
-    <!-- BARIS TOMBOL -->
-    <div class="signature-actions mt-2">
-      <button @click="clearSign('ttd_perawat')" class="btn-clear">
-        Ulang ↻
-      </button>
-      <button @click="saveSign('ttd_perawat')" class="btn-save">
-        Simpan ✔
-      </button>
-    </div>
+            <div v-if="form.ttd_perawat && !ttdPerawatCleared" class="signature-preview text-center">
+              <img :src="form.ttd_perawat" alt="TTD Perawat " class="img-signature" />
+              <button @click="clearSign('ttd_perawat')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_perawat" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_perawat')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
+
 
     <!-- INPUT NAMA (BARIS TERPISAH) -->
     <input
@@ -643,6 +643,8 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      disabledSubmit: false,
+      ttdPerawatCleared: false,
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -862,16 +864,23 @@ loadDataForEdit() {
       console.log(`🟢 Set ${key}:`, this.form[key]);
     });
 
-    // ✅ Render tanda tangan
-    this.renderSignature("ttd_perawat", this.form.ttd_perawat);
+    this.$nextTick(() => {
+      const flagMap = {
+        ttd_perawat: 'ttdPerawatCleared',
+      };
+    
+      Object.keys(flagMap).forEach(refName => {
+        if (this.form[refName]) {
+          this[flagMap[refName]] = false;
+        }
+      });
+    });
 
-    console.log("🟢 LOAD EDIT - Form setelah populate:", this.form);
-
-  } catch (error) {
-    console.error("🟢 LOAD EDIT - Error:", error);
-    alert("Gagal memuat data untuk edit!");
-    this.$emit("back");
-  }
+      } catch (error) {
+        console.error("🟢 LOAD EDIT - Error:", error);
+        alert("Gagal memuat data untuk edit!");
+        this.$emit("back");
+      }
 },
 
 
@@ -903,26 +912,48 @@ loadDataForEdit() {
       }
     },
 
-clearSign(refName) {
-  const pad = this.$refs[refName];
-  if (pad) {
-    pad.clearSignature();
-    this.form[refName] = "";
-  }
-},
+    saveSign(refName) {
+      const pad = this.$refs[refName];
+      if (!pad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
+    
+      const { isEmpty, data } = pad.saveSignature();
+    
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+    
+      const flagMap = {
+        ttd_perawat: 'ttdPerawatCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
+      this.form[refName] = data;
+      console.log("TTD saved:", refName);
+    },
+    
+    clearSign(refName) {
+      const flagMap = {
+        ttd_perawat: 'ttdPerawatCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
+        this.form[refName] = "";
+      }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
+    },
 
-
-
-saveSign(refName) {
-  const pad = this.$refs[refName];
-  if (!pad) return;
-
-  const { isEmpty, data } = pad.saveSignature();
-  if (!isEmpty) {
-    this.form[refName] = data;
-    console.log("TTD saved:", refName);
-  }
-},
 
 
     async submitForm() {
@@ -964,7 +995,7 @@ Object.keys(this.form).forEach((key) => {
         this.loadingSubmit = false;
       }
     },
-  },
+    },
 };
 </script>
 
@@ -1107,7 +1138,23 @@ Object.keys(this.form).forEach((key) => {
   row-gap: 10px;
 }
 
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
 
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
+}
 
 .box-rme {
   border: 1px solid #dcdcdc;

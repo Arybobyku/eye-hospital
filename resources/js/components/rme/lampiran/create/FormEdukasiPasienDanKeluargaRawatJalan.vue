@@ -431,178 +431,185 @@
               </div>
             </div>
 
-      <!-- ================= TANDA TANGAN ================= -->
-      <div class="box-rme mb-4">
-        <h5 class="section-title-rme">Tanda Tangan</h5>
-      
-        <div class="signature-row-3">
-          <!-- KOLOM 1 -->
-          <div>
-            <label class="fw-bold mb-2">Pengkaji</label>
-                <input type="text" v-model="form.nama_pengkaji" class="input-rme mt-2" placeholder="Nama Pengkaji" />
-                        <div class="date-time-wrapper">
-                          <div>
-                            <label>Tanggal :</label>
-                            <input type="date" v-model="form.tanggal_pengkaji" class="input-rme" />
-                          </div>
-                          <div>
-                            <label>Waktu :</label>
-                            <input type="time" v-model="form.waktu_pengkaji" class="input-rme" />
-                          </div>
-                        </div>
+            <!-- ================= TANDA TANGAN ================= -->
+            <div class="box-rme mb-4">
+              <h5 class="section-title-rme">Tanda Tangan</h5>
+            
+              <div class="signature-row-3">
+                <div>
+                  <label class="fw-bold mb-2">Pengkaji</label>
+                  <input type="text" v-model="form.nama_pengkaji" class="input-rme mt-2" placeholder="Nama Pengkaji" />
+                  <div class="date-time-wrapper">
+                    <div>
+                      <label>Tanggal :</label>
+                      <input type="date" v-model="form.tanggal_pengkaji" class="input-rme" />
+                    </div>
+                    <div>
+                      <label>Waktu :</label>
+                      <input type="time" v-model="form.waktu_pengkaji" class="input-rme" />
+                    </div>
+                  </div>
+                  <div v-if="form.ttd_pengkaji && !ttdPengkajiCleared" class="signature-preview text-center">
+                    <img :src="form.ttd_pengkaji" alt="TTD Pengkaji" class="img-signature" />
+                    <button @click="clearSign('ttd_pengkaji')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+                  </div>
+                  <div v-else class="text-center">
                     <VueSignaturePad ref="ttd_pengkaji" :options="sigOption" class="signature-box-rme mx-auto" />
-                    <div class="signature-actions mt-2">
-                    <button @click="clearSign('ttd_pengkaji')" class="btn-clear mt-2">Clear ↻</button>
                     <button @click="saveSign('ttd_pengkaji')" class="btn-save mt-2">Simpan ✔</button>
+                  </div>
                 </div>
               </div>
             </div>
-        </div>
-<div class="box-rme mb-4">
-  <h5 class="section-title-rme">Tabel Edukasi Pasien dan Keluarga</h5>
-  
-  <table class="form-rs">
-    <thead>
-      <tr>
-        <th>Tgl</th>
-        <th>Poliklinik</th>
-        <th>Penjelasan Edukasi Tentang</th>
-        <th>Tanda Tangan Nama Petugas & Profesi</th>
-        <th>Sasaran Edukasi<br>(Nama & Hubungannya dengan pasien)</th>
-        <th>Evaluasi</th>
-        <th style="width: 60px;">Aksi</th>
-      </tr>
-    </thead>
+            <div class="box-rme mb-4">
+              <h5 class="section-title-rme">Tabel Edukasi Pasien dan Keluarga</h5>
 
-    <tbody>
-      <tr v-for="(item, index) in form.tabel_edukasi" :key="index">
-        <td>
-          <input 
-            type="date" 
-            v-model="item.tanggal" 
-            class="line-input1"
-            :disabled="disabledSubmit"
-          >
-        </td>
-        <td>
-          <input 
-            type="text" 
-            v-model="item.poliklinik" 
-            class="line-input1"
-            :disabled="disabledSubmit"
-          >
-        </td>
-        <td>
-          <input 
-            type="text" 
-            v-model="item.penjelasan_edukasi" 
-            class="line-input1"
-            :disabled="disabledSubmit"
-          >
-        </td>
-        <td>
-          <div class="dokter-dpjp-box">
-            <div class="ttd-container-small">
-              <VueSignaturePad 
-                :ref="`ttd_petugas_${index}`" 
-                :options="sigOption" 
-                class="signature-box-header" 
-              />
-              <div class="signature-actions mt-2" v-if="!disabledSubmit">
-                <button 
-                  @click="clearSign(index)" 
-                  class="btn-clear mt-2"
-                  type="button"
-                >
-                  Clear ↻
-                </button>
-                <button 
-                  @click="saveSign(index)" 
-                  class="btn-save mt-2"
-                  type="button"
-                >
-                  Simpan ✔
-                </button>
-              </div>
+              <table class="form-rs">
+                <thead>
+                  <tr>
+                    <th>Tgl</th>
+                    <th>Poliklinik</th>
+                    <th>Penjelasan Edukasi Tentang</th>
+                    <th>Tanda Tangan Nama Petugas & Profesi</th>
+                    <th>Sasaran Edukasi<br>(Nama & Hubungannya dengan pasien)</th>
+                    <th>Evaluasi</th>
+                    <th style="width: 60px;">Aksi</th>
+                  </tr>
+                </thead>
+              
+                <tbody>
+                  <tr v-for="(item, index) in form.tabel_edukasi" :key="index">
+                    <td>
+                      <input 
+                        type="date" 
+                        v-model="item.tanggal" 
+                        class="line-input1"
+                        :disabled="disabledSubmit"
+                      >
+                    </td>
+                    <td>
+                      <input 
+                        type="text" 
+                        v-model="item.poliklinik" 
+                        class="line-input1"
+                        :disabled="disabledSubmit"
+                      >
+                    </td>
+                    <td>
+                      <input 
+                        type="text" 
+                        v-model="item.penjelasan_edukasi" 
+                        class="line-input1"
+                        :disabled="disabledSubmit"
+                      >
+                    </td>
+                      <td>
+                        <div class="dokter-dpjp-box">
+                          <div class="ttd-container-small">
+                            <div v-if="item.ttd_petugas && !ttdPetugasCleared[index]" class="signature-preview text-center">
+                              <img :src="item.ttd_petugas" alt="TTD Petugas" style="width:60%; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+                              <button @click="clearSign(index)" class="btn-clear mt-2" type="button" v-if="!disabledSubmit">
+                                Hapus & Tanda Tangan Ulang
+                              </button>
+                            </div>
+                            <div v-else>
+                              <VueSignaturePad
+                                :ref="`ttd_petugas_${index}`"
+                                :options="sigOption"
+                                class="signature-box-header"
+                              />
+                              <div class="signature-actions mt-2" v-if="!disabledSubmit">
+                                <button @click="saveSign(index)" class="btn-save mt-2" type="button">Simpan ✔</button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="input-dokter-dpjp">
+                            <div class="dropdown-dokter mt-2">
+                              <select
+                                v-model="item.nama_petugas"
+                                class="form-select-dokter"
+                                :disabled="disabledSubmit"
+                              >
+                                <option value="" disabled>🩺 Pilih Dokter</option>
+                                <option
+                                  v-for="dokter in listDokter"
+                                  :key="dokter.id"
+                                  :value="dokter.nama"
+                                >
+                                  {{ dokter.nama }}
+                                </option>
+                              </select>
+                              <span class="dropdown-icon">▾</span>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    <td>
+                      <input 
+                        type="text" 
+                        v-model="item.sasaran_edukasi" 
+                        class="line-input1"
+                        :disabled="disabledSubmit"
+                      >
+                    </td>
+                    <td>
+                      <div class="checkbox-group">
+                        <label class="checkbox-label">
+                          <input 
+                            type="checkbox" 
+                            v-model="item.eval_sudah_dimengerti" 
+                            true-value="1" 
+                            false-value="0"
+                            :disabled="disabledSubmit"
+                          >
+                          <span>Sudah Dimengerti</span>
+                        </label>
+                        <label class="checkbox-label">
+                          <input 
+                            type="checkbox" 
+                            v-model="item.eval_re_demonstrasi" 
+                            true-value="1" 
+                            false-value="0"
+                            :disabled="disabledSubmit"
+                          >
+                          <span>Re-Demonstrasi</span>
+                        </label>
+                        <label class="checkbox-label">
+                          <input 
+                            type="checkbox" 
+                            v-model="item.eval_re_edukasi" 
+                            true-value="1" 
+                            false-value="0"
+                            :disabled="disabledSubmit"
+                          >
+                          <span>Re Edukasi</span>
+                        </label>
+                      </div>
+                    </td>
+                    <td style="text-align: center;">
+                      <button 
+                        @click="hapusTabelEdukasi(index)" 
+                        class="btn-delete-small" 
+                        v-if="form.tabel_edukasi.length > 1 && !disabledSubmit"
+                        type="button"
+                        title="Hapus baris"
+                      >
+                        ✕
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Tombol Tambah Baris -->
+              <button 
+                @click="tambahTabelEdukasi" 
+                class="btn-add mt-2"
+                type="button"
+                v-if="!disabledSubmit"
+              >
+                ➕ Tambah Baris
+              </button>
             </div>
-            <div class="input-dokter-dpjp">
-              <input 
-                type="text" 
-                v-model="item.nama_petugas" 
-                class="line-input1" 
-                placeholder="Nama Dokter DPJP"
-                :disabled="disabledSubmit"
-              >
-            </div>
-          </div>
-        </td>
-        <td>
-          <input 
-            type="text" 
-            v-model="item.sasaran_edukasi" 
-            class="line-input1"
-            :disabled="disabledSubmit"
-          >
-        </td>
-        <td>
-          <div class="checkbox-group">
-            <label class="checkbox-label">
-              <input 
-                type="checkbox" 
-                v-model="item.eval_sudah_dimengerti" 
-                true-value="1" 
-                false-value="0"
-                :disabled="disabledSubmit"
-              >
-              <span>Sudah Dimengerti</span>
-            </label>
-            <label class="checkbox-label">
-              <input 
-                type="checkbox" 
-                v-model="item.eval_re_demonstrasi" 
-                true-value="1" 
-                false-value="0"
-                :disabled="disabledSubmit"
-              >
-              <span>Re-Demonstrasi</span>
-            </label>
-            <label class="checkbox-label">
-              <input 
-                type="checkbox" 
-                v-model="item.eval_re_edukasi" 
-                true-value="1" 
-                false-value="0"
-                :disabled="disabledSubmit"
-              >
-              <span>Re Edukasi</span>
-            </label>
-          </div>
-        </td>
-        <td style="text-align: center;">
-          <button 
-            @click="hapusTabelEdukasi(index)" 
-            class="btn-delete-small" 
-            v-if="form.tabel_edukasi.length > 1 && !disabledSubmit"
-            type="button"
-            title="Hapus baris"
-          >
-            ✕
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  
-  <!-- Tombol Tambah Baris -->
-  <button 
-    @click="tambahTabelEdukasi" 
-    class="btn-add mt-2"
-    type="button"
-    v-if="!disabledSubmit"
-  >
-    ➕ Tambah Baris
-  </button>
-</div>
      </div>
      
 
@@ -651,6 +658,8 @@ export default {
     return {
       loadingSubmit: false,
       disabledSubmit: false, // ✅ TAMBAHKAN
+      ttdPengkajiCleared: false,
+      ttdPetugasCleared: [],
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -786,7 +795,7 @@ export default {
     console.log("🟢 COMPONENT - editData:", this.editData);
     console.log("🟢 COMPONENT - viewData:", this.viewData);
     console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
-
+    await this.fetchDokter();
     await this.fetchTahunAkreditasi();
     
     this.disabledSubmit = false;
@@ -804,6 +813,14 @@ export default {
   },
   
   methods: {
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
   async fetchTahunAkreditasi() {
     try {
       const response = await axios.get('/api/tahun-akreditasi');
@@ -875,7 +892,11 @@ export default {
       
         // Load signature setelah DOM siap
         this.$nextTick(() => {
-          this.loadSignatures(dataSource);
+          // Reset flag pengkaji
+          if (this.form.ttd_pengkaji) this.ttdPengkajiCleared = false;
+        
+          // Reset flag tabel — init array sesuai jumlah baris
+          this.ttdPetugasCleared = this.form.tabel_edukasi.map(item => !item.ttd_petugas);
         });
       
       } catch (error) {
@@ -885,44 +906,6 @@ export default {
       }
     },
 
-    // ✅ LOAD SIGNATURES
-    loadSignatures(data) {
-      // Load signature pengkaji
-      if (data.ttd_pengkaji && this.$refs.ttd_pengkaji) {
-        try {
-          this.$refs.ttd_pengkaji.fromDataURL(data.ttd_pengkaji);
-          console.log("✅ Loaded ttd_pengkaji");
-        } catch (err) {
-          console.error('Gagal load signature ttd_pengkaji:', err);
-        }
-      }
-
-      // Load signatures tabel
-      if (this.form.tabel_edukasi && Array.isArray(this.form.tabel_edukasi)) {
-        this.form.tabel_edukasi.forEach((item, index) => {
-          if (item.ttd_petugas) {
-            this.$nextTick(() => {
-              const refKey = `ttd_petugas_${index}`;
-              const pad = this.$refs[refKey];
-              
-              if (pad) {
-                try {
-                  // Ref dalam v-for adalah array
-                  if (Array.isArray(pad) && pad[0]) {
-                    pad[0].fromDataURL(item.ttd_petugas);
-                  } else {
-                    pad.fromDataURL(item.ttd_petugas);
-                  }
-                  console.log(`✅ Loaded signature tabel ${index}`);
-                } catch (err) {
-                  console.error(`Gagal load ttd tabel ${index}:`, err);
-                }
-              }
-            });
-          }
-        });
-      }
-    },
 
     // ✅ SET DATA FORM (untuk mode CREATE)
     setDataForm() {
@@ -964,13 +947,14 @@ export default {
     // ✅ TAMBAH BARIS TABEL
     tambahTabelEdukasi() {
       this.form.tabel_edukasi.push(this.createEmptyTabelRow());
+      this.ttdPetugasCleared.push(false); // ← sync flag
       console.log("✅ Baris baru ditambahkan. Total:", this.form.tabel_edukasi.length);
     },
 
-    // ✅ HAPUS BARIS TABEL
     hapusTabelEdukasi(index) {
       if (this.form.tabel_edukasi.length > 1) {
         this.form.tabel_edukasi.splice(index, 1);
+        this.ttdPetugasCleared.splice(index, 1); // ← sync flag array
         console.log(`✅ Baris ${index} dihapus. Total:`, this.form.tabel_edukasi.length);
       } else {
         alert("Minimal harus ada 1 baris!");
@@ -979,67 +963,77 @@ export default {
 
     // ✅ SAVE SIGNATURE (support tabel dinamis)
     saveSign(refNameOrIndex) {
-      let pad;
-      
-      // Jika angka (untuk tabel)
       if (typeof refNameOrIndex === 'number') {
         const index = refNameOrIndex;
         const refKey = `ttd_petugas_${index}`;
-        pad = this.$refs[refKey];
+        const pad = this.$refs[refKey];
+      
+        if (pad) {
+          const signPad = Array.isArray(pad) ? pad[0] : pad;
+          const { isEmpty, data } = signPad.saveSignature();
         
-        if (pad) {
-          try {
-            // Ref dalam v-for adalah array
-            const signPad = Array.isArray(pad) ? pad[0] : pad;
-            const { data } = signPad.saveSignature();
-            
-            this.form.tabel_edukasi[index].ttd_petugas = data;
-            console.log(`✅ TTD tabel ${index} saved`);
-            alert(`Tanda tangan baris ${index + 1} tersimpan!`);
-          } catch (err) {
-            console.error(`Error save ttd tabel ${index}:`, err);
-            alert("Gagal menyimpan tanda tangan!");
+          if (isEmpty) {
+            alert("Tanda tangan masih kosong!");
+            return;
           }
-        } else {
-          console.error(`Ref ${refKey} tidak ditemukan`);
+        
+          this.form.tabel_edukasi[index].ttd_petugas = data;
+          this.ttdPetugasCleared[index] = false; // ✅ Vue 3: langsung saja
+          console.log(`✅ TTD tabel ${index} saved`);
         }
-      } 
-      // Jika string (untuk signature lain seperti pengkaji)
-      else {
-        pad = this.$refs[refNameOrIndex];
-        if (pad) {
-          const { data } = pad.saveSignature();
-          this.form[refNameOrIndex] = data;
-          console.log("✅ TTD saved:", refNameOrIndex);
-          alert("Tanda tangan tersimpan!");
-        } else {
-          console.error("REF tidak ditemukan:", refNameOrIndex);
-        }
+      } else {
+        const pad = this.$refs[refNameOrIndex];
+        if (!pad) return;
+      
+        const { isEmpty, data } = pad.saveSignature();
+        if (isEmpty) { alert("Tanda tangan masih kosong!"); return; }
+      
+        if (refNameOrIndex === 'ttd_pengkaji') this.ttdPengkajiCleared = false;
+        this.form[refNameOrIndex] = data;
       }
     },
 
-    // ✅ CLEAR SIGNATURE (support tabel dinamis)
     clearSign(refNameOrIndex) {
-      let pad;
-      
       if (typeof refNameOrIndex === 'number') {
         const index = refNameOrIndex;
-        const refKey = `ttd_petugas_${index}`;
-        pad = this.$refs[refKey];
-        
-        if (pad) {
-          const signPad = Array.isArray(pad) ? pad[0] : pad;
-          signPad.clearSignature();
-          this.form.tabel_edukasi[index].ttd_petugas = "";
-          console.log(`✅ TTD tabel ${index} cleared`);
-        }
+      
+        // ✅ Vue 3: tidak perlu $set, langsung assign
+        this.ttdPetugasCleared[index] = true;
+        this.form.tabel_edukasi[index].ttd_petugas = "";
+      
+        this.$nextTick(() => {
+          this.$nextTick(() => {
+            const refKey = `ttd_petugas_${index}`;
+            const pad = this.$refs[refKey];
+            if (pad) {
+              const signPad = Array.isArray(pad) ? pad[0] : pad;
+              signPad.clearSignature();
+            }
+          });
+        });
       } else {
-        pad = this.$refs[refNameOrIndex];
-        if (pad) {
-          pad.clearSignature();
-          this.form[refNameOrIndex] = "";
-          console.log("✅ TTD cleared:", refNameOrIndex);
+        if (refNameOrIndex === 'ttd_pengkaji') {
+          this.ttdPengkajiCleared = true;
+          this.form.ttd_pengkaji = "";
         }
+        this.$nextTick(() => {
+          const pad = this.$refs[refNameOrIndex];
+          if (pad) pad.clearSignature();
+        });
+      }
+    },
+
+    tambahTabelEdukasi() {
+      this.form.tabel_edukasi.push(this.createEmptyTabelRow());
+      this.ttdPetugasCleared.push(false); // ✅ Vue 3: push langsung
+    },
+
+    hapusTabelEdukasi(index) {
+      if (this.form.tabel_edukasi.length > 1) {
+        this.form.tabel_edukasi.splice(index, 1);
+        this.ttdPetugasCleared.splice(index, 1); // ✅ sync
+      } else {
+        alert("Minimal harus ada 1 baris!");
       }
     },
 
@@ -1483,6 +1477,64 @@ label {
   column-gap: 25px;
   row-gap: 10px;
 }
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
+}
+
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
+}
+
 
 .col-md-4,
 .col-md-6,

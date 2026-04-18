@@ -127,51 +127,81 @@ P: Planning (rencana tindakan)"
                 <!-- TTD PPA -->
                 <td class="text-center">
                   <div class="signature-cell">
-                    <VueSignaturePad
-                      :ref="`ttd_ppa_${index}`"
-                      :options="sigOption"
-                      class="signature-box-table"
-                    />
-                    <button 
-                      @click="saveSign(`ttd_ppa_${index}`, index, 'ttd_ppa')" 
-                      class="btn-save-mini"
-                    >
-                      Simpan ✔
-                    </button>
+                    <div v-if="row.ttd_ppa && !ttdPpaCleared[index]" class="text-center">
+                      <img :src="row.ttd_ppa" style="width:180px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+                      <button
+                        @click="clearSign(index, 'ttd_ppa')"
+                        class="btn-save-mini mt-1"
+                        style="background:#f44336;"
+                        v-if="!disabledSubmit"
+                        type="button"
+                      >
+                        Hapus & TTD Ulang
+                      </button>
+                    </div>
+                    <div v-else>
+                      <VueSignaturePad
+                        :ref="`ttd_ppa_${index}`"
+                        :options="sigOption"
+                        class="signature-box-table"
+                      />
+                      <button
+                        @click="saveSign(`ttd_ppa_${index}`, index, 'ttd_ppa')"
+                        class="btn-save-mini"
+                        v-if="!disabledSubmit"
+                        type="button"
+                      >
+                        Simpan ✔
+                      </button>
+                    </div>
                   </div>
                 </td>
 
                 <!-- Review DPJP -->
                 <td class="text-center">
                   <div class="signature-cell">
-                    <input 
-                      type="date" 
-                      v-model="row.tanggal_review" 
-                      class="input-table mb-1"
-                      placeholder="Tgl Review"
-                    />
-                    <input 
-                      type="time" 
-                      v-model="row.jam_review" 
-                      class="input-table mb-1"
-                    />
-                    <VueSignaturePad
-                      :ref="`ttd_dpjp_${index}`"
-                      :options="sigOption"
-                      class="signature-box-table"
-                    />
-                    <button 
-                      @click="saveSign(`ttd_dpjp_${index}`, index, 'ttd_dpjp')" 
-                      class="btn-save-mini"
-                    >
-                      Simpan ✔
-                    </button>
-                    <input 
-                      type="text" 
-                      v-model="row.nama_dpjp" 
-                      class="input-table mt-1"
-                      placeholder="Nama DPJP"
-                    />
+                    <input type="date" v-model="row.tanggal_review" class="input-table mb-1" placeholder="Tgl Review" />
+                    <input type="time" v-model="row.jam_review" class="input-table mb-1" />
+                    <div v-if="row.ttd_dpjp && !ttdDpjpCleared[index]" class="text-center">
+                      <img :src="row.ttd_dpjp" style="width:180px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+                      <button
+                        @click="clearSign(index, 'ttd_dpjp')"
+                        class="btn-save-mini mt-1"
+                        style="background:#f44336;"
+                        v-if="!disabledSubmit"
+                        type="button"
+                      >
+                        Hapus & TTD Ulang
+                      </button>
+                    </div>
+                    <div v-else>
+                      <VueSignaturePad
+                        :ref="`ttd_dpjp_${index}`"
+                        :options="sigOption"
+                        class="signature-box-table"
+                      />
+                      <button
+                        @click="saveSign(`ttd_dpjp_${index}`, index, 'ttd_dpjp')"
+                        class="btn-save-mini"
+                        v-if="!disabledSubmit"
+                        type="button"
+                      >
+                        Simpan ✔
+                      </button>
+                    </div>
+                    <div class="dropdown-dokter mt-2">
+                      <select v-model="row.nama_dpjp" class="form-select-dokter">
+                        <option value="" disabled>🩺 Pilih Dokter</option>
+                        <option
+                          v-for="dokter in listDokter"
+                          :key="dokter.id"
+                          :value="dokter.nama"
+                        >
+                          {{ dokter.nama }}
+                        </option>
+                      </select>
+                      <span class="dropdown-icon">▾</span>
+                    </div>
                   </div>
                 </td>
 
@@ -257,6 +287,8 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      ttdPpaCleared: [],
+      ttdDpjpCleared: [],
       disabledSubmit: false,
       editUuid: "",
       sigOption: {
@@ -298,6 +330,7 @@ export default {
   },
   async mounted() {
     console.log("p", this.editData);
+    await this.fetchDokter();
     await this.fetchTahunAkreditasi();
     if(this.viewData) {
       console.log(this.editUuid);
@@ -316,7 +349,15 @@ export default {
       this.setDataForm();
     }
   },
-  methods: {
+    methods: {
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
     async fetchTahunAkreditasi() {
       try {
         const response = await axios.get('/api/tahun-akreditasi');
@@ -369,22 +410,9 @@ export default {
             }
           });
           this.$nextTick(() => {
-          this.form.cppt_rows.forEach((row, index) => {
-
-            // ===== TTD PPA =====
-            if (row.ttd_ppa && this.$refs[`ttd_ppa_${index}`]) {
-              const padPpa = this.$refs[`ttd_ppa_${index}`][0];
-              padPpa.fromDataURL(row.ttd_ppa);
-            }
-
-            // ===== TTD DPJP =====
-            if (row.ttd_dpjp && this.$refs[`ttd_dpjp_${index}`]) {
-              const padDpjp = this.$refs[`ttd_dpjp_${index}`][0];
-              padDpjp.fromDataURL(row.ttd_dpjp);
-            }
-
+            this.ttdPpaCleared = this.form.cppt_rows.map(row => !row.ttd_ppa);
+            this.ttdDpjpCleared = this.form.cppt_rows.map(row => !row.ttd_dpjp);
           });
-        });
         }
       } catch (error) {
         console.error("Error loading data:", error);
@@ -393,41 +421,73 @@ export default {
       }
     },
 
-    addRow() {
-      const now = new Date();
-      
-      this.form.cppt_rows.push({
-        tanggal: now.toISOString().split('T')[0],
-        jam: now.toTimeString().substring(0, 5),
-        profesi: "",
-        hasil_asesmen: "",
-        instruksi_ppa: "",
-        nama_ppa: "",
-        ttd_ppa: "",
-        tanggal_review: "",
-        jam_review: "",
-        nama_dpjp: "",
-        ttd_dpjp: ""
-      });
-    },
+addRow() {
+  const now = new Date();
+  this.form.cppt_rows.push({
+    tanggal: now.toISOString().split('T')[0],
+    jam: now.toTimeString().substring(0, 5),
+    profesi: "",
+    hasil_asesmen: "",
+    instruksi_ppa: "",
+    nama_ppa: "",
+    ttd_ppa: "",
+    tanggal_review: "",
+    jam_review: "",
+    nama_dpjp: "",
+    ttd_dpjp: ""
+  });
+  this.ttdPpaCleared.push(false);
+  this.ttdDpjpCleared.push(false);
+},
 
-    deleteRow(index) {
-      if (this.form.cppt_rows.length > 1) {
-        this.form.cppt_rows.splice(index, 1);
-      }
-    },
+deleteRow(index) {
+  if (this.form.cppt_rows.length > 1) {
+    this.form.cppt_rows.splice(index, 1);
+    this.ttdPpaCleared.splice(index, 1);
+    this.ttdDpjpCleared.splice(index, 1);
+  }
+},
 
     saveSign(refName, index, field) {
       const pad = this.$refs[refName];
-      
-      if (!pad || !pad[0]) {
+      const signaturePad = Array.isArray(pad) ? pad[0] : pad;
+    
+      if (!signaturePad) {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-
-      const { data } = pad[0].saveSignature();
+    
+      const { isEmpty, data } = signaturePad.saveSignature();
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+    
       this.form.cppt_rows[index][field] = data;
+    
+      if (field === 'ttd_ppa') this.ttdPpaCleared[index] = false;
+      else if (field === 'ttd_dpjp') this.ttdDpjpCleared[index] = false;
+    
       console.log("TTD saved:", refName, field);
+    },
+    
+    clearSign(index, field) {
+      if (field === 'ttd_ppa') {
+        this.ttdPpaCleared[index] = true;
+        this.form.cppt_rows[index].ttd_ppa = "";
+      } else if (field === 'ttd_dpjp') {
+        this.ttdDpjpCleared[index] = true;
+        this.form.cppt_rows[index].ttd_dpjp = "";
+      }
+    
+      this.$nextTick(() => {
+        this.$nextTick(() => {
+          const refName = `ttd_${field === 'ttd_ppa' ? 'ppa' : 'dpjp'}_${index}`;
+          const pad = this.$refs[refName];
+          const signaturePad = Array.isArray(pad) ? pad[0] : pad;
+          if (signaturePad) signaturePad.clearSignature();
+        });
+      });
     },
 
     async submitForm() {
@@ -670,6 +730,64 @@ export default {
   border-left: 4px solid #2d74b7;
   border-radius: 4px;
   font-size: 14px;
+}
+
+.signature-preview {
+  width: 100%;
+  border: 2px solid #999;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
+}
+
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
 }
 
 /* ACTION FOOTER */

@@ -141,26 +141,30 @@
         <div>
           <div class="text-center">
             <label class="fw-bold mb-2 d-block">Perawat kamar bedah</label>
-            <VueSignaturePad ref="ttd_perawat" :options="sigOption" class="signature-box-rme mx-auto" />
-            <div class="signature-actions mt-2">
-                <button @click="clearSign('ttd_perawat')" class="btn-clear mt-2">Clear ↻</button>
-                <button @click="saveSign('ttd_perawat')" class="btn-save mt-2 ">Simpan ✔</button>
+            <div v-if="form.ttd_perawat && !ttdPerawatCleared" class="signature-preview text-center">
+              <img :src="form.ttd_perawat" alt="TTD Perawat" class="img-signature" />
+              <button @click="clearSign('ttd_perawat')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
-
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_perawat" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_perawat')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
             <input type="text" v-model="form.nama_lengkap_perawat" class="input-rme mt-2" placeholder="Nama Lengkap Perawat" />
           </div>
         </div>
-
+      
         <!-- KOLOM KANAN - KEPALA RUANGAN -->
         <div>
           <div class="text-center">
             <label class="fw-bold mb-2 d-block">Kepala Ruangan</label>
-            <VueSignaturePad ref="ttd_kepala" :options="sigOption" class="signature-box-rme mx-auto" />
-            <div class="signature-actions mt-2">            
-              <button @click="clearSign('ttd_kepala')" class="btn-clear mt-2">Clear ↻</button>
+            <div v-if="form.ttd_kepala && !ttdKepalaCleared" class="signature-preview text-center">
+              <img :src="form.ttd_kepala" alt="TTD Kepala" class="img-signature" />
+              <button @click="clearSign('ttd_kepala')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_kepala" :options="sigOption" class="signature-box-rme mx-auto" />
               <button @click="saveSign('ttd_kepala')" class="btn-save mt-2">Simpan ✔</button>
             </div>
-
             <input type="text" v-model="form.nama_lengkap_kepala_ruangan" class="input-rme mt-2" placeholder="Nama Lengkap Kepala Ruangan" />
           </div>
         </div>
@@ -210,6 +214,8 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      ttdKepalaCleared: false,
+      ttdPerawatCleared: false,
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -342,7 +348,18 @@ loadDataForEdit() {
       }
     });
 
-    this.renderSignature("ttd_perawat", this.form.ttd_perawat); this.renderSignature("ttd_kepala", this.form.ttd_kepala);
+    this.$nextTick(() => {
+      const flagMap = {
+        ttd_perawat: 'ttdPerawatCleared',
+        ttd_kepala: 'ttdKepalaCleared',
+      };
+    
+      Object.keys(flagMap).forEach(refName => {
+        if (this.form[refName]) {
+          this[flagMap[refName]] = false;
+        }
+      });
+    });
 
     console.log("🟢 LOAD EDIT - Form setelah populate:", this.form);
 
@@ -353,15 +370,6 @@ loadDataForEdit() {
   }
 },
 
-renderSignature(refName, data) {
-      this.$nextTick(() => {
-        const pad = this.$refs[refName];
-        if (pad && data) {
-          pad.clearSignature();
-          pad.fromDataURL(data);
-        }
-      });
-    },
 
     setDataForm() {
       const today = new Date();
@@ -386,23 +394,42 @@ renderSignature(refName, data) {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-
-      const { data } = pad.saveSignature();
-      
-      if (refName === "ttd_perawat") {
-        this.form.ttd_perawat= data;
-      } else if (refName === "ttd_kepala") {
-        this.form.ttd_kepala = data;
+    
+      const { isEmpty, data } = pad.saveSignature();
+    
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
       }
-      
+    
+      const flagMap = {
+        ttd_kepala: 'ttdKepalaCleared',
+        ttd_perawat: 'ttdPerawatCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
+      this.form[refName] = data;
       console.log("TTD saved:", refName);
     },
-
+    
     clearSign(refName) {
-      const pad = this.$refs[refName];
-      if (pad) {
-        pad.clearSignature();
+      const flagMap = {
+        ttd_kepala: 'ttdKepalaCleared',
+        ttd_perawat: 'ttdPerawatCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
+        this.form[refName] = "";
       }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
     },
 
     async submitForm() {
@@ -591,6 +618,24 @@ renderSignature(refName, data) {
   border-top: 2px solid #ddd;
   position: sticky;
   bottom: 0;
+}
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
 }
 
 .btn-save-form {

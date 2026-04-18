@@ -287,14 +287,14 @@
             </select>
 
             <label class="fw-bold mb-2">Tanda Tangan</label>
-            <VueSignaturePad
-              ref="ttd_petugas"
-              :options="sigOption"
-              class="signature2-box-rme mx-auto"
-            />
-            <button @click="saveSign('ttd_petugas')" class="btn-save mt-2">
-              Simpan ✔
-            </button>
+            <div v-if="form.ttd_petugas && !ttdPetugasCleared" class="signature-preview text-center">
+              <img :src="form.ttd_petugas" alt="TTD Petugas" class="img-signature" />
+              <button @click="clearSign('ttd_petugas')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_petugas" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_petugas')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
             <input
               type="text"
               v-model="form.nama_petugas"
@@ -343,6 +343,7 @@ export default {
     return {
       loadingSubmit: false,
       disabledSubmit: false,
+      ttdPetugasCleared: false,
       editUuid: "",
       sigOption: {
         penColor: "black",
@@ -459,6 +460,15 @@ export default {
         if (this.form.ttd_petugas && this.$refs.ttd_petugas) {
           this.$refs.ttd_petugas.fromDataURL(this.form.ttd_petugas);
         }
+              const flagMap = {
+                ttd_petugas: 'ttdPetugasCleared',
+              };
+            
+              Object.keys(flagMap).forEach(refName => {
+                if (this.form[refName]) {
+                  this[flagMap[refName]] = false;
+                }
+              });
       });
         }
       } catch (error) {
@@ -489,10 +499,40 @@ export default {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-
-      const { data } = pad.saveSignature();
+    
+      const { isEmpty, data } = pad.saveSignature();
+    
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+    
+      const flagMap = {
+        ttd_petugas: 'ttdPetugasCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
       this.form[refName] = data;
       console.log("TTD saved:", refName);
+    },
+    
+    clearSign(refName) {
+      const flagMap = {
+        ttd_petugas: 'ttdPetugasCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
+        this.form[refName] = "";
+      }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
     },
 
     async submitForm() {
@@ -629,6 +669,14 @@ export default {
   border-color: #2d74b7;
 }
 
+.btn-clear {
+  background: #e53935;
+  color: #fff;
+  padding: 6px 14px;
+  border: none;
+  margin-left: 8px;
+}
+
 /* RADIO & CHECKBOX */
 .radio-group,
 .checkbox-group {
@@ -691,13 +739,11 @@ export default {
 }
 
 /* SIGNATURE */
-.signature2-box-rme {
-  width: 500px !important;
-  height: 110px !important;
-  border: 2px solid #999;
-  border-radius: 4px;
-  display: block;
-  margin: 0 auto;
+.signature-box-rme {
+  width: 100%;
+  height: 160px;
+  border: 1px solid #999;
+  margin-bottom: 10px;
 }
 
 .btn-save {
@@ -759,6 +805,24 @@ export default {
   font-weight: bold;
   cursor: pointer;
   font-size: 16px;
+}
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
 }
 
 /* RESPONSIVE GRID */

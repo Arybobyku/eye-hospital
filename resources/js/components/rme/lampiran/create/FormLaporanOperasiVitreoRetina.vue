@@ -76,7 +76,19 @@
         <div class="row mb-3">
           <div class="col-md-4">
             <label>DPJP Bedah</label>
-            <input v-model="form.dpjp_bedah" class="input-rme" />
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.dpjp_bedah" class="form-select-dokter">
+                <option value="" disabled >🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
           </div>
           <div class="col-md-4">
             <label>Asisten</label>
@@ -761,20 +773,27 @@
         <div class="row">
           <div class="col-md-6 text-center">
             <label class="fw-bold mb-2">DPJP Bedah</label>
-            <VueSignaturePad
-              ref="ttd_dpjp_bedah"
-              :options="sigOption"
-              class="signature2-box-rme mx-auto"
-            />
-            <button @click="saveSign('ttd_dpjp_bedah')" class="btn-save mt-2">
-              Simpan ✔
-            </button>
-            <input
-              type="text"
-              v-model="form.nama_dpjp_bedah_ttd"
-              class="input-rme mt-2"
-              placeholder="Nama Lengkap DPJP Bedah"
-            />
+            <div v-if="form.ttd_dpjp_bedah && !ttdDokterCleared" class="signature-preview text-center">
+              <img :src="form.ttd_dpjp_bedah" alt="TTD Perawat Ruangan" class="img-signature" />
+              <button @click="clearSign('ttd_dpjp_bedah')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_dpjp_bedah" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_dpjp_bedah')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_dpjp_bedah_ttd" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
           </div>
 
           <div class="col-md-6">
@@ -831,6 +850,7 @@ export default {
     return {
       loadingSubmit: false,
       disabledSubmit: false,
+      ttdDokterCleared: false,
       editUuid : "",
       sigOption: {
         penColor: "black",
@@ -1026,6 +1046,7 @@ export default {
     }
   },
   async mounted() {
+  await this.fetchDokter();
   await this.fetchTahunAkreditasi();
     if(this.viewData) {
       console.log(this.editUuid);
@@ -1042,6 +1063,14 @@ export default {
     }
   },
   methods: {
+      async fetchDokter() {
+        try {
+          const response = await axios.get('/master/pasien/master-dokter-all');
+          this.listDokter = response.data.data;
+        } catch (error) {
+          console.error('Gagal memuat data dokter:', error);
+        }
+      },
     async fetchTahunAkreditasi() {
       try {
         const response = await axios.get('/api/tahun-akreditasi');
@@ -1099,6 +1128,15 @@ export default {
             if (this.form.gambar_skema && this.$refs.gambar_skema) {
               this.$refs.gambar_skema.fromDataURL(this.form.gambar_skema);
             }
+            const flagMap = {
+              ttd_dpjp_bedah: 'ttdDokterCleared',
+            };
+          
+            Object.keys(flagMap).forEach(refName => {
+              if (this.form[refName]) {
+                this[flagMap[refName]] = false;
+              }
+            });
           });
         }
       } catch (error) {
@@ -1114,10 +1152,40 @@ export default {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-
-      const { data } = pad.saveSignature();
+    
+      const { isEmpty, data } = pad.saveSignature();
+    
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+    
+      const flagMap = {
+        ttd_dpjp_bedah: 'ttdDokterCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
       this.form[refName] = data;
       console.log("TTD saved:", refName);
+    },
+    
+    clearSign(refName) {
+      const flagMap = {
+        ttd_dpjp_bedah: 'ttdDokterCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
+        this.form[refName] = "";
+      }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
     },
 
     clearSketch() {
@@ -1226,6 +1294,62 @@ export default {
   cursor: not-allowed;
 }
 
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
+}
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
+}
+
 .textarea-rme {
   width: 100%;
   border: 1px solid #ccc;
@@ -1266,13 +1390,11 @@ export default {
 }
 
 /* SIGNATURE & SKETCH */
-.signature2-box-rme {
-  width: 500px !important;
-  height: 110px !important;
-  border: 2px solid #999;
-  border-radius: 4px;
-  display: block;
-  margin: 0 auto;
+.signature-box-rme {
+  width: 100%;
+  height: 160px;
+  border: 1px solid #999;
+  margin-bottom: 10px;
 }
 
 .sketch-box-rme {

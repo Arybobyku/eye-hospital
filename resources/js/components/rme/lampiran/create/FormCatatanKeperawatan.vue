@@ -97,23 +97,37 @@
                 <!-- Nama & Paraf -->
                 <td class="text-center">
                   <div class="signature-cell">
-                    <input 
-                      type="text" 
-                      v-model="row.nama_perawat" 
+                    <input
+                      type="text"
+                      v-model="row.nama_perawat"
                       class="input-table mb-1"
                       placeholder="Nama Perawat"
                     />
-                    <VueSignaturePad
-                      :ref="`ttd_${index}`"
-                      :options="sigOption"
-                      class="signature-box-table"
-                    />
-                    <button 
-                      @click="saveSign(`ttd_${index}`, index)" 
-                      class="btn-save-mini"
-                    >
-                      Simpan ✔
-                    </button>
+                    <div v-if="row.ttd_perawat && !ttdPerawatCleared[index]" class="text-center">
+                      <img :src="row.ttd_perawat" style="width:200px; height:80px; object-fit:contain; border:1px dashed #ccc;" />
+                      <button
+                        @click="clearSign(index)"
+                        class="btn-save-mini mt-1"
+                        style="background:#f44336;"
+                        type="button"
+                      >
+                        Hapus & TTD Ulang
+                      </button>
+                    </div>
+                    <div v-else>
+                      <VueSignaturePad
+                        :ref="`ttd_${index}`"
+                        :options="sigOption"
+                        class="signature-box-table"
+                      />
+                      <button
+                        @click="saveSign(`ttd_${index}`, index)"
+                        class="btn-save-mini"
+                        type="button"
+                      >
+                        Simpan ✔
+                      </button>
+                    </div>
                   </div>
                 </td>
 
@@ -178,6 +192,7 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      ttdPerawatCleared: [],
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -269,16 +284,9 @@ export default {
       });
 
       // 🔴 INI PENTING
-      this.$nextTick(() => {
-        this.form.catatan_rows.forEach((row, index) => {
-          if (row.ttd_perawat) {
-            const pad = this.$refs[`ttd_${index}`];
-            if (pad && pad[0]) {
-              pad[0].fromDataURL(row.ttd_perawat);
-            }
-          }
-        });
-      });
+    this.$nextTick(() => {
+      this.ttdPerawatCleared = this.form.catatan_rows.map(row => !row.ttd_perawat);
+    });
     }
   } catch (err) {
     console.error(err);
@@ -288,7 +296,6 @@ export default {
 
     addRow() {
       const now = new Date();
-      
       this.form.catatan_rows.push({
         tanggal: now.toISOString().split('T')[0],
         jam: now.toTimeString().substring(0, 5),
@@ -296,25 +303,47 @@ export default {
         nama_perawat: "",
         ttd_perawat: ""
       });
+      this.ttdPerawatCleared.push(false); 
     },
 
     deleteRow(index) {
       if (this.form.catatan_rows.length > 1) {
         this.form.catatan_rows.splice(index, 1);
+        this.ttdPerawatCleared.splice(index, 1); 
       }
     },
 
     saveSign(refName, index) {
       const pad = this.$refs[refName];
-      
-      if (!pad || !pad[0]) {
+      const signaturePad = Array.isArray(pad) ? pad[0] : pad;
+    
+      if (!signaturePad) {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-
-      const { data } = pad[0].saveSignature();
+    
+      const { isEmpty, data } = signaturePad.saveSignature();
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+    
       this.form.catatan_rows[index].ttd_perawat = data;
+      this.ttdPerawatCleared[index] = false;
       console.log("TTD saved:", refName);
+    },
+
+    clearSign(index) {
+      this.ttdPerawatCleared[index] = true;
+      this.form.catatan_rows[index].ttd_perawat = "";
+    
+      this.$nextTick(() => {
+        this.$nextTick(() => {
+          const pad = this.$refs[`ttd_${index}`];
+          const signaturePad = Array.isArray(pad) ? pad[0] : pad;
+          if (signaturePad) signaturePad.clearSignature();
+        });
+      });
     },
 
     async submitForm() {

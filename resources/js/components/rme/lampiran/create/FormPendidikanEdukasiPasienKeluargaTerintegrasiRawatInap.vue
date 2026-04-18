@@ -440,21 +440,24 @@
           <div>
             <label class="fw-bold mb-2">Pengkaji</label>
                 <input type="text" v-model="form.nama_pengkaji" class="input-rme mt-2" placeholder="Nama Pengkaji" />
-                        <div class="date-time-wrapper">
-                          <div>
-                            <label>Tanggal :</label>
-                            <input type="date" v-model="form.tanggal_pengkaji" class="input-rme" />
-                          </div>
-                          <div>
-                            <label>Waktu :</label>
-                            <input type="time" v-model="form.waktu_pengkaji" class="input-rme" />
-                          </div>
-                        </div>
-                    <VueSignaturePad ref="ttd_dokter" :options="sigOption" class="signature-box-rme mx-auto" />
-                    <div class="signature-actions mt-2">
-                      <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Clear ↻</button>
-                      <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">Simpan ✔</button>
+                  <div class="date-time-wrapper">
+                    <div>
+                      <label>Tanggal :</label>
+                      <input type="date" v-model="form.tanggal_pengkaji" class="input-rme" />
                     </div>
+                    <div>
+                      <label>Waktu :</label>
+                      <input type="time" v-model="form.waktu_pengkaji" class="input-rme" />
+                    </div>
+                  </div>
+                  <div v-if="form.ttd_dokter && !ttdDokterCleared" class="signature-preview text-center">
+                    <img :src="form.ttd_dokter" alt="TTD Pengkaji" class="img-signature" />
+                    <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+                  </div>
+                  <div v-else class="text-center">
+                    <VueSignaturePad ref="ttd_dokter" :options="sigOption" class="signature-box-rme mx-auto" />
+                    <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">Simpan ✔</button>
+                  </div>
                 </div>
             </div>
         </div>
@@ -467,14 +470,29 @@
   KEBUTUHAN EDUKASI /<br>TOPIK EDUKASI
   <div class="dokter-dpjp-box">
     <div class="ttd-container-small">
-      <VueSignaturePad ref="ttd_dokter_dpjp" :options="sigOption" class="signature-box-header" />
-      <div class="signature-actions mt-2">
-      <button @click="clearSign('ttd_dokter_dpjp')" class="btn-clear mt-2">Clear ↻</button>
-      <button @click="saveSign('ttd_dokter_dpjp')" class="btn-save mt-2">Simpan ✔</button>
+      <div v-if="form.ttd_dokter_dpjp && !ttdDokterDpjpCleared" class="signature-preview text-center">
+        <img :src="form.ttd_dokter_dpjp" alt="TTD DPJP" style="width:100%; height:130px; object-fit:contain;" />
+        <button @click="clearSign('ttd_dokter_dpjp')" class="btn-clear mt-2">Hapus & TTD Ulang</button>
+      </div>
+      <div v-else>
+        <VueSignaturePad ref="ttd_dokter_dpjp" :options="sigOption" class="signature-box-header" />
+        <div class="signature-actions mt-2">
+          <button @click="saveSign('ttd_dokter_dpjp')" class="btn-save mt-2">Simpan ✔</button>
+        </div>
       </div>
     </div>
-    <div class="input-dokter-dpjp">
-      <input type="text" v-model="form.nama_dokter_dpjp" class="line-input1" placeholder="Nama Dokter DPJP">
+    <div class="dropdown-dokter mt-2">
+      <select v-model="form.nama_dokter_dpjp" class="form-select-dokter">
+        <option value="" disabled>🩺 Pilih Dokter</option>
+        <option
+          v-for="dokter in listDokter"
+          :key="dokter.id"
+          :value="dokter.nama"
+        >
+          {{ dokter.nama }}
+        </option>
+      </select>
+      <span class="dropdown-icon">▾</span>
     </div>
   </div>
 </th>
@@ -570,21 +588,53 @@
       </td>
       <td rowspan="9">
           <div class="text-center">
-            <VueSignaturePad ref="ttd_pemberi_dokter" :options="sigOption" class="signature-box-rme1 mx-auto" />
-            <input type="text" v-model="form.nama_pemberi_dokter" class="input-rme1 mt-2" placeholder="Nama Dokter" />
-            <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_pemberi_dokter')" class="btn-clear mt-2">Clear</button>
-              <button @click="saveSign('ttd_pemberi_dokter')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
-              </div>          
+            <div v-if="form.ttd_pemberi_dokter && !ttdPemberiDokterCleared" class="text-center">
+              <img :src="form.ttd_pemberi_dokter" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+              <br>
+              <button @click="clearSign('ttd_pemberi_dokter')" class="btn-clear mt-2">Hapus</button>
             </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_pemberi_dokter" :options="sigOption" class="signature-box-rme1 mx-auto" />
+              <button @click="saveSign('ttd_pemberi_dokter')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+            </div>
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_pemberi_dokter" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
+          </div>
       </td>
       <td rowspan="9">
           <div class="text-center">
-            <VueSignaturePad ref="ttd_penerima_dokter" :options="sigOption" class="signature-box-rme1 mx-auto" />
-            <input type="text" v-model="form.nama_penerima_dokter" class="input-rme1 mt-2" placeholder="Nama Dokter" />
-            <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_penerima_dokter')" class="btn-clear mt-2">Clear</button>
-            <button @click="saveSign('ttd_penerima_dokter')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+            <div v-if="form.ttd_penerima_dokter && !ttdPenerimaDokterCleared" class="text-center">
+              <img :src="form.ttd_penerima_dokter" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+              <br>
+              <button @click="clearSign('ttd_penerima_dokter')" class="btn-clear mt-2">Hapus</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_penerima_dokter" :options="sigOption" class="signature-box-rme1 mx-auto" />
+              <button @click="saveSign('ttd_penerima_dokter')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+            </div>
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_penerima_dokter" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
             </div>
           </div>
       </td>
@@ -992,21 +1042,31 @@
         </select>
       </td>
       <td rowspan="16">
-          <div class="text-center">
-              <VueSignaturePad ref="ttd_pemberi_perawat" :options="sigOption" class="signature-box-rme1 mx-auto" />
+        <div class="text-center">
+          <div v-if="form.ttd_pemberi_perawat && !ttdPemberiPerawatCleared" class="text-center">
+            <img :src="form.ttd_pemberi_perawat" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <br>
+            <button @click="clearSign('ttd_pemberi_perawat')" class="btn-clear mt-2">Hapus</button>
+          </div>
+          <div v-else class="text-center">
+            <VueSignaturePad ref="ttd_pemberi_perawat" :options="sigOption" class="signature-box-rme1 mx-auto" />
+            <button @click="saveSign('ttd_pemberi_perawat')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+          </div>
               <input type="text" v-model="form.nama_pemberi_perawat" class="input-rme1 mt-2" placeholder="Nama Perawat" />
-              <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_pemberi_perawat')" class="btn-clear mt-2">Clear</button>
-              <button @click="saveSign('ttd_pemberi_perawat')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
-          </div></div>
+        </div>
       </td>
       <td rowspan="16">
             <div class="text-center">
-              <VueSignaturePad ref="ttd_penerima_perawat" :options="sigOption" class="signature-box-rme1 mx-auto" />
+              <div v-if="form.ttd_penerima_perawat && !ttdPenerimaPerawatCleared" class="text-center">
+                <img :src="form.ttd_penerima_perawat" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+                <br>
+                <button @click="clearSign('ttd_penerima_perawat')" class="btn-clear mt-2">Hapus</button>
+              </div>
+              <div v-else class="text-center">
+                <VueSignaturePad ref="ttd_penerima_perawat" :options="sigOption" class="signature-box-rme1 mx-auto" />
+                <button @click="saveSign('ttd_penerima_perawat')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+              </div>
               <input type="text" v-model="form.nama_penerima_perawat" class="input-rme1 mt-2" placeholder="Nama Perawat" />
-              <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_penerima_perawat')" class="btn-clear mt-2">Clear</button>
-              <button @click="saveSign('ttd_penerima_perawat')" class="btn-save mt-2 d-block mx-auto">Simpan</button> </div>
           </div>
       </td>
     </tr>
@@ -1713,22 +1773,28 @@
           </select>
         </td>
         <td rowspan="1">
-            <div class="text-center">
-                <VueSignaturePad ref="ttd_pemberi_analis" :options="sigOption" class="signature-box-rme1 mx-auto" />
+          <div v-if="form.ttd_pemberi_analis && !ttdPemberiAnalisCleared" class="text-center">
+            <img :src="form.ttd_pemberi_analis" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <br>
+            <button @click="clearSign('ttd_pemberi_analis')" class="btn-clear mt-2">Hapus</button>
+          </div>
+          <div v-else class="text-center">
+            <VueSignaturePad ref="ttd_pemberi_analis" :options="sigOption" class="signature-box-rme1 mx-auto" />
+            <button @click="saveSign('ttd_pemberi_analis')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
                 <input type="text" v-model="form.nama_pemberi_analis" class="input-rme1 mt-2" placeholder="Nama Analis" />
-              <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_pemberi_analis')" class="btn-clear mt-2">Clear</button>
-                <button @click="saveSign('ttd_pemberi_analis')" class="btn-save mt-2 d-block mx-auto">Simpan</button> </div>
-            </div>
+          </div>
         </td>
         <td rowspan="1">
-              <div class="text-center">
-                <VueSignaturePad ref="ttd_penerima_analis" :options="sigOption" class="signature-box-rme1 mx-auto" />
-                <input type="text" v-model="form.nama_penerima_analis" class="input-rme1 mt-2" placeholder="Nama Analis" />
-              <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_penerima_analis')" class="btn-clear mt-2">Clear</button>
-                <button @click="saveSign('ttd_penerima_analis')" class="btn-save mt-2 d-block mx-auto">Simpan</button> </div>
-            </div>
+          <div v-if="form.ttd_penerima_analis && !ttdPenerimaAnalisCleared" class="text-center">
+            <img :src="form.ttd_penerima_analis" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <br>
+            <button @click="clearSign('ttd_penerima_analis')" class="btn-clear mt-2">Hapus</button>
+          </div>
+          <div v-else class="text-center">
+            <VueSignaturePad ref="ttd_penerima_analis" :options="sigOption" class="signature-box-rme1 mx-auto" />
+            <button @click="saveSign('ttd_penerima_analis')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+            <input type="text" v-model="form.nama_penerima_analis" class="input-rme1 mt-2" placeholder="Nama Analis" />
+          </div>
         </td>
       </tr>
 
@@ -1788,22 +1854,28 @@
           </select>
         </td>
         <td rowspan="2">
-            <div class="text-center">
-                <VueSignaturePad ref="ttd_pemberi_gizi" :options="sigOption" class="signature-box-rme1 mx-auto" />
-                <input type="text" v-model="form.nama_pemberi_gizi" class="input-rme1 mt-2" placeholder="Nama Ahli Gizi" />
-                              <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_pemberi_gizi')" class="btn-clear mt-2">Clear</button>
-                <button @click="saveSign('ttd_pemberi_gizi')" class="btn-save mt-2 d-block mx-auto">Simpan</button></div>
-            </div>
+          <div v-if="form.ttd_pemberi_gizi && !ttdPemberiGiziCleared" class="text-center">
+            <img :src="form.ttd_pemberi_gizi" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <br>
+            <button @click="clearSign('ttd_pemberi_gizi')" class="btn-clear mt-2">Hapus</button>
+          </div>
+          <div v-else class="text-center">
+            <VueSignaturePad ref="ttd_pemberi_gizi" :options="sigOption" class="signature-box-rme1 mx-auto" />
+            <button @click="saveSign('ttd_pemberi_gizi')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+              <input type="text" v-model="form.nama_pemberi_gizi" class="input-rme1 mt-2" placeholder="Nama Ahli Gizi" />
+          </div>
         </td>
         <td rowspan="2">
-              <div class="text-center">
-                <VueSignaturePad ref="ttd_penerima_gizi" :options="sigOption" class="signature-box-rme1 mx-auto" />
-                <input type="text" v-model="form.nama_penerima_gizi" class="input-rme1 mt-2" placeholder="Nama Ahli Gizi" />
-              <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_penerima_gizi')" class="btn-clear mt-2">Clear</button>
-                <button @click="saveSign('ttd_penerima_gizi')" class="btn-save mt-2 d-block mx-auto">Simpan</button> </div>
-            </div>
+          <div v-if="form.ttd_penerima_gizi && !ttdPenerimaGiziCleared" class="text-center">
+            <img :src="form.ttd_penerima_gizi" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <br>
+            <button @click="clearSign('ttd_penerima_gizi')" class="btn-clear mt-2">Hapus</button>
+          </div>
+          <div v-else class="text-center">
+            <VueSignaturePad ref="ttd_penerima_gizi" :options="sigOption" class="signature-box-rme1 mx-auto" />
+            <button @click="saveSign('ttd_penerima_gizi')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+            <input type="text" v-model="form.nama_penerima_gizi" class="input-rme1 mt-2" placeholder="Nama Ahli Gizi" />
+          </div>
         </td>
       </tr>
 
@@ -1906,22 +1978,28 @@
           </select>
         </td>
         <td rowspan="4">
-            <div class="text-center">
-                <VueSignaturePad ref="ttd_pemberi_farmasi" :options="sigOption" class="signature-box-rme1 mx-auto" />
-                <input type="text" v-model="form.nama_pemberi_farmasi" class="input-rme1 mt-2" placeholder="Nama Farmasi" />
-              <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_pemberi_farmasi')" class="btn-clear mt-2">Clear</button>
-                <button @click="saveSign('ttd_pemberi_farmasi')" class="btn-save mt-2 d-block mx-auto">Simpan</button></div>
-            </div>
+          <div v-if="form.ttd_pemberi_farmasi && !ttdPemberiFarmasiCleared" class="text-center">
+            <img :src="form.ttd_pemberi_farmasi" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <br>
+            <button @click="clearSign('ttd_pemberi_farmasi')" class="btn-clear mt-2">Hapus</button>
+          </div>
+          <div v-else class="text-center">
+            <VueSignaturePad ref="ttd_pemberi_farmasi" :options="sigOption" class="signature-box-rme1 mx-auto" />
+            <button @click="saveSign('ttd_pemberi_farmasi')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+              <input type="text" v-model="form.nama_pemberi_farmasi" class="input-rme1 mt-2" placeholder="Nama Farmasi" />
+          </div>
         </td>
         <td rowspan="4">
-              <div class="text-center">
-                <VueSignaturePad ref="ttd_penerima_farmasi" :options="sigOption" class="signature-box-rme1 mx-auto" />
-                <input type="text" v-model="form.nama_penerima_farmasi" class="input-rme1 mt-2" placeholder="Nama Farmasi" />
-                              <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_penerima_farmasi')" class="btn-clear mt-2">Clear</button>
-                <button @click="saveSign('ttd_penerima_farmasi')" class="btn-save mt-2 d-block mx-auto">Simpan</button> </div>
-            </div>
+          <div v-if="form.ttd_penerima_farmasi && !ttdPenerimaFarmasiCleared" class="text-center">
+            <img :src="form.ttd_penerima_farmasi" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <br>
+            <button @click="clearSign('ttd_penerima_farmasi')" class="btn-clear mt-2">Hapus</button>
+          </div>
+          <div v-else class="text-center">
+            <VueSignaturePad ref="ttd_penerima_farmasi" :options="sigOption" class="signature-box-rme1 mx-auto" />
+            <button @click="saveSign('ttd_penerima_farmasi')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+              <input type="text" v-model="form.nama_penerima_farmasi" class="input-rme1 mt-2" placeholder="Nama Farmasi" />
+          </div>
         </td>
       </tr>
 
@@ -2117,22 +2195,28 @@
         </td>
       
         <td rowspan="2">
-            <div class="text-center">
-                <VueSignaturePad ref="ttd_pemberi_fisio" :options="sigOption" class="signature-box-rme1 mx-auto" />
-                <input type="text" v-model="form.nama_pemberi_fisio" class="input-rme1 mt-2" placeholder="Nama Fisioterapis" />
-              <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_pemberi_fisio')" class="btn-clear mt-2">Clear</button>
-                <button @click="saveSign('ttd_pemberi_fisio')" class="btn-save mt-2 d-block mx-auto">Simpan</button> </div>
-            </div>
+          <div v-if="form.ttd_pemberi_fisio && !ttdPemberiFisioCleared" class="text-center">
+            <img :src="form.ttd_pemberi_fisio" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <br>
+            <button @click="clearSign('ttd_pemberi_fisio')" class="btn-clear mt-2">Hapus</button>
+          </div>
+          <div v-else class="text-center">
+            <VueSignaturePad ref="ttd_pemberi_fisio" :options="sigOption" class="signature-box-rme1 mx-auto" />
+            <button @click="saveSign('ttd_pemberi_fisio')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+              <input type="text" v-model="form.nama_pemberi_fisio" class="input-rme1 mt-2" placeholder="Nama Fisioterapis" />
+          </div>
         </td>
         <td rowspan="2">
-              <div class="text-center">
-                <VueSignaturePad ref="ttd_penerima_fisio" :options="sigOption" class="signature-box-rme1 mx-auto" />
-                <input type="text" v-model="form.nama_penerima_fisio" class="input-rme1 mt-2" placeholder="Nama Fisioterapis" />
-              <div class="signature-actions1 mt-2">
-              <button @click="clearSign('ttd_penerima_fisio')" class="btn-clear mt-2">Clear</button>
-                <button @click="saveSign('ttd_penerima_fisio')" class="btn-save mt-2 d-block mx-auto">Simpan</button> </div>
-            </div>
+          <div v-if="form.ttd_penerima_fisio && !ttdPenerimaFisioCleared" class="text-center">
+            <img :src="form.ttd_penerima_fisio" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <br>
+            <button @click="clearSign('ttd_penerima_fisio')" class="btn-clear mt-2">Hapus</button>
+          </div>
+          <div v-else class="text-center">
+            <VueSignaturePad ref="ttd_penerima_fisio" :options="sigOption" class="signature-box-rme1 mx-auto" />
+            <button @click="saveSign('ttd_penerima_fisio')" class="btn-save mt-2 d-block mx-auto">Simpan</button>
+              <input type="text" v-model="form.nama_penerima_fisio" class="input-rme1 mt-2" placeholder="Nama Fisioterapis" />
+          </div>
         </td>
       </tr>
 
@@ -2228,6 +2312,20 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      ttdDokterCleared: false,
+      ttdDokterDpjpCleared: false,
+      ttdPemberiDokterCleared: false,
+      ttdPenerimaDokterCleared: false,
+      ttdPemberiPerawatCleared: false,
+      ttdPenerimaPerawatCleared: false,
+      ttdPemberiAnalisCleared: false,
+      ttdPenerimaAnalisCleared: false,
+      ttdPemberiGiziCleared: false,
+      ttdPenerimaGiziCleared: false,
+      ttdPemberiFarmasiCleared: false,
+      ttdPenerimaFarmasiCleared: false,
+      ttdPemberiFisioCleared: false,
+      ttdPenerimaFisioCleared: false,
       sigOption: { penColor: "black", backgroundColor: "white" },
       form: {
         uuid: "",
@@ -2474,7 +2572,7 @@ async mounted() {
   console.log("🟢 COMPONENT - Mounted");
   console.log("🟢 COMPONENT - editData:", this.editData);
   console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
-
+await this.fetchDokter();
 await this.fetchTahunAkreditasi();
   
 this.disabledSubmit = false;
@@ -2490,7 +2588,15 @@ this.disabledSubmit = false;
   }
 },
   
-  methods: {
+  methods: {    
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
 
   async fetchTahunAkreditasi() {
     try {
@@ -2615,31 +2721,26 @@ loadDataForEdit() {
 },
     
     loadSignatures(data) {
-      const signatures = [
-        'ttd_pengkaji',
-        'ttd_dokter_dpjp',
-        'ttd_dokter',
-        'ttd_pemberi_dokter',
-        'ttd_penerima_dokter',
-        'ttd_pemberi_perawat',
-        'ttd_penerima_perawat',
-        'ttd_pemberi_analis',
-        'ttd_penerima_analis',
-        'ttd_pemberi_gizi',
-        'ttd_penerima_gizi',
-        'ttd_pemberi_farmasi',
-        'ttd_penerima_farmasi',
-        'ttd_pemberi_fisio',
-        'ttd_penerima_fisio'
-      ];
-      
-      signatures.forEach(sig => {
-        if (data[sig] && this.$refs[sig]) {
-          try {
-            this.$refs[sig].fromDataURL(data[sig]);
-          } catch (err) {
-            console.error(`Error loading signature ${sig}:`, err);
-          }
+      const flagMap = {
+        ttd_dokter: 'ttdDokterCleared',
+        ttd_dokter_dpjp: 'ttdDokterDpjpCleared',
+        ttd_pemberi_dokter: 'ttdPemberiDokterCleared',
+        ttd_penerima_dokter: 'ttdPenerimaDokterCleared',
+        ttd_pemberi_perawat: 'ttdPemberiPerawatCleared',
+        ttd_penerima_perawat: 'ttdPenerimaPerawatCleared',
+        ttd_pemberi_analis: 'ttdPemberiAnalisCleared',
+        ttd_penerima_analis: 'ttdPenerimaAnalisCleared',
+        ttd_pemberi_gizi: 'ttdPemberiGiziCleared',
+        ttd_penerima_gizi: 'ttdPenerimaGiziCleared',
+        ttd_pemberi_farmasi: 'ttdPemberiFarmasiCleared',
+        ttd_penerima_farmasi: 'ttdPenerimaFarmasiCleared',
+        ttd_pemberi_fisio: 'ttdPemberiFisioCleared',
+        ttd_penerima_fisio: 'ttdPenerimaFisioCleared',
+      };
+    
+      Object.keys(flagMap).forEach(refName => {
+        if (data[refName]) {
+          this[flagMap[refName]] = false;
         }
       });
     },
@@ -2666,76 +2767,121 @@ loadDataForEdit() {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-      
+    
       const { isEmpty, data } = pad.saveSignature();
-      if (!isEmpty) {
-        this.form[refName] = data;
-        console.log("TTD saved:", refName);
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
       }
+    
+      const flagMap = {
+        ttd_dokter: 'ttdDokterCleared',
+        ttd_dokter_dpjp: 'ttdDokterDpjpCleared',
+        ttd_pemberi_dokter: 'ttdPemberiDokterCleared',
+        ttd_penerima_dokter: 'ttdPenerimaDokterCleared',
+        ttd_pemberi_perawat: 'ttdPemberiPerawatCleared',
+        ttd_penerima_perawat: 'ttdPenerimaPerawatCleared',
+        ttd_pemberi_analis: 'ttdPemberiAnalisCleared',
+        ttd_penerima_analis: 'ttdPenerimaAnalisCleared',
+        ttd_pemberi_gizi: 'ttdPemberiGiziCleared',
+        ttd_penerima_gizi: 'ttdPenerimaGiziCleared',
+        ttd_pemberi_farmasi: 'ttdPemberiFarmasiCleared',
+        ttd_penerima_farmasi: 'ttdPenerimaFarmasiCleared',
+        ttd_pemberi_fisio: 'ttdPemberiFisioCleared',
+        ttd_penerima_fisio: 'ttdPenerimaFisioCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
+      this.form[refName] = data;
+      console.log("TTD saved:", refName);
     },
-    
-async submitForm() {
-  if (!this.form.nama_pengkaji) {
-    alert("Nama Pengkaji harus diisi!");
-    return;
-  }
-  
-  this.loadingSubmit = true;
-  
-  try {
-    const fd = new FormData();
-    
-    // ✅ Append ALL fields including UUID
-    Object.keys(this.form).forEach((key) => {
-      let value = this.form[key];
-    
-      if (typeof value === "boolean") {
-        value = value ? 1 : 0;
-      }
-    
-      fd.append(key, value ?? "");
-    });
 
-    
-    console.log("🟡 SUBMIT - Is Edit Mode:", this.isEditMode);
-    console.log("🟡 SUBMIT - UUID:", this.form.uuid);
-    
-    // ✅ Same route for both create and update
-    const response = await axios.post(
-      "/master/pasien/form-pendidikan-edukasi-pasien-keluarga-terintegrasi-rawat-inap",
-      fd,
-      {
-        headers: { "Content-Type": "multipart/form-data" },
-      }
-    );
-    
-    console.log("🟡 SUBMIT - Response:", response.data);
-    
-    if (response.data.status) {
-      alert(response.data.message || "Data berhasil disimpan!");
-      this.$emit("back");
-    } else {
-      alert(response.data.message || "Gagal menyimpan data!");
-    }
-  } catch (error) {
-    console.error("🟡 SUBMIT - ERROR:", error.response?.data || error);
-    
-    if (error.response?.data?.errors) {
-      const errors = Object.values(error.response.data.errors).flat();
-      alert("Error:\n" + errors.join("\n"));
-    } else {
-      alert(error.response?.data?.message || "Gagal menyimpan form!");
-    }
-  } finally {
-    this.loadingSubmit = false;
-  }
-},
-    
     clearSign(refName) {
-      const pad = this.$refs[refName];
-      if (pad) {
-        pad.clearSignature();
+      const flagMap = {
+        ttd_dokter: 'ttdDokterCleared',
+        ttd_dokter_dpjp: 'ttdDokterDpjpCleared',
+        ttd_pemberi_dokter: 'ttdPemberiDokterCleared',
+        ttd_penerima_dokter: 'ttdPenerimaDokterCleared',
+        ttd_pemberi_perawat: 'ttdPemberiPerawatCleared',
+        ttd_penerima_perawat: 'ttdPenerimaPerawatCleared',
+        ttd_pemberi_analis: 'ttdPemberiAnalisCleared',
+        ttd_penerima_analis: 'ttdPenerimaAnalisCleared',
+        ttd_pemberi_gizi: 'ttdPemberiGiziCleared',
+        ttd_penerima_gizi: 'ttdPenerimaGiziCleared',
+        ttd_pemberi_farmasi: 'ttdPemberiFarmasiCleared',
+        ttd_penerima_farmasi: 'ttdPenerimaFarmasiCleared',
+        ttd_pemberi_fisio: 'ttdPemberiFisioCleared',
+        ttd_penerima_fisio: 'ttdPenerimaFisioCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
         this.form[refName] = "";
+      }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
+    },
+
+    async submitForm() {
+      if (!this.form.nama_pengkaji) {
+        alert("Nama Pengkaji harus diisi!");
+        return;
+      }
+
+      this.loadingSubmit = true;
+
+      try {
+        const fd = new FormData();
+
+        // ✅ Append ALL fields including UUID
+        Object.keys(this.form).forEach((key) => {
+          let value = this.form[key];
+        
+          if (typeof value === "boolean") {
+            value = value ? 1 : 0;
+          }
+        
+          fd.append(key, value ?? "");
+        });
+      
+
+        console.log("🟡 SUBMIT - Is Edit Mode:", this.isEditMode);
+        console.log("🟡 SUBMIT - UUID:", this.form.uuid);
+
+        // ✅ Same route for both create and update
+        const response = await axios.post(
+          "/master/pasien/form-pendidikan-edukasi-pasien-keluarga-terintegrasi-rawat-inap",
+          fd,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+        
+        console.log("🟡 SUBMIT - Response:", response.data);
+        
+        if (response.data.status) {
+          alert(response.data.message || "Data berhasil disimpan!");
+          this.$emit("back");
+        } else {
+          alert(response.data.message || "Gagal menyimpan data!");
+        }
+      } catch (error) {
+        console.error("🟡 SUBMIT - ERROR:", error.response?.data || error);
+
+        if (error.response?.data?.errors) {
+          const errors = Object.values(error.response.data.errors).flat();
+          alert("Error:\n" + errors.join("\n"));
+        } else {
+          alert(error.response?.data?.message || "Gagal menyimpan form!");
+        }
+      } finally {
+        this.loadingSubmit = false;
       }
     },
   },
@@ -2867,7 +3013,44 @@ async submitForm() {
   text-align: center;
 }
 
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
 
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
+}
 
 .checkbox-label {
   display: inline-flex;
@@ -3273,6 +3456,24 @@ label {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+}
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
 }
 
 .view-overlay {

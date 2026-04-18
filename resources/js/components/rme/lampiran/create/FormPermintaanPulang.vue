@@ -124,14 +124,13 @@
           <!-- KOLOM 1: Keluarga Pasien -->
           <div>
             <label class="fw-bold mb-2">Keluarga Pasien</label>
-            <VueSignaturePad 
-              ref="ttd_keluarga" 
-              :options="sigOption" 
-              class="signature-box-rme mx-auto" 
-            />
-            <div class="signature-actions mt-2" style="margin-top: 8px;">
-              <button @click="clearSign('ttd_keluarga')" class="btn-clear ml-2">Ulang ↻</button>
-              <button @click="saveSign('ttd_keluarga')" class="btn-save">Simpan ✔</button>
+            <div v-if="form.ttd_keluarga && !ttdKeluargaCleared" class="signature-preview text-center">
+              <img :src="form.ttd_keluarga" alt="TTD Perawat Kamar Bedah" class="img-signature" />
+              <button @click="clearSign('ttd_keluarga')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_keluarga" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_keluarga')" class="btn-save mt-2">Simpan ✔</button>
             </div>
             <input 
               type="text" 
@@ -144,14 +143,13 @@
           <!-- KOLOM 2: DPJP -->
           <div>
             <label class="fw-bold mb-2">DPJP</label>
-            <VueSignaturePad 
-              ref="ttd_dpjp" 
-              :options="sigOption" 
-              class="signature-box-rme mx-auto" 
-            />
-            <div class="signature-actions mt-2" style="margin-top: 8px; ">
-              <button @click="clearSign('ttd_dpjp')" class="btn-clear ml-2">Ulang ↻</button>
-              <button @click="saveSign('ttd_dpjp')" class="btn-save">Simpan ✔</button>
+            <div v-if="form.ttd_dpjp && !ttdDpjpCleared" class="signature-preview text-center">
+              <img :src="form.ttd_dpjp" alt="TTD Perawat Kamar Bedah" class="img-signature" />
+              <button @click="clearSign('ttd_dpjp')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="ttd_dpjp" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('ttd_dpjp')" class="btn-save mt-2">Simpan ✔</button>
             </div>
             <div class="dropdown-dokter mt-2">
               <select v-model="form.nama_dpjp_ttd" class="form-select-dokter">
@@ -212,6 +210,8 @@ export default {
   data() {
     return {
       loadingSubmit: false,
+      ttdKeluargaCleared: false,
+      ttdDpjpCleared: false,
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -346,6 +346,16 @@ renderSignature(refName, data) {
           pad.fromDataURL(data);
         }
       });
+      const flagMap = {
+        ttd_keluarga: 'ttdKeluargaCleared',
+        ttd_dpjp: 'ttdDpjpCleared',
+      };
+    
+      Object.keys(flagMap).forEach(refName => {
+        if (this.form[refName]) {
+          this[flagMap[refName]] = false;
+        }
+      });
     },
 
 
@@ -373,18 +383,42 @@ renderSignature(refName, data) {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-
-      const { data } = pad.saveSignature();
+    
+      const { isEmpty, data } = pad.saveSignature();
+    
+      if (isEmpty) {
+        alert("Tanda tangan masih kosong!");
+        return;
+      }
+    
+      const flagMap = {
+        ttd_keluarga: 'ttdKeluargaCleared',
+        ttd_dpjp: 'ttdDpjpCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
       this.form[refName] = data;
-      alert("Tanda tangan berhasil disimpan!");
+      console.log("TTD saved:", refName);
     },
-
+    
     clearSign(refName) {
-      const pad = this.$refs[refName];
-      if (pad) {
-        pad.clearSignature();
+      const flagMap = {
+        ttd_keluarga: 'ttdKeluargaCleared',
+        ttd_dpjp: 'ttdDpjpCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
         this.form[refName] = "";
       }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
     },
 
     validateForm() {
@@ -611,6 +645,24 @@ renderSignature(refName, data) {
 
 .form-select-dokter:hover {
   border-color: #a0aec0;
+}
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
 }
 
 .dropdown-icon {

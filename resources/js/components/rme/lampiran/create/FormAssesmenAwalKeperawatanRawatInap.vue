@@ -1078,12 +1078,14 @@
       <div class="">
         <div class="">
           <label>Tanda Tangan Perawat</label>
-          <VueSignaturePad
-            ref="perawat_ttd"
-            :options="sigOption"
-            class="signature2-box-rme"
-          />
-          <button @click="saveSign('perawat_ttd')" class="btn-save">Simpan ✔</button>
+            <div v-if="form.perawat_ttd && !ttdPerawatCleared" class="signature-preview text-center">
+              <img :src="form.perawat_ttd" alt="TTD Perawat Ruangan" class="img-signature" />
+              <button @click="clearSign('perawat_ttd')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
+            </div>
+            <div v-else class="text-center">
+              <VueSignaturePad ref="perawat_ttd" :options="sigOption" class="signature-box-rme mx-auto" />
+              <button @click="saveSign('perawat_ttd')" class="btn-save mt-2">Simpan ✔</button>
+            </div>
           <input
             v-model="form.perawat_nama"
             class="input-rme"
@@ -1135,6 +1137,7 @@ export default {
     return {
       loadingSubmit: false,
       disabledSubmit: false,
+      ttdPerawatCleared: false,
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
@@ -1403,11 +1406,17 @@ export default {
           this.$refs.perawat_ttd.fromDataURL(this.form.perawat_ttd);
         }
       });
-
             // ✨ Load signature jika ada
             this.$nextTick(() => {
-              // Signature akan di-load manual jika diperlukan
-              // Note: vue-signature-pad perlu special handling untuk load existing signature
+              const flagMap = {
+                perawat_ttd: 'ttdPerawatCleared',
+              };
+            
+              Object.keys(flagMap).forEach(refName => {
+                if (this.form[refName]) {
+                  this[flagMap[refName]] = false;
+                }
+              });
             });
           }
         }
@@ -1476,9 +1485,33 @@ export default {
         alert("Tanda tangan masih kosong!");
         return;
       }
-
+    
+      const flagMap = {
+        perawat_ttd: 'ttdPerawatCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = false;
+      }
+    
       this.form[refName] = data;
       console.log("TTD saved:", refName);
+    },
+    
+    clearSign(refName) {
+      const flagMap = {
+        perawat_ttd: 'ttdPerawatCleared',
+      };
+    
+      if (flagMap[refName] !== undefined) {
+        this[flagMap[refName]] = true;
+        this.form[refName] = "";
+      }
+    
+      this.$nextTick(() => {
+        const pad = this.$refs[refName];
+        if (pad) pad.clearSignature();
+      });
     },
 
     async submitForm() {
@@ -1672,6 +1705,39 @@ export default {
   font-weight: bold;
   cursor: pointer;
   font-size: 16px;
+}
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
+}
+
+.btn-clear {
+  background: #f44336;
+  color: white;
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  margin-left: 10px;
+}
+
+.btn-clear:hover {
+  background: #d32f2f;
 }
 
 .btn-save-form:hover {

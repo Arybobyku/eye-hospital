@@ -261,7 +261,7 @@
       </div>
 
       <!-- ================= TANDA TANGAN ================= -->
-      <div class="box-rme mb-4">
+      <!-- <div class="box-rme mb-4">
         <h5 class="section-title-rme">Verifikasi</h5>
 
         <div class="row">
@@ -283,7 +283,7 @@
             />
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- ================= BUTTON BOTTOM ================= -->

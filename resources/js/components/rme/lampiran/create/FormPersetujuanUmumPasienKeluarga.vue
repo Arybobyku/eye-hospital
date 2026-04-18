@@ -150,31 +150,47 @@
                   </div>
                 </div>
               </div>
-                      <div class="signature-row-3">
-                  <!-- KOLOM 1 -->
-                  <div>
-                    <label class="fw-bold mb-2">Pemberi Informasi dari</label><br>
-                    <label class="fw-bold mb-2">RS Khusus Mata Prima Vision</label>
+              <div class="signature-row-3">
+                <!-- KOLOM 1 -->
+                <div>
+                  <label class="fw-bold mb-2">Pemberi Informasi dari</label><br>
+                  <label class="fw-bold mb-2">RS Khusus Mata Prima Vision</label>
+                
+                  <div v-if="form.ttd_dokter && !ttdDokterCleared" class="signature-preview text-center">
+                    <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+                    <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">
+                      Hapus & Tanda Tangan Ulang
+                    </button>
+                  </div>
+                  <div v-else class="text-center">
                     <VueSignaturePad ref="ttd_dokter" :options="sigOption" class="signature-box-rme mx-auto" />
-                    <div class="signature-actions mt-2" style="margin-top: 8px;">
-                    <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Ulang ↻</button>
-                    <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">Simpan ✔</button> </div>
-                    <input type="text" v-model="form.nama_dokter_ttd" class="input-rme mt-2" placeholder="Nama dan Tandatangan " />
+                    <button @click="saveSign('ttd_dokter')" class="btn-save mt-2">Simpan ✔</button>
                   </div>
-              
-                  <!-- KOLOM 2 -->
-                  <div>
-                    <label class="fw-bold mb-2">Penerima Informasi</label><br>
-                                <label class="fw-bold mb-2">( Pasien/Keluarga Pasien )</label>
-                    <VueSignaturePad ref="ttd_keluarga" :options="sigOption" class="signature-box-rme mx-auto" />
-                    <div class="signature-actions mt-2" style="margin-top: 8px;">
-                    <button @click="clearSign('ttd_keluarga')" class="btn-clear mt-2">Ulang ↻</button>
-                    <button @click="saveSign('ttd_keluarga')" class="btn-save mt-2">Simpan ✔</button> </div>
-                    <input type="text" v-model="form.nama_keluarga_ttd" class="input-rme mt-2" placeholder="Nama dan Tandatangan " />
-                  </div>
+                
+                  <input type="text" v-model="form.nama_dokter_ttd" class="input-rme mt-2" placeholder="Nama dan Tandatangan" />
                 </div>
-            </div>
+
+                <!-- KOLOM 2 -->
+                <div>
+                  <label class="fw-bold mb-2">Penerima Informasi</label><br>
+                  <label class="fw-bold mb-2">( Pasien/Keluarga Pasien )</label>
+                
+                  <div v-if="form.ttd_keluarga && !ttdKeluargaCleared" class="signature-preview text-center">
+                    <img :src="form.ttd_keluarga" alt="TTD Keluarga" class="img-signature" />
+                    <button @click="clearSign('ttd_keluarga')" class="btn-clear mt-2">
+                      Hapus & Tanda Tangan Ulang
+                    </button>
+                  </div>
+                  <div v-else class="text-center">
+                    <VueSignaturePad ref="ttd_keluarga" :options="sigOption" class="signature-box-rme mx-auto" />
+                    <button @click="saveSign('ttd_keluarga')" class="btn-save mt-2">Simpan ✔</button>
+                  </div>
+                
+                  <input type="text" v-model="form.nama_keluarga_ttd" class="input-rme mt-2" placeholder="Nama dan Tandatangan" />
+                </div>
+              </div>
           </div>
+        </div>
         </div>
     </div>
     <!-- ================= BUTTON BOTTOM ================= -->
@@ -197,33 +213,60 @@ import axios from "axios";
 
 export default {
   name: "FormPersetujuanUmumPasienKeluarga",
+
   props: {
-    selectedPatient: {
-      type: Object,
-      required: true,
-    },
-    editData: {
-      type: Object,
-      default: null,
-    },
-    viewData: {
-      type: Object,
-      default: null,
-    },
-    documentType: {
-      type: String,
-      default: "",
-    },
+    selectedPatient: { type: Object, required: true },
+    editData: { type: Object, default: null },
+    viewData: { type: Object, default: null },
+    documentType: { type: String, default: "" },
   },
+
   data() {
     return {
       loadingSubmit: false,
       disabledSubmit: false,
+      ttdDokterCleared: false,
+      ttdKeluargaCleared: false,
+
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
       },
-      form: {
+
+      form: this.getEmptyForm(),
+    };
+  },
+
+  computed: {
+    isEditMode() {
+      return !!this.editData;
+    },
+  },
+
+  async mounted() {
+    console.log("🟢 Mounted");
+
+    this.disabledSubmit = false;
+
+    await this.fetchTahunAkreditasi();
+
+    if (this.viewData) {
+      this.disabledSubmit = true;
+      this.loadDataForEdit(this.viewData);
+    } else if (this.editData) {
+      this.loadDataForEdit(this.editData);
+    } else {
+      this.resetForm();
+      this.setDataForm();
+    }
+  },
+
+  methods: {
+    // =========================
+    // FORM TEMPLATE
+    // =========================
+    getEmptyForm() {
+      return {
         uuid: "",
         uuid_pasien: "",
         no_surat: "",
@@ -242,122 +285,78 @@ export default {
         nama_dokter_ttd: "",
         ttd_keluarga: "",
         nama_keluarga_ttd: "",
-      },
-    };
-  },
+      };
+    },
 
-  computed: {
-    isEditMode() {
-      return this.editData !== null && this.editData !== undefined;
-    }
-  },
+    resetForm() {
+      this.form = this.getEmptyForm();
+    },
 
-  async mounted() {
-    console.log("🟢 COMPONENT - Mounted");
-    console.log("🟢 COMPONENT - editData:", this.editData);
-    console.log("🟢 COMPONENT - selectedPatient:", this.selectedPatient);
-    
-    this.disabledSubmit = false;
-
-    await this.fetchTahunAkreditasi();
-    
-    if (this.viewData) {
-      this.disabledSubmit = true;
-      this.loadDataForEdit();
-    } else if (this.editData) {
-      console.log("🟢 MODE: EDIT");
-      this.loadDataForEdit();
-    } else {
-      console.log("🟢 MODE: CREATE");
-      this.setDataForm();
-    }
-  },
-
-  methods: {
-
+    // =========================
+    // FETCH NOMOR SURAT
+    // =========================
     async fetchTahunAkreditasi() {
       try {
-        const response = await axios.get('/api/tahun-akreditasi');
-        const tahun = response.data.tahun || '22';
-        
+        const res = await axios.get("/api/tahun-akreditasi");
+        const tahun = res.data.tahun || "22";
+
         if (!this.form.no_surat) {
           this.form.no_surat = `RM 1.1/PU(GJ)/${tahun}`;
         }
-        
-        console.log("✅ Tahun akreditasi:", tahun);
-        console.log("✅ No surat:", this.form.no_surat);
-      } catch (error) {
-        console.error("❌ Error fetch tahun:", error);
-        if (!this.form.no_surat) {
-          this.form.no_surat = 'RM 1.1/PU(GJ)/22';
-        }
+      } catch (err) {
+        console.error(err);
+        this.form.no_surat = "RM 1.1/PU(GJ)/22";
       }
     },
 
-    loadDataForEdit() {
-      console.log("🟢 LOAD EDIT - Mulai load data");
-      console.log("🟢 LOAD EDIT - editData yang diterima:", this.editData);
-      
-      try {
-        const dataSource = this.editData || this.viewData; // ✅ Support both
-        
-        if (!dataSource) {
-          console.warn("🟢 LOAD EDIT - Tidak ada editData/viewData!");
-          this.setDataForm();
-          return;
-        }
-
-        // ✅ Populate form dengan data
-        Object.keys(this.form).forEach((key) => {
-          if (dataSource.hasOwnProperty(key)) {
-            let value = dataSource[key];
-            
-            // Handle checkbox jika ada
-            if (key.startsWith('check_')) {
-              this.form[key] = value ? "1" : "0";
-            } else {
-              this.form[key] = value !== null ? value : "";
-            }
-            
-            console.log(`🟢 Set ${key}:`, this.form[key]);
-          }
-        });
-
-        console.log("🟢 LOAD EDIT - Form setelah populate:", this.form);
-
-        // ✅ PENTING: Load signatures setelah DOM ready
-        this.$nextTick(() => {
-          this.loadSignatures(dataSource);
-        });
-
-      } catch (error) {
-        console.error("🟢 LOAD EDIT - Error:", error);
-        alert("Gagal memuat data untuk edit!");
-        this.$emit("back");
+    // =========================
+    // LOAD EDIT / VIEW
+    // =========================
+    loadDataForEdit(data) {
+      if (!data) {
+        this.setDataForm();
+        return;
       }
+
+      this.resetForm();
+
+      for (const key in this.form) {
+        if (data[key] !== undefined) {
+          this.form[key] = data[key] ?? "";
+        }
+      }
+
+      this.loadSignatures(data);
     },
 
-    // ✅ TAMBAHKAN METHOD INI (yang missing!)
+    // =========================
+    // LOAD SIGNATURE
+    // =========================
     loadSignatures(data) {
-      const signatures = [
-        'ttd_dokter',
-        'ttd_keluarga'
-      ];
-      
-      signatures.forEach(sig => {
-        if (data[sig] && this.$refs[sig]) {
-          try {
-            this.$refs[sig].fromDataURL(data[sig]);
-            console.log(`✅ Signature loaded: ${sig}`);
-          } catch (err) {
-            console.error(`❌ Error loading signature ${sig}:`, err);
+      this.$nextTick(() => {
+        const signatures = ["ttd_dokter", "ttd_keluarga"];
+
+        signatures.forEach((sig) => {
+          if (data[sig] && this.$refs[sig]) {
+            try {
+              this.$refs[sig].fromDataURL(data[sig]);
+            } catch (err) {
+              console.error(`Error load ${sig}`, err);
+            }
           }
-        }
+        });
+
+        this.ttdDokterCleared = !data.ttd_dokter;
+        this.ttdKeluargaCleared = !data.ttd_keluarga;
       });
     },
 
+    // =========================
+    // SET DATA CREATE
+    // =========================
     setDataForm() {
       const today = new Date();
+
       this.form.tanggal = today.toISOString().split("T")[0];
       this.form.waktu = today.toTimeString().substring(0, 5);
 
@@ -368,41 +367,62 @@ export default {
         this.form.nama = this.selectedPatient.nama;
         this.form.tanggal_lahir = this.selectedPatient.tanggal_lahir;
         this.form.alamat = this.selectedPatient.alamat;
-        this.form.jenis_kelamin = this.selectedPatient.jenis_kelamin || "L";
+
+        // 🔥 FIX jenis kelamin mapping
+        const jk = this.selectedPatient.jenis_kelamin;
+              
+        if (jk === "L" || jk === "Laki-Laki") {
+          this.form.jenis_kelamin = "Laki-Laki";
+        } else if (jk === "P" || jk === "Perempuan") {
+          this.form.jenis_kelamin = "Perempuan";
+        } else {
+          this.form.jenis_kelamin = "";
+        }
       }
     },
 
-    saveSign(refName) {
-      const pad = this.$refs[refName];
-      if (!pad) {
-        console.error("REF tidak ditemukan:", refName);
-        return;
-      }
+    // =========================
+    // SIGNATURE
+    // =========================
+    saveSign(ref) {
+      const pad = this.$refs[ref];
+      if (!pad) return;
 
       const { isEmpty, data } = pad.saveSignature();
-      if (!isEmpty) {
-        this.form[refName] = data;
-        console.log("TTD saved:", refName);
-      }
-    },
 
-    clearSign(refName) {
-      const pad = this.$refs[refName];
-      if (pad) {
-        pad.clearSignature();
-        this.form[refName] = "";
-      }
-    },
-
-    async submitForm() {
-      // ✅ Validasi nama dokter dan keluarga
-      if (!this.form.nama_dokter_ttd) {
-        alert("Nama Dokter harus diisi!");
+      if (isEmpty) {
+        alert("Tanda tangan kosong");
         return;
       }
-      
+
+      this.form[ref] = data;
+
+      if (ref === "ttd_dokter") this.ttdDokterCleared = false;
+      if (ref === "ttd_keluarga") this.ttdKeluargaCleared = false;
+    },
+
+    clearSign(ref) {
+      this.form[ref] = "";
+
+      if (ref === "ttd_dokter") this.ttdDokterCleared = true;
+      if (ref === "ttd_keluarga") this.ttdKeluargaCleared = true;
+
+      this.$nextTick(() => {
+        this.$refs[ref]?.clearSignature();
+      });
+    },
+
+    // =========================
+    // SUBMIT
+    // =========================
+    async submitForm() {
+      if (!this.form.nama_dokter_ttd) {
+        alert("Nama Dokter wajib diisi");
+        return;
+      }
+
       if (!this.form.nama_keluarga_ttd) {
-        alert("Nama Keluarga/Pasien harus diisi!");
+        alert("Nama Keluarga wajib diisi");
         return;
       }
 
@@ -411,40 +431,36 @@ export default {
       try {
         const fd = new FormData();
 
-        // ✅ Append semua fields termasuk UUID
-        Object.keys(this.form).forEach((key) => {
-          const value = this.form[key] ?? "";
-          fd.append(key, value);
-        });
+        for (const key in this.form) {
+          fd.append(key, this.form[key] ?? "");
+        }
 
-        console.log("🟡 SUBMIT - Is Edit Mode:", this.isEditMode);
-        console.log("🟡 SUBMIT - UUID:", this.form.uuid);
-
-        // ✅ Same route for both create and update
-        const response = await axios.post(
+        const res = await axios.post(
           "/master/pasien/form-persetujuan-umum-pasien-keluarga",
-          fd,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
+          fd
         );
 
-        console.log("🟡 SUBMIT - Response:", response.data);
-
-        if (response.data.status) {
-          alert(response.data.message || "Data berhasil disimpan!");
+        if (res.data.status) {
+          alert("Berhasil disimpan");
           this.$emit("back");
         } else {
-          alert(response.data.message || "Gagal menyimpan data!");
+          alert(res.data.message || "Gagal");
         }
-      } catch (error) {
-        console.error("🟡 SUBMIT - ERROR:", error.response?.data || error);
-        
-        if (error.response?.data?.errors) {
-          const errors = Object.values(error.response.data.errors).flat();
-          alert("Error:\n" + errors.join("\n"));
+      } catch (err) {
+        console.error(err);
+
+        if (!err.response) {
+          alert("Server tidak bisa diakses");
+          return;
+        }
+
+        if (err.response.data?.errors) {
+          const msg = Object.values(err.response.data.errors)
+            .flat()
+            .join("\n");
+          alert(msg);
         } else {
-          alert(error.response?.data?.message || "Gagal menyimpan form!");
+          alert(err.response.data?.message || "Error");
         }
       } finally {
         this.loadingSubmit = false;
@@ -482,6 +498,24 @@ export default {
   padding: 1rem;   /* ruang di dalam setiap kolom */
   text-align: center;
   box-sizing: border-box;
+}
+
+.signature-preview {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.img-signature {
+  max-width: 100%;
+  height: 180px;
+  object-fit: contain;
+  border: 1px dashed #ccc;
+  background: white;
+  display: block;
+  margin: 0 auto;
 }
 
 .btn-save {
