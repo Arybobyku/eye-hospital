@@ -3,7 +3,10 @@
 		<div ref="rootmodal" class="modal-content modal-besar"
 			:class="terminate.show ? 'modal-opened' : 'modal-closed'">
 			<div class="modal-header">
-				<button v-on:click="action()" v-if="detail.status_kasir == 'Belum Bayar'">Perbaharui Data Obat</button>
+				<button v-on:click="action()" v-if="detail.status_kasir == 'Belum Bayar'"
+					style="right: 210px; background: #1a6f1d; border-color: #18511a;">Perbaharui Data Obat</button>
+				<button v-on:click="approvementaction()" v-if="detail.approvement_obat == 'no'"
+					style="right: 55px; background: #b3890b; border-color: #a17b0a;">Approve Obat</button>
 				<span class="close" v-on:click="hide()">&times;</span>
 				<h2 v-if="form">{{ form.title }}</h2>
 			</div>
@@ -659,11 +662,18 @@ export default {
 			}
 		},
 
-		action:function() { 
+		action:function() {
 			//if (vm.listobat.length > 0) {
-				vm.parsingForm(); 
-				vm.dialog(); 
+				vm.parsingForm();
+				vm.dialog();
 			//}
+		},
+
+		approvementaction:function() {
+			let data = new FormData();
+			data.append('uuid', vm.detail.uuid);
+			vm.$emit('parsingForm', data, 'approvement');
+			vm.$emit('dialog', 'Yakin ingin melakukan approvement pada resep ini.', 'Ya, approve', 'approvement');
 		},
 
 		nullcheck:function(data){
