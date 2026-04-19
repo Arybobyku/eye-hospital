@@ -478,7 +478,12 @@ export default {
 			osbcva1 = osbcva1.trim();
 			var odbcva2 = vm.form.select.oculardextrabcva2.value;
 			var osbcva2 = vm.form.select.ocularsinistrabcva2.value;
-
+			if (vm.form.assessment == null || vm.form.assessment == '') {
+				vm.form.assessment = `Gangguan Penglihatan`; 
+			}
+			if (vm.form.plan == null || vm.form.plan == '') {
+				vm.form.plan = `Konsul Dokter`; 
+			}
 
 				vm.form.object = `
 				<figure class="table">
