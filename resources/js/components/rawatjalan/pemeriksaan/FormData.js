@@ -207,10 +207,6 @@ export const formkelurahan = () => {
 			name: 'oculardextraautoref', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		oculardextraadd: {
-			title: 'Add', for_id: 'form_' + 'oculardextraadd', type: 'text', required: '',
-			name: 'oculardextraadd', value: '', disabled: false, show: true, kinds: ''
-		},
 
 		ocularsinistraro: {
 			title: 'Nama RO', for_id: 'form_' + 'ocularsinistraro', type: 'text',
@@ -232,10 +228,6 @@ export const formkelurahan = () => {
 			name: 'ocularsinistratonometri', value: '', disabled: false, show: true, kinds: ''
 		},
 
-		ocularsinistraadd: {
-			title: 'Add', for_id: 'form_' + 'ocularsinistraadd', type: 'text', required: '',
-			name: 'ocularsinistraadd', value: '', disabled: false, show: true, kinds: ''
-		},
 
 		// ocularsinistrakacamata_lamasph:{
 		// 	title: 'Kacamata lama sph', for_id: 'form_'+'skocularsinistrakacamata_lamasphalanyeri', type: 'text', required: '', 
@@ -325,6 +317,12 @@ export const formkelurahan = () => {
 				class: 'oculardextrakacamatalamaaddisi', isrequired: false, html: 'Axis', issearch: false, disabled: false,
 			},
 
+			oculardextrakacamatalamaadd: {
+				key: 'oculardextrakacamatalamaadd', for_id: 'form_' + 'oculardextrakacamatalamaadd', name: 'oculardextrakacamatalamaadd', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextrakacamatalamaadd', isrequired: false, html: 'Add', issearch: false, disabled: false,
+			},
+
 			ocularsinistrakacamatalamasph: {
 				key: 'ocularsinistrakacamatalamasph', for_id: 'form_' + 'ocularsinistrakacamatalamasph', name: 'ocularsinistrakacamatalamasph', uuid: '', value: '', label: 'Silahkan Pilih',
 				filter: [], data: [], search: '', option: 'display: none', statics: true,
@@ -337,12 +335,17 @@ export const formkelurahan = () => {
 				class: 'ocularsinistrakacamatalamacyl', isrequired: false, html: 'Cyl', issearch: false, disabled: false,
 			},
 	
-			ocularsinistrakacamatalamaaddisi: {
+			ocularsinistrakacamatalamaaddisi: { //ini axis
 				key: 'ocularsinistrakacamatalamaaddisi', for_id: 'form_' + 'ocularsinistrakacamatalamaaddisi', name: 'ocularsinistrakacamatalamaaddisi', uuid: '', value: '', label: 'Silahkan Pilih',
 				filter: [], data: [], search: '', option: 'display: none', statics: true,
 				class: 'ocularsinistrakacamatalamaaddisi', isrequired: false, html: 'Axis', issearch: false, disabled: false,
 			},
 
+			ocularsinistrakacamatalamaadd: {
+				key: 'ocularsinistrakacamatalamaadd', for_id: 'form_' + 'ocularsinistrakacamatalamaadd', name: 'ocularsinistrakacamatalamaadd', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistrakacamatalamaadd', isrequired: false, html: 'Add', issearch: false, disabled: false,
+			},
 
 			ocularsinistravisus: { 
 				key : 'ocularsinistravisus', for_id: 'form_'+'ocularsinistravisus', name: 'ocularsinistravisus', uuid:'', value: '', label: 'Silahkan Pilih', 
@@ -378,6 +381,18 @@ export const formkelurahan = () => {
 				key : 'ocularsinistrapinhole', for_id: 'form_'+'ocularsinistrapinhole', name: 'ocularsinistrapinhole', uuid:'', value: '', label: 'Silahkan Pilih', 
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'ocularsinistrapinhole', isrequired: false, html: 'Pinhole', issearch: true, disabled: false,
+			},
+
+			oculardextraadd: {
+				key: 'oculardextraadd', for_id: 'form_' + 'oculardextraadd', name: 'oculardextraadd', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'oculardextraadd', isrequired: false, html: 'Add', issearch: false, disabled: false,
+			},
+
+			ocularsinistraadd: {
+				key: 'ocularsinistraadd', for_id: 'form_' + 'ocularsinistraadd', name: 'ocularsinistraadd', uuid: '', value: '', label: 'Silahkan Pilih',
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'ocularsinistraadd', isrequired: false, html: 'Add', issearch: false, disabled: false,
 			},
 			
 			klinik: {

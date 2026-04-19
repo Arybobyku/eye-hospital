@@ -257,7 +257,7 @@ export const arrpemeriksaan = () => {
 		label: 'Error'
 	  });
 	const pilihancylinder = [];  
-		for (let i = -1000; i <= 1000; i += 25) {
+		for (let i = -1000; i <= 0; i += 25) {
 			let val = (i / 100).toFixed(2);
 			pilihancylinder.push({
 				value: val,
@@ -269,6 +269,14 @@ export const arrpemeriksaan = () => {
 			pilihanaxis.push({
 				value: i.toString(),
 				label: i.toString()
+			});
+		}
+	const pilihanadd = [];
+		for (let i = 75; i <= 300; i += 25) {
+			let val = (i / 100).toFixed(2);
+			pilihanadd.push({
+				value: val,
+				label: `+${val}`
 			});
 		}
 
@@ -292,10 +300,16 @@ export const arrpemeriksaan = () => {
 		oculardextrakacamatalamasph: pilihanspheris,
 		oculardextrakacamatalamacyl: pilihancylinder,
 		oculardextrakacamatalamaaddisi: pilihanaxis,
+		oculardextrakacamatalamaadd: pilihanadd,
 
 		ocularsinistrakacamatalamacyl: pilihancylinder,
 		ocularsinistrakacamatalamasph: pilihanspheris,
 		ocularsinistrakacamatalamaaddisi: pilihanaxis,
+		ocularsinistrakacamatalamaadd: pilihanadd,
+
+		oculardextraadd: pilihanadd,
+		
+		ocularsinistraadd: pilihanadd,
 
 		klinik: [
 			{ value: '1', label: 'Poli 1' },

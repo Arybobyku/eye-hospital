@@ -60,17 +60,18 @@ export const parsekelurahan = (form, detail) => {
 	data.append('ocular_dextra_keratometri_k1', form.oculardextrakeratometrik1.value);
 	data.append('ocular_dextra_keratometri_k2', form.oculardextrakeratometrik2.value);
 	data.append('ocular_dextra_tonometri', form.oculardextratonometri.value);
-	data.append('ocular_dextra_visus', form.select.oculardextravisus.label);
-	data.append('ocular_dextra_pinhole', form.select.oculardextrapinhole.label);
-	data.append('ocular_dextra_add', form.oculardextraadd.value);
+	data.append('ocular_dextra_visus', form.select.oculardextravisus.value);
+	data.append('ocular_dextra_pinhole', form.select.oculardextrapinhole.value);
+	data.append('ocular_dextra_add', form.select.oculardextraadd.value);
 	// data.append('ocular_dextra_bcva1', form.oculardextrabcva1.value);
 	data.append('ocular_dextra_bcva1_s', form.select.oculardextrabcva1_s.value);
 	data.append('ocular_dextra_bcva1_c', form.select.oculardextrabcva1_c.value);
 	data.append('ocular_dextra_bcva1_x', form.select.oculardextrabcva1_x.value);
-	data.append('ocular_dextra_bcva2', form.select.oculardextrabcva2.label);
+	data.append('ocular_dextra_bcva2', form.select.oculardextrabcva2.value);
 	data.append('ocular_dextra_kacamata_lama_sph', form.select.oculardextrakacamatalamasph.value);
 	data.append('ocular_dextra_kacamata_lama_cyl', form.select.oculardextrakacamatalamacyl.value);
 	data.append('ocular_dextra_kacamata_lama_addisi', form.select.oculardextrakacamatalamaaddisi.value);
+	data.append('ocular_dextra_kacamata_lama_add', form.select.oculardextrakacamatalamaadd.value);
 
 	// data.append('ocular_sinistra_autoref', form.ocularsinistraautoref.value);
 	data.append('ocular_sinistra_autoref_s', form.select.ocularsinistraautoref_s.value);
@@ -80,17 +81,18 @@ export const parsekelurahan = (form, detail) => {
 	data.append('ocular_sinistra_keratometri_k1', form.ocularsinistrakeratometrik1.value);
 	data.append('ocular_sinistra_keratometri_k2', form.ocularsinistrakeratometrik2.value);
 	data.append('ocular_sinistra_tonometri', form.ocularsinistratonometri.value);
-	data.append('ocular_sinistra_visus', form.select.ocularsinistravisus.label);
-	data.append('ocular_sinistra_pinhole', form.select.ocularsinistrapinhole.label);
-	data.append('ocular_sinistra_add', form.ocularsinistraadd.value);
+	data.append('ocular_sinistra_visus', form.select.ocularsinistravisus.value);
+	data.append('ocular_sinistra_pinhole', form.select.ocularsinistrapinhole.value);
+	data.append('ocular_sinistra_add', form.select.ocularsinistraadd.value);
 	// data.append('ocular_sinistra_bcva1', form.ocularsinistrabcva1.value);
 	data.append('ocular_sinistra_bcva1_s', form.select.ocularsinistrabcva1_s.value);
 	data.append('ocular_sinistra_bcva1_c', form.select.ocularsinistrabcva1_c.value);
 	data.append('ocular_sinistra_bcva1_x', form.select.ocularsinistrabcva1_x.value);
-	data.append('ocular_sinistra_bcva2', form.select.ocularsinistrabcva2.label);
+	data.append('ocular_sinistra_bcva2', form.select.ocularsinistrabcva2.value);
 	data.append('ocular_sinistra_kacamata_lama_sph', form.select.ocularsinistrakacamatalamasph.value);
 	data.append('ocular_sinistra_kacamata_lama_cyl', form.select.ocularsinistrakacamatalamacyl.value);
 	data.append('ocular_sinistra_kacamata_lama_addisi', form.select.ocularsinistrakacamatalamaaddisi.value);
+	data.append('ocular_sinistra_kacamata_lama_add', form.select.ocularsinistrakacamatalamaadd.value);
 
 
 	data.append('bs_lainnya', form.bs_lainnya.value);

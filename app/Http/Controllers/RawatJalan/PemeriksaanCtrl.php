@@ -256,46 +256,64 @@ class PemeriksaanCtrl extends Controller
 				$loop = true;
 			}
 		} while ($loop == false);
-		$ocular_dextra_autoref = 's ' . $request->ocular_dextra_autoref_s;
+		$ocular_dextra_autoref = 's ' . (
+			($val = trim($request->ocular_dextra_autoref_s ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
 		if ($request->ocular_dextra_autoref_c) {
 			$ocular_dextra_autoref .= ' c ' . $request->ocular_dextra_autoref_c;
 		}
 		$ocular_dextra_autoref .= ' x ' . $request->ocular_dextra_autoref_x;
 
-		$ocular_sinistra_autoref = 's ' . $request->ocular_sinistra_autoref_s;
+		$ocular_sinistra_autoref = 's ' . (
+			($val = trim($request->ocular_sinistra_autoref_s ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
 		if ($request->ocular_sinistra_autoref_c) {
 			$ocular_sinistra_autoref .= ' c ' . $request->ocular_sinistra_autoref_c;
 		}
 		$ocular_sinistra_autoref .= ' x ' . $request->ocular_sinistra_autoref_x;
 
-		$ocular_dextra_bcva = 's ' . $request->ocular_dextra_bcva1_s;
+		$ocular_dextra_bcva = 's ' . (
+			($val = trim($request->ocular_dextra_bcva1_s ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
 		if ($request->ocular_dextra_bcva1_c) {
 			$ocular_dextra_bcva .= ' c ' . $request->ocular_dextra_bcva1_c;
 		}
 		$ocular_dextra_bcva .= ' x ' . $request->ocular_dextra_bcva1_x;
 
-		$ocular_sinistra_bcva = 's ' . $request->ocular_sinistra_bcva1_s;
+		$ocular_sinistra_bcva = 's ' . (
+			($val = trim($request->ocular_sinistra_bcva1_s ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
 		if ($request->ocular_sinistra_bcva1_c) {
 			$ocular_sinistra_bcva .= ' c ' . $request->ocular_sinistra_bcva1_c;
 		}
 		$ocular_sinistra_bcva .= ' x ' . $request->ocular_sinistra_bcva1_x;
-		$odVisus = $request->ocular_dextra_visus ;
+
+		$ocular_sinistra_kacamata_lama_sph = (
+			($val = trim($request->ocular_sinistra_kacamata_lama_sph ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
+		
+		$ocular_dextra_kacamata_lama_sph = (
+			($val = trim($request->ocular_dextra_kacamata_lama_sph ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
+
+		$odVisus = $request->ocular_dextra_visus ; //rencana mau buat chekingan tapi endingnya buat di fe aja tambahin component baru untuk handle ini
 		$osVisus = $request->ocular_sinistra_visus;
 		$odPinhole = $request->ocular_dextra_pinhole;
 		$osPinhole = $request->ocular_sinistra_pinhole;
-		if ( $request->ocular_dextra_visus == 'Silahkan Pilih' ) {
-			$odVisus = '';
-		}
-		if ( $request->ocular_sinistra_visus == 'Silahkan Pilih' ) {
-			$osVisus = '';
-		}
-		if ( $request->ocular_dextra_pinhole == 'Silahkan Pilih' ) {
-			$odPinhole = '';
-		}
-		if ( $request->ocular_sinistra_pinhole == 'Silahkan Pilih' ) {
-			$osPinhole = '';
-		}
-
+		$odBcva2 = $request->ocular_sinistra_bcva2;
+		$osBcva2 = $request->ocular_dextra_bcva2;
 		try {
 			DB::beginTransaction();
 
@@ -314,11 +332,12 @@ class PemeriksaanCtrl extends Controller
 					'ocular_dextra_pinhole' => $odPinhole,
 					// 'ocular_dextra_bcva1' => $request->ocular_dextra_bcva1,
 					'ocular_dextra_bcva1' => $ocular_dextra_bcva,
-					'ocular_dextra_bcva2' => $request->ocular_dextra_bcva2,
+					'ocular_dextra_bcva2' => $odBcva2,
 					'ocular_dextra_add' => $request->ocular_dextra_add,
 					'ocular_dextra_kacamata_lama_sph' => $request->ocular_dextra_kacamata_lama_sph,
 					'ocular_dextra_kacamata_lama_cyl' => $request->ocular_dextra_kacamata_lama_cyl,
 					'ocular_dextra_kacamata_lama_addisi' => $request->ocular_dextra_kacamata_lama_addisi,
+					'ocular_dextra_kacamata_lama_add' => $request->ocular_dextra_kacamata_lama_add,
 					'ocular_sinistra_ro' => $request->ocular_sinistra_ro,
 					// 'ocular_sinistra_autoref' => $request->ocular_sinistra_autoref,
 					'ocular_sinistra_autoref' => $ocular_sinistra_autoref,
@@ -329,11 +348,12 @@ class PemeriksaanCtrl extends Controller
 					'ocular_sinistra_pinhole' => $osPinhole,
 					// 'ocular_sinistra_bcva1' => $request->ocular_sinistra_bcva1,
 					'ocular_sinistra_bcva1' => $ocular_sinistra_bcva,
-					'ocular_sinistra_bcva2' => $request->ocular_sinistra_bcva2,
+					'ocular_sinistra_bcva2' => $osBcva2,
 					'ocular_sinistra_add' => $request->ocular_sinistra_add,
-					'ocular_sinistra_kacamata_lama_sph' => $request->ocular_sinistra_kacamata_lama_sph,
+					'ocular_sinistra_kacamata_lama_sph' => $ocular_sinistra_kacamata_lama_sph,
 					'ocular_sinistra_kacamata_lama_cyl' => $request->ocular_sinistra_kacamata_lama_cyl,
 					'ocular_sinistra_kacamata_lama_addisi' => $request->ocular_sinistra_kacamata_lama_addisi,
+					'ocular_sinistra_kacamata_lama_add' => $request->ocular_sinistra_kacamata_lama_add,
 				);
 
 
@@ -378,11 +398,12 @@ class PemeriksaanCtrl extends Controller
 				$item->ocular_dextra_visus = $odVisus;
 				$item->ocular_dextra_pinhole = $odPinhole;
 				$item->ocular_dextra_bcva1 = $ocular_dextra_bcva;
-				$item->ocular_dextra_bcva2 = $request->ocular_dextra_bcva2;
+				$item->ocular_dextra_bcva2 = $odBcva2;
 				$item->ocular_dextra_add = $request->ocular_dextra_add;
 				$item->ocular_dextra_kacamata_lama_sph = $request->ocular_dextra_kacamata_lama_sph;
 				$item->ocular_dextra_kacamata_lama_cyl = $request->ocular_dextra_kacamata_lama_cyl;
 				$item->ocular_dextra_kacamata_lama_addisi = $request->ocular_dextra_kacamata_lama_addisi;
+				$item->ocular_dextra_kacamata_lama_add = $request->ocular_dextra_kacamata_lama_add;
 				$item->ocular_sinistra_ro = $request->ocular_sinistra_ro;
 				$item->ocular_sinistra_autoref = $ocular_sinistra_autoref;
 				$item->ocular_sinistra_keratometri_k1 = $request->ocular_sinistra_keratometri_k1;
@@ -391,11 +412,12 @@ class PemeriksaanCtrl extends Controller
 				$item->ocular_sinistra_visus = $osVisus;
 				$item->ocular_sinistra_pinhole = $osPinhole;
 				$item->ocular_sinistra_bcva1 = $ocular_sinistra_bcva;
-				$item->ocular_sinistra_bcva2 = $request->ocular_sinistra_bcva2;
+				$item->ocular_sinistra_bcva2 = $osBcva2;
 				$item->ocular_sinistra_add = $request->ocular_sinistra_add;
-				$item->ocular_sinistra_kacamata_lama_sph = $request->ocular_sinistra_kacamata_lama_sph;
+				$item->ocular_sinistra_kacamata_lama_sph = $ocular_sinistra_kacamata_lama_sph;
 				$item->ocular_sinistra_kacamata_lama_cyl = $request->ocular_sinistra_kacamata_lama_cyl;
 				$item->ocular_sinistra_kacamata_lama_addisi = $request->ocular_sinistra_kacamata_lama_addisi;
+				$item->ocular_sinistra_kacamata_lama_add = $request->ocular_sinistra_kacamata_lama_add;
 				$item->save();
 
 				$posisi_antrian_dokter = 1;
@@ -442,7 +464,7 @@ class PemeriksaanCtrl extends Controller
                             'sebagai' => $request->cppt_sebagai,
                             'pengguna_uuid' => $pengguna_uuid,
                         );
-                            $update = Cppt::where('uuid', '=', $request->uuid)
+                            $update = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
                                         ->where('sebagai', '=', $request->cppt_sebagai)
                                         ->update($arr);
                     }
