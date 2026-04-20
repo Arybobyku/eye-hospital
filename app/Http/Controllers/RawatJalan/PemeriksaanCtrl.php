@@ -361,7 +361,7 @@ class PemeriksaanCtrl extends Controller
 
                 $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
                 $status_ro = 'Sudah Diperiksa RO';
-                if($registrasi->status_ro == 'Sudah Diperiksa Perawat') {
+                if($registrasi->status_ro == 'Sudah Diperiksa Perawat' || $registrasi->status_ro == 'Sudah Diperiksa') {
                     $status_ro = 'Sudah Diperiksa';
                 }
 				$arr = array(
@@ -434,7 +434,7 @@ class PemeriksaanCtrl extends Controller
 
                 $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
                 $status_ro = 'Sudah Diperiksa RO';
-                if($registrasi->status_ro == 'Sudah Diperiksa Perawat') {
+                if($registrasi->status_ro == 'Sudah Diperiksa Perawat' || $registrasi->status_ro == 'Sudah Diperiksa') {
                     $status_ro = 'Sudah Diperiksa';
                 }
 					$arr = array(
@@ -600,7 +600,8 @@ class PemeriksaanCtrl extends Controller
 				}
 
                 $status_ro = 'Sudah Diperiksa Perawat';
-                if($registrasi->status_ro == 'Sudah Diperiksa RO') {
+				echo($registrasi->status_ro);
+                if($registrasi->status_ro == 'Sudah Diperiksa RO' || $registrasi->status_ro == 'Sudah Diperiksa') {
                     $status_ro = 'Sudah Diperiksa';
                 }
 				$arr = array(
@@ -679,7 +680,7 @@ class PemeriksaanCtrl extends Controller
 
                 $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
                 $status_ro = 'Sudah Diperiksa Perawat';
-                if($registrasi->status_ro == 'Sudah Diperiksa RO') {
+                if($registrasi->status_ro == 'Sudah Diperiksa RO' || $registrasi->status_ro == 'Sudah Diperiksa') {
                     $status_ro = 'Sudah Diperiksa';
                 }
 				$arr = array(
