@@ -410,12 +410,11 @@ class PasienCtrl extends Controller
             return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
         }
     }
-
     public function storeLaporanPembedahan(Request $request)
     {
         try {
             DB::beginTransaction();
-
+    
             // Konversi checkbox boolean dari string
             $booleanFields = [
                 'anestesi_umum',
@@ -425,35 +424,88 @@ class PasienCtrl extends Controller
                 'anestesi_csp',
                 'anestesi_lokal',
             ];
+    
+            // Field date/datetime yang nullable
+            $dateFields = [
+                'tanggal_lahir',
+                'tanggal_operasi',
+                'jam_mulai',
+                'jam_selesai',
+                'tanggal_ttd',
+            ];
 
+            $integerFields = [
+                'lama_operasi',
+                'perdarahan',
+            ];
+    
             $data = $request->all();
-
+    
+            // 1. Konversi boolean
             foreach ($booleanFields as $field) {
                 if (isset($data[$field])) {
                     $data[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
                 }
             }
-
+    
+            // 2. Sanitasi date — ubah string kosong/"null" jadi null
+            foreach ($dateFields as $field) {
+                if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === 'null')) {
+                    $data[$field] = null;
+                }
+            }
+            
+            foreach ($integerFields as $field) {
+                if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === 'null')) {
+                    $data[$field] = null;
+                }
+            }
             $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
             $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
-            $pengguna_sername = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Username'));
-
-            // Tambahkan user yang membuat
-            $data['created_by'] = $pengguna_nama;
-
-            // Simpan data
-            $laporan = DokumenLaporanPembedahan::create($data);
-
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Username'));
+    
+            $uuid = $request->input('uuid');
+    
+            // Hapus uuid dan id dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+            unset($data['id']);
+    
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $laporan = DokumenLaporanPembedahan::where('uuid', $uuid)->first();
+    
+                if (!$laporan) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+    
+                $data['updated_by'] = $pengguna_nama;
+                $data['no_surat'] = 'RM 2.2/LP/22';
+                $laporan->update($data);
+                $action = 'update';
+                $message = 'Laporan Pembedahan berhasil diupdate';
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $data['no_surat'] = 'RM 2.2/LP/22';
+                $laporan = DokumenLaporanPembedahan::create($data);
+                $action = 'create';
+                $message = 'Laporan Pembedahan berhasil disimpan';
+            }
+    
             DB::commit();
-
+    
             return response()->json([
                 'status' => true,
-                'message' => 'Laporan Pembedahan berhasil disimpan',
+                'message' => $message,
                 'data' => $laporan,
-            ], 201);
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+    
         } catch (Exception $e) {
             DB::rollBack();
-
             return response()->json([
                 'status' => false,
                 'message' => 'Gagal menyimpan Laporan Pembedahan',

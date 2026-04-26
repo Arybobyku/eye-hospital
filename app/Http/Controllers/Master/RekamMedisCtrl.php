@@ -642,7 +642,8 @@ class RekamMedisCtrl extends Controller
             ],
             'dokumen_laporan_pembedahan' => [
                 'tanggal' => "$table.created_at",
-                'waktu'   => "$table.created_at"
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 2.2/LP/22',
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],

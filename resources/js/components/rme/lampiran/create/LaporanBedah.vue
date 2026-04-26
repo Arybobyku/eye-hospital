@@ -94,7 +94,6 @@
                 v-model="form.tanggal_lahir"
                 class="input-rme"
                 readonly
-                style="flex: 1"
               />
               <div class="col-md-6">
             <label>Jenis Kelamin :</label>
@@ -536,11 +535,11 @@
 
     <!-- ================= BUTTON BOTTOM ================= -->
     <div class="action-footer">
-      <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
-        <span v-if="loadingSubmit">Menyimpan...</span>
-        <span v-else>Simpan</span>
-      </button>
-
+      <button v-if="!disabledSubmit" class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
+      <span v-if="loadingSubmit">Menyimpan...</span>
+      <span v-else>Simpan</span>
+    </button>
+      
       <button class="btn-back" @click="$emit('back')" :disabled="loadingSubmit">
         Kembali
       </button>
@@ -559,6 +558,10 @@ export default {
       type: Object,
       required: true,
     },
+    viewData: {
+      type: Object,
+      default: null,
+    },
     editData: {
       // ✨ Props untuk data edit
       type: Object,
@@ -576,6 +579,7 @@ export default {
       listDokter: [],
       signatureCleared: false,
       macamSayatanCleared: false,
+      disabledSubmit: false,
       posisiPenderitaCleared: false,
       sigOption: {
         penColor: "black",
@@ -639,7 +643,14 @@ export default {
   },
   async mounted() {
     await this.fetchDokter();
-    if (this.isEditMode && this.editData) {
+    console.log("yudha",this.editData);
+    console.log("yudha",this.isEditMode);
+    console.log('editmode', this.viewData);
+    this.disabledSubmit = false;
+    if (this.viewData){
+      this.disabledSubmit = true;
+    }
+    if (this.editData) {
       // ✨ LOAD DATA UNTUK EDIT
       this.loadDataForEdit();
     } else {
@@ -684,19 +695,21 @@ export default {
     },
     // Bersihkan canvas saja (tanpa mengubah state preview) — tombol Bersihkan di pad aktif
     async loadDataForEdit() {
-      try {
+      // try {
+      // console.log("yudha", this.editData);
         // Option 1: Jika data lengkap sudah ada di editData props
-        if (this.editData.uuid) {
+        // if (this.editData.uuid) {
           // Fetch detail dari server untuk data lengkap
-          const response = await axios.get(
-            `/master/pasien/dokumen-laporan-pembedahan/${this.editData.uuid}`
-          );
-
-          if (response.data.status) {
+          // const response = await axios.get(
+          //   `/master/pasien/dokumen-laporan-pembedahan/${this.editData.uuid}`
+          // );
+           this.editData;
+          // console.log("yudha2", response.data.data);
+          if (this.editData) {
             // Populate form dengan data dari server
             Object.keys(this.form).forEach((key) => {
-              if (response.data.data[key] !== undefined) {
-                this.form[key] = response.data.data[key];
+              if (this.editData[key] !== undefined) {
+                this.form[key] = this.editData[key];
               }
             });
 
@@ -708,14 +721,14 @@ export default {
             });
 
             // ✨ Load signature jika ada
-            if (response.data.data.ttd_dokter) {
+            if (this.editData.ttd_dokter) {
               this.$nextTick(() => {
                 // Set signature dari base64
                 // Note: vue-signature-pad biasanya perlu di-load manual
               });
             }
           }
-        }
+        // }
 
         // Option 2: Atau langsung gunakan editData jika sudah lengkap
         // Object.keys(this.form).forEach(key => {
@@ -723,11 +736,11 @@ export default {
         //     this.form[key] = this.editData[key];
         //   }
         // });
-      } catch (error) {
-        console.error("Error loading data:", error);
-        alert("Gagal memuat data untuk edit!");
-        this.$emit("back");
-      }
+      // } catch (error) {
+      //   console.error("Error loading data:", error);
+      //   alert("Gagal memuat data untuk edit!");
+      //   this.$emit("back");
+      // }
     },
     setDataForm() {
       const today = new Date();

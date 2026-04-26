@@ -16,6 +16,7 @@ class DokumenLaporanPembedahan extends Model
         'uuid',
         'uuid_pasien',
         'no_rm',
+        'no_surat',
         'nik',
         'nama',
         'tanggal_lahir',
