@@ -160,7 +160,7 @@
 					}
 					echo $msg;
 				}
-			?> dengan total biaya perawatan sebesar Rp. {{ number_format($grandtotal) }},- <i><b>({{ terbilang($grandtotal) }} Rupiah)</b></i> Rincian terlampir</span></td>
+			?> dengan total biaya perawatan sebesar Rp. {{ number_format($grandtotalCover) }},- <i><b>({{ terbilang($grandtotalCover) }} Rupiah)</b></i> Rincian terlampir</span></td>
 		</tr>
 	</table>
 	
@@ -175,7 +175,7 @@
 		</tr>
 		<tr>
 			<td style="padding-top: 8px; text-align:justify">
-				<span style="line-height: 23px;">Dan mohon agar datat mengirimkan Bukti Pembayaran via Email : primavisionfinance@gmail.com ,  Up : Debora Solavide Simanjuntak</span>	
+				<span style="line-height: 23px;">Dan mohon agar datat mengirimkan Bukti Pembayaran via Email : primavisionfinance@gmail.com ,  Up : Putri Anggi Salsabila, S.Tr.Ak</span>	
 			</td>
 		</tr>
 		<tr>
@@ -195,7 +195,7 @@
 				<div style="padding-top: 4px">Bagian Claim</div>
 				<br /><br /><br /><br />
 				<span style="text-decoration: underline">
-					<b>(Debora Solavide Simanjuntak, S.E)</b>
+					<b>(Putri Anggi Salsabila, S.Tr.Ak)</b>
 				</span>
 			</td>
 		</tr>

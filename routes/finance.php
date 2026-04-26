@@ -71,6 +71,11 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('update', [CaraBayarCtrl::class, 'update'])->name('finance-carabayar-update');
 		Route::post('remove', [CaraBayarCtrl::class, 'remove'])->name('finance-carabayar-remove');
 
+		Route::get('downloadtemplate/{metode}', [CaraBayarCtrl::class, 'downloadTemplateUploadPembayaran'])->name('finance-carabayar-downloadtemplate');
+		Route::get('download', [CaraBayarCtrl::class, 'exportMetodePembayaran'])->name('finance-carabayar-download');
+		Route::post('uploadmetodepembayaran', [CaraBayarCtrl::class, 'uploadMetodePembayaran'])->name('finance-carabayar-upload');
+		Route::post('uploadupdatelabelmetodepembayaran', [CaraBayarCtrl::class, 'uploadUpdateLabelMetodePembayaran'])->name('finance-carabayar-upload-update-label');
+
 		Route::prefix('child')->group(function () {
 			Route::post('data', [ChildCtrl::class, 'data'])->name('finance-child-data');
 			Route::post('add', [ChildCtrl::class, 'add'])->name('finance-child-add');
@@ -114,12 +119,15 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('hapusbiaya', [KasirCtrl::class, 'hapusbiaya'])->name('kasir-hapusbiaya');
 		Route::post('perbaharuibiaya', [KasirCtrl::class, 'perbaharuibiaya'])->name('kasir-perbaharuibiaya');
 		Route::post('listsudahbayar', [KasirCtrl::class, 'listsudahbayar'])->name('kasir-listsudahbayar');
+		Route::post('editlistsudahbayar', [KasirCtrl::class, 'editlistsudahbayar'])->name('kasir-editlistsudahbayar');
 		Route::post('panjar', [KasirCtrl::class, 'panjar'])->name('panjar-list');
 		Route::post('call', [KasirCtrl::class, 'call'])->name('kasir-call');
 		Route::post('detail', [KasirCtrl::class, 'detail'])->name('kasir-detail');
 		Route::post('bayar', [KasirCtrl::class, 'bayar'])->name('kasir-bayar');
+		Route::post('editbayar', [KasirCtrl::class, 'editbayar'])->name('kasir-editbayar');
 		Route::post('cancelbayar', [KasirCtrl::class, 'cancelbayar'])->name('kasir-cancelbayar');
 		Route::post('terima', [KasirCtrl::class, 'terima'])->name('kasir-terima');
+		Route::post('editkasir', [KasirCtrl::class, 'editkasir'])->name('kasir-editkasir');
 	});
 
 	Route::prefix('historikasir')->group(function () {
@@ -166,12 +174,18 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('detail', [PaketBedahCtrl::class, 'detail'])->name('paketbedah-detail');
 		Route::post('add', [PaketBedahCtrl::class, 'add'])->name('paketbedah-add');
 		Route::post('histori', [PaketBedahCtrl::class, 'histori'])->name('paketbedah-histori');
+		Route::post('remove', [PaketBedahCtrl::class, 'remove'])->name('paketbedah-remove');
+		Route::post('duplicate', [PaketBedahCtrl::class, 'duplicate'])->name('paketbedah-duplicate');
+
 	});
 
 	Route::prefix('listpaketbedah')->group(function () {
 		Route::post('list', [ListPaketBedahCtrl::class, 'list'])->name('listpaketbedah-list');
 		Route::post('add', [ListPaketBedahCtrl::class, 'add'])->name('listpaketbedah-add');
 		Route::post('remove', [ListPaketBedahCtrl::class, 'remove'])->name('listpaketbedah-remove');
+		Route::get('download/{metode}/{name}', [ListPaketBedahCtrl::class, 'downloadTemplatePaketBedah'])->name('listpaketbedah-download');
+		Route::get('download/all', [ListPaketBedahCtrl::class, 'downloadAll'])->name('listpaketbedah-download-all');
+		Route::post('upload', [ListPaketBedahCtrl::class, 'uploadPaketBedah'])->name('listpaketbedah-upload');
 	});
 
 });

@@ -25,12 +25,13 @@ a { text-decoration: none; color: #252525; }
 	width: 200px;
 	position: relative;
 	top: 2px;
+  margin-left: 60px; /* beri ruang untuk icon hamburger */
 }
 
 .nav-control {
   cursor: pointer;
   position: absolute;
-  left:265px;
+  left: 16px; /* sebelum logo */
   top: 38px;
   text-align: center;
   transform: translateY(-50%);
@@ -51,7 +52,7 @@ a { text-decoration: none; color: #252525; }
   z-index: 999; }
 
 .hamburger .line {
-  background: #3088bf !important;
+  background: #1a6f1d !important;
   display: block;
   height: 3px;
   border-radius: 3px;
@@ -107,6 +108,7 @@ a { text-decoration: none; color: #252525; }
 	left: 340px;
 	top: 22px;
 	font-size: 24px;
+  left: 300px; /* geser sedikit karena logo sudah bergeser */
 	font-family: "Roboto Regular";
 }
 
@@ -119,13 +121,13 @@ a { text-decoration: none; color: #252525; }
 }
 
 .patch {
-	width: 98px; 
-	padding: 14px 28px; 
-	border-radius: 50px; 
-	font-weight: bold; 
+	width: 98px;
+	padding: 14px 28px;
+	border-radius: 50px;
+	font-weight: bold;
 	float: left;
-	color: #fff; 
-	height: auto; 
+	color: #fff;
+	height: auto;
 	border: 1px solid #b41828;
 	background: #c01d2e;
 	cursor: pointer;
@@ -134,9 +136,9 @@ a { text-decoration: none; color: #252525; }
 
 .reload {
 	width:50px;
-	height: 49px; 
-	border-radius: 50px; 
-	font-weight: bold; 
+	height: 49px;
+	border-radius: 50px;
+	font-weight: bold;
 	float: left;
 	color: #fff;
 	border: 1px solid #0e64af;
@@ -285,8 +287,13 @@ a { text-decoration: none; color: #252525; }
 	height: auto;
 	float: left;
 	padding: 10px;
-	margin-top: 80px;
+	margin-top: 75px;
 	position: relative;
+}
+
+.content-embed {
+	margin-top: 0 !important;
+	padding: 0 !important;
 }
 
 .content > .inner {
@@ -317,7 +324,7 @@ a { text-decoration: none; color: #252525; }
 
 .not-found > .wrapper {
   max-width: 960px;
-  width: 100%; 
+  width: 100%;
   margin: 30px auto;
   transform: scale(0.8);
 }
@@ -331,7 +338,7 @@ a { text-decoration: none; color: #252525; }
   align-items: center;
 }
 .not-found > .wrapper > .landing-page > .icon__download > svg {
- 
+
   max-height: 325px;
   height: auto;
   margin: 0 0 15px;
@@ -342,7 +349,7 @@ a { text-decoration: none; color: #252525; }
 }
 .not-found > .wrapper > .landing-page > p {
   font-size: 16px;
-  width: 35%; 
+  width: 35%;
   margin: 16px auto 24px;
   text-align: center;
 }
@@ -388,9 +395,9 @@ table.table thead tr th {
 
 table.table thead tr th span.closed {
 	position: absolute;
-	font-size: 23px; 
-	right: 20px; 
-	top: 10.5px; 
+	font-size: 23px;
+	right: 20px;
+	top: 10.5px;
 	cursor: pointer;
 	color: #757575;
 	font-family: "Roboto Regular";
@@ -481,9 +488,9 @@ table.table thead tr th button.table-add:hover {
 
 .tooltip .tooltiptext:after {
 	content: "";
-    width: 0; 
+    width: 0;
 		position: absolute;
-    height: 0; 
+    height: 0;
 		top: -4px;
 		left: 60px;
     border-left: 5px solid transparent;
@@ -510,9 +517,9 @@ table.table thead tr th button.table-add:hover {
 
 .tooltiptext-mini:after {
 	content: "";
-    width: 0; 
+    width: 0;
 		position: absolute;
-    height: 0; 
+    height: 0;
 		top: -4px;
 		left: 20px;
     border-left: 5px solid transparent;
@@ -636,7 +643,7 @@ table.table thead tr th button.table-add:hover {
 	border-radius: 4px;
 }
 
-.pagination a:hover:not(.active) { 
+.pagination a:hover:not(.active) {
 	background-color: #ddd;
 	border: 1px solid #c0c0c0;
 	border-radius: 4px;
@@ -699,7 +706,7 @@ table.table thead tr th button.table-add:hover {
 }
 
 @-webkit-keyframes animatetop {
-  from {top:-150px; opacity:0} 
+  from {top:-150px; opacity:0}
   to {top:0; opacity:1}
 }
 
@@ -710,12 +717,12 @@ table.table thead tr th button.table-add:hover {
 
 /* Add Animation */
 @-webkit-keyframes animatebottom {
-  from {top: 0; opacity:1} 
+  from {top: 0; opacity:1}
   to {top:-150px; opacity:0}
 }
 
 @keyframes animatebottom {
-  from {top: 0; opacity:1} 
+  from {top: 0; opacity:1}
   to {top:-150px; opacity:0}
 }
 
@@ -730,12 +737,12 @@ table.table thead tr th button.table-add:hover {
 }
 
 .modal-loading {
-	margin: auto; 
-	background: #ffffff; 
-	position: absolute; 
-	top: 25px; 
+	margin: auto;
+	background: #ffffff;
+	position: absolute;
+	top: 25px;
 	left:0;
-	right:0; 
+	right:0;
 	margin-left: auto;
 	margin-right: auto;
 	border-radius: 10px
@@ -782,12 +789,12 @@ table.table thead tr th button.table-add:hover {
 .modal-body {padding: 5px 10px;}
 
 .wrap-loading-main {
-	border-radius: 12px; 
-	left: 0px; 
-	top: 0px; 
-	position: absolute; 
-	background: #ffffff; 
-	z-index: 999; 
+	border-radius: 12px;
+	left: 0px;
+	top: 0px;
+	position: absolute;
+	background: #ffffff;
+	z-index: 999;
 }
 
 .loading-main {
@@ -985,7 +992,7 @@ table.table thead tr th button.table-add:hover {
   flex-direction: column;
 }
 .error-page > .main-error-page > .error-title {
-  max-width: 529px; 
+  max-width: 529px;
   font-family: Roboto;
   font-size: 38px;
   font-weight: bold;
@@ -999,7 +1006,7 @@ table.table thead tr th button.table-add:hover {
 }
 
 .error-page > .main-error-page > .error-subtitle {
-  max-width: 568px; 
+  max-width: 568px;
   font-family: Roboto;
   font-size: 16px;
   font-weight: normal;
@@ -1036,13 +1043,13 @@ table.table thead tr th button.table-add:hover {
 }
 
 .olho-esq {
-  
+
     animation: sad 2s alternate infinite;
   transform-origin: center;
 }
 
 .olho-dir {
-  
+
     animation: sad 2s alternate infinite;
   transform-origin: center;
 }
@@ -1062,7 +1069,7 @@ table.table thead tr th button.table-add:hover {
   -webkit-animation: vibrate-1 3s linear infinite both;
 	        animation: vibrate-1 3s linear infinite both;
 }
-.fio{ 
+.fio{
   -webkit-animation: vibrate-1 3s linear infinite both;
 	        animation: vibrate-1 3s linear infinite both;
 }
@@ -1315,7 +1322,7 @@ table.table thead tr th button.table-add:hover {
             transform: translateY(-6px) rotate(1.2deg);
   }
 }
- 
+
 
 @keyframes sad {
   0% {
@@ -1327,7 +1334,7 @@ table.table thead tr th button.table-add:hover {
 }
 
 @keyframes leftright{
-  
+
   0%{
     transform: rotateZ( 0deg)
   }
@@ -1361,7 +1368,7 @@ table.table thead tr th button.table-add:hover {
 }
 
 /**********************************************************
-* Bagian Grid 
+* Bagian Grid
 **********************************************************/
 
 .grid {
@@ -1526,8 +1533,8 @@ h3.label-form-in {
 
 .form-self-group > .arrow-down-select > .triangle-down {
 	position: absolute;
-	width: 0; 
-  height: 0; 
+	width: 0;
+  height: 0;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
@@ -1933,8 +1940,8 @@ table.table-info td:nth-child(2) {
 
 .badge-warning {
 	color: #ffffff;
-	background: #6b7c02;
-	border: 1px solid #626f0b;
+	background: #efc802;
+	border: 1px solid #efc802;
 }
 
 .badge-danger {
@@ -2104,23 +2111,8 @@ ul.list-detail > li > span {
 	border: 1px solid #114312;
 }
 
-.menu-router-link {
-	width: 380px;
-	height: auto;
-	position: fixed;
-	background: #ffffff;
-	overflow-y: auto;
-	left: -3560px;
-	top: 85px;
-	bottom: 10px;
-	border-radius: 10px;
-	box-shadow: 0 0 4px #c6c6c6;
-	box-sizing: border-box;
-	padding-bottom: 10px;
-}
-
 /* width */
-.menu-router-link::-webkit-scrollbar { width: 5px; }
+.menu-router-link::-webkit-scrollbar { width: 15px; }
 /* Track */
 .menu-router-link::-webkit-scrollbar-track { background: #f1f1f1; }
 /* Handle */
@@ -2145,58 +2137,205 @@ ul.list-detail > li > span {
 }
 
 
+.menu-router-link {
+    width: 250px; /* lebih compact dari 380px */
+    height: auto;
+    position: fixed;
+    background: #ffffff;
+    overflow-y: auto;
+    left: -3560px;
+    top: 85px;
+    bottom: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 4px #c6c6c6;
+    box-sizing: border-box;
+    padding-bottom: 10px;
+    overflow: visible; /* penting agar submenu bisa keluar ke kanan */
+}
+
 .menu-router-link > ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	padding-top: 24px;
+    list-style: none;
+    padding: 10px 0;
+    margin: 0;
 }
 
-.menu-router-link > ul > li {
-	padding: 10px;
-	width: auto;
-	margin-top: 6px;
+/* Parent menu item */
+.menu-item {
+    position: relative;
+    padding: 0;
+    margin: 0;
 }
 
-.menu-router-link > ul > li > div {
-	border-bottom: 1px solid #c2c0c0;
-	box-shadow: -4px 4px 3px #d0cece;
-	width: 100%;
+/* Category header */
+.menu-category {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 15px;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.2s ease;
 }
 
-.menu-router-link > ul > li > div > span {
-	padding: 5px 20px;
-	position: relative;
-	top: -5px;
-	color: #FFF;
-	font-family: "Roboto Black";
-	background: #1a6f1d;
+.menu-category:hover {
+    background: #f0f7f0;
+    border-left: 3px solid #1a6f1d;
 }
 
-.menu-router-link > ul > li > ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	margin-top: 14px;
+.menu-category > span {
+    color: #1a6f1d;
+    font-family: "Roboto Black";
+    font-size: 13px;
+    letter-spacing: 0.3px;
 }
 
-.menu-router-link > ul > li > ul > li {
-	padding: 5px;
+.chevron-icon {
+    width: 14px;
+    height: 14px;
+    color: #1a6f1d;
+    transition: transform 0.2s ease;
 }
 
-.menu-router-link > ul > li > ul > li > a:hover {
-	font-size: 14px;
-	color: #114312;
-	font-family: "Roboto Black";
+/* Submenu - muncul ke kanan */
+.submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0;
+    width: 230px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 4px 4px 12px rgba(0,0,0,0.15);
+    list-style: none;
+    padding: 6px 0;
+    margin: 0;
+    z-index: 999;
 }
 
-.menu-router-link > ul > li > ul > li > a > i > svg {
-	width: 16px;
-	position: relative;
-	top: 3px;
-	margin-right: 10px;
+/* Submenu header label */
+.submenu::before {
+    content: attr(data-category);
+    display: block;
+    padding: 8px 15px;
+    font-family: "Roboto Black";
+    font-size: 11px;
+    color: #ffffff;
+    background: #1a6f1d;
+    border-radius: 8px 8px 0 0;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
+.submenu li a {
+    display: flex;
+    align-items: center;
+    padding: 9px 15px;
+    color: #333;
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.15s ease;
+    gap: 10px;
+}
+
+.submenu li a:hover {
+    background: #f0f7f0;
+    color: #1a6f1d;
+    font-family: "Roboto Black";
+}
+
+.submenu li a svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+}
+
+/* Tampilkan submenu saat hover pada parent li (desktop) */
+.menu-item:hover .submenu {
+    display: block;
+}
+
+.menu-item:hover .menu-category {
+    background: #f0f7f0;
+    border-left: 3px solid #1a6f1d;
+}
+
+.menu-item:hover .chevron-icon {
+    transform: rotate(90deg);
+}
+
+/* Tampilkan submenu saat diklik (semua device) */
+.menu-item-active .submenu {
+    display: block;
+}
+
+.menu-item-active .menu-category {
+    background: #f0f7f0;
+    border-left: 3px solid #1a6f1d;
+}
+
+.menu-item-active .chevron-icon {
+    transform: rotate(90deg);
+}
+
+/* =============================================
+   TABLET & HANDPHONE: submenu muncul ke bawah
+   ============================================= */
+@media (max-width: 960px) {
+    /* Aktifkan scroll vertikal pada sidebar */
+    .menu-router-link {
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Matikan hover (tidak ada hover di touch device) */
+    .menu-item:hover .submenu {
+        display: none;
+    }
+    .menu-item:hover .menu-category {
+        background: transparent;
+        border-left: 3px solid transparent;
+    }
+    .menu-item:hover .chevron-icon {
+        transform: rotate(0deg);
+    }
+
+    /* Submenu tampil di bawah, bukan ke kanan */
+    .submenu {
+        position: static !important;
+        width: 100% !important;
+        left: auto !important;
+        top: auto !important;
+        box-shadow: none !important;
+        border-radius: 0 0 6px 6px !important;
+        border-top: 1px solid #e8f5e9;
+        background: #f9fdf9 !important;
+        display: none;
+    }
+
+    /* Header label submenu tetap tampil tapi lebih compact */
+    .submenu::before {
+        border-radius: 0 !important;
+        font-size: 10px;
+        padding: 6px 15px;
+    }
+
+    /* Submenu item sedikit menjorok ke kanan */
+    .submenu li a {
+        padding-left: 25px;
+    }
+
+    /* Active: tampilkan submenu inline */
+    .menu-item-active .submenu {
+        display: block !important;
+    }
+    .menu-item-active .menu-category {
+        background: #f0f7f0 !important;
+        border-left: 3px solid #1a6f1d !important;
+    }
+    .menu-item-active .chevron-icon {
+        transform: rotate(90deg) !important;
+    }
+}
 button.antrian {
 	width: auto;
 	height: auto;
@@ -2341,7 +2480,7 @@ button.button-modal-blue:hover {
 }
 
 @-webkit-keyframes animatetop-top {
-  from {top:-150px; opacity:0} 
+  from {top:-150px; opacity:0}
   to {top:0; opacity:1}
 }
 
@@ -2352,12 +2491,12 @@ button.button-modal-blue:hover {
 
 /* Add Animation */
 @-webkit-keyframes animatebottom-top {
-  from {top: 0; opacity:1} 
+  from {top: 0; opacity:1}
   to {top:-150px; opacity:0}
 }
 
 @keyframes animatebottom-top {
-  from {top: 0; opacity:1} 
+  from {top: 0; opacity:1}
   to {top:-150px; opacity:0}
 }
 
@@ -2410,3 +2549,76 @@ button.button-modal-blue:hover {
 }
 
 .modal-body-top {padding: 5px 10px;}
+
+/* Breadcrumb Bar */
+.breadcrumb-bar {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 18px;
+    margin-bottom: 10px;
+    background: #ffffff;
+    border-bottom: 1px solid #e8e8e8;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    border-radius: 8px;
+}
+
+.breadcrumb-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+}
+
+.breadcrumb-list li {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Home icon */
+.breadcrumb-list li:first-child a {
+    display: flex;
+    align-items: center;
+    color: #1a6f1d;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb-list li:first-child a:hover {
+    color: #114312;
+}
+
+.breadcrumb-list li:first-child a svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Separator */
+.bc-separator {
+    width: 13px;
+    height: 13px;
+    color: #b0b0b0;
+}
+
+/* Category label */
+.bc-category {
+    font-size: 12px;
+    color: #888888;
+    font-family: "Roboto Black";
+    letter-spacing: 0.3px;
+}
+
+/* Active page */
+.bc-active {
+    font-size: 12px;
+    color: #1a6f1d;
+    font-family: "Roboto Black";
+    padding: 2px 10px;
+    background: #edf6ed;
+    border-radius: 50px;
+    border: 1px solid #c3dfc4;
+    letter-spacing: 0.3px;
+}

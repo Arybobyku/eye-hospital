@@ -4,9 +4,23 @@
             :class="terminate.show ? 'modal-opened' : 'modal-closed'">
             <div class="modal-header">
                 <span class="close" v-on:click="hide()">&times;</span>
-                <h2>Detail Data Pemeriksaan Dokter</h2>
+                <h2>Detail Data Pemeriksaan Dokter </h2>
             </div>
             <div class="modal-body">
+                <!-- Foto + Info Singkat Pasien -->
+                <div style="display:flex; align-items:center; gap:16px; padding:12px 0 14px; border-bottom:1px solid #eee; margin-bottom:12px;">
+                    <img
+                        :src="detail.photos ? '/' + detail.photos : '/default-avatar.png'"
+                        alt="Foto Pasien"
+                        @error="$event.target.src='/default-avatar.png'"
+                        style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:3px solid #e0e0e0; box-shadow:0 2px 8px rgba(0,0,0,0.12); flex-shrink:0;"
+                    />
+                    <div>
+                        <div style="font-size:15px; font-weight:700; color:#222;">{{ detail.nama_pasien }}</div>
+                        <div style="font-size:12px; color:#666; margin-top:2px;">{{ detail.rekam_medis }}</div>
+                        <div style="font-size:12px; color:#888;">{{ detail.jenis_kelamin }} &bull; {{ datename(detail.tanggal_lahir) }}</div>
+                    </div>
+                </div>
                 <div class="grid">
                     <div class="col-4 form-mr">
                         <ul class="list-detail">
@@ -41,6 +55,12 @@
                                     detail.status_kasir
                                         }}</strong></span>
                             </li>
+                            <li>
+                                Jenis<span><strong>{{
+                                    detail.jenis
+                                        }}</strong></span>
+                            </li>
+
                         </ul>
                     </div>
 
@@ -458,7 +478,7 @@
                                             @selectclear="selectclear" :selection="form.select.icd9"
                                             v-on:keyup="selectfilter($event, form.select.icd9.name)">
                                         </Selected>
-                                        <!-- <Selected v-on:click="selectbox($event,form.select.carabayartindakanrawatjalan.name,form.select.carabayartindakanrawatjalan.statics )" 
+                                        <!-- <Selected v-on:click="selectbox($event,form.select.carabayartindakanrawatjalan.name,form.select.carabayartindakanrawatjalan.statics )"
                                         :ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
                                             :selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event,form.select.carabayartindakanrawatjalan.name)
                                             ">
@@ -1188,7 +1208,6 @@
                                                         item, index
                                                     ) in listdatajalan" v-if="listdatajalan.length > 0
                                                     ">
-                                                    asas
                                                     <td>
                                                         {{ item.nama_tindakan_rawat_jalan }}
                                                     </td>
@@ -1246,10 +1265,35 @@
                             </div>
 
                             <div class="content-tab-in" v-if="tab.content.cppt">
+                                <!-- Tombol VIEW ALL CPPT -->
+                                <div style="margin-bottom: 12px;">
+                                    <button class="button-modal-page button-modal-green" style="background:#1a6f1d; border-color:#1a6f1d;" @click="openAllCppt()">
+                                        <vue-feather type="list" style="width:14px;height:14px;margin-right:5px;vertical-align:middle;"></vue-feather>
+                                        VIEW ALL CPPT
+                                    </button>
+                                </div>
+
+                                <!-- Modal popup VIEW ALL CPPT — iframe sederhana -->
+                                <div v-if="showAllCppt" style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99998;display:flex;align-items:center;justify-content:center;" @click.self="showAllCppt=false">
+                                    <div style="background:#fff;border-radius:10px;box-shadow:0 6px 32px rgba(0,0,0,0.22);width:92%;max-width:1150px;height:88vh;display:flex;flex-direction:column;overflow:hidden;">
+                                        <!-- Header -->
+                                        <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 20px;background:#1a6f1d;border-radius:10px 10px 0 0;flex-shrink:0;">
+                                            <span style="color:#fff;font-weight:700;font-size:15px;">
+                                                <vue-feather type="list" style="width:16px;height:16px;margin-right:7px;vertical-align:middle;"></vue-feather>
+                                                Semua CPPT — {{ detail.nama_pasien }}
+                                            </span>
+                                            <span @click="showAllCppt=false" style="color:#fff;font-size:24px;cursor:pointer;line-height:1;padding:0 4px;">&times;</span>
+                                        </div>
+                                        <!-- Body: iframe penuh -->
+                                        <div style="flex:1;overflow:hidden;">
+                                            <iframe title="All CPPT" width="100%" height="100%" style="border:0;display:block;" :src="linkR"></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="grid">
-                                    <div class="col-5 form-ml">
-                                        <iframe title="CPPT" width="100%" height="100%" style="border: 0" :src="linkR">
-                                        </iframe>
+                                    <div class="col-5 form-ml" style="overflow-y: auto; max-height: 700px;">
+                                        <RmeSoap v-if="detail.pasien_uuid" :selectedPatient="{ uuid: detail.pasien_uuid }"></RmeSoap>
                                     </div>
 
                                     <div class="col-7 form-ml">
@@ -1270,14 +1314,43 @@
                                         <ckeditor v-model="form.plan" :editor="editor">
                                         </ckeditor>
                                     </div>
-                                    <div class="col-9"></div>
-                                    <div class="col-3 form-ml form-mt">
-                                        <label for="">Tanda Tangan di Dokuem Ini</label>
-                                        <img v-if="form.ttd" :src="form.ttd" alt="ttd dokter" height="100"
-                                            width="400" />
-                                        <br>
+                                    <div class="col-12 form-ml form-mt">
+                                        <label for="">Tanda Tangan di Dokumen Ini</label>
+
+                                        <!-- Tampilkan TTD jika sudah ada -->
+                                        <div v-if="form.ttd" style="margin-bottom: 8px;">
+                                            <img :src="form.ttd" alt="ttd dokter" height="100" width="360"
+                                                style="border: 1px solid #ccc; border-radius: 4px; display: block;" />
+                                            <div style="margin-top: 6px; display: flex; gap: 8px;">
+                                                <button class="button-modal-page button-modal-green"
+                                                    v-on:click="openCpptSignature()">Ubah TTD</button>
+                                                <button class="button-modal-page button-modal-red"
+                                                    v-on:click="form.ttd = ''">Hapus TTD</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Tombol buka signature pad jika belum ada TTD -->
                                         <button v-if="!form.ttd" class="button-modal-page button-modal-green"
-                                            v-on:click="doDigitalSignature()">Tanda Tangan</button>
+                                            v-on:click="openCpptSignature()">Tanda Tangan</button>
+
+                                        <!-- Modal signature pad -->
+                                        <div v-if="showCpptSignature"
+                                            style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99999;display:flex;align-items:center;justify-content:center;"
+                                            @click.self="showCpptSignature = false">
+                                            <div style="background:#fff;padding:24px;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.25);min-width:480px;">
+                                                <h4 style="margin:0 0 12px 0;font-size:15px;font-weight:600;">Tanda Tangan Digital</h4>
+                                                <VueSignaturePad ref="cpptSignaturePad" width="440px" height="200px"
+                                                    style="border:1px solid #ccc;border-radius:4px;display:block;" />
+                                                <div style="margin-top:12px;display:flex;gap:8px;">
+                                                    <button class="button-modal-page button-modal-green"
+                                                        v-on:click="saveCpptSignature()">Simpan TTD</button>
+                                                    <button class="button-modal-page button-modal-red"
+                                                        v-on:click="clearCpptSignature()">Bersihkan</button>
+                                                    <button class="button-modal-page"
+                                                        v-on:click="showCpptSignature = false">Batal</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -1286,8 +1359,10 @@
                         </div>
                     </div>
                 </div>
+                <!-- Ketika Rawat Inap Tidak bisa merubah atau mensave -->
+                <div v-if="detail.jenis != 'Rawat Inap'">
 
-                <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
+                    <div class="grid" style="border-top: 1px solid #d0d0d0; padding-top: 20px" v-if="form">
                     <div class="col-8"></div>
                     <div class="col-4" style="text-align: right" v-if="ishide">
                         <button class="button-modal-page button-modal-red" v-if="tabIndex > 0"
@@ -1317,6 +1392,7 @@
                             Edit Data
                         </button>
                     </div>
+                </div>
                 </div>
             </div>
 
@@ -1388,6 +1464,9 @@ export default {
         ),
         DigitalSignature: defineAsyncComponent(() =>
             import("../../digital-signature/DigitalSignature.vue")
+        ),
+        RmeSoap: defineAsyncComponent(() =>
+            import("../../rme/soap/Soap.vue")
         ),
         ckeditor: CKEditor.component,
     },
@@ -1475,7 +1554,7 @@ export default {
     created: function () { },
     data: function () {
         return {
-            linkR: "/print/rekammedis/rawat-jalan/cppt/",
+            linkR: "/print/rekammedis/rawat-jalan/cpptpoli/",
             editor: ClassicEditor,
             disableButtonSave: false,
             title_racikan: "",
@@ -1619,11 +1698,18 @@ export default {
             typingTimer: null,
             doneTypingInterval: 5000,
             digitalSignature: "",
+            showCpptSignature: false,
+            showAllCppt: false,
         };
     },
     methods: {
         updatedbdokter,
         formatrupiah,
+
+        openAllCppt: function () {
+            vm.showAllCppt = true;
+        },
+
         saveDigitalSignature: function (svg) {
             vm.digitalSignature = svg;
         },
@@ -1665,6 +1751,28 @@ export default {
         },
         doDigitalSignature: function () {
             vm.form.ttd = window.localStorage.getItem("ttd") ?? "";
+        },
+        openCpptSignature: function () {
+            vm.showCpptSignature = true;
+            vm.$nextTick(() => {
+                const pad = vm.$refs.cpptSignaturePad;
+                if (pad) pad.resizeCanvas();
+            });
+        },
+        saveCpptSignature: function () {
+            const pad = vm.$refs.cpptSignaturePad;
+            if (!pad) return;
+            const { isEmpty, data } = pad.saveSignature();
+            if (isEmpty) {
+                alert('Silakan buat tanda tangan terlebih dahulu.');
+                return;
+            }
+            vm.form.ttd = data;
+            vm.showCpptSignature = false;
+        },
+        clearCpptSignature: function () {
+            const pad = vm.$refs.cpptSignaturePad;
+            if (pad) pad.clearSignature();
         },
         setCkEditor: function () {
             console.log('===> SET CK EDITOR', vm.listobat[0]);
@@ -1715,7 +1823,7 @@ export default {
                             `)}
                             </tbody>
                         </table>
-                        </figure>   
+                        </figure>
                         `;
             }
 
@@ -1743,7 +1851,7 @@ export default {
                             `)}
                             </tbody>
                         </table>
-                        </figure>   
+                        </figure>
                         `;
             }
 
@@ -1751,7 +1859,7 @@ export default {
                 vm.form.plan += `
                     <div>Planning</div>
                         <ul>
-                           <li>${vm.form.select.pilihanplan.value}</li>  
+                           <li>${vm.form.select.pilihanplan.value}</li>
                         </ul>
                     `;
             }
@@ -1759,76 +1867,70 @@ export default {
                 vm.form.plan += `
                     <div>Planning</div>
                         <ul>
-                           <li>${vm.form.select.pilihanplan.value} :</li>  
-                             <li>${vm.form.tanggal_kontrol_selanjutnya.value}</li> 
+                           <li>${vm.form.select.pilihanplan.value} :</li>
+                             <li>${vm.form.tanggal_kontrol_selanjutnya.value}</li>
                         </ul>
                     `;
             }
-
+            else if (vm.form.select.pilihanplan.value === 'Rawat Inap') {
+                vm.form.plan += `
+                    <div>Planning</div>
+                        <ul>
+                           <li>${vm.form.select.pilihanplan.value}</li>
+                        </ul>
+                    `;
+            }
+            else if (vm.form.select.pilihanplan.value === 'Operasi') {
+                vm.form.plan += `
+                    <div>Planning</div>
+                        <ul>
+                           <li>${vm.form.select.pilihanplan.value} ${vm.form.penjadwalanodc.value} ${vm.form.waktuodc.value}</li>
+                        </ul>
+                    `;
+            }
+            console.log("TESTING ====>", vm.pemeriksaanro.nadi)
             vm.form.object = `
                     <figure class="table">
-                    <table>
-                        <thead>
+                        <table>
+							<thead>
                             <tr>
-                                <td>&nbsp;</td>
-                                <td>Ocular Dextra</td>
-                                <td>Ocular Sinistra</td>
+                                <td>Nama Obat</td>
+                                <td>Nilai</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>Autoref</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_autoref || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_autoref || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Add</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_add || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_add || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>BCVA</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_bcva1 || ''} => ${vm.pemeriksaanro.ocular_dextra_bcva2 || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_bcva1 || ''} => ${vm.pemeriksaanro.ocular_sinistra_bcva2 || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Keratometri K1</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_keratometri_k1 || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_keratometri_k1 || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Keratometri K2</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_keratometri_k2 || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_keratometri_k2 || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Tonometri</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_tonometri || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_tonometri || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Visus</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_visus || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_visus || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Kacamata Sph</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_sph || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_sph || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Kacamata Cyl</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_cyl || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_cyl || ''}</td>
-                        </tr>
-                        <tr>
-                            <td>Kacamata Add</td>
-                            <td>${vm.pemeriksaanro.ocular_dextra_kacamata_lama_addisi || ''}</td>
-                            <td>${vm.pemeriksaanro.ocular_sinistra_kacamata_lama_addisi || ''}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                    </figure>
+							</thead>
+                            <tbody>
+
+								<tr>
+                                    <td>Nadi</td>
+									<td>${vm.pemeriksaanro.nadi} x/Menit</td>
+                                </tr>
+								<tr>
+                                    <td>Respiratory Rate</td>
+									<td>${vm.pemeriksaanro.respiratory_rate} x/Menit</td>
+                                </tr>
+								<tr>
+                                    <td>Suhu Tubuh</td>
+									<td>${vm.pemeriksaanro.suhu} °C</td>
+                                </tr>
+								<tr>
+                                    <td>Berat Badan</td>
+									<td>${vm.pemeriksaanro.berat_badan} Kg</td>
+                                </tr>
+								<tr>
+                                    <td>Tinggi Badan</td>
+									<td>${vm.pemeriksaanro.tinggi_badan} Cm</td>
+                                </tr>
+								<tr>
+                                    <td>Tekanan Darah</td>
+									<td>${vm.pemeriksaanro.tekanan_darah} mmHg</td>
+                                </tr>
+								<tr>
+                                    <td>KGD</td>
+									<td>${vm.pemeriksaanro.kgd} mg/dL</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </figure>
             `;
 
 
@@ -2402,7 +2504,8 @@ export default {
             }
             vm.tab.button[0].class = "tab-active";
             vm.tab.content.ro = true;
-            vm.linkR = "/print/rekammedis/rawat-jalan/cppt/";
+            vm.linkR = "/print/rekammedis/rawat-jalan/cpptpoli/";
+            vm.showAllCppt = false;
         },
         hide: function () {
             vm.terminate.show = false;
@@ -2823,7 +2926,7 @@ export default {
                         } else {
                             vm.form.tanggal_kontrol_selanjutnya.value = '';
                         }
-                    } 
+                    }
                     else if (planning === "Operasi pada jadwal yang ditentukan") {
                         this.showOperasi = false; // Menyembunyikan div dengan kelas 'Operasi'
                         this.showRawatInap = false; // Menyembunyikan div dengan kelas 'Operasi'

@@ -40,6 +40,15 @@ export const itemselected = (form, item, key) => {
 	form.select[key].search = '';
 	return form;
 }
+export const itemselectedNonUuid = (form, item, key) => {
+	form.select[key].value = item.label;
+	form.select[key].uuid = item.label;
+	form.select[key].label = item.label;
+	form.select[key].option = 'display: none';
+	form.select[key].filter = form.select[key].data;
+	form.select[key].search = '';
+	return form;
+}
 
 export const clearselected = (form, key) => {
 	form.select[key].option = 'display: none';

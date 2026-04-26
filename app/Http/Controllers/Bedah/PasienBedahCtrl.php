@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Bedah;
-
+use DB;
 use App\Http\Controllers\Controller;
 use App\Models\Bedah;
 use App\Models\CaraBayarKamar;
@@ -18,6 +18,10 @@ use App\Models\ResepRacikan;
 use Illuminate\Http\Request;
 use PenggunaHelp;
 use Ramsey\Uuid\Uuid;
+use App\Models\LogPengguna;
+use Crypt;
+use Cookie;
+
 
 class PasienBedahCtrl extends Controller
 {
@@ -32,6 +36,9 @@ class PasienBedahCtrl extends Controller
 
     public function list(Request $request)
     {
+        $namaDokter = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+        $sebagai = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Sebagai'));
+
         if ($this->error != 'next') {
             return response()->json(['data' => $this->error]);
         }
@@ -55,10 +62,16 @@ class PasienBedahCtrl extends Controller
                 ->where(function ($q) {
                     $q->where('registrasi.paket_bedah_uuid', '!=', '-')->orWhere('registrasi.paket_bedah_uuid', '!=', '')->orWhere('registrasi.paket_bedah_uuid', '!=', null);
                 })
- ->where('registrasi.nama_paket_bedah', '!=', '-')
-                                                                      ->Where('registrasi.nama_paket_bedah', '!=', '')
-                                                                      ->Where('registrasi.nama_paket_bedah', '!=', null)
-                ->join('registrasi_operasi', 'registrasi.uuid', '=', 'registrasi_operasi.registrasi_uuid')
+                ->where('registrasi.nama_paket_bedah', '!=', '-')
+                ->Where('registrasi.nama_paket_bedah', '!=', '')
+                ->Where('registrasi.nama_paket_bedah', '!=', null);
+
+
+                if ($sebagai == 'Dokter') {
+                    $data = $data->where('registrasi_operasi.nama_dokter', $namaDokter);
+                }
+                
+                $data = $data->join('registrasi_operasi', 'registrasi.uuid', '=', 'registrasi_operasi.registrasi_uuid')
                 ->orderBy('registrasi.id', 'desc')
                 ->skip($skip)
                 ->take($this->take)
@@ -72,9 +85,9 @@ class PasienBedahCtrl extends Controller
                 ->where(function ($q) {
                     $q->where('registrasi.paket_bedah_uuid', '!=', '-')->Where('registrasi.paket_bedah_uuid', '!=', '')->Where('registrasi.paket_bedah_uuid', '!=', null);
                 })
-                 ->where('registrasi.nama_paket_bedah', '!=', '-')
-                                                                      ->Where('registrasi.nama_paket_bedah', '!=', '')
-                                                                      ->Where('registrasi.nama_paket_bedah', '!=', null)
+                ->where('registrasi.nama_paket_bedah', '!=', '-')
+                ->Where('registrasi.nama_paket_bedah', '!=', '')
+                ->Where('registrasi.nama_paket_bedah', '!=', null)
                 ->join('registrasi_operasi', 'registrasi.uuid', '=', 'registrasi_operasi.registrasi_uuid')
                 ->orderBy('registrasi.id', 'desc')
                 ->count();
@@ -87,10 +100,15 @@ class PasienBedahCtrl extends Controller
                 ->where(function ($q) {
                     $q->where('registrasi.paket_bedah_uuid', '!=', '-')->Where('registrasi.paket_bedah_uuid', '!=', '')->Where('registrasi.paket_bedah_uuid', '!=', null);
                 })
-  ->where('registrasi.nama_paket_bedah', '!=', '-')
-                                                                      ->Where('registrasi.nama_paket_bedah', '!=', '')
-                                                                      ->Where('registrasi.nama_paket_bedah', '!=', null)
-                ->join('registrasi_operasi', 'registrasi.uuid', '=', 'registrasi_operasi.registrasi_uuid')
+                ->where('registrasi.nama_paket_bedah', '!=', '-')
+                ->Where('registrasi.nama_paket_bedah', '!=', '')
+                ->Where('registrasi.nama_paket_bedah', '!=', null);
+
+                if ($sebagai == 'Dokter') {
+                    $data = $data->where('registrasi_operasi.nama_dokter', $namaDokter);
+                }
+                
+                $data = $data->join('registrasi_operasi', 'registrasi.uuid', '=', 'registrasi_operasi.registrasi_uuid')
                 ->orderBy('registrasi.id', 'desc')
                 ->skip($skip)
                 ->take($this->take)
@@ -104,9 +122,9 @@ class PasienBedahCtrl extends Controller
                 ->where(function ($q) {
                     $q->where('registrasi.paket_bedah_uuid', '!=', '-')->orWhere('registrasi.paket_bedah_uuid', '!=', '')->orWhere('registrasi.paket_bedah_uuid', '!=', null);
                 })
-                                                                    ->where('registrasi.nama_paket_bedah', '!=', '-')
-                                                                      ->Where('registrasi.nama_paket_bedah', '!=', '')
-                                                                      ->Where('registrasi.nama_paket_bedah', '!=', null)
+                ->where('registrasi.nama_paket_bedah', '!=', '-')
+                ->Where('registrasi.nama_paket_bedah', '!=', '')
+                ->Where('registrasi.nama_paket_bedah', '!=', null)
                 ->join('registrasi_operasi', 'registrasi.uuid', '=', 'registrasi_operasi.registrasi_uuid')
                 ->orderBy('registrasi.id', 'desc')
                 ->count();
@@ -136,7 +154,7 @@ class PasienBedahCtrl extends Controller
                 ->where('registrasi.delete_soft', '=', 1)
                 ->where('registrasi.apakah_paket', '=', 'Ya')
                 // ->whereDate('bedah_selesai', '=', date('Y-m-d'))
-                ->where('bedah_status', '!=', 'Selesai Dioperasi')
+                ->where('bedah_status', '=', 'Selesai Dioperasi')
                 ->where(function ($q) {
                     $q->where('registrasi.paket_bedah_uuid', '!=', '-')->orWhere('registrasi.paket_bedah_uuid', '!=', '')->orWhere('registrasi.paket_bedah_uuid', '!=', null);
                 })->where('registrasi.nama_paket_bedah', '!=', '-')
@@ -352,6 +370,20 @@ class PasienBedahCtrl extends Controller
         return response()->json(['data' => $data, 'nama_dokter' => $dokter]);
     }
 
+    public function editbedah(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        $data = Registrasi::where('uuid', '=', $request->uuid)->first();
+        $reqgOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->uuid)->first();
+        if ($reqgOp) {
+            $namaPaketBedah = $reqgOp->nama_layanan;
+        }
+
+        return response()->json(['data' => $data, 'data_operasi' => $reqgOp, 'namaPaketBedah' => $namaPaketBedah, ]);
+    }
+
     public function dokteradd(Request $request)
     {
         if ($this->error != 'next') {
@@ -385,6 +417,84 @@ class PasienBedahCtrl extends Controller
             return response()->json(['data' => 'berhasil']);
         } catch (Exception $e) {
             \DB::rollback();
+
+            return response()->json(['hasil' => 'gagal']);
+        }
+    }
+    public function bedahadd(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        
+        $data = Registrasi::where('uuid', '=', $request->uuid)->first();
+        echo $request->uuid;
+
+        if ($data) {
+        }
+
+
+        try {
+            DB::beginTransaction();
+
+            $arrRegOp = [
+                'nama_layanan' => $request->paketbedah,
+                'layanan_uuid' => $request->layanan_uuid,
+            ];
+            $arrReg = [
+                'nama_paket_bedah' => $request->paketbedah,
+                'paket_bedah_uuid' => $request->layanan_uuid,
+            ];
+            $reg = Registrasi::where('uuid', '=', $request->uuid)->first();
+            $regOp = RegistrasiOperasi::where('registrasi_uuid', '=', $request->uuid)->first();
+            // var_dump($request->uuid);
+            // die();
+            RegistrasiOperasi::where('registrasi_uuid', '=', $request->uuid)->update($arrRegOp); 
+            Registrasi::where('uuid', '=', $request->uuid)->update($arrReg); 
+            LayananPasien::where('registrasi_uuid', '=', $request->uuid)->where('is_paket_bedah', 1)->delete();
+
+            $listpaket = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $request->layanan_uuid)->get();
+                    // UNTUK MASUKAN DETAIL PAKET KE TAGIHAN
+            foreach ($listpaket as $row) {
+                    $item = new LayananPasien();
+                    $item->uuid = Uuid::uuid4();
+                    $item->registrasi_uuid = $request->uuid;
+                    $item->registrasi_kode = $reg->kode;
+                    $item->registrasi_nomor = $reg->nomor;
+                    $item->registrasi_jenis = $reg->jenis;
+                    $item->pasien_uuid = $reg->pasien_uuid;
+                    $item->rekam_medis = $reg->rekam_medis;
+                    $item->nama_pasien = $reg->nama_pasien;
+                    $item->pengguna_uuid = $regOp->pengguna_uuid;
+                    $item->nama_dokter = $regOp->nama_dokter;
+                    
+                    $item->tanggal = date('Y-m-d');
+                    $item->waktu = date('H:i');
+                    
+                    $item->is_paket_bedah = 1;
+                    $item->carabayar_uuid = $regOp->carabayar_uuid;
+                    $item->carabayar_nama = $regOp->carabayar_nama;
+                    $item->layanan_uuid = $row->uuid;
+                    
+                    if ($row->nama == 'Honor Operator Bedah') {
+                        $item->nama_layanan = $row->sub_label;
+                    } else {
+                        $item->nama_layanan = $row->nama;
+                    }
+                    $item->tarif = $row->harga;
+                    $item->total = $row->harga;
+                    $item->jenis = $row->label;
+                    $item->default = '-';
+                    $item->others = 1;
+                    $item->save();
+                    $item->no_pendaftaran = $reg->no_pendaftaran;
+                    
+                }
+            DB::commit();
+
+            return response()->json(['data' => 'berhasil']);
+        } catch (Exception $e) {
+            DB::rollback();
 
             return response()->json(['hasil' => 'gagal']);
         }
@@ -935,8 +1045,8 @@ class PasienBedahCtrl extends Controller
                 $item->dokter_uuid = $dataOp->pengguna_uuid;
                 $item->nama_dokter = $dataOp->nama_dokter;
 
-                $item->tanggal = date('Y-m-d');
-                $item->waktu = date('H:i');
+                $item->tanggal =  $row->tanggal ??  date('Y-m-d');
+                $item->waktu =  $row->waktu ?? date('H:i');
 
                 $item->obat_uuid = $row->obat_uuid;
                 $item->nama_obat = $row->nama;
@@ -1028,8 +1138,8 @@ class PasienBedahCtrl extends Controller
                 $item->dokter_uuid = $dataOp->pengguna_uuid;
                 $item->nama_dokter = $dataOp->nama_dokter;
 
-                $item->tanggal = date('Y-m-d');
-                $item->waktu = date('H:i');
+                $item->tanggal =  $row->tanggal ??  date('Y-m-d');
+                $item->waktu =  $row->waktu ?? date('H:i');
 
                 $item->label = $row->label;
                 $item->kemasan = $row->kemasan;

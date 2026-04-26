@@ -93,8 +93,11 @@ class RouteServiceProvider extends ServiceProvider
         ->group(base_path('routes/preview.php'));
 
 			Route::middleware('web')
-	->prefix('master')
-	->group(base_path('routes/master.php'));
+        ->prefix('master')
+        ->group(base_path('routes/master.php'));
+    Route::middleware('web')
+        ->prefix('rme')
+        ->group(base_path('routes/rme.php'));
 			Route::middleware('web')
         ->prefix('bpjs')
         ->group(base_path('routes/bpjs.php'));

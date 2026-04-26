@@ -23,8 +23,10 @@
 						<table class="table">
 							<thead>
 								<tr>
+									<!-- <th>Checkbox</th> -->
 									<th>Tanggal</th>
 									<th>Total Tagihan</th>
+									<th>Total Tagihan Cover Asuransi</th>
 									<th>No Kwitansi</th>
 									<th>No Kwitansi (Klaim)</th>
 									<th>Rekam Medis</th>
@@ -35,8 +37,10 @@
 							</thead>
 							<tbody v-if="listdata.length > 0">
 								<tr v-for="(item, index) in listdata">
+									<!-- <td><input type="checkbox" id="is_kwitansi" name="is_kwitansi" value="1"></td> -->
 									<td>{{ item.tanggal }}</td>
-									<td>{{ totaltagihan(item.layanan) }}</td>
+									<td style="text-align: right;">{{ totaltagihan(item.layanan) }}</td>
+									<td style="text-align: right;">{{ formatrupiah(item.cover_asuransi.toString()) }}</td>
 									<td>{{ item.no_kwitansi }}</td>
 									<td>{{ item.kwitansi_claim }}</td>
 									<td>{{ item.rekam_medis }}</td>
@@ -44,7 +48,7 @@
 									<td>{{ item.nama_dokter }}</td>
 									<td>{{ item.status_claim }}</td>
 								</tr>
-								<tr><td colspan="6">Grand Total</td><td>{{ formatrupiah(supergrand.toString()) }}</td></tr>
+								<tr><td colspan="1">Grand Total</td><td style="text-align: right;">{{ formatrupiah(supergrand.toString()) }}</td> <td style="text-align: right;">{{ formatrupiah(supergrandCoverAsuransi.toString()) }}</td></tr>
 							</tbody>
 							<tbody v-else>
 								<tr><td colspan="7">No Data fo result</td></tr>
@@ -86,6 +90,13 @@ export default {
 				for (let j = 0; j < vm.listdata[i].layanan.length; j++) {
 					tmp += parseInt(vm.listdata[i].layanan[j].total)
 				}
+			}
+			return tmp;
+		},
+		supergrandCoverAsuransi:function() {
+			let tmp = 0;
+			for (let i = 0; i < vm.listdata.length; i++) {
+					tmp += parseInt(vm.listdata[i].cover_asuransi)
 			}
 			return tmp;
 		}

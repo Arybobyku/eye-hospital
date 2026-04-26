@@ -108,11 +108,28 @@
 											</td>
 										</tr>
 										<tr>
-											<td colspan="5">
-												<span v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">Sub Total</span>
+											<td colspan="3">
+												<span
+													v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">Sub
+													Total</span>
 												<span v-else>Grand Total</span>
 											</td>
-											<td><strong>{{ formatrupiah(totalbiaya.toString()) }}</strong></td>
+											<td>
+												<input name="diskon_rp" :form="form.diskon_rp"
+													type="number" style="width: 100%;"
+													v-model.number="globalDiscountNominal"
+													v-on:keyup="ubahDiskonGlobal($event, 'rupiah')"
+													placeholder="Diskon Nominal"/>
+
+											</td>
+											<td>
+												<input name="diskon_persen"
+													:form="form.diskon_persen" type="number" style="width: 100%;"
+													v-model.number="globalDiscountPercentage"
+													v-on:keyup="ubahDiskonGlobal($event, 'persen')"
+													placeholder="Diskon Persen"/>
+											</td>
+											<td><strong>{{ formatrupiah(totalbiaya2.toString()) }}</strong></td>
 										</tr>
 										<tr v-if="detail.panjar != '0' && detail.status == 'Pending'">
 											<td colspan="5">
@@ -126,11 +143,19 @@
 											</td>
 											<td>{{ formatrupiah(coverasuransis.toString()) }}</td>
 										</tr>
-										<tr v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">
+										<tr
+											v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">
 											<td colspan="5">
 												Grand Total
 											</td>
 											<td>{{ formatrupiah(supergrandtotal.toString()) }}</td>
+										</tr>
+											<tr
+											v-if="(detail.apakah_paket == 'Ya' && bedah?.harga_sudah_ditentukan == 1)">
+											<td colspan="5">
+												Harga Paket Sudah Ditentukan
+											</td>
+											<td>{{ formatrupiah(bedah?.total.toString()) }}</td>
 										</tr>
 									</tbody>
 								</table>
@@ -208,11 +233,11 @@ export default {
 			}
 			return temp;
 		},
-		supergrandtotal:function() {
-			let temp = vm.totalbiaya - vm.detail.panjar;
-			temp -= vm.detail.cover_asuransi;
-			return temp;
-		},
+		// supergrandtotal:function() {
+		// 	let temp = vm.totalbiaya - vm.detail.panjar;
+		// 	temp -= vm.detail.cover_asuransi;
+		// 	return temp;
+		// },
 		totalobat:function() {
 			let temp = 0;
 			for (let i = 0; i < vm.listobat.length; i++) {
@@ -220,6 +245,23 @@ export default {
 			}
 			let ab = vm.formatrupiah(temp.toString());
 			return ab;
+		},
+		totalbiaya2: function () {
+			let temp = 0;
+
+
+			temp = vm.totalbiaya - this.globalDiscountNominal;
+			return temp;
+		},
+		supergrandtotal() {
+			if (this.globalDiscountNominal == NaN) {
+				this.globalDiscountNominal = 0;
+			};
+			let temp = parseInt(vm.totalbiaya - this.globalDiscountNominal);
+			console.log(vm.totalbiaya);
+			temp -= this.detail.panjar;
+			temp -= this.detail.cover_asuransi;
+			return temp > 0 ? temp : 0;
 		},
 	},
 	mounted:function() { 
@@ -240,9 +282,11 @@ export default {
 			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
 			kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
 			nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
-			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', catatan: ''
+			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', catatan: '', diskon_rp: '', diskon_persen: '',
 		},
 		temphitung: [],
+				globalDiscountNominal: 0, // For nominal discount
+				globalDiscountPercentage: 0, // For percentage discount
 	}},
 	methods: {
 
@@ -356,6 +400,8 @@ export default {
 
 		greenbutton:function() {
 			if (vm.green == 'Proses Pembayaran') {
+				vm.form.diskon_rp = this.globalDiscountNominal;
+				vm.form.diskon_persen = this.globalDiscountPercentage;
 				if (vm.detail.carabayar_nama == 'Umum') {
 					if (vm.form.select.metodepembayaran.value != '' && vm.form.select.metodepembayaran.value != ' ' && vm.form.select.metodepembayaran.value) {
 						vm.action();
@@ -437,7 +483,7 @@ export default {
 				agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
 				kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
 				nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
-				rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: ''
+				rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', diskon_rp: '', diskon_persen: ''
 			}
 		},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
@@ -504,6 +550,24 @@ export default {
 			vm.listobatracikan = response.data.obatracikan;
 
 			vm.loaderprocess();
+		},
+		ubahDiskonGlobal(event, posisi) {
+			let value = parseFloat(event.target.value);
+			if (this.globalDiscountNominal === NaN) {
+				this.globalDiscountNominal = 0;
+			}
+			this.globalDiscountNominal = this.globalDiscountNominal ? this.globalDiscountNominal : 0;
+			if (posisi === "rupiah") {
+				this.globalDiscountNominal = value;
+				this.globalDiscountPercentage = parseInt((value / this.totalbiaya) * 100);
+			} else if (posisi === "persen") {
+				this.globalDiscountPercentage = value;
+				this.globalDiscountNominal = parseInt((value / 100) * this.totalbiaya);
+			}
+			this.globalDiscountNominal = this.globalDiscountNominal ? this.globalDiscountNominal : 0;
+
+			
+			// this.totalbiaya;
 		},
 
 		dialog:function(position = 'main'){

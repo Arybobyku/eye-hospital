@@ -1,6 +1,34 @@
 <template>
 <div class="inner" ref="roottable">
 	<div class="grid">
+		<div class="col-3 form-mr">
+			<Inputed :ref="formDownloadName" :form="formDownloadName"></Inputed>
+		</div>
+		<div class="col-3 form-mr">
+			<Inputed :ref="formDownloadTanggal" :form="formDownloadTanggal"></Inputed>
+		</div>
+		<div class="col-3 form-mr">
+			<Inputed :ref="formDownloadWaktu" :form="formDownloadWaktu"></Inputed>
+		</div>
+		<div class="col-3 form-mr">
+			<button class="btn-tambah" @click="downloadTemplate()">Generate Template</button>
+		</div>
+		<div class="col-2 form-mr">
+			<div class="form-self-group">
+				<input 
+					:id="formUpload.for_id" 
+					:type="formUpload.type" 
+					:disabled="formUpload.disabled ? 'disabled' : false" 
+					@change="onFileChange" 
+				/>
+			</div>
+
+		</div>
+		<div class="col-1 form-mr">
+			<button class="btn-tambah" @click="uploadFile()">Upload</button>
+		</div>
+	</div>	
+	<div class="grid">
 		<div class="col-12">
 			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
 		</div>
@@ -27,6 +55,7 @@ export default {
 		FormDetail: defineAsyncComponent(() => import('./FormDetail.vue')),
 		FormUnit: defineAsyncComponent(() => import('./FormUnit.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 	},
 	created: function () {},
 	mounted: function () {
@@ -36,7 +65,47 @@ export default {
 	},
 	data: function () { return {
 		uri: 'unit',
-		position: '',
+		position: '',		
+		formDownloadName: { 
+			title: 'Nama penginput stock opname', 
+			for_id: 'formDownloadName',
+			type: 'text', 
+			required: '', 
+			key: 'formDownloadName', 
+			model: 'formDownloadName', 
+			disabled: false,
+			value: '',
+			},
+		formDownloadTanggal: { 
+			title: 'Tanggal', 
+			for_id: 'formDownloadTanggal',
+			type: 'date', 
+			required: '', 
+			key: 'formDownloadTanggal', 
+			model: 'formDownloadTanggal', 
+			disabled: false,
+			value: '',
+			},
+		formDownloadWaktu: { 
+			title: 'Waktu (jam:menit)', 
+			for_id: 'formDownloadWaktu',
+			type: 'time', 
+			required: '', 
+			key: 'formDownloadWaktu', 
+			model: 'formDownloadWaktu', 
+			disabled: false,
+			value: '',
+			},
+		formUpload: { 
+			title: 'Upload Metode Pembayaran', 
+			for_id: 'upload',
+			type: 'file', 
+			required: '', 
+			key: 'upload', 
+			model: 'upload', 
+			disabled: false,
+			value: null,
+		},
 		attach: {
 			link : {
 				list: '/apotek/stockcatatlabel/list',
@@ -69,7 +138,49 @@ export default {
 		/*************************************************************************************************************************
 		* Bagian fungsi untuk pemrosesan table
 		*************************************************************************************************************************/
+		downloadTemplate: function(){
+			let name = vm.formDownloadName.value;
+			let tanggal = vm.formDownloadTanggal.value;
+			let waktu = vm.formDownloadWaktu.value;
+			let link = `/apotek/stockcatatlabel/downloadtemplate/${name}/${tanggal}/${waktu}`;						
+			window.open(link); 
+			vm.formDownloadName.value = '';
+			vm.formDownloadTanggal.value = '';
+			vm.formDownloadWaktu.value = '';
+		},
+		onFileChange(e) {
+			console.log("onfilechanges",e.target.files[0]);
+			vm.formUpload.value = e.target.files[0];
+		},
+		uploadFile: function(){
+			console.log("File upload", vm.formUpload.value);
 
+			vm.$refs.Datatable.skeleton();
+
+			let formData = new FormData();
+			formData.append('file', vm.formUpload.value); // sesuaikan dengan nama field di Laravel request
+
+			axios.post('/apotek/stockcatatlabel/uploadexcel', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+				.then(function (response) {
+					setTimeout(function () {
+						vm.berhasil(response);
+					}, 300);
+
+					window.location.reload();
+				})
+				.catch(function (error) {
+					console.error(error);
+					setTimeout(function () {
+						vm.gagal(error);
+					}, 300).then(function(){
+						window.location.reload();
+					});
+				});
+		},
 		btnhtml:function(_item, _index) {
 			let str = [
 				{ icon: 'trash-2', color: 'btn-danger', posisi: 'detail', tooltip: 'Detail Stock Opname', item: _item, index: _index, show: _item.status == 'Selesai' ? true : false },
@@ -139,7 +250,7 @@ export default {
 				vm.attach.data = new FormData();
 				vm.attach.data.append('uuid', data.uuid);
 				vm.attach.url = vm.attach.link.remove;
-				vm.dialog('Yakin ingin menghapus data yang terpilih dihalaman ini.', 'Ya, hapus data', 'removedata');
+				vm.dialog('Yakin ingin menghapus data ' + data.nama, 'Ya, hapus data', 'removedata');
 			}
 			else if (posisi == 'prosesbalance') {
 				vm.position = "prosesbalancedata";

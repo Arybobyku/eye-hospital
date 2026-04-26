@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\SendAllJob;
 use App\Models\AntrianKasir;
 use App\Models\LayananPasien;
+use App\Models\PaketBedah;
 use App\Models\Pasien;
 use App\Models\Registrasi;
 use App\Models\Resep;
@@ -211,6 +212,96 @@ class KasirCtrl extends Controller
         return response()->json(['data' => $data, 'total' => $total]);
     }
 
+    public function editlistsudahbayar(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        \PenggunaHelp::log('Melihat data list table pada halaman data icd 9');
+
+        $list = '';
+        $total = '';
+        $page = $request->page - 1;
+        $skip = $page * $this->take;
+        $search = $request->search;
+        $column = $request->column;
+
+        if ($request->search != '') {
+            $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
+                                ->where('registrasi.delete_soft', '=', 1)
+                                ->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
+                                // ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
+                                ->where(function ($q) {
+                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
+                                })
+                                ->orderBy('registrasi.no_kwitansi', 'desc')
+                                // ->where(function ($q) {
+                                //     $q->where('registrasi.status', 'Selesai');
+                                // })
+                                ->where(function ($q) {
+                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                                })
+                                ->skip($skip)->take($this->take)
+                                ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
+                                ->get();
+
+            $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
+                                ->where('registrasi.delete_soft', '=', 1)
+                                ->whereDate('registrasi.tanggal_bayar', '=', date('Y-m-d'))
+                                ->where(function ($q) {
+                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
+                                })
+                                // ->where(function ($q) {
+                                //     $q->where('registrasi.status', 'Selesai');
+                                // })
+                                ->where(function ($q) {
+                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                                })
+                                ->where('registrasi.'.$column, 'ilike', '%'.$search.'%')
+                                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
+        } else {
+            $data = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
+                                    ->where('registrasi.delete_soft', '=', 1)
+                                    ->orderBy('registrasi.no_kwitansi', 'desc')
+                                    ->where(function ($q) {
+                                        $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                        $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                        $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
+                                    })
+                                    // ->where(function ($q) {
+                                    //     $q->where('registrasi.status', 'Selesai');
+                                    // })
+                                    ->where(function ($q) {
+                                        $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                                    })
+                                    ->skip($skip)->take($this->take)
+                                    ->select(['registrasi.*', 'pasien.sebutan as sebutan'])
+                                    ->get();
+
+            $total = Registrasi::join('pasien', 'registrasi.pasien_uuid', '=', 'pasien.uuid')
+                                ->where('registrasi.delete_soft', '=', 1)
+                                ->where(function ($q) {
+                                    $q->where('registrasi.jenis', '=', 'Rawat Jalan');
+                                    $q->orWhere('registrasi.jenis', '=', 'One Day Care');
+                                    $q->orWhere('registrasi.jenis', '=', 'Rawat Inap');
+                                })
+                                // ->where(function ($q) {
+                                //     $q->where('registrasi.status', 'Selesai');
+                                // })
+                                ->where(function ($q) {
+                                    $q->where('registrasi.status_dokter', '=', 'Sudah Diperiksa');
+                                })
+                                ->orderBy('registrasi.no_kwitansi', 'desc')->count();
+        }
+
+        return response()->json(['data' => $data, 'total' => $total]);
+    }
+
     public function getpanjar(Request $request)
     {
         $data = Registrasi::where('uuid', '=', $request->uuid)->first();
@@ -297,15 +388,24 @@ class KasirCtrl extends Controller
             \DB::beginTransaction();
 
             $metode_pembayaran = $request->metode_pembayaran && $request->metode_pembayaran != '' ? $request->metode_pembayaran : '-';
-            $arr = [
-                'status_antrian_kasir' => '-',
-                'kasir_jam_selesai' => date('H:i'),
-                'status_kasir' => 'Sudah Bayar',
-                'status' => 'Selesai',
-                'tanggal_bayar' => date('Y-m-d'),
-                'metode_pembayaran' => $metode_pembayaran,
-            ];
-            $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+        $arr = [
+            'status_antrian_kasir' => '-',
+            'kasir_jam_selesai' => date('H:i'),
+            'status_kasir' => 'Sudah Bayar',
+            'status' => 'Selesai',
+            'metode_pembayaran' => $metode_pembayaran,
+            'diskon_persen' => $request->diskon_persen,
+            'diskon_rp' => $request->diskon_rp,
+            'ttd_kasir'            => $request->ttd_kasir ?? null,
+            'stempel'              => $request->stempel ?? '0',
+        ];
+
+        if (!$request->edit_superadmin) {
+            $arr['tanggal_bayar'] = date('Y-m-d');
+        }
+
+          // var_dump($request->diskon_rp);
+           $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 
             $tindakan = json_decode($request->tindakan);
 
@@ -354,6 +454,62 @@ class KasirCtrl extends Controller
                 'status' => 'Selesai',
             ];
             $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+
+            \DB::commit();
+
+            return response()->json(['data' => 'berhasil']);
+        } catch (Exception $e) {
+            \DB::rollback();
+
+            return response()->json(['hasil' => 'gagal']);
+        }
+    }
+
+
+    public function editbayar(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        $data = Registrasi::where('uuid', '=', $request->uuid)->first();
+        if ($data) {
+            \PenggunaHelp::log('Melakukan perubahan pembayaran dengan nama pasien '.$data->nama_pasien.' pada tanggal '.date('Y-m-d'));
+        }
+
+        try {
+            \DB::beginTransaction();
+
+            $metode_pembayaran = $request->metode_pembayaran && $request->metode_pembayaran != '' ? $request->metode_pembayaran : '-';
+            $arr = [
+                'metode_pembayaran' => $metode_pembayaran,
+                'diskon_persen' => $request->diskon_persen,
+                'diskon_rp' => $request->diskon_rp,
+                'tanggal' => $request->tanggal,
+                'rekam_medis' => $request->rekam_medis,
+                'carabayar_nama' => $request->carabayar_nama,
+                'nama_dokter' => $request->nama_dokter,
+
+            ];
+
+           Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+
+            $tindakan = json_decode($request->tindakan);
+
+            foreach ($tindakan as $row) {
+                $item = LayananPasien::find($row->id);
+                $item->layanan_uuid = $row->layanan_uuid;
+                $item->nama_layanan = $row->nama_layanan;
+                $item->tarif = $row->tarif;
+                $item->diskon_rp = $row->diskon_rp;
+                $item->diskon_persen = $row->diskon_persen;
+                $item->total = $row->total;
+
+                if($request->nama_dokter_spesialis!='' && isset($request->nama_dokter_spesialis)){
+                    $item->nama_dokter = $request->nama_dokter_spesialis;
+                }
+                $item->save();
+            }
 
             \DB::commit();
 
@@ -440,7 +596,9 @@ class KasirCtrl extends Controller
         $obatracikan = ResepRacikan::where('registrasi_uuid', '=', $request->uuid)
                         ->orderBy('id', 'desc')->get();
 
-        return response()->json(['data' => $data, 'obatracikan' => $obatracikan, 'layanan' => $layanan, 'obat' => $obat]);
+        $bedah = PaketBedah::where('nama', '=', $data->nama_paket_bedah)->first();
+
+        return response()->json(['data' => $data, 'obatracikan' => $obatracikan, 'layanan' => $layanan, 'obat' => $obat, 'bedah' => $bedah]);
     }
 
     public function call(Request $request)
@@ -512,6 +670,43 @@ class KasirCtrl extends Controller
         $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 
         return response()->json(['data' => 'berhasil']);
+    }
+
+    public function editkasir(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+    
+        $data = Registrasi::where('uuid', '=', $request->uuid)->first();
+        if ($data) {
+            \PenggunaHelp::log('Melakukan perubahan data kasir atas nama pasien '.$data->nama_pasien.' pada tanggal '.date('Y-m-d'));
+        }
+    
+        try {
+            \DB::beginTransaction();
+    
+            $arr = [
+                'no_kwitansi'             => $request->no_kwitansi,
+                'no_invoice'              => $request->no_invoice,
+                'tanggal_bayar'           => $request->tanggal_bayar,
+                'tanggal_selesai_periksa' => $request->tanggal_selesai_periksa,
+                'kode'                    => $request->kode,
+                'nomor'                   => $request->nomor,
+                'tanggal'                 => $request->tanggal,
+                'metode_pembayaran'       => $request->metode_pembayaran,
+            ];
+    
+            Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+    
+            \DB::commit();
+    
+            return response()->json(['data' => 'berhasil']);
+    
+        } catch (\Exception $e) {
+            \DB::rollback();
+            return response()->json(['data' => 'gagal', 'message' => $e->getMessage()]);
+        }
     }
 
     public function panjar(Request $request)

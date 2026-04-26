@@ -238,6 +238,8 @@ class BedahKasirCtrl extends Controller
 
 		$arr = array(
 			'status_antrian_kasir' => '-', 
+			'diskon_persen' => $request->diskon_persen,
+			'diskon_rp' => $request->diskon_rp,
 			'kasir_jam_selesai' => date('H:i'),
 			'status_kasir' => 'Sudah Bayar',
 			'status' => 'Selesai',

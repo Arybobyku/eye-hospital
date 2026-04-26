@@ -23,6 +23,7 @@
 						<table class="table">
 							<thead>
 								<tr>
+									<th>Pemberian Obat</th>
 									<th>Nama Obat</th>
 									<th>Signa</th>
 									<th>Qty</th>
@@ -33,6 +34,7 @@
 							</thead>
 							<tbody>
 								<tr v-for="(item, index) in listobat" v-if="listobat.length > 0">
+									<td>{{ item.is_bedah === 1 ? 'Bedah' : 'Rawat Inap'}}</td>
 									<td>{{ item.nama }}</td>
 									<td>{{ item.signa }}</td>
 									<td>{{ item.jumlah_kecil }} {{ item.nama_satuan_kecil }}</td>
@@ -259,6 +261,7 @@ export default {
 					jumlah_kecil: obats[i].jumlah_kecil,
 					jumlah_besar: obats[i].jumlah_besar,
 					signa: obats[i].signa,
+					is_bedah: obats[i].is_bedah,
 					total: vm.formatrupiah(obats[i].total.toString()),
 				}
 				vm.listobat.push(tmp);

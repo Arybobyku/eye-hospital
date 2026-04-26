@@ -1,5 +1,36 @@
 <template>
 <div class="inner" ref="roottable">
+<div class="grid">
+
+		<div class="col-1 form-mr">
+			<button class="btn-tambah" @click="downloadData()">Download All Data</button>
+		</div>
+		<!-- <div class="col-4 form-mr">
+			<Selected v-on:click="selectbox($event, form.select.carabayar.name, form.select.carabayar.statics)" 
+					:ref="form.select.carabayar.name" @selecteditem="selecteditem" @selectclear="selectclear"
+					:selection="form.select.carabayar" v-on:keyup="selectfilter($event, form.select.carabayar.name)"></Selected>
+		</div>
+		<div class="col-3 form-mr">
+			<Inputed :ref="formDownload" :form="formDownload"></Inputed>
+		</div>
+		<div class="col-2 form-mr">
+			<button class="btn-tambah" @click="downloadTemplate()">Generate Template</button>
+		</div>
+		<div class="col-2 form-mr">
+			<div class="form-self-group">
+				<input 
+					:id="formUpload.for_id" 
+					:type="formUpload.type" 
+					:disabled="formUpload.disabled ? 'disabled' : false" 
+					@change="onFileChange" 
+				/>
+			</div>
+
+		</div>
+		<div class="col-1 form-mr">
+			<button class="btn-tambah" @click="uploadFile()">Upload</button>
+		</div> -->
+	</div>
 	<div class="grid">
 		<div class="col-12">
 			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
@@ -15,6 +46,8 @@
 var vm;
 import { defineAsyncComponent } from 'vue';
 import { nullAndZero, datename, formatrupiah } from '../../../module/Manipulation.js';
+import { filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected } from '../../../module/SelectedFilter.js';
+import { initindexdb, indexdbprocessing } from '../../../module/Indexdb.js';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
@@ -26,6 +59,8 @@ export default {
 		FormUnit: defineAsyncComponent(() => import('./FormUnit.vue')),
 		DetailData: defineAsyncComponent(() => import('./DetailData.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
+		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
 	},
 	created: function () {},
 	mounted: function () {
@@ -36,6 +71,35 @@ export default {
 	data: function () { return {
 		uri: 'unit',
 		position: '',
+		formDownload: { 
+			title: 'Input Nama Paket Bedah', 
+			for_id: 'templateName',
+			type: 'text', 
+			required: '', 
+			key: 'templateName', 
+			model: 'templateName', 
+			disabled: false,
+			value: '',
+			},
+		formUpload: { 
+			title: 'Upload Paket Bedah', 
+			for_id: 'upload',
+			type: 'file', 
+			required: '', 
+			key: 'upload', 
+			model: 'upload', 
+			disabled: false,
+			value: null,
+			},
+		form:{
+			select: {
+				carabayar: { 
+					key : 'carabayar', for_id: 'form_'+'carabayar', name: 'carabayar', uuid:'', value: '', label: 'Silahkan Pilih', 
+					filter: [], data: [], search: '', option: 'display: none', statics: false,
+					class: 'carabayar', isrequired: true, html: 'Penjamin', issearch: false, disabled: false,
+				},
+			},
+		},
 		attach: {
 			link : {
 				list: '/finance/paketbedah/list',
@@ -43,11 +107,14 @@ export default {
 				edit: '/finance/paketbedah/edit',
 				update: '/finance/paketbedah/update',
 				remove: '/finance/paketbedah/remove',
+				duplicate: '/finance/paketbedah/duplicate',
 			}, url: '', data: null
 		},
 		column: [
 			{ value: 'nama', label: 'Nama Paket', type: 'text', search: true, close: false, button: false },
 			// { value: 'nama_dokter', label: 'Nama Dokter', type: 'text', search: true, close: false, button: false },
+			{ value: 'harga_sudah_ditentukan', label: 'Harga Sudah Ditentukan', type: 'text', search: false, close: false, button: false },
+			{ value: 'nama_carabayar', label: 'Penjamin', type: 'text', search: false, close: false, button: false },
 			{ value: 'total', label: 'Biaya', type: 'text', search: false, close: false, button: false },
 			{ value: 'keterangan', label: 'Keterangan', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: true }
@@ -64,14 +131,83 @@ export default {
 		/*************************************************************************************************************************
 		* Bagian fungsi untuk pemrosesan table
 		*************************************************************************************************************************/
+		initindexdb, indexdbprocessing,
+		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected,
 
-		
+		selectfilter: function (event, key) { vm.form = vm.filterselected(vm.form, key); },
+		selecthide:function() { vm.form = vm.hideselected(vm.form); },
+		selecteditem:function(item, key) { 
+			//vm.form = vm.conditionselected(vm.form, item, key, 'address');
+			vm.form = vm.itemselected(vm.form, item, key); 
+		},
+		selectclear:function(key) { vm.form = vm.clearselected(vm.form, key); },
+		selectbox:function(event, key, statics) {
+			let result = vm.boxselected(event, vm.form, key);
+			if (result._position == 'stop') { return ; }
+			else if (result._position == 'nextstop') { vm.form = result._form; }
+			else { vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block'; }
+		},
+
+		getIndexDB:function(key, statics) {
+			vm.form.select[key].data = []; vm.form.select[key].filter = [];
+			if (statics) { vm.form.select[key].data = this.arr[key]; vm.form.select[key].filter = this.arr[key]; }
+			else {
+				vm.initindexdb(vm.$dbNameIndexDb, key)
+					.then(function(response){ vm.form = vm.indexdbprocessing(response, vm.form, key); })
+					.catch(function(error){ console.log(error); });
+			}
+		},
+
+		downloadTemplate: function(){
+			let carabayar = vm.form.select.carabayar.value;
+			let nama = vm.formDownload.value;
+			let link = `/finance/listpaketbedah/download/${carabayar}/${nama}`;						
+			window.open(link); 
+			vm.formDownload.value = '';
+		},
+		downloadData: function(){
+			let link = `/finance/listpaketbedah/download/all`;						
+			window.open(link); 
+			vm.formDownload.value = '';
+		},
+		onFileChange(e) {
+			console.log("onfilechanges",e.target.files[0]);
+			vm.formUpload.value = e.target.files[0];
+		},
+		uploadFile: function(){
+			console.log("File upload", vm.formUpload.value);
+
+			vm.$refs.Datatable.skeleton();
+
+			let formData = new FormData();
+			formData.append('file', vm.formUpload.value); // sesuaikan dengan nama field di Laravel request
+
+			axios.post('/finance/listpaketbedah/upload', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			})
+				.then(function (response) {
+					setTimeout(function () {
+						vm.berhasil(response);
+					}, 300);
+					window.location.reload();
+				})
+				.catch(function (error) {
+					console.error(error);
+					setTimeout(function () {
+						vm.gagal(error);
+					}, 300);
+					window.location.reload();
+				});
+		},		
 
 		btnhtml:function(_item, _index) {
 			let str = [
 				{ icon: 'edit', color: 'btn-warning', posisi: 'edit', tooltip: 'Edit Data', item: _item, index: _index, show: true },
 				{ icon: 'trash-2', color: 'btn-danger', posisi: 'remove', tooltip: 'Hapus Data', item: _item, index: _index, show: true },
 				{ icon: 'arrow-up', color: 'btn-info', posisi: 'detail', tooltip: 'Detail Data', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-info', posisi: 'duplicate', tooltip: 'Duplicate Data', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -84,7 +220,9 @@ export default {
 			let _tmp = '';
 			if (identity == 'btnhtml') { _tmp = { value: vm.btnhtml(data, index), ishtml: 'button', show: false, style: 'width: 40px; text-align: center' } }
 			else if (identity == 'created_at') { _tmp = { value: vm.datename(column, true), ishtml: 'html', style: '' }; }
+			else if (identity == 'harga_sudah_ditentukan') { _tmp = { value: column == 1 ? 'iya' : 'tidak', ishtml: 'text', style: '' }; }
 			else if (identity == 'total') { _tmp = { value: vm.total(column, true), ishtml: 'text', style: '' }; }
+			else if (identity == 'nama_carabayar') { _tmp = { value: data?.nama_carabayar ?? "-", ishtml: 'text', style: '' }; }
 			else { _tmp = { value: column, ishtml: 'text', style: '' } }
 			return _tmp != '' ? _tmp : 'empty';
 		},
@@ -110,7 +248,14 @@ export default {
 				vm.attach.data = new FormData();
 				vm.attach.data.append('uuid', data.uuid);
 				vm.attach.url = vm.attach.link.remove;
-				vm.dialog('Yakin ingin menghapus data yang terpilih dihalaman ini.', 'Ya, hapus data', 'removedata');
+				vm.dialog('Yakin ingin menghapus data ' + data.nama, 'Ya, hapus data', 'removedata');
+			}
+			else if (posisi == 'duplicate') {
+				vm.position = "duplicatedata";
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.duplicate;
+				vm.dialog('Yakin ingin mengduplikat data yang terpilih dihalaman ini.', 'Ya, Duplikasi data', 'duplicatedata');
 			}
 			else if (posisi == 'detail') {
 				vm.$refs.DetailData.aturulang();
@@ -150,6 +295,7 @@ export default {
 			else if (vm.position == 'editdata') { vm.loadingModal('formunit'); vm.$refs.FormUnit.hide();  }
 			else if (vm.position == 'updatedata') { vm.loadingModal('formunit'); }
 			else if (vm.position == 'removedata') { vm.$refs.Datatable.skeleton(); }
+			else if (vm.position == 'duplicatedata') { vm.$refs.Datatable.skeleton(); }
 			
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
@@ -189,6 +335,9 @@ export default {
 			else if (vm.position == 'removedata') { 
 				setTimeout(() => { vm.tablereload(); }, 125, this); 
 			}
+			else if (vm.position == 'duplicatedata') { 
+				setTimeout(() => { vm.tablereload(); }, 125, this); 
+			}
 			vm.message('success', active);
 		},
 
@@ -200,17 +349,20 @@ export default {
 				else if (vm.position == 'editdata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 				else if (vm.position == 'updatedata') { vm.notification('Pembaharuan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'removedata') { vm.notification('Penghapusan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'duplicatedata') { vm.notification('Duplikasi data gagal diproses.', 3000, position); }
 			}
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'adddata') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'updatedata') { vm.notification('Pembaharuan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'removedata') { vm.notification('Penghapusan data berhasil diproses.', 3000, position); }
+				else if (vm.position == 'duplicatedata') { vm.notification('Duplikasi data berhasil diproses.', 3000, position); }
 			}
 		},
 
 		runconfirm: function (posisi) {
 			if (posisi == 'formunit') { vm.loadingModal('formunit'); }
 			else if (posisi == 'removedata') { vm.$refs.Datatable.skeleton(); }
+			else if (posisi == 'duplicatedata') { vm.$refs.Datatable.skeleton(); }
 			vm.executions();
 		},
 

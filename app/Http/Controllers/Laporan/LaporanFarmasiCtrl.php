@@ -15,6 +15,10 @@ use App\Exports\FakturGudang;
 use App\Exports\ReturGudang;
 use App\Exports\StockOpnameApotek;
 use App\Exports\StockOpnameGudang;
+use App\Exports\StockOpnameBedah;
+use App\Exports\KartuStockGudang;
+use App\Exports\KartuStockApotek;
+use App\Exports\KartuStockBedah;
 use App\Models\LogPengguna;
 use App\Models\Registrasi;
 use App\Models\Resep;
@@ -43,14 +47,31 @@ class LaporanFarmasiCtrl extends Controller
 		return \Excel::download(new StockOpnameApotek($dari), $filename);
 	}
 
+	public function stockopnamebedah($dari) {
+		$filename = date('Y-m-d').'- Stock Opanme Bedah.xlsx';
+		return \Excel::download(new StockOpnameBedah($dari), $filename);
+	}
+
 	public function stockopnamegudang($dari) {
 		$filename = date('Y-m-d').'- Stock Opanme Gudang.xlsx';
-		return \Excel::download(new StockOpnameApotek($dari), $filename);
+		return \Excel::download(new StockOpnameGudang($dari), $filename);
 	}
 
 	public function returgudang($dari, $ke, $supplier_uuid) {
 		$filename = date('Y-m-d').'-Retur Obat-Alkes Gudang.xlsx';
 		return \Excel::download(new ReturGudang($dari, $ke, $supplier_uuid), $filename);
+	}
+	public function kartustockgudang($dari, $ke, $obat_uuid) {
+		$filename = date('Y-m-d').'-Kartu Stock Gudang.xlsx';
+		return \Excel::download(new KartuStockGudang($dari, $ke, $obat_uuid), $filename);
+	}
+	public function kartustockapotek($dari, $ke, $obat_uuid) {
+		$filename = date('Y-m-d').'-Kartu Stock Apotek.xlsx';
+		return \Excel::download(new KartuStockApotek($dari, $ke, $obat_uuid), $filename);
+	}
+	public function kartustockbedah($dari, $ke, $obat_uuid) {
+		$filename = date('Y-m-d').'-Kartu Stock Bedah.xlsx';
+		return \Excel::download(new KartuStockBedah($dari, $ke, $obat_uuid), $filename);
 	}
 
 

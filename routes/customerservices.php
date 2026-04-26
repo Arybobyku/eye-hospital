@@ -38,6 +38,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 	Route::prefix('pasien')->group(function () {
 		Route::post('list', [PasienCtrl::class, 'list'])->name('cs-pasien-list');
 		Route::post('listkunjungan', [PasienCtrl::class, 'listkunjungan'])->name('cs-pasien-listkunjungan');
+		Route::post('listkunjunganbpjs', [PasienCtrl::class, 'listkunjunganbpjs'])->name('cs-pasien-listkunjunganbpjs');
 		
 		Route::post('add', [PasienCtrl::class, 'add'])->name('cs-pasien-add');
 		Route::post('edit', [PasienCtrl::class, 'edit'])->name('cs-pasien-edit');

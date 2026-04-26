@@ -1,6 +1,7 @@
 <template>
 	<div :style="terminate.display" class="modal">
-		<div ref="rootmodal" class="modal-content modal-besar" :class="terminate.show ? 'modal-opened' : 'modal-closed'">
+		<div ref="rootmodal" class="modal-content modal-besar"
+			:class="terminate.show ? 'modal-opened' : 'modal-closed'">
 			<div class="modal-header">
 				<button v-on:click="printsa('kwitansi')">Cetak Kwitansi</button>
 				<button v-on:click="printsa('rincian')" style="margin-right: 140px;">Cetak Rincian Tagihan</button>
@@ -21,21 +22,46 @@
 							<li>Cara Bayar<span><strong>{{ detail.carabayar_nama }}</strong></span></li>
 							<li>Dokter yang menangani<span><strong>{{ detail.nama_dokter }}</strong></span></li>
 							<li>Triase<span><strong>{{ detail.berkebutuhan_khusus }}</strong></span></li>
-							<li v-if="detail.berkebutuhan_khusus!='Tidak'">Keterangan<span><strong>{{ detail.keterangan_berkebutuhan }}</strong></span></li>
+							<li v-if="detail.berkebutuhan_khusus!='Tidak'">Keterangan<span><strong>{{
+										detail.keterangan_berkebutuhan }}</strong></span></li>
+
 							<li v-if="detail.carabayar_nama == 'Umum'">
-								<Selected v-on:click="selectbox($event, form.select.metodepembayaran.name, form.select.metodepembayaran.statics)" 
-									:ref="form.select.metodepembayaran.name" @selecteditem="selecteditem" @selectclear="selectclear"
-									:selection="form.select.metodepembayaran" v-on:keyup="selectfilter($event, form.select.metodepembayaran.name)"></Selected>
+								<Selected
+									v-on:click="selectbox($event, form.select.metodepembayaran.name, form.select.metodepembayaran.statics)"
+									:ref="form.select.metodepembayaran.name" @selecteditem="selecteditem"
+									@selectclear="selectclear" :selection="form.select.metodepembayaran"
+									v-on:keyup="selectfilter($event, form.select.metodepembayaran.name)"></Selected>
 							</li>
 						</ul>
+						<div v-if="currentposisi == 'editkasir'" class="editkasir-card">
+						    <div class="editkasir-header">Edit Data Kasir</div>
+						    <div v-for="field in [
+						        { label: 'No Kwitansi',           model: 'no_kwitansi',             type: 'text' },
+						        { label: 'No / Order Invoice',    model: 'no_invoice',              type: 'text' },
+						        { label: 'Tanggal Cetak',         model: 'tanggal_bayar',           type: 'date' },
+						        { label: 'Tgl Selesai Periksa',   model: 'tanggal_selesai_periksa', type: 'date' },
+						        { label: 'Kode Pendaftaran',      model: 'kode',                    type: 'text' },
+						        { label: 'Nomor Pendaftaran',     model: 'nomor',                   type: 'text' },
+						        { label: 'Tanggal Masuk',         model: 'tanggal',                 type: 'date' },
+						    ]" class="editkasir-field">
+						        <label class="editkasir-label">{{ field.label }}</label>
+						        <input
+						            :type="field.type"
+						            v-model="editform[field.model]"
+						            class="editkasir-input"
+						            @focus="$event.target.classList.add('focused')"
+						            @blur="$event.target.classList.remove('focused')"
+						        />
+						    </div>
+						</div>
 					</div>
 					<div class="col-8">
-						
+
 						<div class="grid">
 							<div class="col-2"></div>
 							<div class="col-8">
-								<div class="cop-surat" >
-									<div class="top" style="left: 70px">
+								<div class="cop-surat">
+									<div class="top" style="left: 28%">
 										<img src="/images/favicon.png">
 										<div class="label">
 											<span class="label1">RUMAH SAKIT KHUSUS MATA</span><br />
@@ -44,8 +70,10 @@
 										</div>
 									</div>
 									<div class="bottom">
-										<span class="label1">Jalan Pabrik Tenun NO. 51-53. Medan Petisah. 20118. <br /> Sumatera Utara. Indonesia</span><br />
-										<span class="label2">Email : rsprimavision@gmail.com - HOSPITAL HOTLINE (061) 805 14 888</span>
+										<span class="label1">Jalan Pabrik Tenun NO. 51-53. Medan Petisah. 20118. <br />
+											Sumatera Utara. Indonesia</span><br />
+										<span class="label2">Email : rsprimavision@gmail.com - HOSPITAL HOTLINE (061)
+											805 14 888</span>
 									</div>
 								</div>
 							</div>
@@ -62,6 +90,9 @@
 						</div>
 
 						<div class="grid">
+							<div class="col-12" v-if="detail.apakah_paket =='Ya'">
+								<div class="message"> Paket Bedah <strong class="">{{detail.nama_paket_bedah}}</strong> </div>
+							</div>
 							<div class="col-12">
 								<table class="table">
 									<thead>
@@ -80,39 +111,74 @@
 											<td><strong>{{ index+1 }}</strong></td>
 											<td><strong>{{ item.nama_layanan }}</strong></td>
 											<td :colspan="item.editharga ? '3' : ''">
-												<input type="number" :ref="item.name" :value="item.tarif" v-if="item.editharga" v-on:keyup="ubahharga($event, item, index)" />
+												<input type="number" :ref="item.name" :value="item.tarif"
+													v-if="item.editharga" v-on:keyup="ubahharga($event, item, index)" />
 												<strong v-else>{{ formatrupiah(item.tarif.toString()) }}</strong>
 											</td>
-											<td v-if="!item.editharga"><input type="number" :value="item.diskon_rp" style="width: 100%;" v-on:keyup="ubah($event, item, index, 'rupiah')" /></td>
-											<td v-if="!item.editharga"><input type="number" :value="item.diskon_persen" style="width: 100%;" v-on:keyup="ubah($event, item, index, 'persen')" /></td>
+											<td v-if="!item.editharga"><input type="number" :value="item.diskon_rp"
+													style="width: 100%;"
+													v-on:keyup="ubah($event, item, index, 'rupiah')" /></td>
+											<td v-if="!item.editharga"><input type="number" :value="item.diskon_persen"
+													style="width: 100%;"
+													v-on:keyup="ubah($event, item, index, 'persen')" /></td>
 											<td><strong>{{ formatrupiah(item.total.toString()) }}</strong></td>
 											<td>
-												<template v-if="item.jenis != 'Obat-Obatan' && item.jenis != 'Obat Racikan'">
+												<template
+													v-if="item.jenis != 'Obat-Obatan' && item.jenis != 'Obat Racikan'">
 													<template v-if="!item.editharga">
 														<button class="tooltip btn-warning" style="width: 27px;">
-															<vue-feather type="edit" style="width: 18px; right: 2px; top: 1px; position: relative;" v-on:click="edit(item, index)"></vue-feather> <span class="tooltiptext">Edit Data</span>
+															<vue-feather type="edit"
+																style="width: 18px; right: 2px; top: 1px; position: relative;"
+																v-on:click="edit(item, index)"></vue-feather> <span
+																class="tooltiptext">Edit Data</span>
 														</button>
 														<button class="tooltip btn-danger" style="width: 27px;">
-															<vue-feather type="trash-2" style="width: 18px; right: 2px; top: 1px; position: relative;" v-on:click="hapus(item, index)"></vue-feather> <span class="tooltiptext">Hapus Data</span>
+															<vue-feather type="trash-2"
+																style="width: 18px; right: 2px; top: 1px; position: relative;"
+																v-on:click="hapus(item, index)"></vue-feather> <span
+																class="tooltiptext">Hapus Data</span>
 														</button>
 													</template>
 													<template v-else>
 														<button class="tooltip btn-warning" style="width: 27px;">
-															<vue-feather type="x-octagon" style="width: 18px; right: 2px; top: 1px; position: relative;" v-on:click="batal(item, index)"></vue-feather> <span class="tooltiptext">Cancel Edit</span>
+															<vue-feather type="x-octagon"
+																style="width: 18px; right: 2px; top: 1px; position: relative;"
+																v-on:click="batal(item, index)"></vue-feather> <span
+																class="tooltiptext">Cancel Edit</span>
 														</button>
 														<button class="tooltip btn-success" style="width: 27px;">
-															<vue-feather type="check" style="width: 18px; right: 2px; top: 1px; position: relative;" v-on:click="perbaharui(item, index)"></vue-feather> <span class="tooltiptext">Perbaharui Data</span>
+															<vue-feather type="check"
+																style="width: 18px; right: 2px; top: 1px; position: relative;"
+																v-on:click="perbaharui(item, index)"></vue-feather>
+															<span class="tooltiptext">Perbaharui Data</span>
 														</button>
 													</template>
 												</template>
 											</td>
 										</tr>
 										<tr>
-											<td colspan="5">
-												<span v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">Sub Total</span>
+											<td colspan="3">
+												<span
+													v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">Sub
+													Total</span>
 												<span v-else>Grand Total</span>
 											</td>
-											<td><strong>{{ formatrupiah(totalbiaya.toString()) }}</strong></td>
+											<td>
+												<input name="diskon_rp" :form="form.diskon_rp"
+													type="number" style="width: 100%;"
+													v-model.number="globalDiscountNominal"
+													v-on:keyup="ubahDiskonGlobal($event, 'rupiah')"
+													placeholder="Diskon Nominal"/>
+
+											</td>
+											<td>
+												<input name="diskon_persen"
+													:form="form.diskon_persen" type="number" style="width: 100%;"
+													v-model.number="globalDiscountPercentage"
+													v-on:keyup="ubahDiskonGlobal($event, 'persen')"
+													placeholder="Diskon Persen"/>
+											</td>
+											<td><strong>{{ formatrupiah(totalbiaya2.toString()) }}</strong></td>
 										</tr>
 										<tr v-if="detail.panjar != '0' && detail.status == 'Pending'">
 											<td colspan="5">
@@ -126,11 +192,19 @@
 											</td>
 											<td>{{ formatrupiah(coverasuransis.toString()) }}</td>
 										</tr>
-										<tr v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">
+										<tr
+											v-if="(detail.panjar != '0' && detail.status == 'Pending') || detail.cover_asuransi != 0">
 											<td colspan="5">
 												Grand Total
 											</td>
 											<td>{{ formatrupiah(supergrandtotal.toString()) }}</td>
+										</tr>
+											<tr
+											v-if="(detail.apakah_paket == 'Ya' && bedah?.harga_sudah_ditentukan == 1)">
+											<td colspan="5">
+												Harga Paket Sudah Ditentukan
+											</td>
+											<td>{{ formatrupiah(bedah?.total.toString()) }}</td>
 										</tr>
 									</tbody>
 								</table>
@@ -155,17 +229,86 @@
 				</div>
 
 				<div class="grid" style="border-top: 1px solid #d0d0d0; margin-top: 16px; padding-top: 20px;" v-if="detail">
-					<div class="col-8"></div>
-					<div class="col-4" style="text-align: right" v-if="detail.approvement_obat == 'yes'">
-						<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
-					</div>
-					<div class="col-4" style="text-align: right" v-if="listobat.length < 1 || listobatracikan.length < 1 ">
-						<button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
-						<button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
-					</div>
+				    <div class="col-8"></div>
+				    <div class="col-4" style="text-align: right" 
+				        v-if="detail.approvement_obat == 'yes' && currentposisi != 'editkasir'">
+				        <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
+				        <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+				    </div>
+				    <div class="col-4" style="text-align: right" 
+				        v-if="(listobat.length < 1 || listobatracikan.length < 1) && currentposisi != 'editkasir'">
+				        <button class="button-modal-page button-modal-red" v-on:click="redbutton()">{{ red }}</button>
+				        <button class="button-modal-page button-modal-green" v-on:click="greenbutton()">{{ green }}</button>
+				    </div>
+				    <div class="col-4" style="text-align: right" v-if="currentposisi == 'editkasir'">
+				        <button class="button-modal-page button-modal-red" v-on:click="hide()">Cancel</button>
+				        <button class="button-modal-page button-modal-green" v-on:click="saveeeditkasir()">Simpan</button>
+				    </div>
 				</div>
 			</div>
+			
+						<!-- ===== SECTION TTD & STEMPEL ===== -->
+						<div class="grid ttd-section" v-if="currentposisi != 'editkasir'">
+						    <div class="col-12">
+						        <div class="ttd-wrapper">
+						            <div class="ttd-col">
+						                <div class="ttd-label">Petugas Kasir</div>
+									
+						                <!-- Preview TTD yang sudah ada -->
+						                <div v-if="ttdData && !signatureCleared" class="ttd-preview-wrapper">
+						                    <img :src="ttdData" alt="TTD Kasir" class="ttd-preview-img" />
+						                    <!-- Overlay stempel di atas preview -->
+						                    <transition name="fade-stamp">
+						                        <img
+						                            v-if="stampVisible"
+						                            src="/storage/images/stempel-rs.png"
+						                            class="ttd-stamp-img"
+						                            alt="Stempel RS"
+						                        />
+						                    </transition>
+						                    <button class="btn-ttd-clear mt-2" v-on:click="clearTTD()">
+						                        Hapus & Tanda Tangan Ulang
+						                    </button>
+						                </div>
+									
+						                <!-- Signature Pad jika belum ada / dihapus -->
+						                <div v-else>
+						                    <div class="ttd-canvas-wrapper">
+						                        <VueSignaturePad
+						                            ref="ttd_kasir"
+						                            :options="sigOption"
+						                            class="ttd-canvas"
+						                        />
+						                        <!-- Overlay stempel di atas canvas -->
+						                        <transition name="fade-stamp">
+						                            <img
+						                                v-if="stampVisible"
+						                                src="/storage/images/stempel-rs.png"
+						                                class="ttd-stamp-img"
+						                                alt="Stempel RS"
+						                            />
+						                        </transition>
+						                    </div>
+						                  
+						                </div>
+										<div v-if="!ttdData && signatureCleared">
+									  <button class="btn-ttd-save mt-2" v-on:click="saveTTD()">
+						                        Simpan ✔
+						                    </button>
+											</div>
+						                <!-- Tombol stempel (selalu tampil) -->
+						                <button
+						                    class="btn-ttd-stamp mt-2"
+						                    :class="{ active: stampVisible }"
+						                    v-on:click="toggleStamp()"
+						                >
+						                    🔵 {{ stampVisible ? 'Hapus Stempel' : 'Tambah Stempel' }}
+						                </button>
+						            </div>
+						        </div>
+						    </div>
+						</div>
+						<!-- ===== END TTD & STEMPEL ===== -->
 			<Loader ref="Loader"></Loader>
 		</div>
 	</div>
@@ -206,12 +349,26 @@ export default {
 			for (let i = 0; i < vm.listdata.length; i++) {
 				temp += parseInt(vm.listdata[i].total);
 			}
+
+
+			return temp ;
+		},
+		totalbiaya2: function () {
+			let temp = 0;
+
+
+			temp = vm.totalbiaya - this.globalDiscountNominal;
 			return temp;
 		},
-		supergrandtotal:function() {
-			let temp = vm.totalbiaya - vm.detail.panjar;
-			temp -= vm.detail.cover_asuransi;
-			return temp;
+		
+		supergrandtotal() {
+			if (this.globalDiscountNominal == NaN) {
+				this.globalDiscountNominal = 0;
+			};
+			let temp = parseInt(vm.totalbiaya - this.globalDiscountNominal);
+			temp -= this.detail.panjar;
+			temp -= this.detail.cover_asuransi;
+			return temp > 0 ? temp : 0;
 		},
 		totalobat:function() {
 			let temp = 0;
@@ -230,28 +387,106 @@ export default {
 	},
 	created:function() {},
 	data:function() { return { 
+		currentposisi: '', 
 		listdata: [], tmplistdata:[], listobat: [], listobatracikan: [], tempobat: null,
 		listadministrasi: [], listrawatjalan: [], sementara: [], globalindex: 0, globalitem: null,
 		terminate: { show: false, display: 'display: none' },
 		form: null, btnlbl: '', arr: null,
 		green: 'Proses Pembayaran', red: 'Cancel', pendings: 'Ubah Menjadi Pending', test: null, cover: '', temporer: null,
 		pemeriksaanro: null,
+		// TTD & Stempel
+		stampVisible: false,
+		ttdNamaKasir: '',
+		ttdData: '',
+		signatureCleared: false,
+		sigOption: {
+		    penColor: 'black',
+		    backgroundColor: 'white',
+		},
 		detail : { uuid: '',
-			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
+			agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', apakah_paket: '', nama_paket_bedah: '',  
 			kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
 			nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
-			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', catatan: ''
+			rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: '', catatan: '', diskon_rp: '', diskon_global: '',
+		},
+		editform: {
+    	    no_kwitansi: '',
+    	    no_invoice: '',
+    	    tanggal_bayar: '',
+    	    tanggal_selesai_periksa: '',
+    	    kode: '',
+    	    nomor: '',
+    	    tanggal: '',
+    	},
+		bedah: {
+			id: null,
+			nama: null,
+			harga_sudah_ditentukan: null,
+			total:null,
 		},
 		temphitung: [],
+				globalDiscountNominal: 0, // For nominal discount
+				globalDiscountPercentage: 0, // For percentage discount
 	}},
 	methods: {
 
 		formatrupiah, 
+		// ===== TTD & STEMPEL METHODS =====
+		clearTTD() {
+		    vm.signatureCleared = true;
+		    vm.ttdData = '';
+		    vm.$nextTick(() => {
+		        const pad = vm.$refs.ttd_kasir;
+		        if (pad) pad.clearSignature();
+				pad.resizeCanvas();
+		    });
+		},
+
+		saveTTD() {
+		    const pad = this.$refs.ttd_kasir;
+		    if (!pad) return;
+		    const { isEmpty, data } = pad.saveSignature();
+		    if (isEmpty) {
+		        alert('TTD masih kosong, silakan tanda tangan terlebih dahulu.');
+		        return;
+		    }
+		    vm.ttdData = data;
+		    vm.signatureCleared = false; // kembali ke mode preview
+		    alert('TTD berhasil disimpan.');
+		},
+
+		toggleStamp() {
+			vm.stampVisible = !vm.stampVisible;
+		},
+
+		getTTDData() {
+			// Dipanggil saat submit untuk mendapatkan data TTD + status stempel
+			return {
+				ttd: vm.ttdData,
+				nama_kasir: vm.ttdNamaKasir,
+				stempel: vm.stampVisible,
+			};
+		},
 
 		ubahharga:function(event, item, index) {
 			let value = event.target.value;
 			vm.listdata[index].tarif = value;
 			vm.listdata[index].total = value;
+		},
+
+		saveeeditkasir: function() {
+		    let data = new FormData();
+		    data.append('uuid', vm.detail.uuid);
+		    data.append('no_kwitansi', vm.editform.no_kwitansi);
+		    data.append('no_invoice', vm.editform.no_invoice);
+		    data.append('tanggal_bayar', vm.editform.tanggal_bayar);
+		    data.append('tanggal_selesai_periksa', vm.editform.tanggal_selesai_periksa);
+		    data.append('kode', vm.editform.kode);
+		    data.append('nomor', vm.editform.nomor);
+		    data.append('tanggal', vm.editform.tanggal);
+			data.append('metode_pembayaran', vm.form.select.metodepembayaran.value);
+		    vm.$emit('parsingForm', data, 'editkasir');
+		    vm.$emit('dialog', 'Yakin ingin menyimpan perubahan data kasir ini.', 'Ya, simpan', 'formdetail');
 		},
 		
 		edit:function(item, index) {
@@ -353,9 +588,29 @@ export default {
 			}
 			
 		},
+		ubahDiskonGlobal(event, posisi) {
+			let value = parseFloat(event.target.value);
+			if (this.globalDiscountNominal === NaN) {
+				this.globalDiscountNominal = 0;
+			}
+			this.globalDiscountNominal = this.globalDiscountNominal ? this.globalDiscountNominal : 0;
+			if (posisi === "rupiah") {
+				this.globalDiscountNominal = value;
+				this.globalDiscountPercentage = parseInt((value / this.totalbiaya) * 100);
+			} else if (posisi === "persen") {
+				this.globalDiscountPercentage = value;
+				this.globalDiscountNominal = parseInt((value / 100) * this.totalbiaya);
+			}
+			this.globalDiscountNominal = this.globalDiscountNominal ? this.globalDiscountNominal : 0;
 
+			
+			// this.totalbiaya;
+		},
 		greenbutton:function() {
 			if (vm.green == 'Proses Pembayaran') {
+				vm.form.diskon_rp = this.globalDiscountNominal;
+				vm.form.diskon_persen = this.globalDiscountPercentage;
+				console.log("vm.form", vm.form);
 				if (vm.detail.carabayar_nama == 'Umum') {
 					if (vm.form.select.metodepembayaran.value != '' && vm.form.select.metodepembayaran.value != ' ' && vm.form.select.metodepembayaran.value) {
 						vm.action();
@@ -365,7 +620,7 @@ export default {
 					vm.action();
 				}
 				
-			}
+			}	
 		},
 
 		redbutton:function() {
@@ -395,7 +650,7 @@ export default {
 				vm.form.select.carabayartindakanrawatjalan.label = 'Silahkan Pilih';
 			}
 			else if (key == 'apotek') {
-				vm.tempobat = item;
+			    vm.tempobat = item;
 			}
 		},
 		selectclear:function(key) { vm.form = vm.clearselected(vm.form, key); },
@@ -424,33 +679,63 @@ export default {
 			return data;
 		},
 
-		show:function(posisi, title, uuid){ vm.btnlbl = posisi == 'adddata' ? 'Proses Pembayaran' : 'Update Data'; vm.form.uuid = uuid;
+		show:function(posisi, title, uuid){ vm.currentposisi = posisi; vm.btnlbl = posisi == 'adddata' ? 'Proses Pembayaran' : 'Update Data'; vm.form.uuid = uuid;
 			vm.form.title = title; vm.form.posisi = posisi; 
 			vm.form.posisi = posisi; body.style.overflowY = 'hidden'; vm.terminate.display = 'display: block'; vm.terminate.show = true;
+			vm.$nextTick(() => {
+    		    setTimeout(() => {
+    		        const pad = vm.$refs.ttd_kasir;
+    		        if (pad) pad.resizeCanvas();
+    		    }, 300);
+    		});
     },
-		aturulang: function () { 
+		aturulang: function () {
+			vm.currentposisi = ''; 
+			vm.signatureCleared = true;
 			vm.form = vm.formkelurahan(); 
 			vm.listdata = [];
 			vm.listobat = [];
 			vm.tempobat = null;
+			vm.editform = {
+    		    no_kwitansi: '',
+    		    no_invoice: '',
+    		    tanggal_bayar: '',
+    		    tanggal_selesai_periksa: '',
+    		    kode: '',
+    		    nomor: '',
+    		    tanggal: '',
+    		};
 			vm.detail = { uuid: '',
 				agama: '', alamat: '', alias: '', email: '', golongan_darah: '', jenis_identitas: '', jenis_kelamin: '', 
 				kodepos: '', nama: '', nama_ayah: '', nama_ibu: '', nama_kab_kota: '', nama_kecamatan: '', nama_kelurahan: '', 
 				nama_provinsi: '', no_handphone: '', no_identitas: '', pekerjaan: '', pendidikan_terakhir: '', rekam_medis: '', 
 				rt_rw: '', status_pernikahan: '', tanggal_lahir: '', tempat_lahir: '', tanggal: ''
-			}
+				, diskon_rp: '', diskon_persen: ''
+			};
+			vm.bedah = {
+				id: null,
+				nama: null,
+				harga_sudah_ditentukan: null,
+				total:null,
+			};
+			vm.globalDiscountNominal = 0;
+				vm.globalDiscountPercentage = 0;
 		},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
 		parsingForm:function(position = 'main') { 
-			if (position == 'hapus') {
-				vm.$emit('parsingForm', vm.parsehapus(vm.form, vm.detail, vm.globalitem), 'hapus'); 
-			}
-			else if (position == 'perbaharui') {
-				vm.$emit('parsingForm', vm.parseperbaharui(vm.form, vm.detail, vm.globalitem), 'perbaharui'); 
-			}
-			else {
-				vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail, vm.listdata), 'add'); 
-			}
+		    if (position == 'hapus') {
+		        vm.$emit('parsingForm', vm.parsehapus(vm.form, vm.detail, vm.globalitem), 'hapus'); 
+		    }
+		    else if (position == 'perbaharui') {
+		        vm.$emit('parsingForm', vm.parseperbaharui(vm.form, vm.detail, vm.globalitem), 'perbaharui'); 
+		    }
+		    else {
+		        // Sisipkan data TTD ke form sebelum parsing
+		        vm.form.ttd_kasir     = vm.ttdData;
+		        vm.form.stempel       = vm.stampVisible ? '1' : '0';
+			
+		        vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detail, vm.listdata), 'add'); 
+		    }
 		},
 
 		loaderprocess:function() { const left = this.$refs.rootmodal.getBoundingClientRect(); vm.$refs.Loader.running(left, 'modal', 250); },
@@ -459,8 +744,25 @@ export default {
 
 
 			vm.listdata = [];
-			console.log(response);
 			vm.detail = response.data.data;
+
+			if (vm.currentposisi == 'editkasir') {
+				console.log('masuk editkasir, mengisi editform');
+    		    vm.editform.no_kwitansi             = vm.detail.no_kwitansi ?? '';
+    		    vm.editform.no_invoice              = vm.detail.no_invoice ?? '';
+    		    vm.editform.tanggal_bayar           = vm.detail.tanggal_bayar ?? '';
+    		    vm.editform.tanggal_selesai_periksa = vm.detail.tanggal_selesai_periksa ?? '';
+    		    vm.editform.kode                    = vm.detail.kode ?? '';
+    		    vm.editform.nomor                   = vm.detail.nomor ?? '';
+    		    vm.editform.tanggal                 = vm.detail.tanggal ?? '';
+    		}
+
+			if(response.data.bedah){
+				vm.bedah = response.data.bedah;
+
+				console.log("response.data.bedah", vm.bedah);
+			}
+
 
 			if (vm.detail.carabayar_nama == 'Umum') {
 				vm.form.select.metodepembayaran.isrequired = true;
@@ -469,6 +771,10 @@ export default {
 				vm.form.select.metodepembayaran.isrequired = false;
 			}
 			vm.form.carabayar_nama = vm.detail.carabayar_nama;
+			if (vm.carabayar_nama != "" || vm.carabayar_nama != null){
+				vm.form.select.metodepembayaran.value = vm.detail.metode_pembayaran;
+				vm.form.select.metodepembayaran.label = vm.detail.metode_pembayaran;
+			}
 
 			if (vm.detail.panjar != '0') {
 				vm.form.panjar.value = vm.detail.panjar;
@@ -497,8 +803,9 @@ export default {
 				// vm.tmplistdata.push(_item);
 			}
 
-			console.log(vm.sementara)
 			vm.tmplistdata = vm.listdata;
+			vm.globalDiscountNominal = parseInt(vm.detail.diskon_rp);
+			vm.globalDiscountPercentage = vm.detail.diskon_persen;
 
 			vm.listobat = response.data.obat;
 			vm.listobatracikan = response.data.obatracikan;
@@ -535,5 +842,177 @@ export default {
 	color: #FFF; 
 	padding: 15px 20px; 
 	background-color: #62ad9b;
+}
+.editkasir-header {
+    font-size: 16px;
+    font-weight: 700;
+    color: #000000;
+    letter-spacing: 0.5px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #d0d8ff;
+}
+.editkasir-field {
+    margin-bottom: 10px;
+}
+.editkasir-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #000000;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+.editkasir-input {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #1e293b;
+    background: #ffffff;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+    outline: none;
+}
+.editkasir-input.focused {
+    border-color: #3a5bcc;
+}
+
+/* ===== TTD & STEMPEL ===== */
+.ttd-section {
+	margin-top: 30px;
+	border-top: 1px dashed #ccc;
+	padding-top: 20px;
+}
+.ttd-wrapper {
+	display: flex;
+	justify-content: flex-end; /* rata kanan seperti posisi kasir */
+	padding-right: 10px;
+}
+.ttd-col {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 260px;
+}
+.ttd-label {
+	font-weight: 700;
+	font-size: 14px;
+	color: #333;
+	margin-bottom: 8px;
+	text-align: center;
+}
+.ttd-canvas-wrapper {
+	position: relative;
+	width: 240px;
+	height: 140px;
+	border: 1.5px solid #aaa;
+	border-radius: 6px;
+	overflow: hidden;
+	background: #fff;
+}
+.ttd-canvas {
+	width: 240px !important;
+	height: 140px !important;
+}
+.ttd-stamp-img {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 120px;
+	height: 120px;
+	object-fit: contain;
+	opacity: 0.75;
+	pointer-events: none;
+}
+.ttd-actions {
+	display: flex;
+	gap: 6px;
+	margin-top: 8px;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+.btn-ttd-clear {
+	background: #e53935;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	font-weight: 600;
+}
+.btn-ttd-clear:hover { background: #c62828; }
+
+.btn-ttd-save {
+	background: #1e88e5;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	font-weight: 600;
+}
+.btn-ttd-save:hover { background: #1565c0; }
+
+.btn-ttd-stamp {
+	background: #7b1fa2;
+	color: #fff;
+	border: none;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	font-weight: 600;
+}
+.btn-ttd-stamp:hover { background: #6a1b9a; }
+.btn-ttd-stamp.active {
+	background: #4caf50;
+}
+.btn-ttd-stamp.active:hover { background: #388e3c; }
+
+.ttd-nama-input {
+	margin-top: 8px;
+	width: 100%;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 6px 8px;
+	font-size: 13px;
+	text-align: center;
+	background: #f9f9f9;
+	box-sizing: border-box;
+}
+.ttd-nama-input:focus {
+	outline: none;
+	border-color: #1e88e5;
+	background: #fff;
+}
+
+/* Fade animasi stempel */
+.fade-stamp-enter-active, .fade-stamp-leave-active {
+	transition: opacity 0.3s;
+}
+.fade-stamp-enter-from, .fade-stamp-leave-to {
+	opacity: 0;
+}
+
+.ttd-preview-wrapper {
+    position: relative;
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.ttd-preview-img {
+    width: 240px;
+    height: 140px;
+    object-fit: contain;
+    border: 1.5px solid #aaa;
+    border-radius: 6px;
+    background: #fff;
 }
 </style>

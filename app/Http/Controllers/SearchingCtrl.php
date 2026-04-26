@@ -66,6 +66,33 @@ class SearchingCtrl extends Controller
 		else if ($key == 'obat') {
 			$data = $this->obat($request);
 		}
+		else if ($key == 'obat2') {
+			$data = $this->obat2($request);
+		}
+		else if ($key == 'obat3') {
+			$data = $this->obat3($request);
+		}
+		else if ($key == 'obat4') {
+			$data = $this->obat($request);
+		}
+		else if ($key == 'ocularsinistravisus') {
+			$data = $this->ocularsinistravisus($request);
+		}
+		else if ($key == 'oculardextravisus') {
+			$data = $this->ocularsinistravisus($request);
+		}
+		else if ($key == 'oculardextrabcva2') {
+			$data = $this->ocularsinistravisus($request);
+		}
+		else if ($key == 'oculardextrabcva2') {
+			$data = $this->ocularsinistravisus($request);
+		}
+		else if ($key == 'oculardextrapinhole') {
+			$data = $this->ocularsinistrapinhole($request);
+		}
+		else if ($key == 'oculardextrapinhole') {
+			$data = $this->ocularsinistrapinhole($request);
+		}
 		else if ($key == 'obatgudang') {
 			$data = $this->obatgudang($request);
 		}
@@ -322,7 +349,123 @@ class SearchingCtrl extends Controller
 			});
 		return $collection;
 	}
+	private function obat2() {
+		$collection = new Collection;
+		$key = $request->key;
+		$search = $request->search;
+		$data = DB::table($key)
+			->orderBy('id', 'asc')
+			->where('nama', 'ilike', '%'.$search.'%')
+			->chunk(25, function ($data) use ($collection, $key) {
+				foreach ($data as $row) {
+					$collection->push(
+						(object) [
+							'value' => $row->uuid,
+							'label' => $row->nama,
 
+							'id' => $row->id,
+							'uuid' => $row->uuid,
+							'nama' => $row->nama,
+							'keterangan' => $row->keterangan,
+							'satuan_uuid_besar' => $row->satuan_uuid_besar,
+							'nama_satuan_besar' => $row->nama_satuan_besar,
+							'satuan_uuid_kecil' => $row->satuan_uuid_kecil,
+							'nama_satuan_kecil' => $row->nama_satuan_kecil,
+							'hitung_besar' => $row->hitung_besar,
+							'hitung_kecil' => $row->hitung_kecil,
+							'kategori' => $row->kategori,
+							'formularium' => $row->formularium,
+							'golongan' => $row->golongan,
+							'jenis' => $row->jenis,
+							'min_stock' => $row->min_stock
+						]
+					);
+				}
+			});
+		return $collection;
+	}
+	private function obat3() {
+		$collection = new Collection;
+		$key = $request->key;
+		$search = $request->search;
+		$data = DB::table($key)
+			->orderBy('id', 'asc')
+			->where('nama', 'ilike', '%'.$search.'%')
+			->chunk(25, function ($data) use ($collection, $key) {
+				foreach ($data as $row) {
+					$collection->push(
+						(object) [
+							'value' => $row->uuid,
+							'label' => $row->nama,
+
+							'id' => $row->id,
+							'uuid' => $row->uuid,
+							'nama' => $row->nama,
+							'keterangan' => $row->keterangan,
+							'satuan_uuid_besar' => $row->satuan_uuid_besar,
+							'nama_satuan_besar' => $row->nama_satuan_besar,
+							'satuan_uuid_kecil' => $row->satuan_uuid_kecil,
+							'nama_satuan_kecil' => $row->nama_satuan_kecil,
+							'hitung_besar' => $row->hitung_besar,
+							'hitung_kecil' => $row->hitung_kecil,
+							'kategori' => $row->kategori,
+							'formularium' => $row->formularium,
+							'golongan' => $row->golongan,
+							'jenis' => $row->jenis,
+							'min_stock' => $row->min_stock
+						]
+					);
+				}
+			});
+		return $collection;
+	}
+
+	private function ocularsinistravisus() {
+		$collection = new Collection;
+		$key = $request->key;
+		$search = $request->search;
+		$data = DB::table('master_visus')
+			->orderBy('id', 'asc')
+			->where('nilai', 'ilike', '%'.$search.'%')
+			->chunk(25, function ($data) use ($collection, $key) {
+				foreach ($data as $row) {
+					$collection->push(
+						(object) [
+							'value' => $row->nilai,
+							'label' => $row->nilai,
+
+							'id' => $row->id,
+							'uuid' => $row->uuid,
+							'nilai' => $row->nilai
+						]
+					);
+				}
+			});
+		return $collection;
+	}
+	private function ocularsinistrapinhole() {
+		$collection = new Collection;
+		$key = $request->key;
+		$search = $request->search;
+		$data = DB::table('master_pinhole')
+			->orderBy('id', 'asc')
+			->where('nilai', 'ilike', '%'.$search.'%')
+			->chunk(25, function ($data) use ($collection, $key) {
+				foreach ($data as $row) {
+					$collection->push(
+						(object) [
+							'value' => $row->nilai,
+							'label' => $row->nilai,
+
+							'id' => $row->id,
+							'uuid' => $row->uuid,
+							'nilai' => $row->nilai
+						]
+					);
+				}
+			});
+		return $collection;
+	}
 	private function obatgudang() {
 		$collection = new Collection;
 		$key = $request->key;

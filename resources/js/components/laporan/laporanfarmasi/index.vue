@@ -120,7 +120,7 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-mt form-mt">
+		<div class="col-4 form-mt form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -137,7 +137,7 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<div class="col-4 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -147,24 +147,24 @@
 						<Inputed :ref="form.stockopnamegudang.name" :form="form.stockopnamegudang"></Inputed>
 					</div>
 					<div class="col-12">
-						<button v-on:click="excel('stockopnameapotek')" class="excels">Cetak ke Excel</button>
+						<button v-on:click="excel('stockopnamegudang')" class="excels">Cetak ke Excel</button>
 						<!-- <button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button> -->
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<div class="col-4 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
 						<h3 style="text-decoration: underline;">(Bedah Central) Stock Opname</h3>
 					</div>
 					<div class="col-12">
-						<Inputed :ref="form.stockopnamegudang.name" :form="form.stockopnamegudang"></Inputed>
+						<Inputed :ref="form.stockopnamebedah.name" :form="form.stockopnamebedah"></Inputed>
 					</div>
 					<div class="col-12">
-						<button v-on:click="excel('stockopnameapotek')" class="excels">Cetak ke Excel</button>
+						<button v-on:click="excel('stockopnamebedah')" class="excels">Cetak ke Excel</button>
 						<!-- <button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button> -->
 					</div>
 				</div>
@@ -172,7 +172,7 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<!-- <div class="col-3 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -183,23 +183,23 @@
 					</div>
 					<div class="col-12">
 						<button v-on:click="excel('stockopnameapotek')" class="excels">Cetak ke Excel</button>
-						<!-- <button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button> -->
+						<button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button>
 					</div>
 				</div>
 
 			</div>
-		</div>
+		</div> -->
 
-		<div class="col-3  form-mt">
+		<div class="col-4  form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
 						<h3 style="text-decoration: underline;">(Gudang) Kartu Stock</h3>
 					</div>
 					<div class="col-12">
-						<Selected v-on:click="selectbox($event, form.select.obatgudang.name, form.select.obatgudang.statics)" 
-									:ref="form.select.obatgudang.name" @selecteditem="selecteditem" @selectclear="selectclear"
-									:selection="form.select.obatgudang" v-on:keyup="selectfilter($event, form.select.obatgudang.name)"></Selected>
+						<Selected v-on:click="selectbox($event, form.select.obat2.name, form.select.obat2.statics)" 
+									:ref="form.select.obat2.name" @selecteditem="selecteditem" @selectclear="selectclear"
+									:selection="form.select.obat2" v-on:keyup="selectfilter($event, form.select.obat2.name)"></Selected>
 					</div>
 					<div class="col-12">
 						<Inputed :ref="form.darikartustockgudang.name" :form="form.darikartustockgudang"></Inputed>
@@ -215,16 +215,16 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<div class="col-4 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
 						<h3 style="text-decoration: underline;">(Apotek) Kartu Stock</h3>
 					</div>
 					<div class="col-12">
-						<Selected v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)" 
-											:ref="form.select.apotek.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.apotek" v-on:keyup="selectfilter($event, form.select.apotek.name)"></Selected>
+						<Selected v-on:click="selectbox($event, form.select.obat3.name, form.select.obat3.statics)" 
+											:ref="form.select.obat3.name" @selecteditem="selecteditem" @selectclear="selectclear"
+											:selection="form.select.obat3" v-on:keyup="selectfilter($event, form.select.obat3.name)"></Selected>
 					</div>
 					<div class="col-12">
 						<Inputed :ref="form.darikartustockapotek.name" :form="form.darikartustockapotek"></Inputed>
@@ -240,32 +240,32 @@
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<div class="col-4 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
 						<h3 style="text-decoration: underline;">(Bedah Central) Kartu Stock</h3>
 					</div>
 					<div class="col-12">
-						<Selected v-on:click="selectbox($event, form.select.apotek.name, form.select.apotek.statics)" 
-											:ref="form.select.apotek.name" @selecteditem="selecteditem" @selectclear="selectclear"
-											:selection="form.select.apotek" v-on:keyup="selectfilter($event, form.select.apotek.name)"></Selected>
+						<Selected v-on:click="selectbox($event, form.select.obat4.name, form.select.obat4.statics)" 
+									:ref="form.select.obat4.name" @selecteditem="selecteditem" @selectclear="selectclear"
+									:selection="form.select.obat4" v-on:keyup="selectfilter($event, form.select.obat4.name)"></Selected>
 					</div>
 					<div class="col-12">
-						<Inputed :ref="form.darikartustockapotek.name" :form="form.darikartustockapotek"></Inputed>
+						<Inputed :ref="form.darikartustockbedah.name" :form="form.darikartustockbedah"></Inputed>
 					</div>
 					<div class="col-12">
-						<Inputed :ref="form.kekartustockapotek.name" :form="form.kekartustockapotek"></Inputed>
+						<Inputed :ref="form.kekartustockbedah.name" :form="form.kekartustockbedah"></Inputed>
 					</div>
 					<div class="col-12">
-						<button v-on:click="excel('kartustockapotek')" class="excels">Cetak ke Excel</button>
+						<button v-on:click="excel('kartustockbedah')" class="excels">Cetak ke Excel</button>
 						<!-- <button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button> -->
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="col-3 form-ml form-mt">
+		<!-- <div class="col-3 form-ml form-mt">
 			<div class="inner wrap-laporan" ref="roottable">
 				<div class="grid">
 					<div class="col-12">
@@ -284,11 +284,11 @@
 					</div>
 					<div class="col-12">
 						<button v-on:click="excel('kartustockapotek')" class="excels">Cetak ke Excel</button>
-						<!-- <button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button> -->
+						<button v-on:click="pdf()" class="pdfs">Cetak ke Pdf</button>
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 
 		<!-- <div class="col-4 form-ml">
 			<div class="inner wrap-laporan" ref="roottable">
@@ -464,10 +464,46 @@ export default {
 			else if (posisi == 'stockopnamegudang') {
 				uri = '/laporan/excel/' + posisi + '/' + vm.form.stockopnamegudang.value;
 			}
+			else if (posisi == 'stockopnamebedah') {
+				uri = '/laporan/excel/' + posisi + '/' + vm.form.stockopnamebedah.value;
+			}
 			else if (posisi == 'returgudang') {
 				let tmp = 'empty';
 				if (vm.form.select.supplierretur.value != 'Silahkan Pilih' && vm.form.select.supplierretur.value != '') { tmp = vm.form.select.supplierretur.value; }
 				uri = '/laporan/excel/' + posisi + '/' + vm.form.dariretur.value + '/' + vm.form.keretur.value + '/' + tmp;
+			}
+			else if (posisi == 'fakturgudang') {
+				let tmp = 'empty';
+				if (vm.form.select.supplierretur.value != 'Silahkan Pilih' && vm.form.select.supplierretur.value != '') { tmp = vm.form.select.supplierretur.value; }
+				uri = '/laporan/excel/' + posisi + '/' + vm.form.dariretur.value + '/' + vm.form.keretur.value + '/' + tmp;
+			} else if (posisi == 'kartustockgudang') {
+				let tmp = 'empty';
+				let tmp2 = 'empty';
+				let tmp3 = 'empty';
+				console.log("kartustockgudang", vm.form.select.obat2.uuid);
+				if (vm.form.select.obat2.value != 'Silahkan Pilih' && vm.form.select.obat2.value != '') { tmp = vm.form.select.obat2.value; }
+				if (vm.form.kekartustockgudang.value  != '') { tmp2 = vm.form.kekartustockgudang.value; }
+				if (vm.form.darikartustockgudang.value  != '') { tmp3 = vm.form.darikartustockgudang.value; }
+				uri = '/laporan/excel/' + posisi + '/' + tmp2  + '/' + tmp3 + '/' + tmp;
+
+			}
+			else if (posisi == 'kartustockbedah') {
+				let tmp = 'empty';
+				let tmp2 = 'empty';
+				let tmp3 = 'empty';
+				if (vm.form.select.obat4.value != 'Silahkan Pilih' && vm.form.select.obat4.value != '') { tmp = vm.form.select.obat4.value; }
+				if (vm.form.kekartustockbedah.value  != '') { tmp2 = vm.form.kekartustockbedah.value; }
+				if (vm.form.darikartustockbedah.value  != '') { tmp3 = vm.form.darikartustockbedah.value; }
+				uri = '/laporan/excel/' + posisi + '/' + tmp2  + '/' + tmp3 + '/' + tmp;
+			}
+			else if (posisi == 'kartustockapotek') {
+				let tmp = 'empty';
+				let tmp2 = 'empty';
+				let tmp3 = 'empty';
+				if (vm.form.select.obat3.value != 'Silahkan Pilih' && vm.form.select.obat3.value != '') { tmp = vm.form.select.obat3.value; }
+				if (vm.form.kekartustockapotek.value  != '') { tmp2 = vm.form.kekartustockapotek.value; }
+				if (vm.form.darikartustockapotek.value  != '') { tmp3 = vm.form.darikartustockapotek.value; }
+				uri = '/laporan/excel/' + posisi + '/' + tmp2  + '/' + tmp3 + '/' + tmp;
 			}
 			window.open(uri);
 		},

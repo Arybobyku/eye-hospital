@@ -23,6 +23,11 @@
                                 <td width=50%>{{ $pasien->tanggal_lahir }}</td>
                             </tr>
                             <tr>
+                                <td width="20%">Jenis Kelamin</td>
+                                <td width="1%">:</td>
+                                <td width=50%>{{ $pasien->jenis_kelamin }}</td>
+                            </tr>
+                            <tr>
                                 <td width="20%">No.RM</td>
                                 <td width="1%">:</td>
                                 <td width=50%>{{ $pasien->rekam_medis }}</td>

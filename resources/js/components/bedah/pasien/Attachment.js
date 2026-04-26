@@ -68,6 +68,8 @@ export const parseaddobat = (form) => {
 	data.append('hja_non_resep_besar', form.hja_non_resep_besar);
 	data.append('jumlah_kecil', form.jumlah_kecil);
 	data.append('jumlah_besar', form.jumlah_besar);
+	data.append('tanggal', form.tanggal);
+	data.append('waktu', form.waktu);
 	data.append('signa', form.signa);
 	data.append('total', form.total);
 
@@ -131,5 +133,25 @@ export const parserawatinap = (form) => {
 	data.append('nama_dokter', form.select.dokter.label);
 
 
+	return data;
+}
+
+	export const parseeditbedah = (form) => {
+
+	let data = new FormData();
+	data.append('uuid', form.uuid);
+	data.append('registrasi_uuid', form.registrasi_uuid);
+	data.append('layanan_uuid', form.select.paketbedah.value);
+	data.append('paketbedah', form.select.paketbedah.label);
+
+
+	return data;
+}
+	export const parseeditlayanan = (form, layanan) => {
+
+	let data = new FormData();
+	data.append('uuid', form.uuid);
+	data.append('registrasi_uuid', form.registrasi_uuid);
+	data.append('layanan', JSON.stringify(layanan));
 	return data;
 }

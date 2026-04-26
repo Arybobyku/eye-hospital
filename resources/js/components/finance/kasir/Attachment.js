@@ -15,7 +15,11 @@ export const parsekelurahan = (form, detail, listdata) => {
 	data.append('jenis', detail.jenis);
 	data.append('kode', detail.kode);
 	data.append('nomor', detail.nomor);
+	data.append('diskon_rp', form.diskon_rp);
+	data.append('diskon_persen', form.diskon_persen);
 	data.append('tindakan', JSON.stringify(listdata));
+	data.append('ttd_kasir', form.ttd_kasir ?? '');
+	data.append('stempel', form.stempel ?? '0');
 
 	data.append('metode_pembayaran', form.select.metodepembayaran.value);
 
@@ -52,6 +56,7 @@ export const parseperbaharui = (form, detail, global) => {
 	data.append('uuid', global.uuid);
 	data.append('tarif', global.tarif);
 	data.append('total', global.total);
+	
 	for(var pair of data.entries()) {
 		console.log(pair[0]+ ', '+ pair[1]); 
  	}

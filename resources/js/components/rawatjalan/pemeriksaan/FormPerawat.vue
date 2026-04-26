@@ -7,6 +7,20 @@
 				<h2 v-if="form">{{ form.title }}</h2>
 			</div>
 			<div class="modal-body" v-if="form">
+				<!-- Foto + Info Singkat Pasien -->
+				<div style="display:flex; align-items:center; gap:16px; padding:12px 0 14px; border-bottom:1px solid #eee; margin-bottom:12px;">
+					<img
+						:src="detailperawat.photos ? '/' + detailperawat.photos : '/default-avatar.png'"
+						alt="Foto Pasien"
+						@error="$event.target.src='/default-avatar.png'"
+						style="width:72px; height:72px; border-radius:50%; object-fit:cover; border:3px solid #e0e0e0; box-shadow:0 2px 8px rgba(0,0,0,0.12); flex-shrink:0;"
+					/>
+					<div>
+						<div style="font-size:15px; font-weight:700; color:#222;">{{ detailperawat.nama_pasien }}</div>
+						<div style="font-size:12px; color:#666; margin-top:2px;">{{ detailperawat.rekam_medis }}</div>
+						<div style="font-size:12px; color:#888;">{{ detailperawat.jenis_kelamin }} &bull; {{ datename(detailperawat.tanggal_lahir) }}</div>
+					</div>
+				</div>
 				<div class="grid">
 					<div class="col-4 form-mr">
 						<ul class="list-detail">
@@ -857,14 +871,14 @@
 										</ckeditor>
 									</div>
 									<div class="col-9"></div>
-									<div class="col-3 form-ml form-mt">
+									<!-- <div class="col-3 form-ml form-mt">
 										<label for="">Tanda Tangan di Dokumen Ini</label>
 										<img v-if="form.ttd" :src="form.ttd" alt="ttd dokter" height="100"
 											width="400" />
 										<br>
 										<button v-if="!form.ttd" class="button-modal-page button-modal-green"
 											v-on:click="doDigitalSignature()">Tanda Tangan</button>
-									</div>
+									</div> -->
 								</div>
 							</div>
 						</div>
@@ -1182,54 +1196,54 @@ export default {
 
 
 		hide: function () { vm.terminate.show = false; setTimeout(function () { vm.terminate.display = 'display= none'; body.style.overflowY = 'auto'; }, 250, this); },
-		// parsingForm: function () { 
-		// 	vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detailperawat), 'addperawat'); 
+		// parsingForm: function () {
+		// 	vm.$emit('parsingForm', vm.parsekelurahan(vm.form, vm.detailperawat), 'addperawat');
 		// },
 		setCkEditor: function (val, title) {
-			vm.form.subject = `${vm.form.keluhanutama.value}`;
-			vm.form.object = `
-                    <figure class="table">
-                        <table>
-							<thead>
-                            <tr>
-                                <td>Nama Obat</td>
-                                <td>Nilai</td>
-                            </tr>
-							</thead>
-                            <tbody>
-    
-								<tr>
-                                    <td>Nadi</td>
-									<td>${vm.form.nadi.value} x/Menit</td>
-                                </tr>
-								<tr>
-                                    <td>Respiratory Rate</td>
-									<td>${vm.form.respiratoryrate.value} x/Menit</td>
-                                </tr>
-								<tr>
-                                    <td>Suhu Tubuh</td>
-									<td>${vm.form.suhu.value} °C</td>
-                                </tr>
-								<tr>
-                                    <td>Berat Badan</td>
-									<td>${vm.form.beratbadan.value} Kg</td>
-                                </tr>
-								<tr>
-                                    <td>Tinggi Badan</td>
-									<td>${vm.form.tinggibadan.value} Cm</td>
-                                </tr>
-								<tr>
-                                    <td>Tekanan Darah</td>
-									<td>${vm.form.tekanandarah.value} mmHg</td>
-                                </tr>
-								<tr>
-                                    <td>KGD</td>
-									<td>${vm.form.kgd.value} mg/dL</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        </figure>   
-			`;
+			// vm.form.subject = `${vm.form.keluhanutama.value}`;
+			// vm.form.object = `
+            //         <figure class="table">
+            //             <table>
+			// 				<thead>
+            //                 <tr>
+            //                     <td>Nama Obat</td>
+            //                     <td>Nilai</td>
+            //                 </tr>
+			// 				</thead>
+            //                 <tbody>
+
+			// 					<tr>
+            //                         <td>Nadi</td>
+			// 						<td>${vm.form.nadi.value} x/Menit</td>
+            //                     </tr>
+			// 					<tr>
+            //                         <td>Respiratory Rate</td>
+			// 						<td>${vm.form.respiratoryrate.value} x/Menit</td>
+            //                     </tr>
+			// 					<tr>
+            //                         <td>Suhu Tubuh</td>
+			// 						<td>${vm.form.suhu.value} °C</td>
+            //                     </tr>
+			// 					<tr>
+            //                         <td>Berat Badan</td>
+			// 						<td>${vm.form.beratbadan.value} Kg</td>
+            //                     </tr>
+			// 					<tr>
+            //                         <td>Tinggi Badan</td>
+			// 						<td>${vm.form.tinggibadan.value} Cm</td>
+            //                     </tr>
+			// 					<tr>
+            //                         <td>Tekanan Darah</td>
+			// 						<td>${vm.form.tekanandarah.value} mmHg</td>
+            //                     </tr>
+			// 					<tr>
+            //                         <td>KGD</td>
+			// 						<td>${vm.form.kgd.value} mg/dL</td>
+            //                     </tr>
+            //                 </tbody>
+            //             </table>
+            //             </figure>
+			// `;
 		},
 
 

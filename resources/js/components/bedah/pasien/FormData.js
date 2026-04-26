@@ -74,6 +74,20 @@ export const formdetaildokter = () => {
 		}
 	}
 }
+export const formeditbedah = () => {
+	return {
+		title: '', posisi: '', uuid: '',
+		registrasi_uuid: '',
+		tarif: '',
+		select : {
+			paketbedah: {
+				key : 'paketbedah', for_id: 'form_'+'paketbedah', name: 'paketbedah', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'paketbedah', isrequired: false, html: 'Nama Paket Bedah', issearch: true, disabled: false,
+			},
+		}
+	}
+}
 
 
 export const formobat = () => {
@@ -102,6 +116,10 @@ export const formobat = () => {
 			title: 'Signa', for_id: 'form_'+'signaracikan', type: 'text', required: '', 
 			name: 'signaracikan', value: '', disabled: false, show: true, kinds: ''
 		},
+		signaform:{
+			title: 'Signa', for_id: 'form_'+'signaform', type: 'text', required: '', 
+			name: 'signaform', value: '', disabled: false, show: true, kinds: ''
+		},
 
 		dosisdiperlukan:{
 			title: 'Dosis yang diperlukan', for_id: 'form_'+'dosisdiperlukan', type: 'text', required: '', 
@@ -126,6 +144,14 @@ export const formobat = () => {
 		quantity:{
 			title: 'Quantity', for_id: 'form_'+'quantity', type: 'number', required: '', 
 			name: 'quantity', value: '', disabled: false, show: true, kinds: ''
+		},
+		tanggal:{
+			title: 'tanggal', for_id: 'form_'+'tanggal', type: 'text', required: '', 
+			name: 'tanggal', value: '', disabled: false, show: true, kinds: ''
+		},
+		waktu:{
+			title: 'waktu', for_id: 'form_'+'waktu', type: 'text', required: '', 
+			name: 'waktu', value: '', disabled: false, show: true, kinds: ''
 		},
 
 
@@ -246,6 +272,23 @@ export const formresep = () => {
 				class: 'posisimata', isrequired: false, html: 'Posisi Mata', issearch: false, disabled: false,
 			},
 			
+		}
+	}
+	
+}
+export const formeditlayanan = () => {
+	return {
+		title: '', posisi: '', uuid: '', ispending: '',
+		jenis: '',
+		registrasi_uuid: '',
+		carabayar_nama: '',
+		carabayar_uuid: '',
+		select: {
+			carabayartindakanrawatjalan: { 
+				key : 'carabayartindakanrawatjalan', for_id: 'form_'+'carabayartindakanrawatjalan', name: 'carabayartindakanrawatjalan', uuid:'', value: '', label: 'Silahkan Pilih', 
+				filter: [], data: [], search: '', option: 'display: none', statics: false,
+				class: 'carabayartindakanrawatjalan', isrequired: true, html: 'Nama Tindakan', issearch: true, disabled: false,
+			},
 		}
 	}
 }

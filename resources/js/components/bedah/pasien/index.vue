@@ -24,7 +24,10 @@
 	<FormDetail ref="FormDetail"></FormDetail>
 	<FormInap ref="FormInap" @dialog="dialog" @parsingForm="parsingForm"></FormInap>
 	<FormDetailDokter ref="FormDetailDokter" @dialog="dialog" @parsingForm="parsingForm"></FormDetailDokter>
+	<FormEditBedah ref="FormEditBedah" @dialog="dialog" @parsingForm="parsingForm"></FormEditBedah>
 	<FormHistoriDokter ref="FormHistoriDokter"></FormHistoriDokter>
+	<FormEditLayanan ref="FormEditLayanan" @dialog="dialog" @parsingForm="parsingForm"></FormEditLayanan>
+
 </template>
 
 <script>
@@ -37,13 +40,15 @@ import Swal from 'sweetalert2';
 export default {
 	emits: ["titletrigger", "repatch"],
 	beforeUnmount:function() {},
-	components: { toast, Swal, 
+	components: { toast, Swal,
 		FormUnit: defineAsyncComponent(() => import('./FormUnit.vue')),
 		FormObat: defineAsyncComponent(() => import('./FormObat.vue')),
 		FormResep: defineAsyncComponent(() => import('./FormResep.vue')),
 		FormJadwalKontrol: defineAsyncComponent(() => import('./FormJadwalKontrol.vue')),
+		FormEditLayanan: defineAsyncComponent(() => import('./FormEditLayanan.vue')),
 		FormDetail: defineAsyncComponent(() => import('./FormDetail.vue')),
 		FormDetailDokter: defineAsyncComponent(() => import('./FormDetailDokter.vue')),
+		FormEditBedah: defineAsyncComponent(() => import('./FormEditBedah.vue')),
 		FormInap: defineAsyncComponent(() => import('./FormInap.vue')),
 		FormHistori: defineAsyncComponent(() => import('./FormHistori.vue')),
 		FormHistoriDokter: defineAsyncComponent(() => import('./FormHistoriDokter.vue')),
@@ -68,8 +73,11 @@ export default {
 				inap: '/bedah/pasien/inap',
 				inapadd: '/bedah/pasien/inapadd',
 				detaildokter: '/bedah/pasien/detaildokter',
+				editbedah: '/bedah/pasien/editbedah',
+				addbedah: '/bedah/pasien/addbedah',
 				adddokter: '/bedah/pasien/adddokter',
-
+				editlayanan: '/bedah/layananbedah/edit',
+				updatelayanan: '/bedah/layananbedah/update',
 				histori: '/rawatjalan/pemeriksaan/histori',
 				historidokter: '/dokter/pemeriksaan/histori',
 
@@ -118,8 +126,8 @@ export default {
 				{ value: 'now', label: 'Pasien (Aktif)', class: 'tab-active' },
 				{ value: 'done', label: 'Pasien (Selesai)', class: 'tab-no-active' }
 			],
-			content: { 
-				now: true, 
+			content: {
+				now: true,
 				done: false,
 			}
 		},
@@ -129,8 +137,8 @@ export default {
 
 		changesTab: function (values, index, classes) {
 			if (classes != 'tab-active') {
-				for (let i = 0; i < vm.tab.button.length; i++) { 
-					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; 
+				for (let i = 0; i < vm.tab.button.length; i++) {
+					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';
 				}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
@@ -158,11 +166,12 @@ export default {
 		btnhtml:function(_item, _index) {
 			let str = [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detaildokter', tooltip: 'Dokter Bedah', item: _item, index: _index, show: _item.bedah_status == 'Selesai Dioperasi' ? false : true },
-				{ icon: 'refresh-cw', color: 'btn-info', posisi: 'proses', tooltip: 'Mulai Pembedahan', item: _item, index: _index, 
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'editbedah', tooltip: 'Edit Paket Bedah', item: _item, index: _index, show: _item.bedah_status == 'Selesai Dioperasi' ? false : true },
+				{ icon: 'refresh-cw', color: 'btn-info', posisi: 'proses', tooltip: 'Mulai Pembedahan', item: _item, index: _index,
 					show: _item.bedah_status == '-' ? true : false },
-				{ icon: 'check-circle', color: 'btn-success', posisi: 'selesai', tooltip: 'Selesai Pembedahan', item: _item, index: _index, 
+				{ icon: 'check-circle', color: 'btn-success', posisi: 'selesai', tooltip: 'Selesai Pembedahan', item: _item, index: _index,
 					show: _item.bedah_status == 'Sedang Dioperasi' ? true : false },
-				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'detail', tooltip: 'Detail Paket Bedah', item: _item, index: _index, 
+				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'detail', tooltip: 'Detail Paket Bedah', item: _item, index: _index,
 					show: true },
 				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'inap', tooltip: 'Tambah Kamar Inap', item: _item, index: _index,
 					show: _item.bedah_status == 'Selesai Dioperasi' ? true : false
@@ -175,17 +184,19 @@ export default {
 				//{ icon: 'check-circle', color: 'btn-info', posisi: 'jadwalkontrol', tooltip: 'Jadwal Kontrol', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Histori RO', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-success', posisi: 'historidokter', tooltip: 'Histori Dokter', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'editlayanan', tooltip: 'Edit Layanan Bedah', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'rme', tooltip: 'Laporan Pembedahan', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
 
 		btnhtmldone:function(_item, _index) {
 			let str = [
-				{ icon: 'refresh-cw', color: 'btn-info', posisi: 'proses', tooltip: 'Mulai Pembedahan', item: _item, index: _index, 
+				{ icon: 'refresh-cw', color: 'btn-info', posisi: 'proses', tooltip: 'Mulai Pembedahan', item: _item, index: _index,
 					show: _item.bedah_status == '-' ? true : false },
-				{ icon: 'check-circle', color: 'btn-success', posisi: 'selesai', tooltip: 'Selesai Pembedahan', item: _item, index: _index, 
+				{ icon: 'check-circle', color: 'btn-success', posisi: 'selesai', tooltip: 'Selesai Pembedahan', item: _item, index: _index,
 					show: _item.bedah_status == 'Sedang Dioperasi' ? true : false },
-				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'detail', tooltip: 'Detail Paket Bedah', item: _item, index: _index, 
+				{ icon: 'arrow-up', color: 'btn-warning', posisi: 'detail', tooltip: 'Detail Paket Bedah', item: _item, index: _index,
 					show: true },
 				{
 					icon: 'arrow-up', color: 'btn-warning', posisi: 'inap', tooltip: 'Tambah Kamar Inap', item: _item, index: _index,
@@ -198,6 +209,7 @@ export default {
 				//{ icon: 'check-circle', color: 'btn-info', posisi: 'jadwalkontrol', tooltip: 'Jadwal Kontrol', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-warning', posisi: 'histori', tooltip: 'Histori RO', item: _item, index: _index, show: true },
 				{ icon: 'book', color: 'btn-success', posisi: 'historidokter', tooltip: 'Histori Dokter', item: _item, index: _index, show: true },
+				{ icon: 'arrow-up', color: 'btn-success', posisi: 'editlayanan', tooltip: 'Edit Layanan Bedah', item: _item, index: _index, show: true },
 			]
 			return str;
 		},
@@ -212,13 +224,13 @@ export default {
 			return '<div class="badge badge-success">'+data.bedah_status+'</div>'
 		},
 		waktuMasuk: function (data) {
-			if (data.waktu_masuk_inap == '') 
+			if (data.waktu_masuk_inap == '')
 			{
 				return "-";
 
 			 } else {
 			return data.waktu_masuk_inap
-			} 
+			}
 			// return '<div class="badge badge-success">' + waktuMasukInap + '</div>'
 		},
 		tanggalMasuk: function (data) {
@@ -232,7 +244,7 @@ export default {
 		},
 		datename2: function (data, istimes = false) {
 			if (data <= '2000-01-01') {
-				return '-'; 
+				return '-';
 			} else {
 			let tmp = data.split(" "),
 				dates = tmp[0].split('-');
@@ -312,6 +324,16 @@ export default {
 				vm.attach.data = new FormData();
 				vm.attach.data.append('uuid', data.uuid);
 				vm.attach.url = vm.attach.link.detaildokter;
+				vm.executions();
+			}
+			else if (posisi == 'editbedah') {
+				vm.$refs.FormEditBedah.aturulang();
+				vm.position = "editbedahdata";
+				vm.$refs.FormEditBedah.show('editbedahdata', 'Ganti Paket Bedah', data.uuid);
+				setTimeout(() => { vm.loadingModal('formeditbedah'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.editbedah;
 				vm.executions();
 			}
 			else if (posisi == 'proses') {
@@ -441,10 +463,29 @@ export default {
 				vm.attach.data.append('jenis', data.jenis);
 				vm.attach.url = vm.attach.link.getjadwalkontrol;
 				vm.executions();
+			}else if (posisi == 'editlayanan') {
+				vm.$refs.FormEditLayanan.aturulang();
+				vm.position = "editlayanan";
+				vm.$refs.FormEditLayanan.show('edit', 'Ganti Paket Bedah', data.uuid, data);
+				setTimeout(() => { vm.loadingModal('formeditlayanan'); }, 250, this);
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.editlayanan;
+				vm.executions();
+
+			}
+			else if (posisi == 'rme') {
+				vm.$router.push({
+					name: 'RME (Data Pasien)',
+					query: {
+						pasien_uuid: data.pasien_uuid,
+						rekam_medis: data.rekam_medis,
+					}
+				});
 			}
 		},
 
-		loadingModal: function (position) { 
+		loadingModal: function (position) {
 			console.log("position loadingmodal")
 			console.log(position)
 			if (position == 'formunit') { vm.$refs.FormUnit.loaderprocess();  }
@@ -454,9 +495,12 @@ export default {
 			else if (position == 'detaildata') { vm.$refs.FormDetail.loaderprocess(); }
 			else if (position == 'formdetaildokter') { vm.$refs.FormDetailDokter.loaderprocess(); }
 			else if (position == 'detaildokterdata') { vm.$refs.FormDetailDokter.loaderprocess(); }
+			else if (position == 'formeditbedah') { vm.$refs.FormEditBedah.loaderprocess(); }
+			else if (position == 'editbedahdata') { vm.$refs.FormEditBedah.loaderprocess(); }
 			else if (position == 'inapdata') { vm.$refs.FormInap.loaderprocess(); }
 			else if (position == 'formhistori') { vm.$refs.FormHistori.loaderprocess();  }
 			else if (position == 'formhistoridokter') { vm.$refs.FormHistoriDokter.loaderprocess();  }
+			else if (position == 'formeditlayanan') { vm.$refs.FormEditLayanan.loaderprocess();  }
 		},
 
 		parsingForm:function(data, key) {
@@ -469,6 +513,9 @@ export default {
 			}
 			else if(key == 'adddokter') {
 				 vm.position = 'updatedokterdata'; vm.attach.url = vm.attach.link.adddokter; }
+			else if (key == 'addbedah') {
+				vm.position = 'updatebedahdata'; vm.attach.url = vm.attach.link.addbedah;
+			}
 
 			else if (key == 'remove') {
 				vm.position = 'removedata';
@@ -498,51 +545,55 @@ export default {
 				vm.position = 'inapadd';
 				vm.attach.url = vm.attach.link.inapadd;
 			}
+			if (key == 'updatelayanan') {
+				vm.position = 'updatelayanan';
+				vm.attach.url = vm.attach.link.updatelayanan;
+			}
 		},
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
 		setDatatabledone: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.columndone.length; j++) { col.push(vm.converterdone(data[i], i, data[i][vm.columndone[j].value] ? data[i][vm.columndone[j].value] :vm.columndone[j].value, vm.columndone[j].value)); } temporer.push(col); } vm.moduledone.data = temporer; vm.moduledone.total = total; return temporer; },
-		tableload:function(pos = 'main') { 
+		tableload:function(pos = 'main') {
 
 			if (pos == 'main') {
-				vm.attach.url = vm.attach.link.list; 
-				vm.attach.data = new FormData(); 
-				vm.attach.data.append('search', ''); 
-				vm.attach.data.append('column', ''); 
-				vm.attach.data.append('page', 1); 
+				vm.attach.url = vm.attach.link.list;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
+				vm.attach.data.append('page', 1);
 			}
 			else if (pos == 'done') {
-				vm.attach.url = vm.attach.link.listselesai; 
-				vm.attach.data = new FormData(); 
-				vm.attach.data.append('search', ''); 
-				vm.attach.data.append('column', ''); 
+				vm.attach.url = vm.attach.link.listselesai;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
 				vm.attach.data.append('page', 1);
 			} else {
 				vm.attach.url = vm.attach.link.list;
 				vm.attach.data = new FormData();
 				vm.attach.data.append('search', '');
 				vm.attach.data.append('column', '');
-				vm.attach.data.append('page', 1); 
+				vm.attach.data.append('page', 1);
 			}
 
-			vm.executions(); 
+			vm.executions();
 		},
-		tablereload:function(data = new FormData(), pos = 'main') { 
+		tablereload:function(data = new FormData(), pos = 'main') {
 			if (vm.posisieksternal == 'done') {
 				if (pos == 'outer') {
-					vm.$refs.DatatableDone.skeleton(); 
+					vm.$refs.DatatableDone.skeleton();
 				}
-				vm.attach.url = vm.attach.link.listselesai; 
-				vm.attach.data = data; 
+				vm.attach.url = vm.attach.link.listselesai;
+				vm.attach.data = data;
 			}
 			else {
 				if (pos == 'outer') {
-					vm.$refs.Datatable.skeleton(); 
+					vm.$refs.Datatable.skeleton();
 				}
-				vm.attach.url = vm.attach.link.list; 
-				vm.attach.data = data; 
+				vm.attach.url = vm.attach.link.list;
+				vm.attach.data = data;
 			}
-			vm.position = 'externaltable'; 
+			vm.position = 'externaltable';
 			vm.executions();
 		},
 
@@ -553,8 +604,8 @@ export default {
 		loadmain: () => { vm.position = 'loadmain'; vm.firstloader(); vm.tableload(); },
 
 		loaddone:function() {
-			vm.position = 'loaddone'; 
-			vm.firstloader(); 
+			vm.position = 'loaddone';
+			vm.firstloader();
 			vm.tableload('done');
 		},
 
@@ -563,15 +614,15 @@ export default {
 			vm.message('error', 1);
 			if (vm.position == 'loadmain') { vm.firstloader(); active = 1; }
 			else if (vm.position == 'loaddone') { vm.firstloader(); active = 1; }
-			else if (vm.position == 'externaltable') { 
+			else if (vm.position == 'externaltable') {
 				if (vm.posisieksternal='done') {
-					vm.$refs.DatatableDone.skeleton(); 
-					vm.$refs.DatatableDone.backpage(); 
+					vm.$refs.DatatableDone.skeleton();
+					vm.$refs.DatatableDone.backpage();
 				}
 				else {
-					vm.$refs.Datatable.skeleton(); 
-					vm.$refs.Datatable.backpage(); 
-				} 
+					vm.$refs.Datatable.skeleton();
+					vm.$refs.Datatable.backpage();
+				}
 			}
 			else if (vm.position == 'adddata') { vm.loadingModal('formunit'); }
 			else if (vm.position == 'adddataobat') { vm.loadingModal('formobat'); }
@@ -583,13 +634,14 @@ export default {
 			else if (vm.position == 'editdata') { vm.loadingModal('formunit'); vm.$refs.FormUnit.hide();  }
 			else if (vm.position == 'updatedata') { vm.loadingModal('formunit'); }
 			else if (vm.position == 'updatedokterdata') { vm.loadingModal('formdetaildokter'); }
+			else if (vm.position == 'updatebedahdata') { vm.loadingModal('formeditbedah'); }
 
 			else if (vm.position == 'prosesdata') { vm.$refs.Datatable.skeleton(); }
 			else if (vm.position == 'selesaidata') { vm.$refs.Datatable.skeleton(); }
 			else if (vm.position == 'historidata') { vm.loadingModal('formhistori'); vm.$refs.FormHistori.hide();  }
 			else if (vm.position == 'historidokter') { vm.loadingModal('formhistoridokter'); vm.$refs.FormHistoriDokter.hide();  }
 			else if (vm.position == 'removedata') { vm.loadingModal('formunit'); }
-			
+
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
 		},
@@ -599,38 +651,46 @@ export default {
 			console.log(vm.position);
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
-	
-			if (vm.position == 'loadmain') { 
+
+			if (vm.position == 'loadmain') {
 				vm.posisieksternal='now';
 				vm.firstloader();
-				vm.$refs.Datatable.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.Datatable.paging(); 
+				vm.$refs.Datatable.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total);
+				vm.$refs.Datatable.paging();
 				active = 0;
 			}
-			else if (vm.position == 'loaddone') { 
+			else if (vm.position == 'editlayanan') {
+				vm.$refs.FormEditLayanan.setdataform(response);
+				active = 0;
+			}
+			else if (vm.position == 'loaddone') {
 				vm.posisieksternal='done';
 				vm.firstloader();
-				vm.$refs.DatatableDone.update(vm.columndone, vm.setDatatabledone(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.DatatableDone.paging(); 
+				vm.$refs.DatatableDone.update(vm.columndone, vm.setDatatabledone(response.data.data, response.data.total), response.data.total);
+				vm.$refs.DatatableDone.paging();
 				active = 0;
 			}
-			else if (vm.position == 'externaltable') { 
+			else if (vm.position == 'externaltable') {
 
 				if (vm.posisieksternal=='done') {
-					vm.$refs.DatatableDone.update('', vm.setDatatabledone(response.data.data, response.data.total), response.data.total); 
-					vm.$refs.DatatableDone.skeleton(); 
-					vm.$refs.DatatableDone.paging(); 
+					vm.$refs.DatatableDone.update('', vm.setDatatabledone(response.data.data, response.data.total), response.data.total);
+					vm.$refs.DatatableDone.skeleton();
+					vm.$refs.DatatableDone.paging();
 					active = 0;
 				}
 				else {
-					vm.$refs.Datatable.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total); 
-					vm.$refs.Datatable.skeleton(); 
-					vm.$refs.Datatable.paging(); 
+					vm.$refs.Datatable.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total);
+					vm.$refs.Datatable.skeleton();
+					vm.$refs.Datatable.paging();
 					active = 0;
 				}
 			}
 			else if (vm.position == 'updatedokterdata') {
 				vm.$refs.FormDetailDokter.hide();
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
+			}
+			else if (vm.position == 'updatebedahdata') {
+				vm.$refs.FormEditBedah.hide();
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'adddata') {
@@ -649,37 +709,42 @@ export default {
 			else if (vm.position == 'addjadwalkontrol') {
 				vm.$refs.FormJadwalKontrol.hide();
 				vm.loadingModal('formjadwalkontrol');
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this); 
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this);
 			}
 			else if (vm.position == 'loaddata') {
-				vm.$refs.FormUnit.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormUnit.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddataobat') {
-				vm.$refs.FormObat.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormObat.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddataresep') {
-				vm.$refs.FormResep.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormResep.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddatajadwalkontrol') {
-				vm.$refs.FormJadwalKontrol.setdataform(response); 
+				vm.$refs.FormJadwalKontrol.setdataform(response);
 				active = 0; w
 			}
 			else if (vm.position == 'editdata') {
-				vm.$refs.FormUnit.setdataform(response); 
-				vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormUnit.setdataform(response);
+				vm.position = "updatedata";
+				active = 0;
 			}
 			else if (vm.position == 'detaildata') {
-				vm.$refs.FormDetail.setdataform(response); 
-				vm.position = "detaildata"; 
-				active = 0; 
+				vm.$refs.FormDetail.setdataform(response);
+				vm.position = "detaildata";
+				active = 0;
 			}
 			else if (vm.position == 'detaildokterdata') {
 				vm.$refs.FormDetailDokter.setdataform(response);
 				vm.position = "updatedokterdata";
+				active = 0;
+			}
+			else if (vm.position == 'editbedahdata') {
+				vm.$refs.FormEditBedah.setdataform(response);
+				vm.position = "updatebedahdata";
 				active = 0;
 			}
 			else if (vm.position == 'inapdata') {
@@ -689,29 +754,34 @@ export default {
 			}
 			else if (vm.position == 'updatedata') {
 				vm.loadingModal('formunit');
-				vm.$refs.FormUnit.hide(); 
+				vm.$refs.FormUnit.hide();
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'inapadd') {
 				vm.$refs.FormInap.hide();
 				setTimeout(() => { vm.$refs.DatatableDone.skeleton(); vm.tablereload(); }, 500, this);
 			}
-			else if (vm.position == 'prosesdata') { 
-				setTimeout(() => { vm.tablereload(); }, 125, this); 
+			else if (vm.position == 'prosesdata') {
+				setTimeout(() => { vm.tablereload(); }, 125, this);
 			}
-			else if (vm.position == 'selesaidata') { 
-				setTimeout(() => { vm.tablereload(); }, 125, this); 
+			else if (vm.position == 'selesaidata') {
+				setTimeout(() => { vm.tablereload(); }, 125, this);
 			}
 			else if (vm.position == 'historidata') {
-				vm.$refs.FormHistori.setdataform(response); 
-				//vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormHistori.setdataform(response);
+				//vm.position = "updatedata";
+				active = 0;
 			}
 			else if (vm.position == 'historidokter') {
 				vm.loadingModal('formhistoridokter');
-				vm.$refs.FormHistoriDokter.setdataform(response); 
-				//vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormHistoriDokter.setdataform(response);
+				//vm.position = "updatedata";
+				active = 0;
+			}
+			else if (vm.position == 'updatelayanan') {
+				vm.$refs.FormEditLayanan.hide();
+				setTimeout(() => { vm.$refs.DatatableDone.skeleton(); vm.tablereload(); }, 500, this);
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			vm.message('success', active);
 		},
@@ -735,7 +805,8 @@ export default {
 				else if (vm.position == 'editdata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 				else if (vm.position == 'updatedata') { vm.notification('Pembaharuan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'updatedokterdata') { vm.notification('Penambahan/Pembaharuan data gagal diproses.', 3000, position); }
-
+				else if (vm.position == 'updatebedahdata') { vm.notification('Penambahan/Pembaharuan data gagal diproses.', 3000, position); }
+				else if (vm.position == 'editlayanan') { vm.notification('Data gagal dimuat.', 3000, position); }
 				else if (vm.position == 'prosesdata') { vm.notification('Proses perubahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'selesaidata') { vm.notification('Proses perubahan data gagal diproses.', 3000, position); }
 				else if (vm.position == 'historidata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
@@ -745,8 +816,10 @@ export default {
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'adddata') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				if (vm.position == 'updatedokterdata') { vm.notification('Penambahan/Pembaharuan data berhasil diproses.', 3000, position); }
-
+				else if (vm.position == 'updatebedahdata') { vm.notification('Penambahan/Pembaharuan data berhasil diproses.', 3000, position); }
+				// else if (vm.position == 'editlayanan') { vm.notification('Data gagal dimuat.', 3000, position); }
 				else if (vm.position == 'inapadd') { vm.notification('Penambahan Kamar Inap berhasil diproses.', 3000, position); }
+				else if (vm.position == 'updatelayanan') { vm.notification('Penambahan/Pembaharuan data berhasil diproses', 3000, position); }
 				else if (vm.position == 'adddataobat') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'adddataresep') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }
 				else if (vm.position == 'addjadwalkontrol') { vm.notification('Penambahan data berhasil diproses.', 3000, position); }

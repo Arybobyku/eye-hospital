@@ -103,12 +103,12 @@
 		</tr>
 		<tr>
 			<td style="border: none; padding: 4px 5px">Banyak Uang</td>
-			<td style="border: none; padding: 4px 5px">: Rp. {{ number_format($grandtotal) }}</td>
+			<td style="border: none; padding: 4px 5px">: Rp. {{ number_format($grandtotalCover) }}</td>
 		</tr>
 		<tr>
 			<td style="border: none; padding: 2px 5px">Terbilang</td>
 			<td style="border: none; padding: 2px 5px">: 
-				<i><b>"{{ terbilang($grandtotal) }} Rupiah"</b></i>
+				<i><b>"{{ terbilang($grandtotalCover) }} Rupiah"</b></i>
 			</td>
 		</tr>
 		<tr>
@@ -155,7 +155,7 @@
 				<div style="padding-top: 4px">Dept.Keu / Klaim</div>
 				<br /><br /><br /><br /><br />
 				<span style="text-decoration: underline">
-					<b>Edria Asnita Lestari Sitorus, SE</b>
+					<b>Putri Anggi Salsabila, S.Tr.Ak</b>
 				</span>
 			</td>
 		</tr>

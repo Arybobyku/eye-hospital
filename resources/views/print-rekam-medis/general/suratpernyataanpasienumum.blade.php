@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>REKAM MEDIS GENERAL - SURAT PERNYATAAN PASIEN UMUM</title>
+    <style>
+        @page {
+            margin: 18px;
+        }
+
+        body {
+            margin: 18px;
+        }
+
+        .wrap {
+            width: 100%;
+            height: auto;
+            display: inline-block;
+        }
+
+
+        .left {
+            display: inline-block;
+            float: left;
+        }
+
+        .right {
+            display: inline-block;
+            float: right;
+            margin-right: 65px;
+        }
+
+        .img-wrapper {
+            position: relative;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .img-wrapper img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+
+        .text-above {
+            text-align: center;
+            margin-bottom: 5px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div style="position:fixed; right: 13px; bottom: 10px;"></div>
+    <?php $fullpath = storage_path('app/public/images/header_rme3.png'); ?>
+    <div class="wrap">
+        <div style="width:100%; text-align:right; margin-bottom:5px">{{ $data->no_surat ?? 'RM 9.10/SPPU/' . config('app.tahun_akreditasi', '22') }}</div>
+        @include('print-rekam-medis.partials.header3')
+        <div style="font-weight: bold; text-align: center; padding: 10px;">SURAT PERNYATAAN PASIEN UMUM</div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                <td colspan="2" style="width: 100%;  padding-bottom: 10px;">Yang bertanda tangan di bawah ini:</td>
+            </tr>
+            <tr>
+                <td style="width: 50%;">Nama</td>
+                <td style="width: 50%;">: {{ $data->pembuat_nama }}</td>
+            </tr>
+            <tr>
+                <td style="width: 50%;">Tempat/Tgl Lahir</td>
+                <td style="width: 50%;">: {{ $data->pembuat_tempat_tanggal_lahir }}</td>
+            </tr>
+            <tr>
+                <td style="width: 50%;">Alamat</td>
+                <td style="width: 50%;">: {{ $data->pembuat_alamat }}</td>
+            </tr>
+            <tr>
+                <td style="width: 50%;">Pekerjaan</td>
+                <td style="width: 50%;">: {{ $data->pembuat_pekerjaan }}</td>
+            </tr>
+            <tr>
+                <td style="width: 50%;">No Telp/HP</td>
+                <td style="width: 50%;">: {{ $data->pembuat_no_telp }}</td>
+            </tr>
+            <tr>
+                <td style="width: 50%;">Hubungan Keluarga Pasien</td>
+                <td style="width: 50%;">: {{ $data->pembuat_hubungan_keluarga }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="padding-bottom: 10px; padding-top: 10px;">Bertindak untuk dan atas nama
+                    pasien:</td>
+            </tr>
+            <tr>
+                <td style="width: 50%;">Nama</td>
+                <td style="width: 50%;">: {{ $data->pasien_nama }}</td>
+            </tr>
+            <tr>
+                <td style="width: 50%;">Tempat/Tgl Lahir</td>
+                <td style="width: 50%;">: {{ $data->pasien_tempat_tanggal_lahir }}</td>
+            </tr>
+            <tr>
+                <td style="width: 50%;">Alamat</td>
+                <td style="width: 50%;">: {{ $data->pasien_alamat }}</td>
+            </tr>
+            <tr>
+                <td style="width: 50%;">No RM</td>
+                <td style="width: 50%;">: {{ $data->pasien_no_rm }}</td>
+            </tr>
+            <tr>
+                <td colspan="2">Dengan ini menyatakan bahwa</td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <ol style="text-align: justify;">
+                        <li style="Margin-bottom: 2x">Saya sudah mendapat penjelasan dan telah dianjurkan untuk memakai
+                            penjamin BPJS jikalau memiliki kartu BPJS dan sesuai dengan ketentuan yang berlaku.</li>
+                        <li style="Margin-bottom: 2px">Bahwa pasien tersebut tidak memiliki dan atau tidak mau
+                            menggunakan fasilitas jaminan kepesertaan BPJS Kesehatan.</li>
+                        <li style="Margin-bottom: 2px">Bahwa atas keinginan sendiri pasien tersebut diatas saya setuju
+                            dilakukan pemeriksaan, pengobatan, perawatan sebagai pasien umum setelah saya memahami
+                            perlunya dan manfaat tindakan tersebut.</li>
+                        <li style="Margin-bottom: 2px">Bahwa saya bertanggung jawab dan bersedia membayar sendiri,
+                            secara pribadi atas biaya pemeriksaan, pengobatan, tindakan, dan perawatan sebagai pasien
+                            umum.</li>
+                        <li style="Margin-bottom: 2px">Bahwa apabila saya melakukan pengingkaran atas pernyataan poin 1
+                            – 4, maka saya bersedia dituntut secara hukum pasal penipuan/membuat pernyataan palsu.</li>
+                    </ol>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td style="text-align: right; padding-right: 35%; padding-top: 60px;">Medan,
+                                {{ \Carbon\Carbon::parse($data->tanggal_surat)->format('Y-m-d') }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center; padding-bottom: 20px;">Yang membuat pernyataan</td>
+                            <td style="text-align: center; padding-bottom: 20px;">Saksi Pasien</td>
+                            <td style="text-align: center; padding-bottom: 20px;">Saksi Petugas Rumah Sakit</td>
+                        </tr>
+                        <td style="text-align: center;">
+                            <img src="{{ $data->ttd_pembuat_pernyataan }}" alt="Base64 Image" width="40%">
+                        </td>
+                        <td style="text-align: center;">
+                            <img src="{{ $data->ttd_saksi_pasien }}" alt="Base64 Image" width="40%">
+                        </td>
+                        <td style="text-align: center;">
+                            <img src="{{ $data->ttd_saksi_petugas }}" alt="Base64 Image" width="40%">
+                        </td>
+
+                        <tr>
+                            <td style="text-align: center; padding-top: 20px;">({{ $data->nama_pembuat_pernyataan }})
+                            </td>
+                            <td style="text-align: center; padding-top: 20px;">({{ $data->nama_saksi_pasien }})</td>
+                            <td style="text-align: center; padding-top: 20px;">({{ $data->nama_saksi_petugas }})</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+    @include('print-rekam-medis.partials.footer')
+</body>
+
+</html>

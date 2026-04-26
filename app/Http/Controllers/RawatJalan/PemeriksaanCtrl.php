@@ -44,6 +44,7 @@ class PemeriksaanCtrl extends Controller
 		$skip = $page * $this->take;
 		$search = $request->search;
 		$column = $request->column;
+		$carabayar_filter = $request->carabayar_filter ?? '';
 
 		if ($request->search != "") {
 			$data = Registrasi::where('delete_soft', '=', 1)
@@ -73,37 +74,30 @@ class PemeriksaanCtrl extends Controller
 				// ->where('carabayar_nama', '!=', 'bpjs sehat')
 				// ->where('carabayar_nama', '!=', 'bpjs-sehat')
 				// ->where('carabayar_nama', '!=', 'bpjs_sehat')
-				->whereDate('tanggal', '=', date('Y-m-d'))
-				->skip($skip)->take($this->take)
-				->get();
+				->whereDate('tanggal', '=', date('Y-m-d'));
+			if ($carabayar_filter == 'bpjs') {
+				$data = $data->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$data = $data->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$data = $data->skip($skip)->take($this->take)->get();
+
 			$total = Registrasi::where('delete_soft', '=', 1)
 				->where(function ($q) {
 					$q->where('status', 'Kunjungan')
 						->orWhere('status', 'Rawat Inap')
 						->orWhere('status', 'Selesai');
 				})
-				// ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
-				// ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
-				// ->where('carabayar_nama', '!=', 'bpjs kesehatan')
-				// ->where('carabayar_nama', '!=', 'bpjs Kesehatan')
-				// ->where('carabayar_nama', '!=', 'bpjs_kesehatan')
-				// ->where('carabayar_nama', '!=', 'bpjs-kesehatan')
-				// ->where('carabayar_nama', '!=', 'BPJS KESEHATAN')
-				// ->where('carabayar_nama', '!=', 'BPJS_KESEHATAN')
-				// ->where('carabayar_nama', '!=', 'BPJS-KESEHATAN')
-				// ->where('carabayar_nama', '!=', 'BPJS Sehat')
-				// ->where('carabayar_nama', '!=', 'BPJS-Sehat')
-				// ->where('carabayar_nama', '!=', 'BPJS_Sehat')
-				// ->where('carabayar_nama', '!=', 'BPJS SEHAT')
-				// ->where('carabayar_nama', '!=', 'BPJS-SEHAT')
-				// ->where('carabayar_nama', '!=', 'BPJS_SEHAT')
-				// ->where('carabayar_nama', '!=', 'bpjs sehat')
-				// ->where('carabayar_nama', '!=', 'bpjs-sehat')
-				// ->where('carabayar_nama', '!=', 'bpjs_sehat')
 				->where($column, 'ilike', '%' . $search . '%')
 				->whereDate('tanggal', '=', date('Y-m-d'))
 				->orderBy('status_ro', 'asc')
-				->orderBy('id', 'asc')->count();
+				->orderBy('id', 'asc');
+			if ($carabayar_filter == 'bpjs') {
+				$total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$total = $total->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$total = $total->count();
 		} else {
 			$data = Registrasi::where('delete_soft', '=', 1)
 				->orderBy('status_ro', 'asc')
@@ -131,37 +125,114 @@ class PemeriksaanCtrl extends Controller
 				// ->where('carabayar_nama', '!=', 'bpjs sehat')
 				// ->where('carabayar_nama', '!=', 'bpjs-sehat')
 				// ->where('carabayar_nama', '!=', 'bpjs_sehat')
-				->whereDate('tanggal', '=', date('Y-m-d'))
-				->skip($skip)->take($this->take)
-				->get();
+				->whereDate('tanggal', '=', date('Y-m-d'));
+			if ($carabayar_filter == 'bpjs') {
+				$data = $data->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$data = $data->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$data = $data->skip($skip)->take($this->take)->get();
 
 			$total = Registrasi::where('delete_soft', '=', 1)
 				->whereDate('tanggal', '=', date('Y-m-d'))
-				// ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
-				// 		->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
-				// 		->where('carabayar_nama', '!=', 'bpjs kesehatan')
-				// 		->where('carabayar_nama', '!=', 'bpjs Kesehatan')
-				// 		->where('carabayar_nama', '!=', 'bpjs_kesehatan')
-				// 		->where('carabayar_nama', '!=', 'bpjs-kesehatan')
-				// 		->where('carabayar_nama', '!=', 'BPJS KESEHATAN')
-				// 		->where('carabayar_nama', '!=', 'BPJS_KESEHATAN')
-				// 		->where('carabayar_nama', '!=', 'BPJS-KESEHATAN')
-				// 		->where('carabayar_nama', '!=', 'BPJS Sehat')
-				// 		->where('carabayar_nama', '!=', 'BPJS-Sehat')
-				// 		->where('carabayar_nama', '!=', 'BPJS_Sehat')
-				// 		->where('carabayar_nama', '!=', 'BPJS SEHAT')
-				// 		->where('carabayar_nama', '!=', 'BPJS-SEHAT')
-				// 		->where('carabayar_nama', '!=', 'BPJS_SEHAT')
-				// 		->where('carabayar_nama', '!=', 'bpjs sehat')
-				// 		->where('carabayar_nama', '!=', 'bpjs-sehat')
-				// 		->where('carabayar_nama', '!=', 'bpjs_sehat')
 				->where(function ($q) {
 					$q->where('status', 'Kunjungan')
 						->orWhere('status', 'Rawat Inap')
 						->orWhere('status', 'Selesai');
 				})
 				->orderBy('status_ro', 'asc')
-				->orderBy('id', 'asc')->count();
+				->orderBy('id', 'asc');
+			if ($carabayar_filter == 'bpjs') {
+				$total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$total = $total->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$total = $total->count();
+		}
+
+		return response()->json(['data' => $data, 'total' => $total]);
+	}
+	public function listperawat(Request $request)
+	{
+
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
+
+		PenggunaHelp::log('Melihat data list table pada halaman data icd 9');
+
+		$list = '';
+		$total = '';
+		$page = $request->page - 1;
+		$skip = $page * $this->take;
+		$search = $request->search;
+		$column = $request->column;
+		$carabayar_filter = $request->carabayar_filter ?? '';
+
+		if ($request->search != "") {
+			$data = Registrasi::where('delete_soft', '=', 1)
+				->where($column, 'ilike', '%' . $search . '%')
+				->orderBy('id', 'asc')
+				// ->orderBy('status_ro', 'asc')
+				->where(function ($q) {
+					$q->where('status', 'Kunjungan')
+						->orWhere('status', 'Rawat Inap')
+						->orWhere('status', 'Selesai');
+				})
+				->whereDate('tanggal', '=', date('Y-m-d'));
+			if ($carabayar_filter == 'bpjs') {
+				$data = $data->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$data = $data->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$data = $data->skip($skip)->take($this->take)->get();
+
+			$total = Registrasi::where('delete_soft', '=', 1)
+				->where(function ($q) {
+					$q->where('status', 'Kunjungan')
+						->orWhere('status', 'Rawat Inap')
+						->orWhere('status', 'Selesai');
+				})
+				->where($column, 'ilike', '%' . $search . '%')
+				->whereDate('tanggal', '=', date('Y-m-d'))
+				->orderBy('id', 'asc');
+			if ($carabayar_filter == 'bpjs') {
+				$total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$total = $total->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$total = $total->count();
+		} else {
+			$data = Registrasi::where('delete_soft', '=', 1)
+				// ->orderBy('status_ro', 'asc')
+				->orderBy('id', 'asc')
+				->where(function ($q) {
+					$q->where('status', 'Kunjungan')
+						->orWhere('status', 'Rawat Inap')
+						->orWhere('status', 'Selesai');
+				})
+				->whereDate('tanggal', '=', date('Y-m-d'));
+			if ($carabayar_filter == 'bpjs') {
+				$data = $data->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$data = $data->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$data = $data->skip($skip)->take($this->take)->get();
+
+			$total = Registrasi::where('delete_soft', '=', 1)
+				->whereDate('tanggal', '=', date('Y-m-d'))
+				->where(function ($q) {
+					$q->where('status', 'Kunjungan')
+						->orWhere('status', 'Rawat Inap')
+						->orWhere('status', 'Selesai');
+				})
+				->orderBy('id', 'asc');
+			if ($carabayar_filter == 'bpjs') {
+				$total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			} elseif ($carabayar_filter == 'nonbpjs') {
+				$total = $total->whereNotIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
+			}
+			$total = $total->count();
 		}
 
 		return response()->json(['data' => $data, 'total' => $total]);
@@ -185,7 +256,64 @@ class PemeriksaanCtrl extends Controller
 				$loop = true;
 			}
 		} while ($loop == false);
+		$ocular_dextra_autoref = 's ' . (
+			($val = trim($request->ocular_dextra_autoref_s ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
+		if ($request->ocular_dextra_autoref_c) {
+			$ocular_dextra_autoref .= ' c ' . $request->ocular_dextra_autoref_c;
+		}
+		$ocular_dextra_autoref .= ' x ' . $request->ocular_dextra_autoref_x;
 
+		$ocular_sinistra_autoref = 's ' . (
+			($val = trim($request->ocular_sinistra_autoref_s ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
+		if ($request->ocular_sinistra_autoref_c) {
+			$ocular_sinistra_autoref .= ' c ' . $request->ocular_sinistra_autoref_c;
+		}
+		$ocular_sinistra_autoref .= ' x ' . $request->ocular_sinistra_autoref_x;
+
+		$ocular_dextra_bcva = 's ' . (
+			($val = trim($request->ocular_dextra_bcva1_s ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
+		if ($request->ocular_dextra_bcva1_c) {
+			$ocular_dextra_bcva .= ' c ' . $request->ocular_dextra_bcva1_c;
+		}
+		$ocular_dextra_bcva .= ' x ' . $request->ocular_dextra_bcva1_x;
+
+		$ocular_sinistra_bcva = 's ' . (
+			($val = trim($request->ocular_sinistra_bcva1_s ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
+		if ($request->ocular_sinistra_bcva1_c) {
+			$ocular_sinistra_bcva .= ' c ' . $request->ocular_sinistra_bcva1_c;
+		}
+		$ocular_sinistra_bcva .= ' x ' . $request->ocular_sinistra_bcva1_x;
+
+		$ocular_sinistra_kacamata_lama_sph = (
+			($val = trim($request->ocular_sinistra_kacamata_lama_sph ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
+		
+		$ocular_dextra_kacamata_lama_sph = (
+			($val = trim($request->ocular_dextra_kacamata_lama_sph ?? '')) !== ''
+				? ($val > 0 && strpos($val, '+') !== 0 ? '+' . $val : $val)
+				: ''
+		);
+
+		$odVisus = $request->ocular_dextra_visus ; //rencana mau buat chekingan tapi endingnya buat di fe aja tambahin component baru untuk handle ini
+		$osVisus = $request->ocular_sinistra_visus;
+		$odPinhole = $request->ocular_dextra_pinhole;
+		$osPinhole = $request->ocular_sinistra_pinhole;
+		$odBcva2 = $request->ocular_sinistra_bcva2;
+		$osBcva2 = $request->ocular_dextra_bcva2;
 		try {
 			DB::beginTransaction();
 
@@ -195,45 +323,53 @@ class PemeriksaanCtrl extends Controller
 				$arr = array(
 
 					'ocular_dextra_pd' => $request->ocular_dextra_pd,
-					'ocular_dextra_autoref' => $request->ocular_dextra_autoref,
+					// 'ocular_dextra_autoref' => $request->ocular_dextra_autoref,
+					'ocular_dextra_autoref' => $ocular_dextra_autoref,
 					'ocular_dextra_keratometri_k1' => $request->ocular_dextra_keratometri_k1,
 					'ocular_dextra_keratometri_k2' => $request->ocular_dextra_keratometri_k2,
 					'ocular_dextra_tonometri' => $request->ocular_dextra_tonometri,
-					'ocular_dextra_visus' => $request->ocular_dextra_visus,
-					'ocular_dextra_bcva1' => $request->ocular_dextra_bcva1,
-					'ocular_dextra_bcva2' => $request->ocular_dextra_bcva2,
+					'ocular_dextra_visus' => $odVisus,
+					'ocular_dextra_pinhole' => $odPinhole,
+					// 'ocular_dextra_bcva1' => $request->ocular_dextra_bcva1,
+					'ocular_dextra_bcva1' => $ocular_dextra_bcva,
+					'ocular_dextra_bcva2' => $odBcva2,
 					'ocular_dextra_add' => $request->ocular_dextra_add,
 					'ocular_dextra_kacamata_lama_sph' => $request->ocular_dextra_kacamata_lama_sph,
 					'ocular_dextra_kacamata_lama_cyl' => $request->ocular_dextra_kacamata_lama_cyl,
 					'ocular_dextra_kacamata_lama_addisi' => $request->ocular_dextra_kacamata_lama_addisi,
+					'ocular_dextra_kacamata_lama_add' => $request->ocular_dextra_kacamata_lama_add,
 					'ocular_sinistra_ro' => $request->ocular_sinistra_ro,
-					'ocular_sinistra_autoref' => $request->ocular_sinistra_autoref,
+					// 'ocular_sinistra_autoref' => $request->ocular_sinistra_autoref,
+					'ocular_sinistra_autoref' => $ocular_sinistra_autoref,
 					'ocular_sinistra_keratometri_k1' => $request->ocular_sinistra_keratometri_k1,
 					'ocular_sinistra_keratometri_k2' => $request->ocular_sinistra_keratometri_k2,
 					'ocular_sinistra_tonometri' => $request->ocular_sinistra_tonometri,
-					'ocular_sinistra_visus' => $request->ocular_sinistra_visus,
-					'ocular_sinistra_bcva1' => $request->ocular_sinistra_bcva1,
-					'ocular_sinistra_bcva2' => $request->ocular_sinistra_bcva2,
+					'ocular_sinistra_visus' => $osVisus,
+					'ocular_sinistra_pinhole' => $osPinhole,
+					// 'ocular_sinistra_bcva1' => $request->ocular_sinistra_bcva1,
+					'ocular_sinistra_bcva1' => $ocular_sinistra_bcva,
+					'ocular_sinistra_bcva2' => $osBcva2,
 					'ocular_sinistra_add' => $request->ocular_sinistra_add,
-					'ocular_sinistra_kacamata_lama_sph' => $request->ocular_sinistra_kacamata_lama_sph,
+					'ocular_sinistra_kacamata_lama_sph' => $ocular_sinistra_kacamata_lama_sph,
 					'ocular_sinistra_kacamata_lama_cyl' => $request->ocular_sinistra_kacamata_lama_cyl,
 					'ocular_sinistra_kacamata_lama_addisi' => $request->ocular_sinistra_kacamata_lama_addisi,
+					'ocular_sinistra_kacamata_lama_add' => $request->ocular_sinistra_kacamata_lama_add,
 				);
-			
+
 
 				$update = PemeriksaanRo::where("uuid", '=', $request->uuid)->update($arr);
+
+                $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+                $status_ro = 'Sudah Diperiksa RO';
+                if($registrasi->status_ro == 'Sudah Diperiksa Perawat' || $registrasi->status_ro == 'Sudah Diperiksa') {
+                    $status_ro = 'Sudah Diperiksa';
+                }
 				$arr = array(
-					'ruang_poliklinik' => $request->ruang_poliklinik,
-					'status_ro' => 'Sudah Diperiksa RO',
+					// 'ruang_poliklinik' => $request->ruang_poliklinik,
+					'status_ro' => $status_ro,
 				);
 
 				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
-
-
-
-
-				$registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
-
 
 			} else {
 				$item = new PemeriksaanRo();
@@ -255,29 +391,33 @@ class PemeriksaanCtrl extends Controller
 
 
 				$item->ocular_dextra_pd = $request->ocular_dextra_pd;
-				$item->ocular_dextra_autoref = $request->ocular_dextra_autoref;
+				$item->ocular_dextra_autoref = $ocular_dextra_autoref;
 				$item->ocular_dextra_keratometri_k1 = $request->ocular_dextra_keratometri_k1;
 				$item->ocular_dextra_keratometri_k2 = $request->ocular_dextra_keratometri_k2;
 				$item->ocular_dextra_tonometri = $request->ocular_dextra_tonometri;
-				$item->ocular_dextra_visus = $request->ocular_dextra_visus;
-				$item->ocular_dextra_bcva1 = $request->ocular_dextra_bcva1;
-				$item->ocular_dextra_bcva2 = $request->ocular_dextra_bcva2;
+				$item->ocular_dextra_visus = $odVisus;
+				$item->ocular_dextra_pinhole = $odPinhole;
+				$item->ocular_dextra_bcva1 = $ocular_dextra_bcva;
+				$item->ocular_dextra_bcva2 = $odBcva2;
 				$item->ocular_dextra_add = $request->ocular_dextra_add;
 				$item->ocular_dextra_kacamata_lama_sph = $request->ocular_dextra_kacamata_lama_sph;
 				$item->ocular_dextra_kacamata_lama_cyl = $request->ocular_dextra_kacamata_lama_cyl;
 				$item->ocular_dextra_kacamata_lama_addisi = $request->ocular_dextra_kacamata_lama_addisi;
+				$item->ocular_dextra_kacamata_lama_add = $request->ocular_dextra_kacamata_lama_add;
 				$item->ocular_sinistra_ro = $request->ocular_sinistra_ro;
-				$item->ocular_sinistra_autoref = $request->ocular_sinistra_autoref;
+				$item->ocular_sinistra_autoref = $ocular_sinistra_autoref;
 				$item->ocular_sinistra_keratometri_k1 = $request->ocular_sinistra_keratometri_k1;
 				$item->ocular_sinistra_keratometri_k2 = $request->ocular_sinistra_keratometri_k2;
 				$item->ocular_sinistra_tonometri = $request->ocular_sinistra_tonometri;
-				$item->ocular_sinistra_visus = $request->ocular_sinistra_visus;
-				$item->ocular_sinistra_bcva1 = $request->ocular_sinistra_bcva1;
-				$item->ocular_sinistra_bcva2 = $request->ocular_sinistra_bcva2;
+				$item->ocular_sinistra_visus = $osVisus;
+				$item->ocular_sinistra_pinhole = $osPinhole;
+				$item->ocular_sinistra_bcva1 = $ocular_sinistra_bcva;
+				$item->ocular_sinistra_bcva2 = $osBcva2;
 				$item->ocular_sinistra_add = $request->ocular_sinistra_add;
-				$item->ocular_sinistra_kacamata_lama_sph = $request->ocular_sinistra_kacamata_lama_sph;
+				$item->ocular_sinistra_kacamata_lama_sph = $ocular_sinistra_kacamata_lama_sph;
 				$item->ocular_sinistra_kacamata_lama_cyl = $request->ocular_sinistra_kacamata_lama_cyl;
 				$item->ocular_sinistra_kacamata_lama_addisi = $request->ocular_sinistra_kacamata_lama_addisi;
+				$item->ocular_sinistra_kacamata_lama_add = $request->ocular_sinistra_kacamata_lama_add;
 				$item->save();
 
 				$posisi_antrian_dokter = 1;
@@ -291,9 +431,15 @@ class PemeriksaanCtrl extends Controller
 					$posisi_antrian_dokter += $registrasi_poli->posisi_antrian_dokter;
 				}
 
-				$arr = array(
+
+                $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+                $status_ro = 'Sudah Diperiksa RO';
+                if($registrasi->status_ro == 'Sudah Diperiksa Perawat' || $registrasi->status_ro == 'Sudah Diperiksa') {
+                    $status_ro = 'Sudah Diperiksa';
+                }
+					$arr = array(
 					'ruang_poliklinik' => $request->ruang_poliklinik,
-					'status_ro' => 'Sudah Diperiksa RO',
+					'status_ro' => $status_ro,
 					'posisi_antrian_dokter' => $posisi_antrian_dokter,
 					'ro_jam_selesai' => date('H:i'),
 					'last_position' => 'Pemeriksaan RO (Selesai)'
@@ -301,47 +447,46 @@ class PemeriksaanCtrl extends Controller
 
 				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 
-				
+
 			}
-			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
+            if($request->subject != null || $request->object != null || $request->assessment != null || $request->plan != null){
+                	$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
 						->where('sebagai','=', $request->cppt_sebagai)
 						->first();
-
-			$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
-			if ($cppt != null) {
-				$arr = array(
-					'subjek' => $request->subject,
-					'objek' => $request->object,
-					'asesmen' => $request->assessment,
-					'plan' => $request->plan,
-					'ttd' => $request->ttd,
-					'sebagai' => $request->cppt_sebagai,
-					'pengguna_uuid' => $pengguna_uuid,
-				);
-					$update = Cppt::where('uuid', '=', $request->uuid)
-								->where('sebagai', '=', $request->cppt_sebagai)
-								->update($arr);
-			}
-			else{
-			$item = new Cppt();
-				$item->uuid = Uuid::uuid4();
-				$item->registrasi_uuid = $request->registrasi_uuid;
-				$item->pasien_uuid = $request->pasien_uuid;
-				$item->pengguna_uuid = $pengguna_uuid;
-				$item->nama_pengguna = $request->nama_penggunna;
-				$item->nama_pasien = $request->nama_pasien;
-				$item->nama_dokter = $request->nama_dokter;
-				$item->rekam_medis = $request->rekam_medis;
-				$item->subjek = $request->subject;
-				$item->objek = $request->object;
-				$item->asesmen = $request->assessment;
-				$item->plan = $request->plan;
-				$item->sebagai = $request->cppt_sebagai;
-				$item->ttd = $request->ttd;
-				$item->save();
-
-			
-			}
+                    $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+                    if ($cppt != null) {
+                        $arr = array(
+                            'subjek' => $request->subject,
+                            'objek' => $request->object,
+                            'asesmen' => $request->assessment,
+                            'plan' => $request->plan,
+                            'ttd' => $request->ttd,
+                            'sebagai' => $request->cppt_sebagai,
+                            'pengguna_uuid' => $pengguna_uuid,
+                        );
+                            $update = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
+                                        ->where('sebagai', '=', $request->cppt_sebagai)
+                                        ->update($arr);
+                    }
+                    else{
+                    $item = new Cppt();
+                        $item->uuid = Uuid::uuid4();
+                        $item->registrasi_uuid = $request->registrasi_uuid;
+                        $item->pasien_uuid = $request->pasien_uuid;
+                        $item->pengguna_uuid = $pengguna_uuid;
+                        $item->nama_pengguna = $request->nama_penggunna;
+                        $item->nama_pasien = $request->nama_pasien;
+                        $item->nama_dokter = $request->nama_dokter;
+                        $item->rekam_medis = $request->rekam_medis;
+                        $item->subjek = $request->subject;
+                        $item->objek = $request->object;
+                        $item->asesmen = $request->assessment;
+                        $item->plan = $request->plan;
+                        $item->sebagai = $request->cppt_sebagai;
+                        $item->ttd = $request->ttd;
+                        $item->save();
+                    }
+            }
 
 
 			DB::commit();
@@ -446,18 +591,24 @@ class PemeriksaanCtrl extends Controller
 					$arr = array(
 						'ruang_poliklinik' => $request->ruang_poliklinik,
 						'posisi_antrian_dokter' => $posisi_antrian_dokter,
-						
+
 					);
 					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 				} else {
 					$arr = array('ro_jam_update' => date('H:i'));
 					$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 				}
+
+                $status_ro = 'Sudah Diperiksa Perawat';
+				echo($registrasi->status_ro);
+                if($registrasi->status_ro == 'Sudah Diperiksa RO' || $registrasi->status_ro == 'Sudah Diperiksa') {
+                    $status_ro = 'Sudah Diperiksa';
+                }
 				$arr = array(
 					'ruang_poliklinik' => $request->ruang_poliklinik,
 					'ro_jam_selesai' => date('H:i'),
-					'status_ro' => 'Sudah Diperiksa',
-					'last_position' => 'Pemeriksaan RO (Selesai)'
+					'status_ro' => $status_ro,
+					'last_position' => 'Pemeriksaan Perawat (Selesai)'
 				);
 
 				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
@@ -526,12 +677,26 @@ class PemeriksaanCtrl extends Controller
 				$item->penilaian_resiko_jatuh = $request->penilaian_resiko_jatuh;
 
 				$item->save();
+
+                $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+                $status_ro = 'Sudah Diperiksa Perawat';
+                if($registrasi->status_ro == 'Sudah Diperiksa RO' || $registrasi->status_ro == 'Sudah Diperiksa') {
+                    $status_ro = 'Sudah Diperiksa';
+                }
+				$arr = array(
+					'ruang_poliklinik' => $request->ruang_poliklinik,
+					'ro_jam_selesai' => date('H:i'),
+					'status_ro' => $status_ro,
+					'last_position' => 'Pemeriksaan Perawat (Selesai)'
+				);
+
+				$update = Registrasi::where('uuid', '=', $request->registrasi_uuid)->update($arr);
 			}
-			
+
 
 
 			$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->first();
-			
+
 			if ($edukasi_pasien != null) {
 				$arr = array(
 					'ph_bahasa' => $request->ph_bahasa,
@@ -595,9 +760,9 @@ class PemeriksaanCtrl extends Controller
 					'bs_lainnya' => $request->bs_lainnya,
 					'kmi_alasan' => $request->kmi_alasan,
 					'rpk_jelaskan' => $request->rpk_jelaskan,
-	
+
 				);
-	
+
 				$update = EdukasiPasien::where('registrasi_uuid', '=', $request->registrasi_uuid)->update($arr);
 			} else {
 				$item = new EdukasiPasien();
@@ -611,7 +776,7 @@ class PemeriksaanCtrl extends Controller
 				$item->nama_pasien = $request->nama_pasien;
 				$item->pengguna_uuid = $request->pengguna_uuid;
 				$item->nama_dokter = $request->nama_dokter;
-	
+
 				$item->ph_bahasa = $request->ph_bahasa;
 				$item->ph_pendengaran = $request->ph_pendengaran;
 				$item->ph_masalah_penglihatan = $request->ph_masalah_penglihatan;
@@ -673,54 +838,55 @@ class PemeriksaanCtrl extends Controller
 				$item->bs_lainnya = $request->bs_lainnya;
 				$item->kmi_alasan = $request->kmi_alasan;
 				$item->rpk_jelaskan = $request->rpk_jelaskan;
-	
-	
+
+
 				$item->save();
 			}
 
-			$cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
-			->where('sebagai','=', $request->cppt_sebagai)
-			->first();
+            if($request->subject != null || $request->object != null || $request->assessment != null || $request->plan != null){
+                    $cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
+                    ->where('sebagai','=', $request->cppt_sebagai)
+                    ->first();
 
-$pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
-if ($cppt != null) {
-	$arr = array(
-		'subjek' => $request->subject,
-		'objek' => $request->object,
-		'asesmen' => $request->assessment,
-		'plan' => $request->plan,
-		'ttd' => $request->ttd,
-		'sebagai' => $request->cppt_sebagai,
-		'pengguna_uuid' => $pengguna_uuid,
-	);
-		$update = Cppt::where('uuid', '=', $request->uuid)
-					->where('sebagai', '=', $request->cppt_sebagai)
-					->update($arr);
-}
-else{
-$item = new Cppt();
-	$item->uuid = Uuid::uuid4();
-	$item->registrasi_uuid = $request->registrasi_uuid;
-	$item->pasien_uuid = $request->pasien_uuid;
-	$item->pengguna_uuid = $pengguna_uuid;
-	$item->nama_pengguna = $request->nama_penggunna;
-	$item->nama_pasien = $request->nama_pasien;
-	$item->nama_dokter = $request->nama_dokter;
-	$item->rekam_medis = $request->rekam_medis;
-	$item->subjek = $request->subject;
-	$item->objek = $request->object;
-	$item->asesmen = $request->assessment;
-	$item->plan = $request->plan;
-	$item->sebagai = $request->cppt_sebagai;
-	$item->ttd = $request->ttd;
-	$item->save();
+                    $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+                    if ($cppt != null) {
+                        $arr = array(
+                            'subjek' => $request->subject,
+                            'objek' => $request->object,
+                            'asesmen' => $request->assessment,
+                            'plan' => $request->plan,
+                            'ttd' => $request->ttd,
+                            'sebagai' => $request->cppt_sebagai,
+                            'pengguna_uuid' => $pengguna_uuid,
+                        );
+                            $update = Cppt::where('uuid', '=', $request->uuid)
+                                        ->where('sebagai', '=', $request->cppt_sebagai)
+                                        ->update($arr);
+                    }
+                    else{
+                    $item = new Cppt();
+                        $item->uuid = Uuid::uuid4();
+                        $item->registrasi_uuid = $request->registrasi_uuid;
+                        $item->pasien_uuid = $request->pasien_uuid;
+                        $item->pengguna_uuid = $pengguna_uuid;
+                        $item->nama_pengguna = $request->nama_penggunna;
+                        $item->nama_pasien = $request->nama_pasien;
+                        $item->nama_dokter = $request->nama_dokter;
+                        $item->rekam_medis = $request->rekam_medis;
+                        $item->subjek = $request->subject;
+                        $item->objek = $request->object;
+                        $item->asesmen = $request->assessment;
+                        $item->plan = $request->plan;
+                        $item->sebagai = $request->cppt_sebagai;
+                        $item->ttd = $request->ttd;
+                        $item->save();
+                    }
 
+            }
 
-}
-			
 		//	$edukasi_pasien = EdukasiPasien::where('registrasi_uuid', '=', $registrasi->registrasi_uuid)->first();
-	
-	
+
+
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
@@ -729,7 +895,7 @@ $item = new Cppt();
 			return response()->json(['hasil' => 'gagal']);
 		}
 
-	
+
 	}
 
 	public function detail(Request $request)
@@ -771,7 +937,9 @@ $item = new Cppt();
 			->where('sebagai', '=', 'RO')
 			->orderBy('id', 'desc')->first();
 
-		return response()->json(['data' => $data, 'histori' => $histori, 'kunjungan' => $kunjungan, 'cppt'=>$cppt]);
+		$nama_login = \Illuminate\Support\Facades\Crypt::decrypt(\Illuminate\Support\Facades\Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+		return response()->json(['data' => $data, 'histori' => $histori, 'kunjungan' => $kunjungan, 'cppt'=>$cppt, 'nama_login' => $nama_login]);
 	}
 	public function detailperawat(Request $request)
 	{
@@ -814,7 +982,7 @@ $item = new Cppt();
 		$cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
 			->where('sebagai','=','PERAWAT')
 			->orderBy('id', 'desc')->first();
-		
+
 
 		if ($edukasi_pasien != null){
 		$kunjungan->edukasi_pasien=$edukasi_pasien;

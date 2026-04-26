@@ -91,6 +91,9 @@ export default {
 				{ icon: 'arrow-right', value: 'kelurahan', label: 'Data Kelurahan' },
 				{ icon: 'arrow-right', value: 'supplier', label: 'Data Supplier' },
 				{ icon: 'arrow-right', value: 'obat', label: 'Master Obat' },
+				{ icon: 'arrow-right', value: 'obat2', label: 'Master Obat' },
+				{ icon: 'arrow-right', value: 'obat3', label: 'Master Obat' },
+				{ icon: 'arrow-right', value: 'obat4', label: 'Master Obat' },
 				{ icon: 'arrow-right', value: 'obatgudang', label: 'Obat Gudang Farmasi' },
 				{ icon: 'arrow-right', value: 'satuan', label: 'Satuan Obat' },
 				{ icon: 'arrow-right', value: 'apotek', label: 'Obat Apotek' },
@@ -106,6 +109,12 @@ export default {
 				{ icon: 'arrow-right', value: 'dokter', label: 'Data Dokter Spesialis' },
 				{ icon: 'arrow-right', value: 'dokterumum', label: 'Data Dokter Umum' },
 				{ icon: 'arrow-right', value: 'paketbedah', label: 'Data Paket Bedah' },
+				{ icon: 'arrow-right', value: 'ocularsinistravisus', label: 'Ocular Sinistra Visus' },
+				{ icon: 'arrow-right', value: 'oculardextravisus', label: 'Ocular Dextra Visus' },
+				{ icon: 'arrow-right', value: 'oculardextrabcva2', label: 'Ocular Dextra BCVA2' },
+				{ icon: 'arrow-right', value: 'ocularsinistrabcva2', label: 'Ocular Sinistra BCVA2' },
+				{ icon: 'arrow-right', value: 'oculardextrapinhole', label: 'Ocular Dextra Pinhole' },
+				{ icon: 'arrow-right', value: 'ocularsinistrapinhole', label: 'Ocular Sinistra Pinhole' },
 			]
 		}
 	},

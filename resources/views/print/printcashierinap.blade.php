@@ -369,19 +369,27 @@ $layananpasien = $layananpasien->sortBy('nama_layanan', SORT_REGULAR, false);
 					<td align="right" style="padding: 7px"><b>Rp. {{ number_format($grandtotaltemp) }}</b></td>
 				</tr>
 			@endif
-			@if ($diskon != 0)
-				<?php 
-				$grandtotal = $grandtotal - $diskon; 
-				?>
-				<tr >
-					<td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Diskon</b></td>
-					<td align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($diskon) }}</b></td>
-				</tr>
-				<tr >
-					<td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Pembayaran</b></td>
-					<td align="right" style="padding: 4px 7px;"><b>Rp. {{ number_format($grandtotal) }}</b></td>
-				</tr>
-			@endif
+			@if (($diskon != 0 || $registrasi->diskon_rp != 0) )
+			<?php
+			$diskonGlobal = $registrasi->diskon_rp;
+			$totalDiskonGlobal = $diskonGlobal + $diskon;
+			$grandtotal = $grandtotal - $diskon - $diskonGlobal;
+			?>
+
+			<tr>
+				<td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total Diskon</b>
+				</td>
+
+				<td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp.
+						{{ number_format($totalDiskonGlobal) }}</b></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="left" style="padding: 4px 7px; width: 65%;"><b>Total
+						Pembayaran</b></td>
+				<td colspan="1" align="right" style="padding: 4px 7px;"><b>Rp.
+						{{ number_format($grandtotal) }}</b></td>
+			</tr>
+		@endif
 
 			@if (
 						$registrasi->carabayar_uuid != '1bddd542-fd1e-4b6a-b629-53bd35428796' &&

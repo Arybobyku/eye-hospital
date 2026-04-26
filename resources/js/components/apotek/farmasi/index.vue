@@ -422,13 +422,14 @@ export default {
 		parsingForm:function(data, key) {
 			vm.attach.data = data;
 			if (key == 'pembeli') {
-				if (vm.position == 'adddata') { vm.attach.url = vm.attach.link.addpembeli; } 
+				if (vm.position == 'adddata') { vm.attach.url = vm.attach.link.addpembeli; }
 			}
 			else if (key == 'add') { vm.position = 'updatedata'; vm.attach.url = vm.attach.link.bayar; }
 			else if (key == 'formobat') {
-				if (vm.position == 'updatedatabeli') {  vm.attach.url = vm.attach.link.addbeli; } 
+				if (vm.position == 'updatedatabeli') {  vm.attach.url = vm.attach.link.addbeli; }
 			}
 			else if (key == 'editobat') { vm.position = 'editobat'; vm.attach.url = vm.attach.link.editobat; }
+			else if (key == 'approvement') { vm.position = 'approvement'; vm.attach.url = vm.attach.link.approvement; }
 		},
 
 		setDatatable: 			function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) 			{ col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } 												temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
@@ -556,7 +557,13 @@ export default {
 			}
 			else if (vm.position == 'call') { vm.$refs.Datatable.skeleton(); }
 			else if (vm.position == 'adddata') { vm.loadingModal('formpembeli'); }
-			else if (vm.position == 'approvement') { vm.$refs.Datatable.skeleton(); }
+			else if (vm.position == 'approvement') {
+				if (vm.$refs.FormDetail && vm.$refs.FormDetail.terminate && vm.$refs.FormDetail.terminate.show) {
+					vm.loadingModal('formdetail');
+				} else {
+					vm.$refs.Datatable.skeleton();
+				}
+			}
 			else if (vm.position == 'updatedata') { vm.loadingModal('formdetail'); }
 			else if (vm.position == 'editobat') { vm.loadingModal('formdetail'); }
 			else if (vm.position == 'updatedatabeli') { vm.loadingModal('formobat'); }
@@ -644,8 +651,11 @@ export default {
 				setTimeout(() => { vm.tablereload(); }, 125, this); 
 				active = 1;
 			}
-			else if (vm.position == 'approvement') { 
-				setTimeout(() => { vm.tablereload(); }, 125, this); 
+			else if (vm.position == 'approvement') {
+				if (vm.$refs.FormDetail && vm.$refs.FormDetail.terminate && vm.$refs.FormDetail.terminate.show) {
+					vm.$refs.FormDetail.detail.approvement_obat = 'yes';
+				}
+				setTimeout(() => { vm.tablereload(); }, 125, this);
 				active = 1;
 			}
 			else if (vm.position == 'detaildata') {
@@ -738,7 +748,13 @@ export default {
 			else if (posisi == 'formobat') { vm.loadingModal('formobat'); }
 			else if (posisi == 'terimadata') { vm.$refs.Datatable.skeleton(); }
 			else if (posisi == 'call') { vm.$refs.Datatable.skeleton(); }
-			else if (posisi == 'approvement') { vm.$refs.Datatable?.skeleton() ?? vm.$refs.DatatableBayar?.skeleton(); }
+			else if (posisi == 'approvement') {
+				if (vm.$refs.FormDetail && vm.$refs.FormDetail.terminate && vm.$refs.FormDetail.terminate.show) {
+					vm.loadingModal('formdetail');
+				} else {
+					vm.$refs.Datatable?.skeleton() ?? vm.$refs.DatatableBayar?.skeleton();
+				}
+			}
 			else if (posisi == 'batalbeli') { vm.$refs.DatatableBeli.skeleton(); }
 			else if (posisi == 'selesaibeli') { vm.$refs.DatatableBeli.skeleton(); }
 			vm.executions();

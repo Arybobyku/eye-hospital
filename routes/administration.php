@@ -1,4 +1,4 @@
-<?php
+		<?php
 
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +17,7 @@ use App\Http\Controllers\Administration\HistoriCtrl;
 use App\Http\Controllers\Administration\TrackCtrl;
 use App\Http\Controllers\Administration\LabelCtrl;
 use App\Http\Controllers\Administration\UnitCtrl;
-use App\Http\Controllers\Administration\Icd9Ctrl;
+use App\Http\Controllers\Administration\Icd9Ctrl;	
 use App\Http\Controllers\Administration\Icd10Ctrl;
 use App\Http\Controllers\Administration\RuanganCtrl;
 use App\Http\Controllers\Administration\ProvinsiCtrl;
@@ -52,6 +52,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('update', [TindakanRawatJalanCtrl::class, 'update'])->name('tindakanrawatjalan-update');
 		Route::post('remove', [TindakanRawatJalanCtrl::class, 'remove'])->name('tindakanrawatjalan-remove');
 		Route::post('api', [TindakanRawatJalanCtrl::class, 'api'])->name('tindakanrawatjalan-api');
+		Route::post('upload', [TindakanRawatJalanCtrl::class, 'uploadTemplate'])->name('tindakanrawatjalan-upload');
 	});
 
 	Route::prefix('tindakannonbedah')->group(function () {

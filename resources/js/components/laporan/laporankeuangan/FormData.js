@@ -58,6 +58,18 @@ export const formpermintaan = () => {
 				filter: [], data: [], search: '', option: 'display: none', statics: false,
 				class: 'asuransireg', isrequired: false, html: 'Nama Asuransi', issearch: true, disabled: true,
 			},
+			jenisregistrasi: { 
+				key : 'jenisregistrasi', for_id: 'form_'+'jenisregistrasi', name: 'jenisregistrasi', uuid:'', value: '', label: 'Semua', 
+				filter: [], data: [], search: '', option: 'display: none', statics: true,
+				class: 'jenisregistrasi', isrequired: false, html: 'Jenis Kunjungan', issearch: false, disabled: false,
+			},
 		}
 	}
 }
+
+// tambahkan di luar fungsi formpermintaan, atau bisa juga di data() component
+export const jenisRegistrasiOptions = [
+    { value: 'semua', label: 'Semua' },
+    { value: 'Rawat Inap', label: 'Rawat Inap' },
+    { value: 'Rawat Jalan', label: 'Rawat Jalan' },
+];

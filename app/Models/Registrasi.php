@@ -14,6 +14,11 @@ class Registrasi extends Model
 
 	public function layanan()
   {
-   return $this->hasMany(LayananPasien::class, 'registrasi_uuid', 'uuid')->select('registrasi_uuid', 'total');
+   return $this->hasMany(LayananPasien::class, 'registrasi_uuid', 'uuid')->select('registrasi_uuid', 'total', 'diskon_rp');
 	}
+
+  public function resepracikan()
+{
+    return $this->hasMany(ResepRacikan::class, 'registrasi_uuid', 'uuid');
+}
 }

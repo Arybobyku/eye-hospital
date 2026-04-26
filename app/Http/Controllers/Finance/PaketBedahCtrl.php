@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Finance;
 
 use App\Http\Controllers\Controller;
+use App\Models\CaraBayar;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 use DB;
@@ -11,6 +12,7 @@ use Crypt;
 use PenggunaHelp;
 
 use App\Models\PaketBedah;
+use App\Models\ListPaketBedahBaru;
 
 class PaketBedahCtrl extends Controller
 {
@@ -68,6 +70,8 @@ class PaketBedahCtrl extends Controller
 		try{
 			DB::beginTransaction();
 
+			$carabayar = CaraBayar::where('uuid', $request->uuid_carabayar)->first();
+
 			$item = new PaketBedah();
 			$item->uuid = $uuid;
 			$item->nama = $request->nama;
@@ -75,6 +79,11 @@ class PaketBedahCtrl extends Controller
 			$item->pengguna_uuid = $request->pengguna_uuid && $request->pengguna_uuid != '' ? $request->pengguna_uuid : '-';
 			$item->nama_dokter = $request->nama_dokter && $request->nama_dokter != '' && $request->nama_dokter != 'Silahkan Pilih' ? $request->nama_dokter : '-';
 			$item->keterangan = $request->keterangan;
+			if($carabayar){
+				$item->uuid_carabayar = $carabayar->uuid;
+				$item->nama_carabayar = $carabayar->nama;
+			}
+			$item->harga_sudah_ditentukan = $request->harga_sudah_ditentukan;
 			$item->save();
 
 			DB::commit();
@@ -111,7 +120,14 @@ class PaketBedahCtrl extends Controller
 				'pengguna_uuid' => $request->pengguna_uuid && $request->pengguna_uuid != '' ? $request->pengguna_uuid : '-',
 				'nama_dokter' => $request->nama_dokter && $request->nama_dokter != '' && $request->nama_dokter != 'Silahkan Pilih' ? $request->nama_dokter : '-',
 				'keterangan' => $request->keterangan,
+				'harga_sudah_ditentukan' => $request->harga_sudah_ditentukan,
 		);
+
+		$carabayar = CaraBayar::where('uuid', $request->uuid_carabayar)->first();
+		if($carabayar){
+				$arr['uuid_carabayar'] = $carabayar->uuid;
+				$arr['nama_carabayar']= $carabayar->nama;
+		}
 
 		try{
 			DB::beginTransaction();
@@ -132,7 +148,7 @@ class PaketBedahCtrl extends Controller
 
 		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
 
-		$data = Unit::where('uuid', '=', $request->uuid)->first();
+		$data = PaketBedah::where('uuid', '=', $request->uuid)->first();
 		if ($data) {
 			PenggunaHelp::log('Menghapus data unit dengan nama "'.$data->nama.'" dan id "'.$data->id.'".');
 		}
@@ -143,7 +159,8 @@ class PaketBedahCtrl extends Controller
 			DB::beginTransaction();
 
 			$remove = PaketBedah::where('uuid', '=', $request->uuid)->update($arr);
-			
+			$remove = ListPaketBedahBaru::where('paket_bedah_uuid', '=', $request->uuid)->update($arr);
+
 			DB::commit();
 
 			return response()->json(['data' => 'berhasil']);
@@ -153,6 +170,65 @@ class PaketBedahCtrl extends Controller
 			return response()->json(['hasil' => 'gagal']);
 		}
 	}
+
+	public function duplicate(Request $request) {
+
+		if ($this->error != 'next') {
+			return response()->json(['data' => $this->error]);
+		}
+	
+		$paketLama = PaketBedah::where('uuid', $request->uuid)->first();
+	
+		if (!$paketLama) {
+			return response()->json(['data' => 'Data tidak ditemukan']);
+		}
+	
+		PenggunaHelp::log('Menggandakan data paket bedah dengan nama "' . $paketLama->nama . '" dan id "' . $paketLama->id . '".');
+	
+		try {
+			DB::beginTransaction();
+	
+			// Generate UUID baru untuk master
+			$uuidBaru = Uuid::uuid4();
+	
+			// Duplikasi master
+			$paketBaru = new PaketBedah();
+			$paketBaru->uuid = $uuidBaru;
+			$paketBaru->nama = $paketLama->nama . ' (Copy)';
+			$paketBaru->total = $paketLama->total;
+			$paketBaru->pengguna_uuid = $paketLama->pengguna_uuid;
+			$paketBaru->nama_dokter = $paketLama->nama_dokter;
+			$paketBaru->keterangan = $paketLama->keterangan;
+			$paketBaru->uuid_carabayar = $paketLama->uuid_carabayar;
+			$paketBaru->nama_carabayar = $paketLama->nama_carabayar;
+			$paketBaru->save();
+	
+			// Duplikasi detail
+			$detailLama = ListPaketBedahBaru::where('paket_bedah_uuid', $paketLama->uuid)->get();
+	
+			foreach ($detailLama as $detail) {
+				$detailBaru = new ListPaketBedahBaru();
+				$detailBaru->uuid = Uuid::uuid4();
+				$detailBaru->paket_bedah_uuid = $uuidBaru; // relasi ke paket baru
+				$detailBaru->nama_paket_bedah = $detail->nama_paket_bedah;
+				$detailBaru->label = $detail->label;
+				$detailBaru->sub_label = $detail->sub_label;
+				$detailBaru->nama = $detail->nama;
+				$detailBaru->quantity = $detail->quantity;
+				$detailBaru->harga = $detail->harga;
+				$detailBaru->save();
+			}
+	
+			DB::commit();
+	
+			return response()->json(['data' => 'berhasil']);
+		}
+		catch (Exception $e) {
+			DB::rollback();
+			return response()->json(['hasil' => 'gagal', 'error' => $e->getMessage()]);
+		}
+	}
+	
 
 	public function api(Request $request) {
 		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }

@@ -588,6 +588,8 @@ export default {
 					jumlah: vm.listobatracikan[i].jumlah,
 					signa: vm.listobatracikan[i].signa,
 					total: vm.listobatracikan[i].total,
+					tanggal: vm.listobatracikan[i].tanggal,
+					waktu: vm.listobatracikan[i].waktu,
 					informasi: JSON.stringify(vm.listobatracikan[i].informasi)
 				}
 				testing.push(tmp);
@@ -632,6 +634,8 @@ export default {
 					hja_non_resep_besar: obats[i].hja_non_resep_besar,
 					jumlah_kecil: obats[i].jumlah_kecil,
 					jumlah_besar: obats[i].jumlah_besar,
+					tanggal: obats[i].tanggal,
+					waktu: obats[i].waktu,
 					signa: obats[i].signa,
 					total: obats[i].total,
 					posisimata: obats[i].posisimata,
@@ -648,6 +652,8 @@ export default {
 					jumlah: obatsracikan[i].jumlah,
 					signa: obatsracikan[i].signa,
 					total: obatsracikan[i].total,
+					tanggal: obatsracikan[i].tanggal,
+					waktu: obatsracikan[i].waktu,
 					informasi: JSON.parse(obatsracikan[i].informasi)
 				}
 				vm.listobatracikan.push(tmp);

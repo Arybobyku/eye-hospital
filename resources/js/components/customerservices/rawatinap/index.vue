@@ -47,6 +47,7 @@ export default {
 			{ value: 'rekam_medis', label: 'No Rekam Medis', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
+			{ value: 'jenis', label: 'Jenis', type: 'text', search: true, close: false, button: false },
 			{ value: 'kamar_inap_nama', label: 'Ruangan Kamar', type: 'text', search: true, close: false, button: false },
 			{ value: 'keterangan_inap', label: 'Keterangan', type: 'text', search: false, close: false, button: false },
 			{ value: 'btnhtml', label: '', type: 'text', search: false, close: false, button: false }

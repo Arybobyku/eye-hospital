@@ -417,13 +417,13 @@ export default {
 				{ value: 'rawatjalan', label: 'Data Tindakan', class: 'tab-active' },
 				// { value: 'nonbedah', label: 'Tindakan Non Bedah', class: 'tab-no-active' },
 				// { value: 'bedah', label: 'Tindakan Bedah', class: 'tab-no-active' },
-				// { value: 'jeniskamar', label: 'Biaya Kamar', class: 'tab-no-active' },
+				{ value: 'jeniskamar', label: 'Biaya Kamar', class: 'tab-no-active' },
 			],
 			content: { 
 				rawatjalan: true, 
 				// nonbedah: false, 
 				// bedah: false, 
-				// jeniskamar: false 
+				jeniskamar: false 
 			}
 		},
 	}},
@@ -691,8 +691,8 @@ export default {
 				vm.page[key] = item;
 				let mulai = 0;
 				let data = vm.filtertable[key].length > 0 ? vm.filtertable[key] : vm.listdata[key];
-				if (item > 1) { mulai = ((item - 1) * 10) + 1; }
-				for (let i = mulai; i < (item * 10)+1; i++) { if (i < data.length){ vm.datatablesed[key].push(vm.listdata[key][i]); } }
+				if (item > 1) { mulai = ((item - 1) * 10000) + 1; }
+				for (let i = mulai; i < (item * 10000)+1; i++) { if (i < data.length){ vm.datatablesed[key].push(vm.listdata[key][i]); } }
 			}
 		},
 
@@ -703,8 +703,8 @@ export default {
 				vm.page[key] = item;
 				let mulai = 0;
 				let data = vm.filtertable[key].length > 0 ? vm.filtertable[key] : vm.listdata[key];
-				if (item > 1) { mulai = ((item - 1) * 10) + 1; }
-				for (let i = mulai; i < (item * 10)+1; i++) { if (i < data.length){ vm.datatablesed[key].push(vm.listdata[key][i]); } }
+				if (item > 1) { mulai = ((item - 1) * 10000) + 1; }
+				for (let i = mulai; i < (item * 10000)+1; i++) { if (i < data.length){ vm.datatablesed[key].push(vm.listdata[key][i]); } }
 			}
 		},
 
@@ -714,16 +714,16 @@ export default {
 			vm.page[key] = item;
 			let mulai = 0;
 			let data = vm.filtertable[key].length > 0 ? vm.filtertable[key] : vm.listdata[key];
-			if (item > 1) { mulai = ((item - 1) * 10) + 1; }
-			for (let i = mulai; i < (item * 10)+1; i++) { if (i < data.length){ vm.datatablesed[key].push(vm.listdata[key][i]); } }
+			if (item > 1) { mulai = ((item - 1) * 10000) + 1; }
+			for (let i = mulai; i < (item * 10000)+1; i++) { if (i < data.length){ vm.datatablesed[key].push(vm.listdata[key][i]); } }
 		},
 
 		setfisrtpaging: function() {
 			for (const key in vm.listdata) {
-				vm.totalpage[key] = parseInt(vm.listdata[key].length / 10);
-				let sisa = vm.listdata[key].length % 10;
+				vm.totalpage[key] = parseInt(vm.listdata[key].length / 10000);
+				let sisa = vm.listdata[key].length % 10000;
 				if (sisa > 0) { vm.totalpage[key] += 1; }
-				for (let i = 0; i < 10; i++) { if (i < vm.listdata[key].length){ vm.datatablesed[key].push(vm.listdata[key][i]); } }
+				for (let i = 0; i < 10000; i++) { if (i < vm.listdata[key].length){ vm.datatablesed[key].push(vm.listdata[key][i]); } }
 			}
 			
 		},

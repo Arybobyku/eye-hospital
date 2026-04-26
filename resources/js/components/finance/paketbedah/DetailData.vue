@@ -7,12 +7,43 @@
 			</div>
 			<div class="modal-body" v-if="form">
 				<div class="grid">
-					<div class="col-6">
+
+					<div class="col-12">
+						<div class="flex items-center gap-4">
+						<label>
+							<input type="radio" value="tindakan" v-model="selectedMode" />
+							Tindakan / Layanan
+						</label>
+						<label>
+							<input type="radio" value="obat" v-model="selectedMode" />
+							Obat / BHP
+						</label>
+						</div>
+					</div>
+					<br>
+					<div class="col-12">
+						<div v-if="selectedMode === 'tindakan'">
+							<Selected v-on:click="selectbox($event, form.select.carabayartindakanrawatjalan.name, form.select.carabayartindakanrawatjalan.statics)" 
+								:ref="form.select.carabayartindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
+								:selection="form.select.carabayartindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.carabayartindakanrawatjalan.name)"
+								></Selected>
+						</div>
+						<div v-if="selectedMode === 'obat'">
+							<Selected v-on:click="selectbox($event, form.select.hargagudang.name, form.select.hargagudang.statics)" 
+								:ref="form.select.hargagudang.name" @selecteditem="selecteditem" @selectclear="selectclear"
+								:selection="form.select.hargagudang" v-on:keyup="selectfilter($event, form.select.hargagudang.name)"
+								></Selected>
+						</div>
+					</div>
+					<div class="col-2">
+						<Inputed :ref="form.label.name" :form="form.label"></Inputed>
+					</div>
+					<!-- <div class="col-6">
 						<Inputed :ref="form.label.name" :form="form.label"></Inputed>
 					</div>
 					<div class="col-6 form-ml">
 						<Inputed :ref="form.sublabel.name" :form="form.sublabel"></Inputed>
-					</div>
+					</div> -->
 					<div class="col-5">
 						<Inputed :ref="form.nama.name" :form="form.nama"></Inputed>
 					</div>
@@ -37,7 +68,7 @@
 							<thead>
 								<tr>
 									<th>Label</th>
-									<th>Sub Label</th>
+									<!-- <th>Sub Label</th> -->
 									<th>Nama</th>
 									<th>Quantity</th>
 									<th>Harga</th>
@@ -47,7 +78,7 @@
 							<tbody>
 								<tr v-for="item in maindata" v-if="maindata.length > 0">
 									<td>{{ item.label }}</td>
-									<td>{{ item.sub_label }}</td>
+									<!-- <td>{{ item.sub_label }}</td> -->
 									<td>{{ item.nama }}</td>
 									<td>{{ item.quantity }}</td>
 									<td>{{ formatrupiah(item.harga.toString()) }}</td>
@@ -62,10 +93,10 @@
 									</td>
 								</tr>
 								<tr v-else>
-									<td colspan="5">No Data For Result</td>
+									<td colspan="3">No Data For Result</td>
 								</tr>
 								<tr v-if="maindata.length > 0">
-									<td colspan="4">Grand Total</td>
+									<td colspan="3">Grand Total</td>
 									<td>{{ formatrupiah(totalfull.toString()) }}</td>
 								</tr>
 							</tbody>
@@ -82,6 +113,8 @@
 var vm, body;
 import { defineAsyncComponent } from 'vue';
 import { nullAndZero, datename, formatrupiah } from '../../../module/Manipulation.js';
+import { filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected } from '../../../module/SelectedFilter.js';
+import { initindexdb, indexdbprocessing } from '../../../module/Indexdb.js';
 import { listpaket } from './FormData.js';
 import { parseunit } from './Attachment.js';
 import { toast } from 'vue3-toastify';
@@ -91,6 +124,7 @@ export default {
 	beforeUnmount:function() {},
 	components: {
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
+		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
 	},
 	created: function () {},
 	mounted:function() { 
@@ -108,6 +142,7 @@ export default {
 	},
 	data: function () { return {
 		statusedit: false,
+		selectedMode: 'tindakan',
 		terminate: { show: false, display: 'display: none' },
 		btnlbl: '',
 		form: null,
@@ -122,7 +157,126 @@ export default {
 		},
 	}},
 	methods: {
-		listpaket, parseunit, formatrupiah,
+		listpaket, parseunit, formatrupiah, indexdbprocessing,
+		filterselected, hideselected, itemselected, clearselected, boxselected, conditionselected,initindexdb,
+		onToggleChange(event) {
+			const checked = event.target.checked;
+			console.log("Switch changed:", checked ? "ON" : "OFF");
+
+			// contoh logika
+			if (checked) {
+				vm.isActive = true;
+			} else {
+				vm.isActive = false;
+			}
+		},
+		selectfilter: function (event, jambu, key) { 
+			vm.form = vm.filterselected(vm.form, jambu); 
+		},
+		selecthide:function() { vm.form = vm.hideselected(vm.form); },
+		selecteditem:function(item, key) { 
+			vm.form = vm.itemselected(vm.form, item, key); 
+
+			if (key == 'carabayartindakanrawatjalan') {
+				vm.form.label.value = item.jenis
+				vm.form.sublabel.value = item.jenis
+				vm.form.quantity.value = 1
+				vm.form.nama.value = item.nama_tindakan_rawat_jalan
+				vm.form.harga.value = parseInt(item.harga)
+			}
+
+			if (key == 'hargagudang') {
+				vm.form.label.value = item.jenis;
+				vm.form.sublabel.value = item.jenis;
+				vm.form.quantity.value = 1
+				vm.form.nama.value = item.nama
+				vm.form.harga.value = parseInt(item.hja_resep)
+			}
+
+		},
+		selectclear:function(key) { 
+			
+			vm.form = vm.clearselected(vm.form, key);
+			if (key == 'hargagudang') {
+				vm.tempobat = null;
+			}
+			else if (key == 'apotekracikan') {
+				vm.tempobatracikan = null;
+			}
+			else if (key == 'paketbedah') {
+				vm.form.hargapaket = '';
+			}
+			else if (key == 'paketbedahbedah') {
+				vm.form.hargabedahpaket = '';
+			}
+			else if (key == 'kamarinap') {
+				vm.datakamar = null;
+			}
+			else if (key == 'kamarinapjalan') {
+				vm.datakamarjalan = null;
+			}
+			else if (key == 'carabayar') {
+				vm.form.select.asuransi.disabled = true;
+				vm.form.select.asuransi.isrequired = false;
+				vm.form.select.asuransi.value = '';
+				vm.form.select.asuransi.Label = 'Silahkan Pilih';
+			}
+			else if (key == 'carabayarbedah') {
+				vm.form.select.asuransibedah.disabled = true;
+				vm.form.select.asuransibedah.isrequired = false;
+				vm.form.select.asuransibedah.value = '';
+				vm.form.select.asuransibedah.Label = 'Silahkan Pilih';
+			}
+		},
+		selectbox:function(event, key, statics) {
+			let msg = 'select-close select-close-'+key;
+			if (event.target.className != msg) {
+				if (!vm.form.select[key].disabled) {
+
+					if(event.target.className == ''){
+						event.target.className = 'hospitals selected';
+						form.select[key].option = 'display: block';
+					}
+					console.log("SELECT BOX",event.target.className);
+					let result = vm.boxselected(event, vm.form, key);
+					
+					console.log("SELECT BOX", result._position);
+					if (result._position == 'stop') { return ; }
+					else if (result._position == 'nextstop') { vm.form = result._form; }
+					else { vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block'; }
+				}
+			}
+			
+		},
+
+		getIndexDB:function(key, statics) {
+			vm.form.select[key].data = []; vm.form.select[key].filter = [];
+			if (statics) { vm.form.select[key].data = this.arr[key]; vm.form.select[key].filter = this.arr[key]; }
+			else {
+				vm.initindexdb(vm.$dbNameIndexDb, key)
+					.then(function(response){ 
+						let form;
+						for (let i = 0; i < response.length; i++) {
+							if(key == 'carabayartindakanrawatjalan'){
+								console.log("DATA INDEX DB carabayartindakanrawatjalan", response[i]);
+								response[i].label = `(${response[i].jenis}) - ${response[i].label}`
+
+								vm.form.select[key].filter.push(response[i]);
+								vm.form.select[key].data.push(response[i]);
+							}	
+							else if (key == 'hargagudang') {
+								vm.form.select[key].filter.push(response[i]);
+								vm.form.select[key].data.push(response[i]);
+							}
+						}
+						
+						// 🔽 Sort keduanya berdasarkan label (ascending)
+						vm.form.select['carabayartindakanrawatjalan'].filter.sort((a, b) => a.label.localeCompare(b.label));
+						vm.form.select['carabayartindakanrawatjalan'].data.sort((a, b) => a.label.localeCompare(b.label));
+					})
+					.catch(function(error){ console.log(error); });
+			}
+		},
 		show:function(posisi, title, uuid, nama){ 
 			vm.btnlbl = posisi == 'adddata' ? 'Save Data' : 'Update Data'; 
 			vm.form.nama_paket_bedah = nama;
@@ -176,7 +330,8 @@ export default {
 				vm.attach.url = vm.attach.link.add;
 
 				vm.position = "adddata";
-				vm.dialog('Yakin ingin menambahkan data paket bedah.', 'Ya, Tambahkan data', 'adddata');
+				vm.runconfirm(vm.position)
+				// vm.dialog('Yakin ingin menambahkan data paket bedah.', 'Ya, Tambahkan data', 'adddata');
 			}
 			
 		},
@@ -201,7 +356,6 @@ export default {
 		},
 
 		edititem:function(item) {
-			console.log(item);
 			vm.form.uuid = item.uuid;
 			vm.statusedit = true;
 			vm.form.label.value = item.label;
@@ -228,9 +382,15 @@ export default {
 			if (vm.position == 'firstload') {
 				vm.loaderprocess();
 				vm.maindata = response.data.data;
-				// vm.form.label.value = '';
-				// vm.form.sublabel.value = '';
+				vm.form.label.value = '';
+				vm.form.sublabel.value = '';
+				vm.form.carabayar_nama = response.data.paket_bedah.nama_carabayar;
 				vm.form.nama.value = '';
+				vm.form.select.carabayartindakanrawatjalan.value = '';
+				vm.form.select.carabayartindakanrawatjalan.label = 'Silahkan Pilih';
+
+				vm.form.select.hargagudang.label = '';
+				vm.form.select.hargagudang.label = 'Silahkan Pilih';
 				vm.form.quantity.value = '1';
 				vm.form.harga.value = '';
 			}
@@ -265,3 +425,43 @@ export default {
 	}
 }
 </script>
+
+
+<style scoped>
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .slider {
+  background-color: #4caf50;
+}
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+</style>

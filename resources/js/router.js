@@ -453,6 +453,14 @@ const routes = [
 	},
 
 	{ 
+		path: _base + 'edit-paket-bedah-pasien', 
+		name: 'Edit Layanan Pasien Bedah', 
+		component: () => import('./components/bedah/layananbedah/index.vue'),
+		meta: { title: 'Edit Layanan Pasien Bedah' },
+		props: true 
+	},
+
+	{ 
 		path: _base + 'histori-bedah-pasien', 
 		name: 'Histori Pasien Bedah', 
 		component: () => import('./components/bedah/historipasien/index.vue'),
@@ -550,6 +558,25 @@ const routes = [
 
 
 	/**********************************************************************************
+	 * RME
+	 ***********************************************************************************/
+	{ 
+		path: _base + 'rme-pasien', 
+		name: 'RME (Data Pasien)', 
+		component: () => import('./components/rme/index.vue'),
+		meta: { title: 'RME (Data Pasien)' },
+		props: true 
+	},
+
+	{ 
+		path: _base + 'rme-ttd-dokter', 
+		name: 'Notifikasi Tanda Tangan Dokter', 
+		component: () => import('./components/rme/ttd-dokter/index.vue'),
+		meta: { title: 'Notifikasi Tanda Tangan Dokter' },
+		props: true 
+	},
+
+	/**********************************************************************************
 	 * Laporan
 	 ***********************************************************************************/
 	{ 
@@ -574,6 +601,13 @@ const routes = [
 		name: 'Laporan Keuangan', 
 		component: () => import('./components/laporan/laporankeuangan/index.vue'),
 		meta: { title: 'Laporan Keuangan' },
+		props: true 
+	},
+	{ 
+		path: _base + 'laporan-kontrol-pasien', 
+		name: 'Laporan Kontrol Pasien', 
+		component: () => import('./components/laporan/laporankontrol/index.vue'),
+		meta: { title: 'Laporan Kontrol Pasien' },
 		props: true 
 	},
 
@@ -602,6 +636,13 @@ const routes = [
 		name: '(Apotek) Permintaan Obat/Alkes', 
 		component: () => import('./components/apotek/reqopname/index.vue'),
 		meta: { title: '(Apotek) Permintaan Obat/Alkes' },
+		props: true 
+	},
+	{ 
+		path: _base + 'ri-request-opname', 
+		name: '(Rawat Inap) Permintaan Obat/Alkes ke Gudang', 
+		component: () => import('./components/rawatinap/reqopname/index.vue'),
+		meta: { title: '(Rawat Inap) Permintaan Obat/Alkes ke Gudang' },
 		props: true 
 	},
 
@@ -701,6 +742,13 @@ const routes = [
 	 * Bagian Customer Services
 	 ***********************************************************************************/
 	{ 
+		path: _base + 'customer-service-vclaim', 
+		name: 'BPJS - VClaim', 
+		component: () => import('./components/customerservices/vclaim/index.vue'),
+		meta: { title: 'BPJS - VClaim' },
+		props: true 
+	},
+	{ 
 		path: _base + 'pasien', 
 		name: 'Data Pasien', 
 		component: () => import('./components/customerservices/pasien/index.vue'),
@@ -791,9 +839,9 @@ const routes = [
 
 	{ 
 		path: _base + 'cs-onedaycare-pasien', 
-		name: '(Registrasi) Pasien Bedah (One Day Care)', 
+		name: 'Registrasi Pasien Bedah', 
 		component: () => import('./components/customerservices/onedaycare/index.vue'),
-		meta: { title: '(Registrasi) Pasien Bedah (One Day Care)' },
+		meta: { title: 'Registrasi Pasien Bedah' },
 		props: true 
 	},
 
@@ -879,15 +927,15 @@ const routes = [
 		path: _base + 'carabayar', 
 		name: 'Metode Pembayaran', 
 		component: () => import('./components/finance/carabayar/index.vue'),
-		meta: { title: 'Metode Pembayaran' },
+		meta: { title: 'Penjamin' },
 		props: true 
 	},
 
 	{ 
 		path: _base + 'tindakanrawatjalan', 
-		name: '(Master) Data Tindakan', 
+		name: 'Buku Tarif', 
 		component: () => import('./components/administration/tindakanrawatjalan/index.vue'),
-		meta: { title: '(Master) Data Tindakan' },
+		meta: { title: 'Buku Tarif' },
 		props: true 
 	},
 	// { 
@@ -912,6 +960,15 @@ const routes = [
 		meta: { title: 'Kasir' },
 		props: true 
 	},
+
+		{ 
+		path: _base + 'editkasir', 
+		name: 'Edit Kasir', 
+		component: () => import('./components/finance/editkasir/index.vue'),
+		meta: { title: 'Edit Kasir' },
+		props: true 
+	},
+	
 
 	{ 
 		path: _base + 'histori-kasir', 

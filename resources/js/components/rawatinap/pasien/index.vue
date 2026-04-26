@@ -14,6 +14,7 @@
 	<FormPaket ref="FormPaket" @dialog="dialog" @parsingForm="parsingForm"></FormPaket>
 	<FormDetailPulang ref="FormDetailPulang" @dialog="dialog" @parsingForm="parsingForm"></FormDetailPulang>
 	<FormJadwalKontrol ref="FormJadwalKontrol" @dialog="dialog" @parsingForm="parsingForm"></FormJadwalKontrol>
+	<FormSoapInap ref="FormSoapInap" @saved="onSoapSaved"></FormSoapInap>
 </template>
 
 <script>
@@ -33,6 +34,7 @@ export default {
 		FormResep: defineAsyncComponent(() => import('./FormResep.vue')),
 		FormDetailPulang: defineAsyncComponent(() => import('./FormDetailPulang.vue')),
 		FormJadwalKontrol: defineAsyncComponent(() => import('./FormJadwalKontrol.vue')),
+		FormSoapInap: defineAsyncComponent(() => import('./FormSoapInap.vue')),
 		Datatable: defineAsyncComponent(() => import('../../../section/Datatable.vue')),
 	},
 	created: function () {},
@@ -95,6 +97,7 @@ export default {
 				//{ icon: 'aperture', color: 'btn-success', posisi: 'resep', tooltip: 'Resep Obat', item: _item, index: _index, show: true },
 				{ icon: 'check-circle', color: 'btn-info', posisi: 'jadwalkontrol', tooltip: 'Jadwal Kontrol', item: _item, index: _index, show: true },
 				{ icon: 'printer', color: 'btn-success', posisi: 'print', tooltip: 'Cetak Gelang', item: _item, index: _index, show: true },
+				{ icon: 'file-text', color: 'btn-primary', posisi: 'cppt', tooltip: 'CPPT & SOAP', item: _item, index: _index, show: true },
 				{ icon: 'check-circle', color: 'btn-info', posisi: 'detailpulang', tooltip: 'Pasien Pulang', item: _item, index: _index, show: true },
 			]
 			return str;
@@ -184,6 +187,9 @@ export default {
 				vm.attach.url = vm.attach.link.pulang;
 				vm.dialog('Yakin ingin memulangkan data yang terpilih dihalaman ini.', 'Ya, hapus data', 'pulangdata');
 			}
+			else if (posisi == 'cppt') {
+				vm.$refs.FormSoapInap.showModal(data);
+			}
 		},
 
 		loadingModal: function (position) { 
@@ -245,6 +251,7 @@ export default {
 
 		setDatatable: function (data, total) { let temporer = [], col = []; for (let i = 0; i < data.length; i++) { col = []; for (let j = 0; j < vm.column.length; j++) { col.push(vm.converter(data[i], i, data[i][vm.column[j].value] ? data[i][vm.column[j].value] :vm.column[j].value, vm.column[j].value)); } temporer.push(col); } vm.module.data = temporer; vm.module.total = total; return temporer; },
 		tableload:function() { vm.attach.url = vm.attach.link.list; vm.attach.data = new FormData(); vm.attach.data.append('search', ''); vm.attach.data.append('column', ''); vm.attach.data.append('page', 1); vm.executions(); },
+		onSoapSaved: function() { vm.tablereload(new FormData(), 'outer'); },
 		tablereload:function(data = new FormData(), pos = 'main') { if (pos == 'outer') { vm.$refs.Datatable.skeleton(); } vm.attach.url = vm.attach.link.list; vm.attach.data = data; vm.position = 'externaltable'; vm.executions(); },
 
 		/*************************************************************************************************************************

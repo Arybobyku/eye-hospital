@@ -56,6 +56,7 @@ export const parserawatjalan = (form, detail) => {
 
 	data.append('pengguna_uuid', form.select.dokter.value);
 	data.append('nama_dokter', form.select.dokter.label);
+	data.append('nama_dokter_umum', form.select.dokterumum.label);
 	data.append('no_pendaftaran', form.nopendaftaran.value);
 	data.append('cara_masuk', form.select.caramasuk.value);
 	data.append('rujukan', form.rujukan.value);

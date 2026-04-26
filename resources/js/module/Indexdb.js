@@ -21,8 +21,17 @@ export const initindexdb = (dbName, tableName) => {
 
 	if (tableName == 'supplierretur') { tableName = 'supplier'; }
 	if (tableName == 'dokterreg') { tableName = 'dokter'; }
+	if (tableName == 'obat2') { tableName = 'obat'; }
+	if (tableName == 'obat3') { tableName = 'obat'; }
+	if (tableName == 'obat4') { tableName = 'obat'; }
+	if (tableName == 'ocularsinistravisus') { tableName = 'ocularsinistravisus'; }
+	if (tableName == 'oculardextravisus') { tableName = 'oculardextravisus'; }
+	if (tableName == 'oculardextrabcva2') { tableName = 'oculardextrabcva2'; }
+	if (tableName == 'ocularsinistrabcva2') { tableName = 'ocularsinistrabcva2'; }
+	if (tableName == 'oculardextrapinhole') { tableName = 'oculardextrapinhole'; }
+	if (tableName == 'ocularsinistrapinhole') { tableName = 'ocularsinistrapinhole'; }
 
-	console.log(tableName)
+	console.log("table", tableName)
 	return new Promise(function (resolve, reject) {
     var open = window.indexedDB.open(dbName, window.localStorage.getItem("version"));
     open.onsuccess = function() {
@@ -73,6 +82,15 @@ export const indexdbprocessing = (data, form, key) => {
 			form.select[key].filter.push(data[i]);
 		}
 		else if (key == 'obat') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'obat2') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'obat3') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'obat4') {
 			form.select[key].filter.push(data[i]);
 		}
 		else if (key == 'supplier') {
@@ -171,6 +189,24 @@ export const indexdbprocessing = (data, form, key) => {
 		else if (key == 'alltindakan') {
 			form.select[key].filter.push(data[i]);
 		}
+		else if (key == 'ocularsinistravisus') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'oculardextravisus') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'oculardextrabcva2') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'ocularsinistrabcva2') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'oculardextrapinhole') {
+			form.select[key].filter.push(data[i]);
+		}
+		else if (key == 'ocularsinistrapinhole') {
+			form.select[key].filter.push(data[i]);
+		}
 	}
 
 	form.select[key].data = form.select[key].filter;
@@ -218,6 +254,22 @@ export const createdb = (dbName, version, response) => {
 				let obat = db.createObjectStore('obat', { keyPath: "id", autoIncrement: true });
 				let i = 0, data = response.data.obat;
 				while (i < data.length) { obat.put(obatfunction(data, i)); i++; }
+			}
+			if (response.data.obat2.length > 0) {
+				let obat2 = db.createObjectStore('obat2', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.obat;
+				while (i < data.length) { obat2.put(obat2function(data, i)); i++; }
+			}
+			if (response.data.obat3.length > 0) {
+				let obat3 = db.createObjectStore('obat3', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.obat3;
+				while (i < data.length) { obat3.put(obat3function(data, i)); i++; }
+			}
+
+			if (response.data.obat4.length > 0) {
+				let obat4 = db.createObjectStore('obat4', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.obat4;
+				while (i < data.length) { obat4.put(obat4function(data, i)); i++; }
 			}
 
 			if (response.data.obatgudang.length > 0) {
@@ -357,6 +409,38 @@ export const createdb = (dbName, version, response) => {
 				let tindakanbedah = db.createObjectStore('tindakanbedah', { keyPath: "id", autoIncrement: true });
 				let i = 0, data = response.data.tindakanbedah;
 				while (i < data.length) { tindakanbedah.put(tindakanbedahfunction(data, i)); i++; }
+			}
+			console.log("yudha", response.data)
+
+			if (response.data.ocularsinistravisus.length > 0) {
+				let ocularsinistravisus = db.createObjectStore('ocularsinistravisus', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.ocularsinistravisus;
+				while (i < data.length) { ocularsinistravisus.put(ocularsinistravisusfunction(data, i)); i++; }
+			}
+			if (response.data.oculardextravisus.length > 0) {
+				let oculardextravisus = db.createObjectStore('oculardextravisus', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.oculardextravisus;
+				while (i < data.length) { oculardextravisus.put(oculardextravisusfunction(data, i)); i++; }
+			}
+			if (response.data.oculardextrabcva2.length > 0) {
+				let oculardextrabcva2 = db.createObjectStore('oculardextrabcva2', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.oculardextrabcva2;
+				while (i < data.length) { oculardextrabcva2.put(oculardextrabcva2function(data, i)); i++; }
+			}
+			if (response.data.ocularsinistrabcva2.length > 0) {
+				let ocularsinistrabcva2 = db.createObjectStore('ocularsinistrabcva2', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.ocularsinistrabcva2;
+				while (i < data.length) { ocularsinistrabcva2.put(ocularsinistrabcva2function(data, i)); i++; }
+			}
+			if (response.data.oculardextrapinhole.length > 0) {
+				let oculardextrapinhole = db.createObjectStore('oculardextrapinhole', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.oculardextrapinhole;
+				while (i < data.length) { oculardextrapinhole.put(oculardextrapinholefunction(data, i)); i++; }
+			}
+			if (response.data.ocularsinistrapinhole.length > 0) {
+				let ocularsinistrapinhole = db.createObjectStore('ocularsinistrapinhole', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.ocularsinistrapinhole;
+				while (i < data.length) { ocularsinistrapinhole.put(ocularsinistrapinholefunction(data, i)); i++; }
 			}
 			
 		};
@@ -571,7 +655,73 @@ const obatfunction = (data, i) => {
 		min_stock: data[i].min_stock
 	}
 }
+const obat2function = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nama,
 
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nama: data[i].nama,
+		keterangan: data[i].keterangan,
+		satuan_uuid_besar: data[i].satuan_uuid_besar,
+		nama_satuan_besar: data[i].nama_satuan_besar,
+		satuan_uuid_kecil: data[i].satuan_uuid_kecil,
+		nama_satuan_kecil: data[i].nama_satuan_kecil,
+		hitung_besar: data[i].hitung_besar,
+		hitung_kecil: data[i].hitung_kecil,
+		kategori:data[i].kategori,
+		formularium: data[i].formularium,
+		golongan: data[i].golongan,
+		jenis: data[i].jenis,
+		min_stock: data[i].min_stock
+	}
+}
+const obat3function = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nama,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nama: data[i].nama,
+		keterangan: data[i].keterangan,
+		satuan_uuid_besar: data[i].satuan_uuid_besar,
+		nama_satuan_besar: data[i].nama_satuan_besar,
+		satuan_uuid_kecil: data[i].satuan_uuid_kecil,
+		nama_satuan_kecil: data[i].nama_satuan_kecil,
+		hitung_besar: data[i].hitung_besar,
+		hitung_kecil: data[i].hitung_kecil,
+		kategori:data[i].kategori,
+		formularium: data[i].formularium,
+		golongan: data[i].golongan,
+		jenis: data[i].jenis,
+		min_stock: data[i].min_stock
+	}
+}
+
+const obat4function = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nama,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nama: data[i].nama,
+		keterangan: data[i].keterangan,
+		satuan_uuid_besar: data[i].satuan_uuid_besar,
+		nama_satuan_besar: data[i].nama_satuan_besar,
+		satuan_uuid_kecil: data[i].satuan_uuid_kecil,
+		nama_satuan_kecil: data[i].nama_satuan_kecil,
+		hitung_besar: data[i].hitung_besar,
+		hitung_kecil: data[i].hitung_kecil,
+		kategori:data[i].kategori,
+		formularium: data[i].formularium,
+		golongan: data[i].golongan,
+		jenis: data[i].jenis,
+		min_stock: data[i].min_stock
+	}
+}
 const obatgudangfunction = (data, i) => {
 	return {
 		value: data[i].uuid,
@@ -840,6 +990,7 @@ const carabayartindakanrawatjalanfunction = (data, i) => {
 		tindakan_rawat_jalan_uuid: data[i].tindakan_rawat_jalan_uuid,
 		nama_tindakan_rawat_jalan: data[i].nama_tindakan_rawat_jalan,
 		harga: data[i].harga,
+		jenis: data[i].jenis,
 		default: data[i].default,
 	}
 }
@@ -881,4 +1032,60 @@ const tindakanbedahfunction = (data, i) => {
 		nama: data[i].nama,
 		jenis: data[i].jenis,
 	}
+}
+
+const ocularsinistravisusfunction = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
+}
+
+const oculardextravisusfunction = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
+}
+const oculardextrabcva2function = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
+}
+const ocularsinistrabcva2function = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
+}
+const oculardextrapinholefunction = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
+}
+const ocularsinistrapinholefunction = (data, i) => {
+	return {
+		value: data[i].uuid,
+		label: data[i].nilai,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nilai: data[i].nilai	}
 }
