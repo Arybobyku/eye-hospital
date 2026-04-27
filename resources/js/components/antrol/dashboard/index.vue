@@ -302,13 +302,13 @@
 						alert("Silakan pilih tanggal");
 						return;
 					}
-                    url = `/api/bpjs//antrol-bpjs/dashboard/waktutunggu/tanggal/${this.params1}?ts=${Date.now()}`;
+                    url = `/api/bpjs/antrol-bpjs/dashboard/waktutunggu/tanggal/${this.params1}?ts=${Date.now()}`;
 				} else if (this.filterType === "bulan") {
 					if (!this.params1 || !this.params2) {
 						alert("Silakan pilih bulan dan tahun");
 						return;
 					}
-                    url = `/api/bpjs//antrol-bpjs/dashboard/waktutunggu/bulan/${this.params1}/tahun/${this.params2}?ts=${Date.now()}`;
+                    url = `/api/bpjs/antrol-bpjs/dashboard/waktutunggu/bulan/${this.params1}/tahun/${this.params2}?ts=${Date.now()}`;
 				}
 
 				try {
@@ -616,7 +616,7 @@
                 }).catch(function(error) {
                     setTimeout(function() {
                         vm.gagal(error);
-                    }, 750, this);  
+                    }, 750, this);
                 });
             },
             dialog: function(_text, _confirm, posisi) {
