@@ -84,10 +84,10 @@
 <script>
 window.Echo = new Echo({
 	broadcaster: 'pusher',
-	key: 'ABCDEFG',
+	key: 'b7dabe8cbdde18f40aed',
 	cluster: 'mt1',
-	wsHost: window.location.hostname,
-	wsPort: 6001,
+	// wsHost: window.location.hostname,
+	// wsPort: 6001,
 	forceTLS: false,
 	disableStats: true,
 });
@@ -124,7 +124,7 @@ new Vue({
     counter: { satu: '000', dua: '000', active: '000', nomor: '' },
 		timetime: null,
   }},
-  methods: {	
+  methods: {
 		triggercall:function(data) {
 			const vm = this, myArray = data.split("=");
 			console.log(vm);
@@ -164,11 +164,11 @@ new Vue({
 		bunyi:function(nomor, posisi, jenis) {
 			const vm = this;
 			vm.hitung += 1;
-			var x = document.getElementById("myAudio"); 
+			var x = document.getElementById("myAudio");
 			x.play();
 
 			if (vm.timetime) { window.clearTimeout(vm.timetime); }
-					
+
 			vm.timetime = window.setTimeout(function() {
 				let  tmp = nomor.split("");
 				let msg = 'Nomor antrian, ';
@@ -185,8 +185,8 @@ new Vue({
 				if (parseInt(angka) > 0 && parseInt(angka) < 10) { msg = msg + '0, 0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 9 && parseInt(angka) < 100) { msg = msg + '0, ' + parseInt(angka) + ', '; }
 				else if (parseInt(angka) > 99 && parseInt(angka) < 1000) { msg = msg + ' ' + parseInt(angka) + ', '; }
-							
-				if (jenis == 'poli') { 
+
+				if (jenis == 'poli') {
 					msg = msg + 'ke Poli, '+ posisi;
 				}
 				else { msg = msg + 'ke ' + jenis +', '+ posisi; }
@@ -199,7 +199,7 @@ new Vue({
 				responsiveVoice.speak(msg, "Indonesian Female", parameters);
 
 				window.clearTimeout(vm.timetime);
-			}, 2000, this);			
+			}, 2000, this);
 		},
 		voiceStartCallback: function (){},
 		voiceEndCallback: function (){},
@@ -225,11 +225,11 @@ new Vue({
 						}
 						else if (temp.pemanggil == '6') {
 							let number = vm.calculate(temp.number, 'A');
-							vm.poliklinik[1].nomor = number;			
+							vm.poliklinik[1].nomor = number;
 						}
 					}
 				}
-				
+
 				if (response.data.farmasi.length > 0) {
 					for (let i = 0; i < response.data.farmasi.length; i++) {
 						let temp = response.data.farmasi[i];
@@ -245,7 +245,7 @@ new Vue({
 						vm.poliklinik[3].nomor = number;
 					}
 				}
-							
+
       }).catch(function (error) { /* setTimeout(function() {}, 2500, this); */ })
     },
     firtsload:function() {

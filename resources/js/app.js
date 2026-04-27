@@ -12,9 +12,9 @@ const app = createApp({});
 app.config.globalProperties.$dbNameIndexDb = 'indexDbHospital';
 app.config.globalProperties.$debugs = true;
 // app.mixin({
-// 	globalHelper: function (component) { 
+// 	globalHelper: function (component) {
 // 		defineAsyncComponent(() => import(component));
-// 		console.log("Hello world") 
+// 		console.log("Hello world")
 // 	},
 // });
 import Pusher from 'pusher-js';
@@ -23,10 +23,10 @@ window.Pusher = Pusher;
 import Echo from 'laravel-echo';
 window.Echo = new Echo({
     broadcaster: 'pusher',
-    key: 'ABCDEFG',
+    key: 'b7dabe8cbdde18f40aed',
 		cluster: 'mt1',
-    wsHost: window.location.hostname,
-    wsPort: 6001,
+    // wsHost: window.location.hostname,
+    // wsPort: 6001,
     forceTLS: false,
     disableStats: true,
 });

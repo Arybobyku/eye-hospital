@@ -92,10 +92,10 @@
 <script>
 window.Echo = new Echo({
 	broadcaster: 'pusher',
-	key: 'ABCDEFG',
+	key: 'b7dabe8cbdde18f40aed',
 	cluster: 'mt1',
-	wsHost: window.location.hostname,
-	wsPort: 6001,
+	// wsHost: window.location.hostname,
+	// wsPort: 6001,
 	forceTLS: false,
 	disableStats: true,
 });
@@ -111,7 +111,7 @@ new Vue({
 		//this.$nextTick(() => {
    	 Echo.channel('tradespoli').listen('NewTradePoli', (e) => { vm.triggercall(e.trade); });
   	//})
-		
+
   },
   computed:{},
   created:function() { },
@@ -180,15 +180,15 @@ new Vue({
 				vm.bunyi(number, tmp[1], 'refraksi optisi');
 			}
 		},
-			
+
 		bunyi:function(nomor, posisi, jenis) {
 			const vm = this;
 			vm.hitung += 1;
-			var x = document.getElementById("myAudio"); 
+			var x = document.getElementById("myAudio");
 			x.play();
 
 			if (vm.timetime) { window.clearTimeout(vm.timetime); }
-				
+
 			vm.timetime = window.setTimeout(function() {
 				let tmp = nomor.split("");
 				let msg = 'Nomor antrian, ';
@@ -218,9 +218,9 @@ new Vue({
 				responsiveVoice.speak(msg, "Indonesian Female", parameters);
 
 				window.clearTimeout(vm.timetime);
-			}, 2000, this);				
+			}, 2000, this);
 		},
-			
+
 		voiceStartCallback: function (){ console.log('callback') },
 		voiceEndCallback: function (){ console.log('callback') },
     showSlides() {
@@ -268,9 +268,9 @@ new Vue({
 							vm.poliklinik[3].nomor = number;
 							vm.displayright = number;
 						}
-					}			
+					}
 				}
-				
+
 				// RO
 				if (response.data.ro.length > 0) {
 					for (let i = 0; i < response.data.ro.length; i++) {

@@ -76,10 +76,10 @@
 <script>
 window.Echo = new Echo({
 	broadcaster: 'pusher',
-	key: 'ABCDEFG',
+	key: 'b7dabe8cbdde18f40aed',
 	cluster: 'mt1',
-	wsHost: window.location.hostname,
-	wsPort: 6001,
+	// wsHost: window.location.hostname,
+	// wsPort: 6001,
 	forceTLS: false,
 	disableStats: true,
 });
@@ -131,20 +131,20 @@ new Vue({
 				vm.customer[1].nomor = number;
 				vm.display = number;
 			}
-			vm.bunyi(number, cs[2]);		
-		},	
+			vm.bunyi(number, cs[2]);
+		},
 		bunyi:function(nomor, posisi) {
 			const vm = this;
 			vm.hitung += 1;
-			var x = document.getElementById("myAudio"); 
+			var x = document.getElementById("myAudio");
 			x.play();
 
 			if (vm.timetime) { window.clearTimeout(vm.timetime); }
-				
+
 			vm.timetime = window.setTimeout(function() {
 				let  tmp = nomor.split("");
         console.log("TEMP",tmp)
-							
+
 				let msg = 'Nomor antrian, '+ tmp[0] + tmp[1] +', ';
 				let angka = tmp[3]+''+tmp[4]+''+tmp[5];
 				if (parseInt(angka) > 0 && parseInt(angka) < 10) { msg = msg + '0, 0, ' + parseInt(angka) + ', '; }
@@ -161,7 +161,7 @@ new Vue({
 
 				window.clearTimeout(vm.timetime);
 			}, 2000, this);
-							
+
 		},
 		voiceStartCallback: function (){},
 		voiceEndCallback: function (){},
@@ -178,7 +178,7 @@ new Vue({
 				//dots[this.slideIndex-1].className += " active";
 				this.slideIndex++;
 			}
-      
+
     },
 		calculate:function(data) {
 			let msg = 'CS-';
@@ -196,7 +196,7 @@ new Vue({
 				if (response.data.hasil.length > 0) {
 					for (let i = 0; i < response.data.hasil.length; i++) {
 						let temp = response.data.hasil[i];
-									
+
 						if (temp.pemanggil == 'Customer Service 1') {
 							let number = vm.calculate(temp.number);
 							vm.customer[0].nomor = number;
@@ -207,7 +207,7 @@ new Vue({
 							vm.customer[1].nomor = number;
 							vm.display = number;
 						}
-					}				
+					}
 				}
       }).catch(function (error) { /* setTimeout(function() {}, 2500, this); */ })
     },
