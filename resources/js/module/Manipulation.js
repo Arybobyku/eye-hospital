@@ -1,5 +1,5 @@
 export const datename = (tanggal, istimes = false) => {
-	let tmp = tanggal.split(" "), 
+	let tmp = tanggal.split(" "),
 			dates = tmp[0].split('-');
 	if (tmp.length > 1) {
 		let times = tmp[1].split(':');
@@ -10,7 +10,7 @@ export const datename = (tanggal, istimes = false) => {
 }
 
 const monthname = (month) => {
-	if (month == '01') { month = 'Januari'; } 
+	if (month == '01') { month = 'Januari'; }
 	else if (month == '02') { month = 'Februari'; }
 	else if (month == '03') { month = 'Maret'; }
 	else if (month == '04') { month = 'April'; }
@@ -26,7 +26,7 @@ const monthname = (month) => {
 }
 
 export const datenumber = (tanggal, istimes = false) => {
-	let tmp = tanggal.split(" "), 
+	let tmp = tanggal.split(" "),
 			dates = tmp[0].split('-');
 	if (tmp.length > 1) {
 		let times = tmp[1].split(':');
@@ -52,6 +52,9 @@ export const streachcapital = (str) => {
 }
 
 export const countage = (dates) => {
+    if(!dates){
+        return '-'
+    }
 	let tmp = dates.split(" ");
 	dates = tmp[0].split("-");
 	let yearBirthday = dates[0], monthBirthday = parseInt(dates[1]);
@@ -63,7 +66,7 @@ export const countage = (dates) => {
 	monthBirthday = monthToday - monthBirthday;
 	if (yearBirthday >= 1) {
 		if (monthBirthday > 0) { return yearBirthday + ' tahun ' + monthBirthday + ' bulan';  }
-		return yearBirthday + ' tahun'; 
+		return yearBirthday + ' tahun';
 	}
 	return monthBirthday + ' bulan';
 }
