@@ -114,7 +114,19 @@
         </div>
         <div class="col-md-6">
           <label>Penanggung Pembayaran</label>
-          <input v-model="form.penanggung" class="input-rme" />
+          <div class="dropdown-dokter">
+        <select v-model="form.penanggung" class="form-select-dokter">
+        <option value="" disabled>Pilih Penanggung</option>
+        <option
+         v-for="item in listPenanggung"
+        :key="item"
+        :value="item"
+        >
+        {{ item }}
+        </option>
+        </select>
+        <span class="dropdown-icon">▾</span>
+      </div>
         </div>
       </div>
     </div>
@@ -229,6 +241,13 @@
           penColor: "black", 
           backgroundColor: "white" 
         },
+                listPenanggung: [
+      "BPJS Kesehatan",
+      "BPJS TK",
+      "Umum",
+      "Asuransi",
+      "Lain-lain",
+    ],
         form: {
           uuid: "",
           uuid_pasien: "",

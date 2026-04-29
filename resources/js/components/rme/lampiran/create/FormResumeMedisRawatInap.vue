@@ -56,12 +56,40 @@
 
       <div class="row mb-3">
         <div class="col-md-6">
-          <label>Ruang Rawat Terakhir</label>
-          <input v-model="form.ruang_rawat" class="input-rme" />
+            <div class="dropdown-dokter">
+  <select v-model="form.ruang_rawat" class="form-select-dokter">
+    <option value="" disabled>Pilih Ruangan</option>
+    <option
+      v-for="item in listRuang"
+      :key="item"
+      :value="item"
+    >
+      {{ item }}
+    </option>
+  </select>
+  <span class="dropdown-icon">▾</span>
+</div>
+
+          <!-- <label>Ruang Rawat Terakhir</label>
+          <input v-model="form.ruang_rawat" class="input-rme" /> -->
         </div>
+
         <div class="col-md-6">
-          <label>Penanggung Pembayaran</label>
-          <input v-model="form.penanggung_pembayaran" class="input-rme" />
+        <div class="dropdown-dokter">
+        <select v-model="form.penanggung_pembayaran" class="form-select-dokter">
+        <option value="" disabled>Pilih Penanggung</option>
+        <option
+         v-for="item in listPenanggung"
+        :key="item"
+        :value="item"
+        >
+        {{ item }}
+        </option>
+        </select>
+        <span class="dropdown-icon">▾</span>
+      </div>
+          <!-- <label>Penanggung Pembayaran</label>
+          <input v-model="form.penanggung_pembayaran" class="input-rme" /> -->
         </div>
       </div>
 
@@ -327,12 +355,31 @@
       },
     },
     data() {
+
+      
       return {
         loading: false,
         disabledSubmit: false,
         ttdDokterCleared: false,
         editUuid: "",
         sigOption: { penColor: "black", backgroundColor: "white" },
+
+        listRuang: [
+  "ICU",
+  "IGD",
+  "VIP",
+  "Kelas 1",
+  "Kelas 2",
+  "Kelas 3",
+  "Ruang Bersalin", // tambah di sini
+],
+      listPenanggung: [
+      "BPJS Kesehatan",
+      "BPJS TK",
+      "Umum",
+      "Asuransi",
+      "Lain-lain",
+    ],
         form: {
           uuid: "",
           uuid_pasien: "",
@@ -400,6 +447,7 @@
     },
     async mounted() {
       await this.fetchDokter();
+//      await this.fetchRuang();
       await this.fetchTahunAkreditasi();
       if(this.viewData) {
         console.log(this.editUuid);
@@ -424,6 +472,15 @@
           console.error('Gagal memuat data dokter:', error);
         }
       },
+      // methods — tambah fetchRuang dan panggil di mounted
+      // async fetchRuang() {
+      //   try {
+      //     const response = await axios.get('/master/pasien/master-ruang-all');
+      //     this.listRuang = response.data.data;
+      //   } catch (error) {
+      //     console.error('Gagal memuat data ruang:', error);
+      //   }
+      // },
       async fetchTahunAkreditasi() {
         try {
           const response = await axios.get('/api/tahun-akreditasi');
