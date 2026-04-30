@@ -875,7 +875,7 @@ export default {
 				// vm.form.ocularsinistrabcva2.value = vm.nullcheck(temps.ocular_sinistra_bcva2);
 				vm.form.select.ocularsinistrabcva2.label = temps.ocular_sinistra_bcva2;
 				vm.form.select.ocularsinistrabcva2.value = temps.ocular_sinistra_bcva2;
-				if (temps.ocular_dextra_bcva2  == '' || temps.ocular_sinistra_bcva2  == null) {
+				if (temps.ocular_sinistra_bcva2  == '' || temps.ocular_sinistra_bcva2  == null) {
 					vm.form.select.ocularsinistrabcva2.label = 'Silahkan Pilih';
 					vm.form.select.ocularsinistrabcva2.value = '';
 				}
