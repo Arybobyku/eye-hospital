@@ -42,7 +42,7 @@ import Swal from 'sweetalert2';
 export default {
 	emits: ["titletrigger", "repatch"],
 	beforeUnmount:function() {},
-	components: { toast, Swal, 
+	components: { toast, Swal,
 		FormDetail: defineAsyncComponent(() => import('./FormDetail.vue')),
 		FormDetailTransfer: defineAsyncComponent(() => import('./FormDetailTransfer.vue')),
 		FormCetakan: defineAsyncComponent(() => import('./FormCetakan.vue')),
@@ -63,6 +63,7 @@ export default {
 		position: '',
 		attach: {
 			link : {
+				penunjang: '/dokter/pemeriksaan/set-penunjang',
 				list: '/dokter/pemeriksaan/list',
 				listhistori: '/dokter/pemeriksaan/listhistori',
 				add: '/dokter/pemeriksaan/add',
@@ -173,8 +174,8 @@ export default {
 
 		changesTab: function (values, index, classes) {
 			if (classes != 'tab-active') {
-				for (let i = 0; i < vm.tab.button.length; i++) { 
-					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; 
+				for (let i = 0; i < vm.tab.button.length; i++) {
+					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';
 				}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
@@ -284,6 +285,9 @@ export default {
 		statusdokter:function(data) {
 			if (data.status_dokter == 'Belum Diperiksa') {
 				return '<div class="badge badge-danger">'+data.status_dokter+'</div>';
+			}
+			if (data.status_dokter == 'Sudah Upload Penunjang') {
+				return '<div class="badge badge-info">'+data.status_dokter+'</div>';
 			}
 			return '<div class="badge badge-success">'+data.status_dokter+'</div>'
 		},
@@ -448,7 +452,7 @@ export default {
 			}
 		},
 
-		loadingModal: function (position) { 
+		loadingModal: function (position) {
 			console.log("position loadingmodal");
 			console.log(position);
 			if (position == 'formdetail') { vm.$refs.FormDetail.loaderprocess();  }
@@ -462,7 +466,8 @@ export default {
 
 		parsingForm:function(data, key) {
 			vm.attach.data = data;
-			if (key == 'add') { vm.position = 'updatedata'; vm.attach.url = vm.attach.link.add; }
+			if (key == 'penunjang') { vm.position = 'penunjang'; vm.attach.url = vm.attach.link.penunjang; }
+			else if (key == 'add') { vm.position = 'updatedata'; vm.attach.url = vm.attach.link.add; }
 			else if (key == 'suratistirahat') { vm.position = 'suratistirahat'; vm.attach.url = vm.attach.link.suratistirahat; }
 			else if (key == 'suratkonsul') { vm.position = 'suratkonsul'; vm.attach.url = vm.attach.link.suratkonsul; }
 			else if (key == 'suratbalasankonsul') { vm.position = 'suratbalasankonsul'; vm.attach.url = vm.attach.link.suratbalasankonsul; }
@@ -510,17 +515,17 @@ export default {
 				vm.attach.data.append('carabayar_filter', 'nonbpjs');
 			}
 			else if (pos == 'triase') {
-				vm.attach.url = vm.attach.link.listtriase; 
-				vm.attach.data = new FormData(); 
-				vm.attach.data.append('search', ''); 
-				vm.attach.data.append('column', ''); 
+				vm.attach.url = vm.attach.link.listtriase;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
 				vm.attach.data.append('page', 1);
 			}
 			else if (pos == 'transfer') {
-				vm.attach.url = vm.attach.link.listtransfer; 
-				vm.attach.data = new FormData(); 
-				vm.attach.data.append('search', ''); 
-				vm.attach.data.append('column', ''); 
+				vm.attach.url = vm.attach.link.listtransfer;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
 				vm.attach.data.append('page', 1);
 			}
 			else if (pos == 'histori_bpjs') {
@@ -540,29 +545,29 @@ export default {
 				vm.attach.data.append('carabayar_filter', 'nonbpjs');
 			}
 			else {
-				vm.attach.url = vm.attach.link.listpending; 
-				vm.attach.data = new FormData(); 
-				vm.attach.data.append('search', ''); 
-				vm.attach.data.append('column', ''); 
-				vm.attach.data.append('page', 1); 
+				vm.attach.url = vm.attach.link.listpending;
+				vm.attach.data = new FormData();
+				vm.attach.data.append('search', '');
+				vm.attach.data.append('column', '');
+				vm.attach.data.append('page', 1);
 			}
-			
-			vm.executions(); 
+
+			vm.executions();
 		},
-		tablereload:function(data = new FormData(), pos = 'main') { 
+		tablereload:function(data = new FormData(), pos = 'main') {
 			if (vm.posisieksternal == 'pending') {
 				if (pos == 'outer') {
-					vm.$refs.DatatablePending.skeleton(); 
+					vm.$refs.DatatablePending.skeleton();
 				}
-				vm.attach.url = vm.attach.link.listpending; 
-				vm.attach.data = data; 
+				vm.attach.url = vm.attach.link.listpending;
+				vm.attach.data = data;
 			}
 			else if (vm.posisieksternal == 'triase') {
 				if (pos == 'outer') {
-					vm.$refs.DatatableTriase.skeleton(); 
+					vm.$refs.DatatableTriase.skeleton();
 				}
-				vm.attach.url = vm.attach.link.listtriase; 
-				vm.attach.data = data; 
+				vm.attach.url = vm.attach.link.listtriase;
+				vm.attach.data = data;
 			}
 			else if (vm.posisieksternal == 'histori_bpjs') {
 				if (pos == 'outer') {
@@ -582,10 +587,10 @@ export default {
 			}
 			else if (vm.posisieksternal == 'transfer') {
 				if (pos == 'outer') {
-					vm.$refs.DatatableTransfer.skeleton(); 
+					vm.$refs.DatatableTransfer.skeleton();
 				}
-				vm.attach.url = vm.attach.link.listtransfer; 
-				vm.attach.data = data; 
+				vm.attach.url = vm.attach.link.listtransfer;
+				vm.attach.data = data;
 			}
 			else if (vm.posisieksternal == 'today_bpjs') {
 				if (pos == 'outer') {
@@ -621,14 +626,14 @@ export default {
 		},
 
 		loadpending:function() {
-			vm.position = 'loadpending'; 
-			vm.firstloader(); 
+			vm.position = 'loadpending';
+			vm.firstloader();
 			vm.tableload('pending');
 		},
 
 		loadtriase:function() {
-			vm.position = 'loadtriase'; 
-			vm.firstloader(); 
+			vm.position = 'loadtriase';
+			vm.firstloader();
 			vm.tableload('triase');
 		},
 
@@ -644,8 +649,8 @@ export default {
 		},
 
 		loadtransfer:function() {
-			vm.position = 'loadtransfer'; 
-			vm.firstloader(); 
+			vm.position = 'loadtransfer';
+			vm.firstloader();
 			vm.tableload('transfer');
 		},
 
@@ -692,6 +697,7 @@ export default {
 			else if (vm.position == 'loaddatajadwalkontrol') { vm.loadingModal('formjadwalkontrol'); vm.$refs.FormJadwalKontrol.hide(); }
 			else if (vm.position == 'loaddatatransfer') { vm.loadingModal('formtransfer'); vm.$refs.FormTransfer.hide(); }
 			else if (vm.position == 'call') { vm.getCurrentDatatableRef().skeleton(); }
+			else if (vm.position == 'penunjang') { vm.loadingModal('formdetail'); }
 			else if (vm.position == 'updatedata') { vm.loadingModal('formdetail'); }
 			else if (vm.position == 'updatedatatransfer') { vm.loadingModal('formdetailtransfer'); }
 			else if (vm.position == 'suratistirahat') { vm.loadingModal('formcetakan'); }
@@ -703,7 +709,7 @@ export default {
 			else if (vm.position == 'cetakandata') { vm.loadingModal('formcetakan'); vm.$refs.FormCetakan.hide();  }
 			else if (vm.position == 'historidata') { vm.loadingModal('formhistori'); vm.$refs.FormHistori.hide();  }
 			else if (vm.position == 'historidokter') { vm.loadingModal('formhistoridokter'); vm.$refs.FormHistoriDokter.hide();  }
-			
+
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
 		},
@@ -714,7 +720,7 @@ export default {
 			console.log(vm.position);
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
-	
+
 			if (vm.position == 'loadbpjs') {
 				vm.posisieksternal='today_bpjs';
 				vm.firstloader();
@@ -729,18 +735,18 @@ export default {
 				vm.$refs.DatatableNonBpjs.paging();
 				active = 0;
 			}
-			else if (vm.position == 'loadpending') { 
+			else if (vm.position == 'loadpending') {
 				vm.posisieksternal='pending';
 				vm.firstloader();
-				vm.$refs.DatatablePending.update(vm.columnpending, vm.setDatatablepending(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.DatatablePending.paging(); 
+				vm.$refs.DatatablePending.update(vm.columnpending, vm.setDatatablepending(response.data.data, response.data.total), response.data.total);
+				vm.$refs.DatatablePending.paging();
 				active = 0;
 			}
-			else if (vm.position == 'loadtriase') { 
+			else if (vm.position == 'loadtriase') {
 				vm.posisieksternal='triase';
 				vm.firstloader();
-				vm.$refs.DatatableTriase.update(vm.columntriase, vm.setDatatabletriase(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.DatatableTriase.paging(); 
+				vm.$refs.DatatableTriase.update(vm.columntriase, vm.setDatatabletriase(response.data.data, response.data.total), response.data.total);
+				vm.$refs.DatatableTriase.paging();
 				active = 0;
 			}
 			else if (vm.position == 'loadhistoribpjs') {
@@ -757,25 +763,25 @@ export default {
 				vm.$refs.DatatableHistoriNonBpjs.paging();
 				active = 0;
 			}
-			else if (vm.position == 'loadtransfer') { 
+			else if (vm.position == 'loadtransfer') {
 				vm.posisieksternal='transfer';
 				vm.firstloader();
-				vm.$refs.DatatableTransfer.update(vm.columntransfer, vm.setDatatabletransfer(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.DatatableTransfer.paging(); 
+				vm.$refs.DatatableTransfer.update(vm.columntransfer, vm.setDatatabletransfer(response.data.data, response.data.total), response.data.total);
+				vm.$refs.DatatableTransfer.paging();
 				active = 0;
 			}
-			else if (vm.position == 'externaltable') { 
+			else if (vm.position == 'externaltable') {
 
 				if (vm.posisieksternal=='pending') {
-					vm.$refs.DatatablePending.update('', vm.setDatatablepending(response.data.data, response.data.total), response.data.total); 
-					vm.$refs.DatatablePending.skeleton(); 
-					vm.$refs.DatatablePending.paging(); 
+					vm.$refs.DatatablePending.update('', vm.setDatatablepending(response.data.data, response.data.total), response.data.total);
+					vm.$refs.DatatablePending.skeleton();
+					vm.$refs.DatatablePending.paging();
 					active = 0;
 				}
 				else if (vm.posisieksternal=='triase') {
-					vm.$refs.DatatableTriase.update('', vm.setDatatabletriase(response.data.data, response.data.total), response.data.total); 
-					vm.$refs.DatatableTriase.skeleton(); 
-					vm.$refs.DatatableTriase.paging(); 
+					vm.$refs.DatatableTriase.update('', vm.setDatatabletriase(response.data.data, response.data.total), response.data.total);
+					vm.$refs.DatatableTriase.skeleton();
+					vm.$refs.DatatableTriase.paging();
 					active = 0;
 				}
 				else if (vm.posisieksternal=='histori_bpjs') {
@@ -791,9 +797,9 @@ export default {
 					active = 0;
 				}
 				else if (vm.posisieksternal=='transfer') {
-					vm.$refs.DatatableTransfer.update('', vm.setDatatabletransfer(response.data.data, response.data.total), response.data.total); 
-					vm.$refs.DatatableTransfer.skeleton(); 
-					vm.$refs.DatatableTransfer.paging(); 
+					vm.$refs.DatatableTransfer.update('', vm.setDatatabletransfer(response.data.data, response.data.total), response.data.total);
+					vm.$refs.DatatableTransfer.skeleton();
+					vm.$refs.DatatableTransfer.paging();
 					active = 0;
 				}
 				else if (vm.posisieksternal=='today_bpjs') {
@@ -816,12 +822,12 @@ export default {
 				setTimeout(() => { vm.getCurrentDatatableRef().skeleton(); vm.tablereload(); }, 125, this);
 			}
 			else if (vm.position == 'loaddatajadwalkontrol') {
-				vm.$refs.FormJadwalKontrol.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormJadwalKontrol.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddatatransfer') {
-				vm.$refs.FormTransfer.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormTransfer.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'addtransfer') {
 				vm.$refs.FormTransfer.hide();
@@ -832,40 +838,49 @@ export default {
 			else if (vm.position == 'adddatatransfer') {
 				vm.$refs.FormDetailTransfer.hide();
 				vm.loadingModal('formdetailtransfer');
-				setTimeout(() => { vm.$refs.DatatableTransfer.skeleton(); vm.tablereload(); }, 125, this); 
+				setTimeout(() => { vm.$refs.DatatableTransfer.skeleton(); vm.tablereload(); }, 125, this);
 				// vm.$refs.FormTransfer.setdataform(response);
 			}
 			else if (vm.position == 'removetransfer') {
 				vm.$refs.FormTransfer.setdataform(response);
 			}
-			else if (vm.position == 'call') { 
+			else if (vm.position == 'call') {
 				vm.tablereload();
 				active = 0;
 			}
+			else if (vm.position == 'penunjang') {
+				// Update status reactively in the open modal, then reload table
+				if (vm.$refs.FormDetail && vm.$refs.FormDetail.terminate && vm.$refs.FormDetail.terminate.show) {
+					vm.$refs.FormDetail.detail.status_dokter = 'Pemeriksaan Penunjang';
+				}
+				vm.loadingModal('formdetail');
+				setTimeout(() => { vm.getCurrentDatatableRef().skeleton(); vm.tablereload(); }, 300, this);
+				active = 0;
+			}
 			else if (vm.position == 'detaildata') {
-				vm.$refs.FormDetail.setdataform(response); 
-				vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormDetail.setdataform(response);
+				vm.position = "updatedata";
+				active = 0;
 			}
 			else if (vm.position == 'detaildatatransfer') {
-				vm.$refs.FormDetailTransfer.setdataform(response); 
-				vm.position = "updatedatatransfer"; 
-				active = 0; 
+				vm.$refs.FormDetailTransfer.setdataform(response);
+				vm.position = "updatedatatransfer";
+				active = 0;
 			}
 			else if (vm.position == 'cetakandata') {
-				vm.$refs.FormCetakan.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormCetakan.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'historidata') {
-				vm.$refs.FormHistori.setdataform(response); 
-				//vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormHistori.setdataform(response);
+				//vm.position = "updatedata";
+				active = 0;
 			}
 			else if (vm.position == 'historidokter') {
 				vm.loadingModal('formhistoridokter');
-				vm.$refs.FormHistoriDokter.setdataform(response); 
-				//vm.position = "updatedata"; 
-				active = 0; 
+				vm.$refs.FormHistoriDokter.setdataform(response);
+				//vm.position = "updatedata";
+				active = 0;
 			}
 			else if (vm.position == 'updatedata') {
 				vm.loadingModal('formdetail');
@@ -874,20 +889,20 @@ export default {
 			}
 			else if (vm.position == 'updatedatatransfer') {
 				vm.loadingModal('formdetailtransfer');
-				vm.$refs.FormDetailTransfer.hide(); 
+				vm.$refs.FormDetailTransfer.hide();
 				setTimeout(() => { vm.$refs.DatatableTransfer.skeleton(); vm.tablereload(); }, 500, this);
 			}
 			else if (vm.position == 'suratistirahat') {
-				vm.$refs.FormCetakan.setopentab(response, 'suratistirahat'); 
+				vm.$refs.FormCetakan.setopentab(response, 'suratistirahat');
 			}
 			else if (vm.position == 'suratkonsul') {
-				vm.$refs.FormCetakan.setopentab(response, 'suratkonsul'); 
+				vm.$refs.FormCetakan.setopentab(response, 'suratkonsul');
 			}
 			else if (vm.position == 'suratbalasankonsul') {
-				vm.$refs.FormCetakan.setopentab(response, 'suratbalasankonsul'); 
+				vm.$refs.FormCetakan.setopentab(response, 'suratbalasankonsul');
 			}
 			else if (vm.position == 'resepkacamata') {
-				vm.$refs.FormCetakan.setopentab(response, 'resepkacamata'); 
+				vm.$refs.FormCetakan.setopentab(response, 'resepkacamata');
 			}
 			vm.message('success', active);
 		},
@@ -932,6 +947,7 @@ export default {
 
 		runconfirm: function (posisi) {
 			if (posisi == 'formdetail') { vm.loadingModal('formdetail'); }
+			else if (posisi == 'penunjang') { vm.loadingModal('formdetail'); }
 			else if (posisi == 'formdetailtransfer') { vm.loadingModal('formdetailtransfer'); }
 			else if (posisi == 'formcetakan') { vm.loadingModal('formcetakan'); }
 			else if (posisi == 'formkontrol') { vm.loadingModal('formjadwalkontrol'); }

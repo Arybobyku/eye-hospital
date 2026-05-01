@@ -5,6 +5,13 @@
             <div class="modal-header">
                 <span class="close" v-on:click="hide()">&times;</span>
                 <h2>Detail Data Pemeriksaan Dokter </h2>
+                <!-- Tombol Pemeriksaan Penunjang — hanya tampil saat status masih Belum Diperiksa -->
+                <button
+                    v-if="detail.status_dokter === 'Belum Diperiksa'"
+                    v-on:click="actionPemeriksaanPenunjang()"
+                    style="position:absolute; right:55px; top:12.5px; background:#b35e0b; border-color:#a05309;">
+                    Pemeriksaan Penunjang
+                </button>
             </div>
             <div class="modal-body">
                 <!-- Foto + Info Singkat Pasien -->
@@ -2631,6 +2638,13 @@ export default {
             if (next) {
                 vm.openResumeMedisPopup();
             }
+        },
+
+        actionPemeriksaanPenunjang: function () {
+            let data = new FormData();
+            data.append('uuid', vm.detail.uuid);
+            vm.$emit('parsingForm', data, 'penunjang');
+            vm.$emit('dialog', 'Yakin ingin mengalihkan pasien ini ke Pemeriksaan Penunjang?', 'Ya, alihkan', 'penunjang');
         },
 
         openResumeMedisPopup: function () {

@@ -829,12 +829,20 @@ const routes = [
 		props: true 
 	},
 
-	{ 
-		path: _base + 'histori-pemeriksaan-ro', 
-		name: 'Histori Pemeriksaan', 
+	{
+		path: _base + 'histori-pemeriksaan-ro',
+		name: 'Histori Pemeriksaan',
 		component: () => import('./components/rawatjalan/historipemeriksaan/index.vue'),
 		meta: { title: 'Histori Pemeriksaan' },
-		props: true 
+		props: true
+	},
+
+	{
+		path: _base + 'rawatjalan-pemeriksaan-penunjang',
+		name: 'Pemeriksaan Penunjang',
+		component: () => import('./components/rawatjalan/pemeriksaanpenunjang/index.vue'),
+		meta: { title: 'Pemeriksaan Penunjang' },
+		props: true
 	},
 
 	{ 

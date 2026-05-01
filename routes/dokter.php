@@ -55,6 +55,12 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('listtriase', [PemeriksaanTriaseCtrl::class, 'list'])->name('pemeriksaan-listtriase');
 		Route::post('listtransfer', [PemeriksaanTransferCtrl::class, 'list'])->name('pemeriksaan-listtransfer');
 		Route::post('detailtransfer', [PemeriksaanTransferCtrl::class, 'detail'])->name('pemeriksaan-detailtransfer');
+
+		// Pemeriksaan Penunjang
+		Route::post('set-penunjang', [PemeriksaanCtrl::class, 'setPemeriksaanPenunjang'])->name('pemeriksaan-set-penunjang');
+		Route::post('list-penunjang', [PemeriksaanCtrl::class, 'listPemeriksaanPenunjang'])->name('pemeriksaan-list-penunjang');
+		Route::post('detail-penunjang', [PemeriksaanCtrl::class, 'detailPenunjang'])->name('pemeriksaan-detail-penunjang');
+		Route::post('set-sudah-upload-penunjang', [PemeriksaanCtrl::class, 'setSudahUploadPenunjang'])->name('pemeriksaan-set-sudah-upload-penunjang');
 	});
 
 	Route::prefix('pemeriksaanodc')->group(function () {
