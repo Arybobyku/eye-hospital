@@ -247,6 +247,61 @@ class PasienCtrl extends Controller
         return response()->json(['data' => $data, 'total' => $total]);
     }
 
+    public function registrasiList(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        $data = Registrasi::where('delete_soft', '=', 1)
+            ->where('pasien_uuid', '=', $request->pasien_uuid)
+            ->orderBy('tanggal', 'desc')
+            ->select('uuid', 'tanggal', 'no_pendaftaran', 'nama_dokter', 'nama_pasien', 'rekam_medis')
+            ->get();
+
+        return response()->json(['data' => $data]);
+    }
+
+    public function soapStore(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
+
+            $registrasi = Registrasi::where('uuid', '=', $request->registrasi_uuid)->first();
+
+            $item = new Cppt();
+            $item->uuid            = Uuid::uuid4();
+            $item->registrasi_uuid = $request->registrasi_uuid;
+            $item->pasien_uuid     = $request->pasien_uuid;
+            $item->pengguna_uuid   = $pengguna_uuid;
+            $item->nama_pengguna   = $pengguna_nama;
+            $item->nama_pasien     = $registrasi ? $registrasi->nama_pasien : '';
+            $item->nama_dokter     = $registrasi ? $registrasi->nama_dokter : '';
+            $item->rekam_medis     = $registrasi ? $registrasi->rekam_medis : '';
+            $item->subjek          = $request->subjek ?? '';
+            $item->objek           = $request->objek ?? '';
+            $item->asesmen         = $request->asesmen ?? '';
+            $item->plan            = $request->plan ?? '';
+            $item->sebagai         = 'DOKTER';
+            $item->created_at      = now();
+            $item->save();
+
+            DB::commit();
+            PenggunaHelp::log('Menambahkan data CPPT & SOAP pasien');
+            return response()->json(['data' => 'berhasil']);
+        } catch (\Exception $e) {
+            DB::rollback();
+            return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
+        }
+    }
+
     public function obat(Request $request)
     {
 
