@@ -13,6 +13,9 @@
       <button @click="openCreateModal" class="btn-add">
         <span>+</span> Tambah CPPT &amp; SOAP
       </button>
+      <button @click="showAllCppt = true" class="btn-view-all-cppt">
+        <i class="fas fa-list" style="margin-right:5px;"></i> View All CPPT
+      </button>
     </div>
 
     <div class="filter-bar">
@@ -150,6 +153,34 @@
           @click="currentPageDokumen = page"
         >{{ page }}</button>
         <button :disabled="currentPageDokumen === totalPagesDokumen" @click="currentPageDokumen++">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL VIEW ALL CPPT (iframe) ============ -->
+  <div
+    v-if="showAllCppt"
+    style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99998;display:flex;align-items:center;justify-content:center;"
+    @click.self="showAllCppt = false"
+  >
+    <div style="background:#fff;border-radius:10px;box-shadow:0 6px 32px rgba(0,0,0,0.22);width:92%;max-width:1150px;height:88vh;display:flex;flex-direction:column;overflow:hidden;">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 20px;background:#1a6f1d;border-radius:10px 10px 0 0;flex-shrink:0;">
+        <span style="color:#fff;font-weight:700;font-size:15px;">
+          <i class="fas fa-list" style="margin-right:7px;"></i>
+          Semua CPPT — {{ selectedPatient.nama_pasien || selectedPatient.nama || '' }}
+        </span>
+        <span @click="showAllCppt = false" style="color:#fff;font-size:24px;cursor:pointer;line-height:1;padding:0 4px;">&times;</span>
+      </div>
+      <!-- Body: iframe -->
+      <div style="flex:1;overflow:hidden;">
+        <iframe
+          title="All CPPT"
+          width="100%"
+          height="100%"
+          style="border:0;display:block;"
+          :src="'/print/rekammedis/rawat-jalan/cpptpoli/' + selectedPatient.uuid"
+        ></iframe>
       </div>
     </div>
   </div>
@@ -423,6 +454,9 @@ export default {
       searchQuery: "",
       loading: false,
       data: [],
+
+      // ---- VIEW ALL CPPT ----
+      showAllCppt: false,
 
       // ---- CREATE CPPT ----
       showCreateModal: false,
@@ -868,6 +902,9 @@ export default {
 .btn-add { background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; }
 .btn-add:hover { background: #218838; }
 .btn-add span { font-size: 18px; margin-right: 5px; }
+
+.btn-view-all-cppt { background: #1a6f1d; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; margin-left: 8px; }
+.btn-view-all-cppt:hover { background: #145217; }
 
 .file-link { color: #0066cc; cursor: pointer; text-decoration: underline; }
 .file-link:hover { color: #004499; }
