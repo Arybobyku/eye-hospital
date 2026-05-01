@@ -31,6 +31,9 @@
                                 No Rekam Medis<span><strong>{{ detail.rekam_medis }}</strong></span>
                             </li>
                             <li>
+                                Penjamin<span><strong>{{ detail?.carabayar_nama }}</strong></span>
+                            </li>
+                            <li>
                                 Nama Lengkap<span><strong>{{ detail.nama_pasien }}</strong></span>
                             </li>
                         </ul>
