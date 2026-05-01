@@ -214,7 +214,7 @@ export default {
     },
     print() {
       window.open(
-        `/print/rekammedis/rawat-jalan/rm1dot1/${this.selectedPatient.uuid}`,
+        `/print/rekammedis/bedah/rm2dot2/${this.selectedPatient.uuid}`,
         "_blank"
       );
     },
