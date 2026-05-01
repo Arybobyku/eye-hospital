@@ -214,13 +214,13 @@
 
 <script>
   import axios from "axios";
-  
+
   export default {
     name: "ResumeMedisRawatJalan",
     props: {
-      selectedPatient: { 
-        type: Object, 
-        required: true 
+      selectedPatient: {
+        type: Object,
+        required: true
       },
       viewData: {
         type: Object,
@@ -237,9 +237,9 @@
         disabledSubmit: false,
         ttdDokterCleared: false,
         editUuid: "",
-        sigOption: { 
-          penColor: "black", 
-          backgroundColor: "white" 
+        sigOption: {
+          penColor: "black",
+          backgroundColor: "white"
         },
                 listPenanggung: [
       "BPJS Kesehatan",
@@ -334,19 +334,19 @@
         this.form.nama = p?.nama;
         this.form.tanggal_lahir = p?.tanggal_lahir;
         this.form.no_rm = p?.rekam_medis;
-        this.form.nik = p?.no_ktp;
+        this.form.nik = p?.no_identitas;
         this.form.jenis_kelamin = p?.jenis_kelamin;
       },
-  
+
       async loadDataForEdit() {
         try {
           const response = await axios.get(
             `/master/rekammedis/lampiran/${this.editUuid}?type=resume_medis_rawat_jalan`
           );
-  
+
           if (response.data.status) {
             const data = response.data.data;
-            
+
             // Map semua field ke form
             Object.keys(this.form).forEach(key => {
               if (data[key] !== undefined) {
@@ -375,54 +375,54 @@
           this.$emit('back');
         }
       },
-  
+
     saveSign(refName) {
       const pad = this.$refs[refName];
       if (!pad) {
         console.error("REF tidak ditemukan:", refName);
         return;
       }
-    
+
       const { isEmpty, data } = pad.saveSignature();
-    
+
       if (isEmpty) {
         alert("Tanda tangan masih kosong!");
         return;
       }
-    
+
       const flagMap = {
         ttd_dokter: 'ttdDokterCleared',
       };
-    
+
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = false;
       }
-    
+
       this.form[refName] = data;
       console.log("TTD saved:", refName);
     },
-    
+
     clearSign(refName) {
       const flagMap = {
         ttd_dokter: 'ttdDokterCleared',
       };
-    
+
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = true;
         this.form[refName] = "";
       }
-    
+
       this.$nextTick(() => {
         const pad = this.$refs[refName];
         if (pad) pad.clearSignature();
       });
     },
-  
+
       async submitForm() {
         this.loading = true;
         try {
           const fd = new FormData();
-          
+
           Object.keys(this.form).forEach((k) => {
             // Skip uuid jika kosong (untuk create mode)
             if (k === 'uuid' && !this.form[k]) {
@@ -430,13 +430,13 @@
             }
             fd.append(k, this.form[k] || '');
           });
-  
+
           const response = await axios.post(
-            "/master/pasien/dokumen-resume-medis-rawat-jalan", 
+            "/master/pasien/dokumen-resume-medis-rawat-jalan",
             fd,
             { headers: { "Content-Type": "multipart/form-data" } }
           );
-  
+
           if (response.data.status) {
             alert(response.data.message || "Data berhasil disimpan");
             this.$emit("back");
