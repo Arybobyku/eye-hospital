@@ -57,6 +57,8 @@ use App\Models\DokumenFormLaserFokal;
 use App\Models\DokumenStatusAnestesi;
 use App\Models\DokumenLaporanOperasiVitreoRetina;
 use App\Models\Pengguna;
+use Illuminate\Support\Str;              // ✅ Tambahkan ini
+
 
 use Cookie;
 use Crypt;
@@ -410,109 +412,200 @@ class PasienCtrl extends Controller
             return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
         }
     }
-    public function storeLaporanPembedahan(Request $request)
-    {
-        try {
-            DB::beginTransaction();
-    
-            // Konversi checkbox boolean dari string
-            $booleanFields = [
-                'anestesi_umum',
-                'anestesi_spiral',
-                'anestesi_epidural',
-                'anestesi_bsp',
-                'anestesi_csp',
-                'anestesi_lokal',
-            ];
-    
-            // Field date/datetime yang nullable
-            $dateFields = [
-                'tanggal_lahir',
-                'tanggal_operasi',
-                'jam_mulai',
-                'jam_selesai',
-                'tanggal_ttd',
-            ];
+   public function storeLaporanPembedahan(Request $request)
+{
+    try {
+        DB::beginTransaction();
 
-            $integerFields = [
-                'lama_operasi',
-                'perdarahan',
-            ];
-    
-            $data = $request->all();
-    
-            // 1. Konversi boolean
-            foreach ($booleanFields as $field) {
-                if (isset($data[$field])) {
-                    $data[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
-                }
+        // Konversi checkbox boolean dari string
+        $booleanFields = [
+            'anestesi_umum',
+            'anestesi_spiral',
+            'anestesi_epidural',
+            'anestesi_bsp',
+            'anestesi_csp',
+            'anestesi_lokal',
+        ];
+
+        // Field date/datetime yang nullable
+        $dateFields = [
+            'tanggal_lahir',
+            'tanggal_operasi',
+            'jam_mulai',
+            'jam_selesai',
+            'tanggal_ttd',
+        ];
+
+        $integerFields = [
+            'lama_operasi',
+            'perdarahan',
+        ];
+
+        $imageBase64Fields = [
+            'macam_sayatan_gambar',
+            'posisi_penderita_gambar',
+            'operator_bedah_ttd',
+        ];
+
+        $data = $request->all();
+
+        // 1. Konversi boolean
+        foreach ($booleanFields as $field) {
+            if (isset($data[$field])) {
+                $data[$field] = filter_var($data[$field], FILTER_VALIDATE_BOOLEAN);
             }
-    
-            // 2. Sanitasi date — ubah string kosong/"null" jadi null
-            foreach ($dateFields as $field) {
-                if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === 'null')) {
-                    $data[$field] = null;
-                }
-            }
-            
-            foreach ($integerFields as $field) {
-                if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === 'null')) {
-                    $data[$field] = null;
-                }
-            }
-            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
-            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
-            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Username'));
-    
-            $uuid = $request->input('uuid');
-    
-            // Hapus uuid dan id dari data untuk avoid mass assignment issue
-            unset($data['uuid']);
-            unset($data['id']);
-    
-            if ($uuid) {
-                // UPDATE: cari berdasarkan UUID
-                $laporan = DokumenLaporanPembedahan::where('uuid', $uuid)->first();
-    
-                if (!$laporan) {
-                    return response()->json([
-                        'status' => false,
-                        'message' => 'Data tidak ditemukan',
-                    ], 404);
-                }
-    
-                $data['updated_by'] = $pengguna_nama;
-                $data['no_surat'] = 'RM 2.2/LP/22';
-                $laporan->update($data);
-                $action = 'update';
-                $message = 'Laporan Pembedahan berhasil diupdate';
-            } else {
-                // CREATE: buat baru
-                $data['created_by'] = $pengguna_nama;
-                $data['no_surat'] = 'RM 2.2/LP/22';
-                $laporan = DokumenLaporanPembedahan::create($data);
-                $action = 'create';
-                $message = 'Laporan Pembedahan berhasil disimpan';
-            }
-    
-            DB::commit();
-    
-            return response()->json([
-                'status' => true,
-                'message' => $message,
-                'data' => $laporan,
-                'action' => $action,
-            ], $action === 'create' ? 201 : 200);
-    
-        } catch (Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'status' => false,
-                'message' => 'Gagal menyimpan Laporan Pembedahan',
-                'error' => $e->getMessage(),
-            ], 500);
         }
+
+        // 2. Sanitasi date — ubah string kosong/"null" jadi null
+        foreach ($dateFields as $field) {
+            if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === 'null')) {
+                $data[$field] = null;
+            }
+        }
+
+        foreach ($integerFields as $field) {
+            if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === 'null')) {
+                $data[$field] = null;
+            }
+        }
+
+        // 3. Sanitasi gambar Base64 — ubah string kosong jadi null
+        foreach ($imageBase64Fields as $field) {
+            if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === 'null')) {
+                $data[$field] = null;
+            }
+        }
+
+        // ==========================================
+        // ✨ HANDLE DOKUMENTASI FOTO/PDF (Storage)
+        // ==========================================
+        if (isset($data['teknik_operasi_files']) && $data['teknik_operasi_files']) {
+            $files = json_decode($data['teknik_operasi_files'], true);
+            $savedFiles = [];
+
+            if (is_array($files)) {
+                foreach ($files as $file) {
+                    // Jika ada data Base64 → simpan ke storage
+                    if (isset($file['data'])) {
+                        $base64String = $file['data'];
+
+                        // Hapus prefix "data:image/png;base64,"
+                        if (preg_match('/^data:(\w+)\/(\w+);base64,/', $base64String, $matches)) {
+                            $base64String = substr($base64String, strpos($base64String, ',') + 1);
+                        }
+
+                        $fileData = base64_decode($base64String);
+
+                        $uuidPasien = $request->input('uuid_pasien', 'umum');
+                        $extension = $file['extension'] ?? 'jpg';
+                        $filename = "laporan-pembedahan/{$uuidPasien}/" . Str::uuid() . '.' . $extension;
+
+                        // ✅ Simpan ke storage
+                        Storage::put('public/' . $filename, $fileData);
+
+                        $savedFiles[] = [
+                        'path' => str_replace('\\', '/', $filename),  // ✅ Normalize slash
+                        'name' => $file['name'],
+                        'type' => $file['type'],
+                        'size' => $file['size'] ?? 0,
+                    ];
+                    }
+                    // File lama → tetap pakai path
+                    else {
+                        $savedFiles[] = $file;
+                    }
+                }
+            }
+
+            // Simpan hanya path di database
+            $data['teknik_operasi_files'] = json_encode($savedFiles, JSON_UNESCAPED_SLASHES);
+        } else {
+            // Kosongkan jika tidak ada file
+            $data['teknik_operasi_files'] = null;
+        }
+
+        // ❌ HAPUS field lama — tidak dipakai lagi
+        unset($data['teknik_operasi_foto']);
+
+        // ==========================================
+        // ✨ HAPUS FILE LAMA SAAT UPDATE (Opsional)
+        // ==========================================
+        $uuid = $request->input('uuid');
+        $oldFiles = [];
+
+        if ($uuid) {
+            $laporan = DokumenLaporanPembedahan::where('uuid', $uuid)->first();
+
+            if ($laporan && $laporan->teknik_operasi_files) {
+                $oldFiles = json_decode($laporan->teknik_operasi_files, true) ?? [];
+            }
+        }
+
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+        $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Username'));
+
+        // Hapus uuid dan id dari data untuk avoid mass assignment issue
+        unset($data['uuid']);
+        unset($data['id']);
+
+        if ($uuid) {
+            // UPDATE: cari berdasarkan UUID
+            $laporan = DokumenLaporanPembedahan::where('uuid', $uuid)->first();
+
+            if (!$laporan) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+
+            // ✅ Hapus file lama yang tidak dipakai lagi
+            if (!empty($oldFiles)) {
+                $newPaths = array_column($savedFiles ?? [], 'path');
+
+                foreach ($oldFiles as $oldFile) {
+                    if (isset($oldFile['path']) && !in_array($oldFile['path'], $newPaths)) {
+                        // File lama tidak ada di data baru → hapus dari storage
+                        if (Storage::exists('public/' . $oldFile['path'])) {
+                            Storage::delete('public/' . $oldFile['path']);
+                        }
+                    }
+                }
+            }
+
+            $data['updated_by'] = $pengguna_nama;
+            $data['no_surat'] = 'RM 2.2/LP/22';
+            $laporan->update($data);
+            $action = 'update';
+            $message = 'Laporan Pembedahan berhasil diupdate';
+        } else {
+            // CREATE: buat baru
+            $data['created_by'] = $pengguna_nama;
+            $data['no_surat'] = 'RM 2.2/LP/22';
+            $laporan = DokumenLaporanPembedahan::create($data);
+            $action = 'create';
+            $message = 'Laporan Pembedahan berhasil disimpan';
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $laporan,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+
+    } catch (Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Laporan Pembedahan',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
 
     public function storeFormLaserBarrage(Request $request)
     {
@@ -3540,7 +3633,7 @@ class PasienCtrl extends Controller
         try {
             // ✅ Debug: Lihat data yang masuk
             \Log::info('📥 REQUEST DATA:', $request->all());
-            
+
             // ✅ Validasi input
             $validated = $request->validate([
                 'uuid_pasien' => 'required|string',
@@ -3555,76 +3648,76 @@ class PasienCtrl extends Controller
                 'pernyataan_nama.required' => 'Nama yang menyatakan harus diisi',
                 'pernyataan_tanggal_lahir.required' => 'Tanggal lahir harus diisi',
             ]);
-            
+
             DB::beginTransaction();
-            
+
             $data = $request->except(['uuid', '_token']);
-            
+
             // Ambil user info dari encrypted cookie
             $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Uuid'));
             $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER').'Nama'));
-            
+
             $uuid = $request->input('uuid');
-            
+
             if ($uuid) {
                 // ✅ UPDATE MODE
                 $dokumen = PenolakanTindakanAnestesi::where('uuid', $uuid)->first();
-                
+
                 if (!$dokumen) {
                     return response()->json([
                         'status' => false,
                         'message' => '❌ Data tidak ditemukan',
                     ], 404);
                 }
-                
+
                 $data['updated_by'] = $pengguna_nama;
                 $dokumen->update($data);
-                
+
                 $action = 'update';
                 $message = 'Form ' . ucfirst($data['jenis_form']) . ' Tindakan Anestesi berhasil diupdate';
-                
+
             } else {
                 // ✅ CREATE MODE
                 $data['created_by'] = $pengguna_nama;
                 $dokumen = PenolakanTindakanAnestesi::create($data);
-                
+
                 $action = 'create';
                 $message = ' Form ' . ucfirst($data['jenis_form']) . ' Tindakan Anestesi berhasil disimpan';
             }
-            
+
             DB::commit();
-            
+
             \Log::info('✅ SUCCESS:', [
                 'action' => $action,
                 'uuid' => $dokumen->uuid,
                 'jenis_form' => $dokumen->jenis_form
             ]);
-            
+
             return response()->json([
                 'status' => true,
                 'message' => $message,
                 'data' => $dokumen,
                 'action' => $action,
             ], $action === 'create' ? 201 : 200);
-            
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             DB::rollBack();
-            
+
             return response()->json([
                 'status' => false,
                 'message' => '❌ Validasi gagal',
                 'errors' => $e->errors(),
             ], 422);
-            
+
         } catch (Exception $e) {
             DB::rollBack();
-            
+
             \Log::error('❌ ERROR:', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
             ]);
-            
+
             return response()->json([
                 'status' => false,
                 'message' => '❌ Gagal menyimpan Form Tindakan Anestesi',
@@ -3691,7 +3784,7 @@ class PasienCtrl extends Controller
             ], 500);
         }
     }
-        
+
     public function storeFormPengkajianKeperawatanMataRawatJalan(Request $request)
     {
         try {

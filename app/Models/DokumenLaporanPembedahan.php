@@ -46,7 +46,12 @@ class DokumenLaporanPembedahan extends Model
         'lama_operasi',
         'macam_sayatan',
         'posisi_penderita',
+        'macam_sayatan_teks',      // Teks deskripsi sayatan
+        'macam_sayatan_gambar',    // Base64 gambar sayatan
+        'posisi_penderita_teks',   // Teks deskripsi posisi
+        'posisi_penderita_gambar',
         'teknik_operasi',
+        'teknik_operasi_files',
         'jenis_bahan_lab',
         'pemeriksaan_lab',
         'penggunaan_amhp',
@@ -88,7 +93,7 @@ class DokumenLaporanPembedahan extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
@@ -112,7 +117,40 @@ class DokumenLaporanPembedahan extends Model
         if ($this->anestesi_bsp) $jenis[] = 'BSP';
         if ($this->anestesi_csp) $jenis[] = 'CSP';
         if ($this->anestesi_lokal) $jenis[] = 'Lokal';
-        
+
         return implode(', ', $jenis);
     }
+
+    // ✨ Accessor untuk gambar sayatan (backward compatible)
+    public function getMacamSayatanGambarAttribute($value)
+    {
+        // Jika ada di field baru, gunakan itu
+        // Jika tidak, fallback ke field lama
+        return $value ?? $this->attributes['macam_sayatan'] ?? null;
+    }
+
+    // ✨ Accessor untuk posisi penderita (backward compatible)
+    public function getPosisiPenderitaGambarAttribute($value)
+    {
+        return $value ?? $this->attributes['posisi_penderita'] ?? null;
+    }
+
+    // ✨ Accessor untuk generate full URL file
+    public function getTeknikOperasiFilesUrlAttribute()
+    {
+        $files = $this->teknik_operasi_files;
+
+        if (!$files || !is_array($files)) {
+            return [];
+        }
+
+        return array_map(function ($file) {
+            if (isset($file['path'])) {
+                $file['url'] = asset('storage/' . $file['path']);
+            }
+            return $file;
+        }, $files);
+    }
+
+
 }
