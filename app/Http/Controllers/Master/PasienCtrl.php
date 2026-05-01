@@ -2102,6 +2102,14 @@ class PasienCtrl extends Controller
             ], 500);
         }
     }
+    public function getResumeMedisRawatJalan(Request $request)
+    {
+        $data = DokumenResumeMedisRawatJalan::where('uuid_pasien', $request->uuid_pasien)
+            ->latest()
+            ->first();
+        return response()->json(['data' => $data]);
+    }
+
     public function storeResumeMedisRawatJalan(Request $request)
     {
         try {
