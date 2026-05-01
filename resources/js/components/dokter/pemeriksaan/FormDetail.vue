@@ -18,7 +18,7 @@
                     <div>
                         <div style="font-size:15px; font-weight:700; color:#222;">{{ detail.nama_pasien }}</div>
                         <div style="font-size:12px; color:#666; margin-top:2px;">{{ detail.rekam_medis }}</div>
-                        <div style="font-size:12px; color:#888;">{{ detail.jenis_kelamin }} &bull; {{ datename(detail.tanggal_lahir) }}</div>
+                        <div style="font-size:12px; color:#888;">{{ detail.jenis_kelamin }} &bull; {{ datename(detail.tanggal_lahir) }} &bull; <span v-if="detail.tanggal_lahir">{{ countage(detail.tanggal_lahir) }}</span></div>
                     </div>
                 </div>
                 <div class="grid">
@@ -42,6 +42,9 @@
                         <ul class="list-detail">
                             <li>
                                 Tanggal Lahir<span><strong>{{ datename(detail.tanggal_lahir) }}</strong></span>
+                            </li>
+                            <li>
+                                Umur<span><strong>{{ detail.tanggal_lahir ? countage(detail.tanggal_lahir) : '-' }}</strong></span>
                             </li>
                             <li>
                                 Jenis Kelamin<span><strong>{{ detail.jenis_kelamin }}</strong></span>
@@ -1600,7 +1603,8 @@ import {
 } from "../../../module/DataArray.js";
 import {
     datename,
-    formatrupiah
+    formatrupiah,
+    countage
 } from "../../../module/Manipulation.js";
 import {
     updatedbdokter
@@ -2355,6 +2359,7 @@ export default {
         indexdbprocessing,
         arrpemeriksaan,
         datename,
+        countage,
         filterselected,
         hideselected,
         itemselected,

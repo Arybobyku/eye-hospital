@@ -18,7 +18,7 @@
 					<div>
 						<div style="font-size:15px; font-weight:700; color:#222;">{{ detailperawat.nama_pasien }}</div>
 						<div style="font-size:12px; color:#666; margin-top:2px;">{{ detailperawat.rekam_medis }}</div>
-						<div style="font-size:12px; color:#888;">{{ detailperawat.jenis_kelamin }} &bull; {{ datename(detailperawat.tanggal_lahir) }}</div>
+						<div style="font-size:12px; color:#888;">{{ detailperawat.jenis_kelamin }} &bull; {{ datename(detailperawat.tanggal_lahir) }} &bull; <span v-if="detailperawat.tanggal_lahir">{{ countage(detailperawat.tanggal_lahir) }}</span></div>
 					</div>
 				</div>
 				<div class="grid">
@@ -52,7 +52,8 @@
 					</div>
 					<div class="col-4 form-mr" style="margin-top: -35px;">
 						<ul class="list-detail">
-							<li>Tanggal Lahir<span><strong>{{ datename(detailperawat.tanggal_lahir) }}</strong></span>
+							<li>Tanggal Lahir<span><strong>{{ datename(detailperawat.tanggal_lahir) }}</strong></span></li>
+							<li>Umur<span><strong>{{ detailperawat.tanggal_lahir ? countage(detailperawat.tanggal_lahir) : '-' }}</strong></span>
 
 							</li>
 						</ul>
@@ -915,7 +916,7 @@ import 'vue3-toastify/dist/index.css';
 import { toast } from 'vue3-toastify';
 import Swal from 'sweetalert2';
 import { arrpemeriksaan } from '../../../module/DataArray.js';
-import { datename } from '../../../module/Manipulation.js';
+import { datename, countage } from '../../../module/Manipulation.js';
 import CKEditor from '@ckeditor/ckeditor5-vue';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
@@ -1033,6 +1034,7 @@ export default {
 
 
 		datename,
+		countage,
 
 		greenbutton: function () {
 			if (vm.green == 'Save Data') {
