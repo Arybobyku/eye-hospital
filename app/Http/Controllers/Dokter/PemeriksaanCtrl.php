@@ -1981,7 +1981,7 @@ class PemeriksaanCtrl extends Controller
                     $update = Pasien::where('uuid', '=', $request->pasien_uuid)->update($arr);
                 }
             }
-            $cppt = Cppt::where('registrasi_uuid', '=', $request->uuid)
+            $cppt = Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
                 ->where('sebagai', '=', 'DOKTER')
                 ->first();
 
