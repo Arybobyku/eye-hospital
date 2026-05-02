@@ -158,6 +158,7 @@
                 
                   <div v-if="form.ttd_dokter && !ttdDokterCleared" class="signature-preview text-center">
                     <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+                        <p v-if="form.dokter_ttd_timestamp" class="timestamp-ttd">Ditandatangani: {{ form.dokter_ttd_timestamp }}</p>
                     <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">
                       Hapus & Tanda Tangan Ulang
                     </button>
@@ -177,6 +178,7 @@
                 
                   <div v-if="form.ttd_keluarga && !ttdKeluargaCleared" class="signature-preview text-center">
                     <img :src="form.ttd_keluarga" alt="TTD Keluarga" class="img-signature" />
+                        <p v-if="form.dokter_ttd_timestamp" class="timestamp-ttd">Ditandatangani: {{ form.dokter_ttd_timestamp }}</p>
                     <button @click="clearSign('ttd_keluarga')" class="btn-clear mt-2">
                       Hapus & Tanda Tangan Ulang
                     </button>
@@ -285,6 +287,8 @@ export default {
         nama_dokter_ttd: "",
         ttd_keluarga: "",
         nama_keluarga_ttd: "",
+        dokter_ttd_timestamp: "",
+        keluarga_ttd_timestamp: "",
       };
     },
 
@@ -348,6 +352,9 @@ export default {
 
         this.ttdDokterCleared = !data.ttd_dokter;
         this.ttdKeluargaCleared = !data.ttd_keluarga;
+
+        if (data.dokter_ttd_timestamp) this.form.dokter_ttd_timestamp = data.dokter_ttd_timestamp;
+        if (data.keluarga_ttd_timestamp) this.form.keluarga_ttd_timestamp = data.keluarga_ttd_timestamp;
       });
     },
 
@@ -397,15 +404,37 @@ export default {
 
       this.form[ref] = data;
 
-      if (ref === "ttd_dokter") this.ttdDokterCleared = false;
-      if (ref === "ttd_keluarga") this.ttdKeluargaCleared = false;
+      const now = new Date();
+      const timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit',
+        month: '2-digit', 
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      if (ref === "ttd_dokter") {
+        this.ttdDokterCleared = false;
+        this.form.dokter_ttd_timestamp = timestamp; // ← ini yang hilang
+      }
+      if (ref === "ttd_keluarga") {
+        this.ttdKeluargaCleared = false;
+        this.form.keluarga_ttd_timestamp = timestamp; // ← ini yang hilang
+      }
     },
 
     clearSign(ref) {
       this.form[ref] = "";
 
-      if (ref === "ttd_dokter") this.ttdDokterCleared = true;
-      if (ref === "ttd_keluarga") this.ttdKeluargaCleared = true;
+    if (ref === "ttd_dokter") {
+      this.ttdDokterCleared = true;
+      this.form.dokter_ttd_timestamp = ""; // ← kurung kurawal wajib
+    }
+    if (ref === "ttd_keluarga") {
+      this.ttdKeluargaCleared = true;
+      this.form.keluarga_ttd_timestamp = ""; // ← kurung kurawal wajib
+    }
 
       this.$nextTick(() => {
         this.$refs[ref]?.clearSignature();
@@ -725,6 +754,19 @@ label {
   padding: 1rem;   /* ruang di dalam setiap kolom */
   box-sizing: border-box;
 }
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
+}
+
 .row {
   display: flex;
   flex-wrap: wrap;
