@@ -34,6 +34,7 @@ export default {
 				list: '/dokter/pemeriksaan/list-penunjang',
 				detail: '/dokter/pemeriksaan/detail-penunjang',
 				sudahupload: '/dokter/pemeriksaan/set-sudah-upload-penunjang',
+				batalkan: '/dokter/pemeriksaan/batalkan-penunjang',
 			}, url: '', data: null
 		},
 		column: [
@@ -62,6 +63,7 @@ export default {
 		btnhtml: function (_item, _index) {
 			return [
 				{ icon: 'arrow-up', color: 'btn-success', posisi: 'detail', tooltip: 'Detail Penunjang', item: _item, index: _index, show: true },
+				{ icon: 'x-circle', color: 'btn-danger', posisi: 'batalkan', tooltip: 'Batalkan Penunjang', item: _item, index: _index, show: true },
 			];
 		},
 
@@ -95,6 +97,13 @@ export default {
 				vm.attach.url = vm.attach.link.detail;
 				vm.executions();
 			}
+			else if (posisi == 'batalkan') {
+				vm.position = 'batalkan';
+				vm.attach.data = new FormData();
+				vm.attach.data.append('uuid', data.uuid);
+				vm.attach.url = vm.attach.link.batalkan;
+				vm.dialog('Batalkan pemeriksaan penunjang dan kembalikan status pasien menjadi Belum Diperiksa?', 'Ya, batalkan', 'batalkan');
+			}
 		},
 
 		loadingModal: function (position) {
@@ -107,6 +116,13 @@ export default {
 				vm.position = 'sudahupload';
 				vm.attach.url = vm.attach.link.sudahupload;
 			}
+		},
+
+		batalkanConfirm: function (uuid) {
+			vm.position = 'batalkan';
+			vm.attach.data = new FormData();
+			vm.attach.data.append('uuid', uuid);
+			vm.attach.url = vm.attach.link.batalkan;
 		},
 
 		setDatatable: function (data, total) {
@@ -156,6 +172,7 @@ export default {
 			}
 			else if (vm.position == 'detaildata') { vm.loadingModal('formdetail'); vm.$refs.FormDetail.hide(); }
 			else if (vm.position == 'sudahupload') { vm.loadingModal('formdetail'); }
+			else if (vm.position == 'batalkan') { /* tidak ada modal, langsung reload tabel */ }
 
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function () { vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }); }, 250, this); }
@@ -191,6 +208,10 @@ export default {
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 300, this);
 				active = 0;
 			}
+			else if (vm.position == 'batalkan') {
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 300, this);
+				active = 0;
+			}
 
 			vm.message('success', active);
 		},
@@ -201,15 +222,18 @@ export default {
 				else if (vm.position == 'externaltable') { vm.notification('Datalist tabel gagal dimuat.', 3000, position); }
 				else if (vm.position == 'detaildata') { vm.notification('Proses pengambilan data gagal dilakukan.', 3000, position); }
 				else if (vm.position == 'sudahupload') { vm.notification('Pembaruan status gagal diproses.', 3000, position); }
+				else if (vm.position == 'batalkan') { vm.notification('Pembatalan penunjang gagal diproses.', 3000, position); }
 			}
 			else if (position == 'success' && active == 1) {
 				if (vm.position == 'sudahupload') { vm.notification('Status berhasil diperbarui menjadi Sudah Upload Penunjang.', 3000, position); }
+				else if (vm.position == 'batalkan') { vm.notification('Pemeriksaan penunjang berhasil dibatalkan.', 3000, position); }
 			}
 		},
 
 		runconfirm: function (posisi) {
 			if (posisi == 'formdetail') { vm.loadingModal('formdetail'); }
 			else if (posisi == 'sudah-upload') { vm.loadingModal('formdetail'); }
+			// 'batalkan' tidak butuh loadingModal karena tidak membuka FormDetail
 			vm.executions();
 		},
 

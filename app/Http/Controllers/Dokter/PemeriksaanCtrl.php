@@ -2482,4 +2482,21 @@ class PemeriksaanCtrl extends Controller
         $reg->save();
         return response()->json(['data' => 'berhasil']);
     }
+
+    /**
+     * Batalkan pemeriksaan penunjang — kembalikan status_dokter ke "Belum Diperiksa"
+     */
+    public function batalkanPenunjang(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        $reg = Registrasi::where('uuid', $request->uuid)->first();
+        if (!$reg) {
+            return response()->json(['data' => 'not_found'], 404);
+        }
+        $reg->status_dokter = 'Belum Diperiksa';
+        $reg->save();
+        return response()->json(['data' => 'berhasil']);
+    }
 }
