@@ -43,6 +43,9 @@ class FormPersetujuanUmumPasienKeluarga extends Model
         // ===== Tanda Tangan Keluarga/Pasien =====
         'ttd_keluarga',
         'nama_keluarga_ttd',
+
+        'dokter_ttd_timestamp',
+        'keluarga_ttd_timestamp',
         
         // ===== Audit =====
         'created_by',
