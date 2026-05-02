@@ -89,7 +89,7 @@ class PemeriksaanCtrl extends Controller
                 // 		->orWhere('status', 'Selesai')
                 // 		->orWhere('status', 'Rawat Inap');
                 // })
-                ->where('status_dokter', 'Belum Diperiksa');
+                ->whereIn('status_dokter', ['Belum Diperiksa', 'Sudah Upload Penunjang']);
             if ($carabayar_filter == 'bpjs') {
                 $data = $data->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
             } elseif ($carabayar_filter == 'nonbpjs') {
@@ -104,7 +104,7 @@ class PemeriksaanCtrl extends Controller
                 // 		->orWhere('status', 'Selesai')
                 // 		->orWhere('status', 'Rawat Inap');
                 // })
-                ->where('status_dokter', 'Belum Diperiksa')
+                ->whereIn('status_dokter', ['Belum Diperiksa', 'Sudah Upload Penunjang'])
                 ->where('status_ro', 'Sudah Diperiksa')
                 // ->where('carabayar_nama', '!=', 'BPJS Kesehatan')
                 // ->where('carabayar_nama', '!=', 'Bpjs Kesehatan')
@@ -136,7 +136,7 @@ class PemeriksaanCtrl extends Controller
                 ->whereDate('tanggal', '=', date('Y-m-d'))
                 ->orderBy('tanggal', 'desc')
                 ->orderBy('posisi_antrian_dokter', 'asc')
-                ->orderBy('status_dokter', 'asc');
+                ->orderBy('status_dokter', 'desc');
             if ($carabayar_filter == 'bpjs') {
                 $total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
             } elseif ($carabayar_filter == 'nonbpjs') {
@@ -145,7 +145,7 @@ class PemeriksaanCtrl extends Controller
             $total = $total->count();
         } else {
             $data = Registrasi::where('delete_soft', '=', 1)
-                ->orderBy('status_dokter', 'asc')
+                ->orderBy('status_dokter', 'desc')
                 ->orderBy('tanggal', 'desc')
                 ->orderBy('posisi_antrian_dokter', 'asc')
                 // ->where('apakah_paket', '=', 'Tidak')
@@ -172,7 +172,7 @@ class PemeriksaanCtrl extends Controller
                 // 		->orWhere('status', 'Selesai')
                 // 		->orWhere('status', 'Rawat Inap');
                 // });
-                ->where('status_dokter', 'Belum Diperiksa');
+                ->whereIn('status_dokter', ['Belum Diperiksa', 'Sudah Upload Penunjang']);
 
             if (\Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')) != 'cdc80d09-4b35-4d03-8abe-be86a33e9e08') {
                 $data = $data->where('pengguna_uuid', '=', \Crypt::decrypt(\Cookie::get(env('APP_IDENTIFIER').'BioUuid')));
@@ -224,9 +224,9 @@ class PemeriksaanCtrl extends Controller
                 // 		->orWhere('status', 'Rawat Inap');
                 // })
                 ->where('status_ro', 'Sudah Diperiksa')
-                ->where('status_dokter', 'Belum Diperiksa')
+                ->whereIn('status_dokter', ['Belum Diperiksa', 'Sudah Upload Penunjang'])
                 ->orderBy('posisi_antrian_dokter', 'asc')
-                ->orderBy('status_dokter', 'asc');
+                ->orderBy('status_dokter', 'desc');
             if ($carabayar_filter == 'bpjs') {
                 $total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
             } elseif ($carabayar_filter == 'nonbpjs') {
@@ -298,7 +298,7 @@ class PemeriksaanCtrl extends Controller
                 ->where('berkebutuhan_khusus', '!=', 'Ya')
                 ->where($column, 'ilike', '%'.$search.'%')
                 ->orderBy('posisi_antrian_dokter', 'asc')
-                ->orderBy('status_dokter', 'asc');
+                ->orderBy('status_dokter', 'desc');
             if ($carabayar_filter == 'bpjs') {
                 $total = $total->whereIn('carabayar_nama', ['BPJS Kesehatan', 'BPJS Ketenagakerjaan']);
             } elseif ($carabayar_filter == 'nonbpjs') {
@@ -2404,5 +2404,82 @@ class PemeriksaanCtrl extends Controller
     private function asuransi()
     {
         return \DB::table('asuransi')->orderBy('id', 'asc')->where('delete_soft', '=', '1')->get();
+    }
+
+    /**
+     * Set status_dokter to "Pemeriksaan Penunjang"
+     */
+    public function setPemeriksaanPenunjang(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        $reg = Registrasi::where('uuid', $request->uuid)->first();
+        if (!$reg) {
+            return response()->json(['data' => 'not_found'], 404);
+        }
+        $reg->status_dokter = 'Pemeriksaan Penunjang';
+        $reg->save();
+        return response()->json(['data' => 'berhasil']);
+    }
+
+    /**
+     * Get detail registrasi for pemeriksaan penunjang (no side effects)
+     */
+    public function detailPenunjang(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        $data = Registrasi::where('uuid', $request->uuid)->first();
+        if (!$data) {
+            return response()->json(['data' => null], 404);
+        }
+        return response()->json(['data' => $data]);
+    }
+
+    /**
+     * List registrasi with status_dokter = "Pemeriksaan Penunjang"
+     */
+    public function listPemeriksaanPenunjang(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        $page   = ($request->page - 1);
+        $skip   = $page * $this->take;
+        $search = $request->search;
+        $column = $request->column;
+
+        $base = Registrasi::where('delete_soft', 1)
+            ->where('status_dokter', 'Pemeriksaan Penunjang');
+
+        if ($search != '') {
+            $base = $base->where($column, 'ilike', '%'.$search.'%');
+        }
+
+        $total = $base->count();
+        $data  = $base->orderBy('tanggal', 'desc')
+                      ->orderBy('posisi_antrian_dokter', 'asc')
+                      ->skip($skip)->take($this->take)->get();
+
+        return response()->json(['data' => $data, 'total' => $total]);
+    }
+
+    /**
+     * Set status_dokter to "Sudah Upload Penunjang"
+     */
+    public function setSudahUploadPenunjang(Request $request)
+    {
+        if ($this->error != 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+        $reg = Registrasi::where('uuid', $request->uuid)->first();
+        if (!$reg) {
+            return response()->json(['data' => 'not_found'], 404);
+        }
+        $reg->status_dokter = 'Sudah Upload Penunjang';
+        $reg->save();
+        return response()->json(['data' => 'berhasil']);
     }
 }

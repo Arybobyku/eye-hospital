@@ -1943,6 +1943,11 @@ table.table-info td:nth-child(2) {
 	background: #efc802;
 	border: 1px solid #efc802;
 }
+.badge-info {
+	color: #ffffff;
+	background: #17a2b8;
+	border: 1px solid #17a2b8;
+}
 
 .badge-danger {
 	color: #ffffff;
