@@ -1449,16 +1449,20 @@
                             <input :value="resumeMedisForm.tanggal_lahir" readonly style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:5px;font-size:13px;background:#f8fafc;box-sizing:border-box;" />
                         </div>
                         <div>
+                            <label style="font-size:12px;color:#666;display:block;margin-bottom:3px;">Umur</label>
+                            <input :value="resumeMedisForm.umur" readonly style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:5px;font-size:13px;background:#f8fafc;box-sizing:border-box;" />
+                        </div>
+                        <div>
+                            <label style="font-size:12px;color:#666;display:block;margin-bottom:3px;">Jenis Kelamin</label>
+                            <input :value="resumeMedisForm.jenis_kelamin" readonly style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:5px;font-size:13px;background:#f8fafc;box-sizing:border-box;" />
+                        </div>
+                        <div>
                             <label style="font-size:12px;color:#666;display:block;margin-bottom:3px;">No. RM</label>
                             <input :value="resumeMedisForm.no_rm" readonly style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:5px;font-size:13px;background:#f8fafc;box-sizing:border-box;" />
                         </div>
                         <div>
                             <label style="font-size:12px;color:#666;display:block;margin-bottom:3px;">NIK</label>
                             <input :value="resumeMedisForm.nik" readonly style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:5px;font-size:13px;background:#f8fafc;box-sizing:border-box;" />
-                        </div>
-                        <div>
-                            <label style="font-size:12px;color:#666;display:block;margin-bottom:3px;">Jenis Kelamin</label>
-                            <input :value="resumeMedisForm.jenis_kelamin" readonly style="width:100%;padding:7px 10px;border:1px solid #e2e8f0;border-radius:5px;font-size:13px;background:#f8fafc;box-sizing:border-box;" />
                         </div>
                     </div>
                 </div>
@@ -1473,10 +1477,7 @@
                         </div>
                         <div>
                             <label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:4px;">Dokter yang Merawat</label>
-                            <select v-model="resumeMedisForm.dokter" style="width:100%;padding:7px 10px;border:1px solid #cbd5e0;border-radius:6px;font-size:13px;box-sizing:border-box;background:#fff;appearance:none;-webkit-appearance:none;cursor:pointer;">
-                                <option value="">Pilih Dokter</option>
-                                <option v-for="d in resumeMedisListDokter" :key="d.id" :value="d.nama">{{ d.nama }}</option>
-                            </select>
+                            <input type="text" v-model="resumeMedisForm.dokter" style="width:100%;padding:7px 10px;border:1px solid #cbd5e0;border-radius:6px;font-size:13px;box-sizing:border-box;" />
                         </div>
                         <div>
                             <label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:4px;">Ruang Poli</label>
@@ -1484,14 +1485,7 @@
                         </div>
                         <div>
                             <label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:4px;">Penanggung Pembayaran</label>
-                            <select v-model="resumeMedisForm.penanggung" style="width:100%;padding:7px 10px;border:1px solid #cbd5e0;border-radius:6px;font-size:13px;box-sizing:border-box;background:#fff;appearance:none;-webkit-appearance:none;cursor:pointer;">
-                                <option value="">Pilih Penanggung</option>
-                                <option>BPJS Kesehatan</option>
-                                <option>BPJS TK</option>
-                                <option>Umum</option>
-                                <option>Asuransi</option>
-                                <option>Lain-lain</option>
-                            </select>
+                            <input type="text" v-model="resumeMedisForm.penanggung" style="width:100%;padding:7px 10px;border:1px solid #cbd5e0;border-radius:6px;font-size:13px;box-sizing:border-box;" />
                         </div>
                     </div>
                 </div>
@@ -1556,10 +1550,7 @@
                     <!-- Nama Dokter -->
                     <div>
                         <label style="font-size:12px;font-weight:600;color:#444;display:block;margin-bottom:4px;">Nama Dokter yang Memeriksa</label>
-                        <select v-model="resumeMedisForm.nama_dokter" style="width:100%;padding:7px 10px;border:1px solid #cbd5e0;border-radius:6px;font-size:13px;box-sizing:border-box;background:#fff;appearance:none;-webkit-appearance:none;cursor:pointer;">
-                            <option value="">Pilih Dokter</option>
-                            <option v-for="d in resumeMedisListDokter" :key="d.id" :value="d.nama">{{ d.nama }}</option>
-                        </select>
+                        <input type="text" v-model="resumeMedisForm.nama_dokter" style="width:100%;padding:7px 10px;border:1px solid #cbd5e0;border-radius:6px;font-size:13px;box-sizing:border-box;" />
                     </div>
                 </div>
             </div>
@@ -1567,10 +1558,13 @@
             <!-- Footer -->
             <div style="flex-shrink:0;padding:14px 26px;border-top:1px solid #e2e8f0;display:flex;justify-content:flex-end;align-items:center;gap:10px;background:#f8fafc;border-radius:0 0 12px 12px;">
                 <button @click="cancelResumeMedis()" style="padding:9px 22px;border:1px solid #ccc;border-radius:6px;background:#fff;cursor:pointer;font-size:13px;font-weight:600;color:#555;">
-                    Batal
+                    Tutup
+                </button>
+                <button @click="skipResumeMedis()" :disabled="resumeMedisSaving" style="padding:9px 22px;border:1px solid #b45309;border-radius:6px;background:#fff;color:#b45309;cursor:pointer;font-size:13px;font-weight:600;" :style="resumeMedisSaving ? 'opacity:0.5;cursor:not-allowed;' : ''">
+                    Lewati (Simpan Tanpa Resume Medis)
                 </button>
                 <button @click="saveResumeMedis()" :disabled="resumeMedisSaving" style="padding:9px 26px;border:none;border-radius:6px;background:#1a4f8a;color:#fff;cursor:pointer;font-size:13px;font-weight:700;opacity:1;" :style="resumeMedisSaving ? 'opacity:0.7;cursor:not-allowed;' : ''">
-                    {{ resumeMedisSaving ? 'Menyimpan...' : 'Simpan & Lanjutkan' }}
+                    {{ resumeMedisSaving ? 'Menyimpan...' : 'Simpan Resume Medis & Lanjutkan' }}
                 </button>
             </div>
         </div>
@@ -1741,6 +1735,7 @@ export default {
                 uuid_pasien: '',
                 nama: '',
                 tanggal_lahir: '',
+                umur: '',
                 jenis_kelamin: '',
                 no_rm: '',
                 nik: '',
@@ -2648,12 +2643,86 @@ export default {
         },
 
         openResumeMedisPopup: function () {
+            // ── Auto-fill Pemeriksaan Fisik from Data RO (only fields with values) ──
+            var roLabelMap = {
+                ocular_dextra_visus: 'Visus OD',
+                ocular_sinistra_visus: 'Visus OS',
+                ocular_dextra_tonometri: 'Tonometri OD',
+                ocular_sinistra_tonometri: 'Tonometri OS',
+                nadi: 'Nadi',
+                tekanan_darah: 'Tekanan Darah',
+                tinggi_badan: 'Tinggi Badan',
+                berat_badan: 'Berat Badan',
+                keluhan_utama: 'Keluhan Utama',
+                riwayat_penyakit: 'Riwayat Penyakit',
+                status_psikologi: 'Status Psikologi',
+                status_fungsional: 'Status Fungsional',
+                nyeri: 'Nyeri',
+                skala_nyeri: 'Skala Nyeri',
+            };
+            var roLines = [];
+            if (vm.pemeriksaanro) {
+                Object.keys(roLabelMap).forEach(function (key) {
+                    var val = vm.pemeriksaanro[key];
+                    if (val !== null && val !== undefined && val !== '' && val !== '0' && val !== 0) {
+                        roLines.push(roLabelMap[key] + ': ' + val);
+                    }
+                });
+            }
+            var pemeriksaanFisikAuto = roLines.map(function (l) { return '- ' + l; }).join('\n');
+
+            // ── Auto-fill Diagnosa from all ICD10 entries ──
+            var diagnosaAuto = '';
+            if (vm.listicdten && vm.listicdten.length > 0) {
+                diagnosaAuto = vm.listicdten.map(function (item) { return item.nama_icdten; }).filter(Boolean).map(function (s) { return '- ' + s; }).join('\n');
+            }
+            if (!diagnosaAuto && vm.form.select && vm.form.select.icd10 && vm.form.select.icd10.label) {
+                diagnosaAuto = '- ' + vm.form.select.icd10.label;
+            }
+
+            // ── Auto-fill Terapi from listobat + listobatracikan ──
+            var terapiLines = [];
+            if (vm.listobat && vm.listobat.length > 0) {
+                vm.listobat.forEach(function (item) {
+                    var parts = [];
+                    if (item.nama) { parts.push(item.nama); }
+                    if (item.posisimata) { parts.push('(' + item.posisimata + ')'); }
+                    var detail = [];
+                    if (item.signa) { detail.push('Signa: ' + item.signa); }
+                    if (item.jumlah_kecil) {
+                        var qty = item.jumlah_kecil + (item.nama_satuan_kecil ? ' ' + item.nama_satuan_kecil : '');
+                        detail.push('Qty: ' + qty);
+                    }
+                    if (detail.length > 0) { parts.push('| ' + detail.join(', ')); }
+                    if (parts.length > 0) { terapiLines.push('- ' + parts.join(' ')); }
+                });
+            }
+            if (vm.listobatracikan && vm.listobatracikan.length > 0) {
+                vm.listobatracikan.forEach(function (item) {
+                    var parts = [];
+                    if (item.label) { parts.push(item.label); } else { parts.push('Racikan'); }
+                    var detail = [];
+                    if (item.signa) { detail.push('Signa: ' + item.signa); }
+                    if (item.jumlah) {
+                        var qty = item.jumlah + (item.kemasan ? ' ' + item.kemasan : '');
+                        detail.push('Qty: ' + qty);
+                    }
+                    if (detail.length > 0) { parts.push('| ' + detail.join(', ')); }
+                    terapiLines.push('- ' + parts.join(' '));
+                });
+            }
+            var terapiAuto = terapiLines.join('\n');
+
+            // ── Default Tindakan ──
+            var tindakanAuto = '- Slit Lamp\n- Visus + Lensometry\n- Auto Refraktometry\n- Tonometry Non Contact';
+
             // Pre-fill resume medis form from current detail + form values
             vm.resumeMedisForm = {
                 uuid: '',
                 uuid_pasien: vm.detail.pasien_uuid || '',
                 nama: vm.detail.nama_pasien || '',
                 tanggal_lahir: vm.detail.tanggal_lahir || '',
+                umur: vm.detail.tanggal_lahir ? vm.countage(vm.detail.tanggal_lahir) : '',
                 jenis_kelamin: vm.detail.jenis_kelamin || '',
                 no_rm: vm.detail.rekam_medis || '',
                 nik: vm.detail.no_identitas || '',
@@ -2662,12 +2731,12 @@ export default {
                 dokter: vm.detail.nama_dokter || '',
                 penanggung: vm.detail.carabayar_nama || '',
                 anamnese: vm.form.anamnese ? (vm.form.anamnese.value || '') : '',
-                pemeriksaan_fisik: '',
+                pemeriksaan_fisik: pemeriksaanFisikAuto,
                 alergi_obat: '',
                 penunjang_medis: '',
-                diagnosa: vm.form.select && vm.form.select.icd10 ? (vm.form.select.icd10.label || '') : '',
-                tindakan: '',
-                terapi: '',
+                diagnosa: diagnosaAuto,
+                tindakan: tindakanAuto,
+                terapi: terapiAuto,
                 riwayat: '',
                 edukasi: '',
                 tanggal_kontrol: vm.form.tanggal_kontrol_selanjutnya ? (vm.form.tanggal_kontrol_selanjutnya.value || '') : '',
@@ -2698,8 +2767,9 @@ export default {
                         vm.resumeMedisForm.uuid = existing.uuid;
                         // Overwrite only fields not auto-filled from the current visit
                         let autoFilled = ['anamnese', 'tanggal_berobat', 'poli', 'dokter', 'penanggung',
-                                          'tanggal_kontrol', 'nama', 'tanggal_lahir', 'jenis_kelamin',
-                                          'no_rm', 'nik', 'uuid_pasien', 'diagnosa'];
+                                          'tanggal_kontrol', 'nama', 'tanggal_lahir', 'umur', 'jenis_kelamin',
+                                          'no_rm', 'nik', 'uuid_pasien', 'diagnosa', 'pemeriksaan_fisik',
+                                          'terapi', 'tindakan', 'nama_dokter'];
                         Object.keys(existing).forEach(function (k) {
                             if (autoFilled.indexOf(k) === -1 && existing[k] && vm.resumeMedisForm.hasOwnProperty(k)) {
                                 vm.resumeMedisForm[k] = existing[k];
@@ -2773,6 +2843,13 @@ export default {
 
         cancelResumeMedis: function () {
             vm.showResumeMedis = false;
+        },
+
+        skipResumeMedis: function () {
+            // Tutup popup tanpa menyimpan resume medis, tetapi tetap lanjutkan simpan form detail
+            vm.showResumeMedis = false;
+            vm.parsingForm();
+            vm.dialog();
         },
 
         nullcheck: function (data) {
