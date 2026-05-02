@@ -2727,7 +2727,7 @@ export default {
                 no_rm: vm.detail.rekam_medis || '',
                 nik: vm.detail.no_identitas || '',
                 tanggal_berobat: vm.detail.tanggal || '',
-                poli: vm.detail.ruang_poliklinik ? ('Poliklinik ' + vm.detail.ruang_poliklinik) : '',
+                poli: 'Mata',
                 dokter: vm.detail.nama_dokter || '',
                 penanggung: vm.detail.carabayar_nama || '',
                 anamnese: vm.form.anamnese ? (vm.form.anamnese.value || '') : '',
@@ -2740,7 +2740,7 @@ export default {
                 riwayat: '',
                 edukasi: '',
                 tanggal_kontrol: vm.form.tanggal_kontrol_selanjutnya ? (vm.form.tanggal_kontrol_selanjutnya.value || '') : '',
-                tempat_kontrol: '',
+                tempat_kontrol: 'RSK Mata Prima Vision',
                 ttd_dokter: '',
                 nama_dokter: vm.detail.nama_dokter || '',
             };
