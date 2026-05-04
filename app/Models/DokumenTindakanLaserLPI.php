@@ -44,6 +44,8 @@ class DokumenTindakanLaserLPI extends Model
 
         'mata_kanan',
         'mata_kiri',
+
+        'diagram_mata'
     ];
 
     protected $casts = [

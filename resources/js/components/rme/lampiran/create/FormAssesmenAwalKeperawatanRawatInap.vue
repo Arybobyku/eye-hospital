@@ -220,7 +220,6 @@
             </td>
             <td><input type="text" v-model="form.pernafasan_ket" class="input-rme" /></td>
           </tr>
-
           <tr>
             <td>Penglihatan</td>
             <td>
@@ -230,7 +229,6 @@
             </td>
             <td><input type="text" v-model="form.penglihatan_ket" class="input-rme" /></td>
           </tr>
-
           <tr>
             <td>Pendengaran</td>
             <td>
@@ -240,7 +238,6 @@
             </td>
             <td><input type="text" v-model="form.pendengaran_ket" class="input-rme" /></td>
           </tr>
-
           <tr>
             <td>Bicara</td>
             <td>
@@ -249,7 +246,6 @@
             </td>
             <td><input type="text" v-model="form.bicara_ket" class="input-rme" /></td>
           </tr>
-
           <tr>
             <td>Mulut</td>
             <td>
@@ -259,7 +255,6 @@
             </td>
             <td><input type="text" v-model="form.mulut_ket" class="input-rme" /></td>
           </tr>
-
           <tr>
             <td>Refleks Menelan</td>
             <td>
@@ -269,7 +264,6 @@
             </td>
             <td><input type="text" v-model="form.refleks_menelan_ket" class="input-rme" /></td>
           </tr>
-
           <tr>
             <td>Gastrointestinal</td>
             <td>
@@ -280,7 +274,6 @@
             </td>
             <td><input type="text" v-model="form.gastrointestinal_ket" class="input-rme" /></td>
           </tr>
-
           <tr>
             <td>Defekasi</td>
             <td>
@@ -289,7 +282,6 @@
             </td>
             <td><input type="text" v-model="form.defekasi_ket" class="input-rme" /></td>
           </tr>
-
           <tr>
             <td>Miksi</td>
             <td>
@@ -298,7 +290,6 @@
             </td>
             <td><input type="text" v-model="form.miksi_ket" class="input-rme" /></td>
           </tr>
-
           <tr>
             <td>Pola Tidur</td>
             <td>
@@ -307,7 +298,6 @@
             </td>
             <td><input type="text" v-model="form.pola_tidur_ket" class="input-rme" /></td>
           </tr>
-
           <tr>
             <td>Kulit</td>
             <td>
@@ -335,450 +325,391 @@
     </div>
 
     <!-- ================= RIWAYAT PSIKOSOSIAL KULTURAL SPIRITUAL ================= -->
-<div class="box-rme mb-4">
-  <h5 class="section-title-rme">Riwayat Psikososial Kultural Spiritual</h5>
+    <div class="box-rme mb-4">
+      <h5 class="section-title-rme">Riwayat Psikososial Kultural Spiritual</h5>
 
-  <!-- STATUS PSIKOLOGIS -->
-  <h6 class="mt-3 mb-2" style="font-weight: bold;">Status Psikologis</h6>
-  <div class="mb-3">
-    <label class="checkbox-label">
-      <input type="checkbox" v-model="form.psikologis_cemas" /> Cemas
-    </label>
-    <label class="checkbox-label">
-      <input type="checkbox" v-model="form.psikologis_takut" /> Takut
-    </label>
-    <label class="checkbox-label">
-      <input type="checkbox" v-model="form.psikologis_marah" /> Marah
-    </label>
-    <label class="checkbox-label">
-      <input type="checkbox" v-model="form.psikologis_sedih" /> Sedih
-    </label>
-    <label class="checkbox-label">
-      <input type="checkbox" v-model="form.psikologis_bunuh_diri" /> Kecenderungan bunuh diri
-    </label>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col-md-12">
-      <label>Lain-lain, sebutkan:</label>
-      <input type="text" v-model="form.psikologis_lainnya" class="input-rme" placeholder="Sebutkan kondisi psikologis lainnya..." />
-    </div>
-  </div>
-
-  <!-- STATUS SOSIAL -->
-  <h6 class="mt-4 mb-2" style="font-weight: bold;">Status Sosial</h6>
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label>Hubungan pasien dengan anggota keluarga:</label>
-      <select v-model="form.hubungan_keluarga" class="input-rme">
-        <option value="">Pilih</option>
-        <option value="Baik">Baik</option>
-        <option value="Tidak Baik">Tidak Baik</option>
-      </select>
-    </div>
-    <div class="col-md-6">
-      <label>Tempat tinggal:</label>
-      <input type="text" v-model="form.tempat_tinggal" class="input-rme" placeholder="Rumah/Apartemen/Panti/Lainnya" />
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col-md-4">
-      <label>Kerabat yang dapat dihubungi - Nama:</label>
-      <input type="text" v-model="form.kerabat_nama" class="input-rme" />
-    </div>
-    <div class="col-md-4">
-      <label>Hubungan:</label>
-      <input type="text" v-model="form.kerabat_hubungan" class="input-rme" placeholder="Contoh: Suami/Istri/Anak" />
-    </div>
-    <div class="col-md-4">
-      <label>Telepon:</label>
-      <input type="tel" v-model="form.kerabat_telepon" class="input-rme" placeholder="08xxxxxxxxxx" />
-    </div>
-  </div>
-
-  <!-- STATUS KULTURAL -->
-  <h6 class="mt-4 mb-2" style="font-weight: bold;">Status Kultural</h6>
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label>Bahasa Sehari-hari:</label>
-      <select v-model="form.bahasa_sehari" class="input-rme">
-        <option value="">Pilih</option>
-        <option value="Indonesia">Indonesia</option>
-        <option value="Daerah">Daerah</option>
-        <option value="Inggris">Inggris (aktif/pasif)</option>
-        <option value="Lainnya">Lainnya</option>
-      </select>
-    </div>
-    <div class="col-md-6" v-if="form.bahasa_sehari === 'Daerah'">
-      <label>Sebutkan bahasa daerah:</label>
-      <input type="text" v-model="form.bahasa_daerah_sebutkan" class="input-rme" placeholder="Contoh: Jawa, Sunda, dll" />
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label>Perlu penterjemah:</label>
-      <select v-model="form.perlu_penterjemah" class="input-rme">
-        <option value="">Pilih</option>
-        <option value="Ya">Ya</option>
-        <option value="Tidak">Tidak</option>
-      </select>
-    </div>
-    <div class="col-md-6" v-if="form.perlu_penterjemah === 'Ya'">
-      <label>Bahasa yang diperlukan:</label>
-      <input type="text" v-model="form.penterjemah_bahasa" class="input-rme" placeholder="Sebutkan bahasa..." />
-    </div>
-  </div>
-
-  <!-- STATUS SPIRITUAL -->
-  <h6 class="mt-4 mb-2" style="font-weight: bold;">Status Spiritual</h6>
-  <div class="row mb-3">
-    <div class="col-md-12">
-      <label>Nilai-nilai atau kepercayaan yang dianut:</label>
-      <textarea v-model="form.spiritual_kepercayaan" class="textarea-rme" rows="3" placeholder="Jelaskan nilai-nilai atau kepercayaan yang dianut pasien..."></textarea>
-    </div>
-  </div>
-</div>
-
-<!-- ================= KHUSUS UNTUK WANITA ================= -->
-<div class="box-rme mb-4" v-if="form.jenis_kelamin === 'Perempuan' || form.jenis_kelamin === 'P'">
-  <h5 class="section-title-rme">Khusus Untuk Wanita</h5>
-
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label>Hamil:</label>
-      <select v-model="form.hamil" class="input-rme">
-        <option value="">Pilih</option>
-        <option value="Ya">Ya</option>
-        <option value="Tidak">Tidak</option>
-      </select>
-    </div>
-    <div class="col-md-6" v-if="form.hamil === 'Ya'">
-      <label>HPHT (Hari Pertama Haid Terakhir):</label>
-      <input type="date" v-model="form.hpht" class="input-rme" />
-    </div>
-  </div>
-
-  <div class="row mb-3">
-    <div class="col-md-12">
-      <label>Keluhan Menstruasi:</label>
-      <textarea v-model="form.keluhan_menstruasi" class="textarea-rme" rows="2" placeholder="Jelaskan keluhan menstruasi jika ada..."></textarea>
-    </div>
-  </div>
-</div>
-
-<!-- ================= PENILAIAN RISIKO DEKUBITUS (SKALA NORTON) ================= -->
-<div class="box-rme mb-4">
-  <h5 class="section-title-rme">Penilaian Risiko Dekubitus (Skala Norton)</h5>
-
-  <table class="info-table">
-    <thead>
-      <tr>
-        <th style="width: 200px">Yang Dinilai</th>
-        <th style="width: 150px; text-align:center;">4</th>
-        <th style="width: 150px; text-align:center;">3</th>
-        <th style="width: 150px; text-align:center;">2</th>
-        <th style="width: 150px; text-align:center;">1</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- KELUHAN FISIK -->
-      <tr>
-        <td>Keluhan Fisik</td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_fisik" value="4" /> Baik
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_fisik" value="3" /> Sedang
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_fisik" value="2" /> Buruk
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_fisik" value="1" /> Sangat buruk
-          </label>
-        </td>
-      </tr>
-
-      <!-- STATUS MENTAL -->
-      <tr>
-        <td>Status Mental</td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_mental" value="4" /> Sadar
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_mental" value="3" /> Apatis
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_mental" value="2" /> Bingung
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_mental" value="1" /> Stupor
-          </label>
-        </td>
-      </tr>
-
-      <!-- AKTIVITAS -->
-      <tr>
-        <td>Aktivitas</td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_aktivitas" value="4" /> Jalan sendiri
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_aktivitas" value="3" /> Dengan bantuan
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_aktivitas" value="2" /> Kursi roda
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_aktivitas" value="1" /> Di tempat tidur
-          </label>
-        </td>
-      </tr>
-
-      <!-- MOBILITAS -->
-      <tr>
-        <td>Mobilitas</td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_mobilitas" value="4" /> Bebas bergerak
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_mobilitas" value="3" /> Gerak terbatas
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_mobilitas" value="2" /> Sangat terbatas
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_mobilitas" value="1" /> Tidak bergerak
-          </label>
-        </td>
-      </tr>
-
-      <!-- INKONTINENSIA -->
-      <tr>
-        <td>Inkontinensia</td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_inkontinensia" value="4" /> Kontinen
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_inkontinensia" value="3" /> Kadang inkontinen
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_inkontinensia" value="2" /> Selalu inkontinen
-          </label>
-        </td>
-        <td style="text-align:center;">
-          <label>
-            <input type="radio" v-model="form.norton_inkontinensia" value="1" /> Inkontinen urin & alvi
-          </label>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- DISPLAY TOTAL SKOR -->
-  <div class="mt-3" style="padding: 15px; background: #ffffcc; border: 1px solid #ddd; border-radius: 4px;">
-    <label style="font-weight: bold; font-size: 16px;">Jumlah Skor: {{ nortonScore }}</label>
-    <div class="mt-2">
-      <span v-if="nortonScore >= 16 && nortonScore <= 20" style="color: green; font-weight: bold;">
-        ✓ 16-20: Tidak ada risiko
-      </span>
-      <span v-else-if="nortonScore >= 12 && nortonScore <= 15" style="color: orange; font-weight: bold;">
-        ⚠ 12-15: Risiko Sedang
-      </span>
-      <span v-else-if="nortonScore < 12 && nortonScore > 0" style="color: red; font-weight: bold;">
-        ✕ &lt;12: Risiko Tinggi
-      </span>
-      <span v-else style="color: #999; font-style: italic;">
-        Silakan lengkapi penilaian di atas
-      </span>
-    </div>
-  </div>
-</div>
-
-<!-- ================= SKRINING RISIKO CEDERA/JATUH ================= -->
-<div class="box-rme mb-4">
-  <h5 class="section-title-rme">Skrining Risiko Cedera/Jatuh</h5>
-
-  <div class="row mb-3">
-    <div class="col-md-12">
-      <label style="font-weight: bold;">Risiko Cedera/Jatuh:</label>
-      <div>
-        <label style="margin-right: 20px;">
-          <input type="radio" v-model="form.risiko_jatuh" value="Ya" /> Ya
+      <h6 class="mt-3 mb-2" style="font-weight: bold;">Status Psikologis</h6>
+      <div class="mb-3">
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="form.psikologis_cemas" /> Cemas
         </label>
-        <label>
-          <input type="radio" v-model="form.risiko_jatuh" value="Tidak" /> Tidak
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="form.psikologis_takut" /> Takut
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="form.psikologis_marah" /> Marah
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="form.psikologis_sedih" /> Sedih
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" v-model="form.psikologis_bunuh_diri" /> Kecenderungan bunuh diri
         </label>
       </div>
-    </div>
-  </div>
 
-  <div v-if="form.risiko_jatuh === 'Ya'" class="mb-3" style="padding-left: 20px;">
-    <p style="font-weight: bold; margin-bottom: 10px;">Maka lakukan pemasangan:</p>
-    <div>
-      <label class="checkbox-label">
-        <input type="checkbox" v-model="form.gelang_risiko_jatuh" /> Gelang risiko jatuh
-      </label>
-    </div>
-    <div>
-      <label class="checkbox-label">
-        <input type="checkbox" v-model="form.segitiga_risiko_jatuh" /> Segitiga risiko jatuh
-      </label>
-    </div>
-  </div>
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <label>Lain-lain, sebutkan:</label>
+          <input type="text" v-model="form.psikologis_lainnya" class="input-rme" placeholder="Sebutkan kondisi psikologis lainnya..." />
+        </div>
+      </div>
 
-  <div class="row mb-3">
-    <div class="col-md-6">
-      <label>Diberitahukan ke dokter:</label>
-      <select v-model="form.risiko_jatuh_ke_dokter" class="input-rme">
-        <option value="">Pilih</option>
-        <option value="Ya">Ya</option>
-        <option value="Tidak">Tidak</option>
-      </select>
+      <h6 class="mt-4 mb-2" style="font-weight: bold;">Status Sosial</h6>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label>Hubungan pasien dengan anggota keluarga:</label>
+          <select v-model="form.hubungan_keluarga" class="input-rme">
+            <option value="">Pilih</option>
+            <option value="Baik">Baik</option>
+            <option value="Tidak Baik">Tidak Baik</option>
+          </select>
+        </div>
+        <div class="col-md-6">
+          <label>Tempat tinggal:</label>
+          <input type="text" v-model="form.tempat_tinggal" class="input-rme" placeholder="Rumah/Apartemen/Panti/Lainnya" />
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4">
+          <label>Kerabat yang dapat dihubungi - Nama:</label>
+          <input type="text" v-model="form.kerabat_nama" class="input-rme" />
+        </div>
+        <div class="col-md-4">
+          <label>Hubungan:</label>
+          <input type="text" v-model="form.kerabat_hubungan" class="input-rme" placeholder="Contoh: Suami/Istri/Anak" />
+        </div>
+        <div class="col-md-4">
+          <label>Telepon:</label>
+          <input type="tel" v-model="form.kerabat_telepon" class="input-rme" placeholder="08xxxxxxxxxx" />
+        </div>
+      </div>
+
+      <h6 class="mt-4 mb-2" style="font-weight: bold;">Status Kultural</h6>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label>Bahasa Sehari-hari:</label>
+          <select v-model="form.bahasa_sehari" class="input-rme">
+            <option value="">Pilih</option>
+            <option value="Indonesia">Indonesia</option>
+            <option value="Daerah">Daerah</option>
+            <option value="Inggris">Inggris (aktif/pasif)</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+        <div class="col-md-6" v-if="form.bahasa_sehari === 'Daerah'">
+          <label>Sebutkan bahasa daerah:</label>
+          <input type="text" v-model="form.bahasa_daerah_sebutkan" class="input-rme" placeholder="Contoh: Jawa, Sunda, dll" />
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label>Perlu penterjemah:</label>
+          <select v-model="form.perlu_penterjemah" class="input-rme">
+            <option value="">Pilih</option>
+            <option value="Ya">Ya</option>
+            <option value="Tidak">Tidak</option>
+          </select>
+        </div>
+        <div class="col-md-6" v-if="form.perlu_penterjemah === 'Ya'">
+          <label>Bahasa yang diperlukan:</label>
+          <input type="text" v-model="form.penterjemah_bahasa" class="input-rme" placeholder="Sebutkan bahasa..." />
+        </div>
+      </div>
+
+      <h6 class="mt-4 mb-2" style="font-weight: bold;">Status Spiritual</h6>
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <label>Nilai-nilai atau kepercayaan yang dianut:</label>
+          <textarea v-model="form.spiritual_kepercayaan" class="textarea-rme" rows="3" placeholder="Jelaskan nilai-nilai atau kepercayaan yang dianut pasien..."></textarea>
+        </div>
+      </div>
     </div>
-    <div class="col-md-6" v-if="form.risiko_jatuh_ke_dokter === 'Ya'">
-      <label>Pukul:</label>
-      <input type="time" v-model="form.risiko_jatuh_ke_dokter_pukul" class="input-rme" />
+
+    <!-- ================= KHUSUS UNTUK WANITA ================= -->
+    <div class="box-rme mb-4" v-if="form.jenis_kelamin === 'Perempuan' || form.jenis_kelamin === 'P'">
+      <h5 class="section-title-rme">Khusus Untuk Wanita</h5>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label>Hamil:</label>
+          <select v-model="form.hamil" class="input-rme">
+            <option value="">Pilih</option>
+            <option value="Ya">Ya</option>
+            <option value="Tidak">Tidak</option>
+          </select>
+        </div>
+        <div class="col-md-6" v-if="form.hamil === 'Ya'">
+          <label>HPHT (Hari Pertama Haid Terakhir):</label>
+          <input type="date" v-model="form.hpht" class="input-rme" />
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <label>Keluhan Menstruasi:</label>
+          <textarea v-model="form.keluhan_menstruasi" class="textarea-rme" rows="2" placeholder="Jelaskan keluhan menstruasi jika ada..."></textarea>
+        </div>
+      </div>
     </div>
-  </div>
-</div>
+
+    <!-- ================= PENILAIAN RISIKO DEKUBITUS (SKALA NORTON) ================= -->
+    <div class="box-rme mb-4">
+      <h5 class="section-title-rme">Penilaian Risiko Dekubitus (Skala Norton)</h5>
+
+      <table class="info-table">
+        <thead>
+          <tr>
+            <th style="width: 200px">Yang Dinilai</th>
+            <th style="width: 150px; text-align:center;">4</th>
+            <th style="width: 150px; text-align:center;">3</th>
+            <th style="width: 150px; text-align:center;">2</th>
+            <th style="width: 150px; text-align:center;">1</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Keluhan Fisik</td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_fisik" value="4" /> Baik</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_fisik" value="3" /> Sedang</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_fisik" value="2" /> Buruk</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_fisik" value="1" /> Sangat buruk</label></td>
+          </tr>
+          <tr>
+            <td>Status Mental</td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_mental" value="4" /> Sadar</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_mental" value="3" /> Apatis</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_mental" value="2" /> Bingung</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_mental" value="1" /> Stupor</label></td>
+          </tr>
+          <tr>
+            <td>Aktivitas</td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_aktivitas" value="4" /> Jalan sendiri</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_aktivitas" value="3" /> Dengan bantuan</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_aktivitas" value="2" /> Kursi roda</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_aktivitas" value="1" /> Di tempat tidur</label></td>
+          </tr>
+          <tr>
+            <td>Mobilitas</td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_mobilitas" value="4" /> Bebas bergerak</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_mobilitas" value="3" /> Gerak terbatas</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_mobilitas" value="2" /> Sangat terbatas</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_mobilitas" value="1" /> Tidak bergerak</label></td>
+          </tr>
+          <tr>
+            <td>Inkontinensia</td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_inkontinensia" value="4" /> Kontinen</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_inkontinensia" value="3" /> Kadang inkontinen</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_inkontinensia" value="2" /> Selalu inkontinen</label></td>
+            <td style="text-align:center;"><label><input type="radio" v-model="form.norton_inkontinensia" value="1" /> Inkontinen urin & alvi</label></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="mt-3" style="padding: 15px; background: #ffffcc; border: 1px solid #ddd; border-radius: 4px;">
+        <label style="font-weight: bold; font-size: 16px;">Jumlah Skor: {{ nortonScore }}</label>
+        <div class="mt-2">
+          <span v-if="nortonScore >= 16 && nortonScore <= 20" style="color: green; font-weight: bold;">✓ 16-20: Tidak ada risiko</span>
+          <span v-else-if="nortonScore >= 12 && nortonScore <= 15" style="color: orange; font-weight: bold;">⚠ 12-15: Risiko Sedang</span>
+          <span v-else-if="nortonScore < 12 && nortonScore > 0" style="color: red; font-weight: bold;">✕ &lt;12: Risiko Tinggi</span>
+          <span v-else style="color: #999; font-style: italic;">Silakan lengkapi penilaian di atas</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SKRINING RISIKO CEDERA/JATUH ================= -->
+    <div class="box-rme mb-4">
+      <h5 class="section-title-rme">Skrining Risiko Cedera/Jatuh</h5>
+
+      <div class="row mb-3">
+        <div class="col-md-12">
+          <label style="font-weight: bold;">Risiko Cedera/Jatuh:</label>
+          <div>
+            <label style="margin-right: 20px;"><input type="radio" v-model="form.risiko_jatuh" value="Ya" /> Ya</label>
+            <label><input type="radio" v-model="form.risiko_jatuh" value="Tidak" /> Tidak</label>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="form.risiko_jatuh === 'Ya'" class="mb-3" style="padding-left: 20px;">
+        <p style="font-weight: bold; margin-bottom: 10px;">Maka lakukan pemasangan:</p>
+        <div>
+          <label class="checkbox-label"><input type="checkbox" v-model="form.gelang_risiko_jatuh" /> Gelang risiko jatuh</label>
+        </div>
+        <div>
+          <label class="checkbox-label"><input type="checkbox" v-model="form.segitiga_risiko_jatuh" /> Segitiga risiko jatuh</label>
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label>Diberitahukan ke dokter:</label>
+          <select v-model="form.risiko_jatuh_ke_dokter" class="input-rme">
+            <option value="">Pilih</option>
+            <option value="Ya">Ya</option>
+            <option value="Tidak">Tidak</option>
+          </select>
+        </div>
+        <div class="col-md-6" v-if="form.risiko_jatuh_ke_dokter === 'Ya'">
+          <label>Pukul:</label>
+          <input type="time" v-model="form.risiko_jatuh_ke_dokter_pukul" class="input-rme" />
+        </div>
+      </div>
+    </div>
 
     <!-- ================= PENILAIAN SKALA NYERI ================= -->
     <div class="box-rme mb-4">
       <h5 class="section-title-rme">Penilaian Skala Nyeri</h5>
 
       <div class="row mb-3">
-        <div class="col-md-6">
-          <label>Keluhan Nyeri:</label>
-          <select v-model="form.keluhan_nyeri" class="input-rme">
-            <option value="">Pilih</option>
-            <option value="Ada">Ada</option>
-            <option value="Tidak ada">Tidak ada</option>
-          </select>
+        <div class="col-md-4">
+          <label><strong>Keluhan Nyeri</strong></label>
         </div>
-        <div class="col-md-6" v-if="form.keluhan_nyeri === 'Ada'">
-          <label>Skala Nyeri (0-10):</label>
-          <input type="number" min="0" max="10" v-model="form.skala_nyeri" class="input-rme" />
+        <div class="col-md-4">
+          <label><input type="radio" v-model="form.keluhan_nyeri" value="Ada" /> Ada, Skala nyeri ......</label>
+        </div>
+        <div class="col-md-4">
+          <label><input type="radio" v-model="form.keluhan_nyeri" value="Tidak ada" /> Tidak ada</label>
         </div>
       </div>
 
       <div v-if="form.keluhan_nyeri === 'Ada'">
+        <div class="nyeri-scale-section mb-4">
+          <h6 class="text-center mb-3"><strong>BERAPAKAH SKALA NYERI ANDA?</strong></h6>
+
+          <div class="scale-visual-container">
+            <div class="scale-bar">
+              <div class="scale-gradient"></div>
+              <div class="scale-numbers">
+                <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span>
+                <span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+              </div>
+              <div class="scale-labels">
+                <span class="label-start">Tidak<br>Nyeri</span>
+                <span class="label-middle">Nyeri<br>Sedang</span>
+                <span class="label-end">Nyeri Hebat<br>Tak Tertahankan</span>
+              </div>
+            </div>
+
+            <div class="face-icons">
+              <div class="face-item" :class="{ active: form.skala_nyeri == 0 }">
+                <div class="face-icon">😊</div>
+                <span>Tidak Nyeri</span>
+              </div>
+              <div class="face-item" :class="{ active: form.skala_nyeri >= 1 && form.skala_nyeri <= 3 }">
+                <div class="face-icon">😐</div>
+                <span>Nyeri Ringan</span>
+              </div>
+              <div class="face-item" :class="{ active: form.skala_nyeri >= 4 && form.skala_nyeri <= 6 }">
+                <div class="face-icon">😟</div>
+                <span>Nyeri Sedang</span>
+              </div>
+              <div class="face-item" :class="{ active: form.skala_nyeri >= 7 && form.skala_nyeri <= 9 }">
+                <div class="face-icon">😫</div>
+                <span>Nyeri Berat</span>
+              </div>
+              <div class="face-item" :class="{ active: form.skala_nyeri == 10 }">
+                <div class="face-icon">😭</div>
+                <span>Sangat Berat</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <label><strong>Skala Nyeri (0-10):</strong></label>
+            <input type="number" min="0" max="10" v-model="form.skala_nyeri" class="input-rme" style="width: 100px; display: inline-block; margin-left: 10px;" />
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label><strong>Gambar Lokasi Nyeri:</strong></label>
+          <div class="canvas-wrapper">
+            <canvas
+                ref="canvas"
+                class="drawing-canvas"
+                width="400"
+                height="600"
+                @mousedown="startDrawing"
+                @mousemove="draw"
+                @mouseup="stopDrawing"
+                @mouseleave="stopDrawing"
+                @touchstart="startDrawingTouch"
+                @touchmove="drawTouch"
+                @touchend="stopDrawing"
+            ></canvas>
+            </div>
+          <div class="mt-2">
+            <button type="button" @click="clearCanvas" class="btn-clear-canvas">Hapus Gambar</button>
+          </div>
+        </div>
+
         <div class="row mb-3">
-          <div class="col-md-6">
-            <label>Lokasi:</label>
+          <div class="col-md-12">
+            <label><strong>Lokasi :</strong></label>
             <input type="text" v-model="form.nyeri_lokasi" class="input-rme" />
           </div>
-          <div class="col-md-6">
-            <label>Nyeri berpindah/menjalar:</label>
-            <select v-model="form.nyeri_menjalar" class="input-rme">
-              <option value="">Pilih</option>
-              <option value="Ada">Ada</option>
-              <option value="Tidak ada">Tidak ada</option>
-            </select>
-          </div>
         </div>
 
-        <div class="row mb-3" v-if="form.nyeri_menjalar === 'Ada'">
-          <div class="col-md-6">
-            <label>Menjalar ke:</label>
-            <input type="text" v-model="form.nyeri_menjalar_ke" class="input-rme" />
-          </div>
+        <table class="info-table mb-4">
+          <tr>
+            <td style="width: 30%;"><strong>Nyeri berpindah/menjalar:</strong></td>
+            <td style="width: 30%;"><label><input type="radio" v-model="form.nyeri_menjalar" value="Ada" /> Ada, ke ......</label></td>
+            <td style="width: 40%;"><label><input type="radio" v-model="form.nyeri_menjalar" value="Tidak ada" /> Tidak ada</label></td>
+          </tr>
+          <tr v-if="form.nyeri_menjalar === 'Ada'">
+            <td colspan="3">
+              <label><strong>Menjalar ke:</strong></label>
+              <input type="text" v-model="form.nyeri_menjalar_ke" class="input-rme" />
+            </td>
+          </tr>
+          <tr>
+            <td><strong>Onset nyeri</strong></td>
+            <td><label><input type="radio" v-model="form.onset_nyeri" value="Akut" /> &lt; 3 bulan = akut</label></td>
+            <td><label><input type="radio" v-model="form.onset_nyeri" value="Kronik" /> &gt; 3 bulan = kronik</label></td>
+          </tr>
+        </table>
+
+        <div class="mb-4">
+          <label><strong>Rasa Nyeri</strong></label>
+          <table class="info-table">
+            <tr>
+              <td><label><input type="checkbox" v-model="form.nyeri_seperti_ditusuk" /> - Seperti ditusuk</label></td>
+              <td><label><input type="checkbox" v-model="form.nyeri_seperti_ditikam" /> - Seperti ditikam</label></td>
+              <td><label><input type="checkbox" v-model="form.nyeri_berdenyut" /> - Seperti berdenyut</label></td>
+            </tr>
+            <tr>
+              <td><label><input type="checkbox" v-model="form.nyeri_seperti_dipukul" /> - Seperti dipukul</label></td>
+              <td><label><input type="checkbox" v-model="form.nyeri_seperti_kram" /> - Seperti kram</label></td>
+              <td><label><input type="checkbox" v-model="form.nyeri_seperti_dibakar" /> - Seperti dibakar</label></td>
+            </tr>
+            <tr>
+              <td><label><input type="checkbox" v-model="form.nyeri_tajam" /> - Nyeri tajam</label></td>
+              <td><label><input type="checkbox" v-model="form.nyeri_tumpul" /> - Nyeri tumpul</label></td>
+              <td><label><input type="checkbox" v-model="form.nyeri_seperti_ditarik" /> - Seperti ditarik</label></td>
+            </tr>
+          </table>
         </div>
 
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label>Onset nyeri:</label>
-            <select v-model="form.onset_nyeri" class="input-rme">
-              <option value="">Pilih</option>
-              <option value="Akut">&lt; 3 bulan (Akut)</option>
-              <option value="Kronik">&gt; 3 bulan (Kronik)</option>
-            </select>
-          </div>
-        </div>
+        <table class="info-table mb-4">
+          <tr>
+            <td style="width: 25%;"><strong>Frekuensi nyeri :</strong></td>
+            <td style="width: 25%;"><label><input type="radio" v-model="form.frekuensi_nyeri" value="1-2 jam" /> 1-2 jam</label></td>
+            <td style="width: 25%;"><label><input type="radio" v-model="form.frekuensi_nyeri" value="3-4 jam" /> 3-4 jam</label></td>
+            <td style="width: 25%;"><strong>Lama nyeri :</strong></td>
+            <td style="width: 15%;"><label><input type="radio" v-model="form.lama_nyeri" value="<30 menit" /> &lt;30 menit</label></td>
+            <td style="width: 15%;"><label><input type="radio" v-model="form.lama_nyeri" value=">30 menit" /> &gt;30 menit</label></td>
+          </tr>
+        </table>
 
-        <div class="mb-3">
-          <label>Rasa Nyeri:</label>
-          <div>
-            <label><input type="checkbox" v-model="form.nyeri_ditusuk" /> Seperti ditusuk</label>
-            <label><input type="checkbox" v-model="form.nyeri_ditikam" /> Seperti ditikam</label>
-            <label><input type="checkbox" v-model="form.nyeri_berdenyut" /> Seperti berdenyut</label>
-          </div>
-          <div>
-            <label><input type="checkbox" v-model="form.nyeri_dipukul" /> Seperti dipukul</label>
-            <label><input type="checkbox" v-model="form.nyeri_kram" /> Seperti kram</label>
-            <label><input type="checkbox" v-model="form.nyeri_dibakar" /> Seperti dibakar</label>
-          </div>
-          <div>
-            <label><input type="checkbox" v-model="form.nyeri_tajam" /> Nyeri tajam</label>
-            <label><input type="checkbox" v-model="form.nyeri_tumpul" /> Nyeri tumpul</label>
-            <label><input type="checkbox" v-model="form.nyeri_ditarik" /> Seperti ditarik</label>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label>Frekuensi nyeri:</label>
-            <select v-model="form.frekuensi_nyeri" class="input-rme">
-              <option value="">Pilih</option>
-              <option value="1-2 jam">1-2 jam</option>
-              <option value="3-4 jam">3-4 jam</option>
-            </select>
-          </div>
-          <div class="col-md-6">
-            <label>Lama nyeri:</label>
-            <select v-model="form.lama_nyeri" class="input-rme">
-              <option value="">Pilih</option>
-              <option value="<30 menit">&lt;30 menit</option>
-              <option value=">30 menit">&gt;30 menit</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label>Nyeri memburuk bila:</label>
-            <input type="text" v-model="form.nyeri_memburuk" class="input-rme" />
-          </div>
-          <div class="col-md-6">
-            <label>Nyeri berkurang bila:</label>
-            <input type="text" v-model="form.nyeri_berkurang" class="input-rme" />
-          </div>
-        </div>
+        <table class="info-table mb-3">
+          <tr>
+            <td style="width: 20%;"><strong>Nyeri memburuk bila :</strong></td>
+            <td style="width: 50%;"><input type="text" v-model="form.nyeri_memburuk" class="input-rme" /></td>
+            <td style="width: 20%;"><strong>Nyeri berkurang bila :</strong></td>
+            <td style="width: 30%;"><input type="text" v-model="form.nyeri_berkurang" class="input-rme" /></td>
+          </tr>
+        </table>
       </div>
     </div>
 
@@ -852,16 +783,12 @@
 
       <div class="mb-3">
         <label style="font-weight: bold;">Aktivitas dan Mobilisasi:</label>
-        <div>
-          <label><input type="radio" v-model="form.status_fungsional" value="Mandiri" /> Mandiri</label>
-        </div>
+        <div><label><input type="radio" v-model="form.status_fungsional" value="Mandiri" /> Mandiri</label></div>
         <div>
           <label><input type="radio" v-model="form.status_fungsional" value="Perlu bantuan minimal" /> Perlu bantuan minimal</label>
           <input type="text" v-model="form.status_fungsional_bantuan" class="input-rme" placeholder="Sebutkan..." :disabled="form.status_fungsional !== 'Perlu bantuan minimal'" />
         </div>
-        <div>
-          <label><input type="radio" v-model="form.status_fungsional" value="Ketergantungan total" /> Ketergantungan total</label>
-        </div>
+        <div><label><input type="radio" v-model="form.status_fungsional" value="Ketergantungan total" /> Ketergantungan total</label></div>
       </div>
 
       <div class="row">
@@ -879,9 +806,7 @@
         </div>
       </div>
 
-      <p class="small mt-2" style="font-style: italic;">
-        (bila ketergantungan total kolaborasi dengan DPJP, apakah perlu untuk konsul ke rehabilitasi medik)
-      </p>
+      <p class="small mt-2" style="font-style: italic;">(bila ketergantungan total kolaborasi dengan DPJP, apakah perlu untuk konsul ke rehabilitasi medik)</p>
     </div>
 
     <!-- ================= DIAGNOSA KEPERAWATAN ================= -->
@@ -937,17 +862,10 @@
         <tbody>
           <tr>
             <td>Apakah rawat inap berpengaruh terhadap:<br>- Pasien dan Keluarga<br>- Pekerjaan<br>- Keuangan</td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_berpengaruh" value="Ya" />
-            </td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_berpengaruh" value="Tidak" />
-            </td>
-            <td>
-              <textarea v-model="form.dp_berpengaruh_ket" class="textarea-rme" rows="2"></textarea>
-            </td>
+            <td class="text-center"><input type="radio" v-model="form.dp_berpengaruh" value="Ya" /></td>
+            <td class="text-center"><input type="radio" v-model="form.dp_berpengaruh" value="Tidak" /></td>
+            <td><textarea v-model="form.dp_berpengaruh_ket" class="textarea-rme" rows="2"></textarea></td>
           </tr>
-
           <tr>
             <td>
               Masalah pemenuhan kebutuhan yang dihadapi saat pulang<br>
@@ -961,100 +879,49 @@
               </div>
             </td>
             <td colspan="2"></td>
-            <td>
-              <input type="text" v-model="form.dp_lainnya" class="input-rme" placeholder="Lainnya..." />
-            </td>
+            <td><input type="text" v-model="form.dp_lainnya" class="input-rme" placeholder="Lainnya..." /></td>
           </tr>
-
           <tr>
             <td>Apakah ada yang membantu kebutuhan tersebut diatas (yang merawat pasien)?</td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_ada_yang_membantu" value="Ya" />
-            </td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_ada_yang_membantu" value="Tidak" />
-            </td>
-            <td>
-              <input type="text" v-model="form.dp_yang_merawat" class="input-rme" placeholder="Yang merawat..." />
-            </td>
+            <td class="text-center"><input type="radio" v-model="form.dp_ada_yang_membantu" value="Ya" /></td>
+            <td class="text-center"><input type="radio" v-model="form.dp_ada_yang_membantu" value="Tidak" /></td>
+            <td><input type="text" v-model="form.dp_yang_merawat" class="input-rme" placeholder="Yang merawat..." /></td>
           </tr>
-
           <tr>
             <td>Apakah pasien menggunakan peralatan medis dirumah setelah keluar rumah sakit (cateter, NGT, double lumen, oksigen)?</td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_peralatan_medis" value="Ya" />
-            </td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_peralatan_medis" value="Tidak" />
-            </td>
-            <td>
-              <textarea v-model="form.dp_peralatan_medis_ket" class="textarea-rme" rows="2" placeholder="Alat yang digunakan..."></textarea>
-            </td>
+            <td class="text-center"><input type="radio" v-model="form.dp_peralatan_medis" value="Ya" /></td>
+            <td class="text-center"><input type="radio" v-model="form.dp_peralatan_medis" value="Tidak" /></td>
+            <td><textarea v-model="form.dp_peralatan_medis_ket" class="textarea-rme" rows="2" placeholder="Alat yang digunakan..."></textarea></td>
           </tr>
-
           <tr>
             <td>Apakah pasien memerlukan alat bantu setelah keluar dari rumah sakit (tongkat, kursi roda, walker dll)?</td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_alat_bantu" value="Ya" />
-            </td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_alat_bantu" value="Tidak" />
-            </td>
-            <td>
-              <textarea v-model="form.dp_alat_bantu_ket" class="textarea-rme" rows="2" placeholder="Alat yang digunakan..."></textarea>
-            </td>
+            <td class="text-center"><input type="radio" v-model="form.dp_alat_bantu" value="Ya" /></td>
+            <td class="text-center"><input type="radio" v-model="form.dp_alat_bantu" value="Tidak" /></td>
+            <td><textarea v-model="form.dp_alat_bantu_ket" class="textarea-rme" rows="2" placeholder="Alat yang digunakan..."></textarea></td>
           </tr>
-
           <tr>
             <td>Apakah ketika pulang masih ada perawatan lanjutan/khusus yang harus dilakukan dirumah (rawat luka, perawatan bayi, injeksi lantus dll)?</td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_perawatan_lanjutan" value="Ya" />
-            </td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_perawatan_lanjutan" value="Tidak" />
-            </td>
-            <td>
-              <textarea v-model="form.dp_perawatan_lanjutan_ket" class="textarea-rme" rows="2" placeholder="Jenis Perawatan..."></textarea>
-            </td>
+            <td class="text-center"><input type="radio" v-model="form.dp_perawatan_lanjutan" value="Ya" /></td>
+            <td class="text-center"><input type="radio" v-model="form.dp_perawatan_lanjutan" value="Tidak" /></td>
+            <td><textarea v-model="form.dp_perawatan_lanjutan_ket" class="textarea-rme" rows="2" placeholder="Jenis Perawatan..."></textarea></td>
           </tr>
-
           <tr>
             <td>Apakah pasien memiliki masalah seperti nyeri kronis, kelelahan, batasan asupan cairan atau batasan aktivitas setelah keluar dari rumah sakit?</td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_masalah_khusus" value="Ya" />
-            </td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_masalah_khusus" value="Tidak" />
-            </td>
-            <td>
-              <textarea v-model="form.dp_masalah_khusus_ket" class="textarea-rme" rows="2" placeholder="Cara mengatasinya..."></textarea>
-            </td>
+            <td class="text-center"><input type="radio" v-model="form.dp_masalah_khusus" value="Ya" /></td>
+            <td class="text-center"><input type="radio" v-model="form.dp_masalah_khusus" value="Tidak" /></td>
+            <td><textarea v-model="form.dp_masalah_khusus_ket" class="textarea-rme" rows="2" placeholder="Cara mengatasinya..."></textarea></td>
           </tr>
-
           <tr>
             <td>Apakah alat transportasi pasien untuk pulang aman sesuai dengan kondisi pasien saat keluar rumah sakit?</td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_transportasi_aman" value="Ya" />
-            </td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_transportasi_aman" value="Tidak" />
-            </td>
-            <td>
-              <textarea v-model="form.dp_transportasi_ket" class="textarea-rme" rows="2" placeholder="Alat transportasi..."></textarea>
-            </td>
+            <td class="text-center"><input type="radio" v-model="form.dp_transportasi_aman" value="Ya" /></td>
+            <td class="text-center"><input type="radio" v-model="form.dp_transportasi_aman" value="Tidak" /></td>
+            <td><textarea v-model="form.dp_transportasi_ket" class="textarea-rme" rows="2" placeholder="Alat transportasi..."></textarea></td>
           </tr>
-
           <tr>
             <td>Apakah pasien dan keluarga memerlukan edukasi kesehatan keluar dari rumah sakit obat-obatan, nyeri, diet, mencari pertolongan, followup, dll</td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_edukasi" value="Ya" />
-            </td>
-            <td class="text-center">
-              <input type="radio" v-model="form.dp_edukasi" value="Tidak" />
-            </td>
-            <td>
-              <textarea v-model="form.dp_edukasi_ket" class="textarea-rme" rows="2" placeholder="Jenis edukasi..."></textarea>
-            </td>
+            <td class="text-center"><input type="radio" v-model="form.dp_edukasi" value="Ya" /></td>
+            <td class="text-center"><input type="radio" v-model="form.dp_edukasi" value="Tidak" /></td>
+            <td><textarea v-model="form.dp_edukasi_ket" class="textarea-rme" rows="2" placeholder="Jenis edukasi..."></textarea></td>
           </tr>
         </tbody>
       </table>
@@ -1075,23 +942,17 @@
         </div>
       </div>
 
-      <div class="">
-        <div class="">
-          <label>Tanda Tangan Perawat</label>
-            <div v-if="form.perawat_ttd && !ttdPerawatCleared" class="signature-preview text-center">
-              <img :src="form.perawat_ttd" alt="TTD Perawat Ruangan" class="img-signature" />
-              <button @click="clearSign('perawat_ttd')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
-            </div>
-            <div v-else class="text-center">
-              <VueSignaturePad ref="perawat_ttd" :options="sigOption" class="signature-box-rme mx-auto" />
-              <button @click="saveSign('perawat_ttd')" class="btn-save mt-2">Simpan ✔</button>
-            </div>
-          <input
-            v-model="form.perawat_nama"
-            class="input-rme"
-            placeholder="Nama Perawat"
-          />
+      <div>
+        <label>Tanda Tangan Perawat</label>
+        <div v-if="form.perawat_ttd && !ttdPerawatCleared" class="signature-preview text-center">
+          <img :src="form.perawat_ttd" alt="TTD Perawat Ruangan" class="img-signature" />
+          <button @click="clearSign('perawat_ttd')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
         </div>
+        <div v-else class="text-center">
+          <VueSignaturePad ref="perawat_ttd" :options="sigOption" class="signature-box-rme mx-auto" />
+          <button @click="saveSign('perawat_ttd')" class="btn-save mt-2">Simpan ✔</button>
+        </div>
+        <input v-model="form.perawat_nama" class="input-rme" placeholder="Nama Perawat" />
       </div>
     </div>
   </div>
@@ -1102,10 +963,7 @@
       <span v-if="loadingSubmit">Menyimpan...</span>
       <span v-else>Simpan</span>
     </button>
-
-    <button class="btn-back" @click="$emit('back')" :disabled="loadingSubmit">
-      Kembali
-    </button>
+    <button class="btn-back" @click="$emit('back')" :disabled="loadingSubmit">Kembali</button>
   </div>
 </template>
 
@@ -1114,218 +972,60 @@ import axios from "axios";
 
 export default {
   name: "FormAssesmenAwalKeperawatanRawatInap",
+  emits: ['back'],
   props: {
-    selectedPatient: {
-      type: Object,
-      required: true,
-    },
-    editUuid: {
-        type: String,
-        default: null,
-    },
-    viewData: {
-      type: Object,
-      default: null,
-    },
-    editData: {
-      // ✨ Props untuk data edit
-      type: Object,
-      default: null,
-    },
+    selectedPatient: { type: Object, required: true },
+    editUuid: { type: String, default: null },
+    viewData: { type: Object, default: null },
+    editData: { type: Object, default: null },
   },
   data() {
     return {
       loadingSubmit: false,
       disabledSubmit: false,
       ttdPerawatCleared: false,
-      sigOption: {
-        penColor: "black",
-        backgroundColor: "white",
-      },
+      sigOption: { penColor: "black", backgroundColor: "white" },
+      drawing: false,
+      ctx: null,
+      backgroundImage: null,
       form: {
-        uuid: "", // ✨ Tambahkan field uuid untuk edit
-        uuid_pasien: "",
-        date: "",
-        time: "",
-        no_rm: "",
-        no_surat: "",
-        nama: "",
-        tanggal_lahir: "",
-        jenis_kelamin: "",
-        nik: "",
-        
-        // Alergi
-        tidak_ada_alergi: false,
-        alergi_obat_check: false,
-        alergi_obat: "",
-        alergi_obat_reaksi: "",
-        alergi_makanan_check: false,
-        alergi_makanan: "",
-        alergi_makanan_reaksi: "",
-        alergi_lainnya_check: false,
-        alergi_lainnya: "",
-        alergi_lainnya_reaksi: "",
-        diberitahu_alergi: "",
-        diberitahu_alergi_pukul: "",
-        gelang_alergi: "",
-        tidak_diketahui: false,
-        
-        // Keadaan Umum
-        kesadaran: "",
-        gcs_e: "",
-        gcs_v: "",
-        gcs_m: "",
-        tekanan_darah: "",
-        nadi: "",
-        rr: "",
-        spo2: "",
-        suhu: "",
-        berat_badan: "",
-        tinggi_badan: "",
-        lingkar_kepala: "",
-        lila: "",
-        
-        // Pemeriksaan Fisik
-        pernafasan: "",
-        pernafasan_ket: "",
-        penglihatan: "",
-        penglihatan_ket: "",
-        pendengaran: "",
-        pendengaran_ket: "",
-        bicara: "",
-        bicara_ket: "",
-        mulut: "",
-        mulut_ket: "",
-        refleks_menelan: "",
-        refleks_menelan_ket: "",
-        gastrointestinal: "",
-        gastrointestinal_ket: "",
-        defekasi: "",
-        defekasi_ket: "",
-        miksi: "",
-        miksi_ket: "",
-        pola_tidur: "",
-        pola_tidur_ket: "",
-        kulit: "",
-        kulit_lokasi: "",
-        
-        // Khusus Wanita
-        hamil: "",
-        hpht: "",
-        keluhan_menstruasi: "",
-        
-        // Risiko Jatuh
-        risiko_jatuh: "",
-        gelang_risiko_jatuh: false,
-        segitiga_risiko_jatuh: false,
-        risiko_jatuh_ke_dokter: "",
-        risiko_jatuh_ke_dokter_pukul: "",
-        
-        // Psikososial
-        psikologis_cemas: false,
-        psikologis_takut: false,
-        psikologis_marah: false,
-        psikologis_sedih: false,
-        psikologis_bunuh_diri: false,
-        psikologis_lainnya: "",
-        hubungan_keluarga: "",
-        tempat_tinggal: "",
-        kerabat_nama: "",
-        kerabat_hubungan: "",
-        kerabat_telepon: "",
-        bahasa_sehari: "",
-        bahasa_daerah_sebutkan: "",
-        perlu_penterjemah: "",
-        penterjemah_bahasa: "",
-        spiritual_kepercayaan: "",
-        
-        // Skala Norton
-        norton_fisik: "",
-        norton_mental: "",
-        norton_aktivitas: "",
-        norton_mobilitas: "",
-        norton_inkontinensia: "",
-        
-        // Skala Nyeri
-        keluhan_nyeri: "",
-        skala_nyeri: "",
-        nyeri_lokasi: "",
-        nyeri_menjalar: "",
-        nyeri_menjalar_ke: "",
-        onset_nyeri: "",
-        nyeri_ditusuk: false,
-        nyeri_ditikam: false,
-        nyeri_berdenyut: false,
-        nyeri_dipukul: false,
-        nyeri_kram: false,
-        nyeri_dibakar: false,
-        nyeri_tajam: false,
-        nyeri_tumpul: false,
-        nyeri_ditarik: false,
-        frekuensi_nyeri: "",
-        lama_nyeri: "",
-        nyeri_memburuk: "",
-        nyeri_berkurang: "",
-        
-        // Skrining Gizi
-        gizi_penurunan_bb: "",
-        gizi_asupan_makanan: "",
-        gizi_ke_ahli: "",
-        gizi_ke_ahli_pukul: "",
-        
-        // Status Fungsional
-        status_fungsional: "",
-        status_fungsional_bantuan: "",
-        fungsional_ke_dokter: "",
-        fungsional_ke_dokter_pukul: "",
-        
-        // Diagnosa Keperawatan
-        diagnosa_keperawatan: "",
-        diagnosa_tujuan: "",
-        diagnosa_intervensi: "",
-        
-        // Discharge Planning
-        estimasi_pemulangan: "",
-        tahu_rencana_pulang: "",
-        dp_berpengaruh: "",
-        dp_berpengaruh_ket: "",
-        dp_mobilitas: false,
-        dp_hygiene: false,
-        dp_obat: false,
-        dp_diet: false,
-        dp_makanan: false,
-        dp_lainnya_check: false,
-        dp_lainnya: "",
-        dp_ada_yang_membantu: "",
-        dp_yang_merawat: "",
-        dp_peralatan_medis: "",
-        dp_peralatan_medis_ket: "",
-        dp_alat_bantu: "",
-        dp_alat_bantu_ket: "",
-        dp_perawatan_lanjutan: "",
-        dp_perawatan_lanjutan_ket: "",
-        dp_masalah_khusus: "",
-        dp_masalah_khusus_ket: "",
-        dp_transportasi_aman: "",
-        dp_transportasi_ket: "",
-        dp_edukasi: "",
-        dp_edukasi_ket: "",
-        
-        // Perawat
-        tanggal_kaji: "",
-        pukul_kaji: "",
-        perawat_nama: "",
-        perawat_ttd: "",
-      },
+        uuid: "", uuid_pasien: "", nyeri_gambar: null, date: "", time: "", no_rm: "", no_surat: "",
+        nama: "", tanggal_lahir: "", jenis_kelamin: "", nik: "", tidak_ada_alergi: false,
+        alergi_obat_check: false, alergi_obat: "", alergi_obat_reaksi: "", alergi_makanan_check: false,
+        alergi_makanan: "", alergi_makanan_reaksi: "", alergi_lainnya_check: false, alergi_lainnya: "",
+        alergi_lainnya_reaksi: "", diberitahu_alergi: "", diberitahu_alergi_pukul: "", gelang_alergi: "",
+        tidak_diketahui: false, kesadaran: "", gcs_e: "", gcs_v: "", gcs_m: "", tekanan_darah: "",
+        nadi: "", rr: "", spo2: "", suhu: "", berat_badan: "", tinggi_badan: "", lingkar_kepala: "",
+        lila: "", pernafasan: "", pernafasan_ket: "", penglihatan: "", penglihatan_ket: "",
+        pendengaran: "", pendengaran_ket: "", bicara: "", bicara_ket: "", mulut: "", mulut_ket: "",
+        refleks_menelan: "", refleks_menelan_ket: "", gastrointestinal: "", gastrointestinal_ket: "",
+        defekasi: "", defekasi_ket: "", miksi: "", miksi_ket: "", pola_tidur: "", pola_tidur_ket: "",
+        kulit: "", kulit_lokasi: "", hamil: "", hpht: "", keluhan_menstruasi: "", risiko_jatuh: "",
+        gelang_risiko_jatuh: false, segitiga_risiko_jatuh: false, risiko_jatuh_ke_dokter: "",
+        risiko_jatuh_ke_dokter_pukul: "", psikologis_cemas: false, psikologis_takut: false,
+        psikologis_marah: false, psikologis_sedih: false, psikologis_bunuh_diri: false,
+        psikologis_lainnya: "", hubungan_keluarga: "", tempat_tinggal: "", kerabat_nama: "",
+        kerabat_hubungan: "", kerabat_telepon: "", bahasa_sehari: "", bahasa_daerah_sebutkan: "",
+        perlu_penterjemah: "", penterjemah_bahasa: "", spiritual_kepercayaan: "", norton_fisik: "",
+        norton_mental: "", norton_aktivitas: "", norton_mobilitas: "", norton_inkontinensia: "",
+        keluhan_nyeri: "", skala_nyeri: "", nyeri_lokasi: "", nyeri_menjalar: "", nyeri_menjalar_ke: "",
+        onset_nyeri: "", nyeri_ditusuk: false, nyeri_ditikam: false, nyeri_berdenyut: false,
+        nyeri_dipukul: false, nyeri_kram: false, nyeri_dibakar: false, nyeri_tajam: false,
+        nyeri_tumpul: false, nyeri_ditarik: false, frekuensi_nyeri: "", lama_nyeri: "",
+        nyeri_memburuk: "", nyeri_berkurang: "", gizi_penurunan_bb: "", gizi_asupan_makanan: "",
+        gizi_ke_ahli: "", gizi_ke_ahli_pukul: "", status_fungsional: "", status_fungsional_bantuan: "",
+        fungsional_ke_dokter: "", fungsional_ke_dokter_pukul: "", diagnosa_keperawatan: "",
+        diagnosa_tujuan: "", diagnosa_intervensi: "", estimasi_pemulangan: "", tahu_rencana_pulang: "",
+        dp_berpengaruh: "", dp_berpengaruh_ket: "", dp_mobilitas: false, dp_hygiene: false,
+        dp_obat: false, dp_diet: false, dp_makanan: false, dp_lainnya_check: false, dp_lainnya: "",
+        dp_ada_yang_membantu: "", dp_yang_merawat: "", dp_peralatan_medis: "", dp_peralatan_medis_ket: "",
+        dp_alat_bantu: "", dp_alat_bantu_ket: "", dp_perawatan_lanjutan: "", dp_perawatan_lanjutan_ket: "",
+        dp_masalah_khusus: "", dp_masalah_khusus_ket: "", dp_transportasi_aman: "", dp_transportasi_ket: "",
+        dp_edukasi: "", dp_edukasi_ket: "", tanggal_kaji: "", pukul_kaji: "", perawat_nama: "", perawat_ttd: ""
+      }
     };
   },
-
-
   computed: {
-    isEditMode() {
-      console.log('p', this.state);
-        return !!this.editData.uuid;
-      },
     nortonScore() {
       const fisik = parseInt(this.form.norton_fisik) || 0;
       const mental = parseInt(this.form.norton_mental) || 0;
@@ -1334,121 +1034,103 @@ export default {
       const inkontinensia = parseInt(this.form.norton_inkontinensia) || 0;
       return fisik + mental + aktivitas + mobilitas + inkontinensia;
     },
-    
     giziScore() {
-      const bb = parseInt(this.form.gizi_penurunan_bb) || 0;
-      const asupan = parseInt(this.form.gizi_asupan_makanan) || 0;
-      return bb + asupan;
-    },
-
-    
-  },
-
-  async mounted() {
-
-    await this.fetchTahunAkreditasi();
-    console.log('editmode', this.viewData);
-    if(this.viewData) {
-      this.disabledSubmit = true;
-      this.loadDataForEdit();
-    } else if (this.editData) {
-      // ✨ LOAD DATA UNTUK EDIT
-      console.log("edit");
-      this.disabledSubmit = false;
-
-      this.loadDataForEdit();
-    } else {
-      this.disabledSubmit = false; 
-      // CREATE MODE
-      this.setDataForm();
+      return (parseInt(this.form.gizi_penurunan_bb) || 0) + (parseInt(this.form.gizi_asupan_makanan) || 0);
     }
   },
-
+  async mounted() {
+    await this.fetchTahunAkreditasi();
+    if (this.viewData) { this.disabledSubmit = true; this.loadDataForEdit(); }
+    else if (this.editData) { this.disabledSubmit = false; this.loadDataForEdit(); }
+    else { this.disabledSubmit = false; this.setDataForm(); }
+    this.$nextTick(() => { this.initCanvas(); });
+  },
   methods: {
     async fetchTahunAkreditasi() {
       try {
         const response = await axios.get('/api/tahun-akreditasi');
         const tahun = response.data.tahun || '22';
-
-        if (!this.form.no_surat) {
-          this.form.no_surat = `RM 7.8/AAKRI/${tahun}`;
-        }
-
-        console.log("✅ Tahun akreditasi:", tahun);
-        console.log("✅ No surat:", this.form.no_surat);
+        if (!this.form.no_surat) this.form.no_surat = `RM 7.8/AAKRI/${tahun}`;
       } catch (error) {
-        console.error("❌ Error fetch tahun:", error);
-        if (!this.form.no_surat) {
-          this.form.no_surat = 'RM 7.8/AAKRI/22';
-        }
+        if (!this.form.no_surat) this.form.no_surat = 'RM 7.8/AAKRI/22';
       }
+    },
+    initCanvas() {
+    const canvas = this.$refs.canvas;
+    if (!canvas) {
+        console.log('Waiting for canvas...');
+        setTimeout(() => this.initCanvas(), 200);
+        return;
+    }
+
+    console.log('Canvas found, initializing...');
+    this.ctx = canvas.getContext("2d");
+    this.ctx.strokeStyle = "red";
+    this.ctx.lineWidth = 3;
+    this.ctx.lineCap = "round";
+
+    // Load background
+    this.loadBackgroundImage();
+    },
+    loadBackgroundImage() {
+    if (!this.ctx || !this.$refs.canvas) {
+        setTimeout(() => this.loadBackgroundImage(), 100);
+        return;
+    }
+
+    const img = new Image();
+    img.src = '/images/body_diagram.svg'; // path Anda sudah benar
+
+    img.onload = () => {
+        console.log('Background loaded successfully');
+        this.backgroundImage = img;
+        this.ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+        this.ctx.drawImage(img, 0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+        // Kembalikan style menggambar
+        this.ctx.strokeStyle = "red";
+        this.ctx.lineWidth = 3;
+        this.ctx.lineCap = "round";
+
+        // Restore gambar yang sudah disimpan sebelumnya (jika ada)
+        if (this.form.nyeri_gambar) {
+        const savedImg = new Image();
+        savedImg.onload = () => {
+            this.ctx.drawImage(savedImg, 0, 0);
+        };
+        savedImg.src = this.form.nyeri_gambar;
+        }
+    };
+
+    img.onerror = (err) => {
+        console.error('Failed to load image:', err);
+        // Fallback biar canvas tetap bisa digambar
+        this.ctx.fillStyle = "#f5f5f5";
+        this.ctx.fillRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+        this.ctx.strokeStyle = "red";
+        this.ctx.lineWidth = 3;
+        this.ctx.lineCap = "round";
+    };
     },
     async loadDataForEdit() {
       try {
-        const dataSource = this.editData;
-
-        // Jika data lengkap sudah ada di editData props
-        if (dataSource.uuid) {
-          // Fetch detail dari server untuk data lengkap
-          const response = await axios.get(
-             `/master/rekammedis/lampiran/${dataSource.uuid}?type=asesmen_keperawatan_rawat_inap`
-          );
-          console.log("123", response.data)
+        if (this.editData?.uuid) {
+          const response = await axios.get(`/master/rekammedis/lampiran/${this.editData.uuid}?type=asesmen_keperawatan_rawat_inap`);
           if (response.data.status) {
-            // Populate form dengan data dari server
-            Object.keys(this.form).forEach((key) => {
-              if (response.data.data[key] !== undefined) {
-                this.form[key] = response.data.data[key];
-              }
-            });
-            this.$nextTick(() => {
-        if (this.form.perawat_ttd && this.$refs.perawat_ttd) {
-          this.$refs.perawat_ttd.fromDataURL(this.form.perawat_ttd);
-        }
-      });
-            // ✨ Load signature jika ada
-            this.$nextTick(() => {
-              const flagMap = {
-                perawat_ttd: 'ttdPerawatCleared',
-              };
-            
-              Object.keys(flagMap).forEach(refName => {
-                if (this.form[refName]) {
-                  this[flagMap[refName]] = false;
-                }
-              });
+            Object.keys(this.form).forEach(key => {
+              if (response.data.data[key] !== undefined) this.form[key] = response.data.data[key];
             });
           }
         }
-
-        // Alternative: Langsung gunakan editData jika sudah lengkap
-        // Object.keys(this.form).forEach(key => {
-        //   if (this.editData[key] !== undefined) {
-        //     this.form[key] = this.editData[key];
-        //   }
-        // });
-      } catch (error) {
-        console.error("Error loading data:", error);
-        alert("Gagal memuat data untuk edit!");
-        this.$emit("back");
-      }
+      } catch (error) { console.error("Error loading data:", error); alert("Gagal memuat data untuk edit!"); this.$emit("back"); }
     },
-    formatDate(d) {
-      return d.toISOString().split("T")[0];
-    },
-
-    formatTime(d) {
-      return d.toTimeString().substring(0, 5);
-    },
-
+    formatDate(d) { return d.toISOString().split("T")[0]; },
+    formatTime(d) { return d.toTimeString().substring(0, 5); },
     setDataForm() {
       const now = new Date();
       this.form.date = this.formatDate(now);
       this.form.time = this.formatTime(now);
       this.form.tanggal_kaji = this.formatDate(now);
       this.form.pukul_kaji = this.formatTime(now);
-      
-      // Set data pasien dari props
       this.form.uuid_pasien = this.selectedPatient?.uuid;
       this.form.no_rm = this.selectedPatient?.rekam_medis;
       this.form.nama = this.selectedPatient?.nama;
@@ -1456,7 +1138,6 @@ export default {
       this.form.jenis_kelamin = this.selectedPatient?.jenis_kelamin;
       this.form.nik = this.selectedPatient?.no_ktp;
     },
-
     clearAlergi() {
       if (this.form.tidak_ada_alergi) {
         this.form.alergi_obat_check = false;
@@ -1470,421 +1151,155 @@ export default {
         this.form.alergi_lainnya_reaksi = "";
       }
     },
-
     saveSign(refName) {
       const pad = this.$refs[refName];
-
-      if (!pad) {
-        console.error("REF tidak ditemukan:", refName);
-        return;
-      }
-
+      if (!pad) return;
       const { isEmpty, data } = pad.saveSignature();
-      
-      if (isEmpty) {
-        alert("Tanda tangan masih kosong!");
-        return;
-      }
-    
-      const flagMap = {
-        perawat_ttd: 'ttdPerawatCleared',
-      };
-    
-      if (flagMap[refName] !== undefined) {
-        this[flagMap[refName]] = false;
-      }
-    
+      if (isEmpty) { alert("Tanda tangan masih kosong!"); return; }
       this.form[refName] = data;
-      console.log("TTD saved:", refName);
+      if (refName === 'perawat_ttd') this.ttdPerawatCleared = false;
     },
-    
     clearSign(refName) {
-      const flagMap = {
-        perawat_ttd: 'ttdPerawatCleared',
-      };
-    
-      if (flagMap[refName] !== undefined) {
-        this[flagMap[refName]] = true;
-        this.form[refName] = "";
-      }
-    
-      this.$nextTick(() => {
-        const pad = this.$refs[refName];
-        if (pad) pad.clearSignature();
-      });
+      this.form[refName] = "";
+      if (refName === 'perawat_ttd') this.ttdPerawatCleared = true;
+      this.$nextTick(() => { const pad = this.$refs[refName]; if (pad) pad.clearSignature(); });
     },
-
-    async submitForm() {
-      // Validasi basic
-      if (!this.form.kesadaran) {
-        alert("Mohon lengkapi data Kesadaran!");
+    startDrawing(e) {
+      if (!this.ctx) return;
+      this.drawing = true;
+      const rect = this.$refs.canvas.getBoundingClientRect();
+      const scaleX = this.$refs.canvas.width / rect.width;
+      const scaleY = this.$refs.canvas.height / rect.height;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const x = (clientX - rect.left) * scaleX;
+      const y = (clientY - rect.top) * scaleY;
+      this.ctx.beginPath();
+      this.ctx.moveTo(x, y);
+    },
+    draw(e) {
+      if (!this.drawing || !this.ctx) return;
+      e.preventDefault();
+      const rect = this.$refs.canvas.getBoundingClientRect();
+      const scaleX = this.$refs.canvas.width / rect.width;
+      const scaleY = this.$refs.canvas.height / rect.height;
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      const x = (clientX - rect.left) * scaleX;
+      const y = (clientY - rect.top) * scaleY;
+      this.ctx.lineTo(x, y);
+      this.ctx.stroke();
+    },
+    startDrawingTouch(e) { e.preventDefault(); this.startDrawing(e); },
+    drawTouch(e) { e.preventDefault(); this.draw(e); },
+    stopDrawing() { if (!this.drawing) return; this.drawing = false; this.saveCanvas(); },
+    clearCanvas() {
+    if (!this.ctx || !this.backgroundImage) {
+        // Jika background belum load, clear saja
+        if (this.ctx) {
+        this.ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+        }
+        this.form.nyeri_gambar = null;
         return;
-      }
+    }
 
+    // Clear dan redraw background
+    this.ctx.clearRect(0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+    this.ctx.drawImage(this.backgroundImage, 0, 0, this.$refs.canvas.width, this.$refs.canvas.height);
+    this.ctx.strokeStyle = "red";
+    this.ctx.lineWidth = 3;
+    this.ctx.lineCap = "round";
+    this.form.nyeri_gambar = null;
+    },
+    saveCanvas() { if (this.$refs.canvas) this.form.nyeri_gambar = this.$refs.canvas.toDataURL("image/png"); },
+    async submitForm() {
+      if (!this.form.kesadaran) { alert("Mohon lengkapi data Kesadaran!"); return; }
       this.loadingSubmit = true;
-
       try {
         const fd = new FormData();
-
-        Object.keys(this.form).forEach((key) => {
-  if (this.form[key] === null) {
-    fd.append(key, "");
-  } else {
-    fd.append(key, this.form[key]);
+        Object.keys(this.form).forEach(key => fd.append(key, this.form[key] === null ? "" : this.form[key]));
+        const response = await axios.post("/master/pasien/asesmen-awal-keperawatan-rawat-inap", fd, { headers: { "Content-Type": "multipart/form-data" } });
+        if (response.data.status) { alert(response.data.message); this.$emit("back"); }
+      } catch (error) { alert("Gagal menyimpan data! " + (error.response?.data?.message || error.message)); }
+      finally { this.loadingSubmit = false; }
+    }
   }
-});
-
-        const response = await axios.post(
-          "/master/pasien/asesmen-awal-keperawatan-rawat-inap",
-          fd,
-          { headers: { "Content-Type": "multipart/form-data" } }
-        );
-
-        console.log("BERHASIL:", response.data);
-        
-        if (response.data.status) {
-          alert(response.data.message);
-          this.$emit("back");
-        }
-      } catch (error) {
-        console.error("ERROR:", error.response?.data || error);
-        alert("Gagal menyimpan data! " + (error.response?.data?.message || error.message));
-      } finally {
-        this.loadingSubmit = false;
-      }
-    },
-  },
 };
 </script>
 
 <style scoped>
-.box-rme {
-  border: 1px solid #dcdcdc;
-  padding: 20px;
-  border-radius: 6px;
-  background: white;
+.box-rme { border: 1px solid #dcdcdc; padding: 20px; border-radius: 6px; background: white; }
+.section-title-rme { font-weight: bold; margin-bottom: 15px; color: #2d74b7; border-bottom: 2px solid #2d74b7; padding-bottom: 8px; }
+.input-rme { width: 100%; border: 1px solid #ccc; border-radius: 4px; padding: 6px 10px; background: #f9f9f9; font-size: 14px; }
+.input-rme:focus { outline: none; border-color: #2d74b7; background: white; }
+.input-rme:disabled { background: #e9ecef; cursor: not-allowed; }
+.view-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 251, 251, 0.1); z-index: 10; cursor: not-allowed; }
+.textarea-rme { width: 100%; min-height: 80px; border: 1px solid #ccc; border-radius: 4px; padding: 8px 10px; font-family: inherit; font-size: 14px; resize: vertical; }
+.info-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.info-table th, .info-table td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+.info-table th { background: #f0f0f0; font-weight: bold; color: #333; }
+.info-table .text-center { text-align: center; }
+.signature-box-rme { width: 100%; max-width: 300px; height: 150px; border: 2px solid #999; margin: 10px auto; display: block; background: white; }
+.signature-preview { width: 100%; background: white; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
+.img-signature { max-width: 100%; height: 180px; object-fit: contain; border: 1px dashed #ccc; background: white; display: block; margin: 0 auto; }
+.btn-save { background: #1e88e5; color: white; padding: 6px 16px; border: none; border-radius: 4px; margin: 10px 0; cursor: pointer; font-weight: bold; }
+.btn-save-form { background: #0288d1; color: white; padding: 10px 24px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; }
+.btn-back { background: #ff9800; color: white; padding: 10px 24px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; }
+.btn-clear { background: #f44336; color: white; padding: 6px 16px; border: none; border-radius: 4px; cursor: pointer; font-weight: 500; margin-left: 10px; }
+.action-footer { margin-top: 30px; padding: 20px; display: flex; justify-content: flex-end; gap: 12px; background: #f8f9fa; border-top: 2px solid #ddd; position: sticky; bottom: 0; z-index: 10; }
+.checkbox-label { display: inline-block; margin-right: 15px; margin-bottom: 5px; }
+label { display: inline-block; margin-right: 15px; margin-bottom: 5px; font-size: 14px; }
+label input { margin-right: 5px; }
+.small { font-size: 12px; color: #666; }
+.fw-bold { font-weight: bold; }
+.text-center { text-align: center; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 16px; }
+.mb-4 { margin-bottom: 24px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 16px; }
+.mt-4 { margin-top: 24px; }
+.py-4 { padding-top: 24px; padding-bottom: 24px; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 15px; }
+.row { display: flex; flex-wrap: wrap; margin: 0 -8px; }
+.col-md-3, .col-md-4, .col-md-6, .col-md-12 { padding: 0 8px; width: 100%; }
+@media (min-width: 768px) { .col-md-3 { width: 25%; } .col-md-4 { width: 33.333%; } .col-md-6 { width: 50%; } .col-md-12 { width: 100%; } }
+.nyeri-scale-section { background: #f8f9fa; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px; }
+.scale-visual-container { margin: 20px 0; }
+.scale-bar { position: relative; margin-bottom: 30px; }
+.scale-gradient { height: 30px; background: linear-gradient(to right, #4CAF50 0%, #8BC34A 20%, #FFEB3B 40%, #FF9800 60%, #F44336 80%, #9C27B0 100%); border-radius: 4px; margin-bottom: 10px; }
+.scale-numbers { display: flex; justify-content: space-between; padding: 0 5px; font-weight: bold; margin-bottom: 5px; }
+.scale-numbers span { width: 9.09%; text-align: center; font-size: 14px; }
+.scale-labels { display: flex; justify-content: space-between; }
+.scale-labels span { font-size: 11px; text-align: center; color: #666; }
+.label-start { width: 20%; }
+.label-middle { width: 20%; text-align: center; }
+.label-end { width: 30%; text-align: right; }
+.face-icons { display: flex; justify-content: space-between; margin-top: 20px; padding: 10px; }
+.face-item { text-align: center; padding: 10px; border-radius: 8px; transition: all 0.3s; width: 18%; }
+.face-item.active { background: #e3f2fd; border: 2px solid #2196F3; transform: scale(1.1); }
+.face-icon { font-size: 36px; margin-bottom: 8px; }
+.canvas-wrapper {
+  position: relative;
+  width: 400px;
+  height: 600px;
+  margin: 20px auto;
+  border: 2px solid #2d74b7;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-.section-title-rme {
-  font-weight: bold;
-  margin-bottom: 15px;
-  color: #2d74b7;
-  border-bottom: 2px solid #2d74b7;
-  padding-bottom: 8px;
-}
-
-.input-rme {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 6px 10px;
-  background: #f9f9f9;
-  font-size: 14px;
-}
-
-.input-rme:focus {
-  outline: none;
-  border-color: #2d74b7;
-  background: white;
-}
-
-.input-rme:disabled {
-  background: #e9ecef;
-  cursor: not-allowed;
-}
-.view-overlay {
+.drawing-canvas {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(255, 251, 251, 0.1); /* transparan */
-  z-index: 10;
-  cursor: not-allowed;
+  cursor: crosshair;
+  border-radius: 6px;
+  background: transparent;
 }
-.textarea-rme {
-  width: 100%;
-  min-height: 80px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px 10px;
-  font-family: inherit;
-  font-size: 14px;
-  resize: vertical;
-}
-
-.textarea-rme:focus {
-  outline: none;
-  border-color: #2d74b7;
-}
-
-.info-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-
-.info-table th,
-.info-table td {
-  border: 1px solid #ccc;
-  padding: 10px;
-  text-align: left;
-}
-
-.info-table th {
-  background: #f0f0f0;
-  font-weight: bold;
-  color: #333;
-}
-.signature2-box-rme {
-  width: 320px !important;
-  height: 280px !important;
-  border: 2px solid #999;
-  border-radius: 4px;
-  display: block;
-  margin: 0 auto;
-}
-
-.info-table td {
-  vertical-align: top;
-}
-
-.info-table .text-center {
-  text-align: center;
-}
-
-.signature-box-rme {
-  width: 100%;
-  max-width: 300px;
-  height: 150px;
-  border: 2px solid #999;
-  margin: 10px auto;
-  display: block;
-  background: white;
-}
-
-.signature-section {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.sign-box {
-  text-align: center;
-  width: 100%;
-  max-width: 350px;
-}
-
-.sign-box label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 8px;
-}
-
-.btn-save {
-  background: #1e88e5;
-  color: white;
-  padding: 6px 16px;
-  border: none;
-  border-radius: 4px;
-  margin: 10px 0;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.btn-save:hover {
-  background: #1565c0;
-}
-
-.btn-save-form {
-  background: #0288d1;
-  color: white;
-  padding: 10px 24px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.signature-preview {
-  width: 100%;
-  background: white;
-  padding: 10px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-}
-
-.img-signature {
-  max-width: 100%;
-  height: 180px;
-  object-fit: contain;
-  border: 1px dashed #ccc;
-  background: white;
-  display: block;
-  margin: 0 auto;
-}
-
-.btn-clear {
-  background: #f44336;
-  color: white;
-  padding: 6px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
-  margin-left: 10px;
-}
-
-.btn-clear:hover {
-  background: #d32f2f;
-}
-
-.btn-save-form:hover {
-  background: #0277bd;
-}
-
-.btn-save-form:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.btn-back {
-  background: #ff9800;
-  color: white;
-  padding: 10px 24px;
-  border: none;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 16px;
-}
-
-.btn-back:hover {
-  background: #f57c00;
-}
-
-.btn-back:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-}
-
-.action-footer {
-  margin-top: 30px;
-  padding: 20px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  background: #f8f9fa;
-  border-top: 2px solid #ddd;
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
-}
-
-.checkbox-label {
-  display: inline-block;
-  margin-right: 15px;
-  margin-bottom: 5px;
-}
-
-label {
-  display: inline-block;
-  margin-right: 15px;
-  margin-bottom: 5px;
-  font-size: 14px;
-}
-
-label input[type="checkbox"],
-label input[type="radio"] {
-  margin-right: 5px;
-}
-
-.small {
-  font-size: 12px;
-  color: #666;
-}
-
-.fw-bold {
-  font-weight: bold;
-}
-
-.fw-semibold {
-  font-weight: 600;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.mb-2 {
-  margin-bottom: 8px;
-}
-
-.mb-3 {
-  margin-bottom: 16px;
-}
-
-.mb-4 {
-  margin-bottom: 24px;
-}
-
-.mt-1 {
-  margin-top: 4px;
-}
-
-.mt-2 {
-  margin-top: 8px;
-}
-
-.mt-3 {
-  margin-top: 16px;
-}
-
-.mt-4 {
-  margin-top: 24px;
-}
-
-.py-4 {
-  padding-top: 24px;
-  padding-bottom: 24px;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 15px;
-}
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0 -8px;
-}
-
-.col-md-3,
-.col-md-4,
-.col-md-6,
-.col-md-12 {
-  padding: 0 8px;
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .col-md-3 {
-    width: 25%;
-  }
-  
-  .col-md-4 {
-    width: 33.333%;
-  }
-  
-  .col-md-6 {
-    width: 50%;
-  }
-  
-  .col-md-12 {
-    width: 100%;
-  }
-}
+.btn-clear-canvas { background: #ff9800; color: white; padding: 6px 16px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px; }
+.btn-clear-canvas:hover { background: #f57c00; }
 </style>

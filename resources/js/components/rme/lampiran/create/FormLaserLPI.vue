@@ -140,20 +140,54 @@
         </div>
       </div>
 
+       <!-- ================= DIAGRAM MATA ================= -->
+        <div class="box-rme mb-4">
+            <h5 class="section-title-rme text-center mb-3">
+                Diagram Tindakan
+            </h5>
+
+            <div class="eye-diagram-container">
+
+                <div class="eye-svg-wrapper">
+                    <!-- BACKGROUND SVG -->
+                    <img
+                        src="/images/eye-prp-background.svg"
+                        alt="Diagram Mata"
+                        class="eye-svg-bg"
+                    />
+
+                    <!-- CORETAAN DOKTER -->
+                    <VueSignaturePad
+                        ref="eyeDiagram"
+                        :options="eyeSigOption"
+                        class="eye-canvas-overlay"
+                    />
+                </div>
+
+                <div class="eye-action">
+                    <button
+                        class="btn btn-sm btn-outline-danger"
+                        @click="clearEyeDiagram"
+                    >
+                        Hapus Diagram
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
       <!-- ================= SIGNATURE AREA ================= -->
       <div class="signature-container">
-        <div class="signature-section">
-          <!-- DPJP/Dokter -->
-          <div class="sign-box">
-            <label>DPJP / Dokter yang Melakukan Tindakan</label>
+        <h5 class="section-title-rme text-center mb-4">Tanda Tangan DPJP / Dokter</h5>
+
+        <div class="signature-section-single">
+          <div class="sign-box-center">
+            <label>6. Dokter Penanggung Jawab Pelayanan</label>
 
             <!-- Preview TTD yang sudah ada -->
-            <div
-              v-if="form.ttd_dokter && !signatureCleared.ttd_dokter"
-              class="signature-preview"
-            >
+            <div v-if="form.ttd_dokter && !signatureCleared" class="signature-preview">
               <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
-              <button @click="clearSignature('ttd_dokter')" class="btn-clear">
+              <button @click="clearSignature()" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
             </div>
@@ -165,14 +199,25 @@
                 :options="sigOption"
                 class="signature-box-rme"
               />
-              <button @click="saveSign('ttd_dokter')" class="btn-save">Simpan ✔</button>
+              <button @click="saveSign()" class="btn-save">Simpan ✔</button>
             </div>
 
-            <input
-              v-model="form.nama_dokter"
-              class="input-rme mt-2"
-              placeholder="Nama Jelas DPJP/Dokter"
-            />
+            <label class="mt-3"
+              >7. Nama Dokter : <span class="text-danger">*</span></label
+            >
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_dokter" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
           </div>
         </div>
       </div>
@@ -220,13 +265,17 @@ export default {
       loadingData: false,
       isEditMode: false,
       disabledSubmit: false,
-      signatureCleared: {
-        ttd_dokter: false,
-      },
+      signatureCleared: false,
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
       },
+      eyeSigOption: {
+      penColor: "#d32f2f", // merah medis
+      backgroundColor: "rgba(0,0,0,0)", // transparan
+      minWidth: 1,
+      maxWidth: 2,
+    },
       form: {
         uuid: "",
         uuid_pasien: "",
@@ -255,6 +304,8 @@ export default {
 
         mata_kanan: false,
         mata_kiri: false,
+
+        diagram_mata: "",
       },
     };
   },
@@ -279,6 +330,7 @@ export default {
   },
 
   async mounted() {
+    await this.fetchDokter();
     await this.fetchTahunAkreditasi();
     console.log("🟢 COMPONENT - Mounted");
     console.log("🟢 COMPONENT - editData:", this.editData);
@@ -311,6 +363,14 @@ export default {
         if (!this.form.no_surat) {
           this.form.no_surat = 'RM 10.3/FTLPI/22';
         }
+      }
+    },
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
       }
     },
     setDataForm() {
@@ -375,6 +435,26 @@ export default {
             this.form.tanggal_lahir = this.formatDate(new Date(data.tanggal_lahir));
           }
 
+          // 🔥 RESET signatureCleared jika ada TTD
+      if (data.ttd_dokter) {
+        this.signatureCleared = false;
+      }
+
+      // 🔥 TAMBAHKAN: Render ulang TTD & Diagram
+      this.$nextTick(() => {
+        // Render TTD Dokter
+        if (this.form.ttd_dokter && this.$refs.ttd_dokter) {
+          this.$refs.ttd_dokter.clearSignature();
+          this.$refs.ttd_dokter.fromDataURL(this.form.ttd_dokter);
+        }
+
+        // Render Diagram Mata
+        if (this.form.diagram_mata && this.$refs.eyeDiagram) {
+          this.$refs.eyeDiagram.clearSignature();
+          this.$refs.eyeDiagram.fromDataURL(this.form.diagram_mata);
+        }
+      });
+
           console.log("Data loaded for edit:", this.form);
         }
       } catch (error) {
@@ -386,18 +466,16 @@ export default {
       }
     },
 
-    clearSignature(refName) {
-      this.signatureCleared[refName] = true;
-      this.form[refName] = "";
+   clearSignature() {
+  this.form.ttd_dokter = "";
 
-      // Reset signature pad di next tick
-      this.$nextTick(() => {
-        const pad = this.$refs[refName];
-        if (pad) {
-          pad.clearSignature();
-        }
-      });
-    },
+  this.$nextTick(() => {
+    const pad = this.$refs.ttd_dokter;
+    if (pad) {
+      pad.clearSignature();
+    }
+  });
+},
 
     formatDate(date) {
       if (!date) return "";
@@ -405,26 +483,38 @@ export default {
       return d.toISOString().split("T")[0];
     },
 
-    saveSign(refName) {
-      const pad = this.$refs[refName];
-
+    saveSign() {
+      const pad = this.$refs.ttd_dokter;
       if (!pad) {
-        console.error("REF tidak ditemukan:", refName);
+        console.error("REF tidak ditemukan: ttd_dokter");
         return;
       }
-
       const { isEmpty, data } = pad.saveSignature();
-
       if (isEmpty) {
         alert("Tanda tangan masih kosong!");
         return;
       }
-
-      this.form[refName] = data;
-      console.log("TTD saved:", refName);
+      this.form.ttd_dokter = data;
     },
 
+    clearEyeDiagram() {
+        if (this.$refs.eyeDiagram) {
+        this.$refs.eyeDiagram.clearSignature()
+        }
+    },
+
+    getEyeDiagramImage() {
+        const pad = this.$refs.eyeDiagram;
+
+        if (!pad || pad.isEmpty()) {
+            return null;
+        }
+
+        return pad.saveSignature().data;
+        },
+
     async submitForm() {
+        this.form.diagram_mata = this.getEyeDiagramImage();
       // Validasi
       if (!this.form.tanggal_lahir) {
         alert("Mohon lengkapi tanggal lahir pasien!");
@@ -495,7 +585,9 @@ export default {
   margin: 0 auto;
   padding: 20px;
 }
-
+.mb-3 {
+  margin-bottom: 15px;
+}
 /* ================= TYPOGRAPHY ================= */
 .fw-bold {
   font-weight: 700;
@@ -946,5 +1038,85 @@ label {
 }
 .form-wrapper {
   position: relative;
+}
+
+/* ================= SINGLE EYE DIAGRAM (FINAL) ================= */
+
+/* CONTAINER UTAMA */
+.eye-diagram-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* WRAPPER SVG + CANVAS */
+.eye-svg-wrapper {
+  position: relative;
+  width: 500px;        /* HARUS SAMA DENGAN PDF */
+  height: 250px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* SVG BACKGROUND */
+.eye-svg-bg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* CANVAS CORETAAN */
+.eye-canvas-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+/* AREA TOMBOL */
+.eye-action {
+  margin-top: 12px;
+}
+
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
 }
 </style>

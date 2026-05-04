@@ -536,13 +536,15 @@ export default {
     },
 
     clearSignature() {
-      this.signatureCleared = true;
-      this.form.ttd_dokter = "";
-      this.$nextTick(() => {
-        const pad = this.$refs.ttd_dokter;
-        if (pad) pad.clearSignature();
-      });
-    },
+  this.form.ttd_dokter = "";
+
+  this.$nextTick(() => {
+    const pad = this.$refs.ttd_dokter;
+    if (pad) {
+      pad.clearSignature();
+    }
+  });
+},
 
     formatDate(date) {
       if (!date) return "";
