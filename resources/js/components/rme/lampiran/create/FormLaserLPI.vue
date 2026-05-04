@@ -153,6 +153,9 @@
               class="signature-preview"
             >
               <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+              <p v-if="form.dokter_ttd_timestamp" class="timestamp-ttd">
+                Ditandatangani: {{ form.dokter_ttd_timestamp }}
+              </p>
               <button @click="clearSignature('ttd_dokter')" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
@@ -168,11 +171,25 @@
               <button @click="saveSign('ttd_dokter')" class="btn-save">Simpan ✔</button>
             </div>
 
-            <input
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.nama_dokter" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+            </div>
+
+            <!-- <input
               v-model="form.nama_dokter"
               class="input-rme mt-2"
               placeholder="Nama Jelas DPJP/Dokter"
-            />
+            /> -->
           </div>
         </div>
       </div>
@@ -252,6 +269,8 @@ export default {
         // Tanda Tangan
         ttd_dokter: "",
         nama_dokter: "",
+        dokter_ttd_timestamp: "",
+
 
         mata_kanan: false,
         mata_kiri: false,
@@ -279,6 +298,7 @@ export default {
   },
 
   async mounted() {
+    await this.fetchDokter();
     await this.fetchTahunAkreditasi();
     console.log("🟢 COMPONENT - Mounted");
     console.log("🟢 COMPONENT - editData:", this.editData);
@@ -295,6 +315,14 @@ export default {
   },
 
   methods: {
+    async fetchDokter() {
+      try {
+        const response = await axios.get('/master/pasien/master-dokter-all');
+        this.listDokter = response.data.data;
+      } catch (error) {
+        console.error('Gagal memuat data dokter:', error);
+      }
+    },
     async fetchTahunAkreditasi() {
       try {
         const response = await axios.get('/api/tahun-akreditasi');
@@ -390,6 +418,9 @@ export default {
       this.signatureCleared[refName] = true;
       this.form[refName] = "";
 
+      if (refName === 'ttd_dokter') this.form.dokter_ttd_timestamp = "";
+
+
       // Reset signature pad di next tick
       this.$nextTick(() => {
         const pad = this.$refs[refName];
@@ -421,6 +452,15 @@ export default {
       }
 
       this.form[refName] = data;
+      this.signatureCleared[refName] = false;
+
+      const now = new Date();
+      const timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    
+      if (refName === 'ttd_dokter') this.form.dokter_ttd_timestamp = timestamp
       console.log("TTD saved:", refName);
     },
 
@@ -535,6 +575,45 @@ export default {
 hr {
   margin: 20px 0;
   border: 2px solid #000;
+}
+
+.dropdown-dokter {
+  position: relative;
+  width: 100%;
+}
+
+.form-select-dokter {
+  width: 100%;
+  padding: 10px 40px 10px 14px;
+  font-size: 14px;
+  color: #2d3748;
+  background-color: #fff;
+  border: 1.5px solid #cbd5e0;
+  border-radius: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+.form-select-dokter:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-select-dokter:hover {
+  border-color: #a0aec0;
+}
+
+.dropdown-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #718096;
+  font-size: 16px;
+  pointer-events: none;
 }
 
 /* ================= BADGE ================= */
@@ -747,6 +826,18 @@ label {
   margin-bottom: 10px;
   background: white;
   border-radius: 4px;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .signature-preview {
