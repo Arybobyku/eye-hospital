@@ -123,6 +123,7 @@ class FormEdukasiPasienDanKeluargaRawatJalan extends Model
         'nama_pengkaji',
         'tanggal_pengkaji',
         'waktu_pengkaji',
+        'ttd_pengkaji_timestamp',
         
         // ===== Audit =====
         'created_by',

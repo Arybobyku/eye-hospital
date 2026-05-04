@@ -254,6 +254,21 @@ class FormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap extends Model
         
         'ttd_dokter_dpjp',
         'ttd_dokter',
+
+        'ttd_dokter_timestamp',
+        'ttd_dokter_dpjp_timestamp',
+        'ttd_pemberi_dokter_timestamp',
+        'ttd_penerima_dokter_timestamp',
+        'ttd_pemberi_perawat_timestamp',
+        'ttd_penerima_perawat_timestamp',
+        'ttd_pemberi_analis_timestamp',
+        'ttd_penerima_analis_timestamp',
+        'ttd_pemberi_gizi_timestamp',
+        'ttd_penerima_gizi_timestamp',
+        'ttd_pemberi_farmasi_timestamp',
+        'ttd_penerima_farmasi_timestamp',
+        'ttd_pemberi_fisio_timestamp',
+        'ttd_penerima_fisio_timestamp',
         
         // Audit
         'created_by',

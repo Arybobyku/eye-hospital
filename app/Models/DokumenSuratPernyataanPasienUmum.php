@@ -46,6 +46,9 @@ class DokumenSuratPernyataanPasienUmum extends Model
         'nama_saksi_pasien',
         'ttd_saksi_petugas',
         'nama_saksi_petugas',
+        'pembuat_pernyataan_ttd_timestamp',
+        'saksi_pasien_ttd_timestamp',
+        'saksi_petugas_ttd_timestamp',
         
         'created_by',
         'updated_by',

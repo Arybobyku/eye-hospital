@@ -23,6 +23,7 @@ class DokumenDietitianPasienBaru extends Model
         'jenis_kelamin',
         'nama',
         'nik',
+        'no_surat',
         
         // Data Pasien
         'nama_pasien',
@@ -61,6 +62,7 @@ class DokumenDietitianPasienBaru extends Model
         // Tanda Tangan
         'ttd_dietitian',
         'nama_dietitian',
+        'dokter_ttd_timestamp',
         
         'created_by',
         'updated_by',
@@ -84,6 +86,10 @@ class DokumenDietitianPasienBaru extends Model
         static::creating(function ($model) {
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
+            }
+            if (empty($model->no_surat)) {
+                $tahun = config('app.tahun_akreditasi', '22');
+                $model->no_surat = "RM 3.2/KADPPB/{$tahun}";
             }
         });
     }

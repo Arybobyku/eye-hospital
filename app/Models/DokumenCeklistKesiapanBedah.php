@@ -66,6 +66,8 @@ class DokumenCeklistKesiapanBedah extends Model
         'nama_lengkap_perawat',
         'ttd_kepala',
         'nama_lengkap_kepala_ruangan',
+        'ttd_perawat_timestamp',
+        'ttd_kepala_timestamp',
 
         // ===== Audit =====
         'created_by',

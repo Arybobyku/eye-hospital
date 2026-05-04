@@ -307,6 +307,7 @@
             <!-- Preview TTD yang sudah ada -->
             <div v-if="form.ttd_dokter && !signatureCleared" class="signature-preview">
               <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+              <p v-if="form.dokter_ttd_timestamp" class="timestamp-ttd">Ditandatangani: {{ form.dokter_ttd_timestamp }}</p>
               <button @click="clearSignature()" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
@@ -423,6 +424,7 @@ export default {
         // Tanda Tangan
         ttd_dokter: "",
         nama_dokter: "",
+        dokter_ttd_timestamp: "",
         diagram_mata: "",
       },
     };
@@ -576,6 +578,7 @@ export default {
     clearSignature() {
       this.signatureCleared = true;
       this.form.ttd_dokter = "";
+      this.form.dokter_ttd_timestamp = "";
 
       // Reset signature pad di next tick
       this.$nextTick(() => {
@@ -608,6 +611,17 @@ export default {
       }
 
       this.form.ttd_dokter = data;
+      this.signatureCleared = false;
+
+        const now = new Date();
+        this.form.dokter_ttd_timestamp = now.toLocaleString('id-ID', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
       console.log("TTD saved: ttd_dokter");
     },
 
@@ -1230,6 +1244,18 @@ textarea.form-control {
   border-radius: 50%;
   animation: spin-rme 0.8s linear infinite;
   margin-bottom: 15px;
+}
+
+  .timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 @keyframes spin-rme {

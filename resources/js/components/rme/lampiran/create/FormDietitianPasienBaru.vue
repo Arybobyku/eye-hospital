@@ -14,6 +14,7 @@
       <div class="text-center mb-4">
         <h2 class="fw-bold">ASESMEN AWAL GIZI - PASIEN BARU</h2>
         <h5 class="text-muted">Initial Nutrition Assessment - New Patient</h5>
+        <h4 class="fw-semibold">{{ form.no_surat}} </h4>
         <span v-if="isEditMode && !disabledSubmit" class="badge bg-warning"
           >Mode Edit</span
         >
@@ -372,6 +373,9 @@
               class="signature-preview"
             >
               <img :src="form.ttd_dietitian" alt="TTD Dietitian" class="img-signature" />
+              <p v-if="form.dokter_ttd_timestamp" class="timestamp-ttd">
+                Ditandatangani: {{ form.dokter_ttd_timestamp }}
+              </p>
               <button @click="clearSignature('ttd_dietitian')" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
@@ -456,6 +460,7 @@ export default {
 
         // Data Default (wajib dikirim ke BE)
         no_rm: "",
+        no_surat: "",
         jenis_kelamin: "",
         nama: "",
         nik: "",
@@ -497,6 +502,7 @@ export default {
         // Tanda Tangan
         ttd_dietitian: "",
         nama_dietitian: "",
+        dokter_ttd_timestamp: "",
       },
     };
   },
@@ -520,8 +526,10 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     this.disabledSubmit = false;
+    await this.fetchTahunAkreditasi();
+
     if (this.viewData) {
       this.disabledSubmit = true;
       this.loadEditData();
@@ -533,6 +541,24 @@ export default {
   },
 
   methods: {
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RM 3.2/KADPPB/${tahun}`;
+        }
+
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 3.2/KADPPB/22';
+        }
+      }
+    },
     setDataForm() {
       const today = new Date();
       this.form.tanggal_asesmen = this.formatDate(today);
@@ -595,6 +621,8 @@ export default {
       this.signatureCleared[refName] = true;
       this.form[refName] = "";
 
+      if (refName === 'ttd_dietitian') this.form.dokter_ttd_timestamp = "";
+
       // Reset signature pad di next tick
       this.$nextTick(() => {
         const pad = this.$refs[refName];
@@ -633,6 +661,15 @@ export default {
       }
 
       this.form[refName] = data;
+      this.signatureCleared[refName] = false;
+
+      const now = new Date();
+      const timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    
+      if (refName === 'ttd_dietitian') this.form.dokter_ttd_timestamp = timestamp
       console.log("TTD saved:", refName);
     },
 
@@ -798,6 +835,18 @@ export default {
 
 .btn-clear:hover {
   background: #d32f2f;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .tanggal-tempat {

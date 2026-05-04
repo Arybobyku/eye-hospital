@@ -43,6 +43,7 @@ class DokumenSuratBalasanKonsul extends Model
         // Tanda Tangan
         'ttd_dokter',
         'nama_dokter_konsultan',
+        'dokter_ttd_timestamp',
         
         'created_by',
         'updated_by',
