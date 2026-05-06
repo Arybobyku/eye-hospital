@@ -1996,6 +1996,11 @@ class PemeriksaanCtrl extends Controller
                     'sebagai' => $request->cppt_sebagai,
                     'ttd' => $request->ttd,
                 ];
+                if (!empty($request->ttd)) {
+                    $arr['ttd_timestamp'] = now();
+                } else {
+                    $arr['ttd_timestamp'] = null;
+                }
                 $update = Cppt::where('uuid', '=', $request->uuid)
                     ->where('sebagai', '=', 'DOKTER')
                     ->update($arr);
@@ -2015,6 +2020,11 @@ class PemeriksaanCtrl extends Controller
                 $item->plan = $request->plan;
                 $item->sebagai = $request->cppt_sebagai;
                 $item->ttd = $request->ttd;
+                if (!empty($request->ttd)) {
+                    $item->ttd_timestamp = now();
+                } else {
+                    $item->ttd_timestamp = null;
+                }
                 $item->save();
             }
 
