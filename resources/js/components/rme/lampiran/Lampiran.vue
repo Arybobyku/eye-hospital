@@ -563,13 +563,13 @@ export default {
       assignMap: {},
 
       availableDocuments: [
-        {
-          value: "laporan-bedah",
-          label: "Laporan Pembedahan",
-          component: "CreateLaporanBedah",
-          description: "Form untuk mencatat laporan operasi dan pembedahan pasien",
-          backendType: "laporan_bedah",
-        },
+        // {
+        //   value: "laporan-bedah",
+        //   label: "Laporan Pembedahan",
+        //   component: "CreateLaporanBedah",
+        //   description: "Form untuk mencatat laporan operasi dan pembedahan pasien",
+        //   backendType: "laporan_bedah",
+        // },
         // {
         //   value: "laser-bargage",
         //   label: "Form Laser Bargage",

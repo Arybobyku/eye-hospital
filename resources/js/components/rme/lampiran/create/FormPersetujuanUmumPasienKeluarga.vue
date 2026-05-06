@@ -178,7 +178,7 @@
                 
                   <div v-if="form.ttd_keluarga && !ttdKeluargaCleared" class="signature-preview text-center">
                     <img :src="form.ttd_keluarga" alt="TTD Keluarga" class="img-signature" />
-                        <p v-if="form.dokter_ttd_timestamp" class="timestamp-ttd">Ditandatangani: {{ form.dokter_ttd_timestamp }}</p>
+                        <p v-if="form.keluarga_ttd_timestamp" class="timestamp-ttd">Ditandatangani: {{ form.keluarga_ttd_timestamp }}</p>
                     <button @click="clearSign('ttd_keluarga')" class="btn-clear mt-2">
                       Hapus & Tanda Tangan Ulang
                     </button>

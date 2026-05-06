@@ -172,6 +172,9 @@
                 alt="TTD Pernyataan"
                 class="img-signature"
               />
+              <p v-if="form.pernyataan_ttd_timestamp" class="timestamp-ttd">
+                Ditandatangani: {{ form.pernyataan_ttd_timestamp }}
+              </p>
               <button @click="clearSignature('ttd_pernyataan')" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
@@ -204,6 +207,9 @@
               class="signature-preview"
             >
               <img :src="form.ttd_saksi" alt="TTD Saksi" class="img-signature" />
+              <p v-if="form.saksi_ttd_timestamp" class="timestamp-ttd">
+                Ditandatangani: {{ form.saksi_ttd_timestamp }}
+              </p>
               <button @click="clearSignature('ttd_saksi')" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
@@ -234,6 +240,9 @@
               class="signature-preview"
             >
               <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+              <p v-if="form.dokter_ttd_timestamp" class="timestamp-ttd">
+                Ditandatangani: {{ form.dokter_ttd_timestamp }}
+              </p>
               <button @click="clearSignature('ttd_dokter')" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
@@ -345,10 +354,13 @@ export default {
         // Tanda Tangan
         ttd_pernyataan: "",
         nama_pembuat_pernyataan: "",
+        pernyataan_ttd_timestamp: "",
         ttd_saksi: "",
         nama_saksi: "",
+        saksi_ttd_timestamp: "",
         ttd_dokter: "",
-        nama_dokter:"",
+        nama_dokter: "",
+        dokter_ttd_timestamp: "", 
       },
     };
   },
@@ -476,6 +488,10 @@ export default {
       this.signatureCleared[refName] = true;
       this.form[refName] = "";
 
+      if (refName === 'ttd_pernyataan') this.form.pernyataan_ttd_timestamp = "";
+      if (refName === 'ttd_saksi') this.form.saksi_ttd_timestamp = "";
+      if (refName === 'ttd_dokter') this.form.dokter_ttd_timestamp = "";
+
       // Reset signature pad di next tick
       this.$nextTick(() => {
         const pad = this.$refs[refName];
@@ -514,6 +530,18 @@ export default {
       }
 
       this.form[refName] = data;
+      this.signatureCleared[refName] = false;
+
+      const now = new Date();
+      const timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    
+      if (refName === 'ttd_pernyataan') this.form.pernyataan_ttd_timestamp = timestamp; 
+      if (refName === 'ttd_saksi') this.form.saksi_ttd_timestamp = timestamp;
+      if (refName === 'ttd_dokter') this.form.dokter_ttd_timestamp = timestamp;
+
       console.log("TTD saved:", refName);
     },
 
@@ -852,6 +880,18 @@ select.form-control {
   background: white;
   display: block;
   margin: 0 auto;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 /* ================= BUTTONS ================= */

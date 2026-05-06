@@ -143,6 +143,9 @@
             <label class="fw-bold mb-2 d-block">Perawat kamar bedah</label>
             <div v-if="form.ttd_perawat && !ttdPerawatCleared" class="signature-preview text-center">
               <img :src="form.ttd_perawat" alt="TTD Perawat" class="img-signature" />
+                <p v-if="form.ttd_perawat_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.ttd_perawat_timestamp }}
+                </p>
               <button @click="clearSign('ttd_perawat')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -159,6 +162,9 @@
             <label class="fw-bold mb-2 d-block">Kepala Ruangan</label>
             <div v-if="form.ttd_kepala && !ttdKepalaCleared" class="signature-preview text-center">
               <img :src="form.ttd_kepala" alt="TTD Kepala" class="img-signature" />
+                <p v-if="form.ttd_kepala_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.ttd_kepala_timestamp }}
+                </p>
               <button @click="clearSign('ttd_kepala')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -276,8 +282,10 @@ export default {
         // Tanda Tangan
         ttd_perawat: "",
         nama_lengkap_perawat: "",
+        ttd_perawat_timestamp: "",
         ttd_kepala: "",
         nama_lengkap_kepala_ruangan: "",
+        ttd_kepala_timestamp: "",
       },
     };
   },
@@ -406,12 +414,24 @@ loadDataForEdit() {
         ttd_kepala: 'ttdKepalaCleared',
         ttd_perawat: 'ttdPerawatCleared',
       };
+
+      const timestampMap = {
+        ttd_kepala: 'ttd_kepala_timestamp',
+        ttd_perawat: 'ttd_perawat_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = false;
       }
     
       this.form[refName] = data;
+      if (timestampMap[refName]) {
+        const now = new Date();
+        this.form[timestampMap[refName]] = now.toLocaleString('id-ID', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+      }
       console.log("TTD saved:", refName);
     },
     
@@ -420,10 +440,19 @@ loadDataForEdit() {
         ttd_kepala: 'ttdKepalaCleared',
         ttd_perawat: 'ttdPerawatCleared',
       };
+
+      const timestampMap = {
+        ttd_kepala: 'ttd_kepala_timestamp',
+        ttd_perawat: 'ttd_perawat_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = true;
         this.form[refName] = "";
+      }
+
+      if (timestampMap[refName]) {
+        this.form[timestampMap[refName]] = "";
       }
     
       this.$nextTick(() => {
@@ -764,6 +793,18 @@ label {
 
 .mb-4 {
   margin-bottom: 24px;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .mt-2 {

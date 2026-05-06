@@ -129,6 +129,7 @@ class FormPengkajianKeperawatanMataRawatJalan extends Model
         'waktu_ttd',
         'ttd_perawat',
         'nama_perawat_ttd',
+        'perawat_ttd_timestamp',
         
         // ===== Audit =====
         'created_by',

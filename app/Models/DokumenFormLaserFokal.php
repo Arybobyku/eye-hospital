@@ -40,6 +40,7 @@ class DokumenFormLaserFokal extends Model
         // Tanda Tangan
         'ttd_dokter',
         'nama_dokter',
+        'dokter_ttd_timestamp',
 
         'diagram_mata',
 

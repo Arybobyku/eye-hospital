@@ -452,6 +452,9 @@
                     <label class="fw-bold mb-2 d-block">Dokter Pelaksana</label>
                     <div v-if="form.ttd_dokter && !ttdDokterCleared" class="signature-preview text-center">
                       <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+                        <p v-if="form.ttd_dokter_timestamp" class="timestamp-ttd">
+                          Ditandatangani: {{ form.ttd_dokter_timestamp }}
+                        </p>
                       <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
                     </div>
                     <div v-else class="text-center">
@@ -490,6 +493,9 @@
                   <label class="fw-bold mb-2 d-block">Pasien/Keluarga</label>
                   <div v-if="form.ttd_pasien && !ttdPasienCleared" class="signature-preview text-center">
                     <img :src="form.ttd_pasien" alt="TTD Pasien" class="img-signature" />
+                      <p v-if="form.ttd_pasien_timestamp" class="timestamp-ttd">
+                        Ditandatangani: {{ form.ttd_pasien_timestamp }}
+                      </p>
                     <button @click="clearSign('ttd_pasien')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
                   </div>
                   <div v-else class="text-center">
@@ -593,6 +599,9 @@
       <label class="fw-bold mb-2">Yang Menyatakan (Pasien)</label>
       <div v-if="form.ttd_pasien_pernyataan && !ttdPasienPernyataanCleared" class="signature-preview text-center">
         <img :src="form.ttd_pasien_pernyataan" alt="TTD Pasien Pernyataan" class="img-signature" />
+        <p v-if="form.ttd_pasien_pernyataan_timestamp" class="timestamp-ttd">
+          Ditandatangani: {{ form.ttd_pasien_pernyataan_timestamp }}
+        </p>
         <button @click="clearSign('ttd_pasien_pernyataan')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
       </div>
       <div v-else class="text-center">
@@ -607,6 +616,9 @@
       <label class="fw-bold mb-2">Dokter</label>
       <div v-if="form.ttd_dokter_persetujuan && !ttdDokterPersetujuanCleared" class="signature-preview text-center">
         <img :src="form.ttd_dokter_persetujuan" alt="TTD Dokter Persetujuan" class="img-signature" />
+          <p v-if="form.ttd_dokter_persetujuan_timestamp" class="timestamp-ttd">
+            Ditandatangani: {{ form.ttd_dokter_persetujuan_timestamp }}
+          </p>
         <button @click="clearSign('ttd_dokter_persetujuan')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
       </div>
       <div v-else class="text-center">
@@ -638,6 +650,9 @@
       <div>
         <div v-if="form.ttd_keluarga && !ttdKeluargaCleared" class="signature-preview text-center">
           <img :src="form.ttd_keluarga" alt="TTD Keluarga" class="img-signature" />
+          <p v-if="form.ttd_keluarga_timestamp" class="timestamp-ttd">
+            Ditandatangani: {{ form.ttd_keluarga_timestamp }}
+          </p>
           <button @click="clearSign('ttd_keluarga')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
         </div>
         <div v-else class="text-center">
@@ -651,6 +666,9 @@
       <div>
         <div v-if="form.ttd_perawat && !ttdPerawatCleared" class="signature-preview text-center">
           <img :src="form.ttd_perawat" alt="TTD Perawat" class="img-signature" />
+            <p v-if="form.ttd_perawat_timestamp" class="timestamp-ttd">
+              Ditandatangani: {{ form.ttd_perawat_timestamp }}
+            </p>
           <button @click="clearSign('ttd_perawat')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
         </div>
         <div v-else class="text-center">
@@ -817,24 +835,30 @@ export default {
         // Tanda Tangan Pemberian Informasi
         ttd_dokter: "",
         nama_dokter_ttd: "",
+        ttd_dokter_timestamp: "",
         tanggal_dokter: "",
         waktu_dokter: "",
         ttd_pasien: "",
         nama_pasien_ttd: "",
+        ttd_pasien_timestamp: "",
         tanggal_pasien: "",
         waktu_pasien: "",
         
         // Tanda Tangan Persetujuan
         ttd_pasien_pernyataan: "",
         nama_pasien_pernyataan: "",
+        ttd_pasien_pernyataan_timestamp: "",
         ttd_dokter_persetujuan: "",
         nama_dokter_persetujuan: "",
+        ttd_dokter_persetujuan_timestamp: "",
         
         // Saksi
         ttd_keluarga: "",
         nama_keluarga_ttd: "",
+        ttd_keluarga_timestamp: "",
         ttd_perawat: "",
         nama_perawat_ttd: "",
+        ttd_perawat_timestamp: "",
       },
     };
   },
@@ -1063,12 +1087,28 @@ loadDataForEdit() {
         ttd_keluarga: 'ttdKeluargaCleared',
         ttd_perawat: 'ttdPerawatCleared',
       };
+
+      const timestampMap = {
+        ttd_dokter: 'ttd_dokter_timestamp',
+        ttd_pasien: 'ttd_pasien_timestamp',
+        ttd_pasien_pernyataan: 'ttd_pasien_pernyataan_timestamp',
+        ttd_dokter_persetujuan: 'ttd_dokter_persetujuan_timestamp',
+        ttd_keluarga: 'ttd_keluarga_timestamp',
+        ttd_perawat: 'ttd_perawat_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = false;
       }
     
       this.form[refName] = data;
+      if (timestampMap[refName]) {
+        const now = new Date();
+        this.form[timestampMap[refName]] = now.toLocaleString('id-ID', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+      }
       console.log("TTD saved:", refName);
     },
 
@@ -1081,10 +1121,23 @@ loadDataForEdit() {
         ttd_keluarga: 'ttdKeluargaCleared',
         ttd_perawat: 'ttdPerawatCleared',
       };
+
+      const timestampMap = {
+        ttd_dokter: 'ttd_dokter_timestamp',
+        ttd_pasien: 'ttd_pasien_timestamp',
+        ttd_pasien_pernyataan: 'ttd_pasien_pernyataan_timestamp',
+        ttd_dokter_persetujuan: 'ttd_dokter_persetujuan_timestamp',
+        ttd_keluarga: 'ttd_keluarga_timestamp',
+        ttd_perawat: 'ttd_perawat_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = true;
         this.form[refName] = "";
+      }
+
+      if (timestampMap[refName]) {
+        this.form[timestampMap[refName]] = "";
       }
     
       this.$nextTick(() => {
@@ -1286,6 +1339,18 @@ async submitForm() {
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 10px;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .img-signature {
