@@ -74,7 +74,7 @@
 											<tr>
 												<td>BCVA</td>
 												<td>{{ detail.ocular_dextra_bcva1 }} -> {{ detail.ocular_dextra_bcva2 }}</td>
-												<td>{{ detail.ocular_sinistra_bcva1 }} -> {{ detail.ocular_dextra_bcva2 }}</td>
+												<td>{{ detail.ocular_sinistra_bcva1 }} -> {{ detail.ocular_sinistra_bcva2 }}</td>
 											</tr>
 											<tr>
 												<td>Keratometri K1</td>

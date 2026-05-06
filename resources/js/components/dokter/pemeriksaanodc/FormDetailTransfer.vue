@@ -117,7 +117,7 @@
 															<tr>
 																<td>BCVA</td>
 																<td>{{ pemeriksaanro.ocular_dextra_bcva1 }} -> {{ pemeriksaanro.ocular_dextra_bcva2 }}</td>
-																<td>{{ pemeriksaanro.ocular_sinistra_bcva1 }} -> {{ pemeriksaanro.ocular_dextra_bcva2 }}</td>
+																<td>{{ pemeriksaanro.ocular_sinistra_bcva1 }} -> {{ pemeriksaanro.ocular_sinistra_bcva2 }}</td>
 															</tr>
 															<tr>
 																<td>Keratometri K1</td>
