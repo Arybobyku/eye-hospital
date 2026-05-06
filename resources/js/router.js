@@ -497,12 +497,20 @@ const routes = [
 	/**********************************************************************************
 	 * Keuangan
 	 ***********************************************************************************/
-	{ 
-		path: _base + 'claim-asuransi', 
-		name: 'Klaim Asuransi (Tunggal)', 
+	{
+		path: _base + 'finance-claim',
+		name: 'Claim',
+		component: () => import('./components/finance/claimdokumen/index.vue'),
+		meta: { title: 'Claim' },
+		props: true
+	},
+
+	{
+		path: _base + 'claim-asuransi',
+		name: 'Klaim Asuransi (Tunggal)',
 		component: () => import('./components/finance/claim/index.vue'),
 		meta: { title: 'Klaim Asuransi (Tunggal)' },
-		props: true 
+		props: true
 	},
 
 	{ 
