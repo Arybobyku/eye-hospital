@@ -175,6 +175,7 @@ return [
 				Maatwebsite\Excel\ExcelServiceProvider::class,
 				Barryvdh\DomPDF\ServiceProvider::class,
 				Milon\Barcode\BarcodeServiceProvider::class,
+				App\Services\SatuSehat\SatusehatServiceProvider::class,
 
         /*
          * Application Service Providers...

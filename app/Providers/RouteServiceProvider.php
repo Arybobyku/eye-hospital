@@ -101,6 +101,12 @@ class RouteServiceProvider extends ServiceProvider
 			Route::middleware('web')
         ->prefix('bpjs')
         ->group(base_path('routes/bpjs.php'));
+    Route::middleware('web')
+        ->group(base_path('app/Services/SatuSehat/routes.php'));
+
+    Route::middleware('web')
+        ->prefix('satusehat-api')
+        ->group(base_path('routes/satusehat.php'));
     });
   }
 }

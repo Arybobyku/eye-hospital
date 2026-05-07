@@ -1040,6 +1040,31 @@ const routes = [
 
 	// { path: _base + 'layanan', name: 'Layanan Rumah Sakit',  component: () => import('./components/finance/layanan/index.vue'),
 	// 	meta: { title: 'Layanan Rumah Sakit' },props: true },
+	/**********************************************************************************
+	 * Bagian SatuSehat
+	 ***********************************************************************************/
+	{
+		path: _base + 'satusehat-organization',
+		name: 'SatuSehat - Organization',
+		component: () => import('./components/satusehat/organization/index.vue'),
+		meta: { title: 'SatuSehat - Organization' },
+		props: true
+	},
+	{
+		path: _base + 'satusehat-location',
+		name: 'SatuSehat - Location',
+		component: () => import('./components/satusehat/location/index.vue'),
+		meta: { title: 'SatuSehat - Location' },
+		props: true
+	},
+	{
+		path: _base + 'satusehat-token',
+		name: 'SatuSehat - Access Token',
+		component: () => import('./components/satusehat/token/index.vue'),
+		meta: { title: 'SatuSehat - Access Token' },
+		props: true
+	},
+
 ];
 
 const router = createRouter({ history: createWebHistory(), routes });
