@@ -8,7 +8,7 @@
 			<div class="modal-body" v-if="form">
 				<div class="grid">
 					<div class="col-12">
-						
+
 						<div class="tab-lines"><div class="tab"><button v-for="(item, index) in tab.button" :class="item.class" v-on:click="changesTab(item.value, index, item.class)">{{ item.label }}</button></div></div>
 
 						<div class="tab-content">
@@ -16,26 +16,26 @@
 							<div class="content-tab-in" v-if="tab.content.rawatjalan">
 								<div class="grid">
 									<div class="col-4 form-mr">
-										<Selected v-on:click="selectbox($event, form.select.tindakanrawatjalan.name, form.select.tindakanrawatjalan.statics)" 
+										<Selected v-on:click="selectbox($event, form.select.tindakanrawatjalan.name, form.select.tindakanrawatjalan.statics)"
 										:ref="form.select.tindakanrawatjalan.name" @selecteditem="selecteditem" @selectclear="selectclear"
 										:selection="form.select.tindakanrawatjalan" v-on:keyup="selectfilter($event, form.select.tindakanrawatjalan.name)"></Selected>
 									</div>
 									<div class="col-3 form-mr">
-										<Selected v-on:click="selectbox($event, form.select.defaulttindakan.name, form.select.defaulttindakan.statics)" 
+										<Selected v-on:click="selectbox($event, form.select.defaulttindakan.name, form.select.defaulttindakan.statics)"
 										:ref="form.select.defaulttindakan.name" @selecteditem="selecteditem" @selectclear="selectclear"
 										:selection="form.select.defaulttindakan" v-on:keyup="selectfilter($event, form.select.defaulttindakan.name)"></Selected>
 									</div>
-									<div class="col-3 form-mr form-ml">	
+									<div class="col-3 form-mr form-ml">
 										<Inputed :ref="form.harga.tindakanrawatjalan.name" :form="form.harga.tindakanrawatjalan"></Inputed>
 									</div>
-									<div class="col-2">	
-										<button v-on:click="add('tindakanrawatjalan')" 
+									<div class="col-2">
+										<button v-on:click="add('tindakanrawatjalan')"
 											v-if="!statusedit.tindakanrawatjalan" class="button-modal-page button-modal-green" style="margin-top: 13px;">ADD</button>
 										<template v-else>
 											<button v-on:click="update('tindakanrawatjalan')" class="button-modal-page button-modal-green" style="margin-top: 13px;">Update</button>
 											<button v-on:click="cancel('tindakanrawatjalan')" class="button-modal-page button-modal-red" style="margin-top: 13px;">Cancel</button>
 										</template>
-										
+
 									</div>
 								</div>
 
@@ -85,18 +85,18 @@
 							<div class="content-tab-in" v-if="tab.content.nonbedah">
 								<div class="grid">
 									<div class="col-4 form-mr">
-										<Selected v-on:click="selectbox($event, form.select.tindakannonbedah.name, form.select.tindakannonbedah.statics)" 
+										<Selected v-on:click="selectbox($event, form.select.tindakannonbedah.name, form.select.tindakannonbedah.statics)"
 										:ref="form.select.tindakannonbedah.name" @selecteditem="selecteditem" @selectclear="selectclear"
 										:selection="form.select.tindakannonbedah" v-on:keyup="selectfilter($event, form.select.tindakannonbedah.name)"></Selected>
 									</div>
 									<div class="col-3 form-mr">
 										<Inputed :ref="form.default.tindakannonbedah.name" :form="form.default.tindakannonbedah"></Inputed>
 									</div>
-									<div class="col-3 form-mr form-ml">	
+									<div class="col-3 form-mr form-ml">
 										<Inputed :ref="form.harga.tindakannonbedah.name" :form="form.harga.tindakannonbedah"></Inputed>
 									</div>
-									<div class="col-2">	
-										<button v-on:click="add('tindakannonbedah')" 
+									<div class="col-2">
+										<button v-on:click="add('tindakannonbedah')"
 											v-if="!statusedit.tindakannonbedah" class="button-modal-page button-modal-green" style="margin-top: 13px;">ADD</button>
 										<template v-else>
 											<button v-on:click="update('tindakannonbedah')" class="button-modal-page button-modal-green" style="margin-top: 13px;">Update</button>
@@ -151,35 +151,35 @@
 							<div class="content-tab-in" v-if="tab.content.bedah">
 								<div class="grid">
 									<div class="col-3 form-mr">
-										<Selected v-on:click="selectbox($event, form.select.jenis.name, form.select.jenis.statics)" 
+										<Selected v-on:click="selectbox($event, form.select.jenis.name, form.select.jenis.statics)"
 										:ref="form.select.jenis.name" @selecteditem="selecteditem" @selectclear="selectclear"
 										:selection="form.select.jenis"></Selected>
 									</div>
-									<div class="col-5 form-mr form-ml">	
-										<Selected v-on:click="selectbox($event, form.select.tindakanbedah.name, form.select.tindakanbedah.statics)" 
+									<div class="col-5 form-mr form-ml">
+										<Selected v-on:click="selectbox($event, form.select.tindakanbedah.name, form.select.tindakanbedah.statics)"
 										:ref="form.select.tindakanbedah.name" @selecteditem="selecteditem" @selectclear="selectclear"
 										:selection="form.select.tindakanbedah" v-on:keyup="selectfilter($event, form.select.tindakanbedah.name)"></Selected>
 									</div>
 									<div class="col-2 form-mr">
 										<Inputed :ref="form.default.tindakanbedah.name" :form="form.default.tindakannonbedah"></Inputed>
 									</div>
-									<div class="col-2 form-ml">	
+									<div class="col-2 form-ml">
 										<Inputed :ref="form.vvipharga.tindakanbedah.name" :form="form.vvipharga.tindakanbedah"></Inputed>
 									</div>
-									<div class="col-2 form-mr">	
+									<div class="col-2 form-mr">
 										<Inputed :ref="form.vipharga.tindakanbedah.name" :form="form.vipharga.tindakanbedah"></Inputed>
 									</div>
-									<div class="col-2 form-mr form-ml">	
+									<div class="col-2 form-mr form-ml">
 										<Inputed :ref="form.kelas1harga.tindakanbedah.name" :form="form.kelas1harga.tindakanbedah"></Inputed>
 									</div>
-									<div class="col-3 form-mr form-ml">	
+									<div class="col-3 form-mr form-ml">
 										<Inputed :ref="form.kelas2harga.tindakanbedah.name" :form="form.kelas2harga.tindakanbedah"></Inputed>
 									</div>
-									<div class="col-3 form-mr form-ml">	
+									<div class="col-3 form-mr form-ml">
 										<Inputed :ref="form.kelas3harga.tindakanbedah.name" :form="form.kelas3harga.tindakanbedah"></Inputed>
 									</div>
-									<div class="col-2 form-ml">	
-										<button v-on:click="add('tindakanbedah')" 
+									<div class="col-2 form-ml">
+										<button v-on:click="add('tindakanbedah')"
 											v-if="!statusedit.tindakanbedah" class="button-modal-page button-modal-green" style="margin-top: 13px;">ADD</button>
 										<template v-else>
 											<button v-on:click="update('tindakanbedah')" class="button-modal-page button-modal-green" style="margin-top: 13px;">Update</button>
@@ -244,21 +244,21 @@
 							<div class="content-tab-in" v-if="tab.content.jeniskamar">
 								<div class="grid">
 									<div class="col-3 form-mr">
-										<Selected v-on:click="selectbox($event, form.select.jeniskamar.name, form.select.jeniskamar.statics)" 
+										<Selected v-on:click="selectbox($event, form.select.jeniskamar.name, form.select.jeniskamar.statics)"
 										:ref="form.select.jeniskamar.name" @selecteditem="selecteditem" @selectclear="selectclear"
 										:selection="form.select.jeniskamar" v-on:keyup="selectfilter($event, form.select.jeniskamar.name)"></Selected>
 									</div>
 									<div class="col-2 form-mr">
 										<Inputed :ref="form.default.tindakanbedah.name" :form="form.default.tindakannonbedah"></Inputed>
 									</div>
-									<div class="col-2 form-mr form-ml">	
+									<div class="col-2 form-mr form-ml">
 										<Inputed :ref="form.harga.jeniskamar.name" :form="form.harga.jeniskamar"></Inputed>
 									</div>
-									<div class="col-3 form-mr form-ml">	
+									<div class="col-3 form-mr form-ml">
 										<Inputed :ref="form.hitungan.jeniskamar.name" :form="form.hitungan.jeniskamar"></Inputed>
 									</div>
-									<div class="col-2">	
-										<button v-on:click="add('jeniskamar')" 
+									<div class="col-2">
+										<button v-on:click="add('jeniskamar')"
 											v-if="!statusedit.jeniskamar" class="button-modal-page button-modal-green" style="margin-top: 13px;">ADD</button>
 										<template v-else>
 											<button v-on:click="update('jeniskamar')" class="button-modal-page button-modal-green" style="margin-top: 13px;">Update</button>
@@ -314,7 +314,7 @@
 
 						</div>
 					</div>
-					
+
 				</div>
 			</div>
 			<Loader ref="Loader"></Loader>
@@ -336,18 +336,18 @@ import Swal from 'sweetalert2';
 var vm, body;
 export default {
 	emits: ["dialog", "parsingForm"],
-	components: { toast, Swal, 
+	components: { toast, Swal,
 		Inputed: defineAsyncComponent(() => import('../../../section/Inputed.vue')),
 		Selected: defineAsyncComponent(() => import('../../../section/Selected.vue')),
 	},
-	mounted:function() { 
+	mounted:function() {
 		vm = this; body = document.body;
 		vm.arr = vm.arrdefault();
 		vm.form = vm.formtarif();
 		window.onclick = function(event) { let a = event.target.className; try { if (a.split(" ")) { a = a.split(" "); if (a[0] != 'hospitals') { vm.selecthide(); } } if (event.target.className == '') { vm.selecthide(); } } catch { console.log('mistmatch'); } }
 	},
 	created:function() {},
-	data:function() { return { 
+	data:function() { return {
 		terminate: { show: false, display: 'display: none' }, pos: '',
 		form: null, arr: null, btnlbl: '', carabayar_nama: '', carabayar_uuid: '',
 
@@ -357,7 +357,7 @@ export default {
 			tindakanbedah: false,
 			jeniskamar: false,
 		},
-		
+
 		listdata: {
 			tindakanrawatjalan: [],
 			tindakannonbedah: [],
@@ -370,7 +370,7 @@ export default {
 			tindakannonbedah: [],
 			tindakanbedah: [],
 			jeniskamar: [],
-		}, 
+		},
 		page : {
 			tindakanrawatjalan: 1,
 			tindakannonbedah: 1,
@@ -395,7 +395,7 @@ export default {
 			tindakanbedah: '',
 			jeniskamar: '',
 		},
-		
+
 		attach: {
 			link : {
 				adddata : {
@@ -404,7 +404,7 @@ export default {
 					tindakanbedah: '/finance/carabayar/tarif/tindakanbedah/add',
 					jeniskamar: '/finance/carabayar/tarif/jeniskamar/add',
 				},
-				removedata: { 
+				removedata: {
 					tindakanrawatjalan: '/finance/carabayar/tarif/tindakanrawatjalan/remove',
 					tindakannonbedah: '/finance/carabayar/tarif/tindakannonbedah/remove',
 					tindakanbedah: '/finance/carabayar/tarif/tindakanbedah/remove',
@@ -419,11 +419,11 @@ export default {
 				// { value: 'bedah', label: 'Tindakan Bedah', class: 'tab-no-active' },
 				{ value: 'jeniskamar', label: 'Biaya Kamar', class: 'tab-no-active' },
 			],
-			content: { 
-				rawatjalan: true, 
-				// nonbedah: false, 
-				// bedah: false, 
-				jeniskamar: false 
+			content: {
+				rawatjalan: true,
+				// nonbedah: false,
+				// bedah: false,
+				jeniskamar: false
 			}
 		},
 	}},
@@ -434,9 +434,9 @@ export default {
 
 		selectfilter: function (event, key) { vm.form = vm.filterselected(vm.form, key); },
 		selecthide:function() { vm.form = vm.hideselected(vm.form); },
-		selecteditem:function(item, key) { 
-			vm.form = vm.conditionselected(vm.form, item, key, 'address'); 
-			vm.form = vm.itemselected(vm.form, item, key); 
+		selecteditem:function(item, key) {
+			vm.form = vm.conditionselected(vm.form, item, key, 'address');
+			vm.form = vm.itemselected(vm.form, item, key);
 			if (key == 'tindakanbedah') {
 				vm.form.jenis = item.jenis;
 			}
@@ -444,25 +444,36 @@ export default {
 		selectclear:function(key) { vm.form = vm.clearselected(vm.form, key); },
 		selectbox:function(event, key, statics) {
 			let result = vm.boxselected(event, vm.form, key);
-			if (result._position == 'stop') { return ; }
+			if (result._position == 'stop') {
+                return ; }
 			else if (result._position == 'nextstop') { vm.form = result._form; }
-			else { vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block'; }
+			else {
+                vm.selecthide(); vm.getIndexDB(key, statics); vm.form.select[key].option = 'display: block';
+             }
 		},
 
 		getIndexDB:function(key, statics) {
 			vm.form.select[key].data = []; vm.form.select[key].filter = [];
 			if (statics) { vm.form.select[key].data = this.arr[key]; vm.form.select[key].filter = this.arr[key]; }
 			else {
+                if(key == 'tindakanrawatjalan') {
+                    key = 'bukuTarif'
+                }
 				vm.initindexdb(vm.$dbNameIndexDb, key)
-					.then(function(response){ vm.form = vm.indexdbprocessing(response, vm.form, key); })
+					.then(function(response){
+                        if(key = 'bukuTarif') {
+                            key = 'tindakanrawatjalan';
+                        }
+                        vm.form = vm.indexdbprocessing(response, vm.form, key);
+                    })
 					.catch(function(error){ console.log(error); });
 			}
 		},
 
 		changesTab: function (values, index, classes) {
 			if (classes != 'tab-active') {
-				for (let i = 0; i < vm.tab.button.length; i++) { 
-					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; 
+				for (let i = 0; i < vm.tab.button.length; i++) {
+					vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';
 				}
 				vm.tab.button[index].class = 'tab-active';
 				vm.tab.content[values] = true;
@@ -475,8 +486,8 @@ export default {
 		},
 
 		setdataform: function (response) {
-			for (let i = 0; i < vm.tab.button.length; i++) { 
-				vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active'; 
+			for (let i = 0; i < vm.tab.button.length; i++) {
+				vm.tab.content[vm.tab.button[i].value] = false; vm.tab.button[i].class = 'tab-no-active';
 			}
 			vm.tab.button[0].class = 'tab-active';
 			vm.tab.content.rawatjalan = true;
@@ -495,14 +506,14 @@ export default {
 		},
 
 		show:function(posisi, title, uuid){
-			vm.form.title = title; vm.form.posisi = posisi; 
+			vm.form.title = title; vm.form.posisi = posisi;
 			vm.form.posisi = posisi; body.style.overflowY = 'hidden'; vm.terminate.display = 'display: block'; vm.terminate.show = true;
     },
-		aturulang: function (key) { 
+		aturulang: function (key) {
 			vm.form = vm.formtarif();
 			vm.form.select.defaulttindakan.value = 'Tidak';
 			vm.form.select.defaulttindakan.label = 'Tidak';
-			for (const key in vm.listdata) { 
+			for (const key in vm.listdata) {
 				vm.listdata[key] = [];
 				vm.datatablesed[key] = [];
 				vm.page[key] = 1;
@@ -510,7 +521,7 @@ export default {
 				vm.filtertable[key] = [];
 				vm.search[key] = '';
 			}
-			
+
 		},
 		hide:function() { vm.terminate.show = false; setTimeout(function() { vm.terminate.display = 'display: none'; body.style.overflowY = 'auto'; }, 250, this); },
 		loaderprocess:function() { const left = this.$refs.rootmodal.getBoundingClientRect(); vm.$refs.Loader.running(left, 'modal', 250); },
@@ -523,64 +534,64 @@ export default {
 			vm.form.carabayar_uuid = vm.carabayar_uuid;
 			vm.form.carabayar_nama = vm.carabayar_nama;
 		},
-		
+
 		update: function(keyin) {
 			let next = true;
-			for (const key in vm.form) { 
-				if (key != 'select') { 
+			for (const key in vm.form) {
+				if (key != 'select') {
 					if (vm.form[key][keyin]) {
-						if (vm.form[key][keyin].required != '') { 
-							if (vm.form[key][keyin].value == '') { next = false; } 
-						} 
+						if (vm.form[key][keyin].required != '') {
+							if (vm.form[key][keyin].value == '') { next = false; }
+						}
 					}
-					
+
 				}
 				else {
 					for (const keyselect in vm.form.select) {
 						if (keyselect == keyin) {
 							if (vm.form.select[keyselect].isrequired) { if (vm.form.select[keyselect].value == '') { next = false; } }
-						}	
+						}
 					}
 				}
 			}
-			if (next) { 
-				vm.pos='add'; 
-				vm.form.posisi = keyin; 
-				vm.attach.url = vm.attach.link.adddata[keyin]; 
-				vm.attach.data = vm.parsetarif(vm.form, keyin); 
-				vm.dialog(keyin); 
+			if (next) {
+				vm.pos='add';
+				vm.form.posisi = keyin;
+				vm.attach.url = vm.attach.link.adddata[keyin];
+				vm.attach.data = vm.parsetarif(vm.form, keyin);
+				vm.dialog(keyin);
 			}
 		},
 
 		add: function(keyin) {
 			let next = true;
-			for (const key in vm.form) { 
-				if (key != 'select') { 
+			for (const key in vm.form) {
+				if (key != 'select') {
 					if (vm.form[key][keyin]) {
-						if (vm.form[key][keyin].required != '') { 
-							if (vm.form[key][keyin].value == '') { next = false; } 
-						} 
+						if (vm.form[key][keyin].required != '') {
+							if (vm.form[key][keyin].value == '') { next = false; }
+						}
 					}
-					
+
 				}
 				else {
 					for (const keyselect in vm.form.select) {
 						if (keyselect == keyin) {
 							if (vm.form.select[keyselect].isrequired) { if (vm.form.select[keyselect].value == '') { next = false; } }
-						}	
+						}
 					}
 				}
 			}
-			if (next) { 
-				vm.pos='add'; 
-				vm.form.posisi = keyin; 
-				vm.attach.url = vm.attach.link.adddata[keyin]; 
-				vm.attach.data = vm.parsetarif(vm.form, keyin); 
+			if (next) {
+				vm.pos='add';
+				vm.form.posisi = keyin;
+				vm.attach.url = vm.attach.link.adddata[keyin];
+				vm.attach.data = vm.parsetarif(vm.form, keyin);
 				vm.dialog(keyin); }
 		},
 
 		remove:function(item, index, key) {
-			vm.pos='remove'; 
+			vm.pos='remove';
 			vm.form.posisi = key;
 			vm.form.uuid = item.uuid;
 			vm.attach.url = vm.attach.link.removedata[key];
@@ -619,7 +630,7 @@ export default {
 				vm.form.hitungan.jeniskamar.value = item.jenis;
 				vm.form.default.jeniskamar.value = item.default;
 			}
-			
+
 		},
 
 		cancel:function(key) {
@@ -725,7 +736,7 @@ export default {
 				if (sisa > 0) { vm.totalpage[key] += 1; }
 				for (let i = 0; i < 10000; i++) { if (i < vm.listdata[key].length){ vm.datatablesed[key].push(vm.listdata[key][i]); } }
 			}
-			
+
 		},
 
 		/*
@@ -745,10 +756,10 @@ export default {
 
 		berhasil: function (response, key) {
 			if (vm.$debugs) { console.log(response); }
-			let active = 1; vm.message('success', active); 
+			let active = 1; vm.message('success', active);
 			vm.aturulang(key);
-			vm.swappingvalue(); 
-			vm.listdata[key] = response.data.item;	
+			vm.swappingvalue();
+			vm.listdata[key] = response.data.item;
 			vm.setfisrtpaging(); vm.loaderprocess();
 			vm.statusedit[key] = false;
 		},
