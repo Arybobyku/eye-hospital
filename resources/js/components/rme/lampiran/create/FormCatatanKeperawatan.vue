@@ -3,6 +3,7 @@
     <button @click="$emit('back')" class="btn-back">Kembali</button>
 
     <div class="container py-4">
+      <div v-if="disabledSubmit" class="view-overlay"></div>
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">CATATAN KEPERAWATAN</h2>
@@ -165,10 +166,10 @@
 
     <!-- ================= BUTTON BOTTOM ================= -->
     <div class="action-footer">
-      <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
-        <span v-if="loadingSubmit">Menyimpan...</span>
-        <span v-else>{{ editUuid ? 'Update' : 'Simpan' }}</span>
-      </button>
+      <button v-if="!disabledSubmit" class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
+      <span v-if="loadingSubmit">Menyimpan...</span>
+      <span v-else>Simpan</span>
+    </button>
 
       <button class="btn-back" @click="$emit('back')" :disabled="loadingSubmit">
         Kembali
@@ -191,10 +192,20 @@ export default {
       type: String,
       default: null,
     },
+    viewData: {
+      type: Object,
+      default: null,
+    },
+    editData: {
+      // ✨ Props untuk data edit
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
       loadingSubmit: false,
+      disabledSubmit: false,
       ttdPerawatCleared: [],
       sigOption: {
         penColor: "black",
@@ -224,14 +235,25 @@ export default {
   },
   computed: {
     isEditMode() {
-      return !!this.editUuid;
-    }
+      console.log('p', this.state);
+        return !!this.editData.uuid;
+      },
   },
   async mounted() {
     await this.fetchTahunAkreditasi();
-    if (this.isEditMode) {
+    console.log('editmode', this.editData);
+    if(this.viewData) {
+      this.disabledSubmit = true;
+      this.loadDataForEdit();
+    } else if (this.editData) {
+      // ✨ LOAD DATA UNTUK EDIT
+      console.log("edit");
+      this.disabledSubmit = false;
+
       this.loadDataForEdit();
     } else {
+      this.disabledSubmit = false; 
+      // CREATE MODE
       this.setDataForm();
     }
   },
@@ -271,30 +293,31 @@ export default {
     },
 
     async loadDataForEdit() {
-  try {
-    const response = await axios.get(
-      `/master/rekammedis/lampiran/${this.editUuid}?type=catatan_keperawatan`
-    );
+    try {
+      const dataSource = this.editData;
+      const response = await axios.get(
+        `/master/rekammedis/lampiran/${dataSource.uuid}?type=catatan_keperawatan`
+      );
 
-    if (response.data.status) {
-      const data = response.data.data;
+      if (response.data.status) {
+        const data = response.data.data;
 
-      Object.keys(this.form).forEach(key => {
-        if (key === 'catatan_rows' && data.catatan_rows) {
-          this.form.catatan_rows = JSON.parse(data.catatan_rows);
-        } else if (data[key] !== undefined) {
-          this.form[key] = data[key];
-        }
+        Object.keys(this.form).forEach(key => {
+          if (key === 'catatan_rows' && data.catatan_rows) {
+            this.form.catatan_rows = JSON.parse(data.catatan_rows);
+          } else if (data[key] !== undefined) {
+            this.form[key] = data[key];
+          }
+        });
+
+        // 🔴 INI PENTING
+      this.$nextTick(() => {
+        this.ttdPerawatCleared = this.form.catatan_rows.map(row => !row.ttd_perawat);
       });
-
-      // 🔴 INI PENTING
-    this.$nextTick(() => {
-      this.ttdPerawatCleared = this.form.catatan_rows.map(row => !row.ttd_perawat);
-    });
+      }
+    } catch (err) {
+      console.error(err);
     }
-  } catch (err) {
-    console.error(err);
-  }
 },
 
 
