@@ -39,6 +39,7 @@ class DokumenTindakanEpilasi extends Model
         // Tanda Tangan
         'ttd_dpjp',
         'nama_dpjp',
+        'dpjp_ttd_timestamp',
         
         'created_by',
         'updated_by',

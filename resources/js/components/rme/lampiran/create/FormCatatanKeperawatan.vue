@@ -105,6 +105,9 @@
                     />
                     <div v-if="row.ttd_perawat && !ttdPerawatCleared[index]" class="text-center">
                       <img :src="row.ttd_perawat" style="width:200px; height:80px; object-fit:contain; border:1px dashed #ccc;" />
+                        <p v-if="row.ttd_perawat_timestamp" style="font-size:10px; color:#2d74b7; background:#e9f5ff; padding:3px 8px; border-radius:4px; margin:4px auto; width:fit-content;">
+                          Ditandatangani: {{ row.ttd_perawat_timestamp }}
+                        </p>
                       <button
                         @click="clearSign(index)"
                         class="btn-save-mini mt-1"
@@ -212,7 +215,8 @@ export default {
             jam: "",
             uraian: "",
             nama_perawat: "",
-            ttd_perawat: ""
+            ttd_perawat: "",
+            ttd_perawat_timestamp: ""
           }
         ]
       }
@@ -301,7 +305,8 @@ export default {
         jam: now.toTimeString().substring(0, 5),
         uraian: "",
         nama_perawat: "",
-        ttd_perawat: ""
+        ttd_perawat: "",
+        ttd_perawat_timestamp: ""
       });
       this.ttdPerawatCleared.push(false); 
     },
@@ -330,12 +335,19 @@ export default {
     
       this.form.catatan_rows[index].ttd_perawat = data;
       this.ttdPerawatCleared[index] = false;
+
+      const now = new Date();
+      this.form.catatan_rows[index].ttd_perawat_timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
       console.log("TTD saved:", refName);
     },
 
     clearSign(index) {
       this.ttdPerawatCleared[index] = true;
       this.form.catatan_rows[index].ttd_perawat = "";
+      this.form.catatan_rows[index].ttd_perawat_timestamp = "";
     
       this.$nextTick(() => {
         this.$nextTick(() => {
@@ -439,6 +451,19 @@ export default {
 /* TABLE */
 .table-responsive {
   overflow-x: auto;
+}
+
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .catatan-table {

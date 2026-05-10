@@ -104,8 +104,18 @@
                   </div>
                 </td>
                 <td class="label-cell" style="width: 13%">Operator :</td>
-                <td colspan="3" style="width: 47%">
-                  <input type="text" v-model="form.operator" class="form-control form-control-sm" placeholder="Nama Operator/Dokter" />
+                  <td colspan="3" style="width: 47%">
+                    <select v-model="form.operator" class="form-select-dokter">
+                      <option value="" disabled>🩺 Pilih Dokter</option>
+                      <option
+                        v-for="dokter in listDokter"
+                        :key="dokter.id"
+                        :value="dokter.nama"
+                      >
+                        {{ dokter.nama }}
+                      </option>
+                    </select>
+                    <span class="dropdown-icon">▾</span>
                 </td>
               </tr>
               <tr>
@@ -235,6 +245,9 @@
               class="signature-preview"
             >
               <img :src="form.ttd_perawat" alt="TTD Perawat" class="img-signature" />
+              <p v-if="form.ttd_perawat_timestamp" class="timestamp-ttd">
+                Ditandatangani: {{ form.ttd_perawat_timestamp }}
+              </p>
               <button @click="clearSignature('ttd_perawat')" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
@@ -267,6 +280,9 @@
               class="signature-preview"
             >
               <img :src="form.ttd_operator" alt="TTD Operator" class="img-signature" />
+              <p v-if="form.ttd_operator_timestamp" class="timestamp-ttd">
+                Ditandatangani: {{ form.ttd_operator_timestamp }}
+              </p>
               <button @click="clearSignature('ttd_operator')" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
@@ -390,8 +406,10 @@ export default {
         // Tanda Tangan
         ttd_perawat: "",
         nama_perawat: "",
+        ttd_perawat_timestamp: "",
         ttd_operator: "",
         nama_operator: "",
+        ttd_operator_timestamp: "",
       },
     };
   },
@@ -537,6 +555,15 @@ export default {
     clearSignature(refName) {
       this.signatureCleared[refName] = true;
       this.form[refName] = "";
+      
+      const timestampMap = {
+        ttd_perawat: 'ttd_perawat_timestamp',
+        ttd_operator: 'ttd_operator_timestamp',
+      };
+
+      if (timestampMap[refName]) {
+        this.form[timestampMap[refName]] = "";
+      }
 
       // Reset signature pad di next tick
       this.$nextTick(() => {
@@ -576,6 +603,21 @@ export default {
       }
 
       this.form[refName] = data;
+      this.signatureCleared[refName] = false;
+
+      const timestampMap = {
+        ttd_perawat: 'ttd_perawat_timestamp',
+        ttd_operator: 'ttd_operator_timestamp',
+      };
+    
+      if (timestampMap[refName]) {
+        const now = new Date();
+        this.form[timestampMap[refName]] = now.toLocaleString('id-ID', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+      }
+      
       console.log("TTD saved:", refName);
     },
 
@@ -799,6 +841,18 @@ label {
 .form-control-sm {
   padding: 6px 10px;
   font-size: 13px;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 /* ================= CHECKBOX STYLING ================= */

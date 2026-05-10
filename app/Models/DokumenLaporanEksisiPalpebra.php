@@ -42,6 +42,8 @@ class DokumenLaporanEksisiPalpebra extends Model
         'nama_perawat',
         'ttd_dokter',
         'nama_dokter',
+        'ttd_perawat_timestamp',
+        'ttd_dokter_timestamp',
         
         'created_by',
         'updated_by',

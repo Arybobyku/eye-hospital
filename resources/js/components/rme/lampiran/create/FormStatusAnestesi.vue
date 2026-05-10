@@ -985,6 +985,9 @@
             <label>dr. Anestesi</label>
             <div v-if="form.ttd_dr_anestesi && !ttdDokterCleared" class="signature-preview text-center">
               <img :src="form.ttd_dr_anestesi" alt="TTD Perawat Ruangan" class="img-signature" />
+                <p v-if="form.ttd_dr_anestesi_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.ttd_dr_anestesi_timestamp }}
+                </p>
               <button @click="clearSign('ttd_dr_anestesi')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -1010,6 +1013,9 @@
             <label>Perawat Anestesi</label>
             <div v-if="form.ttd_perawat_anestesi && !ttdPerawatCleared" class="signature-preview text-center">
               <img :src="form.ttd_perawat_anestesi" alt="TTD Perawat Ruangan" class="img-signature" />
+                <p v-if="form.ttd_perawat_anestesi_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.ttd_perawat_anestesi_timestamp }}
+                </p>
               <button @click="clearSign('ttd_perawat_anestesi')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -1260,8 +1266,10 @@ export default {
         // Signature
         ttd_dr_anestesi: "",
         nama_dr_anestesi: "",
+        ttd_dr_anestesi_timestamp: "",
         ttd_perawat_anestesi: "",
         nama_perawat_anestesi: "",
+        ttd_perawat_anestesi_timestamp: "",
       },
     };
   },
@@ -1410,12 +1418,24 @@ export default {
         ttd_dr_anestesi: 'ttdDokterCleared',
         ttd_perawat_anestesi: 'ttdPerawatCleared',
       };
+
+      const timestampMap = {
+        ttd_dr_anestesi: 'ttd_dr_anestesi_timestamp',
+        ttd_perawat_anestesi: 'ttd_perawat_anestesi_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = false;
       }
     
       this.form[refName] = data;
+      if (timestampMap[refName]) {
+      const now = new Date();
+      this.form[timestampMap[refName]] = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    }
       console.log("TTD saved:", refName);
     },
     
@@ -1424,10 +1444,19 @@ export default {
         ttd_dr_anestesi: 'ttdDokterCleared',
         ttd_perawat_anestesi: 'ttdPerawatCleared',
       };
+
+      const timestampMap = {
+        ttd_dr_anestesi: 'ttd_dr_anestesi_timestamp',
+        ttd_perawat_anestesi: 'ttd_perawat_anestesi_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = true;
         this.form[refName] = "";
+      }
+
+      if (timestampMap[refName]) {
+        this.form[timestampMap[refName]] = "";
       }
     
       this.$nextTick(() => {
@@ -1547,6 +1576,18 @@ export default {
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 10px;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .img-signature {

@@ -73,6 +73,7 @@ class DokumenResumeMedisRawatInap extends Model
         // Tanda Tangan
         'dokter_ttd',
         'nama_dokter',
+        'dokter_ttd_timestamp',
         
         'created_by',
         'updated_by',

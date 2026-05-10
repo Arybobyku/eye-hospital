@@ -186,6 +186,7 @@ class DokumenLaporanOperasiVitreoRetina extends Model
         // Stiker & TTD
         'stiker_implant',
         'ttd_dpjp_bedah',
+        'ttd_dpjp_bedah_timestamp',
         'nama_dpjp_bedah_ttd',
         'tanggal_selesai_laporan',
         'jam_selesai_laporan',

@@ -126,6 +126,9 @@
             <label class="fw-bold mb-2">Keluarga Pasien</label>
             <div v-if="form.ttd_keluarga && !ttdKeluargaCleared" class="signature-preview text-center">
               <img :src="form.ttd_keluarga" alt="TTD Perawat Kamar Bedah" class="img-signature" />
+                <p v-if="form.ttd_keluarga_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.ttd_keluarga_timestamp }}
+                </p>
               <button @click="clearSign('ttd_keluarga')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -145,6 +148,9 @@
             <label class="fw-bold mb-2">DPJP</label>
             <div v-if="form.ttd_dpjp && !ttdDpjpCleared" class="signature-preview text-center">
               <img :src="form.ttd_dpjp" alt="TTD Perawat Kamar Bedah" class="img-signature" />
+                <p v-if="form.ttd_dpjp_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.ttd_dpjp_timestamp }}
+                </p>
               <button @click="clearSign('ttd_dpjp')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -235,6 +241,8 @@ export default {
         nama_keluarga_ttd: "",
         ttd_dpjp: "",
         nama_dpjp_ttd: "",
+        ttd_keluarga_timestamp: "",
+        ttd_dpjp_timestamp: "",
       },
     };
   },
@@ -395,12 +403,24 @@ renderSignature(refName, data) {
         ttd_keluarga: 'ttdKeluargaCleared',
         ttd_dpjp: 'ttdDpjpCleared',
       };
+
+      const timestampMap = {
+        ttd_keluarga: 'ttd_keluarga_timestamp',
+        ttd_dpjp: 'ttd_dpjp_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = false;
       }
     
       this.form[refName] = data;
+      if (timestampMap[refName]) {
+        const now = new Date();
+        this.form[timestampMap[refName]] = now.toLocaleString('id-ID', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+      }
       console.log("TTD saved:", refName);
     },
     
@@ -409,10 +429,19 @@ renderSignature(refName, data) {
         ttd_keluarga: 'ttdKeluargaCleared',
         ttd_dpjp: 'ttdDpjpCleared',
       };
+
+      const timestampMap = {
+        ttd_keluarga: 'ttd_keluarga_timestamp',
+        ttd_dpjp: 'ttd_dpjp_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = true;
         this.form[refName] = "";
+      }
+
+      if (timestampMap[refName]) {
+        this.form[timestampMap[refName]] = "";
       }
     
       this.$nextTick(() => {
@@ -537,6 +566,18 @@ renderSignature(refName, data) {
 .colon {
   margin: 0 10px;
   flex-shrink: 0;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .info-value {

@@ -35,6 +35,7 @@ class DokumenResumeMedisRawatJalan extends Model
         
         // Tanda Tangan
         'ttd_dokter',
+        'dokter_ttd_timestamp',
         'nama_dokter',
         
         'created_by',

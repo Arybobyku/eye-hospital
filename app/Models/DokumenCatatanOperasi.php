@@ -119,6 +119,7 @@ class DokumenCatatanOperasi extends Model
         // Catatan & TTD
         'catatan_tambahan',
         'ttd_operator',
+        'ttd_operator_timestamp',
         'nama_operator',
         
         'created_by',

@@ -129,6 +129,9 @@ P: Planning (rencana tindakan)"
                   <div class="signature-cell">
                     <div v-if="row.ttd_ppa && !ttdPpaCleared[index]" class="text-center">
                       <img :src="row.ttd_ppa" style="width:180px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+                      <p v-if="row.ttd_ppa_timestamp" style="font-size:10px; color:#2d74b7; background:#e9f5ff; padding:3px 8px; border-radius:4px; margin:4px auto; width:fit-content;">
+                        Ditandatangani: {{ row.ttd_ppa_timestamp }}
+                      </p>
                       <button
                         @click="clearSign(index, 'ttd_ppa')"
                         class="btn-save-mini mt-1"
@@ -164,6 +167,9 @@ P: Planning (rencana tindakan)"
                     <input type="time" v-model="row.jam_review" class="input-table mb-1" />
                     <div v-if="row.ttd_dpjp && !ttdDpjpCleared[index]" class="text-center">
                       <img :src="row.ttd_dpjp" style="width:180px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+                      <p v-if="row.ttd_dpjp_timestamp" style="font-size:10px; color:#2d74b7; background:#e9f5ff; padding:3px 8px; border-radius:4px; margin:4px auto; width:fit-content;">
+                        Ditandatangani: {{ row.ttd_dpjp_timestamp }}
+                      </p>
                       <button
                         @click="clearSign(index, 'ttd_dpjp')"
                         class="btn-save-mini mt-1"
@@ -313,10 +319,12 @@ export default {
             instruksi_ppa: "",
             nama_ppa: "",
             ttd_ppa: "",
+            ttd_ppa_timestamp: "",
             tanggal_review: "",
             jam_review: "",
             nama_dpjp: "",
-            ttd_dpjp: ""
+            ttd_dpjp: "",
+            ttd_dpjp_timestamp: ""
           }
         ],
         catatan_khusus: ""
@@ -431,10 +439,12 @@ addRow() {
     instruksi_ppa: "",
     nama_ppa: "",
     ttd_ppa: "",
+    ttd_ppa_timestamp: "",
     tanggal_review: "",
     jam_review: "",
     nama_dpjp: "",
-    ttd_dpjp: ""
+    ttd_dpjp: "",
+    ttd_dpjp_timestamp: ""
   });
   this.ttdPpaCleared.push(false);
   this.ttdDpjpCleared.push(false);
@@ -464,9 +474,19 @@ deleteRow(index) {
       }
     
       this.form.cppt_rows[index][field] = data;
+      const now = new Date();
+      const timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
     
-      if (field === 'ttd_ppa') this.ttdPpaCleared[index] = false;
-      else if (field === 'ttd_dpjp') this.ttdDpjpCleared[index] = false;
+      if (field === 'ttd_ppa') {
+        this.ttdPpaCleared[index] = false;
+        this.form.cppt_rows[index].ttd_ppa_timestamp = timestamp;
+      } else if (field === 'ttd_dpjp') {
+        this.ttdDpjpCleared[index] = false;
+        this.form.cppt_rows[index].ttd_dpjp_timestamp = timestamp;
+      }
     
       console.log("TTD saved:", refName, field);
     },
@@ -475,9 +495,11 @@ deleteRow(index) {
       if (field === 'ttd_ppa') {
         this.ttdPpaCleared[index] = true;
         this.form.cppt_rows[index].ttd_ppa = "";
+        this.form.cppt_rows[index].ttd_ppa_timestamp = "";
       } else if (field === 'ttd_dpjp') {
         this.ttdDpjpCleared[index] = true;
         this.form.cppt_rows[index].ttd_dpjp = "";
+        this.form.cppt_rows[index].ttd_dpjp_timestamp = "";
       }
     
       this.$nextTick(() => {

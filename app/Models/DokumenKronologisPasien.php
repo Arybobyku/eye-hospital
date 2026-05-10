@@ -59,6 +59,7 @@ class DokumenKronologisPasien extends Model
         
         // Tanda Tangan
         'ttd_pembuat',
+        'ttd_pembuat_timestamp',
         'nama_pembuat_ttd',
         
         'created_by',

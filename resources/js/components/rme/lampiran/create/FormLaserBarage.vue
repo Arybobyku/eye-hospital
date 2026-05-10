@@ -307,6 +307,9 @@
             <!-- Preview TTD yang sudah ada -->
             <div v-if="form.ttd_dokter && !signatureCleared" class="signature-preview">
               <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+              <p v-if="form.dokter_ttd_timestamp" class="timestamp-ttd">
+                Ditandatangani: {{ form.dokter_ttd_timestamp }}
+              </p>
               <button @click="clearSignature()" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
@@ -409,6 +412,7 @@ export default {
         mata_kanan: false,
         mata_kiri: false,
         ttd_dokter: "",
+        dokter_ttd_timestamp: "",
         nama_dokter: "",
         diagram_mata: "",
       },
@@ -538,6 +542,10 @@ export default {
     clearSignature() {
       this.signatureCleared = true;
       this.form.ttd_dokter = "";
+      this.form.dokter_ttd_timestamp = "";
+
+      if (refName === 'ttd_dokter') this.form.dokter_ttd_timestamp = "";
+
       this.$nextTick(() => {
         const pad = this.$refs.ttd_dokter;
         if (pad) pad.clearSignature();
@@ -562,6 +570,15 @@ export default {
         return;
       }
       this.form.ttd_dokter = data;
+      this.signatureCleared = false;
+
+      const now = new Date();
+      this.form.dokter_ttd_timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    
+      if (refName === 'ttd_dokter') this.form.dokter_ttd_timestamp = timestamp
     },
 
     clearEyeDiagram() {
@@ -686,6 +703,18 @@ export default {
   font-size: 13px;
   margin: 0;
   line-height: 1.5;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 hr {

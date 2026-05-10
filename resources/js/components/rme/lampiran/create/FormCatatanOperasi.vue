@@ -681,6 +681,9 @@
             <!-- Preview TTD yang sudah ada -->
             <div v-if="form.ttd_operator && !signatureCleared" class="signature-preview">
               <img :src="form.ttd_operator" alt="TTD Operator" class="img-signature" />
+              <p v-if="form.ttd_operator_timestamp" class="timestamp-ttd">
+                Ditandatangani: {{ form.ttd_operator_timestamp }}
+              </p>
               <button @click="clearSignature()" class="btn-clear">
                 Hapus & Tanda Tangan Ulang
               </button>
@@ -851,6 +854,7 @@ export default {
         // Catatan & TTD
         catatan_tambahan: "",
         ttd_operator: "",
+        ttd_operator_timestamp: "",
         nama_operator: "",
         created_by: "",
         updated_by: "",
@@ -965,6 +969,8 @@ export default {
     clearSignature() {
       this.signatureCleared = true;
       this.form.ttd_operator = "";
+      this.form.ttd_operator_timestamp = "";
+
       this.$nextTick(() => {
         const pad = this.$refs.ttd_operator;
         if (pad) pad.clearSignature();
@@ -1009,6 +1015,13 @@ export default {
         return;
       }
       this.form.ttd_operator = data;
+      this.signatureCleared = false;
+
+      const now = new Date();
+      this.form.ttd_operator_timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
     },
 
     async submitForm() {
@@ -1157,6 +1170,18 @@ label {
   font-weight: 500;
   color: #555;
   font-size: 14px;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .input-rme {
