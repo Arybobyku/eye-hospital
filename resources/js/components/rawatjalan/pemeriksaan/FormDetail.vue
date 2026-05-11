@@ -24,6 +24,7 @@
 							<li>No Rekam Medis<span><strong>{{ detail.rekam_medis }}</strong></span></li>
 							<li>Nama Lengkap<span><strong>{{ detail.nama_pasien }}</strong></span></li>
 							<li>Tanggal Lahir<span><strong>{{ datename(detail.tanggal_lahir) }}</strong></span></li>
+							<li>Umur<span><strong>{{ detail.tanggal_lahir ? countage(detail.tanggal_lahir) : '-' }}</strong></span></li>
 							<li>Jenis Kelamin<span><strong>{{ detail.jenis_kelamin }}</strong></span></li>
 							<li>Nomor Handphone<span><strong>{{ detail.no_handphone }}</strong></span></li>
 							<li>Cara Bayar<span><strong>{{ detail.carabayar_nama }}</strong></span></li>
@@ -338,7 +339,7 @@ import 'vue3-toastify/dist/index.css';
 import { toast } from 'vue3-toastify';
 import Swal from 'sweetalert2';
 import { arrpemeriksaan } from '../../../module/DataArray.js';
-import { datename } from '../../../module/Manipulation.js';
+import { datename, countage } from '../../../module/Manipulation.js';
 import CKEditor from '@ckeditor/ckeditor5-vue';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 function getUserNama() {
@@ -395,6 +396,7 @@ export default {
 	methods: {
 
 		datename,
+		countage,
 		doDigitalSignature: function () {
 			vm.form.ttd = window.localStorage.getItem("ttd") ?? "";
 		},
@@ -875,7 +877,7 @@ export default {
 				// vm.form.ocularsinistrabcva2.value = vm.nullcheck(temps.ocular_sinistra_bcva2);
 				vm.form.select.ocularsinistrabcva2.label = temps.ocular_sinistra_bcva2;
 				vm.form.select.ocularsinistrabcva2.value = temps.ocular_sinistra_bcva2;
-				if (temps.ocular_dextra_bcva2  == '' || temps.ocular_sinistra_bcva2  == null) {
+				if (temps.ocular_sinistra_bcva2  == '' || temps.ocular_sinistra_bcva2  == null) {
 					vm.form.select.ocularsinistrabcva2.label = 'Silahkan Pilih';
 					vm.form.select.ocularsinistrabcva2.value = '';
 				}

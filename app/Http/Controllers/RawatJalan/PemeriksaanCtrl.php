@@ -312,8 +312,8 @@ class PemeriksaanCtrl extends Controller
 		$osVisus = $request->ocular_sinistra_visus;
 		$odPinhole = $request->ocular_dextra_pinhole;
 		$osPinhole = $request->ocular_sinistra_pinhole;
-		$odBcva2 = $request->ocular_sinistra_bcva2;
-		$osBcva2 = $request->ocular_dextra_bcva2;
+		$odBcva2 = $request->ocular_dextra_bcva2;
+		$osBcva2 = $request->ocular_sinistra_bcva2;
 		try {
 			DB::beginTransaction();
 

@@ -27,7 +27,7 @@ import Swal from 'sweetalert2';
 export default {
 	emits: ["titletrigger", "repatch"],
 	beforeUnmount:function() {},
-	components: { toast, Swal, 
+	components: { toast, Swal,
 		FormUnit: defineAsyncComponent(() => import('./FormUnit.vue')),
 		FormObat: defineAsyncComponent(() => import('./FormObat.vue')),
 		FormPaket: defineAsyncComponent(() => import('./FormPaket.vue')),
@@ -67,10 +67,12 @@ export default {
 			}, url: '', data: null
 		},
 		column: [
-		
+
 			{ value: 'tanggal', label: 'Tanggal', type: 'text', search: true, close: false, button: false },
 			{ value: 'carabayar_nama', label: 'Cara Pembayaran', type: 'text', search: true, close: false, button: false },
 			{ value: 'rekam_medis', label: 'No Rekam Medis', type: 'text', search: true, close: false, button: false },
+			{ value: 'kamar_inap_nama', label: 'Nama Kamar', type: 'text', search: true, close: false, button: false },
+			{ value: 'nama_jenis_kamar', label: 'Jenis Kamar', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_pasien', label: 'Nama Pasien', type: 'text', search: true, close: false, button: false },
 			{ value: 'nama_dokter', label: 'Dokter yang menangani', type: 'text', search: true, close: false, button: false },
 			{ value: 'keterangan_inap', label: 'Keterangan', type: 'text', search: false, close: false, button: false },
@@ -192,7 +194,7 @@ export default {
 			}
 		},
 
-		loadingModal: function (position) { 
+		loadingModal: function (position) {
 			console.log("position loadingmodal");
 			console.log(position);
 			if (position == 'formunit') { vm.$refs.FormUnit.loaderprocess();  }
@@ -240,7 +242,7 @@ export default {
 				vm.position = 'removeresep';
 				vm.attach.url = vm.attach.link.removeresep;
 			}
-			else if (key == 'pulang') 
+			else if (key == 'pulang')
 			{ vm.position = 'updatepulangdata'; vm.attach.url = vm.attach.link.pulang; }
 
 			// else if (key == 'pulang') {
@@ -282,7 +284,7 @@ export default {
 			else if (vm.position == 'updatepulangdata') { vm.loadingModal('formpulangdetail'); }
 
 			// else if (vm.position == 'pulangdata') { vm.$refs.Datatable.skeleton(); }
-			
+
 			/* Bagian ini tidak perlu diubah */
 			if (active == 1) { setTimeout(function(){ vm.$router.push({ name: 'Error', params: { link: vm.name_vue } }) }, 250, this); }
 		},
@@ -294,16 +296,16 @@ export default {
 			if (vm.$debugs) { console.log(response.data); } let active = 1;
 			if (response.data.data == '403') { vm.$router.push('/dashboard/forbidden'); }
 
-			if (vm.position == 'loadmain') { 
+			if (vm.position == 'loadmain') {
 				vm.firstloader();
-				vm.$refs.Datatable.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.Datatable.paging(); 
+				vm.$refs.Datatable.update(vm.column, vm.setDatatable(response.data.data, response.data.total), response.data.total);
+				vm.$refs.Datatable.paging();
 				active = 0;
 			}
-			else if (vm.position == 'externaltable') { 
-				vm.$refs.Datatable.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total); 
-				vm.$refs.Datatable.skeleton(); 
-				vm.$refs.Datatable.paging(); 
+			else if (vm.position == 'externaltable') {
+				vm.$refs.Datatable.update('', vm.setDatatable(response.data.data, response.data.total), response.data.total);
+				vm.$refs.Datatable.skeleton();
+				vm.$refs.Datatable.paging();
 				active = 0;
 			}
 			else if (vm.position == 'adddata') {
@@ -318,45 +320,45 @@ export default {
 			else if (vm.position == 'addjadwalkontrol') {
 				vm.$refs.FormJadwalKontrol.hide();
 				vm.loadingModal('formjadwalkontrol');
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this); 
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this);
 			}
 			else if (vm.position == 'addpaket') {
 				vm.$refs.FormPaket.hide();
 				vm.loadingModal('formpaket');
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this); 
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this);
 			}
 			else if (vm.position == 'loaddata') {
-				vm.$refs.FormUnit.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormUnit.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddataobat') {
-				vm.$refs.FormObat.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormObat.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddataresep') {
-				vm.$refs.FormResep.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormResep.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddatajadwalkontrol') {
-				vm.$refs.FormJadwalKontrol.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormJadwalKontrol.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'loaddatapaket') {
-				vm.$refs.FormPaket.setdataform(response); 
-				active = 0; 
+				vm.$refs.FormPaket.setdataform(response);
+				active = 0;
 			}
 			else if (vm.position == 'updatedata') {
 				vm.loadingModal('formunit');
-				vm.$refs.FormUnit.hide(); 
+				vm.$refs.FormUnit.hide();
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
-			else if (vm.position == 'removedata') { 
+			else if (vm.position == 'removedata') {
 				vm.$refs.FormUnit.setdataform(response);
 			}
-			else if (vm.position == 'removedataobat') { 
+			else if (vm.position == 'removedataobat') {
 				vm.$refs.FormObat.setdataform(response);
 			}
-			else if (vm.position == 'removedataresep') { 
+			else if (vm.position == 'removedataresep') {
 				vm.$refs.FormResep.setdataform(response);
 			}
 			else if (vm.position == 'pulang') {
@@ -379,8 +381,8 @@ export default {
 				vm.$refs.FormDetailPulang.hide();
 				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500, this);
 			}
-			// else if (vm.position == 'pulangdata') { 
-			// 	setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this); 
+			// else if (vm.position == 'pulangdata') {
+			// 	setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 125, this);
 			// }
 			vm.message('success', active);
 		},

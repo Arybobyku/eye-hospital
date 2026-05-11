@@ -29,6 +29,8 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
 		Route::post('history', [PasienCtrl::class, 'history'])->name('master-pasien-history');
 		Route::post('search', [PasienCtrl::class, 'search'])->name('master-pasien-search');
 		Route::post('soap', [PasienCtrl::class, 'soap'])->name('master-pasien-soap');
+		Route::post('registrasi-list', [PasienCtrl::class, 'registrasiList'])->name('master-pasien-registrasi-list');
+		Route::post('soap-store', [PasienCtrl::class, 'soapStore'])->name('master-pasien-soap-store');
 
 		Route::post('dokumen-pertujuan-penolakan-tindakan-dokter', [PasienCtrl::class, 'dokumenPersetujuanPenolakan'])->name('master-pasien-persetujuan-penolkan-tindakan-dokter');
 		Route::post('list-dokumen-persetujuan-penolkan', [PasienCtrl::class, 'listDokumenPersetujuanPenolakan'])->name('master-pasien-list-persetujuan-penolkan-tindakan-dokter');
@@ -86,6 +88,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
 		Route::post('dokumen-kronologis', [PasienCtrl::class, 'storeKronologisPasien'])->name('master-pasien-storeKronologisPasien');
 		Route::post('dokumen-catatan-operasi', [PasienCtrl::class, 'storeCatatanOperasi'])->name('master-pasien-storeCatatanOperasi');
 		Route::post('dokumen-resume-medis-rawat-jalan', [PasienCtrl::class, 'storeResumeMedisRawatJalan'])->name('master-pasien-storeResumeMedisRawatJalan');
+		Route::post('get-resume-medis-rawat-jalan', [PasienCtrl::class, 'getResumeMedisRawatJalan'])->name('master-pasien-getResumeMedisRawatJalan');
 		Route::post('dokumen-resume-medis-rawat-inap', [PasienCtrl::class, 'storeResumeMedisRawatInap'])->name('master-pasien-storeResumeMedisRawatInap');
 		Route::post('dokumen-cppt-rawat-inap', [PasienCtrl::class, 'storeCPPTRawatInap'])->name('master-pasien-storeCPPTRawatInap');
 		Route::post('dokumen-monitoring-efek-samping-obat', [PasienCtrl::class, 'storeMonitoringEfekSampingObat'])->name('master-pasien-storeMonitoringEfekSampingObat');

@@ -9,6 +9,15 @@
     <!-- ============ SOAP TABLE ============ -->
     <div class="header-component-rme">Riwayat SOAP dan Diagnosa</div>
 
+    <div class="action-bar">
+      <button @click="openCreateModal" class="btn-add">
+        <span>+</span> Tambah CPPT &amp; SOAP
+      </button>
+      <button @click="showAllCppt = true" class="btn-view-all-cppt">
+        <i class="fas fa-list" style="margin-right:5px;"></i> View All CPPT
+      </button>
+    </div>
+
     <div class="filter-bar">
       <div class="filter-left">
         Tampil
@@ -144,6 +153,124 @@
           @click="currentPageDokumen = page"
         >{{ page }}</button>
         <button :disabled="currentPageDokumen === totalPagesDokumen" @click="currentPageDokumen++">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL VIEW ALL CPPT (iframe) ============ -->
+  <div
+    v-if="showAllCppt"
+    style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99998;display:flex;align-items:center;justify-content:center;"
+    @click.self="showAllCppt = false"
+  >
+    <div style="background:#fff;border-radius:10px;box-shadow:0 6px 32px rgba(0,0,0,0.22);width:92%;max-width:1150px;height:88vh;display:flex;flex-direction:column;overflow:hidden;">
+      <!-- Header -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 20px;background:#1a6f1d;border-radius:10px 10px 0 0;flex-shrink:0;">
+        <span style="color:#fff;font-weight:700;font-size:15px;">
+          <i class="fas fa-list" style="margin-right:7px;"></i>
+          Semua CPPT — {{ selectedPatient.nama_pasien || selectedPatient.nama || '' }}
+        </span>
+        <span @click="showAllCppt = false" style="color:#fff;font-size:24px;cursor:pointer;line-height:1;padding:0 4px;">&times;</span>
+      </div>
+      <!-- Body: iframe -->
+      <div style="flex:1;overflow:hidden;">
+        <iframe
+          title="All CPPT"
+          width="100%"
+          height="100%"
+          style="border:0;display:block;"
+          :src="'/print/rekammedis/rawat-jalan/cpptpoli/' + selectedPatient.uuid"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MODAL CREATE CPPT & SOAP ============ -->
+  <div v-if="showCreateModal" class="modal-overlay" @click.self="closeCreateModal">
+    <div class="modal-content-dokumen" style="max-width: 680px;">
+      <div class="modal-header-dokumen">
+        <h3>Tambah CPPT &amp; SOAP</h3>
+        <button @click="closeCreateModal" class="btn-close-x">×</button>
+      </div>
+      <div class="modal-body-dokumen">
+
+        <!-- Loading overlay -->
+        <div v-if="loadingCreate" style="text-align:center; padding: 30px 0;">
+          <div class="spinner-rme" style="margin: 0 auto 10px;"></div>
+          Memuat...
+        </div>
+
+        <template v-else>
+          <!-- Pilih Registrasi -->
+          <div class="form-group-dokumen">
+            <label>Pilih Tanggal Registrasi <span style="color:red;">*</span></label>
+            <select v-model="formCreate.registrasi_uuid" class="form-control-dokumen">
+              <option value="">-- Pilih Kunjungan --</option>
+              <option
+                v-for="reg in registrasiOptions"
+                :key="reg.uuid"
+                :value="reg.uuid"
+              >
+                {{ reg.tanggal }} — {{ reg.no_pendaftaran }}
+                <template v-if="reg.nama_dokter"> · {{ reg.nama_dokter }}</template>
+              </option>
+            </select>
+          </div>
+
+          <!-- Subject -->
+          <div class="form-group-dokumen">
+            <label>Subject (Subjek)</label>
+            <textarea
+              v-model="formCreate.subjek"
+              class="form-control-dokumen"
+              rows="3"
+              placeholder="Keluhan / anamnesa pasien..."
+            ></textarea>
+          </div>
+
+          <!-- Object -->
+          <div class="form-group-dokumen">
+            <label>Object (Objek)</label>
+            <textarea
+              v-model="formCreate.objek"
+              class="form-control-dokumen"
+              rows="3"
+              placeholder="Pemeriksaan fisik / hasil objektif..."
+            ></textarea>
+          </div>
+
+          <!-- Assessment -->
+          <div class="form-group-dokumen">
+            <label>Assessment (Asesmen)</label>
+            <textarea
+              v-model="formCreate.asesmen"
+              class="form-control-dokumen"
+              rows="3"
+              placeholder="Diagnosis / penilaian klinis..."
+            ></textarea>
+          </div>
+
+          <!-- Planning -->
+          <div class="form-group-dokumen">
+            <label>Planning (Plan)</label>
+            <textarea
+              v-model="formCreate.plan"
+              class="form-control-dokumen"
+              rows="3"
+              placeholder="Rencana tindakan / terapi..."
+            ></textarea>
+          </div>
+        </template>
+      </div>
+      <div class="modal-footer-dokumen">
+        <button @click="closeCreateModal" class="btn-secondary-dokumen">Batal</button>
+        <button
+          @click="submitCreateForm"
+          class="btn-primary-dokumen"
+          :disabled="!formCreate.registrasi_uuid || loadingCreate || submittingCreate"
+        >
+          {{ submittingCreate ? 'Menyimpan...' : 'Simpan' }}
+        </button>
       </div>
     </div>
   </div>
@@ -328,6 +455,22 @@ export default {
       loading: false,
       data: [],
 
+      // ---- VIEW ALL CPPT ----
+      showAllCppt: false,
+
+      // ---- CREATE CPPT ----
+      showCreateModal: false,
+      loadingCreate: false,
+      submittingCreate: false,
+      registrasiOptions: [],
+      formCreate: {
+        registrasi_uuid: '',
+        subjek: '',
+        objek: '',
+        asesmen: '',
+        plan: '',
+      },
+
       // ---- DOKUMEN ----
       perPageDokumen: 10,
       currentPageDokumen: 1,
@@ -479,6 +622,60 @@ export default {
     formatTimeShort(time) {
       if (!time) return '-';
       return String(time).substring(0, 5);
+    },
+
+    // ---- CREATE CPPT methods ----
+    async openCreateModal() {
+      this.showCreateModal = true;
+      this.loadingCreate = true;
+      this.formCreate = { registrasi_uuid: '', subjek: '', objek: '', asesmen: '', plan: '' };
+      try {
+        const fd = new FormData();
+        fd.append('pasien_uuid', this.selectedPatient.uuid);
+        const res = await axios.post('/master/pasien/registrasi-list', fd, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        this.registrasiOptions = res.data?.data ?? [];
+      } catch (err) {
+        console.error('Gagal memuat daftar registrasi:', err);
+        alert('Gagal memuat daftar kunjungan pasien.');
+        this.showCreateModal = false;
+      } finally {
+        this.loadingCreate = false;
+      }
+    },
+
+    closeCreateModal() {
+      this.showCreateModal = false;
+      this.formCreate = { registrasi_uuid: '', subjek: '', objek: '', asesmen: '', plan: '' };
+    },
+
+    async submitCreateForm() {
+      if (!this.formCreate.registrasi_uuid) return;
+      this.submittingCreate = true;
+      try {
+        const fd = new FormData();
+        fd.append('pasien_uuid', this.selectedPatient.uuid);
+        fd.append('registrasi_uuid', this.formCreate.registrasi_uuid);
+        fd.append('subjek', this.formCreate.subjek);
+        fd.append('objek', this.formCreate.objek);
+        fd.append('asesmen', this.formCreate.asesmen);
+        fd.append('plan', this.formCreate.plan);
+        const res = await axios.post('/master/pasien/soap-store', fd, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        if (res.data?.data === 'berhasil') {
+          alert('CPPT & SOAP berhasil ditambahkan!');
+          this.closeCreateModal();
+          this.fetchHistory();
+        } else {
+          alert('Gagal menyimpan data: ' + (res.data?.error ?? 'unknown error'));
+        }
+      } catch (err) {
+        alert(err.response?.data?.message || err.response?.data?.error || 'Gagal menyimpan data.');
+      } finally {
+        this.submittingCreate = false;
+      }
     },
 
     // ---- DOKUMEN methods ----
@@ -705,6 +902,9 @@ export default {
 .btn-add { background: #28a745; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; }
 .btn-add:hover { background: #218838; }
 .btn-add span { font-size: 18px; margin-right: 5px; }
+
+.btn-view-all-cppt { background: #1a6f1d; color: white; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold; margin-left: 8px; }
+.btn-view-all-cppt:hover { background: #145217; }
 
 .file-link { color: #0066cc; cursor: pointer; text-decoration: underline; }
 .file-link:hover { color: #004499; }

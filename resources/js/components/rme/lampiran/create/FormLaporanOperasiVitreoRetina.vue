@@ -136,8 +136,20 @@
                 Anestesi Blok
               </label>
             </div>
-            <label class="mt-2">DPJP Anestesi</label>
-            <input v-model="form.dpjp_anestesi" class="input-rme" />
+            <label>DPJP Anestesi</label>
+            <div class="dropdown-dokter mt-2">
+              <select v-model="form.dpjp_anestesi" class="form-select-dokter">
+                <option value="" disabled>🩺 Pilih Dokter</option>
+                <option
+                  v-for="dokter in listDokter"
+                  :key="dokter.id"
+                  :value="dokter.nama"
+                >
+                  {{ dokter.nama }}
+                </option>
+              </select>
+              <span class="dropdown-icon">▾</span>
+              </div>
           </div>
         </div>
       </div>
@@ -333,13 +345,17 @@
                 3 mm
               </label>
               <label class="checkbox-label">
+                <input type="checkbox" v-model="form.kanula_3_5mm" />
+                3,5 mm
+              </label>
+              <label class="checkbox-label">
                 <input type="checkbox" v-model="form.kanula_4mm" />
                 4 mm
               </label>
+              
               <label class="checkbox-label">
                 <input type="checkbox" v-model="form.kanula_tak_tembus" />
                 Tak tembus, pindah
-                <input v-model="form.kanula_3_5mm" class="input-rme mt-1" placeholder="3,5 mm" />
               </label>
               <label class="checkbox-label">
                 <input type="checkbox" v-model="form.kanula_ujung_tak_terlihat" />
