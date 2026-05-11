@@ -46,6 +46,9 @@ class DokumenSuratPernyataanBatalOperasi extends Model
         'nama_saksi',
         'ttd_dokter',
         'nama_dokter',
+        'pernyataan_ttd_timestamp',
+        'saksi_ttd_timestamp',
+        'dokter_ttd_timestamp',
 
         'created_by',
         'updated_by',

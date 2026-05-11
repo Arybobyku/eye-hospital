@@ -145,6 +145,11 @@ Route::group(['middleware' => 'throttle: 250, 1'], function(){
 		Route::post('detail', [ClaimCtrl::class, 'detail'])->name('kasir-detail');
 	});
 
+	Route::prefix('claimdokumen')->group(function () {
+		Route::post('list', [\App\Http\Controllers\Finance\ClaimDokumenCtrl::class, 'list'])->name('claimdokumen-list');
+		Route::post('get-dokumen', [\App\Http\Controllers\Finance\ClaimDokumenCtrl::class, 'getDokumen'])->name('claimdokumen-get-dokumen');
+	});
+
 	Route::prefix('kwitansiclaim')->group(function () {
 		Route::post('get', [KwitansiClaimCtrl::class, 'get'])->name('kasir-get');
 		Route::post('add', [KwitansiClaimCtrl::class, 'add'])->name('kasir-add');

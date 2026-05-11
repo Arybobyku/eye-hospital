@@ -581,6 +581,9 @@
 
             <div v-if="form.ttd_perawat && !ttdPerawatCleared" class="signature-preview text-center">
               <img :src="form.ttd_perawat" alt="TTD Perawat " class="img-signature" />
+              <p v-if="form.perawat_ttd_timestamp" class="timestamp-ttd">
+                Ditandatangani: {{ form.perawat_ttd_timestamp }}
+              </p>
               <button @click="clearSign('ttd_perawat')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -754,6 +757,7 @@ export default {
         tanggal_ttd: "",
         waktu_ttd: "",
         ttd_perawat: "",
+        perawat_ttd_timestamp: "",
         nama_perawat_ttd: "",
       },
     };
@@ -935,6 +939,14 @@ loadDataForEdit() {
       }
     
       this.form[refName] = data;
+
+      const now = new Date();
+      const timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    
+      if (refName === 'ttd_perawat') this.form.perawat_ttd_timestamp = timestamp
       console.log("TTD saved:", refName);
     },
     
@@ -947,6 +959,8 @@ loadDataForEdit() {
         this[flagMap[refName]] = true;
         this.form[refName] = "";
       }
+
+      if (refName === 'ttd_perawat') this.form.perawat_ttd_timestamp = "";
     
       this.$nextTick(() => {
         const pad = this.$refs[refName];
@@ -1000,72 +1014,81 @@ Object.keys(this.form).forEach((key) => {
 </script>
 
 <style scoped>
-
-
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
+  body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f5f5f5;
+  }
         
-        .form-rs {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 12px;
-            background: white;
-        }
+  .form-rs {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      background: white;
+  }
 
-        .form-rs th,
-        .form-rs td {
-            border: 1px solid #000;
-            padding: 6px 8px;
-            vertical-align: middle;
-        }
+  .form-rs th,
+  .form-rs td {
+      border: 1px solid #000;
+      padding: 6px 8px;
+      vertical-align: middle;
+  }
 
-        .form-rs th {
-            background-color: #f0f0f0;
-            font-weight: bold;
-            text-align: center;
-        }
+  .form-rs th {
+      background-color: #f0f0f0;
+      font-weight: bold;
+      text-align: center;
+  }
 
-        .form-rs th.center,
-        .form-rs td.center {
-            text-align: center;
-        }
+  .form-rs th.center,
+  .form-rs td.center {
+      text-align: center;
+  }
 
-        .checkbox-label {
-            display: inline-flex;
-            align-items: flex-start;
-            gap: 6px;
-            cursor: pointer;
-            font-size: 12px;
-            margin: 2px 0;
-        }
+  .checkbox-label {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      margin: 2px 0;
+  }
 
-        .line-input {
-            width: 100%;
-            border: none;
-            padding: 2px;
-            font-size: 12px;
-        }
+  .line-input {
+      width: 100%;
+      border: none;
+      padding: 2px;
+      font-size: 12px;
+  }
 
+  .metode-box {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+  }
 
-        .metode-box {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
+  .profesi-header {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      padding: 8px 4px;
+  }
 
-        .profesi-header {
-            writing-mode: vertical-rl;
-            text-orientation: mixed;
-            padding: 8px 4px;
-        }
+  input[type="checkbox"] {
+      cursor: pointer;
+      margin-top: 3px;
+  }
 
-        input[type="checkbox"] {
-            cursor: pointer;
-            margin-top: 3px;
-        }
+  .timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
+}
 
 /* Number Box untuk Sub Header */
 .number-box {

@@ -6,7 +6,7 @@
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">LAPORAN PEMBEDAHAN</h2>
-        <p class="text-muted">RM 2.2/LP/22</p>
+        <p class="text-muted">{{ form.no_surat}}</p>
       </div>
 
       <!-- ================= INFORMASI PASIEN ================= -->
@@ -429,6 +429,7 @@ export default {
       form: {
         uuid_pasien: "",
         no_rm: "",
+        no_surat: "",
         nik: "",
         nama: "",
         tanggal_lahir: "",
@@ -482,10 +483,29 @@ export default {
       },
     };
   },
-  mounted() {
+  async mounted() {
+    await this.fetchTahunAkreditasi();
     this.setDataForm();
   },
   methods: {
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RM 2.2/LP/${tahun}`;
+        }
+
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 2.2/LP/22';
+        }
+      }
+    },
     setDataForm() {
       const today = new Date();
       this.form.tanggal_operasi = today.toISOString().split("T")[0];

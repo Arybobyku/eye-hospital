@@ -75,7 +75,7 @@ class DokumenAsesmenKeperawatanRawatInap extends Model
         'dp_transportasi_aman', 'dp_transportasi_ket',
         'dp_edukasi', 'dp_edukasi_ket',
         // Perawat
-        'tanggal_kaji', 'pukul_kaji', 'perawat_nama', 'perawat_ttd',
+        'tanggal_kaji', 'pukul_kaji', 'perawat_nama', 'perawat_ttd','perawat_ttd_timestamp',
         'created_by', 'updated_by',
     ];
 

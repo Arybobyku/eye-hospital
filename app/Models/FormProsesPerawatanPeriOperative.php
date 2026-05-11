@@ -141,12 +141,15 @@ class FormProsesPerawatanPeriOperative extends Model
         'ttd_perawat_ruangan_waktu',
         'ttd_perawat_ruangan_tanggal',
         'nama_perawat_ruangan',
+        'ttd_perawat_ruangan_timestamp',
         
         // Tanda Tangan Perawat Kamar Bedah
         'ttd_perawat_kamar_bedah',
         'ttd_perawat_kamar_bedah_waktu',
         'ttd_perawat_kamar_bedah_tanggal',
         'nama_perawat_kamar_bedah',
+        'ttd_perawat_kamar_bedah_timestamp',
+
         
         // Audit
         'created_by',

@@ -64,3 +64,7 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## Satu Sehat - Integrasi Sistem Informasi Rumah Sakit dengan Sistem Informasi Kesehatan Nasional (SIKNas)
+Cron Scheduler Running
+php artisan satusehat:sync-patient

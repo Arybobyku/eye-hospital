@@ -226,7 +226,7 @@
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">LAPORAN PEMBEDAHAN</h2>
-        <p class="text-muted">RM 2.2/LP/22</p>
+        <p class="text-muted">{{ form.no_surat}}</p>
       </div>
 
       <!-- ================= INFORMASI PASIEN ================= -->
@@ -849,6 +849,7 @@ export default {
         uuid_pasien: "",
         no_rm: "",
         nik: "",
+        no_surat: "",
         nama: "",
         tanggal_lahir: "",
         jenis_kelamin: "",
@@ -904,7 +905,12 @@ export default {
   },
   async mounted() {
     await this.fetchDokter();
-    if (this.viewData && typeof this.viewData === 'object' && Object.keys(this.viewData).length > 0) {
+    await this.fetchTahunAkreditasi();
+    console.log("yudha",this.editData);
+    console.log("yudha",this.isEditMode);
+    console.log('editmode', this.viewData);
+    this.disabledSubmit = false;
+    if (this.viewData){
       this.disabledSubmit = true;
       this.editData = this.viewData;
       this.loadDataForEdit();
@@ -918,6 +924,24 @@ export default {
     this.closeCameraModal();
   },
   methods: {
+    async fetchTahunAkreditasi() {
+      try {
+        const response = await axios.get('/api/tahun-akreditasi');
+        const tahun = response.data.tahun || '22';
+
+        if (!this.form.no_surat) {
+          this.form.no_surat = `RM 2.2/LP/${tahun}`;
+        }
+
+        console.log("✅ Tahun akreditasi:", tahun);
+        console.log("✅ No surat:", this.form.no_surat);
+      } catch (error) {
+        console.error("❌ Error fetch tahun:", error);
+        if (!this.form.no_surat) {
+          this.form.no_surat = 'RM 2.2/LP/22';
+        }
+      }
+    },
     async fetchDokter() {
       try {
         const response = await axios.get('/master/pasien/master-dokter-all');

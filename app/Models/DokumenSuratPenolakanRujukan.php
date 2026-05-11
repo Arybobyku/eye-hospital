@@ -40,7 +40,9 @@ class DokumenSuratPenolakanRujukan extends Model
         // Tanda Tangan
         'ttd_dokter',
         'nama_dokter_ttd',
+        'dokter_ttd_timestamp',
         'ttd_pembuat',
+        'pembuat_ttd_timestamp',
         
         'created_by',
         'updated_by',

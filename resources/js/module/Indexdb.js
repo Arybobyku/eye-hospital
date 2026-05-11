@@ -4,7 +4,7 @@ export const initindexdb = (dbName, tableName) => {
 	if (tableName == 'satuanbesar' || tableName == 'satuankecil') { tableName = 'satuan'; }
 
 	if (tableName == 'satuankomposisi') { tableName = 'satuan'; }
-	
+
 	if (tableName == 'satuandiperlukan') { tableName = 'satuan'; }
 
 	if (tableName == 'paketbedahbedah') { tableName = 'paketbedah'; }
@@ -30,6 +30,7 @@ export const initindexdb = (dbName, tableName) => {
 	if (tableName == 'ocularsinistrabcva2') { tableName = 'ocularsinistrabcva2'; }
 	if (tableName == 'oculardextrapinhole') { tableName = 'oculardextrapinhole'; }
 	if (tableName == 'ocularsinistrapinhole') { tableName = 'ocularsinistrapinhole'; }
+	if (tableName == 'bukuTarif') { tableName = 'bukuTarif'; }
 
 	console.log("table", tableName)
 	return new Promise(function (resolve, reject) {
@@ -148,6 +149,9 @@ export const indexdbprocessing = (data, form, key) => {
 		else if (key == 'tindakanrawatjalan') {
 			form.select[key].filter.push(data[i]);
 		}
+		else if (key == 'bukuTarif') {
+			form.select[key].filter.push(data[i]);
+		}
 		else if (key == 'icd9') {
 			form.select[key].filter.push(data[i]);
 		}
@@ -210,7 +214,7 @@ export const indexdbprocessing = (data, form, key) => {
 	}
 
 	form.select[key].data = form.select[key].filter;
-	
+
 	return form;
 }
 
@@ -219,7 +223,7 @@ export const createdb = (dbName, version, response) => {
 		const tmp_ = window.indexedDB.open(dbName, version);
 		tmp_.onupgradeneeded = (event) => {
 			let db = tmp_.result;
-			
+
 			if (response.data.apotek.length > 0) {
 				let apotek = db.createObjectStore('apotek', { keyPath: "id", autoIncrement: true });
 				let i = 0, data = response.data.apotek;
@@ -392,6 +396,11 @@ export const createdb = (dbName, version, response) => {
 				let i = 0, data = response.data.tindakanrawatjalan;
 				while (i < data.length) { tindakanrawatjalan.put(tindakanrawatjalanfunction(data, i)); i++; }
 			}
+			if (response.data.bukuTarif.length > 0) {
+				let bukuTarif = db.createObjectStore('bukuTarif', { keyPath: "id", autoIncrement: true });
+				let i = 0, data = response.data.bukuTarif;
+				while (i < data.length) { bukuTarif.put(bukuTariffunction(data, i)); i++; }
+			}
 
 			if (response.data.carabayartindakannonbedah.length > 0) {
 				let carabayartindakannonbedah = db.createObjectStore('carabayartindakannonbedah', { keyPath: "id", autoIncrement: true });
@@ -442,7 +451,7 @@ export const createdb = (dbName, version, response) => {
 				let i = 0, data = response.data.ocularsinistrapinhole;
 				while (i < data.length) { ocularsinistrapinhole.put(ocularsinistrapinholefunction(data, i)); i++; }
 			}
-			
+
 		};
 		tmp_.onerror = function(event) { tmp_.result.close(); reject(event) }
 		tmp_.onsuccess = function () { tmp_.result.close(); resolve('berhasil'); };
@@ -483,7 +492,7 @@ export const updatedbdokter = (dbName, version, response) => {
 			if (response.data.paketbedah.length > 0) {
 				let paketbedah = db.createObjectStore('paketbedah', { keyPath: "sid", autoIncrement: true });
 				let i = 0, data = response.data.paketbedah;
-				
+
 				while (i < data.length) { paketbedah.put(paketbedahfunction(data, i)); i++; }
 			}
 
@@ -618,7 +627,7 @@ const kamarinapfunction = (data, i) => {
 		jumlah_bed: data[i].jumlah_bed,
 		jenis_kamar_uuid: data[i].jenis_kamar_uuid,
 		nama_jenis_kamar: data[i].nama_jenis_kamar
-		
+
 	}
 }
 
@@ -629,7 +638,7 @@ const alltindakanfunction = (data, i) => {
 
 		uuid: data[i].uuid,
 		nama: data[i].nama
-		
+
 	}
 }
 
@@ -970,6 +979,16 @@ const kelurahanfunction = (data, i) => {
 const tindakanrawatjalanfunction = (data, i) => {
 	return {
 		value: data[i].uuid,
+		label: data[i].nama,
+
+		id: data[i].id,
+		uuid: data[i].uuid,
+		nama: data[i].nama
+	}
+}
+const bukuTariffunction = (data, i) => {
+	return {
+		value: data[i].harga,
 		label: data[i].nama,
 
 		id: data[i].id,

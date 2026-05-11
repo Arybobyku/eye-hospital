@@ -303,6 +303,9 @@
       <label>Tanda Tangan Dokter</label>
             <div v-if="form.dokter_ttd && !ttdDokterCleared" class="signature-preview text-center">
               <img :src="form.dokter_ttd" alt="TTD Perawat Ruangan" class="img-signature" />
+                <p v-if="form.dokter_ttd_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.dokter_ttd_timestamp }}
+                </p>
               <button @click="clearSign('dokter_ttd')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -428,6 +431,7 @@
             { nama_obat: "", jumlah: "", dosis: "", frekuensi: "", cara_pemberian: "" }
           ],
           dokter_ttd: "",
+          dokter_ttd_timestamp: "",
           nama_dokter: "",
         },
       };
@@ -583,12 +587,24 @@
       const flagMap = {
         dokter_ttd: 'ttdDokterCleared',
       };
+
+      const timestampMap = {
+        dokter_ttd: 'dokter_ttd_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = false;
       }
-    
+      
       this.form[refName] = data;
+      if (timestampMap[refName]) {
+        const now = new Date();
+        this.form[timestampMap[refName]] = now.toLocaleString('id-ID', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+      }
+      
       console.log("TTD saved:", refName);
     },
     
@@ -596,10 +612,18 @@
       const flagMap = {
         dokter_ttd: 'ttdDokterCleared',
       };
+
+      const timestampMap = {
+        dokter_ttd: 'dokter_ttd_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = true;
         this.form[refName] = "";
+      }
+
+      if (timestampMap[refName]) {
+        this.form[timestampMap[refName]] = "";
       }
     
       this.$nextTick(() => {
@@ -723,6 +747,18 @@
 .tanggal-tempat {
   font-weight: bold;
   margin: 10px 0;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 /* THERAPY TABLE */

@@ -451,6 +451,9 @@
                   </div>
                   <div v-if="form.ttd_pengkaji && !ttdPengkajiCleared" class="signature-preview text-center">
                     <img :src="form.ttd_pengkaji" alt="TTD Pengkaji" class="img-signature" />
+                      <p v-if="form.ttd_pengkaji_timestamp" class="timestamp-ttd">
+                        Ditandatangani: {{ form.ttd_pengkaji_timestamp }}
+                      </p>
                     <button @click="clearSign('ttd_pengkaji')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
                   </div>
                   <div v-else class="text-center">
@@ -507,6 +510,7 @@
                           <div class="ttd-container-small">
                             <div v-if="item.ttd_petugas && !ttdPetugasCleared[index]" class="signature-preview text-center">
                               <img :src="item.ttd_petugas" alt="TTD Petugas" style="width:60%; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+                                <p v-if="item.ttd_petugas_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ item.ttd_petugas_timestamp }}</p>
                               <button @click="clearSign(index)" class="btn-clear mt-2" type="button" v-if="!disabledSubmit">
                                 Hapus & Tanda Tangan Ulang
                               </button>
@@ -657,7 +661,7 @@ export default {
   data() {
     return {
       loadingSubmit: false,
-      disabledSubmit: false, // ✅ TAMBAHKAN
+      disabledSubmit: false,
       ttdPengkajiCleared: false,
       ttdPetugasCleared: [],
       sigOption: {
@@ -763,7 +767,6 @@ export default {
         privasi_ya: "0",
         privasi_tidak: "0",
 
-        // ✅ TABEL EDUKASI DINAMIS
         tabel_edukasi: [
           {
             tanggal: "",
@@ -783,6 +786,7 @@ export default {
         nama_pengkaji: "",
         tanggal_pengkaji: "",
         waktu_pengkaji: "",
+        ttd_pengkaji_timestamp: "",
         
         created_by: "",
         updated_by: "",
@@ -839,7 +843,7 @@ export default {
       }
     }
   },
-    // ✅ LOAD DATA FOR EDIT
+
     loadDataForEdit() {
       console.log("🟢 LOAD EDIT - Mulai load data");
       
@@ -862,7 +866,6 @@ export default {
           }
         });
 
-        // ✅ Load tabel_edukasi
         if (dataSource.tabel_edukasi) {
           try {
             // Jika string JSON, parse
@@ -906,8 +909,6 @@ export default {
       }
     },
 
-
-    // ✅ SET DATA FORM (untuk mode CREATE)
     setDataForm() {
       const today = new Date();
       this.form.tanggal_pengkaji = today.toISOString().split("T")[0];
@@ -929,7 +930,6 @@ export default {
       }
     },
 
-    // ✅ CREATE EMPTY ROW
     createEmptyTabelRow() {
       return {
         tanggal: "",
@@ -938,13 +938,13 @@ export default {
         ttd_petugas: "",
         nama_petugas: "",
         sasaran_edukasi: "",
+        ttd_petugas_timestamp: "",
         eval_sudah_dimengerti: "0",
         eval_re_demonstrasi: "0",
         eval_re_edukasi: "0"
       };
     },
 
-    // ✅ TAMBAH BARIS TABEL
     tambahTabelEdukasi() {
       this.form.tabel_edukasi.push(this.createEmptyTabelRow());
       this.ttdPetugasCleared.push(false); // ← sync flag
@@ -961,7 +961,6 @@ export default {
       }
     },
 
-    // ✅ SAVE SIGNATURE (support tabel dinamis)
     saveSign(refNameOrIndex) {
       if (typeof refNameOrIndex === 'number') {
         const index = refNameOrIndex;
@@ -978,7 +977,13 @@ export default {
           }
         
           this.form.tabel_edukasi[index].ttd_petugas = data;
-          this.ttdPetugasCleared[index] = false; // ✅ Vue 3: langsung saja
+          this.ttdPetugasCleared[index] = false;
+        
+          const now = new Date();
+          this.form.tabel_edukasi[index].ttd_petugas_timestamp = now.toLocaleString('id-ID', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+          });
           console.log(`✅ TTD tabel ${index} saved`);
         }
       } else {
@@ -988,7 +993,15 @@ export default {
         const { isEmpty, data } = pad.saveSignature();
         if (isEmpty) { alert("Tanda tangan masih kosong!"); return; }
       
-        if (refNameOrIndex === 'ttd_pengkaji') this.ttdPengkajiCleared = false;
+        if (refNameOrIndex === 'ttd_pengkaji') {
+          this.ttdPengkajiCleared = false;
+          const now = new Date();
+          this.form.ttd_pengkaji_timestamp = now.toLocaleString('id-ID', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit', second: '2-digit'
+          });
+        }
+      
         this.form[refNameOrIndex] = data;
       }
     },
@@ -997,9 +1010,9 @@ export default {
       if (typeof refNameOrIndex === 'number') {
         const index = refNameOrIndex;
       
-        // ✅ Vue 3: tidak perlu $set, langsung assign
         this.ttdPetugasCleared[index] = true;
         this.form.tabel_edukasi[index].ttd_petugas = "";
+        this.form.tabel_edukasi[index].ttd_petugas_timestamp = ""
       
         this.$nextTick(() => {
           this.$nextTick(() => {
@@ -1015,6 +1028,7 @@ export default {
         if (refNameOrIndex === 'ttd_pengkaji') {
           this.ttdPengkajiCleared = true;
           this.form.ttd_pengkaji = "";
+          this.form.ttd_pengkaji_timestamp = "";
         }
         this.$nextTick(() => {
           const pad = this.$refs[refNameOrIndex];
@@ -1025,19 +1039,18 @@ export default {
 
     tambahTabelEdukasi() {
       this.form.tabel_edukasi.push(this.createEmptyTabelRow());
-      this.ttdPetugasCleared.push(false); // ✅ Vue 3: push langsung
+      this.ttdPetugasCleared.push(false);
     },
 
     hapusTabelEdukasi(index) {
       if (this.form.tabel_edukasi.length > 1) {
         this.form.tabel_edukasi.splice(index, 1);
-        this.ttdPetugasCleared.splice(index, 1); // ✅ sync
+        this.ttdPetugasCleared.splice(index, 1);
       } else {
         alert("Minimal harus ada 1 baris!");
       }
     },
 
-    // ✅ SUBMIT FORM
     async submitForm() {
       this.loadingSubmit = true;
 
@@ -1058,7 +1071,6 @@ export default {
           fd.append(key, this.form[key]);
         });
 
-        // ✅ Serialize tabel_edukasi sebagai JSON
         fd.append('tabel_edukasi', JSON.stringify(this.form.tabel_edukasi));
 
         console.log("📤 Mengirim data form:");
@@ -1208,7 +1220,17 @@ export default {
   row-gap: 10px;
 }
 
-
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
+}
 
 .box-rme {
   border: 1px solid #dcdcdc;

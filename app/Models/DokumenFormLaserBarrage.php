@@ -20,7 +20,7 @@ class DokumenFormLaserBarrage extends Model
         'tanggal_lahir', 'tanggal', 'diagnosa',
         'parameter_laser_barrage',
         'mata_kanan', 'mata_kiri',
-        'ttd_dokter', 'nama_dokter',
+        'ttd_dokter', 'dokter_ttd_timestamp', 'nama_dokter',
         'created_by', 'updated_by',
         'diagram_mata',
     ];

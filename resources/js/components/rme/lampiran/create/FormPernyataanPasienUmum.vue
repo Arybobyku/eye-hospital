@@ -205,6 +205,9 @@
               alt="TTD Pembuat"
               class="img-signature"
             />
+            <p v-if="form.pembuat_pernyataan_ttd_timestamp" class="timestamp-ttd">
+              Ditandatangani: {{ form.pembuat_pernyataan_ttd_timestamp }}
+            </p>
             <button @click="clearSignature('ttd_pembuat_pernyataan')" class="btn-clear">
               Hapus & Tanda Tangan Ulang
             </button>
@@ -243,6 +246,9 @@
               alt="TTD Saksi Pasien"
               class="img-signature"
             />
+            <p v-if="form.saksi_pasien_ttd_timestamp" class="timestamp-ttd">
+              Ditandatangani: {{ form.saksi_pasien_ttd_timestamp }}
+            </p>
             <button @click="clearSignature('ttd_saksi_pasien')" class="btn-clear">
               Hapus & Tanda Tangan Ulang
             </button>
@@ -281,6 +287,9 @@
               alt="TTD Saksi Petugas"
               class="img-signature"
             />
+            <p v-if="form.saksi_petugas_ttd_timestamp" class="timestamp-ttd">
+              Ditandatangani: {{ form.saksi_petugas_ttd_timestamp }}
+            </p>
             <button @click="clearSignature('ttd_saksi_petugas')" class="btn-clear">
               Hapus & Tanda Tangan Ulang
             </button>
@@ -388,10 +397,13 @@ export default {
         // Tanda Tangan (Triple Signatures)
         ttd_pembuat_pernyataan: "",
         nama_pembuat_pernyataan: "",
+        pembuat_pernyataan_ttd_timestamp: "",
         ttd_saksi_pasien: "",
         nama_saksi_pasien: "",
+        saksi_pasien_ttd_timestamp: "",
         ttd_saksi_petugas: "",
         nama_saksi_petugas: "",
+        saksi_petugas_ttd_timestamp: "",
       },
     };
   },
@@ -524,6 +536,10 @@ export default {
       this.signatureCleared[refName] = true;
       this.form[refName] = "";
 
+      if (refName === 'ttd_pembuat_pernyataan') this.form.pembuat_pernyataan_ttd_timestamp = "";
+      if (refName === 'ttd_saksi_pasien') this.form.saksi_pasien_ttd_timestamp = "";
+      if (refName === 'ttd_saksi_petugas') this.form.saksi_petugas_ttd_timestamp = "";
+
       // Reset signature pad di next tick
       this.$nextTick(() => {
         const pad = this.$refs[refName];
@@ -562,6 +578,17 @@ export default {
       }
 
       this.form[refName] = data;
+      this.signatureCleared[refName] = false;
+
+      const now = new Date();
+      const timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    
+      if (refName === 'ttd_pembuat_pernyataan') this.form.pembuat_pernyataan_ttd_timestamp = timestamp;
+      if (refName === 'ttd_saksi_pasien') this.form.saksi_pasien_ttd_timestamp = timestamp;
+      if (refName === 'ttd_saksi_petugas') this.form.saksi_petugas_ttd_timestamp = timestamp; 
       console.log("TTD saved:", refName);
     },
 
@@ -686,6 +713,18 @@ export default {
   font-size: 16px;
   border-bottom: 2px solid #2d74b7;
   padding-bottom: 8px;
+}
+
+.timestamp-ttd {
+  font-size: 11px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 4px 10px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 4px auto;
 }
 
 /* ================= FORM ELEMENTS ================= */

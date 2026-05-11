@@ -140,6 +140,12 @@ class PenolakanTindakanAnestesi extends Model
         'tandai_prognosis',
         'tandai_alternatif_tindakan',
         'tandai_lain_lain',
+        'ttd_dokter_timestamp',
+        'ttd_pasien_timestamp',
+        'ttd_pasien_pernyataan_timestamp',
+        'ttd_dokter_persetujuan_timestamp',
+        'ttd_keluarga_timestamp',
+        'ttd_perawat_timestamp',
         
         // ===== Audit =====
         'created_by',

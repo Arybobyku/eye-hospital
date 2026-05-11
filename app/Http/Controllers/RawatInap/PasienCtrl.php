@@ -915,8 +915,13 @@ class PasienCtrl extends Controller
             $cppt = \App\Models\Cppt::where('registrasi_uuid', '=', $request->registrasi_uuid)
                 ->where('sebagai', '=', 'RAWAT INAP')
                 ->first();
-
+                if (!empty($request->ttd)) {
+                    $ttd_timestamp = now(); // hanya set pertama kali
+                } else {
+                    $ttd_timestamp = null;
+                }                
             if ($cppt) {
+
                 \App\Models\Cppt::where('uuid', '=', $cppt->uuid)->update([
                     'subjek'       => $request->subject,
                     'objek'        => $request->object,
@@ -924,6 +929,7 @@ class PasienCtrl extends Controller
                     'plan'         => $request->plan,
                     'pengguna_uuid'=> $pengguna_uuid,
                     'ttd'          => $request->ttd,
+                    'ttd_timestamp'  => $ttd_timestamp,
                 ]);
             } else {
                 $item = new \App\Models\Cppt();
@@ -940,6 +946,8 @@ class PasienCtrl extends Controller
                 $item->plan          = $request->plan;
                 $item->sebagai       = 'RAWAT INAP';
                 $item->ttd           = $request->ttd;
+                $item->ttd           = $ttd_timestamp;
+                
                 $item->save();
             }
 

@@ -196,8 +196,10 @@ class DokumenStatusAnestesi extends Model
         // Tanda Tangan
         'ttd_dr_anestesi',
         'nama_dr_anestesi',
+        'ttd_dr_anestesi_timestamp',
         'ttd_perawat_anestesi',
         'nama_perawat_anestesi',
+        'ttd_perawat_anestesi_timestamp',
         
         'created_by',
         'updated_by',

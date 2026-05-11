@@ -118,6 +118,9 @@
                 <div class="text-center">
                   <div v-if="item.paraf_dokter && !ttdDokterKunjunganCleared[index]" class="signature-preview text-center">
                     <img :src="item.paraf_dokter" style="width:150px; height:80px; object-fit:contain; border:1px dashed #ccc;" />
+                      <p v-if="item.paraf_dokter_timestamp" class="timestamp-ttd" style="font-size:10px;">
+                        Ditandatangani: {{ item.paraf_dokter_timestamp }}
+                      </p>
                     <br>
                     <button @click="clearSignKunjungan(index, 'dokter')" class="btn-clear mt-2" type="button" v-if="!disabledSubmit">
                       Hapus & TTD Ulang
@@ -153,6 +156,9 @@
                 <div class="text-center">
                   <div v-if="item.paraf_perawat && !ttdPerawatKunjunganCleared[index]" class="signature-preview text-center">
                     <img :src="item.paraf_perawat" style="width:150px; height:80px; object-fit:contain; border:1px dashed #ccc;" />
+                      <p v-if="item.paraf_perawat_timestamp" class="timestamp-ttd" style="font-size:10px;">
+                        Ditandatangani: {{ item.paraf_perawat_timestamp }}
+                      </p>
                     <br>
                     <button @click="clearSignKunjungan(index, 'perawat')" class="btn-clear mt-2" type="button" v-if="!disabledSubmit">
                       Hapus & TTD Ulang
@@ -328,6 +334,9 @@
             <input type="text" v-model="form.dibuat_oleh" class="input-rme" placeholder="Kepala Keperawatan" />
             <div v-if="form.ttd_dibuat_oleh && !ttdDibuatOlehCleared" class="signature-preview text-center">
               <img :src="form.ttd_dibuat_oleh" alt="TTD Dibuat Oleh" class="img-signature" />
+                <p v-if="form.ttd_dibuat_oleh_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.ttd_dibuat_oleh_timestamp }}
+                </p>
               <button @click="clearSign('ttd_dibuat_oleh')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -353,6 +362,9 @@
             </div>
             <div v-if="form.ttd_dokter && !ttdDokterCleared" class="signature-preview text-center">
               <img :src="form.ttd_dokter" alt="TTD Dokter" class="img-signature" />
+                <p v-if="form.ttd_dokter_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.ttd_dokter_timestamp }}
+                </p>
               <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -442,9 +454,11 @@ export default {
             hari: "",
             tanggal_jam: "",
             paraf_dokter: "",
+            paraf_dokter_timestamp: "",
             nama_dokter: "",
             paraf_perawat: "",
             nama_perawat: "",
+            paraf_perawat_timestamp: "",
           }
         ],
         
@@ -475,7 +489,9 @@ export default {
         time_voucher: "",
         dibuat_oleh: "",
         ttd_dibuat_oleh: "",
+        ttd_dibuat_oleh_timestamp: "",
         nama_dokter_voucher: "",
+        ttd_dokter_timestamp: "",
         ttd_dokter: "",
         
         created_by: "",
@@ -625,6 +641,12 @@ export default {
       if (isEmpty) { alert("Tanda tangan masih kosong!"); return; }
     
       this.form.tabel_kunjungan[index][`paraf_${type}`] = data;
+
+      const now = new Date();
+      this.form.tabel_kunjungan[index][`paraf_${type}_timestamp`] = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
     
       if (type === 'dokter') this.ttdDokterKunjunganCleared[index] = false;
       else this.ttdPerawatKunjunganCleared[index] = false;
@@ -634,9 +656,11 @@ export default {
       if (type === 'dokter') {
         this.ttdDokterKunjunganCleared[index] = true;
         this.form.tabel_kunjungan[index].paraf_dokter = "";
+        this.form.tabel_kunjungan[index].paraf_dokter_timestamp = "";
       } else {
         this.ttdPerawatKunjunganCleared[index] = true;
         this.form.tabel_kunjungan[index].paraf_perawat = "";
+        this.form.tabel_kunjungan[index].paraf_perawat_timestamp = "";
       }
     
       this.$nextTick(() => {
@@ -679,9 +703,18 @@ clearSign(refName) {
     ttd_dokter: 'ttdDokterCleared',
   };
 
+  const timestampMap = {
+    ttd_dibuat_oleh: 'ttd_dibuat_oleh_timestamp',
+    ttd_dokter: 'ttd_dokter_timestamp',
+  };
+
   if (flagMap[refName] !== undefined) {
     this[flagMap[refName]] = true;
     this.form[refName] = "";
+  }
+
+    if (timestampMap[refName]) {
+    this.form[timestampMap[refName]] = "";
   }
 
   this.$nextTick(() => {
@@ -718,9 +751,23 @@ saveSign(refName) {
     ttd_dibuat_oleh: 'ttdDibuatOlehCleared',
     ttd_dokter: 'ttdDokterCleared',
   };
+
+  const timestampMap = {
+    ttd_dibuat_oleh: 'ttd_dibuat_oleh_timestamp',
+    ttd_dokter: 'ttd_dokter_timestamp',
+  };
+
   if (flagMap[refName] !== undefined) this[flagMap[refName]] = false;
 
   this.form[refName] = data;
+
+  if (timestampMap[refName]) {
+    const now = new Date();
+    this.form[timestampMap[refName]] = now.toLocaleString('id-ID', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+  }
   console.log("TTD saved:", refName);
 },
 
@@ -792,6 +839,18 @@ saveSign(refName) {
   color: #2d74b7;
   border-bottom: 2px solid #2d74b7;
   padding-bottom: 8px;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .btn-clear {

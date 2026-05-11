@@ -92,6 +92,7 @@ class FormReaksiTransfusiDarah extends Model
         'dokter_telp',
         'dokter_tanggal',
         'ttd_dokter',
+        'dokter_ttd_timestamp',
         
         // ===== Audit =====
         'created_by',

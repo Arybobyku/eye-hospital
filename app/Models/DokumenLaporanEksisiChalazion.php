@@ -42,6 +42,8 @@ class DokumenLaporanEksisiChalazion extends Model
         'nama_perawat',
         'ttd_operator',
         'nama_operator',
+        'ttd_perawat_timestamp',
+        'ttd_operator_timestamp',
         
         'created_by',
         'updated_by',

@@ -452,6 +452,7 @@
                   </div>
                   <div v-if="form.ttd_dokter && !ttdDokterCleared" class="signature-preview text-center">
                     <img :src="form.ttd_dokter" alt="TTD Pengkaji" class="img-signature" />
+                    <p v-if="form.ttd_dokter_timestamp" class="timestamp-ttd">Ditandatangani: {{ form.ttd_dokter_timestamp }}</p>
                     <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
                   </div>
                   <div v-else class="text-center">
@@ -470,8 +471,9 @@
   KEBUTUHAN EDUKASI /<br>TOPIK EDUKASI
   <div class="dokter-dpjp-box">
     <div class="ttd-container-small">
-      <div v-if="form.ttd_dokter_dpjp && !ttdDokterDpjpCleared" class="signature-preview text-center">
+      <div v-if="form.ttd_dokter_dpjp && !ttdDokterDpjpCleared" class="signature-preview1 text-center">
         <img :src="form.ttd_dokter_dpjp" alt="TTD DPJP" style="width:100%; height:130px; object-fit:contain;" />
+        <p v-if="form.ttd_dokter_dpjp_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_dokter_dpjp_timestamp }}</p>
         <button @click="clearSign('ttd_dokter_dpjp')" class="btn-clear mt-2">Hapus & TTD Ulang</button>
       </div>
       <div v-else>
@@ -590,6 +592,7 @@
           <div class="text-center">
             <div v-if="form.ttd_pemberi_dokter && !ttdPemberiDokterCleared" class="text-center">
               <img :src="form.ttd_pemberi_dokter" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+              <p v-if="form.ttd_pemberi_dokter_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_pemberi_dokter_timestamp }}</p>
               <br>
               <button @click="clearSign('ttd_pemberi_dokter')" class="btn-clear mt-2">Hapus</button>
             </div>
@@ -616,6 +619,7 @@
           <div class="text-center">
             <div v-if="form.ttd_penerima_dokter && !ttdPenerimaDokterCleared" class="text-center">
               <img :src="form.ttd_penerima_dokter" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+              <p v-if="form.ttd_penerima_dokter_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_penerima_dokter_timestamp }}</p>
               <br>
               <button @click="clearSign('ttd_penerima_dokter')" class="btn-clear mt-2">Hapus</button>
             </div>
@@ -1045,6 +1049,7 @@
         <div class="text-center">
           <div v-if="form.ttd_pemberi_perawat && !ttdPemberiPerawatCleared" class="text-center">
             <img :src="form.ttd_pemberi_perawat" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <p v-if="form.ttd_pemberi_perawat_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_pemberi_perawat_timestamp }}</p>
             <br>
             <button @click="clearSign('ttd_pemberi_perawat')" class="btn-clear mt-2">Hapus</button>
           </div>
@@ -1059,6 +1064,7 @@
             <div class="text-center">
               <div v-if="form.ttd_penerima_perawat && !ttdPenerimaPerawatCleared" class="text-center">
                 <img :src="form.ttd_penerima_perawat" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+                <p v-if="form.ttd_penerima_perawat_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_penerima_perawat_timestamp }}</p>
                 <br>
                 <button @click="clearSign('ttd_penerima_perawat')" class="btn-clear mt-2">Hapus</button>
               </div>
@@ -1775,6 +1781,7 @@
         <td rowspan="1">
           <div v-if="form.ttd_pemberi_analis && !ttdPemberiAnalisCleared" class="text-center">
             <img :src="form.ttd_pemberi_analis" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <p v-if="form.ttd_pemberi_analis_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_pemberi_analis_timestamp }}</p>
             <br>
             <button @click="clearSign('ttd_pemberi_analis')" class="btn-clear mt-2">Hapus</button>
           </div>
@@ -1787,6 +1794,7 @@
         <td rowspan="1">
           <div v-if="form.ttd_penerima_analis && !ttdPenerimaAnalisCleared" class="text-center">
             <img :src="form.ttd_penerima_analis" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <p v-if="form.ttd_penerima_analis_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_penerima_analis_timestamp }}</p>
             <br>
             <button @click="clearSign('ttd_penerima_analis')" class="btn-clear mt-2">Hapus</button>
           </div>
@@ -1856,6 +1864,7 @@
         <td rowspan="2">
           <div v-if="form.ttd_pemberi_gizi && !ttdPemberiGiziCleared" class="text-center">
             <img :src="form.ttd_pemberi_gizi" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <p v-if="form.ttd_pemberi_gizi_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_pemberi_gizi_timestamp }}</p>
             <br>
             <button @click="clearSign('ttd_pemberi_gizi')" class="btn-clear mt-2">Hapus</button>
           </div>
@@ -1868,6 +1877,7 @@
         <td rowspan="2">
           <div v-if="form.ttd_penerima_gizi && !ttdPenerimaGiziCleared" class="text-center">
             <img :src="form.ttd_penerima_gizi" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <p v-if="form.ttd_penerima_gizi_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_penerima_gizi_timestamp }}</p>
             <br>
             <button @click="clearSign('ttd_penerima_gizi')" class="btn-clear mt-2">Hapus</button>
           </div>
@@ -1980,6 +1990,7 @@
         <td rowspan="4">
           <div v-if="form.ttd_pemberi_farmasi && !ttdPemberiFarmasiCleared" class="text-center">
             <img :src="form.ttd_pemberi_farmasi" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <p v-if="form.ttd_pemberi_farmasi_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_pemberi_farmasi_timestamp }}</p>
             <br>
             <button @click="clearSign('ttd_pemberi_farmasi')" class="btn-clear mt-2">Hapus</button>
           </div>
@@ -1992,6 +2003,7 @@
         <td rowspan="4">
           <div v-if="form.ttd_penerima_farmasi && !ttdPenerimaFarmasiCleared" class="text-center">
             <img :src="form.ttd_penerima_farmasi" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <p v-if="form.ttd_penerima_farmasi_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_penerima_farmasi_timestamp }}</p>
             <br>
             <button @click="clearSign('ttd_penerima_farmasi')" class="btn-clear mt-2">Hapus</button>
           </div>
@@ -2197,6 +2209,7 @@
         <td rowspan="2">
           <div v-if="form.ttd_pemberi_fisio && !ttdPemberiFisioCleared" class="text-center">
             <img :src="form.ttd_pemberi_fisio" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <p v-if="form.ttd_pemberi_fisio_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_pemberi_fisio_timestamp }}</p>
             <br>
             <button @click="clearSign('ttd_pemberi_fisio')" class="btn-clear mt-2">Hapus</button>
           </div>
@@ -2209,6 +2222,7 @@
         <td rowspan="2">
           <div v-if="form.ttd_penerima_fisio && !ttdPenerimaFisioCleared" class="text-center">
             <img :src="form.ttd_penerima_fisio" style="width:140px; height:100px; object-fit:contain; border:1px dashed #ccc;" />
+            <p v-if="form.ttd_penerima_fisio_timestamp" class="timestamp-ttd" style="font-size:10px;">Ditandatangani: {{ form.ttd_penerima_fisio_timestamp }}</p>
             <br>
             <button @click="clearSign('ttd_penerima_fisio')" class="btn-clear mt-2">Hapus</button>
           </div>
@@ -2558,6 +2572,22 @@ export default {
         waktu_farmasi: "",
         tanggal_fisio: "",
         waktu_fisio: "",
+
+        // waktu ttd
+        ttd_dokter_timestamp: "",
+        ttd_dokter_dpjp_timestamp: "",
+        ttd_pemberi_dokter_timestamp: "",
+        ttd_penerima_dokter_timestamp: "",
+        ttd_pemberi_perawat_timestamp: "",
+        ttd_penerima_perawat_timestamp: "",
+        ttd_pemberi_analis_timestamp: "",
+        ttd_penerima_analis_timestamp: "",
+        ttd_pemberi_gizi_timestamp: "",
+        ttd_penerima_gizi_timestamp: "",
+        ttd_pemberi_farmasi_timestamp: "",
+        ttd_penerima_farmasi_timestamp: "",
+        ttd_pemberi_fisio_timestamp: "",
+        ttd_penerima_fisio_timestamp: "",
       },
     };
   },
@@ -2737,6 +2767,23 @@ loadDataForEdit() {
         ttd_pemberi_fisio: 'ttdPemberiFisioCleared',
         ttd_penerima_fisio: 'ttdPenerimaFisioCleared',
       };
+
+      const timestampMap = {
+        ttd_dokter: 'ttd_dokter_timestamp',
+        ttd_dokter_dpjp: 'ttd_dokter_dpjp_timestamp',
+        ttd_pemberi_dokter: 'ttd_pemberi_dokter_timestamp',
+        ttd_penerima_dokter: 'ttd_penerima_dokter_timestamp',
+        ttd_pemberi_perawat: 'ttd_pemberi_perawat_timestamp',
+        ttd_penerima_perawat: 'ttd_penerima_perawat_timestamp',
+        ttd_pemberi_analis: 'ttd_pemberi_analis_timestamp',
+        ttd_penerima_analis: 'ttd_penerima_analis_timestamp',
+        ttd_pemberi_gizi: 'ttd_pemberi_gizi_timestamp',
+        ttd_penerima_gizi: 'ttd_penerima_gizi_timestamp',
+        ttd_pemberi_farmasi: 'ttd_pemberi_farmasi_timestamp',
+        ttd_penerima_farmasi: 'ttd_penerima_farmasi_timestamp',
+        ttd_pemberi_fisio: 'ttd_pemberi_fisio_timestamp',
+        ttd_penerima_fisio: 'ttd_penerima_fisio_timestamp',
+      };
     
       Object.keys(flagMap).forEach(refName => {
         if (data[refName]) {
@@ -2790,12 +2837,36 @@ loadDataForEdit() {
         ttd_pemberi_fisio: 'ttdPemberiFisioCleared',
         ttd_penerima_fisio: 'ttdPenerimaFisioCleared',
       };
+
+      const timestampMap = {
+        ttd_dokter: 'ttd_dokter_timestamp',
+        ttd_dokter_dpjp: 'ttd_dokter_dpjp_timestamp',
+        ttd_pemberi_dokter: 'ttd_pemberi_dokter_timestamp',
+        ttd_penerima_dokter: 'ttd_penerima_dokter_timestamp',
+        ttd_pemberi_perawat: 'ttd_pemberi_perawat_timestamp',
+        ttd_penerima_perawat: 'ttd_penerima_perawat_timestamp',
+        ttd_pemberi_analis: 'ttd_pemberi_analis_timestamp',
+        ttd_penerima_analis: 'ttd_penerima_analis_timestamp',
+        ttd_pemberi_gizi: 'ttd_pemberi_gizi_timestamp',
+        ttd_penerima_gizi: 'ttd_penerima_gizi_timestamp',
+        ttd_pemberi_farmasi: 'ttd_pemberi_farmasi_timestamp',
+        ttd_penerima_farmasi: 'ttd_penerima_farmasi_timestamp',
+        ttd_pemberi_fisio: 'ttd_pemberi_fisio_timestamp',
+        ttd_penerima_fisio: 'ttd_penerima_fisio_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = false;
       }
     
       this.form[refName] = data;
+      if (timestampMap[refName]) {
+        const now = new Date();
+        this.form[timestampMap[refName]] = now.toLocaleString('id-ID', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit', second: '2-digit'
+        });
+      }
       console.log("TTD saved:", refName);
     },
 
@@ -2816,10 +2887,31 @@ loadDataForEdit() {
         ttd_pemberi_fisio: 'ttdPemberiFisioCleared',
         ttd_penerima_fisio: 'ttdPenerimaFisioCleared',
       };
+
+      const timestampMap = {
+        ttd_dokter: 'ttd_dokter_timestamp',
+        ttd_dokter_dpjp: 'ttd_dokter_dpjp_timestamp',
+        ttd_pemberi_dokter: 'ttd_pemberi_dokter_timestamp',
+        ttd_penerima_dokter: 'ttd_penerima_dokter_timestamp',
+        ttd_pemberi_perawat: 'ttd_pemberi_perawat_timestamp',
+        ttd_penerima_perawat: 'ttd_penerima_perawat_timestamp',
+        ttd_pemberi_analis: 'ttd_pemberi_analis_timestamp',
+        ttd_penerima_analis: 'ttd_penerima_analis_timestamp',
+        ttd_pemberi_gizi: 'ttd_pemberi_gizi_timestamp',
+        ttd_penerima_gizi: 'ttd_penerima_gizi_timestamp',
+        ttd_pemberi_farmasi: 'ttd_pemberi_farmasi_timestamp',
+        ttd_penerima_farmasi: 'ttd_penerima_farmasi_timestamp',
+        ttd_pemberi_fisio: 'ttd_pemberi_fisio_timestamp',
+        ttd_penerima_fisio: 'ttd_penerima_fisio_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = true;
         this.form[refName] = "";
+      }
+
+      if (timestampMap[refName]) {
+        this.form[timestampMap[refName]] = "";
       }
     
       this.$nextTick(() => {
@@ -2970,6 +3062,18 @@ loadDataForEdit() {
   grid-template-columns: 0.8fr 0.1fr 2.1fr;
   column-gap: 15px;
   row-gap: 10px;
+}
+
+.timestamp-ttd {
+  font-size: 10px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 4px 10px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 4px auto;
 }
 
 
@@ -3464,6 +3568,27 @@ label {
   padding: 10px;
   border-radius: 4px;
   margin-bottom: 10px;
+}
+
+.signature-preview1 {
+  width: 100%;
+  background: white;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.ttd-container-small {
+  width: 100%;
+  border: 1px solid #000;
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.dokter-dpjp-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .img-signature {

@@ -1,0 +1,565 @@
+{
+  "info": {
+    "_postman_id": "satusehat-laravel-routes-v1",
+    "name": "SatuSehat - Laravel Debug Routes",
+    "description": "Collection untuk testing route SatuSehat di Laravel (prefix /satusehat). Semua route dilindungi middleware auth — pastikan sudah login atau set cookie session yang valid.\n\nSet variable `base_url` sesuai environment lokal Anda.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8000",
+      "type": "string",
+      "description": "URL aplikasi Laravel lokal"
+    },
+    {
+      "key": "org_id",
+      "value": "",
+      "type": "string",
+      "description": "SATUSEHAT_ORGANIZATION_ID faskes"
+    },
+    {
+      "key": "patient_nik",
+      "value": "3174051612870001",
+      "type": "string",
+      "description": "NIK pasien untuk testing"
+    },
+    {
+      "key": "patient_ihs_id",
+      "value": "",
+      "type": "string",
+      "description": "IHS Number pasien dari SatuSehat"
+    },
+    {
+      "key": "practitioner_nik",
+      "value": "",
+      "type": "string",
+      "description": "NIK dokter untuk testing"
+    },
+    {
+      "key": "practitioner_ihs_id",
+      "value": "",
+      "type": "string",
+      "description": "IHS Number dokter dari SatuSehat"
+    },
+    {
+      "key": "encounter_id",
+      "value": "",
+      "type": "string",
+      "description": "Encounter ID dari SatuSehat"
+    }
+  ],
+  "item": [
+    {
+      "name": "🏠 Dashboard",
+      "item": [
+        {
+          "name": "Debug Dashboard (HTML)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat"]
+            },
+            "description": "Halaman HTML berisi daftar semua route, status token cache, dan info environment."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔐 Token / Auth",
+      "item": [
+        {
+          "name": "Info Token (Cache)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Status ok', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.status).to.eql('ok');",
+                  "});",
+                  "pm.test('Token preview ada', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.token_preview).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/token",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "token"]
+            },
+            "description": "Tampilkan info token aktif (nilai disamarkan). Jika belum ada di cache, akan request ke SatuSehat API.\n\nResponse:\n- `from_cache`: apakah token dari cache atau fresh\n- `token_preview`: 12 karakter awal + *** + 12 karakter akhir\n- `token_length`: panjang token"
+          },
+          "response": [
+            {
+              "name": "Token OK (dari cache)",
+              "originalRequest": {
+                "method": "GET",
+                "url": { "raw": "{{base_url}}/satusehat/token" }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "body": "{\n  \"status\": \"ok\",\n  \"from_cache\": true,\n  \"token_preview\": \"eyJhbGciOiJSU...**********************************...*VhbGlkYXRpb24\",\n  \"token_length\": 1024,\n  \"cache_key\": \"satusehat_access_token\",\n  \"message\": \"Token diambil dari cache\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Force Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Bukan dari cache', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.from_cache).to.eql(false);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/token/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "token", "refresh"]
+            },
+            "description": "Paksa hapus cache token lama dan minta token baru dari SatuSehat OAuth2 API.\n\nGunakan saat:\n- Token expired sebelum waktunya\n- Ganti credentials\n- Debugging auth"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🏥 Organization & Location",
+      "item": [
+        {
+          "name": "Get Organization (dari .env)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('ResourceType Organization', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.resourceType).to.eql('Organization');",
+                  "});",
+                  "// Simpan ID ke variable",
+                  "var json = pm.response.json();",
+                  "if (json.id) { pm.collectionVariables.set('org_id', json.id); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/organization",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "organization"]
+            },
+            "description": "Ambil data Organization faskes menggunakan `SATUSEHAT_ORGANIZATION_ID` dari `.env`. Akan error 422 jika env belum diset."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Organization by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/organization/{{org_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "organization", "{{org_id}}"]
+            },
+            "description": "Ambil data Organization berdasarkan Organization ID SatuSehat."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Locations (dari .env)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('ResourceType Bundle', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.resourceType).to.eql('Bundle');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/location",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "location"]
+            },
+            "description": "Ambil daftar Location (poli/ruangan) milik faskes menggunakan org ID dari `.env`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Locations by Org ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/location/{{org_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "location", "{{org_id}}"]
+            },
+            "description": "Ambil daftar Location berdasarkan Organization ID yang diberikan."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👤 Patient",
+      "item": [
+        {
+          "name": "Cari Patient by NIK",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('ResourceType Bundle', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.resourceType).to.eql('Bundle');",
+                  "});",
+                  "// Simpan IHS ID pasien pertama",
+                  "var json = pm.response.json();",
+                  "if (json.entry && json.entry.length > 0) {",
+                  "    var id = json.entry[0].resource.id;",
+                  "    pm.collectionVariables.set('patient_ihs_id', id);",
+                  "    console.log('Patient IHS ID:', id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/patient/{{patient_nik}}",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "patient", "{{patient_nik}}"]
+            },
+            "description": "Cari data pasien di SatuSehat berdasarkan NIK KTP.\n\nMenggunakan identifier: `https://fhir.kemkes.go.id/id/nik|{nik}`\n\nHasil pencarian otomatis disimpan ke variable `patient_ihs_id`."
+          },
+          "response": []
+        },
+        {
+          "name": "Ambil Patient by IHS Number",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('ResourceType Patient', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.resourceType).to.eql('Patient');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/patient-by-id/{{patient_ihs_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "patient-by-id", "{{patient_ihs_id}}"]
+            },
+            "description": "Ambil detail data pasien berdasarkan IHS Number (Patient ID SatuSehat).\n\nIHS Number didapat dari hasil pencarian by NIK."
+          },
+          "response": []
+        },
+        {
+          "name": "Cari Patient by Nama + Tanggal Lahir",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('ResourceType Bundle', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.resourceType).to.eql('Bundle');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/patient-by-name?name=Budi&birthdate=1990-01-01&gender=male",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "patient-by-name"],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "Budi",
+                  "description": "Nama pasien (sebagian nama sudah cukup)"
+                },
+                {
+                  "key": "birthdate",
+                  "value": "1990-01-01",
+                  "description": "Format YYYY-MM-DD"
+                },
+                {
+                  "key": "gender",
+                  "value": "male",
+                  "description": "male / female"
+                }
+              ]
+            },
+            "description": "Cari pasien berdasarkan kombinasi nama, tanggal lahir, dan gender.\n\nSemua parameter opsional tapi minimal satu harus diisi.\n\nParameter FHIR:\n- `name` — nama pasien (tidak harus lengkap)\n- `birthdate` — format YYYY-MM-DD\n- `gender` — `male` atau `female`"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "👨‍⚕️ Practitioner (Dokter)",
+      "item": [
+        {
+          "name": "Cari Practitioner by NIK",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('ResourceType Bundle', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.resourceType).to.eql('Bundle');",
+                  "});",
+                  "// Simpan IHS ID practitioner pertama",
+                  "var json = pm.response.json();",
+                  "if (json.entry && json.entry.length > 0) {",
+                  "    var id = json.entry[0].resource.id;",
+                  "    pm.collectionVariables.set('practitioner_ihs_id', id);",
+                  "    console.log('Practitioner IHS ID:', id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/practitioner/{{practitioner_nik}}",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "practitioner", "{{practitioner_nik}}"]
+            },
+            "description": "Cari data tenaga medis (dokter/perawat) berdasarkan NIK KTP.\n\nIHS ID dokter secara otomatis disimpan ke variable `practitioner_ihs_id`."
+          },
+          "response": []
+        },
+        {
+          "name": "Ambil Practitioner by IHS Number",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('ResourceType Practitioner', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.resourceType).to.eql('Practitioner');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/practitioner-by-id/{{practitioner_ihs_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "practitioner-by-id", "{{practitioner_ihs_id}}"]
+            },
+            "description": "Ambil detail data tenaga medis berdasarkan IHS Number."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🏨 Encounter (Kunjungan)",
+      "item": [
+        {
+          "name": "Ambil Encounter by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('ResourceType Encounter', function () {",
+                  "    var json = pm.response.json();",
+                  "    pm.expect(json.resourceType).to.eql('Encounter');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/encounter/{{encounter_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "encounter", "{{encounter_id}}"]
+            },
+            "description": "Ambil detail data kunjungan (Encounter) berdasarkan ID SatuSehat.\n\nEncounter ID didapat setelah melakukan createEncounter melalui aplikasi."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💊 KFA (Katalog Farmasi)",
+      "item": [
+        {
+          "name": "Cari Produk KFA v1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/kfa/search/paracetamol",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "kfa", "search", "paracetamol"]
+            },
+            "description": "Cari produk obat di Katalog Farmasi (KFA) v1 berdasarkan keyword.\n\nGanti `paracetamol` di URL dengan nama obat yang dicari."
+          },
+          "response": []
+        },
+        {
+          "name": "Detail Produk KFA v1",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/kfa/detail/93000051",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "kfa", "detail", "93000051"]
+            },
+            "description": "Ambil detail produk KFA berdasarkan kode produk.\n\nKode produk didapat dari hasil pencarian KFA."
+          },
+          "response": []
+        },
+        {
+          "name": "Cari Produk KFA v2",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/kfa-v2/search/paracetamol",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "kfa-v2", "search", "paracetamol"]
+            },
+            "description": "Cari produk obat di Katalog Farmasi (KFA) v2.\n\nResponse format lebih lengkap dibanding v1."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "✅ Consent",
+      "item": [
+        {
+          "name": "Cek Consent Pasien",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', function () { pm.response.to.have.status(200); });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/satusehat/consent/{{patient_ihs_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["satusehat", "consent", "{{patient_ihs_id}}"]
+            },
+            "description": "Cek status consent/persetujuan pasien berdasarkan Patient IHS Number.\n\nConsent diperlukan sebelum mengirim data kunjungan pasien ke SatuSehat."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

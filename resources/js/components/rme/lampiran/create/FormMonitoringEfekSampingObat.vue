@@ -289,6 +289,9 @@
             <label class="fw-bold mb-2">Tanda Tangan</label>
             <div v-if="form.ttd_petugas && !ttdPetugasCleared" class="signature-preview text-center">
               <img :src="form.ttd_petugas" alt="TTD Petugas" class="img-signature" />
+                <p v-if="form.ttd_petugas_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.ttd_petugas_timestamp }}
+                </p>
               <button @click="clearSign('ttd_petugas')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -384,6 +387,7 @@ export default {
         penilaian_masalah_lain: false,
         profesi_ttd: "",
         ttd_petugas: "",
+        ttd_petugas_timestamp: "",
         nama_petugas: ""
       }
     };
@@ -516,6 +520,13 @@ export default {
       }
     
       this.form[refName] = data;
+      this.signatureCleared = false;
+
+      const now = new Date();
+      this.form.ttd_petugas_timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
       console.log("TTD saved:", refName);
     },
     
@@ -523,10 +534,18 @@ export default {
       const flagMap = {
         ttd_petugas: 'ttdPetugasCleared',
       };
+
+      const timestampMap = {
+        ttd_petugas: 'ttd_petugas_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = true;
         this.form[refName] = "";
+      }
+
+      if (timestampMap[refName]) {
+        this.form[timestampMap[refName]] = "";
       }
     
       this.$nextTick(() => {
@@ -633,6 +652,18 @@ export default {
 /* TABLE */
 .table-responsive {
   overflow-x: auto;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .resume-table {

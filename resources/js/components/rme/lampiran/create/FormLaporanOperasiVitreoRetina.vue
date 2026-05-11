@@ -791,6 +791,9 @@
             <label class="fw-bold mb-2">DPJP Bedah</label>
             <div v-if="form.ttd_dpjp_bedah && !ttdDokterCleared" class="signature-preview text-center">
               <img :src="form.ttd_dpjp_bedah" alt="TTD Perawat Ruangan" class="img-signature" />
+                <p v-if="form.ttd_dpjp_bedah_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.ttd_dpjp_bedah_timestamp }}
+                </p>
               <button @click="clearSign('ttd_dpjp_bedah')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -1051,6 +1054,7 @@ export default {
         stiker_implant: "",
         ttd_dpjp_bedah: "",
         nama_dpjp_bedah_ttd: "",
+        ttd_dpjp_bedah_timestamp: "",
         tanggal_selesai_laporan: "",
         jam_selesai_laporan: "",
       }
@@ -1179,12 +1183,23 @@ export default {
       const flagMap = {
         ttd_dpjp_bedah: 'ttdDokterCleared',
       };
+
+      const timestampMap = {
+        ttd_dpjp_bedah: 'ttd_dpjp_bedah_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = false;
       }
     
       this.form[refName] = data;
+      if (timestampMap[refName]) {
+      const now = new Date();
+      this.form[timestampMap[refName]] = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    }
       console.log("TTD saved:", refName);
     },
     
@@ -1192,11 +1207,19 @@ export default {
       const flagMap = {
         ttd_dpjp_bedah: 'ttdDokterCleared',
       };
+
+      const timestampMap = {
+        ttd_dpjp_bedah: 'ttd_dpjp_bedah_timestamp',
+      };
     
       if (flagMap[refName] !== undefined) {
         this[flagMap[refName]] = true;
         this.form[refName] = "";
       }
+
+    if (timestampMap[refName]) {
+      this.form[timestampMap[refName]] = "";
+    }
     
       this.$nextTick(() => {
         const pad = this.$refs[refName];
@@ -1278,6 +1301,18 @@ export default {
 .container {
   max-width: 1400px;
   margin: 0 auto;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .box-rme {

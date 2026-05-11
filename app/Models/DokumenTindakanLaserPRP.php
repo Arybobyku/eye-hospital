@@ -41,7 +41,7 @@ class DokumenTindakanLaserPRP extends Model
         // Tanda Tangan
         'ttd_dokter',
         'nama_dokter',
-
+        'dokter_ttd_timestamp',
         'created_by',
         'updated_by',
     ];

@@ -3,6 +3,7 @@
     <button @click="$emit('back')" class="btn-back">Kembali</button>
 
     <div class="container py-4">
+      <div v-if="disabledSubmit" class="view-overlay"></div>
       <!-- ================= HEADER ================= -->
       <div class="text-center mb-4">
         <h2 class="fw-bold">CATATAN KEPERAWATAN</h2>
@@ -105,6 +106,9 @@
                     />
                     <div v-if="row.ttd_perawat && !ttdPerawatCleared[index]" class="text-center">
                       <img :src="row.ttd_perawat" style="width:200px; height:80px; object-fit:contain; border:1px dashed #ccc;" />
+                        <p v-if="row.ttd_perawat_timestamp" style="font-size:10px; color:#2d74b7; background:#e9f5ff; padding:3px 8px; border-radius:4px; margin:4px auto; width:fit-content;">
+                          Ditandatangani: {{ row.ttd_perawat_timestamp }}
+                        </p>
                       <button
                         @click="clearSign(index)"
                         class="btn-save-mini mt-1"
@@ -162,10 +166,10 @@
 
     <!-- ================= BUTTON BOTTOM ================= -->
     <div class="action-footer">
-      <button class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
-        <span v-if="loadingSubmit">Menyimpan...</span>
-        <span v-else>{{ editUuid ? 'Update' : 'Simpan' }}</span>
-      </button>
+      <button v-if="!disabledSubmit" class="btn-save-form" @click="submitForm" :disabled="loadingSubmit">
+      <span v-if="loadingSubmit">Menyimpan...</span>
+      <span v-else>Simpan</span>
+    </button>
 
       <button class="btn-back" @click="$emit('back')" :disabled="loadingSubmit">
         Kembali
@@ -188,10 +192,20 @@ export default {
       type: String,
       default: null,
     },
+    viewData: {
+      type: Object,
+      default: null,
+    },
+    editData: {
+      // ✨ Props untuk data edit
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
       loadingSubmit: false,
+      disabledSubmit: false,
       ttdPerawatCleared: [],
       sigOption: {
         penColor: "black",
@@ -212,7 +226,8 @@ export default {
             jam: "",
             uraian: "",
             nama_perawat: "",
-            ttd_perawat: ""
+            ttd_perawat: "",
+            ttd_perawat_timestamp: ""
           }
         ]
       }
@@ -220,14 +235,25 @@ export default {
   },
   computed: {
     isEditMode() {
-      return !!this.editUuid;
-    }
+      console.log('p', this.state);
+        return !!this.editData.uuid;
+      },
   },
   async mounted() {
     await this.fetchTahunAkreditasi();
-    if (this.isEditMode) {
+    console.log('editmode', this.editData);
+    if(this.viewData) {
+      this.disabledSubmit = true;
+      this.loadDataForEdit();
+    } else if (this.editData) {
+      // ✨ LOAD DATA UNTUK EDIT
+      console.log("edit");
+      this.disabledSubmit = false;
+
       this.loadDataForEdit();
     } else {
+      this.disabledSubmit = false; 
+      // CREATE MODE
       this.setDataForm();
     }
   },
@@ -267,30 +293,31 @@ export default {
     },
 
     async loadDataForEdit() {
-  try {
-    const response = await axios.get(
-      `/master/rekammedis/lampiran/${this.editUuid}?type=catatan_keperawatan`
-    );
+    try {
+      const dataSource = this.editData;
+      const response = await axios.get(
+        `/master/rekammedis/lampiran/${dataSource.uuid}?type=catatan_keperawatan`
+      );
 
-    if (response.data.status) {
-      const data = response.data.data;
+      if (response.data.status) {
+        const data = response.data.data;
 
-      Object.keys(this.form).forEach(key => {
-        if (key === 'catatan_rows' && data.catatan_rows) {
-          this.form.catatan_rows = JSON.parse(data.catatan_rows);
-        } else if (data[key] !== undefined) {
-          this.form[key] = data[key];
-        }
+        Object.keys(this.form).forEach(key => {
+          if (key === 'catatan_rows' && data.catatan_rows) {
+            this.form.catatan_rows = JSON.parse(data.catatan_rows);
+          } else if (data[key] !== undefined) {
+            this.form[key] = data[key];
+          }
+        });
+
+        // 🔴 INI PENTING
+      this.$nextTick(() => {
+        this.ttdPerawatCleared = this.form.catatan_rows.map(row => !row.ttd_perawat);
       });
-
-      // 🔴 INI PENTING
-    this.$nextTick(() => {
-      this.ttdPerawatCleared = this.form.catatan_rows.map(row => !row.ttd_perawat);
-    });
+      }
+    } catch (err) {
+      console.error(err);
     }
-  } catch (err) {
-    console.error(err);
-  }
 },
 
 
@@ -301,7 +328,8 @@ export default {
         jam: now.toTimeString().substring(0, 5),
         uraian: "",
         nama_perawat: "",
-        ttd_perawat: ""
+        ttd_perawat: "",
+        ttd_perawat_timestamp: ""
       });
       this.ttdPerawatCleared.push(false); 
     },
@@ -330,12 +358,19 @@ export default {
     
       this.form.catatan_rows[index].ttd_perawat = data;
       this.ttdPerawatCleared[index] = false;
+
+      const now = new Date();
+      this.form.catatan_rows[index].ttd_perawat_timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
       console.log("TTD saved:", refName);
     },
 
     clearSign(index) {
       this.ttdPerawatCleared[index] = true;
       this.form.catatan_rows[index].ttd_perawat = "";
+      this.form.catatan_rows[index].ttd_perawat_timestamp = "";
     
       this.$nextTick(() => {
         this.$nextTick(() => {
@@ -439,6 +474,19 @@ export default {
 /* TABLE */
 .table-responsive {
   overflow-x: auto;
+}
+
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .catatan-table {

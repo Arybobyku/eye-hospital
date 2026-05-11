@@ -67,6 +67,7 @@ class DokumenAsuhanGizi extends Model
         // Tanda Tangan
         'ttd_ahli_gizi',
         'nama_ahli_gizi',
+        'ahli_gizi_ttd_timestamp',
         
         'created_by',
         'updated_by',

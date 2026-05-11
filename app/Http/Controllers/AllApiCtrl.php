@@ -32,7 +32,7 @@ class AllApiCtrl extends Controller
 
 	public function __construct() {
 		date_default_timezone_set("Asia/Jakarta");
-		//$this->error = PenggunaHelp::acl(); 
+		//$this->error = PenggunaHelp::acl();
 	}
 
 	public function patch(Request $request) {
@@ -52,12 +52,13 @@ class AllApiCtrl extends Controller
 		$ocularsinistrabcva2 = array();
 		$oculardextrapinhole = array();
 		$ocularsinistrapinhole = array();
+		$bukuTarif = array();
 		$dokter = array();
 		$dokterumum = array();
 		$icd9 = array(); $icd10 = array(); $satuan = array(); $ruangans = array();
 		$carabayar = array(); $asuransi = array(); $layanan = array(); $tarif = array();
 		$provinsi = array(); $kabkota = array(); $kecamatan = array(); $kelurahan = array();
-		
+
 		if ($request->position == 'all') {
 			$kamarinap = $this->kamarinap();
 			$alltindakan = $this->alltindakan();
@@ -81,6 +82,7 @@ class AllApiCtrl extends Controller
 			$oculardextrabcva2 = $this->ocularsinistravisus();
 			$oculardextrapinhole = $this->ocularsinistrapinhole();
 			$ocularsinistrapinhole = $this->ocularsinistrapinhole();
+			$bukuTarif = $this->bukuTarif();
 		}
 		else if ($request->position == 'kamarinap') { $kamarinap = $this->kamarinap(); }
 		else if ($request->position == 'alltindakan') { $alltindakan = $this->alltindakan(); }
@@ -91,6 +93,7 @@ class AllApiCtrl extends Controller
 		else if ($request->position == 'tindakannonbedah') { $tindakannonbedah = $this->tindakannonbedah(); }
 		else if ($request->position == 'carabayartindakanbedah') { $carabayartindakanbedah = $this->carabayartindakanbedah(); }
 		else if ($request->position == 'tindakanbedah') { $tindakanbedah = $this->tindakanbedah(); }
+		else if ($request->position == 'bukuTarif') { $bukuTarif = $this->bukuTarif(); }
 		else if ($request->position == 'obat') { $obat = $this->obat(); }
 		else if ($request->position == 'obat2') { $obat2 = $this->obat2(); }
 		else if ($request->position == 'obat3') { $obat3 = $this->obat3(); }
@@ -133,12 +136,13 @@ class AllApiCtrl extends Controller
 			'carabayartindakanbedah' => $carabayartindakanbedah,
 			'tindakanbedah' => $tindakanbedah,
 			'jeniskamar' => $jeniskamar,
-			'obat' => $obat, 'obat2' => $obat2,  'obat3' => $obat3, 'obat4' => $obat4,   'obatgudang' => $obatgudang, 'hargagudang' => $hargagudang, 'apotek' => $apotek, 'apotekracikan' => $apotekracikan, 'supplier' => $supplier, 'dokter' => $dokter, 
+			'obat' => $obat, 'obat2' => $obat2,  'obat3' => $obat3, 'obat4' => $obat4,   'obatgudang' => $obatgudang, 'hargagudang' => $hargagudang, 'apotek' => $apotek, 'apotekracikan' => $apotekracikan, 'supplier' => $supplier, 'dokter' => $dokter,
 			'dokterumum' => $dokterumum,
 			'icd9' => $icd9, 'icd10' => $icd10, 'satuan' => $satuan, 'ruangans' => $ruangans,
 			'carabayar' => $carabayar, 'asuransi' => $asuransi, 'layanan' => $layanan,
 			'tarif' => $tarif, 'provinsi' => $provinsi, 'kabkota' => $kabkota,
 			'kecamatan' => $kecamatan, 'kelurahan' => $kelurahan,
+            'bukuTarif' => $bukuTarif,
 			'ocularsinistravisus' => $ocularsinistravisus,
 			'oculardextravisus' => $oculardextravisus,
 			'oculardextrabcva2' => $oculardextrabcva2,
@@ -400,6 +404,9 @@ class AllApiCtrl extends Controller
 	private function tarif() {
 		return DB::table('tarif')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
 	}
+	private function bukuTarif() {
+		return DB::table('buku_tarif')->orderBy('id','asc')->where('delete_soft', '=', '1')->get();
+	}
 
 	private function provinsi() {
 		return DB::table('provinsi')->orderBy('id','asc')->where('delete_soft', '=', '1')->select(['uuid', 'id', 'nama'])->get();
@@ -430,7 +437,7 @@ class AllApiCtrl extends Controller
 			});
 		return $collection;
 	}
-	
+
 	public function alamat(Request $request) {
 
 		//if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
@@ -568,10 +575,10 @@ class AllApiCtrl extends Controller
 		->orderBy('pasien_id','asc')
 		->select(['nama_pasien', 'tempat_lahir', 'jenisidentitas', 'no_identitas_pasien', 'jeniskelamin', 'alamat_pasien', 'no_mobile_pasien', 'agama', 'statusperkawinan', 'golongandarah', 'no_rekam_medik', 'tanggal_lahir'])
 		->chunk(1000, function ($pasien_m) use ($arr) {
-			
+
 			foreach ($pasien_m as $value) {
 				if ($value->jeniskelamin != 'Undefined') {
-					
+
 					$namapasien = $value->nama_pasien  != '' && $value->nama_pasien ? ucwords(strtolower($value->nama_pasien)) : '-';
 					$tempatlahir = $value->tempat_lahir != '' && $value->tempat_lahir ? ucwords(strtolower($value->tempat_lahir)) : '-';
 					$jenisidentitas = $value->jenisidentitas != '' && $value->jenisidentitas ? $value->jenisidentitas : '-';
@@ -623,11 +630,11 @@ class AllApiCtrl extends Controller
 						'nama_ayah' => '-',
 						'nama_ibu' => '-',
 					);
-					DB::table('pasien')->insert($arry);	
+					DB::table('pasien')->insert($arry);
 					//$arr = array_merge($arr, $arry);
 				}
 			}
-			//DB::table('pasien')->insert($arr);	
+			//DB::table('pasien')->insert($arr);
 		});
 
     return 'Berhasil';

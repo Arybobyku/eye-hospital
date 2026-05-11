@@ -64,6 +64,8 @@ class VoucherRawatInap extends Model
         'ttd_dibuat_oleh',
         'nama_dokter_voucher',
         'ttd_dokter',
+        'ttd_dibuat_oleh_timestamp',
+        'ttd_dokter_timestamp',
         
         // ===== Audit =====
         'created_by',

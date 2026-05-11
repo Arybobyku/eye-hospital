@@ -42,6 +42,7 @@ class DokumenMonitoringEfekSampingObat extends Model
         'penilaian_masalah_lain',
         'profesi_ttd',
         'ttd_petugas',
+        'ttd_petugas_timestamp',
         'nama_petugas',
         'created_by',
         'updated_by',

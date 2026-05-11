@@ -433,6 +433,9 @@
           <label class="fw-bold mb-2">Tanda Tangan Dokter</label>
             <div v-if="form.ttd_dokter && !ttdDokterCleared" class="signature-preview text-center">
               <img :src="form.ttd_dokter" alt="TTD Perawat Ruangan" class="img-signature" />
+                <p v-if="form.dokter_ttd_timestamp" class="timestamp-ttd">
+                  Ditandatangani: {{ form.dokter_ttd_timestamp }}
+                </p>
               <button @click="clearSign('ttd_dokter')" class="btn-clear mt-2">Hapus & Tanda Tangan Ulang</button>
             </div>
             <div v-else class="text-center">
@@ -599,6 +602,7 @@ export default {
         dokter_telp: "",
         dokter_tanggal: "",
         ttd_dokter: "",
+        dokter_ttd_timestamp: "",
       },
     };
   },
@@ -702,6 +706,14 @@ this.disabledSubmit = false;
       }
     
       this.form[refName] = data;
+
+      const now = new Date();
+      const timestamp = now.toLocaleString('id-ID', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+    
+      if (refName === 'ttd_dokter') this.form.dokter_ttd_timestamp = timestamp
       console.log("TTD saved:", refName);
     },
     
@@ -714,6 +726,8 @@ this.disabledSubmit = false;
         this[flagMap[refName]] = true;
         this.form[refName] = "";
       }
+
+      if (refName === 'ttd_dokter') this.form.dokter_ttd_timestamp = "";
     
       this.$nextTick(() => {
         const pad = this.$refs[refName];
@@ -798,8 +812,6 @@ loadDataForEdit() {
     }
 
     console.log("🟢 LOAD EDIT - Form setelah populate:", this.form);
-    // ✅ RENDER TTD SETELAH FORM TERISI SEMUA
-this.renderSignature("ttd_dokter", this.form.ttd_dokter);
 
 
   } catch (error) {
@@ -809,15 +821,6 @@ this.renderSignature("ttd_dokter", this.form.ttd_dokter);
   }
 },
 
-renderSignature(refName, data) {
-      this.$nextTick(() => {
-        const pad = this.$refs[refName];
-        if (pad && data) {
-          pad.clearSignature();
-          pad.fromDataURL(data);
-        }
-      });
-    },
     
     setDataForm() {
       const today = new Date();
@@ -976,6 +979,18 @@ body {
   border-radius: 6px;
   background: white;
   margin-bottom: 20px;
+}
+
+.timestamp-ttd {
+  font-size: 12px;
+  color: #2d74b7;
+  font-weight: 500;
+  padding: 6px 16px;
+  background: #e9f5ff;
+  border-radius: 4px;
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
 }
 
 .section-title-rme {
