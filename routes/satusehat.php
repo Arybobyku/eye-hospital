@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SatuSehat\OrganizationCtrl;
 use App\Http\Controllers\SatuSehat\LocationCtrl;
 use App\Http\Controllers\SatuSehat\TokenCtrl;
+use App\Http\Controllers\SatuSehat\PatientSyncCtrl;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,14 @@ Route::prefix('location')->group(function () {
     Route::post('add',     [LocationCtrl::class, 'add'])    ->name('satusehat-loc-add');
     Route::post('edit',    [LocationCtrl::class, 'edit'])   ->name('satusehat-loc-edit');
     Route::post('update',  [LocationCtrl::class, 'update']) ->name('satusehat-loc-update');
+});
+
+// ── Patient Sync ───────────────────────────────────────────────────────────
+Route::prefix('patient-sync')->group(function () {
+    Route::post('dashboard',    [PatientSyncCtrl::class, 'dashboard'])   ->name('satusehat-patient-dashboard');
+    Route::post('list',         [PatientSyncCtrl::class, 'list'])        ->name('satusehat-patient-list');
+    Route::post('run-sync',     [PatientSyncCtrl::class, 'runSync'])     ->name('satusehat-patient-run-sync');
+    Route::post('retry-failed', [PatientSyncCtrl::class, 'retryFailed'])->name('satusehat-patient-retry');
 });
 
 // ── Access Token ───────────────────────────────────────────────────────────

@@ -13,6 +13,16 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+
+        /**
+         * Sync ID SatuSehat (IHS Number) untuk pasien berdasarkan NIK.
+         * Berjalan setiap jam — hanya memproses pasien yang belum di-sync.
+         * Pasien dengan status 'synced' atau 'not_found' dilewati secara permanen.
+         */
+        $schedule->command('satusehat:sync-patient --batch=50 --delay=300')
+                 ->hourly()
+                 ->withoutOverlapping()
+                 ->appendOutputTo(storage_path('logs/satusehat-sync-patient.log'));
     }
 
     /**
