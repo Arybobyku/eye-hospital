@@ -513,6 +513,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-circle-dot',
                     'color' => '#880E4F', // Pink 900
                 ],
+                [
+                    'table' => 'dokumen_asesmen_pra_operasi',
+                    'type' => 'dokumen_asesmen_pra_operasi',
+                    'label' => 'Asesmen Pra Operasi',
+                    'icon' => 'fa-clipboard-check',
+                    'color' => '#1B5E20', // Hijau tua
+                ],
             ];
 
             // if (!empty($search)) {
@@ -895,7 +902,11 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-
+                'dokumen_asesmen_pra_operasi' => [
+                'tanggal' => "$table.tanggal",
+                'waktu'   => "$table.jam",
+                'no_surat' => 'RM 4.0/APO/22',  // ✅ Fixed nomor surat
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -972,6 +983,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_form_laser_fokal' => 'dokumen_form_laser_fokal',
                 'laporan_operasi_vitreo_retina' => 'dokumen_laporan_operasi_vitreo_retina',
                 'status_anestesi' => 'dokumen_status_anestesi',
+                'dokumen_asesmen_pra_operasi' => 'dokumen_asesmen_pra_operasi',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -1066,6 +1078,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_form_laser_fokal' => 'dokumen_form_laser_fokal',
                 'laporan_operasi_vitreo_retina' => 'dokumen_laporan_operasi_vitreo_retina',
                 'status_anestesi' => 'dokumen_status_anestesi',
+                'dokumen_asesmen_pra_operasi' => 'dokumen_asesmen_pra_operasi',
             ];
 
             if (!isset($tableMap[$type])) {

@@ -105,4 +105,5 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/lampiran/status-anestesi/{uuid}', [PrintRekamMedisCtrl::class, 'printMonitoringEfekSampingObat']);
     Route::get('rekammedis/lampiran/laporan-operasi-vitreo-retina/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanOperasiVitreoRetina']);
     Route::get('rekammedis/lampiran/asesmen-awal-keperawatan-rawat-inap/{uuid}', [PrintRekamMedisCtrl::class, 'printAsessmenAwalKeperawatanRawatInap']);
+    Route::get('rekammedis/lampiran/asesmen-pra-operasi/{uuid}', [PrintRekamMedisCtrl::class, 'printAsesmenPraOperasi']);
 });

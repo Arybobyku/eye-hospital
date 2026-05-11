@@ -57,6 +57,7 @@ use App\Models\DokumenFormLaserFokal;
 use App\Models\DokumenStatusAnestesi;
 use App\Models\DokumenLaporanOperasiVitreoRetina;
 use App\Models\Pengguna;
+use App\Models\DokumenAsesmenPraOperasi;
 use Illuminate\Support\Str;              // ✅ Tambahkan ini
 
 
@@ -467,7 +468,7 @@ class PasienCtrl extends Controller
             return response()->json(['data' => 'gagal', 'error' => $e->getMessage()], 500);
         }
     }
-   public function storeLaporanPembedahan(Request $request)
+public function storeLaporanPembedahan(Request $request)
 {
     try {
         DB::beginTransaction();
@@ -502,7 +503,7 @@ class PasienCtrl extends Controller
             'operator_bedah_ttd',
         ];
 
-        $data = $request->all();
+        $data = $request->except(['teknik_operasi_files', 'teknik_operasi_files_meta']);
 
         // 1. Konversi boolean
         foreach ($booleanFields as $field) {
@@ -511,7 +512,7 @@ class PasienCtrl extends Controller
             }
         }
 
-        // 2. Sanitasi date — ubah string kosong/"null" jadi null
+        // 2. Sanitasi date
         foreach ($dateFields as $field) {
             if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === 'null')) {
                 $data[$field] = null;
@@ -524,7 +525,7 @@ class PasienCtrl extends Controller
             }
         }
 
-        // 3. Sanitasi gambar Base64 — ubah string kosong jadi null
+        // 3. Sanitasi gambar Base64
         foreach ($imageBase64Fields as $field) {
             if (isset($data[$field]) && ($data[$field] === '' || $data[$field] === 'null')) {
                 $data[$field] = null;
@@ -534,67 +535,86 @@ class PasienCtrl extends Controller
         // ==========================================
         // ✨ HANDLE DOKUMENTASI FOTO/PDF (Storage)
         // ==========================================
-        if (isset($data['teknik_operasi_files']) && $data['teknik_operasi_files']) {
-            $files = json_decode($data['teknik_operasi_files'], true);
-            $savedFiles = [];
-
-            if (is_array($files)) {
-                foreach ($files as $file) {
-                    // Jika ada data Base64 → simpan ke storage
-                    if (isset($file['data'])) {
-                        $base64String = $file['data'];
-
-                        // Hapus prefix "data:image/png;base64,"
-                        if (preg_match('/^data:(\w+)\/(\w+);base64,/', $base64String, $matches)) {
-                            $base64String = substr($base64String, strpos($base64String, ',') + 1);
-                        }
-
-                        $fileData = base64_decode($base64String);
-
-                        $uuidPasien = $request->input('uuid_pasien', 'umum');
-                        $extension = $file['extension'] ?? 'jpg';
-                        $filename = "laporan-pembedahan/{$uuidPasien}/" . Str::uuid() . '.' . $extension;
-
-                        // ✅ Simpan ke storage
-                        Storage::put('public/' . $filename, $fileData);
-
-                        $savedFiles[] = [
-                        'path' => str_replace('\\', '/', $filename),  // ✅ Normalize slash
-                        'name' => $file['name'],
-                        'type' => $file['type'],
-                        'size' => $file['size'] ?? 0,
-                    ];
-                    }
-                    // File lama → tetap pakai path
-                    else {
-                        $savedFiles[] = $file;
-                    }
-                }
-            }
-
-            // Simpan hanya path di database
-            $data['teknik_operasi_files'] = json_encode($savedFiles, JSON_UNESCAPED_SLASHES);
-        } else {
-            // Kosongkan jika tidak ada file
-            $data['teknik_operasi_files'] = null;
-        }
-
-        // ❌ HAPUS field lama — tidak dipakai lagi
-        unset($data['teknik_operasi_foto']);
-
-        // ==========================================
-        // ✨ HAPUS FILE LAMA SAAT UPDATE (Opsional)
-        // ==========================================
+        $uuidPasien = $request->input('uuid_pasien', 'umum');
+        $savedFiles = [];
         $uuid = $request->input('uuid');
         $oldFiles = [];
 
+        // 🔥 Ambil file lama jika edit mode
         if ($uuid) {
             $laporan = DokumenLaporanPembedahan::where('uuid', $uuid)->first();
-
             if ($laporan && $laporan->teknik_operasi_files) {
-                $oldFiles = json_decode($laporan->teknik_operasi_files, true) ?? [];
+                $oldData = $laporan->teknik_operasi_files;
+                $oldFiles = is_array($oldData) ? $oldData : json_decode($oldData, true) ?? [];
             }
         }
+
+        // 🔥 Ambil metadata files (cek apakah string JSON atau sudah array)
+        $filesMeta = $request->input('teknik_operasi_files_meta');
+
+        if (is_string($filesMeta)) {
+            $filesMeta = json_decode($filesMeta, true);
+        }
+
+        if (!is_array($filesMeta)) {
+            $filesMeta = [];
+        }
+
+        // 🔥 Handle file upload baru (dari kamera / upload foto / PDF)
+        if ($request->hasFile('teknik_operasi_files')) {
+            $uploadedFiles = $request->file('teknik_operasi_files');
+
+            // Pastikan selalu array
+            if (!is_array($uploadedFiles)) {
+                $uploadedFiles = [$uploadedFiles];
+            }
+
+            foreach ($uploadedFiles as $index => $file) {
+                if ($file && $file->isValid()) {
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = "laporan-pembedahan/{$uuidPasien}/" . Str::uuid() . '.' . $extension;
+
+                    // ✅ Simpan ke storage
+                    $path = $file->storeAs('public/' . dirname($filename), basename($filename));
+
+                    // Normalize path
+                    $cleanPath = str_replace('public/', '', $filename);
+                    $cleanPath = str_replace('\\', '/', $cleanPath);
+
+                    $savedFiles[] = [
+                        'path' => $cleanPath,
+                        'name' => $file->getClientOriginalName(),
+                        'type' => str_starts_with($file->getMimeType(), 'image/') ? 'image' : 'pdf',
+                        'size' => $file->getSize(),
+                    ];
+
+                    \Log::info("✅ File {$index} tersimpan di: {$cleanPath}");
+                }
+            }
+        }
+
+        // 🔥 Gabungkan file lama yang tidak diganti (edit mode)
+        if (!empty($filesMeta)) {
+            foreach ($filesMeta as $meta) {
+                if (isset($meta['is_new']) && !$meta['is_new'] && isset($meta['path'])) {
+                    // File lama - pertahankan path
+                    $savedFiles[] = [
+                        'path' => $meta['path'],
+                        'name' => $meta['name'] ?? '',
+                        'type' => $meta['type'] ?? 'image',
+                        'size' => $meta['size'] ?? 0,
+                    ];
+                }
+            }
+        }
+
+        // Simpan ke data
+        $data['teknik_operasi_files'] = !empty($savedFiles)
+            ? json_encode($savedFiles, JSON_UNESCAPED_SLASHES)
+            : null;
+
+        // ❌ HAPUS field lama — tidak dipakai lagi
+        unset($data['teknik_operasi_foto']);
 
         $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
         $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
@@ -617,13 +637,14 @@ class PasienCtrl extends Controller
 
             // ✅ Hapus file lama yang tidak dipakai lagi
             if (!empty($oldFiles)) {
-                $newPaths = array_column($savedFiles ?? [], 'path');
+                $newPaths = array_column($savedFiles, 'path');
 
                 foreach ($oldFiles as $oldFile) {
                     if (isset($oldFile['path']) && !in_array($oldFile['path'], $newPaths)) {
                         // File lama tidak ada di data baru → hapus dari storage
                         if (Storage::exists('public/' . $oldFile['path'])) {
                             Storage::delete('public/' . $oldFile['path']);
+                            \Log::info("🗑️ File lama dihapus: {$oldFile['path']}");
                         }
                     }
                 }
@@ -654,6 +675,7 @@ class PasienCtrl extends Controller
 
     } catch (Exception $e) {
         DB::rollBack();
+        \Log::error('❌ Error storeLaporanPembedahan: ' . $e->getMessage());
         return response()->json([
             'status' => false,
             'message' => 'Gagal menyimpan Laporan Pembedahan',
@@ -3098,6 +3120,88 @@ class PasienCtrl extends Controller
 
     //     return response()->json(['data' => $data, 'total' => $total]);
     // }
+
+public function storeAsesmenPraOperasi(Request $request)
+{
+    try {
+        DB::beginTransaction();
+
+        $data = $request->all();
+
+        // Ambil user info dari encrypted cookie
+        $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+        $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+        $uuid = $request->input('uuid');
+        unset($data['uuid']);
+        unset($data['id']);
+
+        // ✅ KONVERSI JENIS KELAMIN
+        if (isset($data['jenis_kelamin'])) {
+            $jk = $data['jenis_kelamin'];
+            if (in_array($jk, ['Perempuan', 'P', 'Female', 'F', 'Wanita'])) {
+                $data['jenis_kelamin'] = 'P';
+            } elseif (in_array($jk, ['Laki-laki', 'L', 'Male', 'M', 'Pria'])) {
+                $data['jenis_kelamin'] = 'L';
+            }
+        }
+
+        // ✅ SET NOMOR SURAT JIKA KOSONG
+        if (empty($data['no_surat'])) {
+            $tahun = date('y'); // Format 2 digit tahun
+            $data['no_surat'] = "RM 4.0/APO/{$tahun}";
+        }
+
+        if ($uuid) {
+            // UPDATE
+            $dokumen = DokumenAsesmenPraOperasi::where('uuid', $uuid)->first();
+
+            if (!$dokumen) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Data tidak ditemukan',
+                ], 404);
+            }
+
+            $data['updated_by'] = $pengguna_nama;
+            $dokumen->update($data);
+            $action = 'update';
+            $message = 'Dokumen Asesmen Pra Operasi berhasil diupdate';
+        } else {
+            // CREATE
+            $data['uuid'] = (string) Str::uuid();
+            $data['created_by'] = $pengguna_nama;
+            if (empty($data['tanggal'])) {
+                $data['tanggal'] = date('Y-m-d');
+            }
+            $dokumen = DokumenAsesmenPraOperasi::create($data);
+            $action = 'create';
+            $message = 'Dokumen Asesmen Pra Operasi berhasil disimpan';
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'status' => true,
+            'message' => $message,
+            'data' => $dokumen,
+            'action' => $action,
+        ], $action === 'create' ? 201 : 200);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+
+        return response()->json([
+            'status' => false,
+            'message' => 'Gagal menyimpan Dokumen Asesmen Pra Operasi',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+
+
+
     public function dokumenList(Request $request)
     {
         if ($this->error != 'next') {

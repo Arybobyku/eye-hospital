@@ -1,4 +1,3 @@
-
 <style scoped>
 .dropdown-dokter {
   position: relative;
@@ -132,6 +131,12 @@
   height: 150px;
   object-fit: cover;
   display: block;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.foto-thumbnail:hover {
+  transform: scale(1.05);
 }
 
 .foto-label {
@@ -160,11 +165,55 @@
   font-size: 12px;
   transition: all 0.2s;
   padding: 0;
+  z-index: 5;
 }
 
 .btn-hapus-foto:hover {
   background: rgba(185, 28, 28, 1);
   transform: scale(1.1);
+}
+
+/* ================= MODAL FULLSCREEN FOTO ================= */
+.fullscreen-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-out;
+}
+
+.fullscreen-image {
+  max-width: 95%;
+  max-height: 95vh;
+  object-fit: contain;
+  display: block;
+  cursor: default;
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+.fullscreen-close {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  color: white;
+  font-size: 48px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 100000;
+  transition: transform 0.2s;
+  line-height: 1;
+}
+
+.fullscreen-close:hover {
+  transform: scale(1.2);
+  color: #ff4444;
 }
 
 </style>
@@ -504,13 +553,14 @@
     :key="index"
     class="foto-item"
   >
-    <!-- ✅ Preview Image pakai URL storage -->
+    <!-- ✅ Preview Image dengan click untuk fullscreen -->
     <img
       v-if="file.type === 'image'"
       :src="file.preview || file.url"
       alt="Foto Operasi"
       class="foto-thumbnail"
       @error="handleImageError($event)"
+      @click="previewFullscreen(file.preview || file.url)"
     />
 
     <!-- ✅ Preview PDF -->
@@ -538,6 +588,7 @@
           </div>
         </div>
       </div>
+
       <!-- ================= BAHAN LABORATORIUM ================= -->
       <div class="box-rme mb-4">
         <h5 class="section-title-rme">Bahan Laboratorium</h5>
@@ -745,6 +796,12 @@
         Kembali
       </button>
     </div>
+
+    <!-- ================= MODAL PREVIEW FULLSCREEN ================= -->
+    <div v-if="showFullscreen" class="fullscreen-modal" @click="showFullscreen = false">
+      <span class="fullscreen-close" @click="showFullscreen = false">&times;</span>
+      <img :src="fullscreenImage" class="fullscreen-image" @click.stop />
+    </div>
   </div>
 
 </template>
@@ -764,12 +821,10 @@ export default {
       default: null,
     },
     editData: {
-      // ✨ Props untuk data edit
       type: Object,
       default: null,
     },
     isEditMode: {
-      // ✨ Props flag edit mode
       type: Boolean,
       default: false,
     },
@@ -782,14 +837,15 @@ export default {
       macamSayatanCleared: false,
       disabledSubmit: false,
       posisiPenderitaCleared: false,
+      showFullscreen: false,
+      fullscreenImage: '',
       sigOption: {
         penColor: "black",
         backgroundColor: "white",
-
       },
       cameraStream: null,
       form: {
-        uuid: "", // ✨ Tambahkan field uuid
+        uuid: "",
         uuid_pasien: "",
         no_rm: "",
         nik: "",
@@ -819,9 +875,9 @@ export default {
         jam_mulai: "",
         jam_selesai: "",
         lama_operasi: "",
-        macam_sayatan_teks: "",        // ✨ Teks macam sayatan
-        macam_sayatan_gambar: "",      // ✨ Gambar macam sayatan
-        posisi_penderita_teks: "",     // ✨ Teks posisi penderita
+        macam_sayatan_teks: "",
+        macam_sayatan_gambar: "",
+        posisi_penderita_teks: "",
         posisi_penderita_gambar: "",
         teknik_operasi: "",
         teknik_operasi_files: [],
@@ -843,22 +899,23 @@ export default {
         tanggal_ttd: "",
         nama_operator: "",
         operator_bedah_ttd: "",
-
       },
     };
   },
   async mounted() {
     await this.fetchDokter();
-     if (this.viewData && typeof this.viewData === 'object' && Object.keys(this.viewData).length > 0) {
-    this.disabledSubmit = true;
-    this.editData = this.viewData; // Pakai sebagai data view
-    this.loadDataForEdit();
-  } else if (this.editData && typeof this.editData === 'object') {
-    this.loadDataForEdit();
-  } else {
-    this.setDataForm();
-  }
-
+    if (this.viewData && typeof this.viewData === 'object' && Object.keys(this.viewData).length > 0) {
+      this.disabledSubmit = true;
+      this.editData = this.viewData;
+      this.loadDataForEdit();
+    } else if (this.editData && typeof this.editData === 'object') {
+      this.loadDataForEdit();
+    } else {
+      this.setDataForm();
+    }
+  },
+  beforeUnmount() {
+    this.closeCameraModal();
   },
   methods: {
     async fetchDokter() {
@@ -869,14 +926,17 @@ export default {
         console.error('Gagal memuat data dokter:', error);
       }
     },
-    beforeUnmount() {
-    // Matikan kamera kalau komponen di-destroy
-    this.closeCameraModal();
-    },
+
     handleImageError(event) {
-        console.error('Gagal load gambar:', event.target.src);
-        event.target.style.display = 'none';
+      console.error('Gagal load gambar:', event.target.src);
+      event.target.style.display = 'none';
     },
+
+    previewFullscreen(imageSrc) {
+      this.fullscreenImage = imageSrc;
+      this.showFullscreen = true;
+    },
+
     clearSignature() {
       this.signatureCleared = true;
       this.form.operator_bedah_ttd = "";
@@ -885,299 +945,307 @@ export default {
         if (pad) pad.clearSignature();
       });
     },
-    // Hapus gambar yang sudah tersimpan → tampilkan pad kosong kembali
+
     clearMacamSayatan() {
-        this.macamSayatanCleared = true;
-        this.form.macam_sayatan_gambar = "";  // ✨ Ganti dari macam_sayatan
-        this.$nextTick(() => {
-            const pad = this.$refs.macam_sayatan_pad;  // ✨ Ganti ref
-            if (pad) pad.clearSignature();
-        });
+      this.macamSayatanCleared = true;
+      this.form.macam_sayatan_gambar = "";
+      this.$nextTick(() => {
+        const pad = this.$refs.macam_sayatan_pad;
+        if (pad) pad.clearSignature();
+      });
     },
+
     clearPosisiPenderita() {
-        this.posisiPenderitaCleared = true;
-        this.form.posisi_penderita_gambar = "";  // ✨ Ganti dari posisi_penderita
-        this.$nextTick(() => {
-            const pad = this.$refs.posisi_penderita_pad;  // ✨ Ganti ref
-            if (pad) pad.clearSignature();
-        });
+      this.posisiPenderitaCleared = true;
+      this.form.posisi_penderita_gambar = "";
+      this.$nextTick(() => {
+        const pad = this.$refs.posisi_penderita_pad;
+        if (pad) pad.clearSignature();
+      });
     },
-    // ✨ FUNGSI BARU UPLOAD FOTO
+
     triggerFileUpload(section, accept) {
-    const input = this.$refs[`fileInput_${section}`];
-    if (input) {
+      const input = this.$refs[`fileInput_${section}`];
+      if (input) {
         input.setAttribute('accept', accept);
         input.removeAttribute('capture');
         input.click();
-    }
+      }
     },
 
-   triggerCamera(section) {
-    // Deteksi apakah perangkat mobile
-    const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent);
+    triggerCamera(section) {
+      const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(navigator.userAgent);
 
-    if (isMobile) {
-        // Mobile → buka kamera native lewat input file
+      if (isMobile) {
         const input = this.$refs[`fileInput_${section}`];
         if (input) {
-        input.setAttribute('accept', 'image/*');
-        input.setAttribute('capture', 'environment');
-        input.click();
+          input.setAttribute('accept', 'image/*');
+          input.setAttribute('capture', 'environment');
+          input.click();
         }
-    } else {
-        // Desktop → buka modal kamera custom
+      } else {
         this.openCameraModal(section);
-    }
+      }
     },
 
     openCameraModal(section) {
-  // Tutup kamera sebelumnya dulu
-  this.closeCameraModal();
+      this.closeCameraModal();
 
-  const modalHtml = `
-    <div id="camera-modal" style="
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.9); z-index: 9999;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-    ">
-      <video id="camera-video" autoplay playsinline style="
-        max-width: 100%; max-height: 70vh; border-radius: 8px;
-      "></video>
-      <div style="margin-top: 20px; display: flex; gap: 15px;">
-        <button id="capture-btn" style="
-          background: #4CAF50; color: white; padding: 12px 30px;
-          border: none; border-radius: 30px; font-size: 16px; cursor: pointer;
-        ">📸 Ambil Foto</button>
-        <button id="close-camera-btn" style="
-          background: #f44336; color: white; padding: 12px 30px;
-          border: none; border-radius: 30px; font-size: 16px; cursor: pointer;
-        ">❌ Tutup</button>
-      </div>
-      <canvas id="camera-canvas" style="display: none;"></canvas>
-    </div>
-  `;
+      const modalHtml = `
+        <div id="camera-modal" style="
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          background: rgba(0,0,0,0.95); z-index: 9999;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          padding: 20px;
+        ">
+          <div style="position: relative; display: inline-block;">
+            <video id="camera-video" autoplay playsinline style="
+              max-width: 100%; max-height: 70vh; border-radius: 8px; display: block;
+            "></video>
 
-  document.body.insertAdjacentHTML('beforeend', modalHtml);
+            <!-- Overlay persegi panjang untuk stiker IOL -->
+            <div style="
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              width: 70%;
+              height: 35%;
+              border: 3px solid #00ff00;
+              box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+              pointer-events: none;
+              z-index: 10;
+              border-radius: 4px;
+            ">
+              <div style="
+                position: absolute;
+                top: -3px;
+                left: -3px;
+                width: 25px;
+                height: 25px;
+                border-top: 4px solid #00ff00;
+                border-left: 4px solid #00ff00;
+              "></div>
+              <div style="
+                position: absolute;
+                bottom: -3px;
+                right: -3px;
+                width: 25px;
+                height: 25px;
+                border-bottom: 4px solid #00ff00;
+                border-right: 4px solid #00ff00;
+              "></div>
+            </div>
 
-  const video = document.getElementById('camera-video');
-  const canvas = document.getElementById('camera-canvas');
+            <div style="
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+              color: #00ff00;
+              font-size: 14px;
+              font-weight: bold;
+              text-shadow: 0 0 10px rgba(0,0,0,0.9);
+              pointer-events: none;
+              z-index: 11;
+              margin-top: 20%;
+              text-align: center;
+            ">
+              Arahkan stiker IOL<br>dalam kotak
+            </div>
+          </div>
 
-  // Minta akses kamera
-  navigator.mediaDevices.getUserMedia({
-    video: {
-      width: { ideal: 1280 },
-      height: { ideal: 720 },
-      facingMode: 'environment'
-    }
-  })
-  .then((mediaStream) => {
-    this.cameraStream = mediaStream;  // ✅ Simpan stream ke component
-    video.srcObject = mediaStream;
-  })
-  .catch((err) => {
-    console.error('Gagal akses kamera:', err);
-    alert('Tidak dapat mengakses kamera. Pastikan kamera tersedia dan izin diberikan.');
-    this.closeCameraModal();
-  });
+          <div style="margin-top: 20px; display: flex; gap: 15px;">
+            <button id="capture-btn" style="
+              background: #4CAF50; color: white; padding: 12px 30px;
+              border: none; border-radius: 30px; font-size: 16px; cursor: pointer; font-weight: bold;
+            ">📸 Ambil Foto</button>
+            <button id="close-camera-btn" style="
+              background: #f44336; color: white; padding: 12px 30px;
+              border: none; border-radius: 30px; font-size: 16px; cursor: pointer; font-weight: bold;
+            ">❌ Tutup</button>
+          </div>
 
-  // Tombol ambil foto
-  document.getElementById('capture-btn').addEventListener('click', () => {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    canvas.getContext('2d').drawImage(video, 0, 0);
+          <canvas id="camera-canvas" style="display: none;"></canvas>
+        </div>
+      `;
 
-    const base64String = canvas.toDataURL('image/jpeg', 0.9);
+      document.body.insertAdjacentHTML('beforeend', modalHtml);
 
-    const timestamp = new Date().getTime();
-    const fileName = `camera_capture_${timestamp}.jpg`;
+      const video = document.getElementById('camera-video');
+      const canvas = document.getElementById('camera-canvas');
 
-    const fileData = {
-      preview: base64String,
-      name: fileName,
-      type: 'image',
-      size: Math.round(base64String.length * 0.75),
-      extension: 'jpg',
-    };
-
-    this.form.teknik_operasi_files.push(fileData);
-    this.closeCameraModal();  // ✅ Tutup modal + matikan kamera
-    console.log('Foto dari kamera berhasil disimpan');
-  });
-
-  // Tombol tutup
-  document.getElementById('close-camera-btn').addEventListener('click', () => {
-    this.closeCameraModal();  // ✅ Tutup modal + matikan kamera
-  });
-},
-
-// ✅ Fungsi close yang robust
-closeCameraModal() {
-  // ✅ Matikan semua track kamera
-  if (this.cameraStream) {
-    this.cameraStream.getTracks().forEach(track => {
-      track.stop();  // Stop track
-    });
-    this.cameraStream = null;  // Reset stream
-  }
-
-  // Hapus modal dari DOM
-  const modal = document.getElementById('camera-modal');
-  if (modal) {
-    modal.remove();
-  }
-},
-
-    handleFileUpload(event, section) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        // Validasi tipe file
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
-        if (!allowedTypes.includes(file.type)) {
-            alert('File harus berupa gambar (JPG/PNG/GIF) atau PDF!');
-            return;
+      navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { ideal: 1920 },
+          height: { ideal: 1080 },
+          facingMode: 'environment'
         }
+      })
+      .then((mediaStream) => {
+        this.cameraStream = mediaStream;
+        video.srcObject = mediaStream;
+      })
+      .catch((err) => {
+        console.error('Gagal akses kamera:', err);
+        alert('Tidak dapat mengakses kamera. Pastikan kamera tersedia dan izin diberikan.');
+        this.closeCameraModal();
+      });
 
-        // Validasi ukuran (max 10MB)
-        if (file.size > 10 * 1024 * 1024) {
-            alert('Ukuran file maksimal 10MB!');
-            return;
-        }
+      document.getElementById('capture-btn').addEventListener('click', async () => {
+        const videoWidth = video.videoWidth;
+        const videoHeight = video.videoHeight;
+
+        const cropX = videoWidth * 0.15;
+        const cropY = videoHeight * 0.325;
+        const cropWidth = videoWidth * 0.70;
+        const cropHeight = videoHeight * 0.35;
+
+        canvas.width = cropWidth;
+        canvas.height = cropHeight;
+
+        const ctx = canvas.getContext('2d');
+
+        ctx.drawImage(
+          video,
+          cropX, cropY,
+          cropWidth, cropHeight,
+          0, 0,
+          cropWidth, cropHeight
+        );
+
+        const base64String = canvas.toDataURL('image/jpeg', 0.95);
+
+        const timestamp = new Date().getTime();
+        const fileName = `stiker_iol_${timestamp}.jpg`;
+
+        // 🔥 KONVERSI BASE64 KE FILE OBJECT
+        const response = await fetch(base64String);
+        const blob = await response.blob();
+        const file = new File([blob], fileName, { type: 'image/jpeg' });
 
         const fileData = {
-            file: file,              // File object asli untuk upload
-            name: file.name,
-            type: file.type.startsWith('image/') ? 'image' : 'pdf',
-            size: file.size,
+          file: file,
+          preview: base64String,
+          name: fileName,
+          type: 'image',
+          size: blob.size,
+          extension: 'jpg',
         };
 
-        // Buat preview
-        if (fileData.type === 'image') {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-            fileData.preview = e.target.result;
-            this.form.teknik_operasi_files.push(fileData);
-            };
-            reader.readAsDataURL(file);
-        } else {
-            // PDF tidak perlu preview
-            fileData.preview = null;
-            this.form.teknik_operasi_files.push(fileData);
-        }
+        this.form.teknik_operasi_files.push(fileData);
+        this.closeCameraModal();
+        console.log('✅ Foto stiker IOL berhasil disimpan dengan File object');
+      });
 
-        event.target.value = '';
+      document.getElementById('close-camera-btn').addEventListener('click', () => {
+        this.closeCameraModal();
+      });
+    },
+
+    closeCameraModal() {
+      if (this.cameraStream) {
+        this.cameraStream.getTracks().forEach(track => {
+          track.stop();
+        });
+        this.cameraStream = null;
+      }
+
+      const modal = document.getElementById('camera-modal');
+      if (modal) {
+        modal.remove();
+      }
+    },
+
+    handleFileUpload(event, section) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
+      if (!allowedTypes.includes(file.type)) {
+        alert('File harus berupa gambar (JPG/PNG/GIF) atau PDF!');
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        alert('Ukuran file maksimal 10MB!');
+        return;
+      }
+
+      const fileData = {
+        file: file,
+        name: file.name,
+        type: file.type.startsWith('image/') ? 'image' : 'pdf',
+        size: file.size,
+      };
+
+      if (fileData.type === 'image') {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          fileData.preview = e.target.result;
+          this.form.teknik_operasi_files.push(fileData);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        fileData.preview = null;
+        this.form.teknik_operasi_files.push(fileData);
+      }
+
+      event.target.value = '';
     },
 
     hapusFile(section, index) {
-    if (confirm('Yakin ingin menghapus file ini?')) {
+      if (confirm('Yakin ingin menghapus file ini?')) {
         this.form.teknik_operasi_files.splice(index, 1);
-    }
+      }
     },
 
-    // Bersihkan canvas saja (tanpa mengubah state preview) — tombol Bersihkan di pad aktif
-    // async loadDataForEdit() {
-    //   // try {
-    //   // console.log("yudha", this.editData);
-    //     // Option 1: Jika data lengkap sudah ada di editData props
-    //     // if (this.editData.uuid) {
-    //       // Fetch detail dari server untuk data lengkap
-    //       // const response = await axios.get(
-    //       //   `/master/pasien/dokumen-laporan-pembedahan/${this.editData.uuid}`
-    //       // );
-    //        this.editData;
-    //       // console.log("yudha2", response.data.data);
-    //       if (this.editData) {
-    //         // Populate form dengan data dari server
-    //         Object.keys(this.form).forEach((key) => {
-    //           if (this.editData[key] !== undefined) {
-    //             this.form[key] = this.editData[key];
-    //           }
-    //         });
-
-    //         // Reset semua flag — WAJIB di luar kondisi ttd_dokter
-    //         this.$nextTick(() => {
-    //           if (this.form.macam_sayatan) this.macamSayatanCleared = false;
-    //           if (this.form.posisi_penderita) this.posisiPenderitaCleared = false;
-    //           if (this.form.operator_bedah_ttd) this.signatureCleared = false;
-    //         });
-
-    //         // ✨ Load signature jika ada
-    //         if (this.editData.ttd_dokter) {
-    //           this.$nextTick(() => {
-    //             // Set signature dari base64
-    //             // Note: vue-signature-pad biasanya perlu di-load manual
-    //           });
-    //         }
-    //       }
-    //     // }
-
-    //     // Option 2: Atau langsung gunakan editData jika sudah lengkap
-    //     // Object.keys(this.form).forEach(key => {
-    //     //   if (this.editData[key] !== undefined) {
-    //     //     this.form[key] = this.editData[key];
-    //     //   }
-    //     // });
-    //   // } catch (error) {
-    //   //   console.error("Error loading data:", error);
-    //   //   alert("Gagal memuat data untuk edit!");
-    //   //   this.$emit("back");
-    //   // }
-    // },
     loadDataForEdit() {
-    if (this.editData) {
+      if (this.editData) {
         Object.keys(this.form).forEach((key) => {
-        if (this.editData[key] !== undefined) {
-
+          if (this.editData[key] !== undefined) {
             if (key === 'teknik_operasi_files') {
-            try {
+              try {
                 let files = this.editData[key];
 
-                // Parse JSON string → array
                 if (typeof files === 'string') {
-                files = JSON.parse(files);
+                  files = JSON.parse(files);
                 }
-
-                console.log('Files setelah parse:', files);
 
                 if (Array.isArray(files) && files.length > 0) {
-                this.form[key] = files.map(f => {
-                    // ✅ Hapus SEMUA backslash dari path
+                  this.form[key] = files.map(f => {
                     const cleanPath = f.path ? f.path.replace(/\\/g, '') : '';
 
-                    console.log('Path bersih:', cleanPath);
-
                     return {
-                    path: cleanPath,
-                    name: f.name,
-                    type: f.type,
-                    size: f.size,
-                    preview: f.type === 'image' ? `/storage/${cleanPath}` : null,
-                    url: `/storage/${cleanPath}`,
+                      path: cleanPath,
+                      name: f.name,
+                      type: f.type,
+                      size: f.size,
+                      preview: f.type === 'image' ? `/storage/${cleanPath}` : null,
+                      url: `/storage/${cleanPath}`,
                     };
-                });
+                  });
                 } else {
-                this.form[key] = [];
+                  this.form[key] = [];
                 }
-            } catch (e) {
+              } catch (e) {
                 console.error('Gagal parse teknik_operasi_files:', e);
                 this.form[key] = [];
-            }
+              }
             } else {
-            this.form[key] = this.editData[key];
+              this.form[key] = this.editData[key];
             }
-        }
+          }
         });
-
-        console.log('form.teknik_operasi_files setelah load:', this.form.teknik_operasi_files);
-        console.log('Jumlah file:', this.form.teknik_operasi_files.length);
 
         this.$nextTick(() => {
-        if (this.form.macam_sayatan_gambar) this.macamSayatanCleared = false;
-        if (this.form.posisi_penderita_gambar) this.posisiPenderitaCleared = false;
-        if (this.form.operator_bedah_ttd) this.signatureCleared = false;
+          if (this.form.macam_sayatan_gambar) this.macamSayatanCleared = false;
+          if (this.form.posisi_penderita_gambar) this.posisiPenderitaCleared = false;
+          if (this.form.operator_bedah_ttd) this.signatureCleared = false;
         });
-    }
+      }
     },
+
     setDataForm() {
       const today = new Date();
       this.form.tanggal_operasi = today.toISOString().split("T")[0];
@@ -1194,132 +1262,121 @@ closeCameraModal() {
     },
 
     saveSign(refName) {
-        const pad = this.$refs[refName];
-        if (!pad) {
-            console.error("REF tidak ditemukan:", refName);
-            return;
-        }
+      const pad = this.$refs[refName];
+      if (!pad) {
+        console.error("REF tidak ditemukan:", refName);
+        return;
+      }
 
-        const { isEmpty, data } = pad.saveSignature();  // ✨ Tanpa parameter
+      const { isEmpty, data } = pad.saveSignature();
 
-        if (isEmpty) {
-            alert("Gambar masih kosong!");
-            return;
-        }
+      if (isEmpty) {
+        alert("Gambar masih kosong!");
+        return;
+      }
 
-        // ✨ Switch case untuk mapping field
-        switch (refName) {
-            case 'operator_bedah_ttd':
-            this.signatureCleared = false;
-            this.form.operator_bedah_ttd = data;
-            break;
-            case 'macam_sayatan_pad':
-            this.macamSayatanCleared = false;
-            this.form.macam_sayatan_gambar = data;
-            break;
-            case 'posisi_penderita_pad':
-            this.posisiPenderitaCleared = false;
-            this.form.posisi_penderita_gambar = data;
-            break;
-        }
+      switch (refName) {
+        case 'operator_bedah_ttd':
+          this.signatureCleared = false;
+          this.form.operator_bedah_ttd = data;
+          break;
+        case 'macam_sayatan_pad':
+          this.macamSayatanCleared = false;
+          this.form.macam_sayatan_gambar = data;
+          break;
+        case 'posisi_penderita_pad':
+          this.posisiPenderitaCleared = false;
+          this.form.posisi_penderita_gambar = data;
+          break;
+      }
 
-        console.log("Saved:", refName);
+      console.log("Saved:", refName);
     },
+
     mapJenisKelamin(jk) {
-    const val = jk?.toLowerCase();
-
-    if (val === 'perempuan' || val === 'wanita') return 'P';
-    if (val === 'laki laki' || val === 'laki-laki' || val === 'pria') return 'L';
-
-    return jk; // fallback biar aman
+      const val = jk?.toLowerCase();
+      if (val === 'perempuan' || val === 'wanita') return 'P';
+      if (val === 'laki laki' || val === 'laki-laki' || val === 'pria') return 'L';
+      return jk;
     },
 
-   async submitForm() {
-  this.loadingSubmit = true;
+    async submitForm() {
+      this.loadingSubmit = true;
 
-  try {
-    const fd = new FormData();
+      try {
+        const fd = new FormData();
 
-    // ==========================================
-    // Convert file dokumentasi ke Base64 dulu
-    // ==========================================
-    const filesBase64 = [];
+        // ==========================================
+        // Upload file ke server via FormData
+        // ==========================================
+        const filesMeta = [];
 
-    for (const fileData of this.form.teknik_operasi_files) {
-      if (fileData.file) {
-        // File baru → convert ke Base64
-        const base64 = await this.fileToBase64(fileData.file);
-        filesBase64.push({
-          data: base64,
-          name: fileData.name,
-          type: fileData.type,
-          size: fileData.size,
-          extension: fileData.name.split('.').pop(),
-        });
-      } else {
-        // File lama (edit mode) → tetap pakai path
-        filesBase64.push({
-          path: fileData.path,
-          name: fileData.name,
-          type: fileData.type,
-          size: fileData.size,
-        });
-      }
-    }
+        for (let i = 0; i < this.form.teknik_operasi_files.length; i++) {
+          const fileData = this.form.teknik_operasi_files[i];
 
-    // ==========================================
-    // Kirim semua data form
-    // ==========================================
-    Object.keys(this.form).forEach((key) => {
-      let value = this.form[key];
+          if (fileData.file) {
+            // ✅ File object (upload/kamera) → langsung append
+            fd.append('teknik_operasi_files[]', fileData.file, fileData.name);
 
-      if (key === 'jenis_kelamin') {
-        value = this.mapJenisKelamin(value);
-      }
-
-      // ✅ Field dokumentasi → kirim Base64
-      if (key === 'teknik_operasi_files') {
-        fd.append(key, JSON.stringify(filesBase64));
-      }
-      // ❌ Field lama — skip
-      else if (key === 'teknik_operasi_foto') {
-        // Tidak dipakai
-      }
-      // Field lainnya (termasuk TTD, gambar sayatan, dll)
-      else {
-        if (value !== undefined && value !== null) {
-          fd.append(key, value);
+            filesMeta.push({
+              name: fileData.name,
+              type: fileData.type,
+              size: fileData.file.size,
+              extension: fileData.name.split('.').pop(),
+              is_new: true,
+            });
+          } else if (fileData.path) {
+            // File lama (edit mode)
+            filesMeta.push({
+              path: fileData.path,
+              name: fileData.name,
+              type: fileData.type,
+              is_new: false,
+            });
+          }
         }
+
+        fd.append('teknik_operasi_files_meta', JSON.stringify(filesMeta));
+
+        // ==========================================
+        // Kirim semua data form
+        // ==========================================
+        Object.keys(this.form).forEach((key) => {
+          if (key !== 'teknik_operasi_files') {
+            let value = this.form[key];
+
+            if (key === 'jenis_kelamin') {
+              value = this.mapJenisKelamin(value);
+            }
+
+            if (value !== undefined && value !== null) {
+              fd.append(key, value);
+            }
+          }
+        });
+
+        console.log('📤 Data yang dikirim:', {
+          filesCount: filesMeta.length,
+          filesMeta: filesMeta,
+        });
+
+        const response = await axios.post(
+          "/master/pasien/dokumen-laporan-pembedahan",
+          fd,
+          { headers: { "Content-Type": "multipart/form-data" } }
+        );
+
+        console.log("✅ BERHASIL:", response.data);
+        alert("Laporan Pembedahan berhasil disimpan!");
+        this.$emit("back");
+
+      } catch (error) {
+        console.error("❌ ERROR:", error.response?.data || error);
+        alert("Gagal menyimpan laporan pembedahan!");
+      } finally {
+        this.loadingSubmit = false;
       }
-    });
-
-    const response = await axios.post(
-      "/master/pasien/dokumen-laporan-pembedahan",
-      fd,
-      { headers: { "Content-Type": "multipart/form-data" } }
-    );
-
-    console.log("BERHASIL:", response.data);
-    alert("Laporan Pembedahan berhasil disimpan!");
-    this.$emit("back");
-
-  } catch (error) {
-    console.error("ERROR:", error.response?.data || error);
-    alert("Gagal menyimpan laporan pembedahan!");
-  } finally {
-    this.loadingSubmit = false;
-  }
-},
-
-// Helper: Convert File ke Base64
-fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-},
+    },
   }
 };
 </script>
@@ -1400,24 +1457,17 @@ fileToBase64(file) {
   margin: 0 auto;
 }
 
-.sign-btn-group {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
-
-.btn-clear-sign {
-  background: #e53935;
-  color: white;
-  padding: 6px 16px;
-  border: none;
+.signature-preview {
+  text-align: center;
+  padding: 10px;
+  border: 1px dashed #ccc;
   border-radius: 4px;
-  cursor: pointer;
-  font-weight: 500;
 }
 
-.btn-clear-sign:hover {
-  background: #b71c1c;
+.img-signature {
+  max-width: 100%;
+  max-height: 200px;
+  margin-bottom: 10px;
 }
 
 .btn-save {
@@ -1432,6 +1482,64 @@ fileToBase64(file) {
 
 .btn-save:hover {
   background: #1565c0;
+}
+
+.btn-upload-pdf {
+  background: #c62828;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.btn-upload-pdf:hover {
+  background: #b71c1c;
+  transform: translateY(-1px);
+}
+
+.pdf-thumbnail {
+  width: 100%;
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f0f4ff;
+  border: 2px dashed #b0c4de;
+}
+
+.pdf-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.pdf-name {
+  font-size: 11px;
+  color: #4a5568;
+  text-align: center;
+  word-break: break-all;
+  padding: 0 8px;
+}
+
+.pdf-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.pdf-link:hover {
+  background: #e8f0fe;
 }
 
 .action-footer {
@@ -1573,9 +1681,9 @@ label {
   color: #6c757d;
 }
 
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
+.text-muted.small {
+  font-size: 13px;
+  color: #a0aec0;
 }
 
 @media (max-width: 768px) {
@@ -1588,11 +1696,11 @@ label {
   .checkbox-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-   .signature-box-rme {
+
+  .signature-box-rme {
     width: 100% !important;
   }
 
-  /* ✨ TAMBAHKAN INI */
   .btn-group-upload {
     flex-direction: column;
   }
@@ -1604,82 +1712,5 @@ label {
   .foto-thumbnail {
     height: 120px;
   }
-}
-.signature-preview {
-  text-align: center;
-  padding: 10px;
-  border: 1px dashed #ccc;
-  border-radius: 4px;
-}
-
-.img-signature {
-  max-width: 100%;
-  max-height: 200px;
-  margin-bottom: 10px;
-}
-
-.text-muted.small {
-  font-size: 13px;
-  color: #a0aec0;
-}
-
-.fw-semibold {
-  font-weight: 600;
-}
-.pdf-link {
-  text-decoration: none;
-  color: inherit;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-.pdf-link:hover {
-  background: #e8f0fe;
-}
-.btn-upload-pdf {
-  background: #c62828;
-  color: white;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-}
-
-.btn-upload-pdf:hover {
-  background: #b71c1c;
-  transform: translateY(-1px);
-}
-
-.pdf-thumbnail {
-  width: 100%;
-  height: 150px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: #f0f4ff;
-  border: 2px dashed #b0c4de;
-}
-
-.pdf-icon {
-  font-size: 48px;
-  margin-bottom: 8px;
-}
-
-.pdf-name {
-  font-size: 11px;
-  color: #4a5568;
-  text-align: center;
-  word-break: break-all;
-  padding: 0 8px;
 }
 </style>
