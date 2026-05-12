@@ -1071,6 +1071,13 @@ const routes = [
 		meta: { title: 'Sync Pasien' },
 		props: true
 	},
+	{
+		path: _base + 'satusehat-encounter-sync',
+		name: 'SatuSehat - Encounter Sync',
+		component: () => import('./components/satusehat/encounter/index.vue'),
+		meta: { title: 'SatuSehat - Encounter Sync' },
+		props: true
+	},
 
 ];
 

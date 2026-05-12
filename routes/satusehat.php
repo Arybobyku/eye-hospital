@@ -5,6 +5,7 @@ use App\Http\Controllers\SatuSehat\OrganizationCtrl;
 use App\Http\Controllers\SatuSehat\LocationCtrl;
 use App\Http\Controllers\SatuSehat\TokenCtrl;
 use App\Http\Controllers\SatuSehat\PatientSyncCtrl;
+use App\Http\Controllers\SatuSehat\EncounterSyncCtrl;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,6 +38,16 @@ Route::prefix('patient-sync')->group(function () {
     Route::post('list',         [PatientSyncCtrl::class, 'list'])        ->name('satusehat-patient-list');
     Route::post('run-sync',     [PatientSyncCtrl::class, 'runSync'])     ->name('satusehat-patient-run-sync');
     Route::post('retry-failed', [PatientSyncCtrl::class, 'retryFailed'])->name('satusehat-patient-retry');
+});
+
+// ── Encounter Sync ─────────────────────────────────────────────────────────
+Route::prefix('encounter-sync')->group(function () {
+    Route::post('dashboard',    [EncounterSyncCtrl::class, 'dashboard'])   ->name('satusehat-encounter-dashboard');
+    Route::post('list',         [EncounterSyncCtrl::class, 'list'])        ->name('satusehat-encounter-list');
+    Route::post('run-sync',     [EncounterSyncCtrl::class, 'runSync'])     ->name('satusehat-encounter-run-sync');
+    Route::post('retry-failed', [EncounterSyncCtrl::class, 'retryFailed'])->name('satusehat-encounter-retry');
+    Route::post('set-location', [EncounterSyncCtrl::class, 'setLocation'])->name('satusehat-encounter-set-location');
+    Route::post('sync-one',     [EncounterSyncCtrl::class, 'syncOne'])    ->name('satusehat-encounter-sync-one');
 });
 
 // ── Access Token ───────────────────────────────────────────────────────────
