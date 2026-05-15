@@ -56,6 +56,7 @@ use App\Models\DokumenCatatanKeperawatan;
 use App\Models\DokumenFormLaserFokal;
 use App\Models\DokumenStatusAnestesi;
 use App\Models\DokumenLaporanOperasiVitreoRetina;
+use App\Models\DokumenStatusOftalmologis;
 use App\Models\Pengguna;
 use App\Models\DokumenAsesmenPraOperasi;
 use Illuminate\Support\Str;              // ✅ Tambahkan ini
@@ -3201,6 +3202,71 @@ public function storeAsesmenPraOperasi(Request $request)
 
 
 
+
+    // ── Status Oftalmologis Rawat Jalan ───────────────────────────────────────
+    public function storeStatusOftalmologis(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+            unset($data['id']);
+
+            // Konversi boolean checkboxes
+            $boolFields = [
+                'posisi_normal',
+                'status_palpebra_od_normal', 'status_palpebra_os_normal',
+                'status_conjunctiva_od_normal', 'status_conjunctiva_os_normal',
+                'status_cornea_od_normal', 'status_cornea_os_normal',
+                'status_bmd_od_normal', 'status_bmd_os_normal',
+                'status_pupil_iris_od_normal', 'status_pupil_iris_os_normal',
+                'status_lensa_od_normal', 'status_lensa_os_normal',
+                'status_vitreous_od_normal', 'status_vitreous_os_normal',
+                'status_funduscopy_od_normal', 'status_funduscopy_os_normal',
+            ];
+            foreach ($boolFields as $field) {
+                $data[$field] = filter_var($data[$field] ?? false, FILTER_VALIDATE_BOOLEAN);
+            }
+
+            if ($uuid) {
+                $dokumen = DokumenStatusOftalmologis::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'Status Oftalmologis berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenStatusOftalmologis::create($data);
+                $action  = 'create';
+                $message = 'Status Oftalmologis berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Status Oftalmologis',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
 
     public function dokumenList(Request $request)
     {

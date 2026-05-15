@@ -520,6 +520,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-clipboard-check',
                     'color' => '#1B5E20', // Hijau tua
                 ],
+                [
+                    'table' => 'dokumen_status_oftalmologis',
+                    'type' => 'dokumen_status_oftalmologis',
+                    'label' => 'Status Oftalmologis Rawat Jalan',
+                    'icon' => 'fa-eye',
+                    'color' => '#1565C0', // Biru tua
+                ],
             ];
 
             // if (!empty($search)) {
@@ -873,6 +880,11 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
+            'dokumen_status_oftalmologis' => [
+                'tanggal'  => "$table.tanggal_kunjungan",
+                'waktu'    => "$table.tanggal_kunjungan",
+                'no_surat' => 'RM 1.4/SORJ/22',
+            ],
             'dokumen_laporan_operasi_vitreo_retina' => [
                 'tanggal' => "$table.created_at",
                 'waktu'   => "$table.created_at",
@@ -902,7 +914,7 @@ class RekamMedisCtrl extends Controller
                 // 'user_pelaksana' => 'pembedahan',
                 // 'detail_info' => 'jenis_operasi_detail'
             ],
-                'dokumen_asesmen_pra_operasi' => [
+            'dokumen_asesmen_pra_operasi' => [
                 'tanggal' => "$table.tanggal",
                 'waktu'   => "$table.jam",
                 'no_surat' => 'RM 4.0/APO/22',  // ✅ Fixed nomor surat
@@ -984,6 +996,7 @@ class RekamMedisCtrl extends Controller
                 'laporan_operasi_vitreo_retina' => 'dokumen_laporan_operasi_vitreo_retina',
                 'status_anestesi' => 'dokumen_status_anestesi',
                 'dokumen_asesmen_pra_operasi' => 'dokumen_asesmen_pra_operasi',
+                'dokumen_status_oftalmologis' => 'dokumen_status_oftalmologis',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -1079,6 +1092,7 @@ class RekamMedisCtrl extends Controller
                 'laporan_operasi_vitreo_retina' => 'dokumen_laporan_operasi_vitreo_retina',
                 'status_anestesi' => 'dokumen_status_anestesi',
                 'dokumen_asesmen_pra_operasi' => 'dokumen_asesmen_pra_operasi',
+                'dokumen_status_oftalmologis' => 'dokumen_status_oftalmologis',
             ];
 
             if (!isset($tableMap[$type])) {

@@ -41,6 +41,7 @@ use App\Models\DokumenLaporanOperasiVitreoRetina;
 use App\Models\DokumenTindakanEpilasi;
 use App\Models\DokumenFormLaserBarrage;
 use App\Models\DokumenFormLaserFokal;
+use App\Models\DokumenStatusOftalmologis;
 use App\Models\DokumenAsuhanGizi;
 use App\Models\DokumenCatatanOperasi;
 use App\Models\DokumenSuratPernyataanBatalOperasi;
@@ -782,6 +783,19 @@ function printGeneral($uuid)
     return $pdf->stream();
   }
 
+
+  public function printStatusOftalmologis($uuid)
+  {
+    $pdf  = \App::make('dompdf.wrapper');
+    $data = DokumenStatusOftalmologis::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.statusoftalmologis',
+      compact('pasien', 'data')
+    )->setPaper('a4', 'portrait');
+
+    return $pdf->stream();
+  }
 
   public function printLaporanInjeksi($uuid)
   {

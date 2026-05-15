@@ -72,13 +72,13 @@
         <p class="mb-3">Email: rsprimavision@gmail.com</p>
         <hr class="my-3" style="border: 2px solid #000" />
 
-        <h3 class="fw-bold mt-4 mb-4">FORM TINDAKAN LASER FOKAL</h3>
+        <h3 class="fw-bold mt-4 mb-4"></h3>
         <h4 class="fw-semibold">{{ form.no_surat}} </h4>
 
         <span v-if="isEditMode && !disabledSubmit" class="badge bg-warning"
           >Mode Edit</span
         >
-        <!-- <span v-else class="badge bg-success">Mode Baru</span> -->
+        <!-- <span v-else class="badge bg-succFORM TINDAKAN LASER FOKALess">Mode Baru</span> -->
       </div>
 
       <!-- ================= DATA PASIEN ================= -->

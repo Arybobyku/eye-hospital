@@ -1,0 +1,29 @@
+pada halaman http://127.0.0.1:8000/dashboard/rme-pasien di menu formulir tolong buatkan formulir baru untuk STATUS OFTALMOLOGIS RAWAT JALAN. dan buatkan template print seperti dokumen pdf yang saya lampirkan.
+
+table baru harus menggunaakan prefix dokumen_
+
+kemudian field wajib yang harus ada pada table tersebut:
+
+id
+uuid
+no_rm
+jenis_kelamin
+nama
+nik
+referensi behaviour &  template vue JS:
+/Users/arybobysiregar/webProjects/eye-hospital/resources/js/components/rme/lampiran/create/FormLaserFokal.vue
+
+referensi template print:
+/Users/arybobysiregar/webProjects/eye-hospital/resources/views/print-rekam-medis/general/formlaserfokal.blade.php
+
+referensi table SQL
+
+```
+ALTER TABLE public.dokumen_form_laser_fokal ADD id bigserial NOT NULL;
+ALTER TABLE public.dokumen_form_laser_fokal ADD "uuid" uuid DEFAULT gen_random_uuid() NOT NULL;
+ALTER TABLE public.dokumen_form_laser_fokal ADD uuid_pasien uuid NOT NULL;
+ALTER TABLE public.dokumen_form_laser_fokal ADD no_rm varchar(50) NULL;
+ALTER TABLE public.dokumen_form_laser_fokal ADD jenis_kelamin varchar(50) NULL;
+ALTER TABLE public.dokumen_form_laser_fokal ADD nama varchar(255) NULL;
+ALTER TABLE public.dokumen_form_laser_fokal ADD nik varchar(50) NULL;
+```
