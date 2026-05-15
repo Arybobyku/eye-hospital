@@ -6,6 +6,7 @@ class ConfigSatusehat
 {
     protected string $urlAuth;
     protected string $urlBase;
+    protected string $urlMasterdata;
     protected string $urlConsent;
     protected string $urlKfa;
     protected string $urlKfaV2;
@@ -27,10 +28,23 @@ class ConfigSatusehat
         $this->clientSecret   = env('CLIENT_SECRET_SATUSEHAT',   '');
         $this->organizationId = env('SATUSEHAT_ORGANIZATION_ID', '');
         $this->locationId     = env('SATUSEHAT_LOCATION_ID',     '');
+
+        // Masterdata URL — bisa diset via env, atau diturunkan otomatis dari base URL
+        // Base: https://api-satusehat-stg.dto.kemkes.go.id/fhir-r4/v1/
+        // → https://api-satusehat-stg.dto.kemkes.go.id/masterdata/v1/
+        $defaultMasterdata = '';
+        if ($this->urlBase) {
+            $parsed = parse_url($this->urlBase);
+            if (!empty($parsed['scheme']) && !empty($parsed['host'])) {
+                $defaultMasterdata = $parsed['scheme'] . '://' . $parsed['host'] . '/masterdata/v1/';
+            }
+        }
+        $this->urlMasterdata = env('API_SATUSEHAT_MASTERDATA', $defaultMasterdata);
     }
 
-    public function getUrlAuth():       string { return $this->urlAuth; }
-    public function getUrlBase():       string { return $this->urlBase; }
+    public function getUrlAuth():        string { return $this->urlAuth; }
+    public function getUrlBase():        string { return $this->urlBase; }
+    public function getUrlMasterdata():  string { return $this->urlMasterdata; }
     public function getUrlConsent():    string { return $this->urlConsent; }
     public function getUrlKfa():        string { return $this->urlKfa; }
     public function getUrlKfaV2():      string { return $this->urlKfaV2; }

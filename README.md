@@ -67,4 +67,6 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Satu Sehat - Integrasi Sistem Informasi Rumah Sakit dengan Sistem Informasi Kesehatan Nasional (SIKNas)
 Cron Scheduler Running
+
 php artisan satusehat:sync-patient
+php artisan satusehat:sync-encounter

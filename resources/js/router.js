@@ -1078,6 +1078,27 @@ const routes = [
 		meta: { title: 'SatuSehat - Encounter Sync' },
 		props: true
 	},
+	{
+		path: _base + 'satusehat-wilayah',
+		name: 'SatuSehat - Wilayah',
+		component: () => import('./components/satusehat/wilayah/index.vue'),
+		meta: { title: 'SatuSehat - Wilayah' },
+		props: true
+	},
+	{
+		path: _base + 'satusehat-practitioner-sync',
+		name: 'SatuSehat - Practitioner Sync',
+		component: () => import('./components/satusehat/practitioner/index.vue'),
+		meta: { title: 'SatuSehat - Practitioner Sync' },
+		props: true
+	},
+	{
+		path: _base + 'satusehat-api-logs',
+		name: 'SatuSehat - API Logs',
+		component: () => import('./components/satusehat/apilogs/index.vue'),
+		meta: { title: 'SatuSehat - API Logs' },
+		props: true
+	},
 
 ];
 

@@ -291,6 +291,7 @@ class EncounterSyncCtrl extends Controller
 
         try {
             $bridge = new \App\Services\SatuSehat\Bridge\BridgeBase();
+            $bridge->logContext = 'encounter_sync';
             $orgId  = (new \App\Services\SatuSehat\Config\ConfigSatusehat())->getOrganizationId();
         } catch (\Throwable $e) {
             return response()->json(['data' => 'gagal', 'message' => 'Gagal inisialisasi token: ' . $e->getMessage()], 500);

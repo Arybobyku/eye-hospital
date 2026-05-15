@@ -122,13 +122,18 @@ export default {
 				url: '', data: null
 			},
 			column: [
-				{ value: 'satusehat_id', label: 'ID SatuSehat', type: 'text', search: false, close: false, button: false },
-				{ value: 'kode',         label: 'Kode',          type: 'text', search: true,  close: false, button: false },
-				{ value: 'nama',         label: 'Nama',          type: 'text', search: true,  close: false, button: false },
-				{ value: 'status',       label: 'Status',        type: 'text', search: false, close: false, button: false },
-				{ value: 'tipe_fisik',   label: 'Tipe Fisik',    type: 'text', search: false, close: false, button: false },
-				{ value: 'telepon',      label: 'Telepon',       type: 'text', search: false, close: false, button: false },
-				{ value: 'btnhtml',      label: '',              type: 'text', search: false, close: false, button: true  },
+				{ value: 'satusehat_id',      label: 'ID SatuSehat',    type: 'text', search: false, close: false, button: false },
+				{ value: 'kode',              label: 'Kode',             type: 'text', search: true,  close: false, button: false },
+				{ value: 'nama',              label: 'Nama',             type: 'text', search: true,  close: false, button: false },
+				{ value: 'alias',             label: 'Alias',            type: 'text', search: false, close: false, button: false },
+				{ value: 'status',            label: 'Status',           type: 'text', search: false, close: false, button: false },
+				{ value: 'operational_status',label: 'Op. Status',       type: 'text', search: false, close: false, button: false },
+				{ value: 'tipe_layanan',      label: 'Tipe Layanan',     type: 'text', search: false, close: false, button: false },
+				{ value: 'tipe_fisik',        label: 'Tipe Fisik',       type: 'text', search: false, close: false, button: false },
+				{ value: 'service_class',     label: 'Kelas',            type: 'text', search: false, close: false, button: false },
+				{ value: 'telepon',           label: 'Telepon',          type: 'text', search: false, close: false, button: false },
+				{ value: 'kota',              label: 'Kota',             type: 'text', search: false, close: false, button: false },
+				{ value: 'btnhtml',           label: '',                 type: 'text', search: false, close: false, button: true  },
 			],
 			module: { data: [], column: [], total: 0, ispaging: true },
 
@@ -174,6 +179,28 @@ export default {
 				const bg   = colorMap[column] ?? '#f1f5f9';
 				const text = textMap[column]  ?? '#475569';
 				_tmp = { value: `<span style="padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;background:${bg};color:${text}">${column}</span>`, ishtml: 'html', style: '' };
+			} else if (identity === 'operational_status') {
+				if (!column || column === '-') {
+					_tmp = { value: '<span style="color:#cbd5e1;font-size:11px">—</span>', ishtml: 'html', style: '' };
+				} else {
+					const opColorMap = { O: '#fef3c7', C: '#fee2e2', H: '#e0f2fe', K: '#fae8ff', I: '#fef9c3', U: '#f0fdf4' };
+					const opTextMap  = { O: '#92400e', C: '#dc2626', H: '#0369a1', K: '#7e22ce', I: '#854d0e', U: '#166534' };
+					const bg   = opColorMap[column] ?? '#f1f5f9';
+					const text = opTextMap[column]  ?? '#475569';
+					_tmp = { value: `<span style="padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;background:${bg};color:${text}">${column}</span>`, ishtml: 'html', style: '' };
+				}
+			} else if (identity === 'service_class') {
+				if (!column || column === '-') {
+					_tmp = { value: '<span style="color:#cbd5e1;font-size:11px">—</span>', ishtml: 'html', style: '' };
+				} else {
+					_tmp = { value: `<span style="padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;background:#ede9fe;color:#5b21b6">${column}</span>`, ishtml: 'html', style: '' };
+				}
+			} else if (identity === 'tipe_layanan') {
+				if (!column || column === '-') {
+					_tmp = { value: '<span style="color:#cbd5e1;font-size:11px">—</span>', ishtml: 'html', style: '' };
+				} else {
+					_tmp = { value: `<span style="padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;background:#e0f2fe;color:#075985;font-family:monospace">${column}</span>`, ishtml: 'html', style: '' };
+				}
 			} else if (identity === 'satusehat_id') {
 				_tmp = { value: `<span style="font-size:10px;color:#64748b;font-family:monospace">${column}</span>`, ishtml: 'html', style: '' };
 			} else {

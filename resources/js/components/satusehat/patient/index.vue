@@ -63,6 +63,27 @@
 		</div>
 	</div>
 
+
+	<!-- ── Wilayah Warning ─────────────────────────────────────────────── -->
+	<div class="col-12" v-if="stats && stats.no_area_code > 0">
+		<div class="ps-wilayah-warn">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ps-ww-icon"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+			<div class="ps-ww-body">
+				<div class="ps-ww-title">
+					<strong>{{ stats.no_area_code.toLocaleString('id-ID') }} pasien</strong> tidak memiliki kode wilayah BPS
+				</div>
+				<div class="ps-ww-text">
+					Pasien-pasien ini akan dikirim ke SatuSehat <em>tanpa</em> <code>address.administrativeCode</code> extension.
+					Buka halaman Wilayah, lakukan <strong>Sync ke Master</strong> agar kode BPS terisi otomatis dari relasi wilayah pasien.
+				</div>
+			</div>
+			<div class="ps-ww-actions">
+				<button class="ps-ww-btn-ghost" @click="switchTab('no_area_code')">Lihat Pasien</button>
+				<a href="/dashboard/satusehat-wilayah" class="ps-ww-link">Buka Wilayah &rarr;</a>
+			</div>
+		</div>
+	</div>
+
 	<!-- ── Stats Cards ─────────────────────────────────────────────────── -->
 	<div class="col-12">
 		<div class="ps-stats-row" v-if="!statsLoading && stats">
@@ -130,6 +151,34 @@
 				</div>
 			</div>
 
+			<div class="ps-stat-card ps-card-orange" @click="switchTab('no_area_code')" style="cursor:pointer" title="Klik untuk filter pasien tanpa kode wilayah">
+				<div class="psc-top">
+					<span class="psc-label">Tanpa Kode Wilayah</span>
+					<div class="psc-icon psc-icon-orange">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/><line x1="2" y1="2" x2="22" y2="22" stroke-width="2"/></svg>
+					</div>
+				</div>
+				<div class="psc-num" :class="stats.no_area_code > 0 ? 'psc-num-warn' : ''">{{ stats.no_area_code.toLocaleString('id-ID') }}</div>
+				<div class="psc-sub">
+					<span v-if="stats.no_area_code > 0" class="psc-sub-warn">Sync master wilayah diperlukan</span>
+					<span v-else class="psc-sub-ok">Semua pasien punya kode</span>
+				</div>
+
+				<div class="ps-stat-card ps-card-teal" @click="switchTab('wilayah_complete')" style="cursor:pointer" title="Klik untuk filter pasien dengan wilayah BPS lengkap (4 level)">
+					<div class="psc-top">
+						<span class="psc-label">Wilayah Lengkap</span>
+						<div class="psc-icon psc-icon-teal">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/><polyline points="20 6 9 17 4 12"/></svg>
+						</div>
+					</div>
+					<div class="psc-num" :class="stats.wilayah_complete > 0 ? 'psc-num-teal' : ''">{{ (stats.wilayah_complete || 0).toLocaleString('id-ID') }}</div>
+					<div class="psc-sub">
+						<span v-if="stats.wilayah_complete > 0" class="psc-sub-teal">P + K + D + V semua terisi</span>
+						<span v-else>Belum ada yang lengkap</span>
+					</div>
+				</div>
+			</div>
+
 		</div>
 
 		<!-- Last sync info -->
@@ -145,6 +194,67 @@
 		<!-- Stats skeleton -->
 		<div class="ps-stats-skeleton" v-if="statsLoading">
 			<div class="skel" v-for="i in 5" :key="i"></div>
+		</div>
+
+		<!-- ── Bulk Create Panel (tampil jika ada not_found) ────────────── -->
+		<div class="ps-create-panel" v-if="!statsLoading && stats && stats.not_found > 0">
+			<div class="pcp-left">
+				<div class="pcp-icon">
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+				</div>
+				<div>
+					<div class="pcp-title">
+						<strong>{{ stats.not_found }}</strong> pasien tidak ditemukan di SatuSehat
+					</div>
+					<div class="pcp-desc">
+						Batch hanya memproses pasien yang kode wilayah BPS-nya <strong>sudah lengkap (P+K+D+V)</strong>.
+						Pasien tanpa wilayah lengkap dilewati — sync master wilayah terlebih dahulu, atau gunakan <em>Create NIK</em> per baris.
+					</div>
+				</div>
+			</div>
+			<div class="pcp-right">
+				<div class="pcp-method-wrap">
+					<label class="pcp-method-label">Metode</label>
+					<select v-model="bulkCreateMethod" class="pcp-method-select" :disabled="bulkCreating">
+						<option value="nik">Create by NIK</option>
+						<option value="nik_ibu">Create by NIK IBU</option>
+					</select>
+				</div>
+				<div class="pcp-batch-wrap">
+					<label class="pcp-method-label">Batch</label>
+					<select v-model="bulkCreateBatch" class="pcp-method-select" :disabled="bulkCreating">
+						<option value="10">10 pasien</option>
+						<option value="20">20 pasien</option>
+						<option value="50">50 pasien</option>
+					</select>
+				</div>
+				<button class="pcp-create-btn" @click="createBulk" :disabled="bulkCreating">
+					<svg v-if="!bulkCreating" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+					<svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.67"/></svg>
+					{{ bulkCreating ? 'Mendaftarkan…' : 'Daftarkan Batch' }}
+				</button>
+			</div>
+		</div>
+
+		<!-- Bulk create result -->
+		<div class="ps-create-result" v-if="bulkCreateResult">
+			<div class="pcr-item pcr-green" v-if="bulkCreateResult.created >= 0">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+				<strong>{{ bulkCreateResult.created }}</strong> berhasil didaftarkan
+			</div>
+			<div class="pcr-item pcr-red" v-if="bulkCreateResult.failed > 0">
+				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+				<strong>{{ bulkCreateResult.failed }}</strong> gagal
+			</div>
+			<div class="pcr-msg">{{ bulkCreateResult.message }}</div>
+			<button class="pcr-close" @click="bulkCreateResult = null">✕</button>
+		</div>
+		<div class="ps-create-log" v-if="bulkCreateResult && bulkCreateResult.output">
+			<div class="pcl-header">
+				<span>Output</span>
+				<button class="pcl-toggle" @click="showCreateLog = !showCreateLog">{{ showCreateLog ? 'Sembunyikan' : 'Tampilkan' }}</button>
+			</div>
+			<pre class="pcl-body" v-if="showCreateLog">{{ bulkCreateResult.output }}</pre>
 		</div>
 	</div>
 
@@ -178,25 +288,64 @@
 							<th>NIK</th>
 							<th>ID SatuSehat (IHS)</th>
 							<th>Status</th>
+							<th>Wilayah BPS</th>
 							<th>Waktu Sync</th>
+							<th>Aksi</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr v-for="(row, i) in list" :key="row.uuid">
 							<td><code class="rm-code">{{ row.rekam_medis }}</code></td>
 							<td class="td-nama">{{ row.nama }}</td>
-							<td><code class="nik-code">{{ row.no_identitas || '—' }}</code></td>
+							<td><code class="nik-code">{{ row.no_identitas || '\u2014' }}</code></td>
 							<td>
 								<code class="ihs-code" v-if="row.id_satu_sehat">{{ row.id_satu_sehat }}</code>
-								<span class="ihs-empty" v-else>—</span>
+								<span class="ihs-empty" v-else>\u2014</span>
 							</td>
 							<td>
-								<span class="status-badge"
-									:class="statusClass(row.satusehat_sync_status)">
+								<span class="status-badge" :class="statusClass(row.satusehat_sync_status)">
 									{{ statusLabel(row.satusehat_sync_status) }}
 								</span>
 							</td>
-							<td class="td-date">{{ row.satusehat_synced_at ? formatDate(row.satusehat_synced_at) : '—' }}</td>
+							<!-- Kolom Wilayah BPS: 4 level indicator -->
+							<td class="td-wilayah">
+								<div class="wlvl-row">
+									<span class="wlvl-chip" :class="wilayahChipClass(row, 'province')" :title="wilayahChipTitle(row, 'province')">
+										P<span class="wlvl-code" v-if="wilayahEffCode(row,'province')">{{ wilayahEffCode(row,'province') }}</span><span class="wlvl-null" v-else>null</span>
+									</span>
+									<span class="wlvl-chip" :class="wilayahChipClass(row, 'city')" :title="wilayahChipTitle(row, 'city')">
+										K<span class="wlvl-code" v-if="wilayahEffCode(row,'city')">{{ wilayahEffCode(row,'city') }}</span><span class="wlvl-null" v-else>null</span>
+									</span>
+									<span class="wlvl-chip" :class="wilayahChipClass(row, 'district')" :title="wilayahChipTitle(row, 'district')">
+										D<span class="wlvl-code" v-if="wilayahEffCode(row,'district')">{{ wilayahEffCode(row,'district') }}</span><span class="wlvl-null" v-else>null</span>
+									</span>
+									<span class="wlvl-chip" :class="wilayahChipClass(row, 'village')" :title="wilayahChipTitle(row, 'village')">
+										V<span class="wlvl-code" v-if="wilayahEffCode(row,'village')">{{ wilayahEffCode(row,'village') }}</span><span class="wlvl-null" v-else>null</span>
+									</span>
+								</div>
+							</td>
+							<td class="td-date">{{ row.satusehat_synced_at ? formatDate(row.satusehat_synced_at) : '\u2014' }}</td>
+							<td class="td-action">
+								<span v-if="row.id_satu_sehat" class="action-done">
+									<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+									Terdaftar
+								</span>
+								<div v-else class="action-create-wrap">
+									<button class="btn-create-nik" :disabled="!!creatingRows[row.uuid]"
+										:title="creatingRows[row.uuid] ? 'Sedang diproses...' : 'Daftarkan pasien ke SatuSehat menggunakan NIK'"
+										@click="createOne(row, 'nik')">
+										<svg v-if="!creatingRows[row.uuid]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+										<svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin-icon"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.67"/></svg>
+										{{ creatingRows[row.uuid] ? '...' : 'Create NIK' }}
+									</button>
+									<button class="btn-create-nik-ibu" :disabled="!!creatingRows[row.uuid]"
+										title="Daftarkan sebagai bayi menggunakan NIK Ibu"
+										@click="createOne(row, 'nik_ibu')">
+										<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+										NIK IBU
+									</button>
+								</div>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -265,6 +414,16 @@ export default {
 			statsLoading: true,
 			retrying: false,
 
+			// Per-row create state: { uuid: true/false }
+			creatingRows: {},
+
+			// Bulk create
+			bulkCreating: false,
+			bulkCreateMethod: 'nik',
+			bulkCreateBatch: 20,
+			bulkCreateResult: null,
+			showCreateLog: false,
+
 			// List
 			list: [],
 			listLoading: true,
@@ -275,11 +434,13 @@ export default {
 			activeTab: 'all',
 
 			tabs: [
-				{ key: 'all',       label: 'Semua' },
-				{ key: 'synced',    label: '✓ Berhasil' },
-				{ key: 'pending',   label: '⏳ Pending' },
-				{ key: 'failed',    label: '✗ Gagal' },
-				{ key: 'not_found', label: '○ Tidak Ditemukan' },
+				{ key: 'all',          label: 'Semua' },
+				{ key: 'synced',       label: '✓ Berhasil' },
+				{ key: 'pending',      label: '⏳ Pending' },
+				{ key: 'failed',       label: '✗ Gagal' },
+				{ key: 'not_found',    label: '○ Tidak Ditemukan' },
+				{ key: 'no_area_code',      label: '⚠ Wilayah Kosong' },
+					{ key: 'wilayah_complete', label: '✓ Wilayah Lengkap' },
 			],
 		};
 	},
@@ -336,6 +497,7 @@ export default {
 				vm.statsLoading = false;
 				vm.notification('Gagal memuat statistik sync.', 3500, 'error');
 			});
+	
 		},
 
 		loadList() {
@@ -376,6 +538,74 @@ export default {
 			});
 		},
 
+		// ── Create per-row ────────────────────────────────────────────────
+		createOne(row, method) {
+			if (vm.creatingRows[row.uuid]) return;
+			vm.creatingRows = { ...vm.creatingRows, [row.uuid]: true };
+
+			const fd = new FormData();
+			fd.append('uuid',   row.uuid);
+			fd.append('method', method);
+
+			axios.post('/satusehat-api/patient-sync/create-one', fd, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+				timeout: 60000,
+			}).then(r => {
+				if (r.data.data === '419') { window.location.href = '/masuk'; return; }
+				if (r.data.data === 'berhasil') {
+					// Update baris langsung
+					const idx = vm.list.findIndex(i => i.uuid === row.uuid);
+					if (idx !== -1) {
+						vm.list[idx].id_satu_sehat          = r.data.id_satu_sehat;
+						vm.list[idx].satusehat_sync_status  = 'synced';
+						vm.list[idx].satusehat_synced_at    = new Date().toISOString();
+					}
+					vm.notification(r.data.message || 'Pasien berhasil didaftarkan.', 4000, 'success');
+					vm.loadStats();
+				} else {
+					vm.notification('Gagal: ' + (r.data.message || 'Unknown error'), 5000, 'error');
+				}
+			}).catch(e => {
+				const msg = e?.response?.data?.message ?? e?.message ?? 'Terjadi kesalahan.';
+				vm.notification('Gagal mendaftarkan pasien: ' + msg, 5000, 'error');
+			}).finally(() => {
+				vm.creatingRows = { ...vm.creatingRows, [row.uuid]: false };
+			});
+		},
+
+		// ── Bulk create (not_found) ────────────────────────────────────────
+		createBulk() {
+			if (vm.bulkCreating) return;
+			vm.bulkCreating     = true;
+			vm.bulkCreateResult = null;
+			vm.showCreateLog    = false;
+
+			const fd = new FormData();
+			fd.append('method', vm.bulkCreateMethod);
+			fd.append('batch',  vm.bulkCreateBatch);
+
+			axios.post('/satusehat-api/patient-sync/create-bulk', fd, {
+				headers: { 'Content-Type': 'multipart/form-data' },
+				timeout: 300000,
+			}).then(r => {
+				if (r.data.data === '419') { window.location.href = '/masuk'; return; }
+				vm.bulkCreateResult = r.data;
+				if (r.data.created > 0) {
+					vm.notification(`${r.data.created} pasien berhasil didaftarkan ke SatuSehat.`, 4500, 'success');
+				} else {
+					vm.notification(r.data.message || 'Tidak ada yang diproses.', 3500, 'error');
+				}
+				vm.loadStats();
+				vm.loadList();
+			}).catch(e => {
+				const msg = e?.response?.data?.message ?? e?.message ?? 'Terjadi kesalahan.';
+				vm.notification('Bulk create gagal: ' + msg, 5000, 'error');
+				vm.bulkCreateResult = { created: 0, failed: 0, message: msg, output: '' };
+			}).finally(() => {
+				vm.bulkCreating = false;
+			});
+		},
+
 		// ── UI helpers ─────────────────────────────────────────────────────
 		switchTab(key) {
 			vm.activeTab   = key;
@@ -396,6 +626,38 @@ export default {
 		statusLabel(s) {
 			const m = { synced: 'Berhasil', not_found: 'Tidak Ditemukan', failed: 'Gagal', pending: 'Pending' };
 			return m[s] ?? 'Pending';
+		},
+
+		// ── Wilayah chip helpers ───────────────────────────────────────────
+		wilayahEffCode(row, level) {
+			// Kode BPS diambil langsung dari tabel master wilayah via FK
+			switch (level) {
+				case 'province': return row.master_province_code    || null;
+				case 'city':     return row.master_city_code        || null;
+				case 'district': return row.master_district_code    || null;
+				case 'village':  return row.master_subdistrict_code || null;
+			}
+			return null;
+		},
+
+		wilayahChipClass(row, level) {
+			return vm.wilayahEffCode(row, level) ? 'wlvl-ok' : 'wlvl-missing';
+		},
+
+		wilayahChipTitle(row, level) {
+			const code = vm.wilayahEffCode(row, level);
+			const names = {
+				province: row.nama_provinsi  || '',
+				city:     row.nama_kab_kota  || '',
+				district: row.nama_kecamatan || '',
+				village:  row.nama_kelurahan || '',
+			};
+			const levelLabels = { province: 'Provinsi', city: 'Kota/Kab', district: 'Kecamatan', village: 'Kelurahan' };
+			const lbl  = levelLabels[level];
+			const nama = names[level];
+
+			if (code) return lbl + ': ' + code + (nama ? ' (' + nama + ')' : '') + ' [dari master wilayah]';
+			return lbl + (nama ? ' (' + nama + ')' : '') + ': belum ada kode BPS — sync master wilayah terlebih dahulu';
 		},
 
 		statusClass(s) {
@@ -435,6 +697,23 @@ export default {
 	margin-bottom: 14px;
 	box-shadow: 0 1px 3px rgba(0,0,0,.04);
 }
+/* ── Wilayah warning ── */
+.ps-wilayah-warn {
+	display: flex; align-items: flex-start; gap: 12px;
+	background: #fffbeb; border: 1px solid #fde68a; border-radius: 10px; padding: 14px 18px;
+}
+.ps-ww-icon { width: 20px; height: 20px; stroke: #d97706; flex-shrink: 0; margin-top: 2px; }
+.ps-ww-body { flex: 1; }
+.ps-ww-title { font-size: 14px; font-weight: 600; color: #92400e; margin-bottom: 4px; }
+.ps-ww-text  { font-size: 13px; color: #78350f; line-height: 1.5; }
+.ps-ww-text code { background: #fef3c7; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+.ps-ww-link {
+	white-space: nowrap; align-self: center;
+	background: #d97706; color: #fff; text-decoration: none;
+	padding: 7px 14px; border-radius: 7px; font-size: 13px; font-weight: 500;
+}
+.ps-ww-link:hover { background: #b45309; }
+
 .ptp-left { display: flex; align-items: center; gap: 14px; }
 .ptp-icon {
 	width: 40px; height: 40px; border-radius: 10px;
@@ -661,4 +940,117 @@ export default {
 	border-radius: 6px;
 }
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ── Bulk Create Panel ─────────────────────────────────────────────────── */
+.ps-create-panel {
+	display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px;
+	background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b;
+	border-radius: 10px; padding: 14px 18px; margin-top: 10px;
+}
+.pcp-left  { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 240px; }
+.pcp-icon  { width: 36px; height: 36px; background: #fef3c7; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pcp-icon svg { width: 18px; height: 18px; stroke: #d97706; }
+.pcp-title { font-size: 13px; font-weight: 600; color: #92400e; margin-bottom: 3px; }
+.pcp-desc  { font-size: 12px; color: #b45309; line-height: 1.4; }
+.pcp-right { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
+.pcp-method-wrap, .pcp-batch-wrap { display: flex; flex-direction: column; gap: 3px; }
+.pcp-method-label { font-size: 10px; font-weight: 600; color: #92400e; text-transform: uppercase; letter-spacing: .4px; }
+.pcp-method-select { padding: 6px 10px; border: 1px solid #fcd34d; border-radius: 6px; font-size: 12px; background: #fffbeb; color: #78350f; outline: none; cursor: pointer; }
+.pcp-create-btn {
+	display: flex; align-items: center; gap: 6px;
+	padding: 8px 16px; background: #f59e0b; color: #fff;
+	border: none; border-radius: 8px; font-size: 13px; font-weight: 700;
+	cursor: pointer; transition: background .15s; white-space: nowrap;
+}
+.pcp-create-btn:hover:not(:disabled) { background: #d97706; }
+.pcp-create-btn:disabled { opacity: .6; cursor: not-allowed; }
+.pcp-create-btn svg { width: 14px; height: 14px; }
+
+/* ── Bulk create result ─────────────────────────────────────────────────── */
+.ps-create-result { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 8px 14px; background: #f8fafc; border-radius: 8px; margin-top: 6px; font-size: 13px; }
+.pcr-item { display: flex; align-items: center; gap: 5px; font-size: 13px; }
+.pcr-item svg { width: 13px; height: 13px; }
+.pcr-green { color: #16a34a; }
+.pcr-red   { color: #dc2626; }
+.pcr-msg   { color: #475569; font-style: italic; flex: 1; min-width: 100px; }
+.pcr-close { margin-left: auto; background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 13px; padding: 2px 5px; border-radius: 4px; }
+.pcr-close:hover { background: #e2e8f0; }
+.ps-create-log  { margin-top: 6px; background: #0f172a; border-radius: 8px; overflow: hidden; }
+.pcl-header     { display: flex; justify-content: space-between; align-items: center; padding: 7px 12px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.pcl-header span { font-size: 11px; color: #94a3b8; }
+.pcl-toggle     { background: none; border: none; color: #f59e0b; font-size: 11px; cursor: pointer; padding: 2px 6px; }
+.pcl-body       { margin: 0; padding: 10px 12px; font-size: 11px; color: #a3e635; font-family: monospace; line-height: 1.6; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+
+/* ── Table action column ───────────────────────────────────────────────── */
+.td-action { white-space: nowrap; }
+.action-done { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: #16a34a; }
+.action-done svg { width: 12px; height: 12px; }
+.action-create-wrap { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.wilayah-badge {
+	display: inline-flex; align-items: center; gap: 3px;
+	font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px;
+	cursor: default; white-space: nowrap; line-height: 1.3;
+}
+.wilayah-ok      { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.wilayah-missing { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+.btn-create-nik {
+	display: inline-flex; align-items: center; gap: 4px;
+	padding: 4px 10px; font-size: 11px; font-weight: 700;
+	background: #dcfce7; color: #166534; border: 1px solid #86efac;
+	border-radius: 6px; cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.btn-create-nik:hover:not(:disabled) { background: #bbf7d0; }
+.btn-create-nik:disabled { opacity: .5; cursor: not-allowed; }
+.btn-create-nik svg { width: 11px; height: 11px; }
+.btn-create-nik-ibu {
+	display: inline-flex; align-items: center; gap: 4px;
+	padding: 4px 9px; font-size: 11px; font-weight: 700;
+	background: #fce7f3; color: #9d174d; border: 1px solid #f9a8d4;
+	border-radius: 6px; cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.btn-create-nik-ibu:hover:not(:disabled) { background: #fbcfe8; }
+.btn-create-nik-ibu:disabled { opacity: .5; cursor: not-allowed; }
+.btn-create-nik-ibu svg { width: 11px; height: 11px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spin-icon { animation: spin .8s linear infinite; }
+
+/* ── Wilayah warning actions ── */
+.ps-ww-actions { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; flex-shrink: 0; }
+.ps-ww-btn-ghost {
+	background: transparent; border: 1px solid #d97706; color: #92400e;
+	padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+	cursor: pointer; white-space: nowrap; transition: background .15s;
+}
+.ps-ww-btn-ghost:hover { background: #fef3c7; }
+
+/* No-area-code stat card */
+.ps-card-orange { border-left: 3px solid #ea580c; }
+.psc-icon-orange { background: #ffedd5; }
+.psc-icon-orange svg { stroke: #ea580c; }
+.psc-num-warn { color: #ea580c; }
+.psc-sub-warn { color: #c2410c; font-weight: 600; }
+.psc-sub-ok   { color: #16a34a; }
+
+/* Wilayah-complete stat card */
+.ps-card-teal { border-left: 3px solid #0d9488; }
+.psc-icon-teal { background: #ccfbf1; }
+.psc-icon-teal svg { stroke: #0d9488; }
+.psc-num-teal  { color: #0f766e; }
+.psc-sub-teal  { color: #0f766e; font-weight: 600; }
+
+
+/* ── Wilayah level chips ── */
+.td-wilayah { white-space: nowrap; }
+.wlvl-row   { display: flex; gap: 3px; align-items: center; flex-wrap: nowrap; }
+.wlvl-chip  {
+	display: inline-flex; align-items: center; gap: 2px;
+	font-size: 10px; font-weight: 700; padding: 2px 5px;
+	border-radius: 4px; cursor: default; line-height: 1.3;
+	font-family: monospace; white-space: nowrap;
+}
+.wlvl-ok           { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.wlvl-missing      { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.wlvl-code  { font-size: 9px; opacity: .8; margin-left: 1px; }
+.wlvl-null  { font-size: 9px; font-style: italic; opacity: .75; }
+
 </style>

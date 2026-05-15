@@ -433,7 +433,7 @@ export default {
 			var vm = this;
 			if (vm.syncingRows[row.uuid]) return;
 
-			vm.$set(vm.syncingRows, row.uuid, true);
+			vm.syncingRows = { ...vm.syncingRows, [row.uuid]: true };
 
 			vm.api('sync-one', { uuid: row.uuid })
 				.then(function (r) {
@@ -458,7 +458,7 @@ export default {
 					vm.loadList();
 				})
 				.finally(function () {
-					vm.$set(vm.syncingRows, row.uuid, false);
+					vm.syncingRows = { ...vm.syncingRows, [row.uuid]: false };
 				});
 		},
 

@@ -4,6 +4,9 @@ namespace App\Services\SatuSehat\Foundation\Handler;
 
 class SimpleCurlFactory
 {
+    /** HTTP status code dari request terakhir — diisi setelah setiap curl_exec */
+    protected int $lastHttpCode = 0;
+
     /**
      * Kirim HTTP request ke SatuSehat API.
      *
@@ -65,10 +68,12 @@ class SimpleCurlFactory
 
         if ($result === false) {
             $error = curl_error($ch);
+            $this->lastHttpCode = 0;
             curl_close($ch);
             throw new \RuntimeException('SatuSehat cURL error: ' . $error);
         }
 
+        $this->lastHttpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         return $result;

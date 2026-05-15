@@ -18,7 +18,10 @@
 							<span class="opc-badge" :class="org.active ? 'badge-green' : 'badge-red'">
 								{{ org.active ? 'Aktif' : 'Tidak Aktif' }}
 							</span>
-							<span class="opc-type">{{ org.tipe }}</span>
+							<span class="opc-type">{{ org.tipe_code }} — {{ org.tipe }}</span>
+							<span class="opc-alias" v-if="org.alias && org.alias.length">
+								aka {{ Array.isArray(org.alias) ? org.alias.join(', ') : org.alias }}
+							</span>
 							<span class="opc-id">ID: {{ org.satusehat_id }}</span>
 						</div>
 					</div>
@@ -29,9 +32,9 @@
 				</div>
 
 				<div class="opc-body">
-					<!-- Kontak -->
+					<!-- Kontak Umum -->
 					<div class="opc-section">
-						<div class="opc-section-title">Kontak</div>
+						<div class="opc-section-title">Kontak Umum</div>
 						<div class="opc-info-row">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opc-info-icon"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.54a16 16 0 0 0 5.55 5.55l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
 							<span>{{ org.telepon }}</span>
@@ -40,26 +43,29 @@
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opc-info-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
 							<span>{{ org.email }}</span>
 						</div>
+						<div class="opc-info-row" v-if="org.website && org.website !== '-'">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opc-info-icon"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+							<span>{{ org.website }}</span>
+						</div>
 					</div>
 
 					<!-- Alamat -->
 					<div class="opc-section opc-section-wide">
 						<div class="opc-section-title">Alamat</div>
+						<div class="opc-info-row opc-info-row-sm" style="margin-bottom:6px">
+							<span class="opc-chip opc-chip-sm">{{ org.address_use }}</span>
+							<span class="opc-chip opc-chip-sm">{{ org.address_type }}</span>
+						</div>
 						<div class="opc-info-row">
 							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opc-info-icon"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
 							<span>{{ org.alamat }}</span>
 						</div>
 						<div class="opc-info-row opc-info-row-sm">
-							<span class="opc-chip">{{ org.kecamatan }}</span>
 							<span class="opc-chip">{{ org.kota }}</span>
-							<span class="opc-chip">{{ org.provinsi }}</span>
+							<span class="opc-chip" v-if="org.kode_pos && org.kode_pos !== '-'">{{ org.kode_pos }}</span>
 						</div>
-					</div>
-
-					<!-- Kode Wilayah -->
-					<div class="opc-section">
-						<div class="opc-section-title">Kode Wilayah</div>
-						<div class="opc-codes">
+						<!-- Kode Wilayah BPS inline -->
+						<div class="opc-codes" style="margin-top:8px">
 							<div class="opc-code-item">
 								<span class="opc-code-label">Provinsi</span>
 								<code>{{ org.kode_provinsi }}</code>
@@ -76,6 +82,34 @@
 								<span class="opc-code-label">Kelurahan</span>
 								<code>{{ org.kode_kelurahan }}</code>
 							</div>
+						</div>
+					</div>
+
+					<!-- Kontak Tujuan & partOf -->
+					<div class="opc-section">
+						<div class="opc-section-title">Kontak Tujuan</div>
+						<template v-if="org.contact_purpose && org.contact_purpose !== '-'">
+							<div class="opc-info-row">
+								<span class="opc-badge-purpose">{{ org.contact_purpose }}</span>
+							</div>
+							<div class="opc-info-row" v-if="org.contact_nama && org.contact_nama !== '-'">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opc-info-icon"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+								<span>{{ org.contact_nama }}</span>
+							</div>
+							<div class="opc-info-row" v-if="org.contact_telepon && org.contact_telepon !== '-'">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opc-info-icon"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.6 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.54a16 16 0 0 0 5.55 5.55l.92-.92a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+								<span>{{ org.contact_telepon }}</span>
+							</div>
+							<div class="opc-info-row" v-if="org.contact_email && org.contact_email !== '-'">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opc-info-icon"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+								<span>{{ org.contact_email }}</span>
+							</div>
+						</template>
+						<div v-else class="opc-info-row" style="color:#94a3b8;font-size:12px;font-style:italic">Tidak ada kontak tujuan</div>
+						<div class="opc-section-title" style="margin-top:14px">Bagian dari (partOf)</div>
+						<div class="opc-info-row">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opc-info-icon"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+							<code style="font-size:11px;color:#64748b;word-break:break-all">{{ org.part_of }}</code>
 						</div>
 					</div>
 				</div>
@@ -141,13 +175,15 @@ export default {
 				url: '', data: null
 			},
 			column: [
-				{ value: 'satusehat_id', label: 'ID SatuSehat',  type: 'text',  search: false, close: false, button: false },
-				{ value: 'kode',         label: 'Kode',           type: 'text',  search: true,  close: false, button: false },
-				{ value: 'nama',         label: 'Nama',           type: 'text',  search: true,  close: false, button: false },
-				{ value: 'active',       label: 'Status',         type: 'text',  search: false, close: false, button: false },
-				{ value: 'tipe',         label: 'Tipe',           type: 'text',  search: false, close: false, button: false },
-				{ value: 'telepon',      label: 'Telepon',        type: 'text',  search: false, close: false, button: false },
-				{ value: 'btnhtml',      label: '',               type: 'text',  search: false, close: false, button: true  },
+				{ value: 'satusehat_id',    label: 'ID SatuSehat',   type: 'text', search: false, close: false, button: false },
+				{ value: 'kode',            label: 'Kode',            type: 'text', search: true,  close: false, button: false },
+				{ value: 'nama',            label: 'Nama',            type: 'text', search: true,  close: false, button: false },
+				{ value: 'alias',           label: 'Alias',           type: 'text', search: false, close: false, button: false },
+				{ value: 'active',          label: 'Status',          type: 'text', search: false, close: false, button: false },
+				{ value: 'tipe',            label: 'Tipe',            type: 'text', search: false, close: false, button: false },
+				{ value: 'telepon',         label: 'Telepon',         type: 'text', search: false, close: false, button: false },
+				{ value: 'contact_purpose', label: 'Kontak Tujuan',   type: 'text', search: false, close: false, button: false },
+				{ value: 'btnhtml',         label: '',                type: 'text', search: false, close: false, button: true  },
 			],
 			module: { data: [], column: [], total: 0, ispaging: true },
 
@@ -483,6 +519,28 @@ export default {
 	font-size: 13px;
 	color: #1c84ee;
 	font-weight: 600;
+}
+
+.opc-alias {
+	font-size: 11px;
+	color: rgba(255,255,255,.7);
+	font-style: italic;
+}
+.opc-chip-sm {
+	font-size: 10px;
+	padding: 1px 6px;
+	background: #e2e8f0;
+	color: #475569;
+}
+.opc-badge-purpose {
+	display: inline-block;
+	background: #dbeafe;
+	color: #1d4ed8;
+	font-size: 11px;
+	font-weight: 700;
+	padding: 2px 8px;
+	border-radius: 12px;
+	margin-bottom: 6px;
 }
 
 /* ── Skeleton ──────────────────────────────────────────────────────────── */
