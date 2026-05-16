@@ -43,6 +43,7 @@ use App\Models\DokumenFormLaserBarrage;
 use App\Models\DokumenFormLaserFokal;
 use App\Models\DokumenStatusOftalmologis;
 use App\Models\DokumenLaporanOperasi;
+use App\Models\DokumenLaporanInsiden;
 use App\Models\DokumenAsuhanGizi;
 use App\Models\DokumenCatatanOperasi;
 use App\Models\DokumenSuratPernyataanBatalOperasi;
@@ -795,6 +796,18 @@ function printGeneral($uuid)
       compact('pasien', 'data')
     )->setPaper('a4', 'portrait');
 
+    return $pdf->stream();
+  }
+
+  public function printLaporanInsiden($uuid)
+  {
+    $pdf    = \App::make('dompdf.wrapper');
+    $data   = DokumenLaporanInsiden::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.laporaninsiden',
+      compact('pasien', 'data')
+    )->setPaper('a4', 'portrait');
     return $pdf->stream();
   }
 

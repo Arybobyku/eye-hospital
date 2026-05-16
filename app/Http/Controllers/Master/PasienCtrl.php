@@ -58,6 +58,7 @@ use App\Models\DokumenStatusAnestesi;
 use App\Models\DokumenLaporanOperasiVitreoRetina;
 use App\Models\DokumenStatusOftalmologis;
 use App\Models\DokumenLaporanOperasi;
+use App\Models\DokumenLaporanInsiden;
 use App\Models\Pengguna;
 use App\Models\DokumenAsesmenPraOperasi;
 use Illuminate\Support\Str;              // ✅ Tambahkan ini
@@ -3266,6 +3267,60 @@ public function storeAsesmenPraOperasi(Request $request)
                 'message' => 'Gagal menyimpan Status Oftalmologis',
                 'error'   => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    // ── Laporan Insiden ───────────────────────────────────────────────────────
+    public function storeLaporanInsiden(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+            unset($data['id']);
+
+            $boolFields = [
+                'umur_0_1_bulan', 'umur_1_bulan_1_tahun', 'umur_1_5_tahun',
+                'umur_5_15_tahun', 'umur_15_30_tahun', 'umur_30_65_tahun', 'umur_65_plus',
+                'biaya_pribadi', 'biaya_asuransi_swasta', 'biaya_perusahaan', 'biaya_bpjs',
+                'jenis_knc', 'jenis_ktc', 'jenis_ktd',
+                'pelapor_karyawan', 'pelapor_pasien', 'pelapor_keluarga',
+                'pelapor_pengunjung', 'pelapor_lainnya',
+                'terjadi_pada_pasien', 'terjadi_pada_lainnya',
+                'pasien_rawat_inap', 'pasien_rawat_jalan', 'pasien_igd', 'pasien_lainnya',
+                'spesialisasi_penyakit_mata', 'spesialisasi_lainnya',
+                'akibat_kematian', 'akibat_cedera_berat', 'akibat_cedera_sedang',
+                'akibat_cedera_ringan', 'akibat_tidak_cedera',
+                'tindakan_tim', 'tindakan_dokter', 'tindakan_perawat', 'tindakan_petugas_lainnya',
+                'kejadian_sama_ya', 'kejadian_sama_tidak',
+                'grading_biru', 'grading_hijau', 'grading_kuning', 'grading_merah',
+            ];
+            foreach ($boolFields as $field) {
+                $data[$field] = filter_var($data[$field] ?? false, FILTER_VALIDATE_BOOLEAN);
+            }
+
+            if ($uuid) {
+                $dokumen = DokumenLaporanInsiden::where('uuid', $uuid)->first();
+                if (!$dokumen) return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'Laporan Insiden berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenLaporanInsiden::create($data);
+                $action  = 'create';
+                $message = 'Laporan Insiden berhasil disimpan';
+            }
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => $message, 'data' => $dokumen, 'action' => $action], $action === 'create' ? 201 : 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => false, 'message' => 'Gagal menyimpan Laporan Insiden', 'error' => $e->getMessage()], 500);
         }
     }
 

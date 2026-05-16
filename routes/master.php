@@ -99,6 +99,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
         Route::post('dokumen-asesmen-pra-operasi', [PasienCtrl::class, 'storeAsesmenPraOperasi'])->name('master-pasien-storeAsesmenPraOperasi');
         Route::post('dokumen-status-oftalmologis', [PasienCtrl::class, 'storeStatusOftalmologis'])->name('master-pasien-storeStatusOftalmologis');
         Route::post('dokumen-laporan-operasi', [PasienCtrl::class, 'storeLaporanOperasi'])->name('master-pasien-storeLaporanOperasi');
+        Route::post('dokumen-laporan-insiden', [PasienCtrl::class, 'storeLaporanInsiden'])->name('master-pasien-storeLaporanInsiden');
 
 		//master
 		Route::get('master-dokter-all', [PasienCtrl::class, 'masterDokter'])->name('master-dokter-all');

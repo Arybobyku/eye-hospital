@@ -532,7 +532,14 @@ class RekamMedisCtrl extends Controller
                     'type' => 'dokumen_laporan_operasi',
                     'label' => 'Laporan Operasi',
                     'icon' => 'fa-scalpel',
-                    'color' => '#B71C1C', // Merah tua
+                    'color' => '#B71C1C',
+                ],
+                [
+                    'table' => 'dokumen_laporan_insiden',
+                    'type' => 'dokumen_laporan_insiden',
+                    'label' => 'Laporan Insiden',
+                    'icon' => 'fa-exclamation-triangle',
+                    'color' => '#E65100',
                 ],
             ];
 
@@ -897,6 +904,11 @@ class RekamMedisCtrl extends Controller
                 'waktu'    => "$table.tanggal",
                 'no_surat' => 'RM 5.0/LO/22',
             ],
+            'dokumen_laporan_insiden' => [
+                'tanggal'  => "$table.insiden_tanggal",
+                'waktu'    => "$table.insiden_tanggal",
+                'no_surat' => 'RM 7.9/LI/22',
+            ],
             'dokumen_laporan_operasi_vitreo_retina' => [
                 'tanggal' => "$table.created_at",
                 'waktu'   => "$table.created_at",
@@ -1010,6 +1022,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_asesmen_pra_operasi' => 'dokumen_asesmen_pra_operasi',
                 'dokumen_status_oftalmologis' => 'dokumen_status_oftalmologis',
                 'dokumen_laporan_operasi'     => 'dokumen_laporan_operasi',
+                'dokumen_laporan_insiden'     => 'dokumen_laporan_insiden',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -1107,6 +1120,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_asesmen_pra_operasi' => 'dokumen_asesmen_pra_operasi',
                 'dokumen_status_oftalmologis' => 'dokumen_status_oftalmologis',
                 'dokumen_laporan_operasi'     => 'dokumen_laporan_operasi',
+                'dokumen_laporan_insiden'     => 'dokumen_laporan_insiden',
             ];
 
             if (!isset($tableMap[$type])) {

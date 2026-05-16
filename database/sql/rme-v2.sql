@@ -229,3 +229,128 @@ CREATE TABLE IF NOT EXISTS dokumen_laporan_operasi (
 CREATE INDEX IF NOT EXISTS idx_lo_uuid_pasien ON dokumen_laporan_operasi (uuid_pasien);
 CREATE INDEX IF NOT EXISTS idx_lo_no_rm       ON dokumen_laporan_operasi (no_rm);
 CREATE INDEX IF NOT EXISTS idx_lo_deleted_at  ON dokumen_laporan_operasi (deleted_at);
+
+-- ── dokumen_laporan_insiden ────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS dokumen_laporan_insiden (
+    id            BIGSERIAL    PRIMARY KEY,
+    uuid          UUID         NOT NULL UNIQUE,
+    uuid_pasien   UUID         DEFAULT NULL,
+
+    -- Identitas Pasien
+    no_rm         VARCHAR(50)  DEFAULT NULL,
+    no_surat      VARCHAR(50)  DEFAULT NULL,
+    jenis_kelamin VARCHAR(50)   DEFAULT NULL,
+    nama          VARCHAR(200) DEFAULT NULL,
+    nik           VARCHAR(20)  DEFAULT NULL,
+    tanggal_lahir DATE         DEFAULT NULL,
+
+    -- Header
+    ruangan       VARCHAR(100) DEFAULT NULL,
+
+    -- I. Umur
+    umur_0_1_bulan       BOOLEAN DEFAULT FALSE,
+    umur_1_bulan_1_tahun BOOLEAN DEFAULT FALSE,
+    umur_1_5_tahun       BOOLEAN DEFAULT FALSE,
+    umur_5_15_tahun      BOOLEAN DEFAULT FALSE,
+    umur_15_30_tahun     BOOLEAN DEFAULT FALSE,
+    umur_30_65_tahun     BOOLEAN DEFAULT FALSE,
+    umur_65_plus         BOOLEAN DEFAULT FALSE,
+
+    -- Penanggung Biaya
+    biaya_pribadi         BOOLEAN DEFAULT FALSE,
+    biaya_asuransi_swasta BOOLEAN DEFAULT FALSE,
+    biaya_perusahaan      BOOLEAN DEFAULT FALSE,
+    biaya_bpjs            BOOLEAN DEFAULT FALSE,
+
+    -- Masuk RS
+    tanggal_masuk_rs  DATE        DEFAULT NULL,
+    jam_masuk_rs      VARCHAR(10) DEFAULT NULL,
+
+    -- II. Rincian Kejadian
+    insiden_tanggal   DATE        DEFAULT NULL,
+    insiden_jam       VARCHAR(10) DEFAULT NULL,
+    insiden_deskripsi TEXT        DEFAULT NULL,
+    kronologis_insiden TEXT       DEFAULT NULL,
+
+    -- 4. Jenis Insiden
+    jenis_knc BOOLEAN DEFAULT FALSE,
+    jenis_ktc BOOLEAN DEFAULT FALSE,
+    jenis_ktd BOOLEAN DEFAULT FALSE,
+
+    -- 5. Pelapor
+    pelapor_karyawan           BOOLEAN      DEFAULT FALSE,
+    pelapor_pasien             BOOLEAN      DEFAULT FALSE,
+    pelapor_keluarga           BOOLEAN      DEFAULT FALSE,
+    pelapor_pengunjung         BOOLEAN      DEFAULT FALSE,
+    pelapor_lainnya            BOOLEAN      DEFAULT FALSE,
+    pelapor_lainnya_sebutkan   VARCHAR(255) DEFAULT NULL,
+
+    -- 6. Terjadi pada
+    terjadi_pada_pasien              BOOLEAN      DEFAULT FALSE,
+    terjadi_pada_lainnya             BOOLEAN      DEFAULT FALSE,
+    terjadi_pada_lainnya_sebutkan    VARCHAR(255) DEFAULT NULL,
+
+    -- 7. Menyangkut pasien
+    pasien_rawat_inap       BOOLEAN      DEFAULT FALSE,
+    pasien_rawat_jalan      BOOLEAN      DEFAULT FALSE,
+    pasien_igd              BOOLEAN      DEFAULT FALSE,
+    pasien_lainnya          BOOLEAN      DEFAULT FALSE,
+    pasien_lainnya_sebutkan VARCHAR(255) DEFAULT NULL,
+
+    -- 8. Tempat
+    lokasi_kejadian VARCHAR(255) DEFAULT NULL,
+
+    -- 9. Spesialisasi
+    spesialisasi_penyakit_mata       BOOLEAN      DEFAULT FALSE,
+    spesialisasi_lainnya             BOOLEAN      DEFAULT FALSE,
+    spesialisasi_lainnya_sebutkan    VARCHAR(255) DEFAULT NULL,
+
+    -- 10. Unit Kerja
+    unit_kerja_penyebab VARCHAR(255) DEFAULT NULL,
+
+    -- 11. Akibat
+    akibat_kematian      BOOLEAN DEFAULT FALSE,
+    akibat_cedera_berat  BOOLEAN DEFAULT FALSE,
+    akibat_cedera_sedang BOOLEAN DEFAULT FALSE,
+    akibat_cedera_ringan BOOLEAN DEFAULT FALSE,
+    akibat_tidak_cedera  BOOLEAN DEFAULT FALSE,
+
+    -- 12–13. Tindakan
+    tindakan_hasil                      TEXT         DEFAULT NULL,
+    tindakan_tim                        BOOLEAN      DEFAULT FALSE,
+    tindakan_tim_terdiri                VARCHAR(255) DEFAULT NULL,
+    tindakan_dokter                     BOOLEAN      DEFAULT FALSE,
+    tindakan_perawat                    BOOLEAN      DEFAULT FALSE,
+    tindakan_petugas_lainnya            BOOLEAN      DEFAULT FALSE,
+    tindakan_petugas_lainnya_sebutkan   VARCHAR(255) DEFAULT NULL,
+
+    -- 14. Kejadian sama
+    kejadian_sama_ya         BOOLEAN DEFAULT FALSE,
+    kejadian_sama_tidak      BOOLEAN DEFAULT FALSE,
+    kejadian_sama_keterangan TEXT    DEFAULT NULL,
+
+    -- Pembuat / Penerima
+    pembuat_laporan         VARCHAR(200) DEFAULT NULL,
+    pembuat_laporan_paraf   VARCHAR(200) DEFAULT NULL,
+    tgl_terima              DATE         DEFAULT NULL,
+    penerima_laporan        VARCHAR(200) DEFAULT NULL,
+    penerima_laporan_paraf  TEXT DEFAULT NULL,
+    tgl_lapor               DATE         DEFAULT NULL,
+
+    -- Grading
+    grading_biru   BOOLEAN DEFAULT FALSE,
+    grading_hijau  BOOLEAN DEFAULT FALSE,
+    grading_kuning BOOLEAN DEFAULT FALSE,
+    grading_merah  BOOLEAN DEFAULT FALSE,
+
+    -- Audit
+    created_by VARCHAR(100) DEFAULT NULL,
+    updated_by VARCHAR(100) DEFAULT NULL,
+    created_at TIMESTAMP    DEFAULT NOW(),
+    updated_at TIMESTAMP    DEFAULT NOW(),
+    deleted_at TIMESTAMP    DEFAULT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_li_uuid_pasien ON dokumen_laporan_insiden (uuid_pasien);
+CREATE INDEX IF NOT EXISTS idx_li_no_rm       ON dokumen_laporan_insiden (no_rm);
+CREATE INDEX IF NOT EXISTS idx_li_deleted_at  ON dokumen_laporan_insiden (deleted_at);
