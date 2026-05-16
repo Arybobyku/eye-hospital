@@ -527,6 +527,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-eye',
                     'color' => '#1565C0', // Biru tua
                 ],
+                [
+                    'table' => 'dokumen_laporan_operasi',
+                    'type' => 'dokumen_laporan_operasi',
+                    'label' => 'Laporan Operasi',
+                    'icon' => 'fa-scalpel',
+                    'color' => '#B71C1C', // Merah tua
+                ],
             ];
 
             // if (!empty($search)) {
@@ -885,6 +892,11 @@ class RekamMedisCtrl extends Controller
                 'waktu'    => "$table.tanggal_kunjungan",
                 'no_surat' => 'RM 1.4/SORJ/22',
             ],
+            'dokumen_laporan_operasi' => [
+                'tanggal'  => "$table.tanggal",
+                'waktu'    => "$table.tanggal",
+                'no_surat' => 'RM 5.0/LO/22',
+            ],
             'dokumen_laporan_operasi_vitreo_retina' => [
                 'tanggal' => "$table.created_at",
                 'waktu'   => "$table.created_at",
@@ -997,6 +1009,7 @@ class RekamMedisCtrl extends Controller
                 'status_anestesi' => 'dokumen_status_anestesi',
                 'dokumen_asesmen_pra_operasi' => 'dokumen_asesmen_pra_operasi',
                 'dokumen_status_oftalmologis' => 'dokumen_status_oftalmologis',
+                'dokumen_laporan_operasi'     => 'dokumen_laporan_operasi',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -1093,6 +1106,7 @@ class RekamMedisCtrl extends Controller
                 'status_anestesi' => 'dokumen_status_anestesi',
                 'dokumen_asesmen_pra_operasi' => 'dokumen_asesmen_pra_operasi',
                 'dokumen_status_oftalmologis' => 'dokumen_status_oftalmologis',
+                'dokumen_laporan_operasi'     => 'dokumen_laporan_operasi',
             ];
 
             if (!isset($tableMap[$type])) {

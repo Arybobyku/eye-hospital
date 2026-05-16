@@ -36,6 +36,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
     Route::get('rekammedis/general/formlaserbarrage/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserBarrage']);
     Route::get('rekammedis/general/formlaserfokal/{uuid}', [PrintRekamMedisCtrl::class, 'printFormLaserFokal']);
     Route::get('rekammedis/general/statusoftalmologis/{uuid}', [PrintRekamMedisCtrl::class, 'printStatusOftalmologis']);
+    Route::get('rekammedis/general/laporanoperasi/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanOperasi']);
     Route::get('rekammedis/general/formtindakanepilasi/{uuid}', [PrintRekamMedisCtrl::class, 'printFormTindakanEpilasi']);
     Route::get('rekammedis/general/laporaninjeksi/{uuid}', [PrintRekamMedisCtrl::class, 'printLaporanInjeksi']);
     Route::get('rekammedis/general/tindakanlaserlpi/{uuid}', [PrintRekamMedisCtrl::class, 'printTindakanLaserLPI']);

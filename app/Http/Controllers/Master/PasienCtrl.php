@@ -57,6 +57,7 @@ use App\Models\DokumenFormLaserFokal;
 use App\Models\DokumenStatusAnestesi;
 use App\Models\DokumenLaporanOperasiVitreoRetina;
 use App\Models\DokumenStatusOftalmologis;
+use App\Models\DokumenLaporanOperasi;
 use App\Models\Pengguna;
 use App\Models\DokumenAsesmenPraOperasi;
 use Illuminate\Support\Str;              // ✅ Tambahkan ini
@@ -3263,6 +3264,67 @@ public function storeAsesmenPraOperasi(Request $request)
             return response()->json([
                 'status'  => false,
                 'message' => 'Gagal menyimpan Status Oftalmologis',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    // ── Laporan Operasi ───────────────────────────────────────────────────────
+    public function storeLaporanOperasi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+            unset($data['id']);
+
+            // Konversi boolean checkboxes
+            $boolFields = [
+                'jenis_besar', 'jenis_sedang', 'jenis_kecil',
+                'tipe_elektif', 'tipe_emergency', 'tipe_khusus',
+                'transfusi_tidak', 'transfusi_ya',
+                'implan_tidak', 'implan_ya',
+                'jaringan_patologi_ya', 'jaringan_patologi_tidak',
+            ];
+            foreach ($boolFields as $field) {
+                $data[$field] = filter_var($data[$field] ?? false, FILTER_VALIDATE_BOOLEAN);
+            }
+
+            if ($uuid) {
+                $dokumen = DokumenLaporanOperasi::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'Laporan Operasi berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenLaporanOperasi::create($data);
+                $action  = 'create';
+                $message = 'Laporan Operasi berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Laporan Operasi',
                 'error'   => $e->getMessage(),
             ], 500);
         }

@@ -527,6 +527,9 @@ export default {
     FormStatusOftalmologis: defineAsyncComponent(() =>
       import("./create/FormStatusOftalmologis.vue")
     ),
+    FormLaporanOperasi: defineAsyncComponent(() =>
+      import("./create/FormLaporanOperasi.vue")
+    ),
   },
 
   data() {
@@ -889,6 +892,13 @@ export default {
           description: "Form Status Oftalmologis Rawat Jalan (RM 1.4/SORJ)",
           backendType: "dokumen_status_oftalmologis",
         },
+        {
+          value: "dokumen_laporan_operasi",
+          label: "Laporan Operasi",
+          component: "FormLaporanOperasi",
+          description: "Form Laporan Operasi (RM 5.0/LO)",
+          backendType: "dokumen_laporan_operasi",
+        },
       ],
     };
   },
@@ -1175,6 +1185,7 @@ export default {
         dokumen_tindakan_epilasi: `/print/rekammedis/general/formtindakanepilasi/${item.uuid}`,
         dokumen_form_laser_fokal: `/print/rekammedis/general/formlaserfokal/${item.uuid}`,
         dokumen_status_oftalmologis: `/print/rekammedis/general/statusoftalmologis/${item.uuid}`,
+        dokumen_laporan_operasi: `/print/rekammedis/general/laporanoperasi/${item.uuid}`,
         dokumen_form_laser_barrage: `/print/rekammedis/general/formlaserbarrage/${item.uuid}`,
         dokumen_asuhan_gizi: `/print/rekammedis/general/asuhangizi/${item.uuid}`,
         dokumen_tindakan_laser_lpi: `/print/rekammedis/general/tindakanlaserlpi/${item.uuid}`,

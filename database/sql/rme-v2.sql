@@ -148,3 +148,84 @@ CREATE TABLE IF NOT EXISTS dokumen_status_oftalmologis (
 CREATE INDEX IF NOT EXISTS idx_sorj_uuid_pasien ON dokumen_status_oftalmologis (uuid_pasien);
 CREATE INDEX IF NOT EXISTS idx_sorj_no_rm       ON dokumen_status_oftalmologis (no_rm);
 CREATE INDEX IF NOT EXISTS idx_sorj_deleted_at  ON dokumen_status_oftalmologis (deleted_at);
+
+-- ── dokumen_laporan_operasi ────────────────────────────────────────────────
+CREATE TABLE IF NOT EXISTS dokumen_laporan_operasi (
+    id            BIGSERIAL    PRIMARY KEY,
+    uuid          UUID         NOT NULL UNIQUE,
+    uuid_pasien   UUID         DEFAULT NULL,
+
+    -- Identitas Pasien
+    no_rm         VARCHAR(50)  DEFAULT NULL,
+    no_surat      VARCHAR(50)  DEFAULT NULL,
+    jenis_kelamin VARCHAR(50)   DEFAULT NULL,
+    nama          VARCHAR(200) DEFAULT NULL,
+    nik           VARCHAR(20)  DEFAULT NULL,
+    tanggal_lahir DATE         DEFAULT NULL,
+
+    -- Tim Operasi
+    ahli_bedah       VARCHAR(200) DEFAULT NULL,
+    asisten_dokter   VARCHAR(200) DEFAULT NULL,
+    ahli_anestesi    VARCHAR(200) DEFAULT NULL,
+    instrumen        VARCHAR(200) DEFAULT NULL,
+
+    -- Diagnosa & Waktu
+    diagnosa_prabedah      TEXT        DEFAULT NULL,
+    diagnosa_pasca_bedah   TEXT        DEFAULT NULL,
+    pembedahan_mulai_pukul VARCHAR(10) DEFAULT NULL,
+    pembedahan_selesai_pukul VARCHAR(10) DEFAULT NULL,
+    lama_tindakan          VARCHAR(50) DEFAULT NULL,
+    tanggal                DATE        DEFAULT NULL,
+
+    -- Jenis Pembedahan
+    jenis_pembedahan TEXT        DEFAULT NULL,
+    macam_pembedahan TEXT        DEFAULT NULL,
+
+    -- Checkboxes Jenis
+    jenis_besar  BOOLEAN DEFAULT FALSE,
+    jenis_sedang BOOLEAN DEFAULT FALSE,
+    jenis_kecil  BOOLEAN DEFAULT FALSE,
+
+    -- Checkboxes Tipe
+    tipe_elektif   BOOLEAN DEFAULT FALSE,
+    tipe_emergency BOOLEAN DEFAULT FALSE,
+    tipe_khusus    BOOLEAN DEFAULT FALSE,
+
+    -- Transfusi
+    transfusi_tidak       BOOLEAN      DEFAULT FALSE,
+    transfusi_ya          BOOLEAN      DEFAULT FALSE,
+    transfusi_jenis_jumlah VARCHAR(255) DEFAULT NULL,
+
+    -- Implan
+    implan_tidak       BOOLEAN      DEFAULT FALSE,
+    implan_ya          BOOLEAN      DEFAULT FALSE,
+    implan_jenis_jumlah VARCHAR(255) DEFAULT NULL,
+
+    -- Uraian Pembedahan
+    uraian_pembedahan TEXT DEFAULT NULL,
+
+    -- Pasca Operasi
+    komplikasi_intra_operasi TEXT        DEFAULT NULL,
+    konsultasi_intra_operasi TEXT        DEFAULT NULL,
+    jumlah_perdarahan        VARCHAR(100) DEFAULT NULL,
+
+    -- Jaringan ke Patologi
+    jaringan_patologi_ya    BOOLEAN DEFAULT FALSE,
+    jaringan_patologi_tidak BOOLEAN DEFAULT FALSE,
+
+    -- Tanda Tangan
+    ttd_dokter           TEXT         DEFAULT NULL,
+    nama_dokter          VARCHAR(200) DEFAULT NULL,
+    dokter_ttd_timestamp VARCHAR(50)  DEFAULT NULL,
+
+    -- Audit
+    created_by VARCHAR(100) DEFAULT NULL,
+    updated_by VARCHAR(100) DEFAULT NULL,
+    created_at TIMESTAMP    DEFAULT NOW(),
+    updated_at TIMESTAMP    DEFAULT NOW(),
+    deleted_at TIMESTAMP    DEFAULT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_lo_uuid_pasien ON dokumen_laporan_operasi (uuid_pasien);
+CREATE INDEX IF NOT EXISTS idx_lo_no_rm       ON dokumen_laporan_operasi (no_rm);
+CREATE INDEX IF NOT EXISTS idx_lo_deleted_at  ON dokumen_laporan_operasi (deleted_at);
