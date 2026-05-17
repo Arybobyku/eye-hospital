@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SatuSehat;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Services\SatuSehat\Bridge\BridgeBase;
 use App\Services\SatuSehat\Config\ConfigSatusehat;
 use PenggunaHelp;
@@ -138,6 +139,85 @@ class LocationCtrl extends Controller
         return response()->json(['data' => 'gagal', 'result' => $result], 422);
     }
 
+    // ── Sync → local DB ───────────────────────────────────────────────────
+
+    /**
+     * Fetch ALL locations from SatuSehat and upsert into satusehat_locations.
+     */
+    public function sync(Request $request)
+    {
+        if ($this->error !== 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        try {
+            $bridge  = new BridgeBase();
+            $raw     = $bridge->getJson('Location?organization=' . $this->orgId . '&_count=500');
+            $entries = $raw['entry'] ?? [];
+
+            if (empty($entries)) {
+                return response()->json([
+                    'data'    => 'berhasil',
+                    'message' => 'Tidak ada lokasi ditemukan di SatuSehat.',
+                    'count'   => 0,
+                ]);
+            }
+
+            $now   = now();
+            $saved = 0;
+
+            foreach ($entries as $e) {
+                $res = $e['resource'] ?? [];
+                if (empty($res['id'])) continue;
+
+                $row = $this->flattenForDb($res);
+
+                DB::table('satusehat_locations')->upsert(
+                    array_merge($row, [
+                        'raw_data'   => json_encode($res),
+                        'synced_at'  => $now,
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ]),
+                    ['satusehat_id'],                 // unique key
+                    array_merge(array_keys($row), ['raw_data', 'synced_at', 'updated_at'])
+                );
+                $saved++;
+            }
+
+            PenggunaHelp::log("Sync Location SatuSehat: {$saved} lokasi disimpan ke satusehat_locations.");
+
+            return response()->json([
+                'data'    => 'berhasil',
+                'message' => "{$saved} lokasi berhasil disinkronkan ke database lokal.",
+                'count'   => $saved,
+            ]);
+
+        } catch (\Throwable $e) {
+            return response()->json(['data' => 'gagal', 'message' => $e->getMessage()], 500);
+        }
+    }
+
+    /**
+     * Return local sync status: total records, last sync time.
+     */
+    public function syncStatus(Request $request)
+    {
+        if ($this->error !== 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        $total    = DB::table('satusehat_locations')->count();
+        $lastSync = DB::table('satusehat_locations')->max('synced_at');
+
+        return response()->json([
+            'data' => [
+                'total'      => (int) $total,
+                'last_synced'=> $lastSync,
+            ]
+        ]);
+    }
+
     // ── Helpers ───────────────────────────────────────────────────────────
 
     /**
@@ -145,6 +225,37 @@ class LocationCtrl extends Controller
      */
     private function buildPayload(Request $request): array
     {
+        // ── resolve relasi awal (diperlukan untuk derivasi identifier) ───
+        $partOfId   = trim($request->part_of              ?? '');
+        $managingId = trim($request->managing_organization ?? '');
+
+        // ── identifier ───────────────────────────────────────────────────
+        // Sub-lokasi  (ada partOf)   → system berasal dari identifier Location induk
+        // Lokasi root (tanpa partOf) → system berasal dari identifier managing Organization
+        // Rumus: parent.identifier[0].system + '/' + parent.identifier[0].value
+        $identifier = [];
+        if ($request->kode) {
+            if ($partOfId) {
+                // Fetch parent Location
+                $parentRes    = (new BridgeBase())->getJson('Location/' . $partOfId);
+                $parentIdent  = $parentRes['identifier'][0] ?? [];
+                $parentSystem = $parentIdent['system'] ?? 'https://fhir.kemkes.go.id/id/org-number';
+                $parentValue  = $parentIdent['value']  ?? $this->orgId;
+            } else {
+                // Fetch managing Organization
+                $orgId        = $managingId ?: $this->orgId;
+                $parentRes    = (new BridgeBase())->getJson('Organization/' . $orgId);
+                $parentIdent  = $parentRes['identifier'][0] ?? [];
+                $parentSystem = $parentIdent['system'] ?? 'https://fhir.kemkes.go.id/id/org-number';
+                $parentValue  = $parentIdent['value']  ?? $orgId;
+            }
+            $identifier[] = [
+                'use'    => 'official',
+                'system' => rtrim($parentSystem, '/') . '/' . $parentValue,
+                'value'  => $request->kode,
+            ];
+        }
+
         // ── alias ────────────────────────────────────────────────────────
         $alias = [];
         if ($request->alias) {
@@ -212,11 +323,7 @@ class LocationCtrl extends Controller
         }
 
         // ── managingOrganization ─────────────────────────────────────────
-        $managingId = trim($request->managing_organization ?? '');
         $managingOrg = ['reference' => 'Organization/' . ($managingId ?: $this->orgId)];
-
-        // ── partOf ───────────────────────────────────────────────────────
-        $partOfId = trim($request->part_of ?? '');
 
         // ── hoursOfOperation ─────────────────────────────────────────────
         $hoursOfOperation = [];
@@ -271,11 +378,7 @@ class LocationCtrl extends Controller
         // ── assemble payload ──────────────────────────────────────────────
         $payload = [
             'resourceType' => 'Location',
-            'identifier'   => [[
-                'use'    => 'official',
-                'system' => 'http://sys-ids.kemkes.go.id/location/' . $this->orgId,
-                'value'  => $request->kode,
-            ]],
+            'identifier'   => $identifier,
             'status'      => $request->status ?? 'active',
             'name'        => $request->nama    ?? '',
             'description' => $request->deskripsi ?? '',
@@ -369,6 +472,81 @@ class LocationCtrl extends Controller
             'kode_pos'       => $addr['postalCode'] ?? '-',
             'managing_organization' => $res['managingOrganization']['reference'] ?? '-',
             'part_of'        => $res['partOf']['reference'] ?? '-',
+        ];
+    }
+
+    /**
+     * Flatten a FHIR Location resource into a full row for satusehat_locations table.
+     */
+    private function flattenForDb(array $res): array
+    {
+        // Telecom
+        $telepon = $email = $website = '';
+        foreach ($res['telecom'] ?? [] as $t) {
+            if ($t['system'] === 'phone') $telepon = $t['value'];
+            if ($t['system'] === 'email') $email   = $t['value'];
+            if ($t['system'] === 'url')   $website = $t['value'];
+        }
+
+        // Address + administrativeCode extension
+        $addr    = $res['address'] ?? [];
+        $adminExt = $addr['extension'][0]['extension'] ?? [];
+        $getCode  = fn($url) => collect($adminExt)->firstWhere('url', $url)['valueCode'] ?? null;
+
+        // Service class
+        $scExt    = collect($res['extension'] ?? [])->firstWhere('url', 'https://fhir.kemkes.go.id/r4/StructureDefinition/LocationServiceClass');
+        $scInner  = collect($scExt['extension'] ?? [])->firstWhere('url', 'inpatientServiceClass');
+        $scCode   = $scInner['valueCodeableConcept']['coding'][0]['code'] ?? '';
+        $scLabel  = $scCode ? strtoupper(str_replace('kelas_', '', $scCode)) : null;
+
+        // Hours of operation
+        $hours    = $res['hoursOfOperation'][0] ?? null;
+        $allDay   = (bool)($hours['allDay']       ?? false);
+        $days     = implode(',', $hours['daysOfWeek'] ?? []);
+        $opening  = $hours['openingTime'] ?? null;
+        $closing  = $hours['closingTime'] ?? null;
+
+        // partOf & managingOrganization — strip prefix to keep only FHIR ID
+        $partOfRef  = $res['partOf']['reference']              ?? '';
+        $mgRef      = $res['managingOrganization']['reference'] ?? '';
+        $partOfId   = $partOfRef ? preg_replace('/^Location\//', '', $partOfRef)     : null;
+        $managingId = $mgRef     ? preg_replace('/^Organization\//', '', $mgRef)     : null;
+
+        return [
+            'satusehat_id'         => $res['id'],
+            'kode'                 => $res['identifier'][0]['value']               ?? null,
+            'nama'                 => $res['name']                                 ?? '',
+            'alias'                => ($res['alias'][0] ?? null),
+            'status'               => $res['status']                               ?? 'active',
+            'operational_status'   => $res['operationalStatus']['code']            ?? null,
+            'deskripsi'            => $res['description']                          ?? null,
+            'mode'                 => $res['mode']                                 ?? 'instance',
+            'tipe_layanan'         => $res['type'][0]['coding'][0]['code']         ?? null,
+            'tipe_layanan_display' => $res['type'][0]['coding'][0]['display']       ?? null,
+            'tipe_fisik'           => $res['physicalType']['coding'][0]['code']    ?? null,
+            'tipe_fisik_display'   => $res['physicalType']['coding'][0]['display'] ?? null,
+            'service_class'        => $scLabel,
+            'telepon'              => $telepon   ?: null,
+            'email'                => $email     ?: null,
+            'website'              => $website   ?: null,
+            'alamat'               => $addr['line'][0]   ?? null,
+            'kota'                 => $addr['city']      ?? null,
+            'kode_pos'             => $addr['postalCode'] ?? null,
+            'kode_provinsi'        => $getCode('province'),
+            'kode_kota'            => $getCode('city'),
+            'kode_kecamatan'       => $getCode('district'),
+            'kode_kelurahan'       => $getCode('village'),
+            'rt'                   => $getCode('rt'),
+            'rw'                   => $getCode('rw'),
+            'latitude'             => isset($res['position']['latitude'])  ? (float)$res['position']['latitude']  : null,
+            'longitude'            => isset($res['position']['longitude']) ? (float)$res['position']['longitude'] : null,
+            'managing_organization'=> $managingId,
+            'part_of'              => $partOfId,
+            'hours_all_day'        => $allDay,
+            'hours_days'           => $days     ?: null,
+            'hours_opening'        => $opening,
+            'hours_closing'        => $closing,
+            'availability_exceptions' => $res['availabilityExceptions'] ?? null,
         ];
     }
 }

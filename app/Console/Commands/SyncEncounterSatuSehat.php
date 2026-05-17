@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use App\Services\SatuSehat\Bridge\BridgeBase;
 use App\Services\SatuSehat\Config\ConfigSatusehat;
+use App\Services\SatuSehat\EncounterBuilder;
 
 class SyncEncounterSatuSehat extends Command
 {
@@ -19,14 +20,6 @@ class SyncEncounterSatuSehat extends Command
                             {--delay=300 : Delay antar request dalam milidetik}';
 
     protected $description = 'Kirim data Encounter (kunjungan) ke SatuSehat berdasarkan registrasi pending';
-
-    private const ORG_SYSTEM_PREFIX  = 'http://sys-ids.kemkes.go.id/encounter/';
-    private const CLASS_SYSTEM       = 'http://terminology.hl7.org/CodeSystem/v3-ActCode';
-    private const SVCTYPE_SYSTEM     = 'http://snomed.info.sct';
-    private const PARTICIP_SYSTEM    = 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType';
-    private const SVC_CLASS_URL      = 'https://fhir.kemkes.go.id/r4/StructureDefinition/ServiceClass';
-    private const SVC_CLASS_OUTPT    = 'http://terminology.kemkes.go.id/CodeSystem/locationServiceClass-Outpatient';
-    private const UPGRADE_CLASS_URL  = 'http://terminology.kemkes.go.id/CodeSystem/locationUpgradeClass';
 
     public function handle(): int
     {
@@ -102,7 +95,7 @@ class SyncEncounterSatuSehat extends Command
                 }
 
                 try {
-                    $payload = $this->buildPayload($reg, $orgId);
+                    $payload = EncounterBuilder::build($reg, $orgId);
                     $result  = $bridge->postJson('Encounter', $payload);
 
                     $encounterId = $result['id'] ?? null;
@@ -149,113 +142,4 @@ class SyncEncounterSatuSehat extends Command
         return self::SUCCESS;
     }
 
-    /**
-     * Build FHIR Encounter resource payload dari data registrasi.
-     */
-    private function buildPayload(object $reg, string $orgId): array
-    {
-        // Format ISO 8601 dengan timezone WIB +07:00
-        $waktu     = $reg->waktu ?? '00:00';
-        $periodStart = $reg->tanggal . 'T' . $waktu . ':00+07:00';
-
-        $payload = [
-            'resourceType' => 'Encounter',
-            'identifier'   => [[
-                'system' => self::ORG_SYSTEM_PREFIX . $orgId,
-                'value'  => $reg->nomor,
-            ]],
-            'status' => 'arrived',
-            'class'  => [
-                'system'  => self::CLASS_SYSTEM,
-                'code'    => 'AMB',
-                'display' => 'ambulatory',
-            ],
-            'serviceType' => [
-                'coding' => [[
-                    'system'  => self::SVCTYPE_SYSTEM,
-                    'code'    => '419192003',
-                    'display' => 'Internal medicine',
-                ]],
-            ],
-            'subject' => [
-                'reference' => 'Patient/' . $reg->patient_ihs_id,
-                'display'   => $reg->nama_pasien ?? '',
-            ],
-            'period' => [
-                'start' => $periodStart,
-            ],
-            'statusHistory' => [[
-                'status' => 'arrived',
-                'period' => ['start' => $periodStart],
-            ]],
-            'serviceProvider' => [
-                'reference' => 'Organization/' . $orgId,
-            ],
-        ];
-
-        // Participant (dokter) — sertakan hanya jika IHS ID tersedia
-        $participantIndividual = [];
-        if (!empty($reg->practitioner_ihs_id)) {
-            $participantIndividual['reference'] = 'Practitioner/' . $reg->practitioner_ihs_id;
-        }
-        if (!empty($reg->nama_dokter) && $reg->nama_dokter !== '-') {
-            $participantIndividual['display'] = $reg->nama_dokter;
-        }
-
-        if (!empty($participantIndividual)) {
-            $payload['participant'] = [[
-                'type' => [[
-                    'coding' => [[
-                        'system'  => self::PARTICIP_SYSTEM,
-                        'code'    => 'ATND',
-                        'display' => 'attender',
-                    ]],
-                ]],
-                'individual' => $participantIndividual,
-            ]];
-        }
-
-        // Location (poli) — sertakan hanya jika ada Location ID atau nama poli
-        $locationRef = [];
-        if (!empty($reg->satusehat_location_id)) {
-            $locationRef['reference'] = 'Location/' . $reg->satusehat_location_id;
-        }
-        if (!empty($reg->ruang_poliklinik) && $reg->ruang_poliklinik !== '0' && $reg->ruang_poliklinik !== '-') {
-            $locationRef['display'] = $reg->ruang_poliklinik;
-        }
-
-        if (!empty($locationRef)) {
-            $payload['location'] = [[
-                'location' => $locationRef,
-                'period'   => ['start' => $periodStart],
-                'extension' => [[
-                    'url'       => self::SVC_CLASS_URL,
-                    'extension' => [
-                        [
-                            'url' => 'value',
-                            'valueCodeableConcept' => [
-                                'coding' => [[
-                                    'system'  => self::SVC_CLASS_OUTPT,
-                                    'code'    => 'reguler',
-                                    'display' => 'Kelas Reguler',
-                                ]],
-                            ],
-                        ],
-                        [
-                            'url' => 'upgradeClassIndicator',
-                            'valueCodeableConcept' => [
-                                'coding' => [[
-                                    'system'  => self::UPGRADE_CLASS_URL,
-                                    'code'    => 'kelas-tetap',
-                                    'display' => 'Kelas Tetap Perawatan',
-                                ]],
-                            ],
-                        ],
-                    ],
-                ]],
-            ]];
-        }
-
-        return $payload;
-    }
 }

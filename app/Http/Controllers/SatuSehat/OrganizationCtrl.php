@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SatuSehat;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Services\SatuSehat\Bridge\BridgeBase;
 use App\Services\SatuSehat\Config\ConfigSatusehat;
 use PenggunaHelp;
@@ -172,14 +173,34 @@ class OrganizationCtrl extends Controller
      */
     private function buildPayload(Request $request): array
     {
+        // ── partOf (resolved early — needed for identifier derivation) ──
+        $partOfId = trim($request->part_of ?? '');
+
         // ── identifier ──────────────────────────────────────────────────
+        // Sub-org  → system is derived from the parent org's identifier:
+        //            parent.identifier[0].system + '/' + parent.identifier[0].value
+        // Root-org → (no kode submitted for root, so this block won't fire in practice)
         $identifier = [];
         if ($request->kode) {
-            $identifier[] = [
-                'use'    => 'official',
-                'system' => 'http://sys-ids.kemkes.go.id/organization/' . $this->orgId,
-                'value'  => $request->kode,
-            ];
+            if ($partOfId) {
+                // Fetch parent from SatuSehat to build the correct system URL
+                $parentRes    = (new BridgeBase())->getJson('Organization/' . $partOfId);
+                $parentIdent  = $parentRes['identifier'][0] ?? [];
+                $parentSystem = $parentIdent['system'] ?? ('https://fhir.kemkes.go.id/id/org-number');
+                $parentValue  = $parentIdent['value']  ?? $this->orgId;
+                $identifier[] = [
+                    'use'    => 'official',
+                    'system' => rtrim($parentSystem, '/') . '/' . $parentValue,
+                    'value'  => $request->kode,
+                ];
+            } else {
+                // No parent: standard root-level identifier
+                $identifier[] = [
+                    'use'    => 'official',
+                    'system' => 'https://fhir.kemkes.go.id/id/org-number',
+                    'value'  => $request->kode,
+                ];
+            }
         }
 
         // ── alias ───────────────────────────────────────────────────────
@@ -223,8 +244,7 @@ class OrganizationCtrl extends Controller
         }
 
         // ── partOf ──────────────────────────────────────────────────────
-        $partOfId = trim($request->part_of ?? '');
-        $partOf   = ['reference' => 'Organization/' . ($partOfId ?: $this->orgId)];
+        $partOf = ['reference' => 'Organization/' . ($partOfId ?: $this->orgId)];
 
         // ── contact ─────────────────────────────────────────────────────
         $contact = [];
@@ -282,6 +302,169 @@ class OrganizationCtrl extends Controller
         if ($contact) $payload['contact'] = $contact;
 
         return $payload;
+    }
+
+    // ── Sync to Local DB ──────────────────────────────────────────────────
+
+    /**
+     * Fetch all organizations from SatuSehat API and upsert into satusehat_organizations.
+     */
+    public function sync(Request $request)
+    {
+        if ($this->error !== 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        $bridge  = new BridgeBase();
+        $synced  = 0;
+        $failed  = 0;
+        $now     = now();
+
+        // Fetch root org first
+        $rootRes = $bridge->getJson('Organization/' . $this->orgId);
+        if (!empty($rootRes['id'])) {
+            try {
+                DB::table('satusehat_organizations')->upsert(
+                    [$this->flattenForDb($rootRes, $now)],
+                    ['satusehat_id'],
+                    array_keys($this->flattenForDb($rootRes, $now))
+                );
+                $synced++;
+            } catch (\Exception $e) {
+                $failed++;
+            }
+        }
+
+        // Fetch sub-organizations
+        $page  = 1;
+        $done  = false;
+        $url   = 'Organization?partof=' . $this->orgId . '&_count=500';
+
+        while (!$done) {
+            $raw     = $bridge->getJson($url);
+            $entries = $raw['entry'] ?? [];
+
+            if (empty($entries)) break;
+
+            $rows = [];
+            foreach ($entries as $entry) {
+                $res = $entry['resource'] ?? [];
+                if (empty($res['id'])) continue;
+                try {
+                    $rows[] = $this->flattenForDb($res, $now);
+                } catch (\Exception $e) {
+                    $failed++;
+                }
+            }
+
+            if ($rows) {
+                try {
+                    DB::table('satusehat_organizations')->upsert(
+                        $rows,
+                        ['satusehat_id'],
+                        array_diff(array_keys($rows[0]), ['satusehat_id', 'created_at'])
+                    );
+                    $synced += count($rows);
+                } catch (\Exception $e) {
+                    $failed += count($rows);
+                }
+            }
+
+            // Follow next link
+            $nextLink = collect($raw['link'] ?? [])->firstWhere('relation', 'next')['url'] ?? null;
+            if ($nextLink) {
+                // Extract relative path after base FHIR URL
+                $url  = preg_replace('/^.*?\/fhir-r4\/v1\//', '', $nextLink);
+                $page++;
+            } else {
+                $done = true;
+            }
+        }
+
+        PenggunaHelp::log("Sync Organization ke DB lokal: {$synced} berhasil, {$failed} gagal");
+
+        return response()->json([
+            'data'   => 'berhasil',
+            'synced' => $synced,
+            'failed' => $failed,
+        ]);
+    }
+
+    /**
+     * Return sync status summary from local satusehat_organizations table.
+     */
+    public function syncStatus(Request $request)
+    {
+        if ($this->error !== 'next') {
+            return response()->json(['data' => $this->error]);
+        }
+
+        $total      = DB::table('satusehat_organizations')->count();
+        $lastSynced = DB::table('satusehat_organizations')->max('synced_at');
+
+        return response()->json([
+            'data' => [
+                'total'       => $total,
+                'last_synced' => $lastSynced,
+            ],
+        ]);
+    }
+
+    /**
+     * Flatten a FHIR Organization resource into a DB row for satusehat_organizations.
+     */
+    private function flattenForDb(array $res, $now): array
+    {
+        // Telecom
+        $telepon = null;
+        $email   = null;
+        $website = null;
+        foreach (array_merge($res['telecom'] ?? [], $res['contact'][0]['telecom'] ?? []) as $t) {
+            if ($t['system'] === 'phone' && !$telepon) $telepon = $t['value'];
+            if ($t['system'] === 'email' && !$email)   $email   = $t['value'];
+            if ($t['system'] === 'url'   && !$website) $website = $t['value'];
+        }
+
+        // Address & BPS codes
+        $addr     = $res['address'][0] ?? [];
+        $adminExt = $addr['extension'][0]['extension'] ?? [];
+        $getCode  = fn($u) => collect($adminExt)->firstWhere('url', $u)['valueCode'] ?? null;
+
+        // partOf — strip "Organization/" prefix
+        $partOfRaw = $res['partOf']['reference'] ?? null;
+        $partOf    = $partOfRaw ? preg_replace('/^Organization\//', '', $partOfRaw) : null;
+
+        // identifier
+        $ident          = $res['identifier'][0] ?? [];
+        $identSystem    = $ident['system'] ?? null;
+        $identValue     = $ident['value']  ?? null;
+
+        return [
+            'satusehat_id'      => $res['id'],
+            'kode'              => $identValue,
+            'identifier_system' => $identSystem,
+            'identifier_value'  => $identValue,
+            'nama'              => $res['name']                             ?? '',
+            'alias'             => implode(', ', $res['alias'] ?? []) ?: null,
+            'aktif'             => ($res['active'] ?? false) ? true : false,
+            'tipe'              => $res['type'][0]['coding'][0]['code']    ?? null,
+            'tipe_display'      => $res['type'][0]['coding'][0]['display'] ?? null,
+            'telepon'           => $telepon,
+            'email'             => $email,
+            'website'           => $website,
+            'alamat'            => $addr['line'][0]   ?? null,
+            'kota'              => $addr['city']       ?? null,
+            'kode_pos'          => $addr['postalCode'] ?? null,
+            'kode_provinsi'     => $getCode('province'),
+            'kode_kota'         => $getCode('city'),
+            'kode_kecamatan'    => $getCode('district'),
+            'kode_kelurahan'    => $getCode('village'),
+            'part_of'           => $partOf,
+            'raw_data'          => json_encode($res),
+            'synced_at'         => $now,
+            'created_at'        => $now,
+            'updated_at'        => $now,
+        ];
     }
 
     /**

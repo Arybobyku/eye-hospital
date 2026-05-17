@@ -19,20 +19,24 @@ use App\Http\Controllers\SatuSehat\PractitionerSyncCtrl;
 
 // ── Organization ──────────────────────────────────────────────────────────
 Route::prefix('organization')->group(function () {
-    Route::post('profile', [OrganizationCtrl::class, 'profile'])->name('satusehat-org-profile');
-    Route::post('list',   [OrganizationCtrl::class, 'list'])  ->name('satusehat-org-list');
-    Route::post('add',    [OrganizationCtrl::class, 'add'])   ->name('satusehat-org-add');
-    Route::post('edit',   [OrganizationCtrl::class, 'edit'])  ->name('satusehat-org-edit');
-    Route::post('update', [OrganizationCtrl::class, 'update'])->name('satusehat-org-update');
+    Route::post('profile',      [OrganizationCtrl::class, 'profile'])    ->name('satusehat-org-profile');
+    Route::post('list',         [OrganizationCtrl::class, 'list'])       ->name('satusehat-org-list');
+    Route::post('add',          [OrganizationCtrl::class, 'add'])        ->name('satusehat-org-add');
+    Route::post('edit',         [OrganizationCtrl::class, 'edit'])       ->name('satusehat-org-edit');
+    Route::post('update',       [OrganizationCtrl::class, 'update'])     ->name('satusehat-org-update');
+    Route::post('sync',         [OrganizationCtrl::class, 'sync'])       ->name('satusehat-org-sync');
+    Route::post('sync-status',  [OrganizationCtrl::class, 'syncStatus']) ->name('satusehat-org-sync-status');
 });
 
 // ── Location ──────────────────────────────────────────────────────────────
 Route::prefix('location')->group(function () {
-    Route::post('profile', [LocationCtrl::class, 'profile'])->name('satusehat-loc-profile');
-    Route::post('list',    [LocationCtrl::class, 'list'])   ->name('satusehat-loc-list');
-    Route::post('add',     [LocationCtrl::class, 'add'])    ->name('satusehat-loc-add');
-    Route::post('edit',    [LocationCtrl::class, 'edit'])   ->name('satusehat-loc-edit');
-    Route::post('update',  [LocationCtrl::class, 'update']) ->name('satusehat-loc-update');
+    Route::post('profile',     [LocationCtrl::class, 'profile'])    ->name('satusehat-loc-profile');
+    Route::post('list',        [LocationCtrl::class, 'list'])       ->name('satusehat-loc-list');
+    Route::post('add',         [LocationCtrl::class, 'add'])        ->name('satusehat-loc-add');
+    Route::post('edit',        [LocationCtrl::class, 'edit'])       ->name('satusehat-loc-edit');
+    Route::post('update',      [LocationCtrl::class, 'update'])     ->name('satusehat-loc-update');
+    Route::post('sync',        [LocationCtrl::class, 'sync'])       ->name('satusehat-loc-sync');
+    Route::post('sync-status', [LocationCtrl::class, 'syncStatus']) ->name('satusehat-loc-sync-status');
 });
 
 // ── Patient Sync ───────────────────────────────────────────────────────────

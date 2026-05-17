@@ -127,6 +127,82 @@
 			</div>
 		</div>
 
+		<!-- ── Sync Panel ────────────────────────────────────────────────── -->
+		<div class="col-12">
+			<div class="sync-panel">
+				<div class="sync-panel-left">
+					<div class="sync-panel-icon">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+					</div>
+					<div class="sync-panel-info">
+						<div class="sync-panel-title">Sync Organization ke DB Lokal</div>
+						<div class="sync-panel-desc">
+							Simpan data Organization dari SatuSehat ke database lokal agar bisa dipakai oleh Encounter Sync tanpa perlu hit API berulang.
+						</div>
+					</div>
+				</div>
+				<div class="sync-panel-right">
+					<div class="sync-stats" v-if="syncStatus.total !== null">
+						<div class="sync-stat-item">
+							<span class="sync-stat-label">Total Tersimpan</span>
+							<span class="sync-stat-val">{{ syncStatus.total }}</span>
+						</div>
+						<div class="sync-stat-item" v-if="syncStatus.last_synced">
+							<span class="sync-stat-label">Terakhir Sync</span>
+							<span class="sync-stat-val">{{ formatSyncTime(syncStatus.last_synced) }}</span>
+						</div>
+					</div>
+					<button class="sync-btn" :disabled="syncing" @click="runSync">
+						<span v-if="!syncing">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;vertical-align:middle;margin-right:5px"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+							Sync ke DB Lokal
+						</span>
+						<span v-else style="display:flex;align-items:center;gap:6px">
+							<svg style="width:14px;height:14px;animation:spin .75s linear infinite" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0 1 15-6.7L21 8"/></svg>
+							Menyinkronkan...
+						</span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- ── Org Chart ─────────────────────────────────────────────────── -->
+		<div class="col-12">
+			<div class="org-chart-wrapper">
+				<div class="ocw-header" @click="chartOpen = !chartOpen">
+					<div class="ocw-title">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="ocw-icon"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="8.5" y="14" width="7" height="7" rx="1"/><line x1="6.5" y1="10" x2="6.5" y2="17"/><line x1="17.5" y1="10" x2="17.5" y2="12.5"/><line x1="6.5" y1="14" x2="17.5" y2="14"/><line x1="12" y1="14" x2="12" y2="10"/></svg>
+						Org Chart — Struktur Organisasi SatuSehat
+					</div>
+					<div class="ocw-toggle">
+						<span class="ocw-count" v-if="chartNodes.length">{{ chartNodes.length }} organisasi</span>
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="ocw-chevron" :class="chartOpen ? 'chevron-up' : ''"><polyline points="6 9 12 15 18 9"/></svg>
+					</div>
+				</div>
+
+				<div class="ocw-body" v-show="chartOpen">
+					<div v-if="chartLoading" class="chart-loading">
+						<div class="chart-spin"></div>
+						<span>Memuat struktur organisasi...</span>
+					</div>
+					<div v-else-if="!chartNodes.length" class="chart-empty">
+						Belum ada data organisasi. Tambahkan suborganisasi terlebih dahulu.
+					</div>
+					<div v-else class="chart-scroll">
+						<div class="chart-tree">
+							<OrgNode
+								v-for="root in chartRoots"
+								:key="root.satusehat_id"
+								:node="root"
+								:children-map="chartChildrenMap"
+								:depth="0"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- ── Datatable ──────────────────────────────────────────────────── -->
 		<div class="col-12">
 			<Datatable ref="Datatable" :module="module" @tablereload="tablereload" @tablebutton="tablebutton"></Datatable>
@@ -152,6 +228,7 @@ export default {
 		toast, Swal,
 		FormOrganization: defineAsyncComponent(() => import('./FormOrganization.vue')),
 		Datatable:        defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+		OrgNode:          defineAsyncComponent(() => import('./OrgNode.vue')),
 	},
 	created() {},
 	mounted() {
@@ -159,6 +236,8 @@ export default {
 		setTimeout(() => { vm.titletrigger(); }, 250);
 		vm.loadmain();
 		vm.loadProfile();
+		vm.loadChart();
+		vm.loadSyncStatus();
 	},
 	data() {
 		return {
@@ -166,11 +245,13 @@ export default {
 			position: '',
 			attach: {
 				link: {
-					profile: '/satusehat-api/organization/profile',
-					list:   '/satusehat-api/organization/list',
-					add:    '/satusehat-api/organization/add',
-					edit:   '/satusehat-api/organization/edit',
-					update: '/satusehat-api/organization/update',
+					profile:    '/satusehat-api/organization/profile',
+					list:       '/satusehat-api/organization/list',
+					add:        '/satusehat-api/organization/add',
+					edit:       '/satusehat-api/organization/edit',
+					update:     '/satusehat-api/organization/update',
+					sync:       '/satusehat-api/organization/sync',
+					syncStatus: '/satusehat-api/organization/sync-status',
 				},
 				url: '', data: null
 			},
@@ -190,10 +271,50 @@ export default {
 			// Profile card
 			org: null,
 			profileLoading: true,
+
+			// Org chart
+			chartOpen: true,
+			chartLoading: false,
+			chartNodes: [],
+
+			// Sync to local DB
+			syncing: false,
+			syncStatus: { total: null, last_synced: null },
 		};
+	},
+	computed: {
+		// Build a map: parentId → [children]
+		chartChildrenMap() {
+			const map = {};
+			const allIds = new Set(vm.chartNodes.map(n => n.satusehat_id));
+			for (const node of vm.chartNodes) {
+				const parentId = node.part_of || '';
+				if (!map[parentId]) map[parentId] = [];
+				map[parentId].push(node);
+			}
+			return map;
+		},
+		// Nodes with no parent (or whose parent isn't in the list)
+		chartRoots() {
+			const allIds = new Set(vm.chartNodes.map(n => n.satusehat_id));
+			return vm.chartNodes.filter(n => !n.part_of || !allIds.has(n.part_of));
+		},
 	},
 	methods: {
 		nullAndZero, datename,
+
+		// ── Org chart ─────────────────────────────────────────────────────────
+		loadChart() {
+			vm.chartLoading = true;
+			const fd = new FormData();
+			fd.append('search', ''); fd.append('column', ''); fd.append('page', 1); fd.append('limit', 500);
+			axios.post(vm.attach.link.list, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+				.then(r => {
+					vm.chartNodes = r.data?.data ?? [];
+				})
+				.catch(() => {})
+				.finally(() => { vm.chartLoading = false; });
+		},
 
 		// ── Profile card ─────────────────────────────────────────────────────
 		loadProfile() {
@@ -340,7 +461,7 @@ export default {
 			} else if (vm.position === 'adddata') {
 				vm.loadingModal('formorganization');
 				vm.$refs.FormOrganization.hide();
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500);
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); vm.loadChart(); }, 500);
 			} else if (vm.position === 'editdata') {
 				vm.$refs.FormOrganization.setdataform(response);
 				vm.position = 'updatedata';
@@ -348,7 +469,7 @@ export default {
 			} else if (vm.position === 'updatedata') {
 				vm.loadingModal('formorganization');
 				vm.$refs.FormOrganization.hide();
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500);
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); vm.loadChart(); }, 500);
 			}
 			vm.message('success', active);
 		},
@@ -369,6 +490,44 @@ export default {
 		runconfirm(posisi) {
 			if (posisi === 'formorganization') { vm.loadingModal('formorganization'); }
 			vm.executions();
+		},
+
+		// ── Sync to local DB ─────────────────────────────────────────────
+		loadSyncStatus() {
+			axios.post(vm.attach.link.syncStatus, new FormData(), {
+				headers: { 'Content-Type': 'multipart/form-data' }
+			}).then(r => {
+				if (r.data?.data && typeof r.data.data === 'object') {
+					vm.syncStatus = r.data.data;
+				}
+			}).catch(() => {});
+		},
+
+		runSync() {
+			if (vm.syncing) return;
+			vm.syncing = true;
+			axios.post(vm.attach.link.sync, new FormData(), {
+				headers: { 'Content-Type': 'multipart/form-data' }
+			}).then(r => {
+				const synced = r.data?.synced ?? 0;
+				const failed = r.data?.failed ?? 0;
+				vm.notification(`Sync berhasil: ${synced} organization tersimpan` + (failed ? `, ${failed} gagal` : '') + '.', 4000, 'success');
+				vm.loadSyncStatus();
+			}).catch(() => {
+				vm.notification('Sync Organization gagal.', 3500, 'error');
+			}).finally(() => {
+				vm.syncing = false;
+			});
+		},
+
+		formatSyncTime(ts) {
+			if (!ts) return '-';
+			try {
+				return new Date(ts).toLocaleString('id-ID', {
+					day: '2-digit', month: 'short', year: 'numeric',
+					hour: '2-digit', minute: '2-digit',
+				});
+			} catch { return ts; }
 		},
 
 		// ── Wajib disertakan ─────────────────────────────────────────────
@@ -543,6 +702,78 @@ export default {
 	margin-bottom: 6px;
 }
 
+/* ── Org Chart ─────────────────────────────────────────────────────────── */
+.org-chart-wrapper {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	margin-bottom: 20px;
+	overflow: hidden;
+	box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+.ocw-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14px 20px;
+	background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+	cursor: pointer;
+	user-select: none;
+}
+.ocw-header:hover { background: linear-gradient(135deg, #1e293b 0%, #1e3a5f 100%); }
+.ocw-title {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 13px;
+	font-weight: 700;
+	color: #fff;
+	letter-spacing: .3px;
+}
+.ocw-icon { width: 18px; height: 18px; stroke: #93c5fd; flex-shrink: 0; }
+.ocw-toggle { display: flex; align-items: center; gap: 8px; }
+.ocw-count { font-size: 11px; color: rgba(255,255,255,.6); background: rgba(255,255,255,.1); padding: 2px 9px; border-radius: 20px; }
+.ocw-chevron { width: 16px; height: 16px; stroke: rgba(255,255,255,.7); transition: transform .25s; }
+.chevron-up { transform: rotate(180deg); }
+
+.ocw-body { padding: 20px; }
+
+/* Loading state */
+.chart-loading {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 20px;
+	color: #64748b;
+	font-size: 13px;
+}
+.chart-spin {
+	width: 20px; height: 20px;
+	border: 2px solid #e2e8f0;
+	border-top-color: #1c84ee;
+	border-radius: 50%;
+	animation: spin .75s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.chart-empty {
+	text-align: center;
+	padding: 30px;
+	color: #94a3b8;
+	font-size: 13px;
+}
+
+/* Scrollable tree container */
+.chart-scroll { overflow-x: auto; padding-bottom: 10px; }
+.chart-tree {
+	display: flex;
+	gap: 24px;
+	justify-content: center;
+	align-items: flex-start;
+	min-width: max-content;
+	padding: 8px 16px;
+}
+
 /* ── Skeleton ──────────────────────────────────────────────────────────── */
 .org-profile-skeleton {
 	display: flex;
@@ -567,4 +798,57 @@ export default {
 .skel-h2 { height: 14px; width: 35%; }
 .skel-h3 { height: 14px; width: 70%; }
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ── Sync Panel ────────────────────────────────────────────────────────── */
+.sync-panel {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	margin-bottom: 20px;
+	padding: 16px 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	flex-wrap: wrap;
+	box-shadow: 0 1px 4px rgba(0,0,0,.04);
+}
+.sync-panel-left  { display: flex; align-items: flex-start; gap: 14px; flex: 1; min-width: 0; }
+.sync-panel-icon {
+	width: 40px; height: 40px; flex-shrink: 0;
+	background: linear-gradient(135deg, #eff6ff, #dbeafe);
+	border-radius: 10px;
+	display: flex; align-items: center; justify-content: center;
+}
+.sync-panel-icon svg { width: 20px; height: 20px; stroke: #1c84ee; }
+.sync-panel-info { flex: 1; min-width: 0; }
+.sync-panel-title {
+	font-size: 13px; font-weight: 700; color: #1e293b; margin-bottom: 4px;
+}
+.sync-panel-desc { font-size: 12px; color: #64748b; line-height: 1.5; }
+
+.sync-panel-right { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+
+.sync-stats { display: flex; gap: 16px; }
+.sync-stat-item { text-align: center; }
+.sync-stat-label { display: block; font-size: 10px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
+.sync-stat-val   { font-size: 18px; font-weight: 700; color: #1c84ee; }
+.sync-stat-item:last-child .sync-stat-val { font-size: 12px; color: #475569; font-weight: 600; }
+
+.sync-btn {
+	display: inline-flex;
+	align-items: center;
+	padding: 8px 16px;
+	background: linear-gradient(135deg, #1c84ee, #1264b3);
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	font-size: 13px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: opacity .2s;
+	white-space: nowrap;
+}
+.sync-btn:disabled { opacity: .65; cursor: not-allowed; }
+.sync-btn:not(:disabled):hover { opacity: .88; }
 </style>

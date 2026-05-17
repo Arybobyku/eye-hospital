@@ -131,21 +131,75 @@
 						<Inputed :ref="form.rw.name" :form="form.rw"></Inputed>
 					</div>
 
-					<!-- Kode Wilayah BPS -->
+					<!-- ── Kode Wilayah BPS — Cascading Dropdown ── -->
 					<div class="col-12">
-						<div class="form-sub-label">Kode Wilayah Administratif (BPS / SatuSehat)</div>
+						<div class="form-sub-label">
+							Kode Wilayah Administratif (BPS / SatuSehat)
+							<span v-if="wilayah.loadingAny" class="wil-loading-badge">Memuat...</span>
+						</div>
 					</div>
+
+					<!-- Provinsi -->
 					<div class="col-3">
-						<Inputed :ref="form.kode_provinsi.name" :form="form.kode_provinsi"></Inputed>
+						<div class="form-self-group">
+							<select v-model="wilayah.province" @change="onProvinceChange"
+								class="ss-select" id="dd_prov_loc"
+								:disabled="wilayah.loadingProvinces">
+								<option value="">
+									{{ wilayah.loadingProvinces ? '— Memuat... —' : (wilayah.provinces.length ? '— Pilih Provinsi —' : '— Belum ada data —') }}
+								</option>
+								<option v-for="p in wilayah.provinces" :key="p.code" :value="p.code">{{ p.name }}</option>
+							</select>
+							<label for="dd_prov_loc">Provinsi <code v-if="form.kode_provinsi.value" class="wil-code">{{ form.kode_provinsi.value }}</code></label>
+						</div>
 					</div>
+
+					<!-- Kota/Kabupaten -->
 					<div class="col-3">
-						<Inputed :ref="form.kode_kota.name" :form="form.kode_kota"></Inputed>
+						<div class="form-self-group">
+							<select v-model="wilayah.city" @change="onCityChange"
+								class="ss-select" id="dd_city_loc"
+								:disabled="wilayah.loadingCities || !wilayah.province">
+								<option value="">{{ wilayah.loadingCities ? '— Memuat... —' : '— Pilih Kota/Kab —' }}</option>
+								<option v-for="c in wilayah.cities" :key="c.code" :value="c.code">{{ c.name }}</option>
+							</select>
+							<label for="dd_city_loc">Kota / Kabupaten <code v-if="form.kode_kota.value" class="wil-code">{{ form.kode_kota.value }}</code></label>
+						</div>
 					</div>
+
+					<!-- Kecamatan -->
 					<div class="col-3">
-						<Inputed :ref="form.kode_kecamatan.name" :form="form.kode_kecamatan"></Inputed>
+						<div class="form-self-group">
+							<select v-model="wilayah.district" @change="onDistrictChange"
+								class="ss-select" id="dd_dist_loc"
+								:disabled="wilayah.loadingDistricts || !wilayah.city">
+								<option value="">{{ wilayah.loadingDistricts ? '— Memuat... —' : '— Pilih Kecamatan —' }}</option>
+								<option v-for="d in wilayah.districts" :key="d.code" :value="d.code">{{ d.name }}</option>
+							</select>
+							<label for="dd_dist_loc">Kecamatan <code v-if="form.kode_kecamatan.value" class="wil-code">{{ form.kode_kecamatan.value }}</code></label>
+						</div>
 					</div>
+
+					<!-- Kelurahan/Desa -->
 					<div class="col-3">
-						<Inputed :ref="form.kode_kelurahan.name" :form="form.kode_kelurahan"></Inputed>
+						<div class="form-self-group">
+							<select v-model="wilayah.village" @change="onVillageChange"
+								class="ss-select" id="dd_vil_loc"
+								:disabled="wilayah.loadingVillages || !wilayah.district">
+								<option value="">{{ wilayah.loadingVillages ? '— Memuat... —' : '— Pilih Kelurahan —' }}</option>
+								<option v-for="v in wilayah.villages" :key="v.code" :value="v.code">{{ v.name }}</option>
+							</select>
+							<label for="dd_vil_loc">Kelurahan / Desa <code v-if="form.kode_kelurahan.value" class="wil-code">{{ form.kode_kelurahan.value }}</code></label>
+						</div>
+					</div>
+
+					<!-- Hint bila belum ada data wilayah -->
+					<div class="col-12" v-if="!wilayah.loadingProvinces && !wilayah.provinces.length">
+						<div class="wil-empty-hint">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="wil-hint-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+							Data wilayah belum tersedia. Fetch terlebih dahulu di menu
+							<strong>SatuSehat → Wilayah</strong> lalu coba lagi.
+						</div>
 					</div>
 
 					<!-- ── SECTION: Posisi Geografis ── -->
@@ -165,11 +219,36 @@
 						<div class="form-section-title">Organisasi &amp; Relasi</div>
 					</div>
 
+					<!-- Managing Organization — dropdown dari daftar org -->
 					<div class="col-6">
-						<Inputed :ref="form.managing_organization.name" :form="form.managing_organization"></Inputed>
+						<div class="form-self-group">
+							<select v-model="form.managing_organization.value" class="ss-select" :id="form.managing_organization.for_id">
+								<option value="">— Gunakan default organisasi —</option>
+								<option v-for="org in orgList" :key="org.satusehat_id" :value="org.satusehat_id">
+									{{ org.nama }} — {{ org.satusehat_id }}
+								</option>
+							</select>
+							<label :for="form.managing_organization.for_id">Managing Organization</label>
+						</div>
 					</div>
+
+					<!-- Part Of — dropdown dari daftar lokasi yang sudah ada -->
 					<div class="col-6">
-						<Inputed :ref="form.part_of.name" :form="form.part_of"></Inputed>
+						<div class="form-self-group">
+							<select v-model="form.part_of.value" class="ss-select" :id="form.part_of.for_id"
+								:disabled="locLoading">
+								<option value="">
+									{{ locLoading ? '— Memuat lokasi... —' : (availableLocList.length ? '— Lokasi induk (root / tidak ada) —' : '— Belum ada lokasi tersedia —') }}
+								</option>
+								<option v-for="loc in availableLocList" :key="loc.satusehat_id" :value="loc.satusehat_id">
+									{{ loc.nama }}{{ loc.kode && loc.kode !== '-' ? ' (' + loc.kode + ')' : '' }}
+								</option>
+							</select>
+							<label :for="form.part_of.for_id">
+								{{ form.part_of.title }}
+								<code v-if="form.part_of.value" class="wil-code">{{ form.part_of.value.slice(0,16) }}…</code>
+							</label>
+						</div>
 					</div>
 
 					<!-- ── SECTION: Jam Operasional ── -->
@@ -215,6 +294,16 @@ import { formlocation } from './FormData.js';
 import { parselocation } from './Attachment.js';
 var vm, body;
 
+const WILAYAH_API  = '/satusehat-api/wilayah/select';
+const ORG_LIST_API = '/satusehat-api/organization/list';
+const LOC_LIST_API = '/satusehat-api/location/list';
+
+function postJSON(url, payload = {}) {
+	const fd = new FormData();
+	Object.entries(payload).forEach(([k, v]) => fd.append(k, v));
+	return axios.post(url, fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+}
+
 export default {
 	emits: ['dialog', 'parsingForm'],
 	components: {
@@ -223,17 +312,173 @@ export default {
 	mounted() {
 		vm = this; body = document.body;
 		vm.form = vm.formlocation();
+		vm.loadProvinces();
+		vm.loadOrgList();
+		vm.loadLocList();
 	},
 	data() {
 		return {
 			terminate: { show: false, display: 'display: none' },
 			form: null,
 			btnlbl: '',
+
+			// ── Org list untuk dropdown managingOrganization ──────────────────
+			orgList: [],
+
+			// ── Location list untuk dropdown partOf ───────────────────────────
+			locList: [],
+			locLoading: false,
+
+			// ── Wilayah cascade state ─────────────────────────────────────────
+			wilayah: {
+				provinces: [], cities: [], districts: [], villages: [],
+				province: '', city: '', district: '', village: '',
+				loadingProvinces: false,
+				loadingCities:    false,
+				loadingDistricts: false,
+				loadingVillages:  false,
+				get loadingAny() {
+					return this.loadingProvinces || this.loadingCities || this.loadingDistricts || this.loadingVillages;
+				},
+			},
 		};
+	},
+	computed: {
+		// Exclude the location currently being edited from the parent options
+		// (a location cannot be its own ancestor)
+		availableLocList() {
+			const currentId = vm?.form?.satusehat_id ?? '';
+			return vm.locList.filter(l => l.satusehat_id !== currentId);
+		},
 	},
 	methods: {
 		formlocation, parselocation,
 
+		// ── Org list for managingOrganization dropdown ────────────────────────
+		loadOrgList() {
+			const fd = new FormData();
+			fd.append('search', ''); fd.append('column', ''); fd.append('page', 1); fd.append('limit', 200);
+			axios.post(ORG_LIST_API, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+				.then(r => { vm.orgList = r.data?.data ?? []; })
+				.catch(() => {});
+		},
+
+		// ── Location list for partOf dropdown ────────────────────────────────
+		loadLocList() {
+			vm.locLoading = true;
+			const fd = new FormData();
+			fd.append('search', ''); fd.append('column', ''); fd.append('page', 1); fd.append('limit', 500);
+			axios.post(LOC_LIST_API, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+				.then(r => { vm.locList = r.data?.data ?? []; })
+				.catch(() => {})
+				.finally(() => { vm.locLoading = false; });
+		},
+
+		// ── Wilayah cascade ───────────────────────────────────────────────────
+		loadProvinces() {
+			vm.wilayah.loadingProvinces = true;
+			postJSON(WILAYAH_API, { level: 'province' })
+				.then(r => { vm.wilayah.provinces = r.data?.data ?? []; })
+				.catch(() => {})
+				.finally(() => { vm.wilayah.loadingProvinces = false; });
+		},
+
+		loadCities(provinceCode) {
+			vm.wilayah.loadingCities = true;
+			vm.wilayah.cities = []; vm.wilayah.districts = []; vm.wilayah.villages = [];
+			postJSON(WILAYAH_API, { level: 'city', parent_code: provinceCode })
+				.then(r => { vm.wilayah.cities = r.data?.data ?? []; })
+				.catch(() => {})
+				.finally(() => { vm.wilayah.loadingCities = false; });
+		},
+
+		loadDistricts(cityCode) {
+			vm.wilayah.loadingDistricts = true;
+			vm.wilayah.districts = []; vm.wilayah.villages = [];
+			postJSON(WILAYAH_API, { level: 'district', parent_code: cityCode })
+				.then(r => { vm.wilayah.districts = r.data?.data ?? []; })
+				.catch(() => {})
+				.finally(() => { vm.wilayah.loadingDistricts = false; });
+		},
+
+		loadVillages(districtCode) {
+			vm.wilayah.loadingVillages = true;
+			vm.wilayah.villages = [];
+			postJSON(WILAYAH_API, { level: 'sub_district', parent_code: districtCode })
+				.then(r => { vm.wilayah.villages = r.data?.data ?? []; })
+				.catch(() => {})
+				.finally(() => { vm.wilayah.loadingVillages = false; });
+		},
+
+		onProvinceChange() {
+			const code = vm.wilayah.province;
+			vm.form.kode_provinsi.value = code;
+			vm.wilayah.city = ''; vm.wilayah.district = ''; vm.wilayah.village = '';
+			vm.form.kode_kota.value = ''; vm.form.kode_kecamatan.value = ''; vm.form.kode_kelurahan.value = '';
+			vm.wilayah.cities = []; vm.wilayah.districts = []; vm.wilayah.villages = [];
+			if (code) vm.loadCities(code);
+		},
+
+		onCityChange() {
+			const code = vm.wilayah.city;
+			vm.form.kode_kota.value = code;
+			vm.wilayah.district = ''; vm.wilayah.village = '';
+			vm.form.kode_kecamatan.value = ''; vm.form.kode_kelurahan.value = '';
+			vm.wilayah.districts = []; vm.wilayah.villages = [];
+			if (code) vm.loadDistricts(code);
+		},
+
+		onDistrictChange() {
+			const code = vm.wilayah.district;
+			vm.form.kode_kecamatan.value = code;
+			vm.wilayah.village = '';
+			vm.form.kode_kelurahan.value = '';
+			vm.wilayah.villages = [];
+			if (code) vm.loadVillages(code);
+		},
+
+		onVillageChange() {
+			vm.form.kode_kelurahan.value = vm.wilayah.village;
+		},
+
+		// Restore cascading dropdowns when editing (sequential async)
+		async restoreWilayah(provCode, cityCode, distCode, vilCode) {
+			if (!provCode) return;
+			vm.wilayah.province = provCode;
+			vm.form.kode_provinsi.value = provCode;
+
+			vm.wilayah.loadingCities = true;
+			try {
+				const rc = await postJSON(WILAYAH_API, { level: 'city', parent_code: provCode });
+				vm.wilayah.cities = rc.data?.data ?? [];
+			} catch(e) {} finally { vm.wilayah.loadingCities = false; }
+
+			if (!cityCode) return;
+			vm.wilayah.city = cityCode;
+			vm.form.kode_kota.value = cityCode;
+
+			vm.wilayah.loadingDistricts = true;
+			try {
+				const rd = await postJSON(WILAYAH_API, { level: 'district', parent_code: cityCode });
+				vm.wilayah.districts = rd.data?.data ?? [];
+			} catch(e) {} finally { vm.wilayah.loadingDistricts = false; }
+
+			if (!distCode) return;
+			vm.wilayah.district = distCode;
+			vm.form.kode_kecamatan.value = distCode;
+
+			vm.wilayah.loadingVillages = true;
+			try {
+				const rv = await postJSON(WILAYAH_API, { level: 'sub_district', parent_code: distCode });
+				vm.wilayah.villages = rv.data?.data ?? [];
+			} catch(e) {} finally { vm.wilayah.loadingVillages = false; }
+
+			if (!vilCode) return;
+			vm.wilayah.village = vilCode;
+			vm.form.kode_kelurahan.value = vilCode;
+		},
+
+		// ── Form actions ──────────────────────────────────────────────────────
 		action() {
 			let next = true;
 			for (const key in vm.form) {
@@ -253,7 +498,12 @@ export default {
 			vm.terminate.show    = true;
 		},
 
-		aturulang() { vm.form = vm.formlocation(); },
+		aturulang() {
+			vm.form = vm.formlocation();
+			vm.wilayah.province = ''; vm.wilayah.city = '';
+			vm.wilayah.district = ''; vm.wilayah.village = '';
+			vm.wilayah.cities = []; vm.wilayah.districts = []; vm.wilayah.villages = [];
+		},
 
 		hide() {
 			vm.terminate.show = false;
@@ -290,10 +540,9 @@ export default {
 			vm.form.tipe_fisik.value   = res.physicalType?.coding?.[0]?.code ?? 'ro';
 
 			// Service class (extension)
-			const scExt = (res.extension ?? []).find(e => e.url === 'https://fhir.kemkes.go.id/r4/StructureDefinition/LocationServiceClass');
+			const scExt   = (res.extension ?? []).find(e => e.url === 'https://fhir.kemkes.go.id/r4/StructureDefinition/LocationServiceClass');
 			const scInner = scExt?.extension?.find(e => e.url === 'inpatientServiceClass');
-			const scCode = scInner?.valueCodeableConcept?.coding?.[0]?.code ?? '';
-			// Map kelas_1 → '1', kelas_2 → '2', etc.
+			const scCode  = scInner?.valueCodeableConcept?.coding?.[0]?.code ?? '';
 			vm.form.service_class.value = scCode.replace('kelas_', '').toUpperCase() || '';
 
 			// Telecom
@@ -314,12 +563,15 @@ export default {
 			vm.form.kode_pos.value    = addr.postalCode  ?? '';
 
 			const adminExt = addr.extension?.[0]?.extension ?? [];
-			vm.form.kode_provinsi.value  = adminExt.find(e => e.url === 'province')?.valueCode  ?? '';
-			vm.form.kode_kota.value      = adminExt.find(e => e.url === 'city')?.valueCode      ?? '';
-			vm.form.kode_kecamatan.value = adminExt.find(e => e.url === 'district')?.valueCode  ?? '';
-			vm.form.kode_kelurahan.value = adminExt.find(e => e.url === 'village')?.valueCode   ?? '';
-			vm.form.rt.value             = adminExt.find(e => e.url === 'rt')?.valueCode         ?? '';
-			vm.form.rw.value             = adminExt.find(e => e.url === 'rw')?.valueCode         ?? '';
+			const provCode  = adminExt.find(e => e.url === 'province')?.valueCode  ?? '';
+			const cityCode  = adminExt.find(e => e.url === 'city')?.valueCode      ?? '';
+			const distCode  = adminExt.find(e => e.url === 'district')?.valueCode  ?? '';
+			const vilCode   = adminExt.find(e => e.url === 'village')?.valueCode   ?? '';
+			vm.form.rt.value = adminExt.find(e => e.url === 'rt')?.valueCode ?? '';
+			vm.form.rw.value = adminExt.find(e => e.url === 'rw')?.valueCode ?? '';
+
+			// Restore cascading wilayah dropdowns
+			vm.restoreWilayah(provCode, cityCode, distCode, vilCode);
 
 			// Posisi
 			vm.form.latitude.value  = String(res.position?.latitude  ?? '');
@@ -364,7 +616,8 @@ export default {
 	color: #334155;
 	margin-top: 4px;
 }
-.ss-select:focus { outline: none; border-color: #1c84ee; }
+.ss-select:focus { outline: none; border-color: #0f766e; }
+.ss-select:disabled { background: #f8fafc; color: #94a3b8; cursor: not-allowed; }
 
 /* Section dividers */
 .form-section-title {
@@ -396,5 +649,43 @@ export default {
 	border-radius: 6px;
 	padding: 5px 10px;
 	margin: 4px 0 2px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
+
+/* Wilayah badge (shows selected code inline in label) */
+.wil-code {
+	font-size: 10px;
+	background: #dbeafe;
+	color: #1d4ed8;
+	border-radius: 4px;
+	padding: 0 5px;
+	font-family: monospace;
+	font-style: normal;
+}
+.wil-loading-badge {
+	font-size: 10px;
+	background: #fef9c3;
+	color: #ca8a04;
+	border-radius: 10px;
+	padding: 1px 8px;
+	font-weight: 600;
+	animation: pulse-badge 1.2s ease-in-out infinite;
+}
+@keyframes pulse-badge { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+
+/* Wilayah empty hint */
+.wil-empty-hint {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	background: #fff7ed;
+	border: 1px solid #fed7aa;
+	border-radius: 6px;
+	padding: 8px 12px;
+	font-size: 12px;
+	color: #9a3412;
+}
+.wil-hint-icon { width: 16px; height: 16px; stroke: #ea580c; flex-shrink: 0; }
 </style>

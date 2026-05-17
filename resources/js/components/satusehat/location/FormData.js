@@ -187,7 +187,7 @@ export const formlocation = () => {
 			required: '', name: 'managing_organization', value: '', disabled: false, show: true, kinds: ''
 		},
 		part_of: {
-			title: 'Bagian dari Lokasi Induk (ID SatuSehat Location — opsional)', for_id: 'form_part_of', type: 'text',
+			title: 'Bagian dari Lokasi Induk (partOf — kosongkan = root)', for_id: 'form_part_of', type: 'select',
 			required: '', name: 'part_of', value: '', disabled: false, show: true, kinds: ''
 		},
 

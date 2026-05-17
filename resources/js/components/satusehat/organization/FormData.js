@@ -33,7 +33,7 @@ export const formorganization = () => {
 			]
 		},
 		part_of: {
-			title: 'Bagian dari Organisasi (ID SatuSehat Induk — kosongkan = induk utama)', for_id: 'form_part_of', type: 'text',
+			title: 'Bagian dari Organisasi (partOf — kosongkan = induk utama)', for_id: 'form_part_of', type: 'select',
 			required: '', name: 'part_of', value: '', disabled: false, show: true, kinds: ''
 		},
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
+use App\Services\SatuSehat\EncounterBuilder;
 use PenggunaHelp;
 
 class EncounterSyncCtrl extends Controller
@@ -298,7 +299,7 @@ class EncounterSyncCtrl extends Controller
         }
 
         try {
-            $payload = $this->buildEncounterPayload($reg, $orgId);
+            $payload = EncounterBuilder::build($reg, $orgId);
             $result  = $bridge->postJson('Encounter', $payload);
 
             $encounterId = $result['id'] ?? null;
@@ -333,89 +334,6 @@ class EncounterSyncCtrl extends Controller
             ]);
             return response()->json(['data' => 'gagal', 'message' => $e->getMessage()], 500);
         }
-    }
-
-    /**
-     * Build FHIR Encounter payload — shared antara syncOne() dan Artisan command.
-     * (Duplikasi minimal; payload builder di Command tetap mandiri agar bisa dipakai via CLI.)
-     */
-    private function buildEncounterPayload(object $reg, string $orgId): array
-    {
-        $waktu       = $reg->waktu ?? '00:00';
-        $periodStart = $reg->tanggal . 'T' . $waktu . ':00+07:00';
-
-        $payload = [
-            'resourceType' => 'Encounter',
-            'identifier'   => [[
-                'system' => 'http://sys-ids.kemkes.go.id/encounter/' . $orgId,
-                'value'  => $reg->nomor,
-            ]],
-            'status' => 'arrived',
-            'class'  => [
-                'system'  => 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
-                'code'    => 'AMB',
-                'display' => 'ambulatory',
-            ],
-            'serviceType' => [
-                'coding' => [[
-                    'system'  => 'http://snomed.info.sct',
-                    'code'    => '419192003',
-                    'display' => 'Internal medicine',
-                ]],
-            ],
-            'subject' => [
-                'reference' => 'Patient/' . $reg->patient_ihs_id,
-                'display'   => $reg->nama_pasien ?? '',
-            ],
-            'period'        => ['start' => $periodStart],
-            'statusHistory' => [['status' => 'arrived', 'period' => ['start' => $periodStart]]],
-            'serviceProvider' => ['reference' => 'Organization/' . $orgId],
-        ];
-
-        // Practitioner
-        $individual = [];
-        if (!empty($reg->practitioner_ihs_id)) {
-            $individual['reference'] = 'Practitioner/' . $reg->practitioner_ihs_id;
-        }
-        if (!empty($reg->nama_dokter) && $reg->nama_dokter !== '-') {
-            $individual['display'] = $reg->nama_dokter;
-        }
-        if (!empty($individual)) {
-            $payload['participant'] = [[
-                'type' => [[
-                    'coding' => [[
-                        'system'  => 'http://terminology.hl7.org/CodeSystem/v3-ParticipationType',
-                        'code'    => 'ATND',
-                        'display' => 'attender',
-                    ]],
-                ]],
-                'individual' => $individual,
-            ]];
-        }
-
-        // Location
-        $locationRef = [];
-        if (!empty($reg->satusehat_location_id)) {
-            $locationRef['reference'] = 'Location/' . $reg->satusehat_location_id;
-        }
-        if (!empty($reg->ruang_poliklinik) && $reg->ruang_poliklinik !== '0' && $reg->ruang_poliklinik !== '-') {
-            $locationRef['display'] = $reg->ruang_poliklinik;
-        }
-        if (!empty($locationRef)) {
-            $payload['location'] = [[
-                'location' => $locationRef,
-                'period'   => ['start' => $periodStart],
-                'extension' => [[
-                    'url'       => 'https://fhir.kemkes.go.id/r4/StructureDefinition/ServiceClass',
-                    'extension' => [
-                        ['url' => 'value', 'valueCodeableConcept' => ['coding' => [['system' => 'http://terminology.kemkes.go.id/CodeSystem/locationServiceClass-Outpatient', 'code' => 'reguler', 'display' => 'Kelas Reguler']]]],
-                        ['url' => 'upgradeClassIndicator', 'valueCodeableConcept' => ['coding' => [['system' => 'http://terminology.kemkes.go.id/CodeSystem/locationUpgradeClass', 'code' => 'kelas-tetap', 'display' => 'Kelas Tetap Perawatan']]]],
-                    ],
-                ]],
-            ]];
-        }
-
-        return $payload;
     }
 
     /**

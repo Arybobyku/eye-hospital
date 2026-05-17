@@ -59,6 +59,30 @@
 						</div>
 					</div>
 
+					<!-- Divider -->
+					<div class="lsc-divider"></div>
+
+					<!-- Sync ke database lokal -->
+					<div class="lsc-sync-group">
+						<div class="lsc-section-title">Database Lokal</div>
+						<div class="lsc-sync-meta">
+							<span class="lsc-sync-count">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+								<strong>{{ syncStatus.total }}</strong> tersimpan
+							</span>
+							<span class="lsc-sync-time" v-if="syncStatus.last_synced">
+								<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+								{{ formatSyncTime(syncStatus.last_synced) }}
+							</span>
+							<span class="lsc-sync-time" v-else style="color:#94a3b8">Belum pernah disinkronkan</span>
+						</div>
+						<button class="lsc-sync-btn" @click="runSync" :disabled="syncing">
+							<svg v-if="!syncing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+							<svg v-else viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" class="spin-icon"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
+							{{ syncing ? 'Menyinkronkan...' : 'Sync ke DB Lokal' }}
+						</button>
+					</div>
+
 				</div>
 			</div>
 
@@ -71,6 +95,44 @@
 				</div>
 			</div>
 
+		</div>
+
+		<!-- ── Location Chart ────────────────────────────────────────────── -->
+		<div class="col-12">
+			<div class="loc-chart-wrapper">
+				<div class="lcw-header" @click="chartOpen = !chartOpen">
+					<div class="lcw-title">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="lcw-icon"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+						Location Chart
+					</div>
+					<div style="display:flex;align-items:center;gap:10px">
+						<span class="lcw-count" v-if="chartNodes.length">{{ chartNodes.length }} lokasi</span>
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="lcw-chevron" :class="chartOpen ? 'chevron-up' : ''"><polyline points="6 9 12 15 18 9"/></svg>
+					</div>
+				</div>
+
+				<div class="lcw-body" v-show="chartOpen">
+					<div v-if="chartLoading" class="chart-loading">
+						<div class="chart-spin"></div>
+						<span>Memuat lokasi...</span>
+					</div>
+					<div v-else-if="!chartNodes.length" class="chart-empty">
+						<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:28px;height:28px;stroke:#94a3b8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+						<span>Belum ada data lokasi.</span>
+					</div>
+					<div v-else class="chart-scroll">
+						<div class="chart-tree">
+							<LocNode
+								v-for="root in chartRoots"
+								:key="root.satusehat_id"
+								:node="root"
+								:children-map="chartChildrenMap"
+								:depth="0"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<!-- ── Datatable ──────────────────────────────────────────────────── -->
@@ -99,6 +161,7 @@ export default {
 		toast, Swal,
 		FormLocation: defineAsyncComponent(() => import('./FormLocation.vue')),
 		Datatable:    defineAsyncComponent(() => import('../../../section/Datatable.vue')),
+		LocNode:      defineAsyncComponent(() => import('./LocNode.vue')),
 	},
 	created() {},
 	mounted() {
@@ -106,6 +169,8 @@ export default {
 		setTimeout(() => { vm.titletrigger(); }, 250);
 		vm.loadmain();
 		vm.loadProfile();
+		vm.loadChart();
+		vm.loadSyncStatus();
 	},
 	data() {
 		return {
@@ -113,11 +178,13 @@ export default {
 			position: '',
 			attach: {
 				link: {
-					profile: '/satusehat-api/location/profile',
-					list:    '/satusehat-api/location/list',
-					add:     '/satusehat-api/location/add',
-					edit:    '/satusehat-api/location/edit',
-					update:  '/satusehat-api/location/update',
+					profile:    '/satusehat-api/location/profile',
+					list:       '/satusehat-api/location/list',
+					add:        '/satusehat-api/location/add',
+					edit:       '/satusehat-api/location/edit',
+					update:     '/satusehat-api/location/update',
+					sync:       '/satusehat-api/location/sync',
+					syncStatus: '/satusehat-api/location/sync-status',
 				},
 				url: '', data: null
 			},
@@ -140,10 +207,90 @@ export default {
 			// Summary card
 			summary: null,
 			profileLoading: true,
+
+			// Location chart
+			chartOpen: true,
+			chartLoading: false,
+			chartNodes: [],
+
+			// Sync ke DB lokal
+			syncing: false,
+			syncStatus: { total: 0, last_synced: null },
 		};
+	},
+	computed: {
+		// Build a map: parentId → [children]  (strip "Location/" prefix from part_of)
+		chartChildrenMap() {
+			const map = {};
+			for (const node of vm.chartNodes) {
+				const rawPartOf = node.part_of || '';
+				const parentId  = rawPartOf.replace(/^Location\//, '');
+				if (!map[parentId]) map[parentId] = [];
+				map[parentId].push(node);
+			}
+			return map;
+		},
+		// Nodes whose parent is not in the node list → these are tree roots
+		chartRoots() {
+			const allIds = new Set(vm.chartNodes.map(n => n.satusehat_id));
+			return vm.chartNodes.filter(n => {
+				const rawPartOf = n.part_of || '';
+				const parentId  = rawPartOf.replace(/^Location\//, '');
+				return !parentId || parentId === '-' || !allIds.has(parentId);
+			});
+		},
 	},
 	methods: {
 		nullAndZero, datename,
+
+		// ── Location chart ───────────────────────────────────────────────────
+		loadChart() {
+			vm.chartLoading = true;
+			const fd = new FormData();
+			fd.append('search', ''); fd.append('column', ''); fd.append('page', 1); fd.append('limit', 500);
+			axios.post(vm.attach.link.list, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+				.then(r => { vm.chartNodes = r.data?.data ?? []; })
+				.catch(() => {})
+				.finally(() => { vm.chartLoading = false; });
+		},
+
+		// ── Sync ke DB lokal ─────────────────────────────────────────────────
+		loadSyncStatus() {
+			axios.post(vm.attach.link.syncStatus, new FormData(), {
+				headers: { 'Content-Type': 'multipart/form-data' }
+			}).then(r => {
+				if (r.data?.data && typeof r.data.data === 'object') {
+					vm.syncStatus = r.data.data;
+				}
+			}).catch(() => {});
+		},
+
+		runSync() {
+			if (vm.syncing) return;
+			vm.syncing = true;
+			axios.post(vm.attach.link.sync, new FormData(), {
+				headers: { 'Content-Type': 'multipart/form-data' }
+			}).then(r => {
+				if (r.data?.data === '419') { window.location.href = '/masuk'; return; }
+				if (r.data?.data === 'berhasil') {
+					const count = r.data?.count ?? 0;
+					vm.notification(`${count} lokasi berhasil disinkronkan ke database lokal.`, 4000, 'success');
+					vm.loadSyncStatus();
+				} else {
+					vm.notification(r.data?.message ?? 'Sync gagal.', 4000, 'error');
+				}
+			}).catch(() => {
+				vm.notification('Sync location gagal. Periksa koneksi SatuSehat.', 4000, 'error');
+			}).finally(() => {
+				vm.syncing = false;
+			});
+		},
+
+		formatSyncTime(ts) {
+			if (!ts) return '';
+			const d = new Date(ts);
+			return d.toLocaleString('id-ID', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+		},
 
 		// ── Profile / Summary ────────────────────────────────────────────────
 		loadProfile() {
@@ -300,7 +447,7 @@ export default {
 			} else if (vm.position === 'adddata') {
 				vm.loadingModal('formlocation');
 				vm.$refs.FormLocation.hide();
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500);
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); vm.loadChart(); }, 500);
 				// Refresh summary setelah tambah data
 				vm.loadProfile();
 			} else if (vm.position === 'editdata') {
@@ -310,7 +457,7 @@ export default {
 			} else if (vm.position === 'updatedata') {
 				vm.loadingModal('formlocation');
 				vm.$refs.FormLocation.hide();
-				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); }, 500);
+				setTimeout(() => { vm.$refs.Datatable.skeleton(); vm.tablereload(); vm.loadChart(); }, 500);
 				// Refresh summary setelah update data
 				vm.loadProfile();
 			}
@@ -474,4 +621,131 @@ export default {
 .skel-h1 { height: 18px; width: 40%; }
 .skel-h2 { height: 13px; width: 28%; margin-bottom: 0; }
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ── Sync section ────────────────────────────────────────────────────────── */
+.lsc-sync-group { display: flex; flex-direction: column; gap: 8px; min-width: 200px; }
+
+.lsc-sync-meta {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+.lsc-sync-count, .lsc-sync-time {
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	font-size: 12px;
+	color: #64748b;
+}
+.lsc-sync-count svg, .lsc-sync-time svg { width: 13px; height: 13px; stroke: #94a3b8; flex-shrink: 0; }
+.lsc-sync-count strong { color: #0f766e; font-weight: 700; }
+
+.lsc-sync-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	background: #0f766e;
+	color: #fff;
+	border: none;
+	border-radius: 8px;
+	padding: 8px 16px;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: background .15s, opacity .15s;
+	white-space: nowrap;
+}
+.lsc-sync-btn:hover:not(:disabled) { background: #0d5e57; }
+.lsc-sync-btn:disabled { opacity: .6; cursor: not-allowed; }
+.lsc-sync-btn svg { width: 14px; height: 14px; stroke: #fff; }
+.spin-icon { animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Location Chart ─────────────────────────────────────────────────────── */
+.loc-chart-wrapper {
+	background: #1e293b;
+	border-radius: 12px;
+	margin-bottom: 20px;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0,0,0,.12);
+}
+
+.lcw-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 14px 20px;
+	cursor: pointer;
+	user-select: none;
+	transition: background .15s;
+}
+.lcw-header:hover { background: rgba(255,255,255,.04); }
+
+.lcw-title {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-size: 13px;
+	font-weight: 700;
+	color: #f1f5f9;
+	letter-spacing: .3px;
+}
+.lcw-icon { width: 18px; height: 18px; stroke: #5eead4; }
+
+.lcw-count {
+	font-size: 11px;
+	background: rgba(94,234,212,.15);
+	color: #5eead4;
+	border-radius: 10px;
+	padding: 2px 10px;
+	font-weight: 600;
+}
+.lcw-chevron { width: 16px; height: 16px; stroke: #94a3b8; transition: transform .25s; }
+.chevron-up  { transform: rotate(180deg); }
+
+.lcw-body {
+	background: #f8fafc;
+	border-top: 1px solid rgba(255,255,255,.06);
+}
+
+/* Loading spinner */
+.chart-loading {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	padding: 30px 24px;
+	font-size: 13px;
+	color: #64748b;
+}
+.chart-spin {
+	width: 20px; height: 20px;
+	border: 2px solid #e2e8f0;
+	border-top-color: #0f766e;
+	border-radius: 50%;
+	animation: spin .7s linear infinite;
+	flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Empty state */
+.chart-empty {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 28px 24px;
+	font-size: 13px;
+	color: #94a3b8;
+}
+
+/* Scrollable tree container */
+.chart-scroll {
+	overflow-x: auto;
+	padding: 24px 24px 28px;
+}
+.chart-tree {
+	display: flex;
+	gap: 28px;
+	align-items: flex-start;
+	min-width: max-content;
+}
 </style>
