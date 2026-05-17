@@ -1,681 +1,868 @@
-# Dokumentasi Integrasi SatuSehat
+# SATUSEHAT — Dokumentasi Integrasi
 
-> Sistem Informasi Rumah Sakit Mata — Integrasi FHIR R4 dengan Platform SatuSehat (Kemenkes RI)
+Dokumentasi teknis lengkap untuk modul integrasi **SatuSehat (FHIR R4)** pada sistem Eye Hospital.
 
 ---
 
 ## Daftar Isi
 
-1. [Overview](#1-overview)
-2. [Konfigurasi Environment](#2-konfigurasi-environment)
+1. [Gambaran Umum](#1-gambaran-umum)
+2. [Prasyarat & Konfigurasi](#2-prasyarat--konfigurasi)
 3. [Skema Database](#3-skema-database)
-4. [Arsitektur Service Layer](#4-arsitektur-service-layer)
-5. [Menu & Halaman Dashboard](#5-menu--halaman-dashboard)
-6. [Artisan Commands](#6-artisan-commands)
-7. [Scheduler (Otomatis)](#7-scheduler-otomatis)
-8. [Flow Teknis Lengkap](#8-flow-teknis-lengkap)
-9. [API Logging](#9-api-logging)
-10. [Troubleshooting](#10-troubleshooting)
+4. [Arsitektur File](#4-arsitektur-file)
+5. [Modul: Pasien](#5-modul-pasien)
+6. [Modul: Practitioner (Pengguna)](#6-modul-practitioner-pengguna)
+7. [Modul: Organization](#7-modul-organization)
+8. [Modul: Location](#8-modul-location)
+9. [Modul: Encounter (Registrasi)](#9-modul-encounter-registrasi)
+10. [Modul: Wilayah (BPS Code)](#10-modul-wilayah-bps-code)
+11. [Auto-Sync Pasien (LISTEN/NOTIFY)](#11-auto-sync-pasien-listennotify)
+11b. [Auto-Sync Encounter/Registrasi (LISTEN/NOTIFY)](#11b-auto-sync-encounterregistrasi-listennotify)
+12. [Shared Services](#12-shared-services)
+13. [Referensi API Routes](#13-referensi-api-routes)
+14. [Artisan Commands](#14-artisan-commands)
+15. [Alur Kerja Lengkap (Onboarding)](#15-alur-kerja-lengkap-onboarding)
+16. [Deployment Production](#16-deployment-production)
+17. [Troubleshooting](#17-troubleshooting)
 
 ---
 
-## 1. Overview
+## 1. Gambaran Umum
 
-Integrasi SatuSehat memungkinkan SIMRS mengirimkan data klinis ke platform nasional Kemenkes RI sesuai standar **FHIR R4**. Resource yang di-implementasikan:
+Modul SatuSehat mengintegrasikan sistem Eye Hospital dengan platform **FHIR R4** milik Kementerian Kesehatan RI. Setiap resource FHIR dikirim melalui REST API SatuSehat menggunakan Bearer Token OAuth2.
 
-| FHIR Resource | Fungsi | Sumber Data Lokal |
-|---|---|---|
-| `Patient` | Daftarkan / cari pasien di SatuSehat | Tabel `pasien` (NIK) |
-| `Encounter` | Kirim data kunjungan/registrasi | Tabel `registrasi` |
-| `Organization` | Profil rumah sakit | Konfigurasi env |
-| `Location` | Data poli/ruangan | Konfigurasi env |
+### Fitur yang Tersedia
+
+| Modul | Resource FHIR | Keterangan |
+|-------|--------------|------------|
+| Pasien | `Patient` | Sync NIK → IHS Number; auto-sync via PostgreSQL NOTIFY |
+| Practitioner | `Practitioner` | Sync NIK dokter/nakes → IHS Practitioner ID |
+| Organization | `Organization` | Sync & cache organisasi fasyankes dari SatuSehat |
+| Location | `Location` | Sync & cache lokasi/ruangan dari SatuSehat |
+| Encounter | `Encounter` | Kirim data kunjungan pasien (registrasi) ke SatuSehat |
+| Wilayah | _(BPS Code lookup)_ | Cache kode administratif BPS untuk address mapping |
 
 ---
 
-## 2. Konfigurasi Environment
+## 2. Prasyarat & Konfigurasi
 
-Tambahkan variabel berikut di file `.env`:
+### `.env` Variables
 
 ```env
-# ── Credentials OAuth2 ────────────────────────────────────────────
-CLIENT_ID_SATUSEHAT=<client_id_dari_portal_satusehat>
-CLIENT_SECRET_SATUSEHAT=<client_secret_dari_portal_satusehat>
+# ── SatuSehat OAuth2 ──────────────────────────────────────────────────────────
+SATUSEHAT_ENV=development          # development | staging | production
+SATUSEHAT_CLIENT_ID=your-client-id
+SATUSEHAT_CLIENT_SECRET=your-client-secret
+SATUSEHAT_ORGANIZATION_ID=your-org-id   # FHIR Organization ID fasyankes Anda
 
-# ── URL API ───────────────────────────────────────────────────────
-# Staging
-API_SATUSEHAT_AUTH=https://api-satusehat-stg.dto.kemkes.go.id/oauth2/v1/
-API_SATUSEHAT_BASE=https://api-satusehat-stg.dto.kemkes.go.id/fhir-r4/v1/
-
-# Production
-# API_SATUSEHAT_AUTH=https://api-satusehat.kemkes.go.id/oauth2/v1/
-# API_SATUSEHAT_BASE=https://api-satusehat.kemkes.go.id/fhir-r4/v1/
-
-# Masterdata (diturunkan otomatis dari BASE URL, tidak perlu diisi manual)
-# API_SATUSEHAT_MASTERDATA=https://api-satusehat-stg.dto.kemkes.go.id/masterdata/v1/
-
-# ── Identitas Fasilitas ───────────────────────────────────────────
-SATUSEHAT_ORGANIZATION_ID=<org_id_dari_portal_satusehat>
-SATUSEHAT_LOCATION_ID=<location_id_default_poli>
+# ── URL (otomatis ditentukan oleh BridgeBase berdasarkan SATUSEHAT_ENV) ───────
+# development : https://api-satusehat-dev.dto.kemkes.go.id
+# staging     : https://api-satusehat-stg.dto.kemkes.go.id
+# production  : https://api-satusehat.dto.kemkes.go.id
 ```
 
-> **URL Masterdata** diturunkan otomatis dari `API_SATUSEHAT_BASE` dengan mengganti path `/fhir-r4/v1/` menjadi `/masterdata/v1/`. Override dengan `API_SATUSEHAT_MASTERDATA` jika berbeda.
+### Setup Database
+
+Jalankan migration SQL berikut (idempotent, aman dijalankan ulang):
+
+```bash
+psql -U postgres -d eye_hospital -f database/sql/satu-sehat.sql
+```
 
 ---
 
 ## 3. Skema Database
 
-### 3.1 Migrasi yang Ditambahkan
+### Kolom Tambahan pada Tabel Existing
 
-Jalankan seluruh migrasi berikut secara berurutan:
-
-```bash
-php artisan migrate
+**`pasien`**
+```sql
+id_satu_sehat          VARCHAR(50)   -- IHS Number hasil sync
+satusehat_sync_status  VARCHAR(20)   -- null | synced | failed
+satusehat_synced_at    TIMESTAMP
 ```
 
-| File Migrasi | Perubahan |
-|---|---|
-| `2026_05_13_000001_create_satusehat_wilayah_table` | Buat tabel `satusehat_wilayah` |
-| `2026_05_13_000002_add_ss_area_codes_to_pasien` | Tambah kolom `ss_*_code` ke `pasien` |
-| `2026_05_13_000003_create_satusehat_api_logs_table` | Buat tabel `satusehat_api_logs` |
-| `2026_05_13_000004_seed_satusehat_wilayah_label` | Label menu Wilayah |
-| `2026_05_13_000005_seed_satusehat_apilog_label` | Label menu API Logs |
-| `2026_05_13_000006_add_satusehat_code_to_wilayah_master` | Kolom `satusehat_code` ke tabel master wilayah |
-
-Atau jalankan langsung SQL-nya (untuk PostgreSQL):
-
-```bash
-psql -d <database> -f database/sql/satu-sehat.sql
+**`registrasi`**
+```sql
+satusehat_encounter_id         VARCHAR(64)   -- FHIR Encounter.id
+satusehat_encounter_status     VARCHAR(20)
+satusehat_encounter_synced_at  TIMESTAMP
+satusehat_location_id          VARCHAR(64)   -- Location FHIR ID yang dipakai
 ```
 
-### 3.2 Kolom Tambahan pada Tabel Existing
+**`pengguna`**
+```sql
+satusehat_ihs_id       VARCHAR(64)   -- IHS Practitioner ID
+nik                    VARCHAR(20)
+satusehat_sync_status  VARCHAR(20)
+satusehat_synced_at    TIMESTAMP
+```
 
-**Tabel `pasien`:**
+**`provinsi` / `kab_kota` / `kecamatan` / `kelurahan`**
+```sql
+satusehat_code  VARCHAR(20)   -- Kode BPS SatuSehat
+```
 
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| `id_satu_sehat` | `VARCHAR(50)` | IHS Number dari SatuSehat |
-| `satusehat_sync_status` | `VARCHAR(20)` | `synced` / `not_found` / `failed` / NULL |
-| `satusehat_synced_at` | `TIMESTAMP` | Waktu terakhir sync berhasil |
-| `ss_province_code` | `VARCHAR(20)` | Kode BPS provinsi (override manual) |
-| `ss_city_code` | `VARCHAR(20)` | Kode BPS kota/kabupaten (override manual) |
-| `ss_district_code` | `VARCHAR(20)` | Kode BPS kecamatan (override manual) |
-| `ss_subdistrict_code` | `VARCHAR(20)` | Kode BPS kelurahan/desa (override manual) |
+### Tabel Baru
 
-**Tabel `registrasi`:**
+| Tabel | Fungsi |
+|-------|--------|
+| `satusehat_wilayah` | Cache kode BPS dari API SatuSehat (province/city/district/subdistrict) |
+| `satusehat_api_logs` | Log semua request/response API SatuSehat |
+| `satusehat_locations` | Cache lokal FHIR Location resources |
+| `satusehat_organizations` | Cache lokal FHIR Organization resources |
 
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| `satusehat_encounter_id` | `VARCHAR(64)` | Encounter ID dari SatuSehat |
-| `satusehat_encounter_status` | `VARCHAR(20)` | `synced` / `failed` / NULL |
-| `satusehat_encounter_synced_at` | `TIMESTAMP` | Waktu sync encounter |
-| `satusehat_location_id` | `VARCHAR(64)` | Location ID poli yang dikaitkan |
-
-**Tabel `pengguna`:**
-
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| `satusehat_ihs_id` | `VARCHAR(64)` | IHS Practitioner ID dokter |
-
-**Tabel master wilayah (`provinsi`, `kab_kota`, `kecamatan`, `kelurahan`):**
-
-| Kolom | Tipe | Keterangan |
-|---|---|---|
-| `satusehat_code` | `VARCHAR(20)` | Kode BPS SatuSehat hasil sync wilayah |
-
-### 3.3 Tabel Baru
-
-**`satusehat_wilayah`** — Cache kode wilayah BPS dari SatuSehat Masterdata API:
+### Tabel `satusehat_organizations` (penting untuk Encounter)
 
 ```sql
-id          BIGSERIAL PRIMARY KEY
-level       VARCHAR(20)   -- 'province' | 'city' | 'district' | 'sub_district'
-code        VARCHAR(20) UNIQUE  -- kode BPS: '31', '3171', '317101', '3171010001'
-name        VARCHAR(255)  -- nama wilayah, contoh: 'DKI JAKARTA'
-parent_code VARCHAR(20)   -- kode parent (NULL untuk provinsi)
-raw_data    JSONB         -- response mentah dari API
-fetched_at  TIMESTAMP     -- kapan terakhir di-fetch
+CREATE TABLE satusehat_organizations (
+    satusehat_id         VARCHAR(64)  NOT NULL UNIQUE,  -- FHIR Organization.id
+    identifier_system    VARCHAR(500),                   -- Dipakai di Encounter.identifier[].system
+    identifier_value     VARCHAR(255),                   -- Dipakai di Encounter.identifier[].value
+    nama                 VARCHAR(500) NOT NULL DEFAULT '',
+    aktif                BOOLEAN      DEFAULT TRUE,
+    part_of              VARCHAR(64),                    -- Parent Organization FHIR ID
+    ...
+);
 ```
 
-**`satusehat_api_logs`** — Log semua request/response ke SatuSehat API:
+> **Catatan**: Kolom `identifier_system` dan `identifier_value` digunakan oleh `EncounterBuilder` untuk mengisi `identifier[0].system` pada payload Encounter — tanpa ini Encounter akan ditolak SatuSehat.
 
-```sql
-id            BIGSERIAL PRIMARY KEY
-method        VARCHAR(10)   -- GET | POST | PUT | PATCH
-url           TEXT          -- URL lengkap yang dipanggil
-request_body  TEXT          -- body request (JSON)
-response_body TEXT          -- body response dari API
-http_code     SMALLINT      -- kode HTTP response (200, 201, 400, dll)
-context       VARCHAR(100)  -- 'patient_sync' | 'encounter_sync' | 'wilayah' | 'other'
-duration_ms   INTEGER       -- lama eksekusi dalam milidetik
-is_success    BOOLEAN       -- true jika http_code 2xx
-created_at    TIMESTAMP
+---
+
+## 4. Arsitektur File
+
+```
+app/
+├── Console/Commands/
+│   ├── ListenPasienSatuSehat.php      # Daemon LISTEN pg_notify → dispatch job
+│   └── SyncEncounterSatuSehat.php     # Scheduler bulk-sync Encounter
+│
+├── Http/Controllers/SatuSehat/
+│   ├── BridgeBase.php                 # HTTP client (OAuth2 token, request wrapper)
+│   ├── PatientSyncCtrl.php            # Sync Pasien: one-by-one & bulk
+│   ├── PractitionerSyncCtrl.php       # Sync Practitioner (Pengguna/Dokter)
+│   ├── OrganizationCtrl.php           # Sync & cache Organization dari SatuSehat
+│   ├── LocationCtrl.php               # Sync & cache Location dari SatuSehat
+│   ├── EncounterSyncCtrl.php          # Sync Encounter: one-by-one & bulk
+│   └── WilayahCtrl.php                # Cache wilayah BPS
+│
+├── Jobs/
+│   └── SyncPasienToSatuSehat.php      # Queue job: sync 1 pasien (idempoten)
+│
+├── Observers/
+│   └── PasienObserver.php             # Eloquent hook: dispatch job saat Pasien dibuat
+│
+├── Providers/
+│   └── AppServiceProvider.php         # Register observer + dokumentasi strategi dual-layer
+│
+└── Services/SatuSehat/
+    ├── PatientBuilder.php             # Build FHIR Patient payload (static)
+    └── EncounterBuilder.php           # Build FHIR Encounter payload (static)
+
+config/supervisor/
+└── satusehat-listener.conf            # Supervisor config untuk daemon LISTEN
+
+database/sql/
+└── satu-sehat.sql                     # DDL: ALTER TABLE, CREATE TABLE, trigger pg_notify
+
+resources/js/components/satusehat/
+├── patient/index.vue                  # UI sync pasien
+├── practitioner/index.vue             # UI sync practitioner
+├── organization/index.vue             # UI sync & status organization
+├── location/index.vue                 # UI sync & status location
+└── encounter/index.vue                # UI sync encounter
+
+routes/
+└── satusehat.php                      # Semua route /satusehat/...
 ```
 
 ---
 
-## 4. Arsitektur Service Layer
+## 5. Modul: Pasien
 
-```
-app/Services/SatuSehat/
-├── Config/
-│   └── ConfigSatusehat.php        # Baca .env, sediakan semua URL & credentials
-├── Foundation/
-│   ├── Http/
-│   │   └── Authentication.php     # OAuth2 client_credentials token
-│   └── Handler/
-│       └── SimpleCurlFactory.php  # HTTP executor (cURL), capture lastHttpCode
-└── Bridge/
-    ├── BridgeBase.php             # Base class: getJson/postJson/putJson + logging
-    └── BridgeMasterdata.php       # Override baseUrl() ke /masterdata/v1/
-```
+### Cara Kerja
 
-### BridgeBase — Cara Kerja
+1. Pasien baru dibuat (via Eloquent atau `DB::table()`)
+2. **Auto-sync** terpicu (lihat [Bagian 11](#11-auto-sync-pasien-listennotify))
+3. `SyncPasienToSatuSehat` job melakukan POST ke `/fhir-r4/v1/Patient`
+4. Respons `id` dari SatuSehat disimpan ke `pasien.id_satu_sehat`
 
-Setiap method `getJson()`, `postJson()`, `putJson()` memanggil `callWithLog()` yang:
-
-1. Catat waktu mulai (`microtime`)
-2. Eksekusi HTTP request via `SimpleCurlFactory`
-3. Capture `http_code` via `curl_getinfo(CURLINFO_HTTP_CODE)`
-4. Insert log ke tabel `satusehat_api_logs`
-5. Return decoded JSON array
-
-```php
-// Contoh penggunaan di controller
-$bridge = new BridgeBase();
-$bridge->logContext = 'patient_sync';   // label untuk kolom context di log
-
-$result = $bridge->getJson('Patient?identifier=...');
-$result = $bridge->postJson('Encounter', $payload);
-```
-
-### ConfigSatusehat — Derivasi URL Masterdata
-
-```php
-// Input  : API_SATUSEHAT_BASE=https://api-satusehat-stg.dto.kemkes.go.id/fhir-r4/v1/
-// Output : https://api-satusehat-stg.dto.kemkes.go.id/masterdata/v1/
-$parsed = parse_url($this->urlBase);
-$defaultMasterdata = $parsed['scheme'] . '://' . $parsed['host'] . '/masterdata/v1/';
-```
-
----
-
-## 5. Menu & Halaman Dashboard
-
-Semua halaman diakses dari `/dashboard/satusehat-*`.
-
-### 5.1 Token (`/dashboard/satusehat-token`)
-
-Halaman untuk memantau dan me-refresh access token OAuth2.
-
-- Tampilkan status token (aktif/expired), `client_id`, waktu expire
-- Tombol **Refresh Token** memanggil `POST /satusehat-api/token/refresh`
-- Token di-cache oleh `Authentication.php` — tidak disimpan di DB
-
-**Controller:** `TokenCtrl`
-**Routes:** `POST /satusehat-api/token/status`, `POST /satusehat-api/token/refresh`
-
-### 5.2 Organization (`/dashboard/satusehat-organization`)
-
-Kelola profil Organization FHIR rumah sakit.
-
-- Lihat profil Organization yang sudah terdaftar di SatuSehat
-- Tambah / Edit Organization
-- Organization ID disimpan di `.env` sebagai `SATUSEHAT_ORGANIZATION_ID`
-
-**Controller:** `OrganizationCtrl`
-**Routes:** `POST /satusehat-api/organization/{profile|list|add|edit|update}`
-
-### 5.3 Location (`/dashboard/satusehat-location`)
-
-Kelola data Location FHIR (poli/ruangan).
-
-- Lihat daftar Location terdaftar
-- Tambah / Edit Location
-- Location ID dapat dikaitkan ke `registrasi.satusehat_location_id`
-
-**Controller:** `LocationCtrl`
-**Routes:** `POST /satusehat-api/location/{profile|list|add|edit|update}`
-
-### 5.4 Sync Pasien (`/dashboard/sync-pasien`)
-
-Dashboard sinkronisasi data pasien → SatuSehat Patient resource.
-
-**Statistik yang ditampilkan:**
-- Total pasien, % sudah sync, synced, not_found, failed, pending
-- Badge per baris: indikator kode wilayah tersedia/tidak
-
-**Aksi tersedia:**
-
-| Aksi | Keterangan |
-|---|---|
-| **Run Sync** | Jalankan `Artisan::call('satusehat:sync-patient')` via UI |
-| **Retry Failed** | Reset status `failed` → NULL agar ikut batch berikutnya |
-| **Create NIK** | Sync satu pasien secara manual (create ke SatuSehat) |
-| **Create NIK IBU** | Sync menggunakan NIK Ibu (untuk bayi tanpa NIK) |
-
-**Status nilai pasien:**
-
-| Status | Arti |
-|---|---|
-| `synced` | IHS Number berhasil didapat, tersimpan di `id_satu_sehat` |
-| `not_found` | NIK tidak ditemukan di SatuSehat (skip permanen) |
-| `failed` | Error sementara, akan di-retry scheduler berikutnya |
-| NULL | Belum pernah diproses |
-
-**Indikator Wilayah (badge hijau/kuning):**
-
-Setiap baris menampilkan badge apakah payload address pasien akan menyertakan `administrativeCode`. Badge hijau jika:
-- Ada nilai di `ss_province_code` + `ss_city_code` pada record pasien, **ATAU**
-- `provinsi.satusehat_code` + `kab_kota.satusehat_code` sudah terisi via FK
-
-**Controller:** `PatientSyncCtrl`
-**Routes:** `POST /satusehat-api/patient-sync/{dashboard|list|run-sync|retry-failed|create-one|create-bulk}`
-
-### 5.5 Sync Encounter (`/dashboard/satusehat-encounter`)
-
-Dashboard sinkronisasi kunjungan → SatuSehat Encounter resource.
-
-**Statistik yang ditampilkan:**
-- Total registrasi, synced, failed, pending, not_eligible (pasien belum sync)
-
-**Aksi tersedia:**
-
-| Aksi | Keterangan |
-|---|---|
-| **Run Sync** | Jalankan `Artisan::call('satusehat:sync-encounter')` via UI |
-| **Retry Failed** | Reset status `failed` → NULL |
-| **Set Location** | Kaitkan `satusehat_location_id` ke satu atau banyak registrasi |
-| **Sync One** | Sync satu encounter secara manual |
-
-**Syarat encounter bisa di-sync:**
-- Pasien harus sudah memiliki `id_satu_sehat` (sudah sync Patient terlebih dahulu)
-- `satusehat_encounter_id` masih NULL
-
-**Controller:** `EncounterSyncCtrl`
-**Routes:** `POST /satusehat-api/encounter-sync/{dashboard|list|run-sync|retry-failed|set-location|sync-one}`
-
-### 5.6 Wilayah (`/dashboard/satusehat-wilayah`)
-
-Dashboard untuk fetch dan kelola kode BPS administratif dari SatuSehat Masterdata API.
-
-**Panel Fetch Semua:**
-
-Satu tombol **Fetch Semua** yang secara otomatis:
-1. Fetch semua Provinsi (34 data)
-2. Fetch Kota/Kabupaten dari setiap Provinsi (~500+ data)
-3. Fetch Kecamatan dari setiap Kota (opsional, dicentang by default, ~7.000+ data)
-4. Fetch Kelurahan/Desa dari setiap Kecamatan (opsional, nonaktif by default, ~80.000+ data)
-
-Opsi checkbox tersedia untuk mengaktifkan/menonaktifkan level kecamatan dan kelurahan. Proses berjalan di background (server-side `set_time_limit(600)`). Log per-step ditampilkan setelah selesai dalam panel terminal.
-
-**Panel Sync ke Master Data:**
-
-Tombol **Sync Semua ke Master** mencocokkan nama wilayah di cache SatuSehat ke tabel master lokal (`provinsi`, `kab_kota`, `kecamatan`, `kelurahan`) dan mengisi kolom `satusehat_code`.
-
-Aturan matching:
-1. Exact match (case-insensitive)
-2. Partial string contains (fallback)
-3. Hanya record yang `satusehat_code IS NULL` yang diupdate
-
-Tersedia juga tombol sync per level (Provinsi / Kota / Kecamatan / Kelurahan) untuk kontrol granular.
-
-**Fetch Manual per Level:** Panel collapsible untuk fetch satu kota atau satu kecamatan tertentu.
-
-**Stats Cards:** Jumlah data ter-cache per level.
-
-**Controller:** `WilayahCtrl`
-**Routes:**
-
-```
-POST /satusehat-api/wilayah/dashboard
-POST /satusehat-api/wilayah/list
-POST /satusehat-api/wilayah/fetch
-POST /satusehat-api/wilayah/fetch-all
-POST /satusehat-api/wilayah/select
-POST /satusehat-api/wilayah/sync-to-master
-POST /satusehat-api/wilayah/sync-all-to-master
-POST /satusehat-api/wilayah/master-stats
-```
-
-### 5.7 API Logs (`/dashboard/satusehat-api-logs`)
-
-Viewer untuk semua log request/response ke SatuSehat API.
-
-**Fitur:**
-- Filter berdasarkan method (GET/POST/PUT/PATCH), context, status (sukses/gagal), pencarian URL
-- Klik baris untuk expand melihat request body dan response body (pretty-printed JSON)
-- Stats: total request, sukses, gagal, rata-rata durasi, breakdown per context
-- Tombol **Hapus Log Lama** (> 30 hari) dan **Hapus Semua**
-
-**Context values:**
-
-| Context | Sumber |
-|---|---|
-| `patient_sync` | Semua request dari `PatientSyncCtrl` |
-| `encounter_sync` | Semua request dari `EncounterSyncCtrl` |
-| `wilayah` | Semua request dari `BridgeMasterdata` |
-| `other` | Default jika tidak di-set |
-
-**Controller:** `ApiLogCtrl`
-**Routes:** `POST /satusehat-api/api-logs/{dashboard|list|detail|clear|clear-all}`
-
----
-
-## 6. Artisan Commands
-
-### 6.1 `satusehat:sync-patient`
-
-Sinkronisasi IHS Number untuk pasien berdasarkan NIK.
-
-```bash
-php artisan satusehat:sync-patient
-php artisan satusehat:sync-patient --batch=100 --delay=500
-```
-
-**Options:**
-
-| Option | Default | Keterangan |
-|---|---|---|
-| `--batch` | `50` | Jumlah pasien diproses per iterasi |
-| `--delay` | `300` | Delay antar request dalam milidetik (hindari rate-limit) |
-
-**Logika:**
-1. Query pasien: `no_identitas NOT NULL`, `id_satu_sehat IS NULL`, status bukan `synced`/`not_found`
-2. Validasi format NIK: harus 16 digit angka
-3. Panggil `GET Patient?identifier=https://fhir.kemkes.go.id/id/nik|{NIK}`
-4. Jika ditemukan → simpan `id_satu_sehat`, set status `synced`
-5. Jika tidak ditemukan → set status `not_found` (skip permanen)
-6. Jika error → set status `failed` (akan di-retry)
-
-**Log output:** `storage/logs/satusehat-sync-patient.log`
-
-### 6.2 `satusehat:sync-encounter`
-
-Kirim data Encounter (kunjungan) ke SatuSehat.
-
-```bash
-php artisan satusehat:sync-encounter
-php artisan satusehat:sync-encounter --batch=20 --delay=500
-```
-
-**Options:**
-
-| Option | Default | Keterangan |
-|---|---|---|
-| `--batch` | `30` | Jumlah encounter diproses per iterasi |
-| `--delay` | `300` | Delay antar request dalam milidetik |
-
-**Logika:**
-1. Query registrasi: `satusehat_encounter_id IS NULL`, status NULL atau `failed`
-2. JOIN ke `pasien` dan `pengguna` untuk ambil `patient_ihs_id` dan `practitioner_ihs_id`
-3. Jika `patient_ihs_id` kosong → lewati (pasien belum sync), coba lagi berikutnya
-4. Build FHIR Encounter payload (lihat section 8.3)
-5. Panggil `POST Encounter`
-6. Jika berhasil → simpan `satusehat_encounter_id`, set status `synced`
-7. Jika gagal → set status `failed`
-
-**Log output:** `storage/logs/satusehat-sync-encounter.log`
-
----
-
-## 7. Scheduler (Otomatis)
-
-Didefinisikan di `app/Console/Kernel.php`. Aktifkan dengan menambahkan cron job di server:
-
-```bash
-# Tambahkan ke crontab (crontab -e)
-* * * * * cd /path/to/project && php artisan schedule:run >> /dev/null 2>&1
-```
-
-**Jadwal yang sudah dikonfigurasi:**
-
-| Command | Frekuensi | Overlap | Log File |
-|---|---|---|---|
-| `satusehat:sync-patient --batch=50 --delay=300` | Setiap jam | `withoutOverlapping` | `satusehat-sync-patient.log` |
-| `satusehat:sync-encounter --batch=30 --delay=300` | Setiap 30 menit | `withoutOverlapping` | `satusehat-sync-encounter.log` |
-
-`withoutOverlapping()` memastikan tidak ada dua proses sync yang berjalan bersamaan.
-
-**Periksa jadwal yang berjalan:**
-
-```bash
-php artisan schedule:list
-php artisan schedule:run --verbose   # jalankan manual sekali
-```
-
----
-
-## 8. Flow Teknis Lengkap
-
-### 8.1 Flow Sinkronisasi Pasien (IHS Number)
-
-```
-Cron (tiap jam)
-    └─► php artisan satusehat:sync-patient
-            │
-            ├─► ConfigSatusehat::__construct()     // baca .env
-            ├─► Authentication::getToken()          // POST OAuth2 token
-            └─► Loop pasien (batch=50)
-                    │
-                    ├─► Validasi NIK (16 digit)
-                    │
-                    └─► BridgeBase::getJson(
-                            "Patient?identifier=.../nik|{NIK}"
-                        )
-                            │
-                            ├─► SimpleCurlFactory::request()   // HTTP GET
-                            ├─► capture lastHttpCode
-                            ├─► INSERT satusehat_api_logs
-                            └─► return decoded JSON
-                                    │
-                                    ├─► total > 0 → UPDATE pasien
-                                    │       id_satu_sehat = entry[0].resource.id
-                                    │       status = 'synced'
-                                    │
-                                    ├─► total = 0 → status = 'not_found'
-                                    └─► exception → status = 'failed'
-```
-
-### 8.2 Flow Sinkronisasi Encounter
-
-```
-Cron (tiap 30 menit)
-    └─► php artisan satusehat:sync-encounter
-            │
-            ├─► ConfigSatusehat + Authentication (token)
-            └─► Loop registrasi (batch=30)
-                    │
-                    ├─► pasien.id_satu_sehat kosong? → SKIP (retry berikutnya)
-                    │
-                    └─► buildPayload(registrasi, orgId)
-                            │
-                            ├─► resourceType: Encounter
-                            ├─► subject: Patient/{patient_ihs_id}
-                            ├─► participant: Practitioner/{practitioner_ihs_id}  [jika ada]
-                            ├─► location: Location/{satusehat_location_id}       [jika ada]
-                            ├─► period.start: tanggal + waktu + "+07:00"
-                            └─► serviceProvider: Organization/{orgId}
-                                    │
-                                    └─► BridgeBase::postJson("Encounter", payload)
-                                            │
-                                            ├─► INSERT satusehat_api_logs
-                                            └─► response.id ada?
-                                                    ├─► Ya  → status = 'synced'
-                                                    └─► Tidak → status = 'failed'
-```
-
-### 8.3 Payload FHIR Patient — Address Extension
-
-Saat create/update Patient di SatuSehat, address administrativeCode diisi dengan kode BPS. Prioritas sumber kode:
-
-```
-Prioritas 1: pasien.ss_province_code (kolom override manual)
-     ↓ jika NULL
-Prioritas 2: provinsi.satusehat_code  (via FK pasien.provinsi_id)
-     ↓ jika NULL
-Tidak sertakan extension address
-```
+### FHIR Patient Payload (contoh)
 
 ```json
 {
+  "resourceType": "Patient",
+  "meta": { "profile": ["https://fhir.kemkes.go.id/r4/StructureDefinition/Patient"] },
+  "identifier": [
+    {
+      "use": "official",
+      "system": "https://fhir.kemkes.go.id/id/nik",
+      "value": "3273011234560001"
+    }
+  ],
+  "name": [{ "use": "official", "text": "Budi Santoso" }],
+  "gender": "male",
+  "birthDate": "1990-01-15",
   "address": [{
+    "use": "home",
+    "line": ["Jl. Merdeka No. 1"],
+    "city": "Kota Bandung",
+    "postalCode": "40111",
+    "country": "ID",
     "extension": [{
       "url": "https://fhir.kemkes.go.id/r4/StructureDefinition/administrativeCode",
       "extension": [
-        { "url": "province",     "valueCode": "31" },
-        { "url": "city",         "valueCode": "3171" },
-        { "url": "district",     "valueCode": "317101" },
-        { "url": "village",      "valueCode": "3171010001" }
+        { "url": "province",    "valueCode": "32" },
+        { "url": "city",        "valueCode": "3273" },
+        { "url": "district",    "valueCode": "327301" },
+        { "url": "village",     "valueCode": "3273011001" }
       ]
     }]
   }]
 }
 ```
 
-Extension hanya disertakan jika minimal `province` + `city` terisi.
+### Builder: `PatientBuilder::build($pasien, $method = 'nik')`
 
-### 8.4 Flow Fetch Wilayah (BPS Cache)
+```php
+use App\Services\SatuSehat\PatientBuilder;
 
-```
-User klik "Fetch Semua" di /dashboard/satusehat-wilayah
-    │
-    └─► POST /satusehat-api/wilayah/fetch-all
-            │
-            ├─► set_time_limit(600)
-            ├─► BridgeMasterdata::__construct()
-            │       └─► baseUrl() = ConfigSatusehat::getUrlMasterdata()
-            │                     = https://...kemkes.go.id/masterdata/v1/
-            │
-            ├─► [Step 1] getProvinces()
-            │       GET masterdata/v1/wilayah/provinsi
-            │       → upsert ke satusehat_wilayah (level='province')
-            │
-            ├─► [Step 2] For each provinceCode:
-            │       getCities(provinceCode)
-            │       GET masterdata/v1/wilayah/kota?provinsi_id={code}
-            │       → upsert ke satusehat_wilayah (level='city')
-            │
-            ├─► [Step 3] if with_district=true:
-            │       For each cityCode:
-            │           getDistricts(cityCode)
-            │           → upsert ke satusehat_wilayah (level='district')
-            │
-            ├─► [Step 4] if with_subdistrict=true:
-            │       For each districtCode:
-            │           getSubDistricts(districtCode)
-            │           → upsert ke satusehat_wilayah (level='sub_district')
-            │
-            └─► return { log: [...], total: {...}, message: "..." }
+$payload = PatientBuilder::build($pasien, 'nik');
 ```
 
-### 8.5 Flow Sync Wilayah ke Master Data Lokal
+- **`$method = 'nik'`**: Identifier menggunakan NIK (`https://fhir.kemkes.go.id/id/nik`)
+- **`$method = 'ihs-number'`**: Identifier menggunakan IHS Number (untuk update)
+- Gender mapping: `laki-laki/l → male`, `perempuan/p → female`
+- Marital status: `menikah → M`, `belum → U`, `hidup_sendiri → D`, `mati → W`
+- BPS code diambil via FK: `pasien.provinsi_id → provinsi.satusehat_code`
+
+---
+
+## 6. Modul: Practitioner (Pengguna)
+
+Sync NIK dokter/tenaga kesehatan ke **IHS Practitioner ID** SatuSehat.
+
+### Endpoint
 
 ```
-User klik "Sync Semua ke Master"
-    │
-    └─► POST /satusehat-api/wilayah/sync-all-to-master
-            │
-            └─► For each level in [province, city, district, sub_district]:
-                    │
-                    ├─► Load ssCodes dari satusehat_wilayah
-                    │       keyBy: strtoupper(name) → {code, name}
-                    │
-                    ├─► Load localItems dari tabel master
-                    │       WHERE delete_soft=1 AND satusehat_code IS NULL
-                    │
-                    └─► For each localItem:
-                            ├─► Exact match? (strtoupper)
-                            │       → UPDATE satusehat_code = ssItem.code
+POST /satusehat/practitioners/sync-one
+POST /satusehat/practitioners/sync-all
+GET  /satusehat/practitioners/sync-status
+```
+
+### Prasyarat
+
+- `pengguna.nik` harus terisi (16 digit)
+- Setelah sync berhasil: `pengguna.satusehat_ihs_id` diisi
+- IHS Practitioner ID ini dipakai pada `Encounter.participant[].individual.reference`
+
+---
+
+## 7. Modul: Organization
+
+Cache data Organization dari SatuSehat ke tabel `satusehat_organizations` lokal.
+
+### Kenapa perlu di-cache?
+
+Setiap Encounter membutuhkan `identifier[].system` yang nilainya adalah:
+```
+{parent.identifier[0].system}/{parent.identifier[0].value}
+```
+Tanpa cache lokal, setiap sync Encounter harus hit API SatuSehat terlebih dahulu.
+
+### Cara Sync
+
+1. Buka menu SatuSehat → Organization
+2. Klik tombol **"Sync dari SatuSehat"**
+3. Sistem fetch root org + semua sub-org via API
+4. Data di-upsert ke `satusehat_organizations`
+
+### Endpoint
+
+```
+POST /satusehat/organizations/sync        → jalankan sync
+POST /satusehat/organizations/sync-status → cek total & last sync
+```
+
+---
+
+## 8. Modul: Location
+
+Cache data Location (ruangan/gedung) dari SatuSehat ke tabel `satusehat_locations` lokal.
+
+### Cara Sync
+
+Sama dengan Organization — buka UI Location, klik Sync.
+
+### Endpoint
+
+```
+POST /satusehat/locations/sync        → jalankan sync
+POST /satusehat/locations/sync-status → cek total & last sync
+GET  /satusehat/locations/list        → daftar location untuk dropdown
+```
+
+Location yang tersimpan di lokal dipakai sebagai opsi di form Encounter saat memilih `satusehat_location_id`.
+
+---
+
+## 9. Modul: Encounter (Registrasi)
+
+Kirim data kunjungan pasien (tabel `registrasi`) ke SatuSehat sebagai FHIR **Encounter**.
+
+### Prasyarat
+
+- `registrasi.satusehat_location_id` harus diisi (pilih dari dropdown Location)
+- Pasien sudah punya `id_satu_sehat` (IHS Number)
+- Dokter/nakes sudah punya `satusehat_ihs_id` (IHS Practitioner ID)
+- Organization sudah di-sync (untuk `identifier_system`)
+
+### FHIR Encounter Payload (ringkas)
+
+```json
+{
+  "resourceType": "Encounter",
+  "status": "finished",
+  "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB" },
+  "identifier": [{
+    "system": "http://sys-ids.kemkes.go.id/encounter/{orgId}",
+    "value": "REG-0001"
+  }],
+  "subject": { "reference": "Patient/{ihsNumber}", "display": "Nama Pasien" },
+  "participant": [{
+    "type": [{ "coding": [{ "system": "...", "code": "ATND" }] }],
+    "individual": { "reference": "Practitioner/{ihsId}", "display": "dr. Nama" }
+  }],
+  "period": { "start": "2024-01-15T08:00:00+07:00", "end": "2024-01-15T09:00:00+07:00" },
+  "location": [{ "location": { "reference": "Location/{locationId}" } }],
+  "serviceProvider": { "reference": "Organization/{orgId}" }
+}
+```
+
+### Builder: `EncounterBuilder::build($reg, $orgId)`
+
+```php
+use App\Services\SatuSehat\EncounterBuilder;
+
+$payload = EncounterBuilder::build($reg, $orgId);
+```
+
+- Single source of truth — dipakai oleh **controller** (sync one) maupun **Artisan command** (bulk)
+- `$reg` adalah object registrasi dari DB (dengan join pasien, dokter, dll.)
+- Identifier system diambil dari `satusehat_organizations` lokal; fallback ke `http://sys-ids.kemkes.go.id/encounter/{orgId}`
+
+### Endpoint
+
+```
+POST /satusehat/encounters/sync-one    → sync 1 registrasi (from Vue)
+GET  /satusehat/encounters/sync-status → statistik pending/synced/failed
+```
+
+### Artisan Command (bulk scheduler)
+
+```bash
+php artisan satusehat:sync-encounter --limit=50 --days=7
+```
+
+---
+
+## 10. Modul: Wilayah (BPS Code)
+
+Cache kode administratif BPS (Provinsi/Kab-Kota/Kecamatan/Kelurahan) dari API SatuSehat.
+
+### Cara Kerja
+
+- `satusehat_wilayah` menyimpan semua level (`province`, `city`, `district`, `village`)
+- Setelah cache terisi, kode BPS di-update ke tabel master wilayah lokal (`provinsi.satusehat_code`, dll.)
+- `PatientBuilder` mengambil kode BPS dari FK relasi tabel master, bukan dari lookup real-time
+
+### Endpoint
+
+```
+POST /satusehat/wilayah/fetch-province
+POST /satusehat/wilayah/fetch-city
+POST /satusehat/wilayah/fetch-district
+POST /satusehat/wilayah/fetch-village
+POST /satusehat/wilayah/update-master
+```
+
+---
+
+## 11. Auto-Sync Pasien (LISTEN/NOTIFY)
+
+### Arsitektur Dual-Layer
+
+```
+INSERT ke tabel pasien
+        │
+        ├─── via Eloquent (new Pasien()->save())
+        │         │
+        │         └── PasienObserver::created()
+        │                   │
+        │                   └── Bus::dispatchAfterResponse(SyncPasienToSatuSehat)
+        │
+        └─── via raw DB::table('pasien')->insert() ATAU Eloquent
+                  │
+                  └── PostgreSQL Trigger fn_notify_pasien_inserted()
                             │
-                            └─► Partial match? (str_contains)
-                                    → UPDATE satusehat_code = ssItem.code
+                            └── pg_notify('satusehat_pasien_insert', payload_json)
+                                      │
+                                      └── ListenPasienSatuSehat daemon
+                                                │
+                                                └── SyncPasienToSatuSehat::dispatch(uuid)
 ```
 
----
+**Kedua jalur dapat aktif bersamaan dengan aman** — `SyncPasienToSatuSehat::handle()` cek `id_satu_sehat` di awal; jika sudah terisi, skip tanpa hit API.
 
-## 9. API Logging
+### Layer 1: PostgreSQL LISTEN/NOTIFY
 
-Semua request/response ke SatuSehat API dicatat otomatis tanpa kode tambahan di controller.
-
-**Cara kerja:** `BridgeBase::callWithLog()` dipanggil oleh setiap `getJson()`, `postJson()`, `putJson()`.
-
-**Mengubah context log di controller:**
-
-```php
-$bridge = new BridgeBase();
-$bridge->logContext = 'patient_sync';   // label bebas
-```
-
-**Menonaktifkan logging (opsional):**
-
-```php
-$bridge->enableLogging = false;
-```
-
-**Melihat log via UI:** `/dashboard/satusehat-api-logs`
-
-**Query manual di database:**
-
+**Trigger** (di `database/sql/satu-sehat.sql`):
 ```sql
--- 10 request terakhir yang gagal
-SELECT method, url, http_code, context, duration_ms, created_at
-FROM satusehat_api_logs
-WHERE is_success = false
-ORDER BY created_at DESC
-LIMIT 10;
+CREATE OR REPLACE FUNCTION fn_notify_pasien_inserted()
+RETURNS trigger AS $$
+BEGIN
+    IF NEW.delete_soft = 1
+       AND NEW.no_identitas IS NOT NULL
+       AND NEW.no_identitas <> ''
+       AND NEW.id_satu_sehat IS NULL
+    THEN
+        PERFORM pg_notify(
+            'satusehat_pasien_insert',
+            json_build_object(
+                'uuid',          NEW.uuid,
+                'no_identitas',  NEW.no_identitas,
+                'id_satu_sehat', NEW.id_satu_sehat,
+                'delete_soft',   NEW.delete_soft
+            )::text
+        );
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- Rata-rata durasi per context
-SELECT context, COUNT(*) as total, ROUND(AVG(duration_ms)) as avg_ms
-FROM satusehat_api_logs
-GROUP BY context
-ORDER BY total DESC;
+CREATE TRIGGER trg_pasien_inserted
+    AFTER INSERT ON pasien
+    FOR EACH ROW EXECUTE FUNCTION fn_notify_pasien_inserted();
+```
+
+**Daemon** (`php artisan satusehat:listen-pasien`):
+- Loop polling `pgsqlGetNotify()` dengan timeout 5 detik
+- Saat notifikasi diterima → validasi NIK → `SyncPasienToSatuSehat::dispatch($uuid)`
+- Graceful shutdown: SIGTERM/SIGINT set flag `$shouldStop = true`
+- Auto-reconnect jika koneksi PostgreSQL putus
+
+### Layer 2: Eloquent Observer (Fallback)
+
+```php
+// app/Observers/PasienObserver.php
+public function created(Pasien $pasien): void
+{
+    if (!empty($pasien->id_satu_sehat)) return;
+    if (!preg_match('/^\d{16}$/', trim($pasien->no_identitas ?? ''))) return;
+
+    Bus::dispatchAfterResponse(new SyncPasienToSatuSehat($pasien->uuid));
+}
+```
+
+- **`dispatchAfterResponse()`** — job dikirim setelah HTTP response selesai, tidak memblok request
+- Aktif sebagai safety net saat daemon tidak berjalan
+
+### Job: `SyncPasienToSatuSehat`
+
+```php
+// app/Jobs/SyncPasienToSatuSehat.php
+class SyncPasienToSatuSehat implements ShouldQueue
+{
+    public int $tries   = 2;
+    public array $backoff = [30, 120];  // retry setelah 30 detik, lalu 2 menit
+    public int $timeout = 60;
+}
+```
+
+**Alur `handle()`**:
+1. Fetch pasien dari DB by UUID
+2. Guard: `id_satu_sehat` sudah ada → return (idempoten)
+3. Validasi NIK 16 digit
+4. Build payload via `PatientBuilder::build($pasien)`
+5. POST ke `/fhir-r4/v1/Patient`
+6. Sukses (201): simpan `id_satu_sehat`, set `status = 'synced'`
+7. Duplikat (409/422): GET existing IHS Number, update DB
+8. Gagal: set `status = 'failed'`, throw exception (trigger retry)
+
+---
+
+## 11b. Auto-Sync Encounter/Registrasi (LISTEN/NOTIFY)
+
+### Arsitektur Dual-Layer (sama dengan Pasien)
+
+```
+INSERT / UPDATE ke tabel registrasi
+        │
+        ├─── via Eloquent (new Registrasi()->save() / $reg->update([...]))
+        │         │
+        │         └── RegistrasiObserver::created() / updated()
+        │                   │
+        │                   └── Bus::dispatchAfterResponse(SyncEncounterToSatuSehat)
+        │
+        └─── via raw DB::table('registrasi')->insert/update ATAU Eloquent
+                  │
+                  └── PostgreSQL Trigger fn_notify_registrasi_upsert()
+                            │
+                            └── pg_notify('satusehat_registrasi_upsert', payload_json)
+                                      │
+                                      └── ListenRegistrasiSatuSehat daemon
+                                                │
+                                                └── SyncEncounterToSatuSehat::dispatch(uuid)
+```
+
+### Kondisi Trigger Notifikasi
+
+**INSERT**: Selalu kirim notifikasi jika `delete_soft = 1`
+
+**UPDATE**: Kirim notifikasi jika `delete_soft = 1` DAN encounter belum/gagal sync, DAN salah satu field relevan berubah:
+- `satusehat_location_id` berubah (baru diisi)
+- `satusehat_encounter_status` berubah (di-reset untuk retry)
+- `pasien_uuid` atau `pengguna_uuid` berubah
+- `tanggal` atau `waktu` berubah
+
+Ini berarti update yang tidak relevan (misal ubah catatan/diagnosis) tidak memicu notifikasi yang tidak perlu.
+
+### Status Encounter
+
+| Status | Keterangan |
+|--------|------------|
+| `null` | Belum pernah diproses |
+| `waiting_patient` | Pasien belum punya IHS Number — tunggu sync pasien |
+| `no_location` | `satusehat_location_id` belum diisi |
+| `synced` | Berhasil dikirim ke SatuSehat |
+| `failed` | Gagal — akan di-retry oleh queue (maks 3x) |
+
+### Status `waiting_patient` — Alur Lengkap
+
+Skenario umum: pasien baru didaftarkan bersamaan dengan registrasi.
+
+1. INSERT ke `pasien` → trigger pasien → job `SyncPasienToSatuSehat` dispatch
+2. INSERT ke `registrasi` → trigger registrasi → job `SyncEncounterToSatuSehat` dispatch
+3. Job encounter berjalan: pasien belum punya `id_satu_sehat` → status `waiting_patient`
+4. Job pasien selesai: `id_satu_sehat` terisi
+5. Setelah pasien di-sync, **jalankan sync encounter manual** dari UI atau scheduler untuk pick up status `waiting_patient`
+
+> Untuk otomatisasi penuh, aktifkan trigger UPDATE pada pasien yang memicu re-dispatch encounter yang `waiting_patient`. Lihat catatan di bagian trigger.
+
+### Job: `SyncEncounterToSatuSehat`
+
+```php
+class SyncEncounterToSatuSehat implements ShouldQueue
+{
+    public int $tries   = 3;
+    public array $backoff = [30, 120, 300];  // retry 30 detik, 2 menit, 5 menit
+    public int $timeout = 60;
+}
+```
+
+**Alur `handle()`**:
+1. Fetch registrasi + join pasien, pengguna
+2. Guard: `satusehat_encounter_id` terisi & status `synced` → skip
+3. Guard: pasien belum punya `id_satu_sehat` → status `waiting_patient`, return
+4. Guard: `satusehat_location_id` kosong → status `no_location`, return
+5. Build payload via `EncounterBuilder::build($reg, $orgId)`
+6. POST ke SatuSehat
+7. Sukses: simpan `satusehat_encounter_id`, status `synced`
+8. Duplikat: GET existing Encounter ID, update DB
+9. Gagal: status `failed`, throw untuk retry
+
+### Artisan Command
+
+```bash
+# Development
+php artisan satusehat:listen-registrasi
+
+# Dengan opsi
+php artisan satusehat:listen-registrasi --timeout=5000 --max-jobs=1000
+```
+
+### Supervisor (Production)
+
+File: `config/supervisor/satusehat-registrasi-listener.conf`
+
+```bash
+sudo cp config/supervisor/satusehat-registrasi-listener.conf /etc/supervisor/conf.d/
+sudo supervisorctl reread && sudo supervisorctl update
+sudo supervisorctl start satusehat-registrasi-listener
 ```
 
 ---
 
-## 10. Troubleshooting
+## 12. Shared Services
 
-### Token expired / 401 Unauthorized
+### `PatientBuilder` — `app/Services/SatuSehat/PatientBuilder.php`
 
-Token OAuth2 di-cache dalam memory per request. Jika expired, sistem akan otomatis request token baru saat `Authentication::getToken()` dipanggil. Jika tetap gagal, periksa `CLIENT_ID_SATUSEHAT` dan `CLIENT_SECRET_SATUSEHAT` di `.env`.
-
-### Patient payload ditolak — "Code not found: '722'"
-
-Artinya kode BPS kota/kabupaten tidak valid. Penyebab: kolom `satusehat_code` di tabel `kab_kota` belum terisi. Lakukan:
-1. Fetch wilayah di `/dashboard/satusehat-wilayah` → **Fetch Semua**
-2. Sync ke master → **Sync Semua ke Master**
-3. Periksa tabel `kab_kota` — kolom `satusehat_code` harus sudah terisi
-
-### Encounter ditolak — pasien tidak ditemukan
-
-Pastikan pasien sudah di-sync terlebih dahulu (kolom `id_satu_sehat` tidak NULL). Encounter tidak bisa dibuat tanpa `Patient` terdaftar di SatuSehat.
-
-### Scheduler tidak berjalan
-
-Pastikan cron sudah aktif:
-
-```bash
-crontab -l   # pastikan ada entry scheduler
-php artisan schedule:run --verbose   # test manual
+```php
+PatientBuilder::build(object $pasien, string $method = 'nik'): array
 ```
 
-Periksa log:
+Membangun FHIR Patient payload. Logika di sini adalah **single source of truth** untuk semua kode yang perlu membangun Patient payload — baik sync one, sync bulk, maupun job auto-sync.
 
-```bash
-tail -f storage/logs/satusehat-sync-patient.log
-tail -f storage/logs/satusehat-sync-encounter.log
+### `EncounterBuilder` — `app/Services/SatuSehat/EncounterBuilder.php`
+
+```php
+EncounterBuilder::build(object $reg, string $orgId): array
 ```
 
-### Fetch Semua timeout
+Membangun FHIR Encounter payload. Digunakan oleh:
+- `EncounterSyncCtrl::syncOne()` — sync dari UI Vue
+- `SyncEncounterSatuSehat::handle()` — bulk sync via Artisan scheduler
 
-Default PHP `max_execution_time` bisa di-override paksa. Jika server menggunakan PHP-FPM yang membatasi waktu eksekusi via `request_terminate_timeout`, pertimbangkan untuk:
-- Menonaktifkan fetch kelurahan (terlalu banyak, ratusan ribu data)
-- Menjalankan `fetch-all` secara terjadwal via Artisan command terpisah daripada via HTTP request
+Keduanya memanggil `EncounterBuilder::build()` sehingga perubahan payload cukup dilakukan di satu tempat.
 
-### Melihat semua log error SatuSehat
+### `BridgeBase` — `app/Http/Controllers/SatuSehat/BridgeBase.php`
+
+Base class untuk semua controller SatuSehat. Menyediakan:
+- `getToken()` — OAuth2 client credentials, dengan cache
+- `request(method, endpoint, payload)` — wrapper HTTP call + logging ke `satusehat_api_logs`
+- Base URL otomatis berdasarkan `SATUSEHAT_ENV`
+
+---
+
+## 13. Referensi API Routes
+
+File: `routes/satusehat.php`
+
+### Pasien
+
+| Method | URL | Keterangan |
+|--------|-----|------------|
+| `POST` | `/satusehat/patients/sync-one` | Sync 1 pasien by UUID |
+| `POST` | `/satusehat/patients/sync-all` | Bulk sync semua pasien belum sync |
+| `GET`  | `/satusehat/patients/sync-status` | Statistik sync pasien |
+
+### Practitioner
+
+| Method | URL | Keterangan |
+|--------|-----|------------|
+| `POST` | `/satusehat/practitioners/sync-one` | Sync 1 pengguna |
+| `POST` | `/satusehat/practitioners/sync-all` | Bulk sync |
+| `GET`  | `/satusehat/practitioners/sync-status` | Statistik |
+
+### Organization
+
+| Method | URL | Keterangan |
+|--------|-----|------------|
+| `POST` | `/satusehat/organizations/sync` | Sync & cache dari SatuSehat |
+| `POST` | `/satusehat/organizations/sync-status` | Total & last sync |
+
+### Location
+
+| Method | URL | Keterangan |
+|--------|-----|------------|
+| `POST` | `/satusehat/locations/sync` | Sync & cache dari SatuSehat |
+| `POST` | `/satusehat/locations/sync-status` | Total & last sync |
+| `GET`  | `/satusehat/locations/list` | Daftar untuk dropdown |
+
+### Encounter
+
+| Method | URL | Keterangan |
+|--------|-----|------------|
+| `POST` | `/satusehat/encounters/sync-one` | Sync 1 registrasi |
+| `GET`  | `/satusehat/encounters/sync-status` | Statistik |
+
+### Wilayah
+
+| Method | URL | Keterangan |
+|--------|-----|------------|
+| `POST` | `/satusehat/wilayah/fetch-province` | Fetch & cache provinsi |
+| `POST` | `/satusehat/wilayah/fetch-city` | Fetch & cache kab/kota |
+| `POST` | `/satusehat/wilayah/fetch-district` | Fetch & cache kecamatan |
+| `POST` | `/satusehat/wilayah/fetch-village` | Fetch & cache kelurahan |
+| `POST` | `/satusehat/wilayah/update-master` | Update satusehat_code di tabel master lokal |
+
+---
+
+## 14. Artisan Commands
+
+### `satusehat:listen-pasien`
 
 ```bash
-grep "GAGAL\|failed\|error" storage/logs/satusehat-sync-patient.log
+php artisan satusehat:listen-pasien [--timeout=5000] [--max-jobs=1000]
 ```
 
-Atau via dashboard `/dashboard/satusehat-api-logs` dengan filter Status = Gagal.
+| Option | Default | Keterangan |
+|--------|---------|------------|
+| `--timeout` | `5000` | Timeout polling pg_notify (ms) |
+| `--max-jobs` | `1000` | Restart daemon setelah N job (cegah memory leak) |
+
+**Catatan**: Di production, jalankan via Supervisor — lihat `config/supervisor/satusehat-listener.conf`.
+
+### `satusehat:listen-registrasi`
+
+```bash
+php artisan satusehat:listen-registrasi [--timeout=5000] [--max-jobs=1000]
+```
+
+| Option | Default | Keterangan |
+|--------|---------|------------|
+| `--timeout` | `5000` | Timeout polling pg_notify (ms) |
+| `--max-jobs` | `1000` | Restart daemon setelah N job (cegah memory leak) |
+
+**Catatan**: Di production, jalankan via Supervisor — lihat `config/supervisor/satusehat-registrasi-listener.conf`.
+
+### `satusehat:sync-encounter`
+
+```bash
+php artisan satusehat:sync-encounter [--batch=30] [--delay=300]
+```
+
+Bulk sync registrasi yang belum ter-sync (termasuk status `waiting_patient` setelah pasien di-sync).
+
+### Queue Worker (untuk job)
+
+```bash
+php artisan queue:work --queue=default --sleep=3 --tries=3
+```
+
+Job `SyncPasienToSatuSehat` membutuhkan queue worker aktif.
+
+---
+
+## 15. Alur Kerja Lengkap (Onboarding)
+
+Checklist untuk setup pertama kali di environment baru:
+
+1. **Isi `.env`** — `SATUSEHAT_CLIENT_ID`, `SATUSEHAT_CLIENT_SECRET`, `SATUSEHAT_ORGANIZATION_ID`, `SATUSEHAT_ENV`
+2. **Jalankan SQL** — `psql -f database/sql/satu-sehat.sql` (DDL + trigger)
+3. **Sync Wilayah** — UI Wilayah → fetch semua level → update master
+4. **Sync Organization** — UI Organization → Sync dari SatuSehat
+5. **Sync Location** — UI Location → Sync dari SatuSehat
+6. **Sync Practitioner** — UI Practitioner → Sync All (untuk semua dokter/nakes)
+7. **Sync Pasien Existing** — UI Pasien → Sync All (untuk pasien lama)
+8. **Jalankan Queue Worker** — `php artisan queue:work`
+9. **Jalankan Daemon LISTEN** — via Supervisor atau manual `php artisan satusehat:listen-pasien`
+10. **Test** — daftarkan pasien baru, cek `pasien.id_satu_sehat` terisi otomatis
+
+---
+
+## 16. Deployment Production
+
+### Queue Worker (Supervisor)
+
+```ini
+[program:eye-hospital-worker]
+command=/usr/bin/php /var/www/eye-hospital/artisan queue:work --sleep=3 --tries=3 --max-time=3600
+directory=/var/www/eye-hospital
+user=www-data
+autostart=true
+autorestart=true
+stdout_logfile=/var/log/supervisor/eye-hospital-worker.log
+```
+
+### SatuSehat Listener Daemon (Supervisor)
+
+File: `config/supervisor/satusehat-listener.conf`
+
+```ini
+[program:satusehat-listener]
+command=/usr/bin/php /var/www/eye-hospital/artisan satusehat:listen-pasien --timeout=5000 --max-jobs=1000
+directory=/var/www/eye-hospital
+user=www-data
+autostart=true
+autorestart=true
+startretries=10
+startsecs=3
+stopsignal=TERM
+stopwaitsecs=10
+stdout_logfile=/var/log/supervisor/satusehat-listener.log
+stderr_logfile=/var/log/supervisor/satusehat-listener-error.log
+```
+
+**Install Supervisor:**
+```bash
+sudo apt-get install supervisor
+sudo cp config/supervisor/satusehat-listener.conf /etc/supervisor/conf.d/
+sudo supervisorctl reread && sudo supervisorctl update
+sudo supervisorctl start satusehat-listener
+```
+
+### SatuSehat Registrasi Listener (Supervisor)
+
+File: `config/supervisor/satusehat-registrasi-listener.conf`
+
+```bash
+sudo cp config/supervisor/satusehat-registrasi-listener.conf /etc/supervisor/conf.d/
+sudo supervisorctl reread && sudo supervisorctl update
+sudo supervisorctl start satusehat-registrasi-listener
+```
+
+### Scheduled Command (Laravel Scheduler)
+
+Di `app/Console/Kernel.php`:
+```php
+$schedule->command('satusehat:sync-encounter --limit=100')->hourly();
+```
+
+Aktifkan cron:
+```bash
+* * * * * cd /var/www/eye-hospital && php artisan schedule:run >> /dev/null 2>&1
+```
+
+---
+
+## 17. Troubleshooting
+
+### Pasien tidak ter-sync otomatis
+
+**Kemungkinan penyebab:**
+- Queue worker tidak berjalan → jalankan `php artisan queue:work`
+- Daemon LISTEN tidak berjalan → `sudo supervisorctl status satusehat-listener`
+- NIK pasien tidak valid (bukan 16 digit angka)
+- `delete_soft != 1` (pasien non-aktif)
+
+**Cek log:**
+```bash
+tail -f /var/log/supervisor/satusehat-listener.log
+php artisan queue:failed  # lihat job yang gagal
+```
+
+### Encounter ditolak SatuSehat (400/422)
+
+**Kemungkinan penyebab:**
+- Organization belum di-sync → `identifier_system` kosong, fallback dipakai
+- Pasien belum punya `id_satu_sehat`
+- Dokter/nakes belum punya `satusehat_ihs_id`
+- `satusehat_location_id` tidak terisi di registrasi
+
+**Solusi:** Pastikan urutan onboarding di Bagian 15 diikuti.
+
+### Token SatuSehat expired
+
+BridgeBase meng-cache token dan refresh otomatis. Jika tetap gagal, cek `SATUSEHAT_CLIENT_ID` dan `SATUSEHAT_CLIENT_SECRET` di `.env`.
+
+### Daemon LISTEN tidak menerima notifikasi
+
+```bash
+# Cek trigger terpasang
+psql -c "\d pasien"  # lihat list trigger
+psql -c "SELECT tgname FROM pg_trigger WHERE tgrelid = 'pasien'::regclass;"
+
+# Test manual
+psql -c "LISTEN satusehat_pasien_insert;"
+# (di session lain) INSERT INTO pasien (...) VALUES (...);
+```
+
+### Double-sync (job dikirim 2x untuk pasien yang sama)
+
+Ini **normal** dan **aman** — job kedua akan skip karena `id_satu_sehat` sudah terisi oleh job pertama. Tidak ada data ganda dikirim ke SatuSehat.
+
+### Log API
+
+Semua request/response tersimpan di tabel `satusehat_api_logs`:
+```sql
+SELECT method, url, http_code, is_success, duration_ms, created_at
+FROM satusehat_api_logs
+ORDER BY created_at DESC
+LIMIT 50;
+```
+
+---
+
+*Dokumentasi ini dihasilkan otomatis bersama kode — update setiap ada perubahan arsitektur signifikan.*

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 use App\Models\Pasien;
+use App\Services\SatuSehat\PatientBuilder;
 use PenggunaHelp;
 
 class PatientSyncCtrl extends Controller
@@ -307,7 +308,7 @@ class PatientSyncCtrl extends Controller
         }
 
         try {
-            $payload = $this->buildPatientPayload($pasien, $method);
+            $payload = PatientBuilder::build($pasien, $method);
             $result  = $bridge->postJson('Patient', $payload);
 
             $ihsId = $result['id'] ?? null;
@@ -439,7 +440,7 @@ class PatientSyncCtrl extends Controller
 
         foreach ($candidates as $pasien) {
             try {
-                $payload = $this->buildPatientPayload($pasien, $method);
+                $payload = PatientBuilder::build($pasien, $method);
                 $result  = $bridge->postJson('Patient', $payload);
                 $ihsId   = $result['id'] ?? null;
 
@@ -491,171 +492,6 @@ class PatientSyncCtrl extends Controller
             'failed'  => $failed,
             'output'  => implode("\n", $log),
         ]);
-    }
-
-    /**
-     * Build FHIR Patient resource payload dari data pasien lokal.
-     *
-     * Kode wilayah BPS (administrativeCode) diambil dari tabel master via FK:
-     *   provinsi_id  → provinsi.satusehat_code
-     *   kab_kota_id  → kab_kota.satusehat_code
-     *   kecamatan_id → kecamatan.satusehat_code
-     *   kelurahan_id → kelurahan.satusehat_code
-     *
-     * Pastikan master wilayah sudah di-sync via Dashboard → SatuSehat → Wilayah.
-     * Minimal province + city harus tersedia agar extension administrativeCode disertakan.
-     * SatuSehat memvalidasi konsistensi hierarki kode BPS (Rule 10621–10623).
-     */
-    private function buildPatientPayload(object $pasien, string $method = 'nik'): array
-    {
-        $nik    = trim($pasien->no_identitas ?? '');
-        $system = $method === 'nik_ibu'
-            ? 'https://fhir.kemkes.go.id/id/nik-ibu'
-            : 'https://fhir.kemkes.go.id/id/nik';
-
-        // Gender mapping
-        $genderRaw = strtolower(trim($pasien->jenis_kelamin ?? ''));
-        $gender = match(true) {
-            in_array($genderRaw, ['laki-laki', 'laki laki', 'l', 'male'])   => 'male',
-            in_array($genderRaw, ['perempuan', 'p', 'female', 'wanita'])    => 'female',
-            default                                                          => 'unknown',
-        };
-
-        // Marital status mapping
-        $maritalRaw  = strtolower(trim($pasien->status_pernikahan ?? ''));
-        $maritalCode = match(true) {
-            str_contains($maritalRaw, 'menikah') && !str_contains($maritalRaw, 'belum') && !str_contains($maritalRaw, 'cerai') => 'M',
-            str_contains($maritalRaw, 'belum')   => 'U',
-            str_contains($maritalRaw, 'hidup')   => 'D',
-            str_contains($maritalRaw, 'mati')    => 'W',
-            default                              => 'U',
-        };
-        $maritalDisplay = ['M' => 'Married', 'U' => 'Unmarried', 'D' => 'Divorced', 'W' => 'Widowed'][$maritalCode] ?? 'Unmarried';
-
-        $payload = [
-            'resourceType' => 'Patient',
-            'meta'         => ['profile' => ['https://fhir.kemkes.go.id/r4/StructureDefinition/Patient']],
-            'identifier'   => [[
-                'use'    => 'official',
-                'system' => $system,
-                'value'  => $nik,
-            ]],
-            'active'           => true,
-            'name'             => [['use' => 'official', 'text' => strtoupper($pasien->nama ?? '')]],
-            'gender'           => $gender,
-            'birthDate'        => $pasien->tanggal_lahir ?? null,
-            'deceasedBoolean'  => false,
-            'maritalStatus'    => [
-                'coding' => [[
-                    'system'  => 'http://terminology.hl7.org/CodeSystem/v3-MaritalStatus',
-                    'code'    => $maritalCode,
-                    'display' => $maritalDisplay,
-                ]],
-                'text' => $maritalDisplay,
-            ],
-            'multipleBirthInteger' => 0,
-            'communication'    => [[
-                'language' => [
-                    'coding' => [[
-                        'system'  => 'urn:ietf:bcp:47',
-                        'code'    => 'id-ID',
-                        'display' => 'Indonesian',
-                    ]],
-                    'text' => 'Indonesian',
-                ],
-                'preferred' => true,
-            ]],
-        ];
-
-        // Telecom (handphone)
-        $hp = trim($pasien->no_handphone ?? '');
-        if ($hp && $hp !== '-') {
-            $payload['telecom'] = [[
-                'system' => 'phone',
-                'value'  => $hp,
-                'use'    => 'mobile',
-            ]];
-        }
-
-        // Address
-        $alamat = trim($pasien->alamat ?? '');
-        if ($alamat && $alamat !== '-') {
-            $payload['address'] = [[
-                'use'        => 'home',
-                'line'       => [$alamat],
-                'city'       => $pasien->nama_kab_kota ?? '',
-                'postalCode' => $pasien->kodepos ?? '',
-                'country'    => 'ID',
-            ]];
-
-            /**
-             * Kode administratif BPS/SatuSehat — diambil dari tabel master wilayah via FK.
-             *
-             * Struktur kode BPS bersifat prefix-bertingkat (divalidasi SatuSehat Rule 10621–10623):
-             *   Province    : 2 digit  (misal "31")
-             *   City        : 4 digit  = province + 2  (misal "3171")
-             *   District    : 6 digit  = city + 2      (misal "317101")
-             *   Sub-district: 10 digit = district + 4  (misal "3171010001")
-             *
-             * Pastikan tabel master sudah di-sync via Dashboard → SatuSehat → Wilayah.
-             */
-            $provinceCode    = '';
-            $cityCode        = '';
-            $districtCode    = '';
-            $subdistrictCode = '';
-
-            if (!empty($pasien->provinsi_id)) {
-                $provinceCode = (string)(DB::table('provinsi')
-                    ->where('id', $pasien->provinsi_id)->value('satusehat_code') ?? '');
-            }
-            if (!empty($pasien->kab_kota_id)) {
-                $cityCode = (string)(DB::table('kab_kota')
-                    ->where('id', $pasien->kab_kota_id)->value('satusehat_code') ?? '');
-            }
-            if (!empty($pasien->kecamatan_id)) {
-                $districtCode = (string)(DB::table('kecamatan')
-                    ->where('id', $pasien->kecamatan_id)->value('satusehat_code') ?? '');
-            }
-            if (!empty($pasien->kelurahan_id)) {
-                $subdistrictCode = (string)(DB::table('kelurahan')
-                    ->where('id', $pasien->kelurahan_id)->value('satusehat_code') ?? '');
-            }
-
-            /**
-             * Validasi hierarki — jika kode tidak konsisten, hapus level yang salah
-             * daripada mengirim payload yang pasti ditolak SatuSehat.
-             */
-            if ($cityCode && $provinceCode && !str_starts_with($cityCode, $provinceCode)) {
-                $cityCode        = '';
-                $districtCode    = '';
-                $subdistrictCode = '';
-            }
-            if ($districtCode && $cityCode && !str_starts_with($districtCode, $cityCode)) {
-                $districtCode    = '';
-                $subdistrictCode = '';
-            }
-            if ($subdistrictCode && $districtCode && !str_starts_with($subdistrictCode, $districtCode)) {
-                $subdistrictCode = '';
-            }
-
-            // Sertakan extension hanya jika minimal province + city tersedia dan konsisten
-            if ($provinceCode && $cityCode) {
-                $adminExt = [
-                    ['url' => 'province', 'valueCode' => $provinceCode],
-                    ['url' => 'city',     'valueCode' => $cityCode],
-                ];
-                if ($districtCode)    $adminExt[] = ['url' => 'district', 'valueCode' => $districtCode];
-                if ($subdistrictCode) $adminExt[] = ['url' => 'village',  'valueCode' => $subdistrictCode];
-
-                $payload['address'][0]['extension'] = [[
-                    'url'       => 'https://fhir.kemkes.go.id/r4/StructureDefinition/administrativeCode',
-                    'extension' => $adminExt,
-                ]];
-            }
-            // Jika belum ada kode atau tidak konsisten → address tetap dikirim tanpa extension
-        }
-
-        return $payload;
     }
 
     /**

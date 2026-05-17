@@ -153,3 +153,175 @@ CREATE TABLE IF NOT EXISTS satusehat_organizations (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_ss_org_satusehat_id ON satusehat_organizations (satusehat_id);
 CREATE INDEX        IF NOT EXISTS idx_ss_org_aktif        ON satusehat_organizations (aktif);
 CREATE INDEX        IF NOT EXISTS idx_ss_org_part_of      ON satusehat_organizations (part_of);
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- PostgreSQL LISTEN/NOTIFY — auto-sync pasien ke SatuSehat
+-- ═══════════════════════════════════════════════════════════════════════════════
+--
+-- Cara kerja:
+--   1. Setiap INSERT ke tabel `pasien`, trigger memanggil pg_notify()
+--   2. Artisan daemon `php artisan satusehat:listen-pasien` mendengarkan channel
+--   3. Daemon menerima notifikasi → dispatch SyncPasienToSatuSehat job
+--
+-- Channel yang digunakan: 'satusehat_pasien_insert'
+-- Payload: JSON minimal (uuid, no_identitas, id_satu_sehat, delete_soft)
+--
+-- Catatan: pg_notify payload maksimal 8000 byte. Kita hanya kirim field
+-- yang diperlukan untuk validasi awal — data lengkap diambil ulang di job.
+-- ─────────────────────────────────────────────────────────────────────────────
+
+-- Fungsi trigger untuk INSERT pasien baru
+CREATE OR REPLACE FUNCTION fn_notify_pasien_inserted()
+RETURNS trigger AS $$
+BEGIN
+    -- Kirim notifikasi hanya jika:
+    --   - pasien aktif (delete_soft = 1)
+    --   - NIK terisi (no_identitas not null / not empty)
+    --   - Belum punya IHS ID (id_satu_sehat masih null)
+    IF NEW.delete_soft = 1
+       AND NEW.no_identitas IS NOT NULL
+       AND NEW.no_identitas <> ''
+       AND NEW.id_satu_sehat IS NULL
+    THEN
+        PERFORM pg_notify(
+            'satusehat_pasien_insert',
+            json_build_object(
+                'uuid',           NEW.uuid,
+                'no_identitas',   NEW.no_identitas,
+                'id_satu_sehat',  NEW.id_satu_sehat,
+                'delete_soft',    NEW.delete_soft
+            )::text
+        );
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Pasang trigger AFTER INSERT on pasien
+-- DROP dulu jika sudah ada (idempotent saat re-run)
+DROP TRIGGER IF EXISTS trg_pasien_inserted ON pasien;
+CREATE TRIGGER trg_pasien_inserted
+    AFTER INSERT ON pasien
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_notify_pasien_inserted();
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- PostgreSQL LISTEN/NOTIFY — auto-sync registrasi (Encounter) ke SatuSehat
+-- ═══════════════════════════════════════════════════════════════════════════════
+--
+-- Cara kerja:
+--   1. Setiap INSERT atau UPDATE ke tabel `registrasi`, trigger memanggil pg_notify()
+--   2. Artisan daemon `php artisan satusehat:listen-registrasi` mendengarkan channel
+--   3. Daemon menerima notifikasi → dispatch SyncEncounterToSatuSehat job
+--
+-- Channel yang digunakan: 'satusehat_registrasi_upsert'
+-- Payload: JSON minimal (uuid, nomor, satusehat_encounter_id, satusehat_encounter_status, event)
+--
+-- Kondisi trigger notifikasi:
+--   INSERT : delete_soft = 1 (registrasi aktif)
+--   UPDATE : delete_soft = 1 DAN (encounter_id NULL ATAU status bukan 'synced')
+--            → mencakup retry setelah pasien di-sync, location diisi, dsb.
+-- ─────────────────────────────────────────────────────────────────────────────
+
+-- Fungsi trigger untuk INSERT / UPDATE registrasi
+CREATE OR REPLACE FUNCTION fn_notify_registrasi_upsert()
+RETURNS trigger AS $$
+DECLARE
+    v_event TEXT;
+BEGIN
+    -- Tentukan jenis event
+    IF TG_OP = 'INSERT' THEN
+        v_event := 'insert';
+    ELSE
+        v_event := 'update';
+    END IF;
+
+    -- INSERT: kirim notifikasi jika registrasi aktif
+    IF TG_OP = 'INSERT' AND NEW.delete_soft = 1 THEN
+        PERFORM pg_notify(
+            'satusehat_registrasi_upsert',
+            json_build_object(
+                'uuid',                       NEW.uuid,
+                'nomor',                      NEW.nomor,
+                'satusehat_encounter_id',     NEW.satusehat_encounter_id,
+                'satusehat_encounter_status', NEW.satusehat_encounter_status,
+                'event',                      v_event
+            )::text
+        );
+    END IF;
+
+    -- UPDATE: kirim notifikasi jika aktif DAN belum/gagal sync
+    IF TG_OP = 'UPDATE'
+       AND NEW.delete_soft = 1
+       AND (
+           NEW.satusehat_encounter_id IS NULL
+           OR NEW.satusehat_encounter_status IN ('failed', 'waiting_patient', 'no_location')
+       )
+    THEN
+        -- Hanya kirim jika ada perubahan field yang relevan untuk sync
+        IF NEW.satusehat_location_id     IS DISTINCT FROM OLD.satusehat_location_id
+           OR NEW.satusehat_encounter_status IS DISTINCT FROM OLD.satusehat_encounter_status
+           OR NEW.pasien_uuid            IS DISTINCT FROM OLD.pasien_uuid
+           OR NEW.pengguna_uuid          IS DISTINCT FROM OLD.pengguna_uuid
+           OR NEW.tanggal                IS DISTINCT FROM OLD.tanggal
+           OR NEW.waktu                  IS DISTINCT FROM OLD.waktu
+           OR (OLD.satusehat_encounter_id IS NOT NULL AND NEW.satusehat_encounter_id IS NULL)
+        THEN
+            PERFORM pg_notify(
+                'satusehat_registrasi_upsert',
+                json_build_object(
+                    'uuid',                       NEW.uuid,
+                    'nomor',                      NEW.nomor,
+                    'satusehat_encounter_id',     NEW.satusehat_encounter_id,
+                    'satusehat_encounter_status', NEW.satusehat_encounter_status,
+                    'event',                      v_event
+                )::text
+            );
+        END IF;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Pasang trigger AFTER INSERT OR UPDATE on registrasi
+-- DROP dulu jika sudah ada (idempotent saat re-run)
+DROP TRIGGER IF EXISTS trg_registrasi_upsert ON registrasi;
+CREATE TRIGGER trg_registrasi_upsert
+    AFTER INSERT OR UPDATE ON registrasi
+    FOR EACH ROW
+    EXECUTE FUNCTION fn_notify_registrasi_upsert();
+
+-- ─────────────────────────────────────────────────────────────────────────────
+
+-- (Opsional) Trigger untuk UPDATE — aktifkan jika ingin re-sync saat NIK berubah
+-- CREATE OR REPLACE FUNCTION fn_notify_pasien_updated()
+-- RETURNS trigger AS $$
+-- BEGIN
+--     -- Kirim notifikasi hanya jika NIK berubah dan IHS ID belum ada
+--     IF NEW.no_identitas IS DISTINCT FROM OLD.no_identitas
+--        AND NEW.id_satu_sehat IS NULL
+--        AND NEW.no_identitas IS NOT NULL
+--        AND NEW.no_identitas <> ''
+--        AND NEW.delete_soft = 1
+--     THEN
+--         PERFORM pg_notify(
+--             'satusehat_pasien_insert',
+--             json_build_object(
+--                 'uuid',          NEW.uuid,
+--                 'no_identitas',  NEW.no_identitas,
+--                 'id_satu_sehat', NEW.id_satu_sehat,
+--                 'delete_soft',   NEW.delete_soft,
+--                 'event',         'update_nik'
+--             )::text
+--         );
+--     END IF;
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+--
+-- DROP TRIGGER IF EXISTS trg_pasien_updated ON pasien;
+-- CREATE TRIGGER trg_pasien_updated
+--     AFTER UPDATE ON pasien
+--     FOR EACH ROW
+--     EXECUTE FUNCTION fn_notify_pasien_updated();
