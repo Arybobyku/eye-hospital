@@ -533,6 +533,9 @@ export default {
     FormLaporanInsiden: defineAsyncComponent(() =>
       import("./create/FormLaporanInsiden.vue")
     ),
+    FormCatatanKeperawatanOperasi: defineAsyncComponent(() =>
+      import("./create/FormCatatanKeperawatanOperasi.vue")
+    ),
   },
 
   data() {
@@ -909,6 +912,13 @@ export default {
           description: "Formulir Laporan Insiden ke Tim KP di RS (RM 7.9/LI)",
           backendType: "dokumen_laporan_insiden",
         },
+        {
+          value: "dokumen_catatan_keperawatan_operasi",
+          label: "Catatan Keperawatan Operasi",
+          component: "FormCatatanKeperawatanOperasi",
+          description: "Catatan Keperawatan Intra Dan Pasca Operasi (RM 4.6/CKIDPO)",
+          backendType: "dokumen_catatan_keperawatan_operasi",
+        },
       ],
     };
   },
@@ -1197,6 +1207,7 @@ export default {
         dokumen_status_oftalmologis: `/print/rekammedis/general/statusoftalmologis/${item.uuid}`,
         dokumen_laporan_operasi: `/print/rekammedis/general/laporanoperasi/${item.uuid}`,
         dokumen_laporan_insiden: `/print/rekammedis/general/laporaninsiden/${item.uuid}`,
+        dokumen_catatan_keperawatan_operasi: `/print/rekammedis/general/catatankeperawatanoperasi/${item.uuid}`,
         dokumen_form_laser_barrage: `/print/rekammedis/general/formlaserbarrage/${item.uuid}`,
         dokumen_asuhan_gizi: `/print/rekammedis/general/asuhangizi/${item.uuid}`,
         dokumen_tindakan_laser_lpi: `/print/rekammedis/general/tindakanlaserlpi/${item.uuid}`,

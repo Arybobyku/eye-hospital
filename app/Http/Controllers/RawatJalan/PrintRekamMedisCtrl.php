@@ -44,6 +44,7 @@ use App\Models\DokumenFormLaserFokal;
 use App\Models\DokumenStatusOftalmologis;
 use App\Models\DokumenLaporanOperasi;
 use App\Models\DokumenLaporanInsiden;
+use App\Models\DokumenCatatanKeperawatanOperasi;
 use App\Models\DokumenAsuhanGizi;
 use App\Models\DokumenCatatanOperasi;
 use App\Models\DokumenSuratPernyataanBatalOperasi;
@@ -821,6 +822,18 @@ function printGeneral($uuid)
       compact('pasien', 'data')
     )->setPaper('a4', 'portrait');
 
+    return $pdf->stream();
+  }
+
+  public function printCatatanKeperawatanOperasi($uuid)
+  {
+    $pdf    = \App::make('dompdf.wrapper');
+    $data   = DokumenCatatanKeperawatanOperasi::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.catatankeperawatanoperasi',
+      compact('pasien', 'data')
+    )->setPaper('a4', 'portrait');
     return $pdf->stream();
   }
 

@@ -59,6 +59,7 @@ use App\Models\DokumenLaporanOperasiVitreoRetina;
 use App\Models\DokumenStatusOftalmologis;
 use App\Models\DokumenLaporanOperasi;
 use App\Models\DokumenLaporanInsiden;
+use App\Models\DokumenCatatanKeperawatanOperasi;
 use App\Models\Pengguna;
 use App\Models\DokumenAsesmenPraOperasi;
 use Illuminate\Support\Str;              // ✅ Tambahkan ini
@@ -3382,6 +3383,148 @@ public function storeAsesmenPraOperasi(Request $request)
                 'message' => 'Gagal menyimpan Laporan Operasi',
                 'error'   => $e->getMessage(),
             ], 500);
+        }
+    }
+
+    // ── Catatan Keperawatan Intra Dan Pasca Operasi ────────────────────────────
+    public function storeCatatanKeperawatanOperasi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+            unset($data['id']);
+
+            // Decode cairan_infus JSON string back to array
+            if (isset($data['cairan_infus']) && is_string($data['cairan_infus'])) {
+                $data['cairan_infus'] = json_decode($data['cairan_infus'], true) ?? [];
+            }
+
+            $boolFields = [
+                'tipe_elektif', 'tipe_darurat', 'tipe_rawat_jalan',
+                'biusan_umum', 'biusan_lokal', 'biusan_regional',
+                'kesadaran_terjaga', 'kesadaran_mudah_dibangunkan',
+                'emosi_rileks', 'emosi_gelisah', 'emosi_tidak_ada_respon',
+                'canul_tangan', 'canul_kaki', 'canul_cvp',
+                'jenis_op_bersih', 'jenis_op_terkontaminasi',
+                'jenis_op_bersih_terkontaminasi', 'jenis_op_kotor_infeksi',
+                'posisi_supine', 'posisi_prone', 'posisi_lithotomi',
+                'posisi_kidney', 'posisi_lateral',
+                'selengantangan_adduksi', 'selengantangan_abduksi',
+                'urine_ya', 'urine_tidak', 'urine_ok', 'urine_ruangan',
+                'desinfeksi_iodium', 'desinfeksi_alkohol',
+                'desinfeksi_povidone', 'desinfeksi_chlorhexidine',
+                'insisi_pfannenstiel',
+                'alat_hand_rest', 'alat_lithotomi_support', 'alat_lateral_support',
+                'alat_chest_support', 'alat_heat_frame',
+                'diatermi_ya', 'diatermi_tidak',
+                'diatermi_monopolar', 'diatermi_bipolar',
+                'diatermi_netral_bokong', 'diatermi_netral_tungkai_atas',
+                'diatermi_netral_tungkai_bawah', 'diatermi_netral_punggung',
+                'diatermi_netral_bahu',
+                'diatermi_kulit_sbl_utuh', 'diatermi_kulit_sbl_bulosa',
+                'diatermi_kulit_sbl_eritema', 'diatermi_kulit_sbl_luka_bakar',
+                'diatermi_kulit_ssd_utuh', 'diatermi_kulit_ssd_bulosa',
+                'diatermi_kulit_ssd_eritema', 'diatermi_kulit_ssd_luka_bakar',
+                'warm_blanket_ya', 'warm_blanket_tidak',
+                'tourniquet_ya', 'tourniquet_tidak',
+                'tourniquet_lengan', 'tourniquet_kaki',
+                'implant_ya', 'implant_tidak',
+                'drain_ya', 'drain_tidak',
+                'irigasi_ya', 'irigasi_tidak',
+                'irigasi_nacl', 'irigasi_h2o2', 'irigasi_antibiotik',
+                'tampon_ya', 'tampon_tidak',
+                'spesimen_histology', 'spesimen_kultur',
+                'spesimen_cytologi', 'spesimen_frozen',
+                // C1 Gangguan pola nafas
+                'c_gn_neuro_muskular', 'c_gn_penumpukan_sekret',
+                'c_gn_int_jalan_nafas', 'c_gn_int_hiperekstensi', 'c_gn_int_observasi_rr',
+                'c_gn_int_pantau_ttv', 'c_gn_int_suction', 'c_gn_int_o2', 'c_gn_int_obat',
+                'c_gn_eval_ttv_normal', 'c_gn_eval_nafas_spontan', 'c_gn_eval_sianosis',
+                'c_gn_eval_observasi_ruangan',
+                // C2 Resiko kekurangan cairan
+                'c_rc_pembatasan_intake', 'c_rc_hilang_cairan', 'c_rc_pengeluaran_integritas',
+                'c_rc_int_ukur_io', 'c_rc_int_pantau_ttv', 'c_rc_int_mual_muntah',
+                'c_rc_int_periksa_pembalut', 'c_rc_int_pantau_suhu',
+                'c_rc_eval_ttv_normal', 'c_rc_eval_mukosa_lembab', 'c_rc_eval_turgor_elastis',
+                // C3 Resiko cedera
+                'c_rd_pemajanan_peralatan', 'c_rd_hipoksia_jaringan',
+                'c_rd_int_lepas_gigi', 'c_rd_int_periksa_identitas', 'c_rd_int_brankar',
+                'c_rd_int_sabuk', 'c_rd_int_peralatan_posisi', 'c_rd_int_keamanan_elektrikal',
+                'c_rd_int_plate_diatermi', 'c_rd_int_pantau_io', 'c_rd_int_catat_kassa',
+                'c_rd_eval_posisi', 'c_rd_eval_alat_elektro', 'c_rd_eval_kassa',
+                // C4 Resiko infeksi intra
+                'c_ri_trauma_post', 'c_ri_pemajanan_lingkungan', 'c_ri_pemajanan_peralatan',
+                'c_ri_int_cuci_tangan', 'c_ri_int_desinfeksi', 'c_ri_int_kadaluarsa',
+                'c_ri_int_sterilitas', 'c_ri_int_tutup_luka',
+                'c_ri_eval_lingkungan_steril',
+                // D Pengkajian pasca operasi
+                'd_ruang_pemulihan_ya', 'd_ruang_pemulihan_tidak',
+                'd_kembali_ruangan', 'd_kembali_icu',
+                'd_keadaan_baik', 'd_keadaan_sedang', 'd_keadaan_buruk',
+                'd_kesadaran_cm', 'd_kesadaran_apatis', 'd_kesadaran_somnolen',
+                'd_kesadaran_sopor', 'd_kesadaran_koma',
+                'd_kulit_datang_kering', 'd_kulit_datang_merah_muda', 'd_kulit_datang_hangat',
+                'd_kulit_keluar_kering', 'd_kulit_keluar_merah_muda', 'd_kulit_keluar_hangat',
+                'd_sirkulasi_merah_muda', 'd_sirkulasi_kebiruan',
+                'd_posisi_lateral', 'd_posisi_datar', 'd_posisi_head_up', 'd_posisi_semi_fowler',
+                'd_perdarahan_ya', 'd_perdarahan_tidak',
+                'd_muntah_ya', 'd_muntah_tidak',
+                'd_mukosa_lembab', 'd_mukosa_kering',
+                'd_jaringan_pa_ya', 'd_jaringan_pa_tidak', 'd_jaringan_pa_k_bedah', 'd_jaringan_pa_ruangan',
+                'd_nyeri_ya', 'd_nyeri_tidak',
+                'd_jatuh_ringan', 'd_jatuh_sedang', 'd_jatuh_tinggi',
+                'd_nadi_teratur_masuk', 'd_nadi_teratur_keluar',
+                'd_nadi_tidak_teratur_masuk', 'd_nadi_tidak_teratur_keluar',
+                'd_nadi_lemah_masuk', 'd_nadi_lemah_keluar',
+                'd_nadi_takikardia_masuk', 'd_nadi_takikardia_keluar',
+                'd_nadi_normal_masuk', 'd_nadi_normal_keluar',
+                'd_nafas_teratur_masuk', 'd_nafas_teratur_keluar',
+                'd_nafas_tidak_teratur_masuk', 'd_nafas_tidak_teratur_keluar',
+                'd_nafas_dangkal_masuk', 'd_nafas_dangkal_keluar',
+                'd_nafas_dalam_masuk', 'd_nafas_dalam_keluar',
+                'd_nafas_sukar_masuk', 'd_nafas_sukar_keluar',
+                // E1 Nyeri akut
+                'e_na_gangguan_kulit', 'e_na_selang_drain',
+                'e_na_int_kaji_lokasi', 'e_na_int_kaji_ttv', 'e_na_int_atur_posisi', 'e_na_int_relaksasi',
+                'e_na_eval_ttv_normal', 'e_na_eval_nyeri_terkontrol',
+                'e_na_eval_nyeri_berkurang', 'e_na_eval_observasi_ruangan',
+                // E2 Resiko infeksi pasca
+                'e_ri_trauma_post', 'e_ri_pemajanan_lingkungan', 'e_ri_pemajanan_peralatan',
+                'e_ri_int_cuci_tangan', 'e_ri_int_desinfeksi', 'e_ri_int_kadaluarsa',
+                'e_ri_int_sterilitas', 'e_ri_int_tutup_luka',
+                'e_ri_eval_lingkungan_steril',
+                // E3 Resiko suhu
+                'e_rs_suhu_rendah', 'e_rs_penggunaan_obat', 'e_rs_dehidrasi',
+                'e_rs_int_catat_suhu', 'e_rs_int_kaji_suhu', 'e_rs_int_kolaborasi_obat',
+                'e_rs_eval_dingin_berkurang', 'e_rs_eval_tidak_menggigil',
+            ];
+            foreach ($boolFields as $field) {
+                $data[$field] = filter_var($data[$field] ?? false, FILTER_VALIDATE_BOOLEAN);
+            }
+
+            if ($uuid) {
+                $dokumen = DokumenCatatanKeperawatanOperasi::where('uuid', $uuid)->first();
+                if (!$dokumen) return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'Catatan Keperawatan Operasi berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenCatatanKeperawatanOperasi::create($data);
+                $action  = 'create';
+                $message = 'Catatan Keperawatan Operasi berhasil disimpan';
+            }
+
+            DB::commit();
+            return response()->json(['status' => true, 'message' => $message, 'data' => $dokumen, 'action' => $action], $action === 'create' ? 201 : 200);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['status' => false, 'message' => 'Gagal menyimpan Catatan Keperawatan Operasi', 'error' => $e->getMessage()], 500);
         }
     }
 

@@ -541,6 +541,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-exclamation-triangle',
                     'color' => '#E65100',
                 ],
+                [
+                    'table' => 'dokumen_catatan_keperawatan_operasi',
+                    'type' => 'dokumen_catatan_keperawatan_operasi',
+                    'label' => 'Catatan Keperawatan Operasi',
+                    'icon' => 'fa-notes-medical',
+                    'color' => '#00695C',
+                ],
             ];
 
             // if (!empty($search)) {
@@ -909,6 +916,11 @@ class RekamMedisCtrl extends Controller
                 'waktu'    => "$table.insiden_tanggal",
                 'no_surat' => 'RM 7.9/LI/22',
             ],
+            'dokumen_catatan_keperawatan_operasi' => [
+                'tanggal'  => "$table.created_at",
+                'waktu'    => "$table.created_at",
+                'no_surat' => 'RM 4.6/CKIDPO/22',
+            ],
             'dokumen_laporan_operasi_vitreo_retina' => [
                 'tanggal' => "$table.created_at",
                 'waktu'   => "$table.created_at",
@@ -1023,6 +1035,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_status_oftalmologis' => 'dokumen_status_oftalmologis',
                 'dokumen_laporan_operasi'     => 'dokumen_laporan_operasi',
                 'dokumen_laporan_insiden'     => 'dokumen_laporan_insiden',
+                'dokumen_catatan_keperawatan_operasi' => 'dokumen_catatan_keperawatan_operasi',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -1121,6 +1134,7 @@ class RekamMedisCtrl extends Controller
                 'dokumen_status_oftalmologis' => 'dokumen_status_oftalmologis',
                 'dokumen_laporan_operasi'     => 'dokumen_laporan_operasi',
                 'dokumen_laporan_insiden'     => 'dokumen_laporan_insiden',
+                'dokumen_catatan_keperawatan_operasi' => 'dokumen_catatan_keperawatan_operasi',
             ];
 
             if (!isset($tableMap[$type])) {
