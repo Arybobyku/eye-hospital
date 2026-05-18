@@ -173,10 +173,10 @@ class PatientSyncCtrl extends Controller
         // Filter pencarian
         if ($search !== '') {
             $query->where(function ($q) use ($search) {
-                $q->where('nama',          'ilike', '%' . $search . '%')
-                  ->orWhere('rekam_medis', 'ilike', '%' . $search . '%')
-                  ->orWhere('no_identitas','ilike', '%' . $search . '%')
-                  ->orWhere('id_satu_sehat','ilike', '%' . $search . '%');
+                $q->where('pasien.nama',          'ilike', '%' . $search . '%')
+                  ->orWhere('pasien.rekam_medis', 'ilike', '%' . $search . '%')
+                  ->orWhere('pasien.no_identitas','ilike', '%' . $search . '%')
+                  ->orWhere('pasien.id_satu_sehat','ilike', '%' . $search . '%');
             });
         }
 
