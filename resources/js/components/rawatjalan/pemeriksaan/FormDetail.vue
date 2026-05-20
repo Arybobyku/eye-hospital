@@ -44,7 +44,7 @@
 
 						<div class="tab-content">
 
-							<div style="position: relative;" class="content-tab-in" v-if="tab.content.ocular_dextra">
+							<div style="position: relative;" class="content-tab-in" v-show="tab.content.ocular_dextra">
 								<div class="grid">
 									<!-- Ocular Dextra -->
 									<div class="col-6">
@@ -53,12 +53,12 @@
 											<div class="col-4">
 												<Selected v-on:click="selectbox($event, form.select.oculardextraautoref_s.name, form.select.oculardextraautoref_s.statics)"
 												:ref="form.select.oculardextraautoref_s.name" @selecteditem="selecteditem" @selectclear="selectclear"
-												:selection="form.select.oculardextraautoref_s"></Selected>
+												:selection="form.select.oculardextraautoref_s" ></Selected>
 											</div>
 											<div class="col-4">
 												<Selected v-on:click="selectbox($event, form.select.oculardextraautoref_c.name, form.select.oculardextraautoref_c.statics)"
 												:ref="form.select.oculardextraautoref_c.name" @selecteditem="selecteditem" @selectclear="selectclear"
-												:selection="form.select.oculardextraautoref_c"></Selected>
+												:selection="form.select.oculardextraautoref_c" ></Selected>
 											</div>
 											<div class="col-4">
 												<Selected v-on:click="selectbox($event, form.select.oculardextraautoref_x.name, form.select.oculardextraautoref_x.statics)"
@@ -259,7 +259,7 @@
 								</div>
 							</div>
 
-							<div style="position: relative" class="content-tab-in" v-if="tab.content.cppt">
+							<div style="position: relative" class="content-tab-in" v-show="tab.content.cppt">
 
 
 								<div class="grid">
@@ -393,6 +393,18 @@ export default {
 			content: { ocular_dextra: true,  cppt: false, }
 		},
 	}},
+	watch: {
+		form: {
+			deep: true,
+			handler() {
+				clearTimeout(this.ckTimeout);
+
+				this.ckTimeout = setTimeout(() => {
+					this.setCkEditor();
+				}, 100);
+			}
+		}
+	},
 	methods: {
 
 		datename,
@@ -457,8 +469,8 @@ export default {
 			var osautoref_x = vm.form.select.ocularsinistraautoref_x.value;
 			var osautoref = '';
 			if (osautoref_s) osautoref += 's ' + osautoref_s + ' ';
-			if (osautoref_c) osautoref += ' c ' + odautoref_c + ' ';
-			if (osautoref_x) osautoref += ' x ' + odautoref_x;
+			if (osautoref_c) osautoref += ' c ' + osautoref_c + ' ';
+			if (osautoref_x) osautoref += ' x ' + osautoref_x;
 			osautoref = osautoref.trim();
 
 			var odbcva1_s = vm.form.select.oculardextrabcva1_s.value;
