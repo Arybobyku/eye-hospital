@@ -430,6 +430,39 @@ export default {
     FormSuratBalasanKonsul: defineAsyncComponent(() =>
       import("./create/FormSuratBalasanKonsul.vue")
     ),
+    FormProtokolTindakanTerapi: defineAsyncComponent(() =>
+      import("./create/FormProtokolTindakanTerapi.vue")
+    ),
+    FormFormulirKonsulDanJawabanKonsul: defineAsyncComponent(() =>
+      import("./create/FormFormulirKonsulDanJawabanKonsul.vue")
+    ),
+    FormSuratKeteranganHasilPemeriksaanMata: defineAsyncComponent(() =>
+      import("./create/FormSuratKeteranganHasilPemeriksaanMata.vue")
+    ),
+    FormSuratKeteranganMata: defineAsyncComponent(() =>
+      import("./create/FormSuratKeteranganMata.vue")
+    ),
+    FormInformasiTindakanAnastesi: defineAsyncComponent(() =>
+      import("./create/FormInformasiTindakanAnastesi.vue")
+    ),
+    FormPersiapanPeralatanAnestesi: defineAsyncComponent(() =>
+      import("./create/FormPersiapanPeralatanAnestesi.vue")
+    ),
+    FormCPPTRawatJalan: defineAsyncComponent(() =>
+      import("./create/FormCPPTRawatJalan.vue")
+    ),
+    FormCatatanPerkembanganTerintegrasi: defineAsyncComponent(() =>
+      import("./create/FormCatatanPerkembanganTerintegrasi.vue")
+    ),
+    FormPemberianEdukasiPasienTerintegrasi: defineAsyncComponent(() =>
+      import("./create/FormPemberianEdukasiPasienTerintegrasi.vue")
+    ),
+    FormChecklistKeselamatanPasienOperasi: defineAsyncComponent(() =>
+      import("./create/FormChecklistKeselamatanPasienOperasi.vue")
+    ),
+    FormEvaluasiPraAnestesi: defineAsyncComponent(() =>
+      import("./create/FormEvaluasiPraAnestesi.vue")
+    ),
     FormPernyataanBatalOperasi: defineAsyncComponent(() =>
       import("./create/FormPernyataanBatalOperasi.vue")
     ),
@@ -523,6 +556,9 @@ export default {
     ),
     FormLaporanOperasiVitreoRetina: defineAsyncComponent(() =>
       import("./create/FormLaporanOperasiVitreoRetina.vue")
+    ),
+    FormPengkajianAwalMedisMata: defineAsyncComponent(() =>
+      import("./create/FormPengkajianAwalMedisMata.vue")
     ),
   },
 
@@ -632,6 +668,83 @@ export default {
           component: "FormSuratBalasanKonsul",
           description: "Form Surat Balasan Konsultasi Pasien",
           backendType: "surat_balasan_konsul",
+        },
+        {
+          value: "protokol-tindakan-terapi",
+          label: "Protokol Tindakan Terapi",
+          component: "FormProtokolTindakanTerapi",
+          description: "Form Protokol Tindakan Terapi",
+          backendType: "protokol_tindakan_terapi",
+        },
+        {
+          value: "formulir-konsul-dan-jawaban-konsul",
+          label: "Formulir Konsul & Jawaban Konsul",
+          component: "FormFormulirKonsulDanJawabanKonsul",
+          description: "Form Konsul dan Jawaban Konsul",
+          backendType: "formulir_konsul_dan_jawaban_konsul",
+        },
+        {
+          value: "surat-keterangan-hasil-pemeriksaan-mata",
+          label: "Surat Keterangan Hasil Pemeriksaan Mata",
+          component: "FormSuratKeteranganHasilPemeriksaanMata",
+          description: "Surat Keterangan Hasil Pemeriksaan Mata (Buta Warna)",
+          backendType: "surat_keterangan_hasil_pemeriksaan_mata",
+        },
+        {
+          value: "surat-keterangan-mata",
+          label: "Surat Keterangan Mata",
+          component: "FormSuratKeteranganMata",
+          description: "Surat Keterangan Hasil Pemeriksaan Mata",
+          backendType: "surat_keterangan_mata",
+        },
+        {
+          value: "informasi-tindakan-anastesi",
+          label: "Informasi Tindakan Anastesi dan Sedasi",
+          component: "FormInformasiTindakanAnastesi",
+          description: "Informasi Tindakan Anastesi dan Sedasi",
+          backendType: "informasi_tindakan_anastesi",
+        },
+        {
+          value: "persiapan-peralatan-anestesi",
+          label: "Persiapan Peralatan Anestesi",
+          component: "FormPersiapanPeralatanAnestesi",
+          description: "Persiapan Peralatan Anestesi",
+          backendType: "persiapan_peralatan_anestesi",
+        },
+        {
+          value: "cppt-rawat-jalan",
+          label: "CPPT Rawat Jalan",
+          component: "FormCPPTRawatJalan",
+          description: "Catatan Perkembangan Pasien Terintegrasi Rawat Jalan",
+          backendType: "cppt_rawat_jalan",
+        },
+        {
+          value: "catatan-perkembangan-terintegrasi",
+          label: "Catatan Perkembangan Terintegrasi",
+          component: "FormCatatanPerkembanganTerintegrasi",
+          description: "Catatan Perkembangan Terintegritasi",
+          backendType: "catatan_perkembangan_terintegrasi",
+        },
+        {
+          value: "pemberian-edukasi-pasien-terintegrasi",
+          label: "Pemberian Edukasi Pasien Terintegrasi",
+          component: "FormPemberianEdukasiPasienTerintegrasi",
+          description: "Pemberian Edukasi Pasien Terintegrasi",
+          backendType: "pemberian_edukasi_pasien_terintegrasi",
+        },
+        {
+          value: "checklist-keselamatan-pasien-operasi",
+          label: "Checklist Keselamatan Pasien Operasi",
+          component: "FormChecklistKeselamatanPasienOperasi",
+          description: "Checklist Keselamatan Pasien Operasi",
+          backendType: "checklist_keselamatan_pasien_operasi",
+        },
+        {
+          value: "evaluasi-pra-anestesi",
+          label: "Evaluasi Pra Anestesi",
+          component: "FormEvaluasiPraAnestesi",
+          description: "Evaluasi Pra Anestesi",
+          backendType: "evaluasi_pra_anestesi",
         },
         {
           value: "surat-pernyataan-batal-operasi",
@@ -879,6 +992,13 @@ export default {
           description: "Laporan Operasi Operasi Bedah Mata",
           backendType: "laporan_operasi_vitreo_retina",
         },
+        {
+          value: "dokumen_pengkajian_awal_medis_mata",
+          label: "Pengkajian Awal Medis Mata",
+          component: "FormPengkajianAwalMedisMata",
+          description: "Pengkajian Awal Medis Mata",
+          backendType: "dokumen_pengkajian_awal_medis_mata",
+        },
       ],
     };
   },
@@ -1014,6 +1134,14 @@ export default {
         "surat-kontrol-ulang": "fa-redo",
         surat_konsul: "fa-comment-medical",
         "surat-balasan-kosultasi": "fa-reply",
+        "protokol-tindakan-terapi": "fa-clipboard-list",
+        "formulir-konsul-dan-jawaban-konsul": "fa-file-medical",
+        "surat-keterangan-hasil-pemeriksaan-mata": "fa-eye",
+        "surat-keterangan-mata": "fa-eye",
+        "informasi-tindakan-anastesi": "fa-syringe",
+        "persiapan-peralatan-anestesi": "fa-toolbox",
+        "cppt-rawat-jalan": "fa-notes-medical",
+        "catatan-perkembangan-terintegrasi": "fa-file-medical",
       };
       return iconMap[value] || "fa-file-alt";
     },
@@ -1137,6 +1265,8 @@ export default {
         surat_penolakan_rujukan: `/print/rekammedis/general/suratpenolakanrujukan/${item.uuid}`,
         surat_pernyataan_pasien_umum: `/print/rekammedis/general/suratpernyataanpasienumum/${item.uuid}`,
         surat_balasan_konsul: `/print/rekammedis/general/suratbalasankonsul/${item.uuid}`,
+        protokol_tindakan_terapi: `/print/rekammedis/general/protokoltindakanterapi/${item.uuid}`,
+        formulir_konsul_dan_jawaban_konsul: `/print/rekammedis/general/formulirkonsuldanjawabankonsul/${item.uuid}`,
         dokumen_ceklist_kesiapan_bedah: `/print/rekammedis/bedah/rm2dot0/${item.uuid}`,
         form_edukasi_pasien_dan_keluarga_rawat_jalan: `/print/rekammedis/rawat-jalan/rm1dot2/${item.uuid}`,
         form_persetujuan_umum_pasien_keluarga: `/print/rekammedis/rawat-jalan/rm1dot1/${item.uuid}`,
@@ -1173,6 +1303,16 @@ export default {
         dokumen_kronologis_pasien: `/print/rekammedis/general/kronologis/${item.uuid}`,
         status_anestesi: `/print/rekammedis/lampiran/status-anestesi/${item.uuid}`,
         laporan_operasi_vitreo_retina: `/print/rekammedis/lampiran/laporan-operasi-vitreo-retina/${item.uuid}`,
+        surat_keterangan_hasil_pemeriksaan_mata: `/print/rekammedis/general/suratketeranganhasilpemeriksaanmata/${item.uuid}`,
+        surat_keterangan_mata: `/print/rekammedis/general/suratketeranganmata/${item.uuid}`,
+        informasi_tindakan_anastesi: `/print/rekammedis/general/informasitindakananastesi/${item.uuid}`,
+        persiapan_peralatan_anestesi: `/print/rekammedis/general/persiapanperalatananestesi/${item.uuid}`,
+        cppt_rawat_jalan: `/print/rekammedis/lampiran/cppt-rawat-jalan/${item.uuid}`,
+        catatan_perkembangan_terintegrasi: `/print/rekammedis/lampiran/catatan-perkembangan-terintegrasi/${item.uuid}`,
+        pemberian_edukasi_pasien_terintegrasi: `/print/rekammedis/lampiran/pemberian-edukasi-pasien-terintegrasi/${item.uuid}`,
+        checklist_keselamatan_pasien_operasi: `/print/rekammedis/lampiran/checklist-keselamatan-pasien-operasi/${item.uuid}`,
+        evaluasi_pra_anestesi: `/print/rekammedis/lampiran/evaluasi-pra-anestesi/${item.uuid}`,
+        dokumen_pengkajian_awal_medis_mata: `/print/rekammedis/general/pengkajianawalmedisMata/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];

@@ -60,6 +60,10 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
 		Route::post('dokumen-surat-kontrol', [PasienCtrl::class, 'storeSuratKontrol'])->name('master-pasien-storeSuratKontrol');
 		Route::post('dokumen-surat-konsul', [PasienCtrl::class, 'storeSuratKonsul'])->name('master-pasien-storeSuratKonsul');
 		Route::post('dokumen-surat-balasan-konsul', [PasienCtrl::class, 'storeSuratBalasanKonsul'])->name('master-pasien-storeSuratBalasanKonsul');
+		Route::post('dokumen-protokol-tindakan-terapi', [PasienCtrl::class, 'storeProtokolTindakanTerapi'])->name('master-pasien-storeProtokolTindakanTerapi');
+		Route::post('dokumen-formulir-konsul-dan-jawaban-konsul', [PasienCtrl::class, 'storeFormulirKonsulDanJawabanKonsul'])->name('master-pasien-storeFormulirKonsulDanJawabanKonsul');
+		Route::post('dokumen-surat-keterangan-hasil-pemeriksaan-mata', [PasienCtrl::class, 'storeSuratKeteranganHasilPemeriksaanMata'])->name('master-pasien-storeSuratKeteranganHasilPemeriksaanMata');
+		Route::post('dokumen-surat-keterangan-mata', [PasienCtrl::class, 'storeSuratKeteranganMata'])->name('master-pasien-storeSuratKeteranganMata');
 		Route::post('dokumen-surat-pernyataan-batal-operasi', [PasienCtrl::class, 'storeSuratPernyataanBatalOperasi'])->name('master-pasien-storeSuratPernyataanBatalOperasi');
 		Route::post('dokumen-surat-pernyataan-pasien-umum', [PasienCtrl::class, 'storeSuratPernyataanPasienUmum'])->name('master-pasien-storeSuratPernyataanPasienUmum');
 		Route::post('dokumen-dietitian-pasien-baru', [PasienCtrl::class, 'storeDokumenDietitianPasienBaru'])->name('master-pasien-storeDokumenDietitianPasienBaru');
@@ -71,7 +75,15 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
 		Route::post('form-proses-perawatan-peri-operative', [PasienCtrl::class, 'storeFormProsesPerawatanPeriOperative']);
 		Route::post('form-pendidikan-edukasi-pasien-keluarga-terintegrasi-rawat-inap', [PasienCtrl::class, 'storeFormPendidikanEdukasiPasienKeluargaTerintegrasiRawatInap']);
 		Route::post('penolakan-tindakan-anestesi', [PasienCtrl::class, 'storePenolakanTindakanAnestesi']);
+		Route::post('dokumen-informasi-tindakan-anestesi', [PasienCtrl::class, 'storeInformasiTindakanAnastesi']);
+		Route::post('dokumen-persiapan-peralatan-anestesi', [PasienCtrl::class, 'storePersiapanPeralatanAnestesi']);
+		Route::post('dokumen-cppt-rawat-jalan', [PasienCtrl::class, 'storeCPPTRawatJalan']);
+		Route::post('dokumen-catatan-perkembangan-terintegrasi', [PasienCtrl::class, 'storeCatatanPerkembanganTerintegrasi']);
+		Route::post('dokumen-pemberian-edukasi-pasien-terintegrasi', [PasienCtrl::class, 'storePemberianEdukasiPasienTerintegrasi']);
+		Route::post('dokumen-checklist-keselamatan-pasien-operasi', [PasienCtrl::class, 'storeCeklistKeselamatanPasienOperasi']);
+		Route::post('dokumen-evaluasi-pra-anestesi', [PasienCtrl::class, 'storeEvaluasiPraAnestesi']);
 		Route::post('form-pengkajian-keperawatan-mata-rawat-jalan', [PasienCtrl::class, 'storeFormPengkajianKeperawatanMataRawatJalan']);
+		Route::post('dokumen-pengkajian-awal-medis-mata', [PasienCtrl::class, 'storeDokumenPengkajianAwalMedisMata']);
 		Route::post('form-laporan-injeksi', [PasienCtrl::class, 'storeFormLaporanInjeksi']);
 		Route::post('form-permintaan-pulang', [PasienCtrl::class, 'storeFormPermintaanPulang']);
 		Route::post('voucher-rawat-inap', [PasienCtrl::class, 'storeVoucherRawatInap']);

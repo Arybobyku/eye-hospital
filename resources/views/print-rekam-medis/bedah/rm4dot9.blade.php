@@ -69,683 +69,437 @@
         .smallfont4dot9 {
             font-size: 9;
         }
+
+        .page-break {
+            page-break-after: always;
+        }
+
+        .ttd-table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .ttd-table td {
+            border: 1px solid black;
+            padding: 8px;
+            vertical-align: top;
+            width: 33.33%;
+        }
+
+        .ttd-section-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
     </style>
 
 <body>
     <div style="position:fixed; right: 13px; bottom: 10px;"></div>
     <?php $fullpath = storage_path('app/public/images/header_rme.png'); ?>
+
+    {{-- ===== PAGE 1: HEADER + CHECKLIST ===== --}}
+
     <div class="wrap">
         <div style="width:100%; text-align:right; margin-bottom:5px">
             RM/4.9/CLKPO/22
         </div>
-        
-<table style="border-collapse: collapse;">
-    {{-- HEADER --}}
-    <tr style="border: 1px solid black;">
-        <div style="width: 100%;">
-            <table style="width: 100%;">
-                <tr style="border: 1px solid black;">
-                    <td style="border-right: 1px solid black; width:100%">
-                        <img style="width: 70%;"
-                            src="data:image/png;base64,
-            <?php echo base64_encode(file_get_contents($fullpath)); ?>" />
-                    </td>
-                    <td style="width: 50%">
-                        <div class="smallfont4dot9">
-                        <table style="width: 100%" border="0">
-                            <tr>
-                                <td width="20%">Nama</td>
-                                <td width="1%">:</td>
-                                <td width=50%>{{ $pasien->nama }}</td>
-                            </tr>
-                            <tr>
-                                <td width="20%">Tgl. Lahir</td>
-                                <td width="1%">:</td>
-                                <td width=50%>{{ $pasien->tanggal_lahir }}</td>
-                            </tr>
-                            <tr>
-                                <td width="20%">No.RM</td>
-                                <td width="1%">:</td>
-                                <td width=50%>{{ $pasien->rekam_medis }}</td>
-                            </tr>
-                            <tr>
-                                <td width="10%">NIK</td>
-                                <td width="1%">:</td>
-                                <td width=50%>{{ $pasien->no_identitas }}</td>
-                            </tr>
-                        </table>
-                        </div>
-                    </td>
-                </tr>
-            </table>
-        </div>
-    </tr>
-</table>
+
+        <table style="border-collapse: collapse;">
+            <tr style="border: 1px solid black;">
+                <div style="width: 100%;">
+                    <table style="width: 100%;">
+                        <tr style="border: 1px solid black;">
+                            <td style="border-right: 1px solid black; width:100%">
+                                <img style="width: 70%;"
+                                    src="data:image/png;base64,<?php echo base64_encode(file_get_contents($fullpath)); ?>" />
+                            </td>
+                            <td style="width: 50%">
+                                <div class="smallfont4dot9">
+                                    <table style="width: 100%" border="0">
+                                        <tr>
+                                            <td width="20%">Nama</td>
+                                            <td width="1%">:</td>
+                                            <td width="50%">{{ $pasien->nama }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">Tgl. Lahir</td>
+                                            <td width="1%">:</td>
+                                            <td width="50%">{{ $pasien->tanggal_lahir }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="20%">No.RM</td>
+                                            <td width="1%">:</td>
+                                            <td width="50%">{{ $pasien->rekam_medis }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="10%">NIK</td>
+                                            <td width="1%">:</td>
+                                            <td width="50%">{{ $pasien->no_identitas }}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </tr>
+        </table>
     </div>
+
     <table class="tablee4dot9" style="width: 100%;">
         <tr>
             <td style="text-align: center; padding:5px;"><b>CHECKLIST KESELAMATAN PASIEN OPERASI</b></td>
         </tr>
     </table>
+
     <div class="smallfont4dot9">
         <table class="tablee4dot9" style="width: 100%;">
             <tr>
-                <td class="td14dot9"><b>Sebelum Induksi anestesi/ Sign In <br>Waktu :{{ $kb != null && $kb->si_jam }} </b></td>
+                <td class="td14dot9"><b>Sebelum Induksi anestesi/ Sign In <br>Waktu : {{ $data->signin_waktu ?? '' }}</b></td>
                 <td class="td24dot9"><b>--></b></td>
-                <td class="td34dot9"><b>Sebelum Insisi/Time Out <br> Waktu :{{ $kb != null && $kb->to_jam }}</b></td>
+                <td class="td34dot9"><b>Sebelum Insisi/Time Out <br>Waktu : {{ $data->timeout_waktu ?? '' }}</b></td>
                 <td class="td44dot9"><b>--></b></td>
-                <td class="td54dot9"><b>Sebelum Pasien Meninggalkan Kamar Operasi/ Sign Out <br> Waktu :{{ $kb != null && $kb->so_jam }}</td>
+                <td class="td54dot9"><b>Sebelum Pasien Meninggalkan Kamar Operasi/ Sign Out <br>Waktu : {{ $data->signout_waktu ?? '' }}</b></td>
             </tr>
             <tr style="vertical-align: top;">
+
+                {{-- ===== SIGN IN ===== --}}
                 <td class="td14dot9">
                     <table>
                         <tr>
-                            <td colspan="2"><b>Minimal ada perawat, perawat Anestesi dan Dokter Anestesi </b></td>
+                            <td colspan="2"><b>Minimal ada perawat, perawat Anestesi dan Dokter Anestesi</b></td>
                         </tr>
                         <tr>
-                            <td colspan="2">Apakah identitas pasien sudah benar, rencana tindakan sudah jelas, dan ada
-                                persetujuan tindakan medis yang akan dilakukan ( <i>informed consent</i>) ? </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_1 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_1 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        <tr>
-                            <td colspan="2">Apakah area yang akan dioperasi sudah diberi tanda ? </td>
+                            <td colspan="2">Apakah identitas pasien sudah benar, rencana tindakan sudah jelas, dan ada persetujuan tindakan medis yang akan dilakukan (<i>informed consent</i>)?</td>
                         </tr>
                         <tr>
                             <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_2 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
+                                <table style="margin-top: -10px"><tr>
+                                    <td><input type="checkbox" {{ ($data->signin_q1 ?? '') == 'Ya' ? 'Checked' : '' }}></td>
+                                    <td>Ya</td>
+                                </tr></table>
                             </td>
                             <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_2 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak diperlukan</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        <tr>
-                            <td colspan="2">Apakah mesin anestesi dan obat-obatan sudah lengkap ? </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_3 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_3 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        <tr>
-                            <td colspan="2"> Apakah sudah terpasang 'pulse oksimetri' pada pasien, dan sudah berfungsi
-                                baik ? </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_4 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_4 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        <tr>
-                            <td colspan="2">Apakah pasien memiliki riwayat alergi? </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_5 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_5 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
+                                <table style="margin-top: -10px"><tr>
+                                    <td><input type="checkbox" {{ ($data->signin_q1 ?? '') == 'Tidak' ? 'Checked' : '' }}></td>
+                                    <td>Tidak</td>
+                                </tr></table>
                             </td>
                         </tr>
+                        <tr><td colspan="2">Apakah area yang akan dioperasi sudah diberi tanda?</td></tr>
                         <tr>
-                            <td colspan="2">Apakah pasien memiliki gangguan pernapasan ? </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signin_q2 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signin_q2 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak diperlukan</td></tr></table></td>
+                        </tr>
+                        <tr><td colspan="2">Apakah mesin anestesi dan obat-obatan sudah lengkap?</td></tr>
+                        <tr>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signin_q3 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signin_q3 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
+                        </tr>
+                        <tr><td colspan="2">Apakah sudah terpasang <i>pulse oksimetri</i> pada pasien, dan sudah berfungsi baik?</td></tr>
+                        <tr>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signin_q4 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signin_q4 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
+                        </tr>
+                        <tr><td colspan="2">Apakah pasien memiliki riwayat alergi?</td></tr>
+                        <tr>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signin_q5 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signin_q5 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
+                        </tr>
+                        <tr><td colspan="2">Apakah pasien memiliki gangguan pernapasan?</td></tr>
+                        <tr>
+                            <td colspan="2"><table><tr><td><input type="checkbox" {{ ($data->signin_q6 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya, dan alat/bantuan sudah tersedia</td></tr></table></td>
                         </tr>
                         <tr>
-                            <td colspan="2">
-                                <table>
-                                    <tr>
-                                        <td> <input type="checkbox" {{ $kb != null && $kb->si_bagian_6 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya, dan alat/bantuan sudah tersedia</td>
-                                    </tr>
-                                </table>
-                            </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signin_q6 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
+                        </tr>
+                        <tr><td colspan="2">Resiko perdarahan &gt; 500ml (7ml/kg bagi anak-anak)</td></tr>
+                        <tr>
+                            <td colspan="2"><table><tr><td><input type="checkbox" {{ ($data->signin_q7 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya, dan sudah direncanakan pemasangan infus 2 (<i>line</i>) dan tersedia cairan-cairan yang akan diberikan</td></tr></table></td>
                         </tr>
                         <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_6 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signin_q7 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
-                        <tr>
-                            <td colspan="2">Resiko perdarahan > 500ml(7ml/kg bagi anak-anak)</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">
-                                <table>
-                                    <tr>
-                                        <td> <input type="checkbox" {{ $kb != null && $kb->si_bagian_6 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td colspan="2">Ya, dan sudah direncanakan pemasangan infus 2 (<i>line</i>) dan
-                                            tersedia cairan-cairan yang akan diberikan</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->si_bagian_6 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <br><br><br><br><br><br><br><br><br>
-                        <tr>
-                            <td colspan="2"><b>Tanda tangan dan nama</b></td>
-                        </tr>
-
-                        <tr>
-                            <td colspan="2"> <u>dr. Anestesi :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->nama_ahli_anastesi }}</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><u>Perawat Anestesi :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->asisten_operasi }}</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><u>Perawat :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->si_nama }}</b>
-                            </td>
-                        </tr> 
                     </table>
                 </td>
-                <td class="td24dot9">
-                    <table></table>
-                </td>
+
+                <td class="td24dot9"><table></table></td>
+
+                {{-- ===== TIME OUT ===== --}}
                 <td class="td34dot9">
                     <table>
+                        <tr><td colspan="2"><b>Dengan perawat, perawat Anestesi dan Dokter Anestesi</b></td></tr>
+                        <tr><td colspan="2">Memastikan bahwa semua anggota tim medis sudah memperkenalkan diri (nama dan peran masing-masing)</td></tr>
                         <tr>
-                            <td colspan="2"><b>Dengan perawat, perawat Anestesi dan Dokter Anestesi </b></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q1 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q1 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2">Memastikan dan baca ulang nama pasien, tindakan medis dan area yang akan diinsisi.</td></tr>
                         <tr>
-                            <td colspan="2"> Memastikan bahwa semua anggota tim medis sudah memperkenalkan diri(nama dan
-                                peran masing-masing) </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q2 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q2 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2">Apakah profilaksis antibiotik sudah di berikan 1 jam sebelumnya?</td></tr>
                         <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_1 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_2 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        <tr>
-                            <td colspan="2">Memastikan dan baca ulang nama pasien, tindakan medis dan area yang akan
-                                diinsisi.</td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q3 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q3 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak perlu</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2"><b>Kejadian berisiko yang perlu diantisipasi untuk Dokter Bedah :</b></td></tr>
+                        <tr><td colspan="2">Apakah tindakan berisiko atau tindakan tidak rutin yang akan dilakukan?</td></tr>
+                        <tr><td colspan="2">{{ $data->timeout_q4_tindakan_beresiko ?? '' }}</td></tr>
+                        <tr><td colspan="2">Berapa lama tindakan ini akan dikerjakan?</td></tr>
+                        <tr><td colspan="2">{{ $data->timeout_q4_lama_tindakan ?? '' }}</td></tr>
+                        <tr><td colspan="2">Apakah sudah antisipasi perdarahan?</td></tr>
                         <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_2_1 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_2_1 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q4_antisipasi_perdarahan ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q4_antisipasi_perdarahan ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2"><b>Untuk Dokter Anastesi</b></td></tr>
+                        <tr><td colspan="2">Apakah ada hal khusus untuk pasien ini?</td></tr>
                         <tr>
-                            <td colspan="2">Apakah profilaksis antibiotik sudah di berikan 1 jam sebelumnya? </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q5 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q5 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2"><b>Untuk Tim Perawat</b></td></tr>
+                        <tr><td colspan="2">Apakah sudah dipastikan kesterilan peralatan?</td></tr>
                         <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_2_2 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_2_2 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak perlu</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        <tr>
-                            <td colspan="2"><b>Kejadian berisiko yang perlu diantisipasi untuk Dokter Bedah :</b></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q6_kesterilan ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q6_kesterilan ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2">Apakah alat implan yang dibutuhkan sudah disterilan?</td></tr>
                         <tr>
-                            <td colspan="2"> Apakah tindakan bersiko atau tindaan tidak rutin yang akan di lakukan ?
-                            </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q6_implan ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q6_implan ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2">Apakah ada masalah dengan peralatan atau masalah alat yang dikhawatirkan?</td></tr>
                         <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td colspan="2">{{ $kb != null && $kb->to_bagian_2_3 }}</td>
-                                    </tr>
-                                </table>
-                            </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q6_masalah_alat ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q6_masalah_alat ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2">Apakah hasil radiologi yang diperlukan sudah ada?</td></tr>
                         <tr>
-                            <td colspan="2">Berapa lama tindakan ini akan dikerjakan? </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q6_radiologi ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->timeout_q6_radiologi ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td colspan="2">{{ $kb != null && $kb->to_bagian_3 }}</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Apakah sudah antisipasi perdarahan?</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_4_1 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_4_1 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>Untuk Dokter Anastesi</b></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Apakah ada hal khusus untuk pasien ini?</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_4_2 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_4_2 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>Untuk TIm Perawat</b></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Apakah sudah dipastikan kesterilan peralatan?</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_5 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_5 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Apakah alat implan yang di butuhkan sudah disterilan?</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_6 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->to_bagian_6 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Apakah ada masalah dengan peralatan atau masalah alat yang dikhawatirkan?
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_asisten_1 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_asisten_1 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Apakah hasil radiologi yang diperlukan sudah ada?</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_penata == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_penata == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <br>
-                         <tr>
-                            <td colspan="2"><b>Tanda tangan dan nama</b></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><u>dr. Anestesi :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->nama_ahli_anastesi }}</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><u>Perawat Anestesi :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->asisten_operasi }}</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><u>Perawat Sirkuler :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->to_nama }}</b>
-                            </td>
-                        </tr> 
                     </table>
                 </td>
-                <td class="td44dot9">
-                    <table></table>
-                </td>
+
+                <td class="td44dot9"><table></table></td>
+
+                {{-- ===== SIGN OUT ===== --}}
                 <td class="td54dot9">
                     <table>
+                        <tr><td colspan="2"><b>Dengan perawat, perawat Anestesi dan Dokter Anestesi</b></td></tr>
+                        <tr><td colspan="2">Secara verbal perawat memastikan nama tindakan</td></tr>
                         <tr>
-                            <td colspan="2"><b>Dengan perawat, perawat Anestesi dan Dokter Anestesi </b></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signout_q1 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signout_q1 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2">Kelengkapan alat, jumlah kasa dan jarum</td></tr>
                         <tr>
-                            <td colspan="2"> Secara verbal perawat memastikan nama tindakan </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signout_q2 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Lengkap</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signout_q2 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2">Pelebelan spacimen (baca label spacimen dan nama pasien dengan keras)</td></tr>
                         <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_1 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_1 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        <tr>
-                            <td colspan="2">Kelengkapan alat, jumlah kasa dan jarum</td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signout_q3 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signout_q3 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2">Apakah ada masalah peralatan yang perlu disampaikan?</td></tr>
                         <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_2 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Lengkap</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_2 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signout_q4 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signout_q4 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <tr><td colspan="2"><b>Untuk Dokter Bedah, Dokter Anestesi dan Perawat</b></td></tr>
+                        <tr><td colspan="2">Apakah ada catatan khusus untuk proses <i>recovery</i> dan penanganan perawatan pasien ini</td></tr>
                         <tr>
-                            <td colspan="2">Pelebelan spacimen (baca label spacimen dan nama pasien dengan keras) </td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signout_q5 ?? '') == 'Ya' ? 'Checked' : '' }}></td><td>Ya</td></tr></table></td>
+                            <td><table style="margin-top: -10px"><tr><td><input type="checkbox" {{ ($data->signout_q5 ?? '') == 'Tidak' ? 'Checked' : '' }}></td><td>Tidak</td></tr></table></td>
                         </tr>
+                        <div style="padding-bottom: 300%;"></div>
                         <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_3 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_3 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak </td>
-                                    </tr>
-                                </table>
-                            </td>
+                            <td>Medan, {{ $data->signout_tanggal ? \Carbon\Carbon::parse($data->signout_tanggal)->locale('id')->isoFormat('D MMMM YYYY') : '' }}</td>                        
                         </tr>
-                        <tr>
-                            <td colspan="2">Apakah ada masalah peralatan yang perlu disampaikan?</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_4 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_4 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>Untuk Dokter Bedah, Dokter Anestesi dan Perawat </b></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Apakah ada catatan khusus untuk proses <i>recovery</i> dan penanganan
-                                perawatan pasien ini </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_5 == 'Ya' ? 'Checked' : '' }}></td>
-                                        <td>Ya</td>
-                                    </tr>
-                                </table>
-                            </td>
-                            <td>
-                                <table style="margin-top: -10px">
-                                    <tr>
-                                        <td><input type="checkbox" {{ $kb != null && $kb->so_bagian_5 == 'Tidak' ? 'Checked' : '' }}></td>
-                                        <td>Tidak</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-                         <tr>
-                            <td colspan="2" >Medan, {{ $kb != null && $kb->created_at }}</td>
-                        </tr>
-                        <br>
-                        <tr>
-                            <td colspan="2"><b>Tanda tangan dan nama</b></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><u>dr. Bedah :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->nama_operator }}</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><u>dr. Anestesi :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->nama_ahli_anastesi }}</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><u>Perawat Anestesi :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->asisten_operasi }}</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><u>Perawat Instrumen :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->scrub_nurses}}</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><u>Perawat Sirkuler :</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><b>{{ $kb != null && $kb->to_nama }}</b>
-                            </td>
-                        </tr> 
                     </table>
                 </td>
+
             </tr>
         </table>
     </div>
-    {{-- <td class="td14dot9"><b>Minimal ada perawat, perawat Anestesi dan Dokter Anestesi </b></td>
-    <td class="td24dot9"></td>
-    <td class="td34dot9"><b>Dengan perawat, perawat Anestesi, Dokter Anestesi dan Dokter Bedah</b></td>
-    <td class="td44dot9"></td>
-    <td class="td54dot9"><b>Dengan Perawat, Perawat Anestesi, Dokter Anestesi dan Dokter Bedah</b></td> --}}
+
+    {{-- ===== PAGE BREAK ===== --}}
+    <div class="page-break"></div>
+
+    {{-- ===== PAGE 2: TANDA TANGAN ===== --}}
+
+    <div class="smallfont4dot9">
+
+        <table class="tablee4dot9" style="width: 100%; margin-bottom: 10px;">
+            <tr>
+                <td style="text-align: center; padding:5px;"><b>TANDA TANGAN & NAMA</b></td>
+            </tr>
+        </table>
+
+        {{-- Baris TTD: Sign In | Time Out | Sign Out --}}
+        <table class="ttd-table">
+            <tr>
+                <td style="text-align:center; background-color:#f0f0f0;"><b>Sign In</b></td>
+                <td style="text-align:center; background-color:#f0f0f0;"><b>Time Out</b></td>
+                <td style="text-align:center; background-color:#f0f0f0;"><b>Sign Out</b></td>
+            </tr>
+            <tr style="vertical-align: top;">
+
+                {{-- TTD SIGN IN --}}
+                <td>
+                    <table style="width:100%">
+                        <tr><td><b>dr. Anestesi :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->signin_ttd_dr_anestesi))
+                                    <img src="{{ $data->signin_ttd_dr_anestesi }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->signin_nama_dr_anestesi ?? '' }}</b></td></tr>
+
+                        <tr><td style="padding-top:10px;"><b>Perawat Anestesi :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->signin_ttd_perawat_anestesi))
+                                    <img src="{{ $data->signin_ttd_perawat_anestesi }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->signin_nama_perawat_anestesi ?? '' }}</b></td></tr>
+
+                        <tr><td style="padding-top:10px;"><b>Perawat :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->signin_ttd_perawat))
+                                    <img src="{{ $data->signin_ttd_perawat }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->signin_nama_perawat ?? '' }}</b></td></tr>
+                    </table>
+                </td>
+
+                {{-- TTD TIME OUT --}}
+                <td>
+                    <table style="width:100%">
+                        <tr><td><b>dr. Anestesi :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->timeout_ttd_dr_anestesi))
+                                    <img src="{{ $data->timeout_ttd_dr_anestesi }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->timeout_nama_dr_anestesi ?? '' }}</b></td></tr>
+
+                        <tr><td style="padding-top:10px;"><b>Perawat Anestesi :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->timeout_ttd_perawat_anestesi))
+                                    <img src="{{ $data->timeout_ttd_perawat_anestesi }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->timeout_nama_perawat_anestesi ?? '' }}</b></td></tr>
+
+                        <tr><td style="padding-top:10px;"><b>Perawat Sirkuler :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->timeout_ttd_perawat_sirkuler))
+                                    <img src="{{ $data->timeout_ttd_perawat_sirkuler }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->timeout_nama_perawat_sirkuler ?? '' }}</b></td></tr>
+                    </table>
+                </td>
+
+                {{-- TTD SIGN OUT --}}
+                <td>
+                    <table style="width:100%">
+                        <tr><td style="padding-top:5px;"><b>dr. Bedah :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->signout_ttd_dr_bedah))
+                                    <img src="{{ $data->signout_ttd_dr_bedah }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->signout_nama_dr_bedah ?? '' }}</b></td></tr>
+
+                        <tr><td style="padding-top:10px;"><b>dr. Anestesi :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->signout_ttd_dr_anestesi))
+                                    <img src="{{ $data->signout_ttd_dr_anestesi }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->signout_nama_dr_anestesi ?? '' }}</b></td></tr>
+
+                        <tr><td style="padding-top:10px;"><b>Perawat Anestesi :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->signout_ttd_perawat_anestesi))
+                                    <img src="{{ $data->signout_ttd_perawat_anestesi }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->signout_nama_perawat_anestesi ?? '' }}</b></td></tr>
+
+                        <tr><td style="padding-top:10px;"><b>Perawat Instrumen :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->signout_ttd_perawat_instrument))
+                                    <img src="{{ $data->signout_ttd_perawat_instrument }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->signout_nama_perawat_instrument ?? '' }}</b></td></tr>
+
+                        <tr><td style="padding-top:10px;"><b>Perawat Sirkuler :</b></td></tr>
+                        <tr>
+                            <td>
+                                @if(!empty($data->signout_ttd_perawat_sirkuler))
+                                    <img src="{{ $data->signout_ttd_perawat_sirkuler }}" style="width:80px; height:40px; object-fit:contain;" />
+                                @else
+                                    <div style="height:40px;">&nbsp;</div>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr><td><b>{{ $data->signout_nama_perawat_sirkuler ?? '' }}</b></td></tr>
+                    </table>
+                </td>
+
+            </tr>
+        </table>
+
+    </div>
+
 </body>
+</html>

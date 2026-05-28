@@ -258,6 +258,20 @@ class RekamMedisCtrl extends Controller
                     'color' => '#FFA726', // Orange terang
                 ],
                 [
+                    'table' => 'dokumen_protokol_tindakan_terapi',
+                    'type' => 'protokol_tindakan_terapi',
+                    'label' => 'Protokol Tindakan Terapi',
+                    'icon' => 'fa-clipboard-list',
+                    'color' => '#26A69A',
+                ],
+                [
+                    'table' => 'dokumen_formulir_konsul_dan_jawaban_konsul',
+                    'type' => 'formulir_konsul_dan_jawaban_konsul',
+                    'label' => 'Formulir Konsul & Jawaban Konsul',
+                    'icon' => 'fa-file-medical',
+                    'color' => '#1565C0',
+                ],
+                [
                     'table' => 'dokumen_surat_pernyataan_batal_operasi',
                     'type' => 'surat_pernyataan_batal_operasi',
                     'label' => 'Surat Pernyataan Batal Operasi',
@@ -514,6 +528,76 @@ class RekamMedisCtrl extends Controller
                     'color' => '#880E4F', // Pink 900
                 ],
                 [
+                    'table' => 'dokumen_surat_keterangan_hasil_pemeriksaan_mata',
+                    'type' => 'surat_keterangan_hasil_pemeriksaan_mata',
+                    'label' => 'Surat Keterangan Hasil Pemeriksaan Mata (Buta Warna)',
+                    'icon' => 'fa-eye',
+                    'color' => '#0288D1', // Light Blue 700
+                ],
+                [
+                    'table' => 'dokumen_surat_keterangan_mata',
+                    'type' => 'surat_keterangan_mata',
+                    'label' => 'Surat Keterangan Pemeriksaan Mata',
+                    'icon' => 'fa-eye',
+                    'color' => '#00838F', // Cyan 800
+                ],
+                [
+                    'table' => 'dokumen_informasi_tindakan_anastesi',
+                    'type' => 'informasi_tindakan_anastesi',
+                    'label' => 'Informasi Tindakan Anastesi dan Sedasi',
+                    'icon' => 'fa-syringe',
+                    'color' => '#6A1B9A', // Purple 800
+                ],
+                [
+                    'table' => 'dokumen_persiapan_peralatan_anestesi',
+                    'type' => 'persiapan_peralatan_anestesi',
+                    'label' => 'Persiapan Peralatan Anestesi',
+                    'icon' => 'fa-toolbox',
+                    'color' => '#1565C0', // Blue 800
+                ],
+                [
+                    'table' => 'dokumen_cppt_rawat_jalan',
+                    'type' => 'cppt_rawat_jalan',
+                    'label' => 'CPPT Rawat Jalan',
+                    'icon' => 'fa-notes-medical',
+                    'color' => '#00695C', // Teal 800
+                ],
+                [
+                    'table' => 'dokumen_catatan_perkembangan_terintegrasi',
+                    'type' => 'catatan_perkembangan_terintegrasi',
+                    'label' => 'Catatan Perkembangan Terintegrasi',
+                    'icon' => 'fa-file-medical',
+                    'color' => '#4527A0', // Deep Purple 800
+                ],
+                [
+                    'table' => 'dokumen_pemberian_edukasi_pasien_terintegrasi',
+                    'type' => 'pemberian_edukasi_pasien_terintegrasi',
+                    'label' => 'Pemberian Edukasi Pasien Terintegrasi',
+                    'icon' => 'fa-chalkboard-teacher',
+                    'color' => '#1565C0', // Blue 800
+                ],
+                [
+                    'table' => 'dokumen_checklist_keselamatan_pasien_operasi',
+                    'type' => 'checklist_keselamatan_pasien_operasi',
+                    'label' => 'Checklist Keselamatan Pasien Operasi',
+                    'icon' => 'fa-clipboard-check',
+                    'color' => '#B71C1C', // Red 900
+                ],
+                [
+                    'table' => 'dokumen_evaluasi_pra_anestesi',
+                    'type' => 'evaluasi_pra_anestesi',
+                    'label' => 'Evaluasi Pra Anestesi',
+                    'icon' => 'fa-stethoscope',
+                    'color' => '#1A237E', // Indigo 900
+                ],
+                [
+                    'table' => 'dokumen_pengkajian_awal_medis_mata',
+                    'type' => 'dokumen_pengkajian_awal_medis_mata',
+                    'label' => 'Pengkajian Awal Medis Mata',
+                    'icon' => 'fa-eye',
+                    'color' => '#0D47A1', // Blue 900
+                ],
+                [
                     'table' => 'dokumen_asesmen_pra_operasi',
                     'type' => 'dokumen_asesmen_pra_operasi',
                     'label' => 'Asesmen Pra Operasi',
@@ -541,13 +625,6 @@ class RekamMedisCtrl extends Controller
                 $count = \DB::table($config['table'])
                     ->where('uuid_pasien', $uuid_pasien)
                     ->whereNull('deleted_at');
-
-                // if (!empty($search)) {
-                //     $count->where(function ($q) use ($search) {
-                //         $q->where('nama', 'ILIKE', "%{$search}%")
-                //             ->orWhere('no_rm', 'ILIKE', "%{$search}%");
-                //     });
-                // }
 
                 $total += $count->count();
             }
@@ -907,6 +984,66 @@ class RekamMedisCtrl extends Controller
                 'waktu'   => "$table.jam",
                 'no_surat' => 'RM 4.0/APO/22',  // ✅ Fixed nomor surat
             ],
+            'dokumen_protokol_tindakan_terapi' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 9.6/PTT/22',
+            ],
+            'dokumen_formulir_konsul_dan_jawaban_konsul' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 10.2/FKDJK/22',
+            ],
+            'dokumen_surat_keterangan_hasil_pemeriksaan_mata' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 9.2/SKHPM/22',
+            ],
+            'dokumen_surat_keterangan_mata' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 8.6/SKHPM/22',
+            ],
+            'dokumen_informasi_tindakan_anastesi' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 8.2/ITADS/22',
+            ],
+            'dokumen_persiapan_peralatan_anestesi' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 5.1/PPA/22',
+            ],
+            'dokumen_cppt_rawat_jalan' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 1.5/CPPTRJ/22',
+            ],
+            'dokumen_catatan_perkembangan_terintegrasi' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 6.7/CPT/22',
+            ],
+            'dokumen_pemberian_edukasi_pasien_terintegrasi' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 6.6/PEPT/22',
+            ],
+            'dokumen_checklist_keselamatan_pasien_operasi' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM/4.9/CLKPO/22',
+            ],
+            'dokumen_evaluasi_pra_anestesi' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 4.10/EPA/22',
+            ],
+            'dokumen_pengkajian_awal_medis_mata' => [
+                'tanggal' => "$table.tanggal",
+                'waktu'   => "$table.jam",
+                'no_surat' => 'RM 7.7/PAMM/22',
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -942,6 +1079,8 @@ class RekamMedisCtrl extends Controller
                 'informed_consent' => 'dokumen_informed_consent',
                 'surat_pernyataan_pasien_umum' => 'dokumen_surat_pernyataan_pasien_umum',
                 'surat_balasan_konsul' => 'dokumen_surat_balasan_konsul',
+                'protokol_tindakan_terapi' => 'dokumen_protokol_tindakan_terapi',
+                'formulir_konsul_dan_jawaban_konsul' => 'dokumen_formulir_konsul_dan_jawaban_konsul',
                 'surat_konsul' => 'dokumen_surat_konsul',
                 'surat_pernyataan_batal_operasi' => 'dokumen_surat_pernyataan_batal_operasi',
                 'surat_kontrol_ulang' => 'dokumen_surat_kontrol',
@@ -984,6 +1123,16 @@ class RekamMedisCtrl extends Controller
                 'laporan_operasi_vitreo_retina' => 'dokumen_laporan_operasi_vitreo_retina',
                 'status_anestesi' => 'dokumen_status_anestesi',
                 'dokumen_asesmen_pra_operasi' => 'dokumen_asesmen_pra_operasi',
+                'surat_keterangan_hasil_pemeriksaan_mata' => 'dokumen_surat_keterangan_hasil_pemeriksaan_mata',
+                'surat_keterangan_mata' => 'dokumen_surat_keterangan_mata',
+                'informasi_tindakan_anastesi' => 'dokumen_informasi_tindakan_anastesi',
+                'persiapan_peralatan_anestesi' => 'dokumen_persiapan_peralatan_anestesi',
+                'cppt_rawat_jalan' => 'dokumen_cppt_rawat_jalan',
+                'catatan_perkembangan_terintegrasi' => 'dokumen_catatan_perkembangan_terintegrasi',
+                'pemberian_edukasi_pasien_terintegrasi' => 'dokumen_pemberian_edukasi_pasien_terintegrasi',
+                'checklist_keselamatan_pasien_operasi' => 'dokumen_checklist_keselamatan_pasien_operasi',
+                'evaluasi_pra_anestesi' => 'dokumen_evaluasi_pra_anestesi',
+                'dokumen_pengkajian_awal_medis_mata' => 'dokumen_pengkajian_awal_medis_mata',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -1037,6 +1186,8 @@ class RekamMedisCtrl extends Controller
                 'informed_consent' => 'dokumen_informed_consent',
                 'surat_pernyataan_pasien_umum' => 'dokumen_surat_pernyataan_pasien_umum',
                 'surat_balasan_konsul' => 'dokumen_surat_balasan_konsul',
+                'protokol_tindakan_terapi' => 'dokumen_protokol_tindakan_terapi',
+                'formulir_konsul_dan_jawaban_konsul' => 'dokumen_formulir_konsul_dan_jawaban_konsul',
                 'surat_konsul' => 'dokumen_surat_konsul',
                 'surat_pernyataan_batal_operasi' => 'dokumen_surat_pernyataan_batal_operasi',
                 'surat_kontrol_ulang' => 'dokumen_surat_kontrol',
@@ -1079,6 +1230,16 @@ class RekamMedisCtrl extends Controller
                 'laporan_operasi_vitreo_retina' => 'dokumen_laporan_operasi_vitreo_retina',
                 'status_anestesi' => 'dokumen_status_anestesi',
                 'dokumen_asesmen_pra_operasi' => 'dokumen_asesmen_pra_operasi',
+                'surat_keterangan_hasil_pemeriksaan_mata' => 'dokumen_surat_keterangan_hasil_pemeriksaan_mata',
+                'surat_keterangan_mata' => 'dokumen_surat_keterangan_mata',
+                'informasi_tindakan_anastesi' => 'dokumen_informasi_tindakan_anastesi',
+                'persiapan_peralatan_anestesi' => 'dokumen_persiapan_peralatan_anestesi',
+                'cppt_rawat_jalan' => 'dokumen_cppt_rawat_jalan',
+                'catatan_perkembangan_terintegrasi' => 'dokumen_catatan_perkembangan_terintegrasi',
+                'pemberian_edukasi_pasien_terintegrasi' => 'dokumen_pemberian_edukasi_pasien_terintegrasi',
+                'checklist_keselamatan_pasien_operasi' => 'dokumen_checklist_keselamatan_pasien_operasi',
+                'evaluasi_pra_anestesi' => 'dokumen_evaluasi_pra_anestesi',
+                'dokumen_pengkajian_awal_medis_mata' => 'dokumen_pengkajian_awal_medis_mata',
             ];
 
             if (!isset($tableMap[$type])) {

@@ -26,6 +26,17 @@ use App\Models\DokumenCatatanKeperawatan;
 use App\Models\DokumenMonitoringEfekSampingObat;
 use App\Models\Cppt;
 use App\Models\DokumenSuratBalasanKonsul;
+use App\Models\DokumenProtokolTindakanTerapi;
+use App\Models\DokumenSuratKeteranganHasilPemeriksaanMata;
+use App\Models\DokumenSuratKeteranganMata;
+use App\Models\DokumenInformasiTindakanAnastesi;
+use App\Models\DokumenPersiapanPeralatanAnestesi;
+use App\Models\DokumenCPPTRawatJalan;
+use App\Models\DokumenCatatanPerkembanganTerintegrasi;
+use App\Models\DokumenPemberianEdukasiPasienTerintegrasi;
+use App\Models\DokumenChecklistKeselamatanPasienOperasi;
+use App\Models\DokumenEvaluasiPraAnestesi;
+use App\Models\DokumenPengkajianAwalMedisMata;
 use App\Models\DokumenSuratKonsul;
 use App\Models\DokumenTindakanLaserPRP;
 use App\Models\DokumenSuratKontrol;
@@ -1117,17 +1128,12 @@ function printGeneral($uuid)
   function printFormulirKonsulDanJawabanKonsul($uuid)
   {
     $pdf = \App::make('dompdf.wrapper');
-    $pasien = Pasien::where('uuid', '=', $uuid)->first();
-    $roperasi = RegistrasiOperasi::where('pasien_uuid', '=', $uuid)->latest();
-    $ptk = PersetujuanTindakanKedokteran::where('pasien_uuid', '=', $uuid)
-      ->orderBy('created_at', 'asc')
-      ->first();
-    //dump($ptk);die();
-    $ro = PemeriksaanRo::where('pasien_uuid', '=', $uuid)->first();
+    $data = \App\Models\DokumenFormulirKonsulDanJawabanKonsul::where('uuid', $uuid)->firstOrFail();
+    $pasien = \App\Models\Pasien::where('uuid', $data->uuid_pasien)->first();
     $pdf->loadView(
       'print-rekam-medis.general.formulirkonsuldanjawabankonsul',
-      compact('pasien', 'ro', 'roperasi', 'ptk',)
-    )->setPaper('a4', 'potrait');
+      compact('data', 'pasien')
+    )->setPaper('a4', 'portrait');
 
     return $pdf->stream();
   }
@@ -1479,6 +1485,263 @@ function printGeneral($uuid)
       ),
     )->setPaper('a4', 'potrait',);
 
+
+    return $pdf->stream();
+  }
+
+  public function printProtokolTindakanTerapi($uuid)
+  {
+    $pdf     = \App::make('dompdf.wrapper');
+    $data    = DokumenProtokolTindakanTerapi::where('uuid', $uuid)->first();
+    $pasien  = Pasien::where('uuid', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.protokoltindakanterapi',
+      compact('pasien', 'data')
+    )->setPaper('a4', 'portrait');
+
+    return $pdf->stream();
+  }
+
+  public function printSuratKeteranganHasilPemeriksaanMata($uuid)
+  {
+    $pdf    = \App::make('dompdf.wrapper');
+    $data   = DokumenSuratKeteranganHasilPemeriksaanMata::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.suratketeranganhasilpemeriksaanmata',
+      compact('pasien', 'data')
+    )->setPaper('a4', 'portrait');
+
+    return $pdf->stream();
+  }
+
+  public function printSuratKeteranganMata($uuid)
+  {
+    $pdf    = \App::make('dompdf.wrapper');
+    $data   = DokumenSuratKeteranganMata::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.suratketeranganmata',
+      compact('pasien', 'data')
+    )->setPaper('a4', 'portrait');
+
+    return $pdf->stream();
+  }
+
+  public function printPersiapanPeralatanAnestesi($uuid)
+  {
+    $pdf    = \App::make('dompdf.wrapper');
+    $data   = DokumenPersiapanPeralatanAnestesi::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.persiapanperalatananestesi',
+      compact('pasien', 'data')
+    )->setPaper('a4', 'portrait');
+
+    return $pdf->stream();
+  }
+
+  public function printCpptRawatJalan($uuid)
+  {
+    set_time_limit(0);
+    ini_set('memory_limit', '512M');
+
+    $pdf    = \App::make('dompdf.wrapper');
+    $pdf->setOptions([
+      'isRemoteEnabled'    => false,
+      'isHtml5ParserEnabled' => true,
+      'isFontSubsettingEnabled' => true,
+      'defaultPaperSize'   => 'a4',
+      'dpi'                => 96,
+      'chunkSize'          => 512,
+    ]);
+
+    $data   = DokumenCPPTRawatJalan::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.formcpptrawatjalan',
+      compact('data', 'pasien')
+    )->setPaper('a4', 'landscape');
+
+    return $pdf->stream();
+  }
+
+  public function printCatatanPerkembanganTerintegrasi($uuid)
+  {
+    set_time_limit(0);
+    ini_set('memory_limit', '512M');
+
+    $pdf    = \App::make('dompdf.wrapper');
+    $pdf->setOptions([
+      'isRemoteEnabled'    => false,
+      'isHtml5ParserEnabled' => true,
+      'isFontSubsettingEnabled' => true,
+      'defaultPaperSize'   => 'a4',
+      'dpi'                => 96,
+      'chunkSize'          => 512,
+    ]);
+
+    $data   = DokumenCatatanPerkembanganTerintegrasi::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.catatanperkembanganterintegrasi',
+      compact('data', 'pasien')
+    )->setPaper('a4', 'portrait');
+
+    return $pdf->stream();
+  }
+
+  public function printPemberianEdukasiPasienTerintegrasi($uuid)
+  {
+    set_time_limit(0);
+    ini_set('memory_limit', '512M');
+
+    $pdf    = \App::make('dompdf.wrapper');
+    $pdf->setOptions([
+      'isRemoteEnabled'         => false,
+      'isHtml5ParserEnabled'    => true,
+      'isFontSubsettingEnabled' => true,
+      'defaultPaperSize'        => 'a4',
+      'dpi'                     => 96,
+      'chunkSize'               => 512,
+    ]);
+
+    $data   = DokumenPemberianEdukasiPasienTerintegrasi::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.pemberianedukasipasienterintegrasi',
+      compact('data', 'pasien')
+    )->setPaper('a4', 'landscape');
+
+    return $pdf->stream();
+  }
+
+  public function printChecklistKeselamatanPasienOperasi($uuid)
+  {
+    set_time_limit(0);
+    ini_set('memory_limit', '256M');
+
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->setOptions([
+      'isRemoteEnabled'         => false,
+      'isHtml5ParserEnabled'    => true,
+      'isFontSubsettingEnabled' => true,
+      'defaultPaperSize'        => 'a4',
+      'dpi'                     => 96,
+    ]);
+
+    $raw    = DokumenChecklistKeselamatanPasienOperasi::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $raw->uuid_pasien)->first();
+
+    // Map ke field yang dipakai blade rm4dot9
+    $kb = (object) [
+      'si_jam'       => $raw->signin_waktu,
+      'si_bagian_1'  => $raw->signin_q1,
+      'si_bagian_2'  => $raw->signin_q2,
+      'si_bagian_3'  => $raw->signin_q3,
+      'si_bagian_4'  => $raw->signin_q4,
+      'si_bagian_5'  => $raw->signin_q5,
+      'si_bagian_6'  => $raw->signin_q6,
+      'si_bagian_7'  => $raw->signin_q7,
+      'si_nama'      => $raw->signin_nama_perawat,
+
+      'to_jam'        => $raw->timeout_waktu,
+      'to_bagian_1'   => $raw->timeout_q1,
+      'to_bagian_2'   => $raw->timeout_q1,
+      'to_bagian_2_1' => $raw->timeout_q2,
+      'to_bagian_2_2' => $raw->timeout_q3,
+      'to_bagian_2_3' => $raw->timeout_q4_tindakan_beresiko,
+      'to_bagian_3'   => $raw->timeout_q4_lama_tindakan,
+      'to_bagian_4_1' => $raw->timeout_q4_antisipasi_perdarahan,
+      'to_bagian_4_2' => $raw->timeout_q5,
+      'to_bagian_5'   => $raw->timeout_q6_kesterilan,
+      'to_bagian_6'   => $raw->timeout_q6_implan,
+      'so_asisten_1'  => $raw->timeout_q6_masalah_alat,
+      'so_penata'     => $raw->timeout_q6_radiologi,
+      'to_nama'       => $raw->timeout_nama_perawat_sirkuler,
+
+      'so_jam'       => $raw->signout_waktu,
+      'so_bagian_1'  => $raw->signout_q1,
+      'so_bagian_2'  => $raw->signout_q2,
+      'so_bagian_3'  => $raw->signout_q3,
+      'so_bagian_4'  => $raw->signout_q4,
+      'so_bagian_5'  => $raw->signout_q5,
+
+      'nama_operator'      => $raw->signout_nama_dr_bedah,
+      'nama_ahli_anastesi' => $raw->signout_nama_dr_anestesi,
+      'asisten_operasi'    => $raw->signout_nama_perawat_anestesi,
+      'scrub_nurses'       => $raw->signout_nama_perawat_instrument,
+      'created_at'         => $raw->created_at,
+    ];
+    $data = $raw;
+
+    $pdf->loadView(
+      'print-rekam-medis.bedah.rm4dot9',
+      compact('pasien', 'kb','data')
+    )->setPaper('a4', 'portrait');
+
+    return $pdf->stream();
+  }
+
+  public function printInformasiTindakanAnastesi($uuid)
+  {
+    $pdf    = \App::make('dompdf.wrapper');
+    $data   = DokumenInformasiTindakanAnastesi::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.informasitindakananastesi',
+      compact('pasien', 'data')
+    )->setPaper('a4', 'portrait');
+
+    return $pdf->stream();
+  }
+
+  public function printEvaluasiPraAnestesiLampiran($uuid)
+  {
+    set_time_limit(0);
+    ini_set('memory_limit', '256M');
+
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->setOptions([
+      'isRemoteEnabled'         => false,
+      'isHtml5ParserEnabled'    => true,
+      'isFontSubsettingEnabled' => true,
+      'defaultPaperSize'        => 'a4',
+      'dpi'                     => 96,
+    ]);
+
+    $epa    = DokumenEvaluasiPraAnestesi::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $epa->uuid_pasien)->first();
+
+    $pdf->loadView(
+      'print-rekam-medis.general.evaluasipraanesthesi',
+      compact('pasien', 'epa')
+    )->setPaper('a4', 'portrait');
+
+    return $pdf->stream();
+  }
+
+  public function printPengkajianAwalMedisMata($uuid)
+  {
+    set_time_limit(0);
+    ini_set('memory_limit', '256M');
+
+    $pdf = \App::make('dompdf.wrapper');
+    $pdf->setOptions([
+      'isRemoteEnabled'         => false,
+      'isHtml5ParserEnabled'    => true,
+      'isFontSubsettingEnabled' => true,
+      'defaultPaperSize'        => 'a4',
+      'dpi'                     => 96,
+    ]);
+
+    $pamm   = DokumenPengkajianAwalMedisMata::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $pamm->uuid_pasien)->first();
+
+    $pdf->loadView(
+      'print-rekam-medis.general.pengkajianawalmedisMata',
+      compact('pasien', 'pamm')
+    )->setPaper('a4', 'portrait');
 
     return $pdf->stream();
   }

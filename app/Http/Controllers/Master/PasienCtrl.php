@@ -58,6 +58,18 @@ use App\Models\DokumenStatusAnestesi;
 use App\Models\DokumenLaporanOperasiVitreoRetina;
 use App\Models\Pengguna;
 use App\Models\DokumenAsesmenPraOperasi;
+use App\Models\DokumenProtokolTindakanTerapi;
+use App\Models\DokumenFormulirKonsulDanJawabanKonsul;
+use App\Models\DokumenSuratKeteranganHasilPemeriksaanMata;
+use App\Models\DokumenSuratKeteranganMata;
+use App\Models\DokumenInformasiTindakanAnastesi;
+use App\Models\DokumenPersiapanPeralatanAnestesi;
+use App\Models\DokumenCPPTRawatJalan;
+use App\Models\DokumenCatatanPerkembanganTerintegrasi;
+use App\Models\DokumenPemberianEdukasiPasienTerintegrasi;
+use App\Models\DokumenChecklistKeselamatanPasienOperasi;
+use App\Models\DokumenEvaluasiPraAnestesi;
+use App\Models\DokumenPengkajianAwalMedisMata;
 use Illuminate\Support\Str;              // ✅ Tambahkan ini
 
 
@@ -1147,7 +1159,7 @@ public function storeLaporanPembedahan(Request $request)
             ], 500);
         }
     }
-
+    
 
     public function storeSuratPernyataanBatalOperasi(Request $request)
     {
@@ -4251,4 +4263,639 @@ public function storeAsesmenPraOperasi(Request $request)
 
         return response()->json(['data' => $data]);
     }
+
+    public function storeProtokolTindakanTerapi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+
+            if ($uuid) {
+                $dokumen = DokumenProtokolTindakanTerapi::where('uuid', $uuid)->first();
+
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $message = 'Protokol Tindakan Terapi berhasil diupdate';
+                $action  = 'update';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenProtokolTindakanTerapi::create($data);
+                $message = 'Protokol Tindakan Terapi berhasil disimpan';
+                $action  = 'create';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Protokol Tindakan Terapi',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeFormulirKonsulDanJawabanKonsul(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+
+            if ($uuid) {
+                $dokumen = DokumenFormulirKonsulDanJawabanKonsul::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $message = 'Formulir Konsul dan Jawaban Konsul berhasil diupdate';
+                $action  = 'update';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenFormulirKonsulDanJawabanKonsul::create($data);
+                $message = 'Formulir Konsul dan Jawaban Konsul berhasil disimpan';
+                $action  = 'create';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Formulir Konsul dan Jawaban Konsul',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeSuratKeteranganHasilPemeriksaanMata(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+
+            // Handle pasfoto upload
+            if ($request->hasFile('pasfoto_file')) {
+                $file = $request->file('pasfoto_file');
+                $path = Storage::disk('public')->putFile('pasfoto', $file);
+                $data['pasfoto'] = $path;
+            }
+            unset($data['pasfoto_file']);
+
+            if ($uuid) {
+                $dokumen = DokumenSuratKeteranganHasilPemeriksaanMata::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $message = 'Surat Keterangan Hasil Pemeriksaan Mata berhasil diupdate';
+                $action  = 'update';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenSuratKeteranganHasilPemeriksaanMata::create($data);
+                $message = 'Surat Keterangan Hasil Pemeriksaan Mata berhasil disimpan';
+                $action  = 'create';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Surat Keterangan Hasil Pemeriksaan Mata',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeInformasiTindakanAnastesi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+
+            if ($uuid) {
+                $dokumen = DokumenInformasiTindakanAnastesi::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $message = 'Informasi Tindakan Anastesi berhasil diupdate';
+                $action  = 'update';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenInformasiTindakanAnastesi::create($data);
+                $message = 'Informasi Tindakan Anastesi berhasil disimpan';
+                $action  = 'create';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Informasi Tindakan Anastesi',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storePersiapanPeralatanAnestesi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+
+            if ($uuid) {
+                $dokumen = DokumenPersiapanPeralatanAnestesi::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $message = 'Persiapan Peralatan Anestesi berhasil diupdate';
+                $action  = 'update';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenPersiapanPeralatanAnestesi::create($data);
+                $message = 'Persiapan Peralatan Anestesi berhasil disimpan';
+                $action  = 'create';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Persiapan Peralatan Anestesi',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeCPPTRawatJalan(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+            unset($data['id']);
+
+            if (isset($data['cppt_rows'])) {
+                if (is_string($data['cppt_rows'])) {
+                    $data['cppt_rows'] = json_decode($data['cppt_rows'], true);
+                }
+
+                if (!is_array($data['cppt_rows'])) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Format CPPT rows tidak valid',
+                    ], 400);
+                }
+
+                if (empty($data['cppt_rows'])) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Minimal harus ada 1 catatan perkembangan pasien',
+                    ], 400);
+                }
+            }
+
+            if ($uuid) {
+                $dokumen = DokumenCPPTRawatJalan::where('uuid', $uuid)->first();
+
+                if (!$dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'CPPT Rawat Jalan berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $data['tanggal'] = date('Y-m-d');
+                $dokumen = DokumenCPPTRawatJalan::create($data);
+                $action  = 'create';
+                $message = 'CPPT Rawat Jalan berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan CPPT Rawat Jalan',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeCatatanPerkembanganTerintegrasi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+            unset($data['id']);
+
+            if (isset($data['cppt_rows'])) {
+                if (is_string($data['cppt_rows'])) {
+                    $data['cppt_rows'] = json_decode($data['cppt_rows'], true);
+                }
+
+                if (!is_array($data['cppt_rows'])) {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'Format catatan tidak valid',
+                    ], 400);
+                }
+
+                if (empty($data['cppt_rows'])) {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'Minimal harus ada 1 catatan perkembangan',
+                    ], 400);
+                }
+            }
+
+            if ($uuid) {
+                $dokumen = DokumenCatatanPerkembanganTerintegrasi::where('uuid', $uuid)->first();
+
+                if (!$dokumen) {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'Catatan Perkembangan Terintegrasi berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $data['tanggal']    = date('Y-m-d');
+                $dokumen = DokumenCatatanPerkembanganTerintegrasi::create($data);
+                $action  = 'create';
+                $message = 'Catatan Perkembangan Terintegrasi berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Catatan Perkembangan Terintegrasi',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storePemberianEdukasiPasienTerintegrasi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+            unset($data['id']);
+
+            if (isset($data['edukasi_sections'])) {
+                if (is_string($data['edukasi_sections'])) {
+                    $data['edukasi_sections'] = json_decode($data['edukasi_sections'], true);
+                }
+
+                if (!is_array($data['edukasi_sections'])) {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'Format data edukasi tidak valid',
+                    ], 400);
+                }
+            }
+
+            if ($uuid) {
+                $dokumen = DokumenPemberianEdukasiPasienTerintegrasi::where('uuid', $uuid)->first();
+
+                if (!$dokumen) {
+                    return response()->json([
+                        'status'  => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'Pemberian Edukasi Pasien Terintegrasi berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $data['tanggal']    = date('Y-m-d');
+                $dokumen = DokumenPemberianEdukasiPasienTerintegrasi::create($data);
+                $action  = 'create';
+                $message = 'Pemberian Edukasi Pasien Terintegrasi berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Pemberian Edukasi Pasien Terintegrasi',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeCeklistKeselamatanPasienOperasi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+            unset($data['id']);
+
+            if ($uuid) {
+                $dokumen = DokumenChecklistKeselamatanPasienOperasi::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'Checklist Keselamatan Pasien Operasi berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenChecklistKeselamatanPasienOperasi::create($data);
+                $action  = 'create';
+                $message = 'Checklist Keselamatan Pasien Operasi berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Checklist Keselamatan Pasien Operasi',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeEvaluasiPraAnestesi(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data          = $request->all();
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+            $uuid          = $request->input('uuid');
+            unset($data['uuid']);
+            unset($data['id']);
+
+            if ($uuid) {
+                $dokumen = DokumenEvaluasiPraAnestesi::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'Evaluasi Pra Anestesi berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenEvaluasiPraAnestesi::create($data);
+                $action  = 'create';
+                $message = 'Evaluasi Pra Anestesi berhasil disimpan';
+            }
+
+            DB::commit();
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Evaluasi Pra Anestesi',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeDokumenPengkajianAwalMedisMata(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data          = $request->all();
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+            $uuid          = $request->input('uuid');
+            unset($data['uuid']);
+            unset($data['id']);
+
+            if ($uuid) {
+                $dokumen = DokumenPengkajianAwalMedisMata::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'Pengkajian Awal Medis Mata berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenPengkajianAwalMedisMata::create($data);
+                $action  = 'create';
+                $message = 'Pengkajian Awal Medis Mata berhasil disimpan';
+            }
+
+            DB::commit();
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Pengkajian Awal Medis Mata',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeSuratKeteranganMata(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+
+            if ($uuid) {
+                $dokumen = DokumenSuratKeteranganMata::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $message = 'Surat Keterangan Mata RM 8.6 berhasil diupdate';
+                $action  = 'update';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenSuratKeteranganMata::create($data);
+                $message = 'Surat Keterangan Mata RM 8.6 berhasil disimpan';
+                $action  = 'create';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Surat Keterangan Mata RM 8.6',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
 }
