@@ -560,6 +560,9 @@ export default {
     FormPengkajianAwalMedisMata: defineAsyncComponent(() =>
       import("./create/FormPengkajianAwalMedisMata.vue")
     ),
+    FormPenilaianRisikoJatuhPasienGeriatri: defineAsyncComponent(() =>
+      import("./create/FormPenilaianRisikoJatuhPasienGeriatri.vue")
+    ),
   },
 
   data() {
@@ -999,6 +1002,13 @@ export default {
           description: "Pengkajian Awal Medis Mata",
           backendType: "dokumen_pengkajian_awal_medis_mata",
         },
+        {
+          value: "dokumen_penilaian_risiko_jatuh_pasien_geriatri",
+          label: "Penilaian Risiko Jatuh Pasien Geriatri",
+          component: "FormPenilaianRisikoJatuhPasienGeriatri",
+          description: "Formulir Penilaian Risiko Jatuh Pasien Geriatri",
+          backendType: "dokumen_penilaian_risiko_jatuh_pasien_geriatri",
+        },
       ],
     };
   },
@@ -1313,6 +1323,7 @@ export default {
         checklist_keselamatan_pasien_operasi: `/print/rekammedis/lampiran/checklist-keselamatan-pasien-operasi/${item.uuid}`,
         evaluasi_pra_anestesi: `/print/rekammedis/lampiran/evaluasi-pra-anestesi/${item.uuid}`,
         dokumen_pengkajian_awal_medis_mata: `/print/rekammedis/general/pengkajianawalmedisMata/${item.uuid}`,
+        dokumen_penilaian_risiko_jatuh_pasien_geriatri: `/print/rekammedis/general/penilaianrisikoJatuhPasienGeriatri/${item.uuid}`,
       };
 
       const url = printUrls[item.document_type];

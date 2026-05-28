@@ -604,6 +604,13 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-clipboard-check',
                     'color' => '#1B5E20', // Hijau tua
                 ],
+                [
+                    'table' => 'dokumen_penilaian_risiko_jatuh_pasien_geriatri',
+                    'type' => 'dokumen_penilaian_risiko_jatuh_pasien_geriatri',
+                    'label' => 'Penilaian Risiko Jatuh Pasien Geriatri',
+                    'icon' => 'fa-person-falling',
+                    'color' => '#E65100', // Deep Orange 900
+                ],
             ];
 
             // if (!empty($search)) {
@@ -1044,6 +1051,11 @@ class RekamMedisCtrl extends Controller
                 'waktu'   => "$table.jam",
                 'no_surat' => 'RM 7.7/PAMM/22',
             ],
+            'dokumen_penilaian_risiko_jatuh_pasien_geriatri' => [
+                'tanggal' => "$table.created_at",
+                'waktu'   => "$table.created_at",
+                'no_surat' => 'RM 6.5/FPRJPG/22',
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -1133,6 +1145,7 @@ class RekamMedisCtrl extends Controller
                 'checklist_keselamatan_pasien_operasi' => 'dokumen_checklist_keselamatan_pasien_operasi',
                 'evaluasi_pra_anestesi' => 'dokumen_evaluasi_pra_anestesi',
                 'dokumen_pengkajian_awal_medis_mata' => 'dokumen_pengkajian_awal_medis_mata',
+                'dokumen_penilaian_risiko_jatuh_pasien_geriatri' => 'dokumen_penilaian_risiko_jatuh_pasien_geriatri',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -1240,6 +1253,7 @@ class RekamMedisCtrl extends Controller
                 'checklist_keselamatan_pasien_operasi' => 'dokumen_checklist_keselamatan_pasien_operasi',
                 'evaluasi_pra_anestesi' => 'dokumen_evaluasi_pra_anestesi',
                 'dokumen_pengkajian_awal_medis_mata' => 'dokumen_pengkajian_awal_medis_mata',
+                'dokumen_penilaian_risiko_jatuh_pasien_geriatri' => 'dokumen_penilaian_risiko_jatuh_pasien_geriatri',
             ];
 
             if (!isset($tableMap[$type])) {

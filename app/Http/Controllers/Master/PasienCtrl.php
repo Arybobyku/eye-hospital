@@ -70,6 +70,7 @@ use App\Models\DokumenPemberianEdukasiPasienTerintegrasi;
 use App\Models\DokumenChecklistKeselamatanPasienOperasi;
 use App\Models\DokumenEvaluasiPraAnestesi;
 use App\Models\DokumenPengkajianAwalMedisMata;
+use App\Models\DokumenPenilaianRisikoJatuhPasienGeriatri;
 use Illuminate\Support\Str;              // ✅ Tambahkan ini
 
 
@@ -1971,6 +1972,68 @@ public function storeLaporanPembedahan(Request $request)
                 'status' => false,
                 'message' => 'Gagal menyimpan Tindakan Laser Capsulotomy',
                 'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeDokumenPenilaianRisikoJatuhGeriatri(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $data = $request->all();
+
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+
+            $uuid = $request->input('uuid');
+            unset($data['uuid']);
+
+            // Decode penilaian_rows JSON string → array (model cast handles re-encoding to JSONB)
+            if (isset($data['penilaian_rows']) && is_string($data['penilaian_rows'])) {
+                $data['penilaian_rows'] = json_decode($data['penilaian_rows'], true) ?? [];
+            }
+
+            // Hapus kolom lama (flat) yang kini ada di dalam penilaian_rows
+            foreach ([
+                'tanggal','jam',
+                'item_1','item_2','item_3','item_4','item_5',
+                'item_6','item_7','item_8','item_9','item_10','item_11',
+                'total_skor','risiko_level','nama_penilai',
+                'ttd_penilai','ttd_penilai_timestamp',
+            ] as $k) {
+                unset($data[$k]);
+            }
+
+            if ($uuid) {
+                $dokumen = DokumenPenilaianRisikoJatuhPasienGeriatri::where('uuid', $uuid)->first();
+                if (!$dokumen) {
+                    return response()->json(['status' => false, 'message' => 'Data tidak ditemukan'], 404);
+                }
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                $action  = 'update';
+                $message = 'Dokumen Penilaian Risiko Jatuh Geriatri berhasil diupdate';
+            } else {
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenPenilaianRisikoJatuhPasienGeriatri::create($data);
+                $action  = 'create';
+                $message = 'Dokumen Penilaian Risiko Jatuh Geriatri berhasil disimpan';
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => true,
+                'message' => $message,
+                'data'    => $dokumen,
+                'action'  => $action,
+            ], $action === 'create' ? 201 : 200);
+        } catch (Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal menyimpan Dokumen Penilaian Risiko Jatuh Geriatri',
+                'error'   => $e->getMessage(),
             ], 500);
         }
     }

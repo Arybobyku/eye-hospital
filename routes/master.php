@@ -96,6 +96,7 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
 		Route::post('asesmen-awal-keperawatan-rawat-inap', [PasienCtrl::class, 'storeAsesmenKeperawatanRawatInap'])->name('master-pasien-storeAsesmenKeperawatanRawatInap');
 		Route::post('dokumen-pulang-aps', [PasienCtrl::class, 'storeDokumenPulangAPS'])->name('master-pasien-storeDokumenPulangAPS');
 		Route::post('dokumen-laser-capsulotomy', [PasienCtrl::class, 'storeTindakanLaserCapsulotomy'])->name('master-pasien-storeTindakanLaserCapsulotomy');
+		Route::post('dokumen-penilaian-risiko-jatuh-geriatri', [PasienCtrl::class, 'storeDokumenPenilaianRisikoJatuhGeriatri'])->name('master-pasien-storeDokumenPenilaianRisikoJatuhGeriatri');
 		Route::post('dokumen-tindakan-epilasi', [PasienCtrl::class, 'storeTindakanEpilasi'])->name('master-pasien-storeTindakanEpilasi');
 		Route::post('dokumen-kronologis', [PasienCtrl::class, 'storeKronologisPasien'])->name('master-pasien-storeKronologisPasien');
 		Route::post('dokumen-catatan-operasi', [PasienCtrl::class, 'storeCatatanOperasi'])->name('master-pasien-storeCatatanOperasi');

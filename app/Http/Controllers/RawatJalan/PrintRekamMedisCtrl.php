@@ -37,6 +37,7 @@ use App\Models\DokumenPemberianEdukasiPasienTerintegrasi;
 use App\Models\DokumenChecklistKeselamatanPasienOperasi;
 use App\Models\DokumenEvaluasiPraAnestesi;
 use App\Models\DokumenPengkajianAwalMedisMata;
+use App\Models\DokumenPenilaianRisikoJatuhPasienGeriatri;
 use App\Models\DokumenSuratKonsul;
 use App\Models\DokumenTindakanLaserPRP;
 use App\Models\DokumenSuratKontrol;
@@ -1741,6 +1742,19 @@ function printGeneral($uuid)
     $pdf->loadView(
       'print-rekam-medis.general.pengkajianawalmedisMata',
       compact('pasien', 'pamm')
+    )->setPaper('a4', 'portrait');
+
+    return $pdf->stream();
+  }
+
+  public function printPenilaianRisikoJatuhPasienGeriatri($uuid)
+  {
+    $pdf    = \App::make('dompdf.wrapper');
+    $data   = DokumenPenilaianRisikoJatuhPasienGeriatri::where('uuid', $uuid)->first();
+    $pasien = Pasien::where('uuid', $data->uuid_pasien)->first();
+    $pdf->loadView(
+      'print-rekam-medis.general.penilaianrisikoJatuhPasienGeriatri',
+      compact('pasien', 'data')
     )->setPaper('a4', 'portrait');
 
     return $pdf->stream();
