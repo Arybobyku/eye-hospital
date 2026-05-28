@@ -1766,3 +1766,70 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.dokumen_surat_keterangan_hasil_pemeriksaan_mata
     OWNER to postgres;
+
+-- Table: public.dokumen_penilaian_risiko_jatuh_pasien_geriatri
+
+-- DROP TABLE IF EXISTS public.dokumen_penilaian_risiko_jatuh_pasien_geriatri;
+
+CREATE TABLE IF NOT EXISTS public.dokumen_penilaian_risiko_jatuh_pasien_geriatri
+(
+    id bigint NOT NULL DEFAULT nextval('dokumen_penilaian_risiko_jatuh_pasien_geriatri_id_seq'::regclass),
+    uuid text COLLATE pg_catalog."default" NOT NULL DEFAULT (gen_random_uuid())::text,
+    uuid_pasien text COLLATE pg_catalog."default",
+    no_rm text COLLATE pg_catalog."default",
+    no_surat text COLLATE pg_catalog."default" DEFAULT 'RM 6.5/FPRJPG/22'::text,
+    nik text COLLATE pg_catalog."default",
+    nama text COLLATE pg_catalog."default",
+    tanggal_lahir date,
+    jenis_kelamin text COLLATE pg_catalog."default",
+    tanggal date,
+    jam text COLLATE pg_catalog."default",
+    item_1 smallint DEFAULT 0,
+    item_2 smallint DEFAULT 0,
+    item_3 smallint DEFAULT 0,
+    item_4 smallint DEFAULT 0,
+    item_5 smallint DEFAULT 0,
+    item_6 smallint DEFAULT 0,
+    item_7 smallint DEFAULT 0,
+    item_8 smallint DEFAULT 0,
+    item_9 smallint DEFAULT 0,
+    item_10 smallint DEFAULT 0,
+    item_11 smallint DEFAULT 0,
+    total_skor integer DEFAULT 0,
+    risiko_level text COLLATE pg_catalog."default",
+    nama_penilai text COLLATE pg_catalog."default",
+    int_a1 smallint,
+    int_a2 smallint,
+    int_a3 smallint,
+    int_a4 smallint,
+    int_b1 smallint,
+    int_b2 smallint,
+    int_b3 smallint,
+    int_b4 smallint,
+    int_b5 smallint,
+    int_b6 smallint,
+    int_b7 smallint,
+    int_b8 smallint,
+    int_b9 smallint,
+    int_b10 smallint,
+    int_b11 smallint,
+    nama_petugas text COLLATE pg_catalog."default",
+    created_by text COLLATE pg_catalog."default",
+    updated_by text COLLATE pg_catalog."default",
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    deleted_at timestamp without time zone,
+    penilaian_rows jsonb DEFAULT '[]'::jsonb,
+    ttd_dokter text COLLATE pg_catalog."default",
+    nama_dokter text COLLATE pg_catalog."default",
+    ttd_dokter_timestamp text COLLATE pg_catalog."default",
+    ttd_petugas text COLLATE pg_catalog."default",
+    ttd_petugas_timestamp text COLLATE pg_catalog."default",
+    CONSTRAINT dokumen_penilaian_risiko_jatuh_pasien_geriatri_pkey PRIMARY KEY (id),
+    CONSTRAINT dokumen_penilaian_risiko_jatuh_pasien_geriatri_uuid_key UNIQUE (uuid)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.dokumen_penilaian_risiko_jatuh_pasien_geriatri
+    OWNER to postgres;
