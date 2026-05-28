@@ -234,6 +234,8 @@ export default {
 			{ name: "Bill Pembayaran", icon: "💳" },
 			{ name: "Laporan Pembedahan", icon: "💳" },
 			{ name: "Resume", icon: "✉️" },
+      { name: "Perencanaan Pulang Rawat Inap", icon: "🏠" },
+      { name: "Transfer Pasien Rawat Inap", icon: "↔️" },
 			{ name: "Formulir", icon: "✉️" },
 		],
 	}},

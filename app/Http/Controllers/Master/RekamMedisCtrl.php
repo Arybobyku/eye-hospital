@@ -548,6 +548,27 @@ class RekamMedisCtrl extends Controller
                     'icon' => 'fa-notes-medical',
                     'color' => '#00695C',
                 ],
+                [
+                    'table' => 'dokumen_surat_pengantar_rawat_inap',
+                    'type' => 'surat_pengantar_rawat_inap',
+                    'label' => 'Surat Pengantar Untuk Dirawat Inap',
+                    'icon' => 'fa-circle-bed',
+                    'color' => '#880E4F', // Pink 900
+                ],
+                [
+                    'table' => 'dokumen_penyimpanan_barang_berharga',
+                    'type' => 'penyimpanan_barang_berharga',
+                    'label' => 'Form Penyimpanan Barang Berharga Milik Pasien',
+                    'icon' => 'fa-circle-bed',
+                    'color' => '#880E4F', // Pink 900
+                ],
+                [
+                    'table' => 'dokumen_permintaan_pelayanan_kerohanian',
+                    'type' => 'permintaan_pelayanan_kerohanian',
+                    'label' => 'Form Permintaan Pelayanan Kerohanian',
+                    'icon' => 'fa-circle-bed',
+                    'color' => '#880E4F', // Pink 900
+                ],
             ];
 
             // if (!empty($search)) {
@@ -955,6 +976,21 @@ class RekamMedisCtrl extends Controller
                 'waktu'   => "$table.jam",
                 'no_surat' => 'RM 4.0/APO/22',  // ✅ Fixed nomor surat
             ],
+            'dokumen_surat_pengantar_rawat_inap' => [
+                'tanggal'  => "$table.created_at",
+                'waktu'    => "$table.created_at",
+                'no_surat' => 'RM 2.5/SPUDI/22',
+            ],
+            'dokumen_penyimpanan_barang_berharga' => [
+                'tanggal'  => "$table.created_at",
+                'waktu'    => "$table.created_at",
+                'no_surat' => 'RM 7.2/FPBBMP/22',
+            ],
+            'dokumen_permintaan_pelayanan_kerohanian' => [
+                'tanggal'  => "$table.created_at",
+                'waktu'    => "$table.created_at",
+                'no_surat' => 'RM 7.1/FPPKK/22',
+            ],
             // Tambahkan mapping untuk tabel baru di sini
         ];
 
@@ -1036,6 +1072,9 @@ class RekamMedisCtrl extends Controller
                 'dokumen_laporan_operasi'     => 'dokumen_laporan_operasi',
                 'dokumen_laporan_insiden'     => 'dokumen_laporan_insiden',
                 'dokumen_catatan_keperawatan_operasi' => 'dokumen_catatan_keperawatan_operasi',
+                'surat_pengantar_rawat_inap' => 'dokumen_surat_pengantar_rawat_inap',
+                'penyimpanan_barang_berharga' => 'dokumen_penyimpanan_barang_berharga',
+                'permintaan_pelayanan_kerohanian' => 'dokumen_permintaan_pelayanan_kerohanian',
                 // Tambahkan mapping baru di sini
             ];
 
@@ -1135,6 +1174,9 @@ class RekamMedisCtrl extends Controller
                 'dokumen_laporan_operasi'     => 'dokumen_laporan_operasi',
                 'dokumen_laporan_insiden'     => 'dokumen_laporan_insiden',
                 'dokumen_catatan_keperawatan_operasi' => 'dokumen_catatan_keperawatan_operasi',
+                'surat_pengantar_rawat_inap' => 'dokumen_surat_pengantar_rawat_inap',
+                'penyimpanan_barang_berharga' => 'dokumen_penyimpanan_barang_berharga',
+                'permintaan_pelayanan_kerohanian' => 'dokumen_permintaan_pelayanan_kerohanian',
             ];
 
             if (!isset($tableMap[$type])) {

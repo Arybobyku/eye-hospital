@@ -1833,3 +1833,108 @@ TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.dokumen_penilaian_risiko_jatuh_pasien_geriatri
     OWNER to postgres;
+
+    
+
+CREATE TABLE IF NOT EXISTS dokumen_permintaan_pelayanan_kerohanian (
+    id BIGSERIAL PRIMARY KEY,
+    uuid UUID NOT NULL DEFAULT gen_random_uuid(),
+    uuid_pasien VARCHAR(36) NOT NULL,
+
+    jenis_kelamin VARCHAR(20),
+    nik VARCHAR(50),
+    no_rm VARCHAR(50),
+
+    no_surat VARCHAR(100) DEFAULT 'RM 7.1/FPPKK/22',
+
+    nama VARCHAR(255),
+
+    tanggal_lahir_pasien DATE,
+    jenis_kelamin_pasien VARCHAR(10),
+    alamat_pasien TEXT,
+
+    nama_wali VARCHAR(255),
+    tanggal_lahir_wali DATE,
+    jenis_kelamin_wali VARCHAR(10),
+    alamat_wali TEXT,
+
+    agama_kepercayaan VARCHAR(100),
+    bentuk_pelayanan TEXT,
+
+    tanggal_pelayanan DATE,
+    jam_pelayanan TIME,
+
+    koordinasi_team TEXT,
+    pelayanan_doa_bersama BOOLEAN DEFAULT FALSE,
+    keterangan_pelayanan TEXT,
+
+    tanggal DATE,
+
+    ttd_rohaniawan TEXT,
+    nama_rohaniawan_ttd VARCHAR(255),
+    ttd_rohaniawan_timestamp VARCHAR(50),
+
+    ttd_kepala_ruangan TEXT,
+    nama_kepala_ruangan_ttd VARCHAR(255),
+    ttd_kepala_ruangan_timestamp VARCHAR(50),
+
+    ttd_keluarga TEXT,
+    nama_keluarga_ttd VARCHAR(255),
+    ttd_keluarga_timestamp VARCHAR(50),
+
+    created_by VARCHAR(255),
+    updated_by VARCHAR(255),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP,
+
+    CONSTRAINT dokumen_permintaan_pelayanan_kerohanian_uuid_key UNIQUE (uuid)
+);
+
+CREATE TABLE IF NOT EXISTS dokumen_penyimpanan_barang_berharga (
+    id BIGSERIAL PRIMARY KEY,
+    uuid UUID NOT NULL DEFAULT gen_random_uuid(),
+    uuid_pasien VARCHAR(36) NOT NULL,
+
+    no_rm VARCHAR(50) NOT NULL,
+    no_surat VARCHAR(100) DEFAULT 'RM 7.2/FPBBMP/22',
+
+    nik VARCHAR(50),
+    nama VARCHAR(255),
+
+    tanggal_lahir DATE,
+    jenis_kelamin VARCHAR(10),
+
+    nama_petugas VARCHAR(255),
+    tanggal DATE,
+
+    pasien_tidak_sadar BOOLEAN DEFAULT FALSE,
+
+    barang_rows JSONB,
+
+    ttd_petugas TEXT,
+    nama_petugas_ttd VARCHAR(255),
+    ttd_petugas_timestamp VARCHAR(50),
+
+    ttd_saksi1 TEXT,
+    nama_saksi1_ttd VARCHAR(255),
+    ttd_saksi1_timestamp VARCHAR(50),
+
+    ttd_keluarga TEXT,
+    nama_keluarga_ttd VARCHAR(255),
+    ttd_keluarga_timestamp VARCHAR(50),
+
+    ttd_kepala_ruangan TEXT,
+    nama_kepala_ruangan_ttd VARCHAR(255),
+    ttd_kepala_ruangan_timestamp VARCHAR(50),
+
+    created_by VARCHAR(255),
+    updated_by VARCHAR(255),
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP,
+
+    CONSTRAINT dokumen_penyimpanan_barang_berharga_uuid_key UNIQUE (uuid)
+);
