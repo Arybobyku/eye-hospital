@@ -536,6 +536,15 @@ export default {
     FormCatatanKeperawatanOperasi: defineAsyncComponent(() =>
       import("./create/FormCatatanKeperawatanOperasi.vue")
     ),
+    FormSuratPengantarUntukDirawatInap: defineAsyncComponent(() =>
+      import("./create/FormSuratPengantarUntukDirawatInap.vue")
+    ),
+    FormPenyimpananBarangBerharga: defineAsyncComponent(() =>
+      import("./create/FormPenyimpananBarangBerharga.vue")
+    ),
+    FormPermintaanPelayananKerohanian: defineAsyncComponent(() =>
+      import("./create/FormPermintaanPelayananKerohanian.vue")
+    ),
   },
 
   data() {
@@ -919,6 +928,27 @@ export default {
           description: "Catatan Keperawatan Intra Dan Pasca Operasi (RM 4.6/CKIDPO)",
           backendType: "dokumen_catatan_keperawatan_operasi",
         },
+        {
+          value: "dokumen-surat-pengantar-untuk-dirawat-inap",
+          label: "Surat Pengantar Untuk Dirawat Inap",
+          component: "FormSuratPengantarUntukDirawatInap",
+          description: "Surat Pengantar Untuk Dirawat Inap (RM 2.5/SPUDI/22)",
+          backendType: "surat_pengantar_rawat_inap",
+        },
+        {
+          value: "dokumen-penyimpanan-barang-berharga",
+          label: "Form Penyimpanan Barang Berharga Milik Pasien",
+          component: "FormPenyimpananBarangBerharga",
+          description: "Formulir Penyimpanan Barang Berharga Milik Pasien (RM 7.2/FPBBMP/22)",
+          backendType: "penyimpanan_barang_berharga",
+        },
+        {
+          value: "dokumen-permintaan-pelayanan-kerohanian",
+          label: "Form Permintaan Pelayanan Kerohanian",
+          component: "FormPermintaanPelayananKerohanian",
+          description: "Formulir Permintaan Pelayanan Kegiatan Kerohanian (RM 7.1/FPPKK/22)",
+          backendType: "permintaan_pelayanan_kerohanian",
+        },
       ],
     };
   },
@@ -1217,6 +1247,10 @@ export default {
         dokumen_kronologis_pasien: `/print/rekammedis/general/kronologis/${item.uuid}`,
         status_anestesi: `/print/rekammedis/lampiran/status-anestesi/${item.uuid}`,
         laporan_operasi_vitreo_retina: `/print/rekammedis/lampiran/laporan-operasi-vitreo-retina/${item.uuid}`,
+        surat_pengantar_rawat_inap: `/print/rekammedis/lampiran/surat-pengantar-rawat-inap/${item.uuid}`,
+        permintaan_pelayanan_kerohanian: `/print/rekammedis/lampiran/permintaan-pelayanan-kerohanian/${item.uuid}`,
+        penyimpanan_barang_berharga: `/print/rekammedis/lampiran/penyimpanan-barang-berharga/${item.uuid}`,
+
       };
 
       const url = printUrls[item.document_type];

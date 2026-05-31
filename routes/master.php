@@ -102,6 +102,9 @@ Route::group(['middleware' => 'throttle: 250, 1'], function () {
         Route::post('dokumen-laporan-operasi', [PasienCtrl::class, 'storeLaporanOperasi'])->name('master-pasien-storeLaporanOperasi');
         Route::post('dokumen-laporan-insiden', [PasienCtrl::class, 'storeLaporanInsiden'])->name('master-pasien-storeLaporanInsiden');
         Route::post('dokumen-catatan-keperawatan-operasi', [PasienCtrl::class, 'storeCatatanKeperawatanOperasi'])->name('master-pasien-storeCatatanKeperawatanOperasi');
+        Route::post('dokumen-surat-pengantar-rawat-inap', [PasienCtrl::class, 'storeSuratPengantarRawatInap'])->name('master-pasien-storeSuratPengantarRawatInap');
+        Route::post('dokumen-penyimpanan-barang-berharga', [PasienCtrl::class, 'storeFormPenyimpananBarangBerharga'])->name('master-pasien-storeFormPenyimpananBarangBerharga');
+        Route::post('dokumen-permintaan-pelayanan-kerohanian', [PasienCtrl::class, 'storeFormPermintaanPelayananKerohanian'])->name('master-pasien-storeFormPermintaanPelayananKerohanian');
 
 		//master
 		Route::get('master-dokter-all', [PasienCtrl::class, 'masterDokter'])->name('master-dokter-all');

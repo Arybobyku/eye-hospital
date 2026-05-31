@@ -13,6 +13,7 @@ use App\Models\Registrasi;
 use App\Models\RegistrasiOperasi;
 use App\Models\Resep;
 use App\Models\ResepRacikan;
+use App\Models\PerencanaanPasienPulang;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
@@ -690,8 +691,10 @@ class PasienCtrl extends Controller
             $daysInHospital = $this->calculateDaysInHospital($tglMasuk, $waktuMasuk, $tglKeluar, $waktuKeluar);
 
             $arrKamar = [
-                'qty' => $daysInHospital,
-                'total' => $billKamar->tarif * $daysInHospital,
+                'qty' => 1,
+                // 'qty' => $daysInHospital,
+                // 'total' => $billKamar->tarif * $daysInHospital,
+                'total' => 1,
             ];
             echo 'arrKamar';
             echo $daysInHospital;
@@ -704,6 +707,60 @@ class PasienCtrl extends Controller
                 'waktu_keluar_inap' => $request->waktu_keluar_inap,
             ];
             $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr2);
+            $item = new PerencanaanPasienPulang();
+            $item->uuid = Uuid::uuid4();
+            $item->registrasi_uuid = $data->uuid;
+            $item->pasien_uuid = $data->pasien_uuid;
+            $item->nama_pasien = $data->nama_pasien;
+            $item->tanggal_masuk = $data->tanggal_masuk;
+            $item->tanggal_keluar_inap = $request->tanggal_keluar_inap;
+            $item->waktu_keluar_inap = $request->waktu_keluar_inap;
+            $item->usia_lanjut = $request->usia_lanjut;
+            $item->hambatan_mobilisasi = $request->hambatan_mobilisasi;
+            $item->butuh_berkelanjutan = $request->butuh_berkelanjutan;
+            $item->tergantung_orang_lain = $request->tergantung_orang_lain;
+            $item->transportasi = $request->transportasi;
+            $item->orang_merawat_dirumah = $request->orang_merawat_dirumah;
+            $item->diet = $request->diet;
+            $item->alat_medis = $request->alat_medis;
+            $item->alat_bantu = $request->alat_bantu;
+            $item->balutan_jangan_kotor = $request->balutan_jangan_kotor;
+            $item->batasi_pekerjaan = $request->batasi_pekerjaan;
+            $item->hindari_angkat_berat = $request->hindari_angkat_berat;
+            $item->jika_muncul_keluhan = $request->jika_muncul_keluhan;
+            $item->jangan_berkendara = $request->jangan_berkendara;
+            $item->cek_lab = $request->cek_lab;
+            $item->pendidikan_lainnya = $request->pendidikan_lainnya;
+            $item->jadwal_kontrol_berikutnya = $request->jadwal_kontrol_berikutnya;
+            $item->obat_obatan = $request->obat_obatan;
+            $item->tanggal_appoinment = $request->tanggal_appoinment;
+            $item->jam_appointment = $request->jam_appointment;
+            $item->resep_obat = $request->resep_obat;
+            $item->petugas_admisi = $request->petugas_admisi;
+            $item->perawat_appointment = $request->perawat_appointment;
+            $item->hasil_pemeriksaan_penunjang1 = $request->hasil_pemeriksaan_penunjang1;
+            $item->hasil_pemeriksaan_penunjang2 = $request->hasil_pemeriksaan_penunjang2;
+            $item->hasil_pemeriksaan_penunjang3 = $request->hasil_pemeriksaan_penunjang3;
+            $item->hasil_pemeriksaan_penunjang4 = $request->hasil_pemeriksaan_penunjang4;
+            $item->pasien_pulang_bersama = $request->pasien_pulang_bersama;
+            $item->intruksi_ke = $request->intruksi_ke;
+            $item->ttd_pasien = $request->ttd_pasien;
+            $item->ttd_perawat = $request->ttd_perawat;
+            $item->pemberitahuan_dokter = $request->pemberitahuan_dokter;
+            $item->pemberitahuan_farmasi = $request->pemberitahuan_farmasi;
+            $item->pemberitahuan_food = $request->pemberitahuan_food;
+            $item->kelengkapan_hasil_lab = $request->kelengkapan_hasil_lab;
+            $item->kelengkapan_resume_medis = $request->kelengkapan_resume_medis;
+            $item->surat_opname = $request->surat_opname;
+            $item->kelengkapan_surat_jaminan = $request->kelengkapan_surat_jaminan;
+            $item->memastikan_barang = $request->memastikan_barang;
+            $item->bukti_verif_lab = $request->bukti_verif_lab;
+            $item->bukti_verif_obat = $request->bukti_verif_obat;
+            $item->bukti_verif_visite = $request->bukti_verif_visite;
+            $item->bukti_verif_alat = $request->bukti_verif_alat;
+            $item->ttd_karu = $request->ttd_karu;
+            $item->ttd_penata = $request->ttd_penata;
+            $item->save();
             PenggunaHelp::log('Pasien Pulang nama pasien "' . $data->nama_pasien . '".');
 
             return response()->json(['hasil' => 'berhasil']);

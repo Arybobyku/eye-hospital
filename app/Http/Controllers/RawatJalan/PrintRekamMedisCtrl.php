@@ -65,6 +65,9 @@ use App\Models\FormPermintaanPulang;
 use App\Models\VoucherRawatInap;
 use App\Models\FormReaksiTransfusiDarah;
 use App\Models\DokumenAsesmenKeperawatanRawatInap;
+use App\Models\DokumenPenyimpananBarangBerharga;
+use App\Models\DokumenPermintaanPelayananKerohanian;
+use App\Models\DokumenSuratPengantarRawatInap;
 use App\Models\Pengguna;
 use App\Models\Resep;
 use App\Models\ResepRacikan;
@@ -1533,6 +1536,59 @@ function printGeneral($uuid)
       ),
     )->setPaper('a4', 'potrait',);
 
+
+    return $pdf->stream();
+  }
+
+  function printFormPenyimpananBarangBerhargaPasien($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenPenyimpananBarangBerharga::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $pdf->loadView(
+      'print-rekam-medis.general.penyimpananbarangberhargapasien',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+    return $pdf->stream();
+  }
+
+  function printPermintaanKegiatanKerohanian($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenPermintaanPelayananKerohanian::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $pdf->loadView(
+      'print-rekam-medis.general.permintaankegiatankerohanian',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
+
+    return $pdf->stream();
+  }
+  function printPengantarRawatInap($uuid)
+  {
+    $pdf = \App::make('dompdf.wrapper');
+    $data = DokumenSuratPengantarRawatInap::where('uuid', '=', $uuid)->first();
+    $pasien = Pasien::where('uuid', '=', $data->uuid_pasien)->first();
+    $registrasi = '';
+    $pdf->loadView(
+      'print-rekam-medis.rawat-inap.pengantarrawatinap',
+      compact(
+        'data',
+        'pasien',
+        'registrasi',
+      ),
+    )->setPaper('a4', 'potrait');
 
     return $pdf->stream();
   }

@@ -62,6 +62,9 @@ use App\Models\DokumenLaporanInsiden;
 use App\Models\DokumenCatatanKeperawatanOperasi;
 use App\Models\Pengguna;
 use App\Models\DokumenAsesmenPraOperasi;
+use App\Models\DokumenSuratPengantarRawatInap;
+use App\Models\DokumenPenyimpananBarangBerharga;
+use App\Models\DokumenPermintaanPelayananKerohanian;
 use Illuminate\Support\Str;              // ✅ Tambahkan ini
 
 
@@ -4619,5 +4622,216 @@ public function storeAsesmenPraOperasi(Request $request)
         ->get();
 
         return response()->json(['data' => $data]);
+    }
+
+    public function storeSuratPengantarRawatInap(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $data = $request->all();
+            
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Username'));
+            
+            $uuid = $request->input('uuid');
+            
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+            
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenSuratPengantarRawatInap::where('uuid', $uuid)->first();
+                
+                if (!$dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+                
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                
+                $action = 'update';
+                $message = 'Surat Pengantar Rawat Inap berhasil diupdate';
+                
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenSuratPengantarRawatInap::create($data);
+                
+                $action = 'create';
+                $message = 'Surat Pengantar Rawat Inap berhasil disimpan';
+            }
+            
+            DB::commit();
+            
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Surat Pengantar Rawat Inap',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function storeFormPenyimpananBarangBerharga(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $data = $request->all();
+            
+            // Ambil data pengguna dari Cookie (encrypted)
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Username'));
+            
+            $uuid = $request->input('uuid');
+            
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+            unset($data['id']);
+            
+            // ===== HANDLING KHUSUS UNTUK BARANG_ROWS (JSON) =====
+            if (isset($data['barang_rows'])) {
+                if (is_string($data['barang_rows'])) {
+                    $data['barang_rows'] = json_decode($data['barang_rows'], true);
+                }
+                
+                if (!is_array($data['barang_rows'])) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Format barang rows tidak valid',
+                    ], 400);
+                }
+                
+                // Validasi minimal ada 1 entri
+                if (empty($data['barang_rows'])) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Minimal harus ada 1 data barang',
+                    ], 400);
+                }
+            }
+            
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenPenyimpananBarangBerharga::where('uuid', $uuid)->first();
+                
+                if (!$dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+                
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                
+                $action = 'update';
+                $message = 'Formulir Penyimpanan Barang Berharga berhasil diupdate';
+                
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $data['id'] = '';
+                $dokumen = DokumenPenyimpananBarangBerharga::create($data);
+                
+                $action = 'create';
+                $message = 'Formulir Penyimpanan Barang Berharga berhasil disimpan';
+            }
+            
+            DB::commit();
+            
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Formulir Penyimpanan Barang Berharga',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    public function storeFormPermintaanPelayananKerohanian(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $data = $request->all();
+            
+            // Ambil user info dari encrypted cookie
+            $pengguna_uuid = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Uuid'));
+            $pengguna_nama = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Nama'));
+            $pengguna_username = Crypt::decrypt(Cookie::get(env('APP_IDENTIFIER') . 'Username'));
+            
+            $uuid = $request->input('uuid');
+            
+            // Hapus uuid dari data untuk avoid mass assignment issue
+            unset($data['uuid']);
+            
+            if ($uuid) {
+                // UPDATE: cari berdasarkan UUID
+                $dokumen = DokumenPermintaanPelayananKerohanian::where('uuid', $uuid)->first();
+                
+                if (!$dokumen) {
+                    return response()->json([
+                        'status' => false,
+                        'message' => 'Data tidak ditemukan',
+                    ], 404);
+                }
+                
+                $data['updated_by'] = $pengguna_nama;
+                $dokumen->update($data);
+                
+                $action = 'update';
+                $message = 'Formulir Permintaan Pelayanan Kerohanian berhasil diupdate';
+                
+            } else {
+                // CREATE: buat baru
+                $data['created_by'] = $pengguna_nama;
+                $dokumen = DokumenPermintaanPelayananKerohanian::create($data);
+                
+                $action = 'create';
+                $message = 'Formulir Permintaan Pelayanan Kerohanian berhasil disimpan';
+            }
+            
+            DB::commit();
+            
+            return response()->json([
+                'status' => true,
+                'message' => $message,
+                'data' => $dokumen,
+                'action' => $action,
+            ], $action === 'create' ? 201 : 200);
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return response()->json([
+                'status' => false,
+                'message' => 'Gagal menyimpan Formulir Permintaan Pelayanan Kerohanian',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
