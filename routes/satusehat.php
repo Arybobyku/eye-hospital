@@ -9,6 +9,7 @@ use App\Http\Controllers\SatuSehat\EncounterSyncCtrl;
 use App\Http\Controllers\SatuSehat\WilayahCtrl;
 use App\Http\Controllers\SatuSehat\ApiLogCtrl;
 use App\Http\Controllers\SatuSehat\PractitionerSyncCtrl;
+use App\Http\Controllers\SatuSehat\CarePlanSyncCtrl;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,12 +52,17 @@ Route::prefix('patient-sync')->group(function () {
 
 // ── Encounter Sync ─────────────────────────────────────────────────────────
 Route::prefix('encounter-sync')->group(function () {
-    Route::post('dashboard',    [EncounterSyncCtrl::class, 'dashboard'])   ->name('satusehat-encounter-dashboard');
-    Route::post('list',         [EncounterSyncCtrl::class, 'list'])        ->name('satusehat-encounter-list');
-    Route::post('run-sync',     [EncounterSyncCtrl::class, 'runSync'])     ->name('satusehat-encounter-run-sync');
-    Route::post('retry-failed', [EncounterSyncCtrl::class, 'retryFailed'])->name('satusehat-encounter-retry');
-    Route::post('set-location', [EncounterSyncCtrl::class, 'setLocation'])->name('satusehat-encounter-set-location');
-    Route::post('sync-one',     [EncounterSyncCtrl::class, 'syncOne'])    ->name('satusehat-encounter-sync-one');
+    Route::post('dashboard',       [EncounterSyncCtrl::class, 'dashboard'])     ->name('satusehat-encounter-dashboard');
+    Route::post('list',            [EncounterSyncCtrl::class, 'list'])          ->name('satusehat-encounter-list');
+    Route::post('run-sync',        [EncounterSyncCtrl::class, 'runSync'])       ->name('satusehat-encounter-run-sync');
+    Route::post('retry-failed',    [EncounterSyncCtrl::class, 'retryFailed'])   ->name('satusehat-encounter-retry');
+    Route::post('set-location',    [EncounterSyncCtrl::class, 'setLocation'])   ->name('satusehat-encounter-set-location');
+    Route::post('sync-one',        [EncounterSyncCtrl::class, 'syncOne'])       ->name('satusehat-encounter-sync-one');
+    Route::post('status-history',  [EncounterSyncCtrl::class, 'statusHistory'])  ->name('satusehat-encounter-status-history');
+    Route::post('update-status',   [EncounterSyncCtrl::class, 'updateStatus'])   ->name('satusehat-encounter-update-status');
+    Route::post('detail',          [EncounterSyncCtrl::class, 'encounterDetail'])->name('satusehat-encounter-detail');
+    Route::post('conditions',      [EncounterSyncCtrl::class, 'conditions'])      ->name('satusehat-encounter-conditions');
+    Route::post('observations',    [EncounterSyncCtrl::class, 'observations'])    ->name('satusehat-encounter-observations');
 });
 
 // ── Access Token ───────────────────────────────────────────────────────────
@@ -92,4 +98,13 @@ Route::prefix('practitioner-sync')->group(function () {
     Route::post('list',       [PractitionerSyncCtrl::class, 'list'])      ->name('satusehat-practitioner-list');
     Route::post('sync-one',   [PractitionerSyncCtrl::class, 'syncOne'])   ->name('satusehat-practitioner-sync-one');
     Route::post('sync-bulk',  [PractitionerSyncCtrl::class, 'syncBulk'])  ->name('satusehat-practitioner-sync-bulk');
+});
+
+// ── CarePlan Sync ─────────────────────────────────────────────────────────
+Route::prefix('careplan-sync')->group(function () {
+    Route::post('dashboard',    [CarePlanSyncCtrl::class, 'dashboard'])   ->name('satusehat-careplan-dashboard');
+    Route::post('list',         [CarePlanSyncCtrl::class, 'list'])        ->name('satusehat-careplan-list');
+    Route::post('sync-one',     [CarePlanSyncCtrl::class, 'syncOne'])     ->name('satusehat-careplan-sync-one');
+    Route::post('run-sync',     [CarePlanSyncCtrl::class, 'runSync'])     ->name('satusehat-careplan-run-sync');
+    Route::post('retry-failed', [CarePlanSyncCtrl::class, 'retryFailed'])->name('satusehat-careplan-retry');
 });

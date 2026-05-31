@@ -79,6 +79,7 @@
 						<h3 class="label-form">Nomor Identitas</h3>
 
 						<Inputed :ref="form.ktp.name" :form="form.ktp"></Inputed>
+						<Inputed :ref="form.nik.name" :form="form.nik"></Inputed>
 						<Inputed :ref="form.npwp.name" :form="form.npwp"></Inputed>
 						<Inputed :ref="form.sima.name" :form="form.sima"></Inputed>
 						<Inputed :ref="form.simc.name" :form="form.simc"></Inputed>

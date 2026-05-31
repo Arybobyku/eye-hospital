@@ -6,25 +6,35 @@
       Loading...
     </div>
 
-    <div v-if="state == 'list'">
-      <!-- HEADER -->
-      <div class="header-component-rme">Laporan Pembedahan</div>
+    <!-- ========== LIST ========== -->
+    <div v-if="state === 'list'">
+      <div class="header-component-rme">Resume Medis Rawat Jalan</div>
+
+      <!-- PATIENT INFO CARD -->
+      <div class="patient-info-card mb-3">
+        <div class="row">
+          <div class="col-md-3"><strong>No. RM:</strong> {{ selectedPatient?.rekam_medis }}</div>
+          <div class="col-md-4"><strong>Nama:</strong> {{ selectedPatient?.nama }}</div>
+          <div class="col-md-3"><strong>NIK:</strong> {{ selectedPatient?.no_identitas }}</div>
+          <div class="col-md-2"><strong>JK:</strong> {{ selectedPatient?.jenis_kelamin }}</div>
+        </div>
+      </div>
 
       <!-- FILTER BAR -->
       <div class="filter-bar">
         <div class="filter-left">
           Tampil
-          <select v-model="perPage">
+          <select v-model="perPage" @change="fetchList">
             <option v-for="n in [10, 25, 50, 100]" :key="n">{{ n }}</option>
           </select>
           data
         </div>
-
         <div class="filter-right">
-          <button class="btn-add" @click="onAdd">+ Tambah</button>
-
+          <button class="btn-add" @click="onAdd">
+            <i class="fas fa-plus"></i> Tambah
+          </button>
           Cari:
-          <input type="text" v-model="searchQuery" class="search-input" />
+          <input type="text" v-model="searchQuery" @input="onSearch" class="search-input" placeholder="No surat, dokter, diagnosa..." />
         </div>
       </div>
 
@@ -32,30 +42,43 @@
       <table class="custom-table-rme">
         <thead>
           <tr>
-            <th>NO</th>
-            <th>TANGGAL</th>
-            <th>JAM</th>
-            <th>NAMA PASIEN</th>
-            <th>JENIS KELAMIN</th>
-            <th>NIK</th>
-            <th>USER</th>
-            <th>ACTION</th>
+            <th style="width:50px">NO</th>
+            <th style="width:130px">TANGGAL BEROBAT</th>
+            <th style="width:160px">NO SURAT</th>
+            <th style="width:160px">DOKTER</th>
+            <th>DIAGNOSA</th>
+            <th style="width:130px">DIBUAT OLEH</th>
+            <th style="width:150px" class="text-center">ACTION</th>
           </tr>
         </thead>
-
         <tbody>
-          <tr v-for="(item, index) in paginatedData" :key="item.id">
-            <td>{{ index + 1 + (currentPage - 1) * perPage }}</td>
-            <td>{{ item.date }}</td>
-            <td>{{ item.time }}</td>
-            <td>{{ item.nama }}</td>
-            <td>{{ item.jenis_kelamin }}</td>
-            <td>{{ item.no_identitas }}</td>
-            <td>{{ item.carabayar_nama }}</td>
-            <!-- ACTION -->
+          <tr v-if="data.length === 0">
+            <td colspan="7" class="text-center">
+              {{ loading ? 'Memuat data...' : 'Tidak ada data' }}
+            </td>
+          </tr>
+          <tr v-for="(item, index) in data" :key="item.uuid">
+            <td>{{ pagination.from + index }}</td>
+            <td>{{ formatDate(item.tanggal_berobat) }}</td>
+            <td>{{ item.no_surat || '-' }}</td>
+            <td>{{ item.dokter || '-' }}</td>
+            <td class="diagnosa-cell">{{ item.diagnosa || '-' }}</td>
+            <td>{{ item.created_by || '-' }}</td>
             <td class="text-center">
-              <!-- icon print -->
-              <i class="fas fa-print action-icon" @click="print()"></i>
+              <div class="action-buttons">
+                <button class="btn-action btn-view" @click="onView(item)" title="Lihat">
+                  <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn-action btn-edit" @click="onEdit(item)" title="Edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-action btn-print" @click="onPrint(item)" title="Print">
+                  <i class="fas fa-print"></i>
+                </button>
+                <button class="btn-action btn-delete" @click="onDelete(item)" title="Hapus">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -63,31 +86,51 @@
 
       <!-- FOOTER INFO -->
       <div class="table-info">
-        Menampilkan {{ startRow }} s/d {{ endRow }} dari {{ data.length }} data
+        Menampilkan {{ pagination.from }} s/d {{ pagination.to }} dari {{ pagination.total }} data
       </div>
 
       <!-- PAGINATION -->
       <div class="pagination-rme">
-        <button :disabled="currentPage === 1" @click="currentPage--">Previous</button>
-
-        <button
-          v-for="page in totalPages"
-          :key="page"
-          :class="['page-btn', { active: currentPage === page }]"
-          @click="currentPage = page"
-        >
-          {{ page }}
+        <button :disabled="pagination.current_page === 1" @click="changePage(pagination.current_page - 1)">
+          <i class="fas fa-chevron-left"></i> Previous
         </button>
-
-        <button :disabled="currentPage === totalPages" @click="currentPage++">
-          Next
+        <button
+          v-for="page in visiblePages"
+          :key="page"
+          :class="['page-btn', { active: pagination.current_page === page }]"
+          @click="changePage(page)"
+        >{{ page }}</button>
+        <button :disabled="pagination.current_page === pagination.total_pages" @click="changePage(pagination.current_page + 1)">
+          Next <i class="fas fa-chevron-right"></i>
         </button>
       </div>
     </div>
 
-    <!-- Create Data -->
-    <div v-if="state == 'create'">
-      <CreateLaporanBedah @back="state = 'list'" :selectedPatient="selectedPatient" />
+    <!-- ========== CREATE ========== -->
+    <div v-if="state === 'create'">
+      <FormResumeMedisRawatJalan
+        :selectedPatient="selectedPatient"
+        @back="onBack"
+      />
+    </div>
+
+    <!-- ========== VIEW ========== -->
+    <div v-if="state === 'view'">
+      <FormResumeMedisRawatJalan
+        :selectedPatient="selectedPatient"
+        :viewData="activeItem"
+        :editData="activeItem"
+        @back="onBack"
+      />
+    </div>
+
+    <!-- ========== EDIT ========== -->
+    <div v-if="state === 'edit'">
+      <FormResumeMedisRawatJalan
+        :selectedPatient="selectedPatient"
+        :editData="activeItem"
+        @back="onBack"
+      />
     </div>
   </div>
 </template>
@@ -95,24 +138,16 @@
 <script>
 import axios from "axios";
 import { defineAsyncComponent } from "vue";
+
 export default {
-  name: "InformedConsent",
+  name: "ResumeMenu",
+
   components: {
-    CreateLaporanBedah: defineAsyncComponent(() =>
-      import("./CreateLaporanBedah.vue")
+    FormResumeMedisRawatJalan: defineAsyncComponent(() =>
+      import("../lampiran/create/FormResumeMedisRawatJalan.vue")
     ),
   },
 
-  data() {
-    return {
-      perPage: 10,
-      currentPage: 1,
-      searchQuery: "",
-      state: "list",
-      loading: false,
-      data: [],
-    };
-  },
   props: {
     selectedPatient: {
       type: Object,
@@ -120,103 +155,135 @@ export default {
     },
   },
 
+  data() {
+    return {
+      state: "list",
+      loading: false,
+      data: [],
+      activeItem: null,
+      searchQuery: "",
+      searchTimeout: null,
+      perPage: 10,
+      pagination: {
+        total: 0,
+        per_page: 10,
+        current_page: 1,
+        total_pages: 1,
+        from: 0,
+        to: 0,
+      },
+    };
+  },
+
+  computed: {
+    visiblePages() {
+      const total = this.pagination.total_pages || 1;
+      const cur   = this.pagination.current_page;
+      const delta = 2;
+      const range = [];
+      for (let i = Math.max(1, cur - delta); i <= Math.min(total, cur + delta); i++) {
+        range.push(i);
+      }
+      return range;
+    },
+  },
+
   watch: {
     selectedPatient: {
       immediate: true,
-      handler(newVal) {
-        if (newVal?.id) {
-          this.fetchHistory();
-        }
+      handler(val) {
+        if (val?.uuid) this.fetchList();
       },
     },
   },
 
-  computed: {
-    filteredData() {
-      if (!this.searchQuery) return this.data;
-
-      return this.data.filter((row) =>
-        Object.values(row).some((val) =>
-          String(val).toLowerCase().includes(this.searchQuery.toLowerCase())
-        )
-      );
-    },
-
-    totalPages() {
-      return Math.ceil(this.filteredData.length / this.perPage);
-    },
-
-    paginatedData() {
-      const start = (this.currentPage - 1) * this.perPage;
-      return this.filteredData.slice(start, start + this.perPage);
-    },
-
-    startRow() {
-      return (this.currentPage - 1) * this.perPage + 1;
-    },
-
-    endRow() {
-      const end = this.currentPage * this.perPage;
-      return end > this.data.length ? this.data.length : end;
-    },
-  },
-  mounted() {
-    // this.fetchHistory();
-  },
-
   methods: {
-    async fetchHistory() {
+    async fetchList() {
+      if (!this.selectedPatient?.uuid) return;
       this.loading = true;
-
       try {
-        const formData = new FormData();
-        formData.append("search", this.selectedPatient.uuid);
-        formData.append("limit", 10);
-        formData.append("page", 1);
+        const fd = new FormData();
+        fd.append("uuid_pasien", this.selectedPatient.uuid);
+        fd.append("search", this.searchQuery);
+        fd.append("limit", this.perPage);
+        fd.append("page", this.pagination.current_page);
 
-        const res = await axios.post("/master/pasien/list-dokumen-persetujuan-penolkan", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        // 👇 pastikan data backend berupa array
-        this.data = res.data?.data ?? [];
+        const res = await axios.post("/master/pasien/list-resume-medis-rawat-jalan", fd);
+        if (res.data.status) {
+          this.data       = res.data.data ?? [];
+          this.pagination = res.data.pagination;
+        }
       } catch (err) {
-        console.error("Gagal memuat history:", err);
-        alert("Gagal memuat data history.");
+        console.error("Gagal memuat data:", err);
       } finally {
         this.loading = false;
       }
     },
-    onAdd() {
-      this.state = "create";
-      this.$emit("set-breadcrumb", {
-            docName: "Laporan Pembedahan"
-        });
-      console.log("TAMBAH");
-    },
-    mappedStatus(data) {
-      if (data?.status_ro != "Sudah Diperiksa") {
-        return "Pemriksasan Refraksi Optisi";
-      }
-      if (data?.status_dokter != "Sudah Diperiksa") {
-        return "Pemriksasan Dokter";
-      }
-      if (data?.status_dokter != "Sudah Bayar") {
-        return "Farmasi";
-      }
-      if (data?.status_dokter != "Sudah Bayar") {
-        return "Kasir";
-      }
 
-      return "Selesai";
+    onSearch() {
+      clearTimeout(this.searchTimeout);
+      this.searchTimeout = setTimeout(() => {
+        this.pagination.current_page = 1;
+        this.fetchList();
+      }, 400);
     },
-    print() {
-      window.open(
-        `/print/rekammedis/rawat-jalan/rm1dot1/${this.selectedPatient.uuid}`,
-        "_blank"
-      );
+
+    changePage(page) {
+      if (page < 1 || page > this.pagination.total_pages) return;
+      this.pagination.current_page = page;
+      this.fetchList();
+    },
+
+    onAdd() {
+      this.activeItem = null;
+      this.state = "create";
+    },
+
+    onView(item) {
+      this.activeItem = item;
+      this.state = "view";
+    },
+
+    onEdit(item) {
+      this.activeItem = item;
+      this.state = "edit";
+    },
+
+    onPrint(item) {
+      window.open(`/print/rekammedis/lampiran/rekam-medis-rawat-jalan/${item.uuid}`, "_blank");
+    },
+
+    async onDelete(item) {
+      if (!confirm("Apakah Anda yakin ingin menghapus dokumen ini?")) return;
+      this.loading = true;
+      try {
+        const res = await axios.delete(
+          `/master/rekammedis/lampiran/${item.uuid}?type=resume_medis_rawat_jalan`
+        );
+        if (res.data.status) {
+          await this.fetchList();
+        } else {
+          alert(res.data.message || "Gagal menghapus data");
+        }
+      } catch (err) {
+        console.error("Error delete:", err);
+        alert("Terjadi kesalahan saat menghapus data");
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    onBack() {
+      this.activeItem = null;
+      this.state = "list";
+      this.fetchList();
+    },
+
+    formatDate(val) {
+      if (!val) return "-";
+      const d = new Date(val);
+      if (isNaN(d)) return val;
+      return d.toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
     },
   },
 };
@@ -228,6 +295,7 @@ export default {
   padding: 15px;
   border-radius: 5px;
   border: 1px solid #ddd;
+  position: relative;
 }
 
 .header-component-rme {
@@ -240,21 +308,43 @@ export default {
   margin-bottom: 15px;
 }
 
+.patient-info-card {
+  background: #f0f6ff;
+  border: 1px solid #c7dff7;
+  border-radius: 6px;
+  padding: 10px 15px;
+  font-size: 13px;
+}
+
 .filter-bar {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   margin-bottom: 10px;
   font-size: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .filter-left select {
   margin: 0 5px;
+  padding: 3px 6px;
+  border: 1px solid #aaa;
+  border-radius: 3px;
+}
+
+.filter-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .search-input {
-  padding: 3px 5px;
+  padding: 4px 8px;
   border: 1px solid #aaa;
   border-radius: 3px;
+  min-width: 200px;
 }
 
 /* TABLE */
@@ -262,46 +352,92 @@ export default {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 10px;
+  font-size: 13px;
 }
-
 .custom-table-rme th {
   background: #1d72c9;
   color: white;
   padding: 8px;
   text-align: left;
-  font-size: 13px;
 }
-
 .custom-table-rme td {
   border: 1px solid #ddd;
-  padding: 8px;
-  font-size: 13px;
+  padding: 7px 8px;
 }
-
 .custom-table-rme tbody tr:nth-child(even) {
   background: #e9f2ff;
 }
+.diagnosa-cell {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 
-/* INFO */
+/* ACTION BUTTONS */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+.btn-action {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-view   { background: #17a2b8; }
+.btn-view:hover { background: #138496; }
+.btn-edit   { background: #ffc107; color: #333; }
+.btn-edit:hover { background: #e0a800; }
+.btn-print  { background: #6c757d; }
+.btn-print:hover { background: #545b62; }
+.btn-delete { background: #dc3545; }
+.btn-delete:hover { background: #c82333; }
+
+/* ADD BUTTON */
+.btn-add {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btn-add:hover { background: #218838; }
+
+/* FOOTER & PAGINATION */
 .table-info {
   margin-top: 5px;
   font-size: 13px;
+  color: #555;
 }
-
-/* PAGINATION */
 .pagination-rme {
   display: flex;
   gap: 5px;
+  margin-top: 10px;
+  flex-wrap: wrap;
 }
-
 .pagination-rme button {
   padding: 5px 10px;
   border: 1px solid #1d72c9;
   background: white;
   cursor: pointer;
   border-radius: 3px;
+  font-size: 13px;
 }
-
+.pagination-rme button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
 .page-btn.active {
   background: #1d72c9;
   color: white;
@@ -319,7 +455,6 @@ export default {
   font-size: 18px;
   z-index: 10;
 }
-
 .spinner-rme {
   width: 32px;
   height: 32px;
@@ -329,24 +464,14 @@ export default {
   animation: spin-rme 0.8s linear infinite;
   margin-bottom: 10px;
 }
-
-.btn-add {
-  background: #28a745; /* hijau */
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.btn-add:hover {
-  background: #218838;
-}
-
 @keyframes spin-rme {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
+
+.text-center { text-align: center; }
+.mb-3 { margin-bottom: 12px; }
+.row { display: flex; flex-wrap: wrap; }
+.col-md-2 { flex: 0 0 16.66%; }
+.col-md-3 { flex: 0 0 25%; }
+.col-md-4 { flex: 0 0 33.33%; }
 </style>

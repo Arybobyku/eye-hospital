@@ -40,6 +40,7 @@ export const setdataeditpengguna = (form, response) => {
 	form.daruratnama.value = data.darurat_nama;
 	form.darurathubungan.value = data.darurat_hubungan;
 	form.ktp.value = data.ktp;
+	form.nik.value = data.nik ?? '';
 	form.sima.value = data.sima;
 	form.simc.value = data.simc;
 	form.npwp.value = data.npwp;

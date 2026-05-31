@@ -502,10 +502,13 @@ export default {
   },
 
   watch: {
-    selectedPatient: {
+    // Bandingkan UUID secara eksplisit — bukan referensi object.
+    // Ini mencegah re-fetch setiap kali parent re-render (misal: saat mengetik form lain)
+    // yang akan membuat object baru meskipun UUID-nya sama.
+    'selectedPatient.uuid': {
       immediate: true,
-      handler(newVal) {
-        if (newVal?.uuid) {
+      handler(newUuid, oldUuid) {
+        if (newUuid && newUuid !== oldUuid) {
           this.fetchHistory();
           this.fetchDokumen();
           this.checkUserRole();

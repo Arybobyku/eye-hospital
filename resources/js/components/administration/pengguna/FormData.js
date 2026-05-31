@@ -61,9 +61,13 @@ export const formpengguna = () => {
 			title: 'No Handphone', for_id: 'form_'+'nohandphone', type: 'text', required: 'required', 
 			name: 'nohandphone', value: '', disabled: false, show: true, kinds: ''
 		},
-		ktp: { 
-			title: 'No KTP', for_id: 'form_'+'ktp', type: 'text', required: 'required', 
+		ktp: {
+			title: 'No KTP', for_id: 'form_'+'ktp', type: 'text', required: 'required',
 			name: 'ktp', value: '', disabled: false, show: true, kinds: ''
+		},
+		nik: {
+			title: 'NIK', for_id: 'form_'+'nik', type: 'text', required: '',
+			name: 'nik', value: '', disabled: false, show: true, kinds: ''
 		},
 		sima: { 
 			title: 'No SIM A', for_id: 'form_'+'sima', type: 'text', required: '', 

@@ -23,6 +23,7 @@ use App\Models\ResepRacikan;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
+use App\Services\SatuSehat\SatuSehatLocationResolver;
 
 class PemeriksaanCtrl extends Controller
 {
@@ -2058,6 +2059,20 @@ class PemeriksaanCtrl extends Controller
         $cek = Registrasi::where('pengguna_uuid', '=', $data->pengguna_uuid)->whereDate('tanggal', '=', date('Y-m-d'))
             ->where('kode', '=', 'RJ')->where('jenis', '=', 'Rawat Jalan')->update($arr);
 
+        // ── SatuSehat: simpan Location ID poli saat pasien masuk ruang dokter ─
+        // if (empty($data->satusehat_location_poli_id)) {
+        //     $poliLocationId = SatuSehatLocationResolver::resolvePoli($data->ruang_poliklinik ?? '');
+        //     if ($poliLocationId) {
+        //         $poliUpdate = ['satusehat_location_poli_id' => $poliLocationId];
+        //         // Jika encounter belum pernah synced (no_location/waiting_patient/null),
+        //         // update juga satusehat_location_id agar job sync pakai lokasi poli
+        //         if (empty($data->satusehat_encounter_id)) {
+        //             $poliUpdate['satusehat_location_id'] = $poliLocationId;
+        //         }
+        //         Registrasi::where('uuid', '=', $request->uuid)->update($poliUpdate);
+        //     }
+        // }
+
         if ($data) {
             if ($data->dokter_jam_selesai == '-') {
                 $arr = ['status_antrian_dokter' => 'active'];
@@ -2265,6 +2280,21 @@ class PemeriksaanCtrl extends Controller
             $arr = ['dokter_jam_periksa' => date('H:i')];
             $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
         }
+
+        // ── SatuSehat: simpan Location ID poli saat pasien dipanggil masuk ───
+        // if (empty($cek->satusehat_location_poli_id)) {
+        //     $poliName      = $request->ruang_poliklinik ?? $cek->ruang_poliklinik ?? '';
+        //     $poliLocationId = SatuSehatLocationResolver::resolvePoli($poliName);
+        //     if ($poliLocationId) {
+        //         $poliUpdate = ['satusehat_location_poli_id' => $poliLocationId];
+        //         // Jika encounter belum synced, pakai lokasi poli sebagai primary location
+        //         if (empty($cek->satusehat_encounter_id)) {
+        //             $poliUpdate['satusehat_location_id'] = $poliLocationId;
+        //         }
+        //         Registrasi::where('uuid', '=', $request->uuid)->update($poliUpdate);
+        //     }
+        // }
+
         $arr = ['status_antrian_dokter' => 'active'];
         $update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 

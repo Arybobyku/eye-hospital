@@ -17,6 +17,7 @@ use App\Models\PenanggungJawab;
 use App\Models\LayananPasien;
 use App\Models\CaraBayarTindakanRawatJalan;
 use App\Events\NewTradeRo;
+use Illuminate\Support\Facades\Cache;
 
 class RegistrasiCtrl extends Controller
 {
@@ -294,6 +295,10 @@ class RegistrasiCtrl extends Controller
 				$item->ruang_poliklinik = $request->ruang_poliklinik ? $request->ruang_poliklinik : 0;
 				$item->berkebutuhan_khusus = $request->berkebutuhan_khusus ? $request->berkebutuhan_khusus : '-';
 				$item->keterangan_berkebutuhan = $request->keterangan_berkebutuhan ? $request->keterangan_berkebutuhan : '-';
+
+				// ── SatuSehat: isi location ID dari master data (Front Office Lantai 1) ──
+				$item->satusehat_location_id = $this->getFrontOfficeLocationId();
+
 				$status_penjamin = '-';
 				$is_approve = '-';
 				$is_pay = '-';
@@ -571,6 +576,35 @@ class RegistrasiCtrl extends Controller
 		if ($this->error != 'next') { return response()->json(['data' => $this->error]); }
 		$data = Pasien::where('delete_soft', '=', '1')->where('nama', 'ilike', '%'.$request->keyword.'%')->limit(15)->get();
 		return response()->json(['data' => $data]);
+	}
+
+	/**
+	 * Ambil SatuSehat Location ID untuk Front Office (tempat registrasi rawat jalan).
+	 *
+	 * Lookup dari tabel satusehat_locations berdasarkan alias 'Front Office Lantai 1'.
+	 * Hasilnya di-cache 24 jam agar tidak query DB setiap kali ada registrasi baru.
+	 *
+	 * Jika data belum ada di tabel (belum sync dari SatuSehat), kembalikan null
+	 * sehingga encounter_status akan menjadi 'no_location' dan bisa di-retry
+	 * setelah Location di-sync.
+	 *
+	 * @return string|null  satusehat_id dari tabel satusehat_locations, atau null
+	 */
+	private function getFrontOfficeLocationId(): ?string
+	{
+		return Cache::remember('satusehat_location_front_office', 86400, function () {
+			$loc = DB::table('satusehat_locations')
+				->where('status', 'active')
+				->where(function ($q) {
+					$q->where('alias', 'ilike', '%Front Office%')
+					  ->orWhere('nama',  'ilike', '%Front Office%');
+				})
+				->orderByRaw("CASE WHEN alias ilike '%Lantai 1%' THEN 0 ELSE 1 END")
+				->select('satusehat_id')
+				->first();
+
+			return $loc?->satusehat_id ?? null;
+		});
 	}
 
 }

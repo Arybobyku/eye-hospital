@@ -14,19 +14,30 @@ class SyncEncounterSatuSehat extends Command
      * Signature command — bisa dipanggil manual:
      *   php artisan satusehat:sync-encounter
      *   php artisan satusehat:sync-encounter --batch=20
+     *   php artisan satusehat:sync-encounter --date-from=2025-05-01 --date-to=2025-05-31
+     *
+     * Cron harian dijalankan tanpa opsi sehingga hanya memproses bulan ini.
      */
     protected $signature = 'satusehat:sync-encounter
-                            {--batch=30 : Jumlah encounter per batch}
-                            {--delay=300 : Delay antar request dalam milidetik}';
+                            {--batch=30      : Jumlah encounter per batch}
+                            {--delay=300     : Delay antar request dalam milidetik}
+                            {--date-from=    : Tanggal mulai (Y-m-d), default hari pertama bulan ini}
+                            {--date-to=      : Tanggal akhir (Y-m-d), default hari ini}';
 
-    protected $description = 'Kirim data Encounter (kunjungan) ke SatuSehat berdasarkan registrasi pending';
+    protected $description = 'Kirim data Encounter (kunjungan) ke SatuSehat — default rentang bulan ini';
 
     public function handle(): int
     {
         $batchSize = (int) $this->option('batch');
         $delayMs   = (int) $this->option('delay');
+        $dateFrom  = $this->option('date-from') ?? date('Y-m-01');   // awal bulan ini
+        $dateTo    = $this->option('date-to')   ?? date('Y-m-d');    // hari ini
 
-        $this->info('[SatuSehat Encounter Sync] Mulai — batch=' . $batchSize);
+        // Pastikan urutan benar
+        if ($dateFrom > $dateTo) [$dateFrom, $dateTo] = [$dateTo, $dateFrom];
+
+        $this->info('[SatuSehat Encounter Sync] Mulai — batch=' . $batchSize
+            . ' | dari=' . $dateFrom . ' | sampai=' . $dateTo);
 
         try {
             $bridge = new BridgeBase();
@@ -70,6 +81,8 @@ class SyncEncounterSatuSehat extends Command
                 ->leftJoin('pasien',   'pasien.uuid',   '=', 'registrasi.pasien_uuid')
                 ->leftJoin('pengguna', 'pengguna.uuid', '=', 'registrasi.pengguna_uuid')
                 ->where('registrasi.delete_soft', 1)
+                // Hanya sync registrasi dalam rentang tanggal — cron tidak menyentuh data di luar rentang
+                ->whereBetween('registrasi.tanggal', [$dateFrom, $dateTo])
                 ->whereNull('registrasi.satusehat_encounter_id')
                 ->where(function ($q) {
                     $q->whereNull('registrasi.satusehat_encounter_status')
@@ -102,10 +115,30 @@ class SyncEncounterSatuSehat extends Command
 
                     if ($encounterId) {
                         DB::table('registrasi')->where('id', $reg->id)->update([
-                            'satusehat_encounter_id'      => $encounterId,
-                            'satusehat_encounter_status'  => 'synced',
-                            'satusehat_encounter_synced_at' => now(),
+                            'satusehat_encounter_id'          => $encounterId,
+                            'satusehat_encounter_status'      => 'synced',
+                            'satusehat_encounter_fhir_status' => 'arrived',
+                            'satusehat_encounter_synced_at'   => now(),
                         ]);
+
+                        // Seed initial status history — hanya sekali (idempoten)
+                        $alreadySeeded = DB::table('satusehat_encounter_status_history')
+                            ->where('registrasi_uuid', $reg->uuid)
+                            ->exists();
+                        if (!$alreadySeeded) {
+                            $waktuStr  = $reg->waktu ?? '00:00';
+                            DB::table('satusehat_encounter_status_history')->insert([
+                                'registrasi_uuid'        => $reg->uuid,
+                                'satusehat_encounter_id' => $encounterId,
+                                'status'                 => 'arrived',
+                                'period_start'           => $reg->tanggal . ' ' . $waktuStr . ':00+07:00',
+                                'period_end'             => null,
+                                'catatan'                => 'Batch sync awal',
+                                'updated_by'             => 'artisan:sync-encounter',
+                                'created_at'             => now(),
+                            ]);
+                        }
+
                         $synced++;
                         $this->line("  ✓ [{$reg->nama_pasien}] No.{$reg->nomor} → {$encounterId}");
                     } else {

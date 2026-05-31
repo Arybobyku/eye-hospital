@@ -1278,12 +1278,43 @@
                             </div>
 
                             <div class="content-tab-in" v-if="tab.content.cppt">
-                                <!-- Tombol VIEW ALL CPPT -->
-                                <div style="margin-bottom: 12px;">
+                                <!-- Tombol VIEW ALL CPPT + Resume Medis -->
+                                <div style="margin-bottom: 12px; display:flex; gap:8px; flex-wrap:wrap;">
                                     <button class="button-modal-page button-modal-green" style="background:#1a6f1d; border-color:#1a6f1d;" @click="openAllCppt()">
                                         <vue-feather type="list" style="width:14px;height:14px;margin-right:5px;vertical-align:middle;"></vue-feather>
                                         VIEW ALL CPPT
                                     </button>
+                                    <button class="button-modal-page" style="background:#0f62a8; border-color:#0f62a8; color:#fff;" @click="openAllResumeMedis()">
+                                        <vue-feather type="file-text" style="width:14px;height:14px;margin-right:5px;vertical-align:middle;"></vue-feather>
+                                        VIEW ALL RESUME MEDIS
+                                    </button>
+                                </div>
+
+                                <!-- Modal Resume Medis (embed ResumeMenu component) -->
+                                <div v-if="showAllResumeMedis" style="position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:99999;display:flex;align-items:center;justify-content:center;" @click.self="showAllResumeMedis=false">
+                                    <div style="background:#fff;border-radius:10px;box-shadow:0 6px 32px rgba(0,0,0,0.22);width:94%;max-width:1200px;height:92vh;display:flex;flex-direction:column;overflow:hidden;">
+                                        <!-- Header -->
+                                        <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 20px;background:#0f62a8;border-radius:10px 10px 0 0;flex-shrink:0;">
+                                            <span style="color:#fff;font-weight:700;font-size:15px;">
+                                                <vue-feather type="file-text" style="width:16px;height:16px;margin-right:7px;vertical-align:middle;"></vue-feather>
+                                                Resume Medis Rawat Jalan — {{ detail.nama_pasien }}
+                                            </span>
+                                            <span @click="showAllResumeMedis=false" style="color:#fff;font-size:26px;cursor:pointer;line-height:1;padding:0 6px;">&times;</span>
+                                        </div>
+                                        <!-- Body: embed ResumeMenu component -->
+                                        <div style="flex:1;overflow-y:auto;padding:16px;">
+                                            <ResumeMenu
+                                                v-if="detail.pasien_uuid"
+                                                :selectedPatient="{
+                                                    uuid: detail.pasien_uuid,
+                                                    nama: detail.nama_pasien,
+                                                    rekam_medis: detail.rekam_medis,
+                                                    no_identitas: detail.no_identitas || '',
+                                                    jenis_kelamin: detail.jenis_kelamin || ''
+                                                }"
+                                            />
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Modal popup VIEW ALL CPPT — iframe sederhana -->
@@ -1306,7 +1337,7 @@
 
                                 <div class="grid">
                                     <div class="col-5 form-ml" style="overflow-y: auto; max-height: 700px;">
-                                        <RmeSoap v-if="detail.pasien_uuid" :selectedPatient="{ uuid: detail.pasien_uuid }"></RmeSoap>
+                                        <RmeSoap v-if="soapSelectedPatient" :selectedPatient="soapSelectedPatient"></RmeSoap>
                                     </div>
 
                                     <div class="col-7 form-ml">
@@ -1639,6 +1670,9 @@ export default {
             import("../../rme/soap/Soap.vue")
         ),
         ckeditor: CKEditor.component,
+        ResumeMenu: defineAsyncComponent(() =>
+            import("../../rme/resume/resume.vue")
+        ),
     },
     computed: {
         htgquantity: function () {
@@ -1697,6 +1731,12 @@ export default {
             }
             let ab = parseInt(temp);
             return ab;
+        },
+        // Computed stabil untuk prop RmeSoap — hanya berubah jika pasien_uuid berubah,
+        // TIDAK berubah saat field form lain diketik (mencegah re-fetch berulang)
+        soapSelectedPatient: function () {
+            if (!vm || !vm.detail || !vm.detail.pasien_uuid) return null;
+            return { uuid: vm.detail.pasien_uuid };
         },
     },
     mounted: function () {
@@ -1902,6 +1942,7 @@ export default {
             digitalSignature: "",
             showCpptSignature: false,
             showAllCppt: false,
+            showAllResumeMedis: false,
         };
     },
     methods: {
@@ -1910,6 +1951,10 @@ export default {
 
         openAllCppt: function () {
             vm.showAllCppt = true;
+        },
+
+        openAllResumeMedis: function () {
+            vm.showAllResumeMedis = true;
         },
 
         saveDigitalSignature: function (svg) {
@@ -2062,6 +2107,7 @@ export default {
                     <div>Planning</div>
                         <ul>
                            <li>${vm.form.select.pilihanplan.value}</li>
+                          ${vm.form.tanggal_kontrol_selanjutnya.value ? `<li>Tanggal Kontrol Selanjutnya: ${vm.form.tanggal_kontrol_selanjutnya.value}</li>` : ''}
                         </ul>
                     `;
             }
@@ -2925,7 +2971,7 @@ export default {
             vm.tab.content.ro = true;
             vm.linkR = "/print/rekammedis/rawat-jalan/cpptpoli/";
             vm.showAllCppt = false;
-            vm.showResumeMedis = false;
+            vm.showAllResumeMedis = false;
         },
         hide: function () {
             vm.terminate.show = false;

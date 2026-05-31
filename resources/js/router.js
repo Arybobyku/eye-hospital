@@ -1093,6 +1093,13 @@ const routes = [
 		props: true
 	},
 	{
+		path: _base + 'satusehat-careplan-sync',
+		name: 'SatuSehat - CarePlan Sync',
+		component: () => import('./components/satusehat/careplan/index.vue'),
+		meta: { title: 'SatuSehat - CarePlan Sync' },
+		props: true
+	},
+	{
 		path: _base + 'satusehat-api-logs',
 		name: 'SatuSehat - API Logs',
 		component: () => import('./components/satusehat/apilogs/index.vue'),

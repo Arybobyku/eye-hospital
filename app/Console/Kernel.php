@@ -34,6 +34,16 @@ class Kernel extends ConsoleKernel
                  ->everyThirtyMinutes()
                  ->withoutOverlapping()
                  ->appendOutputTo(storage_path('logs/satusehat-sync-encounter.log'));
+
+        /**
+         * Sync CarePlan ke SatuSehat.
+         * Berjalan setiap 15 menit — pick up registrasi dengan status_dokter 'Sudah Diperiksa'
+         * yang belum ter-sync (termasuk yang waiting_encounter atau waiting_patient).
+         */
+        $schedule->command('satusehat:sync-careplan --batch=30')
+                 ->everyFifteenMinutes()
+                 ->withoutOverlapping()
+                 ->appendOutputTo(storage_path('logs/satusehat-sync-careplan.log'));
     }
 
     /**

@@ -18,6 +18,7 @@ export const parsepengguna = (form) => {
 	data.append('darurat_nama', form.daruratnama.value);
 	data.append('darurat_hubungan', form.darurathubungan.value);
 	data.append('ktp', form.ktp.value);
+	data.append('nik', form.nik.value);
 	data.append('sima', form.sima.value);
 	data.append('simc', form.simc.value);
 	data.append('npwp', form.npwp.value);

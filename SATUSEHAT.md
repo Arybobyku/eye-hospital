@@ -18,12 +18,14 @@ Dokumentasi teknis lengkap untuk modul integrasi **SatuSehat (FHIR R4)** pada si
 10. [Modul: Wilayah (BPS Code)](#10-modul-wilayah-bps-code)
 11. [Auto-Sync Pasien (LISTEN/NOTIFY)](#11-auto-sync-pasien-listennotify)
 11b. [Auto-Sync Encounter/Registrasi (LISTEN/NOTIFY)](#11b-auto-sync-encounterregistrasi-listennotify)
-12. [Shared Services](#12-shared-services)
-13. [Referensi API Routes](#13-referensi-api-routes)
-14. [Artisan Commands](#14-artisan-commands)
-15. [Alur Kerja Lengkap (Onboarding)](#15-alur-kerja-lengkap-onboarding)
-16. [Deployment Production](#16-deployment-production)
-17. [Troubleshooting](#17-troubleshooting)
+11c. [Auto-Sync CarePlan (LISTEN/NOTIFY)](#11c-auto-sync-careplan-listennotify)
+12. [Modul: CarePlan (Rencana Rawat)](#12-modul-careplan-rencana-rawat)
+13. [Shared Services](#13-shared-services)
+14. [Referensi API Routes](#14-referensi-api-routes)
+15. [Artisan Commands](#15-artisan-commands)
+16. [Alur Kerja Lengkap (Onboarding)](#16-alur-kerja-lengkap-onboarding)
+17. [Deployment Production](#17-deployment-production)
+18. [Troubleshooting](#18-troubleshooting)
 
 ---
 
@@ -40,6 +42,7 @@ Modul SatuSehat mengintegrasikan sistem Eye Hospital dengan platform **FHIR R4**
 | Organization | `Organization` | Sync & cache organisasi fasyankes dari SatuSehat |
 | Location | `Location` | Sync & cache lokasi/ruangan dari SatuSehat |
 | Encounter | `Encounter` | Kirim data kunjungan pasien (registrasi) ke SatuSehat |
+| CarePlan | `CarePlan` | Kirim rencana rawat pasien otomatis saat dokter selesai periksa |
 | Wilayah | _(BPS Code lookup)_ | Cache kode administratif BPS untuk address mapping |
 
 ---
@@ -84,10 +87,13 @@ satusehat_synced_at    TIMESTAMP
 
 **`registrasi`**
 ```sql
-satusehat_encounter_id         VARCHAR(64)   -- FHIR Encounter.id
-satusehat_encounter_status     VARCHAR(20)
-satusehat_encounter_synced_at  TIMESTAMP
-satusehat_location_id          VARCHAR(64)   -- Location FHIR ID yang dipakai
+satusehat_encounter_id            VARCHAR(64)   -- FHIR Encounter.id (diisi setelah POST berhasil)
+satusehat_encounter_status        VARCHAR(20)   -- null | waiting_patient | no_location | synced | failed
+satusehat_encounter_synced_at     TIMESTAMP
+satusehat_encounter_fhir_status   VARCHAR(20)   -- FHIR status aktif: arrived | in-progress | finished | cancelled
+satusehat_location_id             VARCHAR(64)   -- FHIR Location.id (Front Office / lokasi utama)
+satusehat_location_ro_id          VARCHAR(64)   -- FHIR Location.id ruang Refraksi Optisi
+satusehat_location_poli_id        VARCHAR(64)   -- FHIR Location.id ruang Poli Dokter
 ```
 
 **`pengguna`**
@@ -111,6 +117,29 @@ satusehat_code  VARCHAR(20)   -- Kode BPS SatuSehat
 | `satusehat_api_logs` | Log semua request/response API SatuSehat |
 | `satusehat_locations` | Cache lokal FHIR Location resources |
 | `satusehat_organizations` | Cache lokal FHIR Organization resources |
+| `satusehat_encounter_status_history` | Riwayat transisi FHIR status per Encounter (untuk `statusHistory` payload) |
+
+### Tabel `satusehat_encounter_status_history`
+
+```sql
+CREATE TABLE satusehat_encounter_status_history (
+    id               BIGSERIAL PRIMARY KEY,
+    registrasi_uuid  UUID         NOT NULL,  -- FK ke registrasi.uuid
+    status           VARCHAR(20)  NOT NULL,  -- arrived | in-progress | finished | cancelled
+    period_start     TIMESTAMP    NOT NULL,  -- Waktu status dimulai (UTC)
+    period_end       TIMESTAMP    DEFAULT NULL,  -- NULL = status masih aktif
+    created_at       TIMESTAMP    DEFAULT NOW()
+);
+CREATE INDEX ON satusehat_encounter_status_history (registrasi_uuid);
+```
+
+Tabel ini dikelola sepenuhnya oleh `SyncEncounterToSatuSehat` job:
+- `handlePost()` — insert baris `arrived` pertama kali
+- `handleRo()` — tutup `arrived` (set `period_end`), insert `in-progress`
+- `handleDokter()` — tutup semua open, insert `finished`
+- `rollbackStatusUpdate()` — batalkan transisi jika PUT API gagal
+
+`EncounterBuilder::buildStatusHistory()` membaca tabel ini untuk mengisi `statusHistory[]` di payload FHIR.
 
 ### Tabel `satusehat_organizations` (penting untuk Encounter)
 
@@ -135,8 +164,11 @@ CREATE TABLE satusehat_organizations (
 ```
 app/
 ├── Console/Commands/
-│   ├── ListenPasienSatuSehat.php      # Daemon LISTEN pg_notify → dispatch job
-│   └── SyncEncounterSatuSehat.php     # Scheduler bulk-sync Encounter
+│   ├── ListenPasienSatuSehat.php      # Daemon LISTEN pg_notify → dispatch job Pasien
+│   ├── ListenRegistrasiSatuSehat.php  # Daemon LISTEN pg_notify → dispatch job Encounter
+│   ├── ListenCarePlanSatuSehat.php    # Daemon LISTEN pg_notify → dispatch job CarePlan
+│   ├── SyncEncounterSatuSehat.php     # Scheduler bulk-sync Encounter
+│   └── SyncCarePlanSatuSehat.php      # Scheduler bulk-sync CarePlan
 │
 ├── Http/Controllers/SatuSehat/
 │   ├── BridgeBase.php                 # HTTP client (OAuth2 token, request wrapper)
@@ -145,33 +177,41 @@ app/
 │   ├── OrganizationCtrl.php           # Sync & cache Organization dari SatuSehat
 │   ├── LocationCtrl.php               # Sync & cache Location dari SatuSehat
 │   ├── EncounterSyncCtrl.php          # Sync Encounter: one-by-one & bulk
+│   ├── CarePlanSyncCtrl.php           # Sync CarePlan: dashboard, list, sync, retry
 │   └── WilayahCtrl.php                # Cache wilayah BPS
 │
 ├── Jobs/
-│   └── SyncPasienToSatuSehat.php      # Queue job: sync 1 pasien (idempoten)
+│   ├── SyncPasienToSatuSehat.php      # Queue job: sync 1 pasien (idempoten)
+│   ├── SyncEncounterToSatuSehat.php   # Queue job: sync 1 encounter (idempoten)
+│   └── SyncCarePlanToSatuSehat.php    # Queue job: sync 1 careplan (idempoten)
 │
 ├── Observers/
-│   └── PasienObserver.php             # Eloquent hook: dispatch job saat Pasien dibuat
+│   ├── PasienObserver.php             # Eloquent hook: dispatch job saat Pasien dibuat
+│   └── RegistrasiObserver.php         # Eloquent hook: dispatch job saat Registrasi dibuat/diupdate
 │
 ├── Providers/
 │   └── AppServiceProvider.php         # Register observer + dokumentasi strategi dual-layer
 │
 └── Services/SatuSehat/
     ├── PatientBuilder.php             # Build FHIR Patient payload (static)
-    └── EncounterBuilder.php           # Build FHIR Encounter payload (static)
+    ├── EncounterBuilder.php           # Build FHIR Encounter payload (static)
+    └── CarePlanBuilder.php            # Build FHIR CarePlan payload (static)
 
 config/supervisor/
-└── satusehat-listener.conf            # Supervisor config untuk daemon LISTEN
+├── satusehat-listener.conf                # Daemon: listen-pasien
+├── satusehat-registrasi-listener.conf     # Daemon: listen-registrasi
+└── satusehat-careplan-listener.conf       # Daemon: listen-careplan
 
 database/sql/
-└── satu-sehat.sql                     # DDL: ALTER TABLE, CREATE TABLE, trigger pg_notify
+└── satu-sehat.sql                         # DDL: ALTER TABLE, CREATE TABLE, trigger pg_notify
 
 resources/js/components/satusehat/
 ├── patient/index.vue                  # UI sync pasien
 ├── practitioner/index.vue             # UI sync practitioner
 ├── organization/index.vue             # UI sync & status organization
 ├── location/index.vue                 # UI sync & status location
-└── encounter/index.vue                # UI sync encounter
+├── encounter/index.vue                # UI sync encounter
+└── careplan/index.vue                 # UI sync careplan (dashboard + tabel)
 
 routes/
 └── satusehat.php                      # Semua route /satusehat/...
@@ -184,7 +224,7 @@ routes/
 ### Cara Kerja
 
 1. Pasien baru dibuat (via Eloquent atau `DB::table()`)
-2. **Auto-sync** terpicu (lihat [Bagian 11](#11-auto-sync-pasien-listennotify))
+2. **Auto-sync** terpicu (lihat [Bagian 11 — Auto-Sync Pasien](#11-auto-sync-pasien-listennotify))
 3. `SyncPasienToSatuSehat` job melakukan POST ke `/fhir-r4/v1/Patient`
 4. Respons `id` dari SatuSehat disimpan ke `pasien.id_satu_sehat`
 
@@ -318,27 +358,66 @@ Kirim data kunjungan pasien (tabel `registrasi`) ke SatuSehat sebagai FHIR **Enc
 - Dokter/nakes sudah punya `satusehat_ihs_id` (IHS Practitioner ID)
 - Organization sudah di-sync (untuk `identifier_system`)
 
-### FHIR Encounter Payload (ringkas)
+### Siklus FHIR Status Encounter
+
+Encounter mengikuti alur status FHIR berikut yang dipicu secara otomatis oleh trigger PostgreSQL:
+
+```
+[Pendaftaran CS]           [RO Selesai]              [Dokter Selesai]
+      │                         │                           │
+      ▼                         ▼                           ▼
+   arrived  ──────────►  in-progress  ──────────►      finished
+  (POST baru)         (PUT update — event ro)      (PUT update — event dokter)
+```
+
+| FHIR Status | Event Trigger | Dipicu Oleh |
+|-------------|---------------|-------------|
+| `arrived` | `encounter_post` | Pasien didaftarkan (location diisi, status_ro = 'Belum Diperiksa') |
+| `in-progress` | `encounter_ro` | Status RO berubah ke 'Sudah Diperiksa RO' |
+| `finished` | `encounter_dokter` | Status dokter berubah ke 'Sudah Diperiksa' |
+
+### FHIR Encounter Payload — POST (arrived)
 
 ```json
 {
   "resourceType": "Encounter",
-  "status": "finished",
+  "status": "arrived",
   "class": { "system": "http://terminology.hl7.org/CodeSystem/v3-ActCode", "code": "AMB" },
-  "identifier": [{
-    "system": "http://sys-ids.kemkes.go.id/encounter/{orgId}",
-    "value": "REG-0001"
-  }],
+  "serviceType": { "coding": [{ "system": "...", "code": "397", "display": "Outpatients" }] },
+  "identifier": [{ "system": "http://sys-ids.kemkes.go.id/encounter/{orgId}", "value": "REG-0001" }],
   "subject": { "reference": "Patient/{ihsNumber}", "display": "Nama Pasien" },
-  "participant": [{
-    "type": [{ "coding": [{ "system": "...", "code": "ATND" }] }],
-    "individual": { "reference": "Practitioner/{ihsId}", "display": "dr. Nama" }
-  }],
-  "period": { "start": "2024-01-15T08:00:00+07:00", "end": "2024-01-15T09:00:00+07:00" },
-  "location": [{ "location": { "reference": "Location/{locationId}" } }],
+  "participant": [{ "type": [...], "individual": { "reference": "Practitioner/{ihsId}" } }],
+  "period": { "start": "2024-01-15T08:00:00+07:00" },
+  "statusHistory": [{ "status": "arrived", "period": { "start": "2024-01-15T08:00:00+07:00" } }],
+  "location": [
+    { "location": { "reference": "Location/{frontOfficeId}" }, "status": "completed" },
+    { "location": { "reference": "Location/{roId}", "display": "Refraksi Optisi" }, "status": "completed" },
+    { "location": { "reference": "Location/{poliId}", "display": "Poli Mata" }, "status": "active" }
+  ],
   "serviceProvider": { "reference": "Organization/{orgId}" }
 }
 ```
+
+### FHIR Encounter Payload — PUT (in-progress / finished)
+
+```json
+{
+  "resourceType": "Encounter",
+  "id": "{encounterId}",
+  "status": "finished",
+  "statusHistory": [
+    { "status": "arrived",     "period": { "start": "...", "end": "..." } },
+    { "status": "in-progress", "period": { "start": "...", "end": "..." } },
+    { "status": "finished",    "period": { "start": "..." } }
+  ],
+  "period": { "start": "2024-01-15T08:00:00+07:00", "end": "2024-01-15T09:30:00+07:00" },
+  "location": [{ "location": { "reference": "Location/{poliId}", "display": "Poli Mata" } }],
+  "participant": [{ "type": [...], "individual": { "reference": "Practitioner/{ihsId}" } }],
+  "serviceProvider": { "reference": "Organization/{orgId}" }
+}
+```
+
+> **Catatan**: Payload PUT tidak menyertakan `serviceType` (berbeda dengan POST) sesuai spesifikasi SatuSehat.
 
 ### Builder: `EncounterBuilder::build($reg, $orgId)`
 
@@ -348,21 +427,57 @@ use App\Services\SatuSehat\EncounterBuilder;
 $payload = EncounterBuilder::build($reg, $orgId);
 ```
 
-- Single source of truth — dipakai oleh **controller** (sync one) maupun **Artisan command** (bulk)
-- `$reg` adalah object registrasi dari DB (dengan join pasien, dokter, dll.)
+- Digunakan untuk **POST Encounter baru** (status `arrived`)
+- Mendukung multi-lokasi: Front Office, Refraksi Optisi, dan Poli Dokter sekaligus
+- `statusHistory` dibangun dari tabel `satusehat_encounter_status_history`
 - Identifier system diambil dari `satusehat_organizations` lokal; fallback ke `http://sys-ids.kemkes.go.id/encounter/{orgId}`
+
+### Builder: `EncounterBuilder::buildPut($reg, $orgId, $newFhirStatus, $locationId, $locationDisplay, $withPractitioner)`
+
+```php
+$payload = EncounterBuilder::buildPut(
+    $reg,
+    $orgId,
+    'in-progress',        // FHIR status baru
+    $locationId,          // FHIR Location.id yang aktif
+    'Refraksi Optisi',    // Display name lokasi
+    false                 // true = sertakan participant.individual (untuk event dokter)
+);
+```
+
+- Digunakan untuk **PUT Encounter** (update status ke `in-progress` atau `finished`)
+- **Pemanggil wajib update `satusehat_encounter_status_history` di DB SEBELUM memanggil metode ini**, karena `buildStatusHistory()` membaca dari DB
+- Payload selalu menyertakan `"id": "{encounterId}"` di root (diperlukan FHIR PUT)
+- `period.end` diisi dengan waktu sekarang (WIB)
 
 ### Endpoint
 
 ```
-POST /satusehat/encounters/sync-one    → sync 1 registrasi (from Vue)
-GET  /satusehat/encounters/sync-status → statistik pending/synced/failed
+POST /satusehat-api/encounter-sync/sync-one    → sync 1 registrasi (dari Vue)
+POST /satusehat-api/encounter-sync/dashboard   → statistik: total, synced, failed, waiting
+POST /satusehat-api/encounter-sync/list        → daftar dengan filter status & tanggal
+POST /satusehat-api/encounter-sync/detail      → ambil detail Encounter dari SatuSehat (GET Encounter/{id})
+POST /satusehat-api/encounter-sync/run-sync    → bulk sync semua pending
+POST /satusehat-api/encounter-sync/retry-failed → reset failed/waiting → null (untuk retry)
 ```
+
+### Expand Detail Encounter di UI Vue
+
+Di halaman Encounter Sync, baris dengan `satusehat_encounter_status = 'synced'` menampilkan tombol chevron (▶). Klik tombol tersebut untuk memperluas baris dan menampilkan detail FHIR dari SatuSehat:
+
+- **Subject** — referensi & nama pasien
+- **Periode Kunjungan** — tanggal & jam mulai/selesai
+- **Tenaga Medis** — Practitioner reference & display
+- **Lokasi** — daftar Location dengan status
+- **Riwayat Status** (`statusHistory`) — timeline transisi FHIR status
+- **Identifier** — system & value
+
+Data di-fetch secara lazy (saat pertama kali dibuka) via endpoint `POST /satusehat-api/encounter-sync/detail`.
 
 ### Artisan Command (bulk scheduler)
 
 ```bash
-php artisan satusehat:sync-encounter --limit=50 --days=7
+php artisan satusehat:sync-encounter [--batch=30] [--date-from=YYYY-MM-DD] [--date-to=YYYY-MM-DD]
 ```
 
 ---
@@ -494,39 +609,61 @@ class SyncPasienToSatuSehat implements ShouldQueue
 
 ## 11b. Auto-Sync Encounter/Registrasi (LISTEN/NOTIFY)
 
-### Arsitektur Dual-Layer (sama dengan Pasien)
+### Arsitektur 3-Event
 
 ```
-INSERT / UPDATE ke tabel registrasi
+UPDATE tabel registrasi
         │
-        ├─── via Eloquent (new Registrasi()->save() / $reg->update([...]))
-        │         │
-        │         └── RegistrasiObserver::created() / updated()
-        │                   │
-        │                   └── Bus::dispatchAfterResponse(SyncEncounterToSatuSehat)
-        │
-        └─── via raw DB::table('registrasi')->insert/update ATAU Eloquent
+        └── PostgreSQL Trigger fn_notify_registrasi_upsert()
                   │
-                  └── PostgreSQL Trigger fn_notify_registrasi_upsert()
+                  ├── EVENT encounter_post  (location diisi, status_ro='Belum Diperiksa', belum ada encounter_id)
+                  │         └── pg_notify('satusehat_registrasi_upsert', {..., "event": "encounter_post"})
+                  │
+                  ├── EVENT encounter_ro   (status_ro berubah → 'Sudah Diperiksa RO')
+                  │         └── pg_notify('satusehat_registrasi_upsert', {..., "event": "encounter_ro"})
+                  │
+                  └── EVENT encounter_dokter (status_dokter berubah → 'Sudah Diperiksa')
+                            └── pg_notify('satusehat_registrasi_upsert', {..., "event": "encounter_dokter"})
+
+pg_notify → ListenRegistrasiSatuSehat daemon
+                  │
+                  └── SyncEncounterToSatuSehat::dispatch($uuid, $event)
                             │
-                            └── pg_notify('satusehat_registrasi_upsert', payload_json)
-                                      │
-                                      └── ListenRegistrasiSatuSehat daemon
-                                                │
-                                                └── SyncEncounterToSatuSehat::dispatch(uuid)
+                            ├── encounter_post   → handlePost()   → POST /Encounter
+                            ├── encounter_ro     → handleRo()     → PUT  /Encounter/{id}
+                            └── encounter_dokter → handleDokter() → PUT  /Encounter/{id}
 ```
+
+> **Catatan**: Trigger hanya mendengarkan `AFTER UPDATE` (bukan INSERT). Notifikasi INSERT tidak lagi diperlukan karena POST Encounter dipicu saat CS melengkapi data registrasi (field location diisi).
 
 ### Kondisi Trigger Notifikasi
 
-**INSERT**: Selalu kirim notifikasi jika `delete_soft = 1`
+| Event | Kondisi UPDATE |
+|-------|----------------|
+| `encounter_post` | `delete_soft=1`, `satusehat_encounter_id IS NULL`, `status_ro='Belum Diperiksa'`, dan salah satu field berubah: `satusehat_location_id`, `satusehat_encounter_status`, `pasien_uuid`, `pengguna_uuid`, `tanggal`, atau `waktu` |
+| `encounter_ro` | `delete_soft=1`, `satusehat_encounter_id IS NOT NULL`, `status_ro` berubah ke `'Sudah Diperiksa RO'` |
+| `encounter_dokter` | `delete_soft=1`, `satusehat_encounter_id IS NOT NULL`, `status_dokter` berubah dari `'Belum Diperiksa'` ke `'Sudah Diperiksa'` |
 
-**UPDATE**: Kirim notifikasi jika `delete_soft = 1` DAN encounter belum/gagal sync, DAN salah satu field relevan berubah:
-- `satusehat_location_id` berubah (baru diisi)
-- `satusehat_encounter_status` berubah (di-reset untuk retry)
-- `pasien_uuid` atau `pengguna_uuid` berubah
-- `tanggal` atau `waktu` berubah
+Tiga IF terpisah (bukan IF/ELSIF) — satu UPDATE **bisa** memicu lebih dari satu event sekaligus jika kondisinya overlap.
 
-Ini berarti update yang tidak relevan (misal ubah catatan/diagnosis) tidak memicu notifikasi yang tidak perlu.
+### Trigger PostgreSQL (`fn_notify_registrasi_upsert`)
+
+```sql
+-- Trigger hanya AFTER UPDATE (bukan INSERT)
+CREATE TRIGGER trg_registrasi_upsert
+    AFTER UPDATE ON registrasi
+    FOR EACH ROW EXECUTE FUNCTION fn_notify_registrasi_upsert();
+```
+
+Migration untuk menerapkan versi terbaru:
+```bash
+php artisan migrate --path=database/migrations/2026_05_27_000002_update_encounter_trigger_3events.php
+```
+
+Atau langsung via psql:
+```bash
+psql -U postgres -d eye_hospital -f database/sql/satu-sehat.sql
+```
 
 ### Status Encounter
 
@@ -535,42 +672,99 @@ Ini berarti update yang tidak relevan (misal ubah catatan/diagnosis) tidak memic
 | `null` | Belum pernah diproses |
 | `waiting_patient` | Pasien belum punya IHS Number — tunggu sync pasien |
 | `no_location` | `satusehat_location_id` belum diisi |
-| `synced` | Berhasil dikirim ke SatuSehat |
-| `failed` | Gagal — akan di-retry oleh queue (maks 3x) |
+| `synced` | Berhasil dikirim ke SatuSehat (POST maupun PUT) |
+| `failed` | Gagal — akan di-retry oleh queue |
 
-### Status `waiting_patient` — Alur Lengkap
+### FHIR Status vs Status Encounter
 
-Skenario umum: pasien baru didaftarkan bersamaan dengan registrasi.
-
-1. INSERT ke `pasien` → trigger pasien → job `SyncPasienToSatuSehat` dispatch
-2. INSERT ke `registrasi` → trigger registrasi → job `SyncEncounterToSatuSehat` dispatch
-3. Job encounter berjalan: pasien belum punya `id_satu_sehat` → status `waiting_patient`
-4. Job pasien selesai: `id_satu_sehat` terisi
-5. Setelah pasien di-sync, **jalankan sync encounter manual** dari UI atau scheduler untuk pick up status `waiting_patient`
-
-> Untuk otomatisasi penuh, aktifkan trigger UPDATE pada pasien yang memicu re-dispatch encounter yang `waiting_patient`. Lihat catatan di bagian trigger.
+| `satusehat_encounter_fhir_status` | `satusehat_encounter_status` | Kondisi |
+|-----------------------------------|------------------------------|---------|
+| `arrived` | `synced` | POST berhasil |
+| `in-progress` | `synced` | PUT encounter_ro berhasil |
+| `finished` | `synced` | PUT encounter_dokter berhasil |
+| _(sebelumnya)_ | `failed` | PUT/POST gagal — rollback otomatis |
 
 ### Job: `SyncEncounterToSatuSehat`
 
 ```php
 class SyncEncounterToSatuSehat implements ShouldQueue
 {
-    public int $tries   = 3;
-    public array $backoff = [30, 120, 300];  // retry 30 detik, 2 menit, 5 menit
+    public int $tries   = 1;               // tidak retry otomatis — business logic tiap event beda
+    public array $backoff = [30, 120, 300];
     public int $timeout = 60;
+
+    public function __construct(
+        public string $registrasiUuid,
+        public string $event = 'encounter_post'  // backward compatible
+    ) {}
 }
 ```
 
-**Alur `handle()`**:
-1. Fetch registrasi + join pasien, pengguna
-2. Guard: `satusehat_encounter_id` terisi & status `synced` → skip
-3. Guard: pasien belum punya `id_satu_sehat` → status `waiting_patient`, return
-4. Guard: `satusehat_location_id` kosong → status `no_location`, return
+**Routing event di `handle()`**:
+```php
+match ($this->event) {
+    'encounter_post'   => $this->handlePost($reg, $orgId, $bridge, $uuid),
+    'encounter_ro'     => $this->handleRo($reg, $orgId, $bridge, $uuid),
+    'encounter_dokter' => $this->handleDokter($reg, $orgId, $bridge, $uuid),
+    default => Log::warning('Unknown event', ['event' => $this->event]),
+};
+```
+
+**`handlePost()` — POST Encounter baru (arrived)**:
+1. Guard: `satusehat_encounter_id` sudah ada & status `synced` → skip
+2. Guard: pasien belum punya `id_satu_sehat` → status `waiting_patient`, return
+3. Guard: `satusehat_location_id` kosong → status `no_location`, return
+4. Insert baris `arrived` ke `satusehat_encounter_status_history`
 5. Build payload via `EncounterBuilder::build($reg, $orgId)`
-6. POST ke SatuSehat
-7. Sukses: simpan `satusehat_encounter_id`, status `synced`
-8. Duplikat: GET existing Encounter ID, update DB
-9. Gagal: status `failed`, throw untuk retry
+6. POST ke `/Encounter`
+7. Sukses (201): simpan `satusehat_encounter_id`, `fhir_status = 'arrived'`, status `synced`
+8. Duplikat (409/422): GET existing Encounter ID, update DB
+9. Gagal: status `failed`, throw exception
+
+**`handleRo()` — PUT Encounter in-progress**:
+1. Guard: sudah `in-progress`/`finished`/`cancelled` → skip
+2. Cari lokasi RO: prioritas `satusehat_location_ro_id`, fallback ILIKE `'%refraksi%'` atau `'%optisi%'` di `satusehat_locations`
+3. DB::transaction: tutup `arrived` (set `period_end = now()`), insert `in-progress` (idempotent)
+4. Build payload via `EncounterBuilder::buildPut($reg, $orgId, 'in-progress', $locId, $locDisplay, false)`
+5. PUT ke `/Encounter/{id}`
+6. Sukses: update `fhir_status = 'in-progress'`, status `synced`
+7. Gagal: `rollbackStatusUpdate()`, throw exception
+
+**`handleDokter()` — PUT Encounter finished**:
+1. Guard: sudah `finished`/`cancelled` → skip; pasien tanpa IHS → skip
+2. Cari lokasi poli: prioritas `satusehat_location_poli_id`, fallback ILIKE `'%poli%'` + `'%{ruang_poliklinik}%'`
+3. DB::transaction: tutup SEMUA open periods (`arrived`, `in-progress`), insert `finished` (period_end = now())
+4. Build payload via `EncounterBuilder::buildPut($reg, $orgId, 'finished', $locId, $locDisplay, true)`
+5. PUT ke `/Encounter/{id}`
+6. Sukses: update `fhir_status = 'finished'`, status `synced`
+7. Gagal: `rollbackStatusUpdate()`, throw exception
+
+**`rollbackStatusUpdate()` — Rollback pada PUT gagal**:
+```php
+private function rollbackStatusUpdate(string $uuid, string $newStatus, string $prevStatus): void
+{
+    // Hapus baris status baru dari history
+    DB::table('satusehat_encounter_status_history')
+        ->where('registrasi_uuid', $uuid)->where('status', $newStatus)->delete();
+    // Buka kembali status sebelumnya (period_end = null)
+    DB::table('satusehat_encounter_status_history')
+        ->where('registrasi_uuid', $uuid)->where('status', $prevStatus)
+        ->update(['period_end' => null]);
+    // Kembalikan fhir_status di registrasi
+    DB::table('registrasi')->where('uuid', $uuid)
+        ->update(['satusehat_encounter_fhir_status' => $prevStatus]);
+}
+```
+
+### Status `waiting_patient` — Alur Lengkap
+
+Skenario: pasien baru didaftarkan bersamaan dengan registrasi.
+
+1. INSERT ke `pasien` → trigger pasien → job `SyncPasienToSatuSehat` dispatch
+2. UPDATE `registrasi` (location diisi) → trigger `encounter_post` → job dispatch
+3. Job encounter berjalan: pasien belum punya `id_satu_sehat` → status `waiting_patient`
+4. Job pasien selesai: `id_satu_sehat` terisi
+5. Jalankan sync encounter manual dari UI atau tunggu scheduler (setiap 30 menit)
 
 ### Artisan Command
 
@@ -579,7 +773,7 @@ class SyncEncounterToSatuSehat implements ShouldQueue
 php artisan satusehat:listen-registrasi
 
 # Dengan opsi
-php artisan satusehat:listen-registrasi --timeout=5000 --max-jobs=1000
+php artisan satusehat:listen-registrasi --timeout=5000 --max-jobs=1000 --heartbeat=30
 ```
 
 ### Supervisor (Production)
@@ -594,7 +788,220 @@ sudo supervisorctl start satusehat-registrasi-listener
 
 ---
 
-## 12. Shared Services
+## 11c. Auto-Sync CarePlan (LISTEN/NOTIFY)
+
+### Arsitektur
+
+```
+UPDATE registrasi SET status_dokter = 'Sudah Diperiksa'
+        │
+        └── PostgreSQL Trigger fn_notify_careplan_ready()
+                  │
+                  └── pg_notify('satusehat_careplan_notify', payload_json)
+                            │
+                            └── ListenCarePlanSatuSehat daemon
+                                      │
+                                      └── SyncCarePlanToSatuSehat::dispatch(uuid)
+                                                │
+                                                └── POST /CarePlan ke SatuSehat
+```
+
+### Kondisi Trigger Notifikasi
+
+Trigger `trg_registrasi_careplan` hanya berbunyi saat **semua** kondisi ini terpenuhi:
+- `status_dokter` berubah ke `'Sudah Diperiksa'` (transisi, bukan update berulang)
+- `satusehat_careplan_id IS NULL` (belum ter-sync)
+- `delete_soft = 1` (registrasi aktif)
+
+```sql
+-- database/sql/satu-sehat.sql
+CREATE OR REPLACE FUNCTION fn_notify_careplan_ready()
+RETURNS trigger AS $$
+BEGIN
+    IF NEW.status_dokter = 'Sudah Diperiksa'
+       AND (OLD.status_dokter IS DISTINCT FROM 'Sudah Diperiksa')
+       AND NEW.satusehat_careplan_id IS NULL
+       AND NEW.delete_soft = 1
+    THEN
+        PERFORM pg_notify('satusehat_careplan_notify', json_build_object(
+            'uuid',                   NEW.uuid,
+            'nomor',                  NEW.nomor,
+            'pasien_uuid',            NEW.pasien_uuid,
+            'pengguna_uuid',          NEW.pengguna_uuid,
+            'satusehat_encounter_id', NEW.satusehat_encounter_id,
+            'status_dokter',          NEW.status_dokter
+        )::text);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_registrasi_careplan
+    AFTER UPDATE ON registrasi
+    FOR EACH ROW EXECUTE FUNCTION fn_notify_careplan_ready();
+```
+
+### Status CarePlan
+
+| Status | Keterangan |
+|--------|------------|
+| `null` | Belum pernah diproses |
+| `waiting_patient` | Pasien belum punya IHS Number |
+| `waiting_encounter` | Encounter belum ter-sync ke SatuSehat |
+| `synced` | Berhasil dikirim ke SatuSehat |
+| `failed` | Gagal — akan di-retry oleh queue (maks 3x) |
+
+### Daemon Command
+
+```bash
+# Development
+php artisan satusehat:listen-careplan
+
+# Dengan opsi
+php artisan satusehat:listen-careplan --timeout=5000 --max-jobs=1000
+```
+
+### Scheduler (Safety Net)
+
+Selain daemon realtime, bulk sync berjalan setiap 15 menit sebagai jaring pengaman — menangkap registrasi yang `waiting_encounter` / `waiting_patient` setelah prasyaratnya terpenuhi:
+
+```php
+// app/Console/Kernel.php
+$schedule->command('satusehat:sync-careplan --batch=30')
+         ->everyFifteenMinutes()
+         ->withoutOverlapping()
+         ->appendOutputTo(storage_path('logs/satusehat-sync-careplan.log'));
+```
+
+---
+
+## 12. Modul: CarePlan (Rencana Rawat)
+
+Kirim **rencana rawat pasien** (FHIR `CarePlan`) ke SatuSehat secara otomatis saat dokter menyelesaikan pemeriksaan.
+
+### Prasyarat
+
+- Pasien sudah punya `id_satu_sehat` (IHS Number) — lihat Modul Pasien
+- Registrasi sudah punya `satusehat_encounter_id` — lihat Modul Encounter
+- Tabel `pemeriksaan_dokter` terisi untuk registrasi yang bersangkutan
+- Dokter (opsional) sudah punya `satusehat_ihs_id`
+
+### Kolom Tambahan di `registrasi`
+
+```sql
+ALTER TABLE registrasi
+  ADD COLUMN IF NOT EXISTS satusehat_careplan_id         VARCHAR(64)  DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS satusehat_careplan_status     VARCHAR(20)  DEFAULT NULL,
+  ADD COLUMN IF NOT EXISTS satusehat_careplan_synced_at  TIMESTAMP    DEFAULT NULL;
+```
+
+### FHIR CarePlan Payload (contoh)
+
+```json
+{
+  "resourceType": "CarePlan",
+  "status": "active",
+  "intent": "plan",
+  "category": [{
+    "coding": [{
+      "system": "http://snomed.info/sct",
+      "code":   "736271009",
+      "display": "Outpatient care plan"
+    }]
+  }],
+  "title": "Rencana Rawat Jalan",
+  "description": "Anamnese: Penglihatan kabur. Diagnosa: Katarak senilis",
+  "subject": { "reference": "Patient/{ihsNumber}", "display": "Budi Santoso" },
+  "encounter": { "reference": "Encounter/{encounterId}" },
+  "period": {
+    "start": "2024-01-15",
+    "end":   "2024-02-15"
+  },
+  "author": { "reference": "Practitioner/{ihsId}", "display": "dr. Nama Dokter" },
+  "contributor": [{ "reference": "Organization/{orgId}" }],
+  "activity": [{
+    "detail": {
+      "kind": "ServiceRequest",
+      "code": {
+        "coding": [{
+          "system": "http://snomed.info/sct",
+          "code":   "308335008",
+          "display": "Patient encounter procedure"
+        }]
+      },
+      "status":      "in-progress",
+      "description": "Pemeriksaan Mata"
+    }
+  }]
+}
+```
+
+**Field yang diisi otomatis dari DB:**
+
+| Field CarePlan | Sumber |
+|----------------|--------|
+| `subject.reference` | `pasien.id_satu_sehat` |
+| `encounter.reference` | `registrasi.satusehat_encounter_id` |
+| `description` | `pemeriksaan_dokter.anamnese` + `pemeriksaan_diagnosa` |
+| `period.start` | `registrasi.tanggal` |
+| `period.end` | `pemeriksaan_dokter.tanggal_kontrol_selanjutnya` (opsional) |
+| `author.reference` | `pengguna.satusehat_ihs_id` (opsional) |
+| `activity[].detail.description` | `layanan_pasien.nama_layanan` (dikecualikan obat-obatan) |
+
+### Builder: `CarePlanBuilder::build($reg, $orgId)`
+
+```php
+use App\Services\SatuSehat\CarePlanBuilder;
+
+$payload = CarePlanBuilder::build($reg, $orgId);
+```
+
+- `$reg` adalah object registrasi dari DB (sudah include join pasien + pengguna)
+- Fetch otomatis `pemeriksaan_dokter` dan `layanan_pasien` by `registrasi_uuid`
+- Aktivitas obat (`nama_layanan` = 'Obat-obatan' / 'Obat Racikan') **dikecualikan**
+
+### Job: `SyncCarePlanToSatuSehat`
+
+```php
+class SyncCarePlanToSatuSehat implements ShouldQueue
+{
+    public int $tries   = 3;
+    public array $backoff = [30, 120, 300];  // retry 30 detik, 2 menit, 5 menit
+    public int $timeout = 60;
+}
+```
+
+**Alur `handle()`**:
+1. Fetch registrasi + join pasien, pengguna
+2. Guard: `satusehat_careplan_id` sudah terisi → skip (idempoten)
+3. Guard: pasien belum punya `id_satu_sehat` → status `waiting_patient`, return
+4. Guard: `satusehat_encounter_id` kosong → status `waiting_encounter`, return
+5. Build payload via `CarePlanBuilder::build($reg, $orgId)`
+6. POST ke SatuSehat `/CarePlan`
+7. Sukses: simpan `satusehat_careplan_id`, status `synced`, catat waktu
+8. Gagal: status `failed`, throw untuk retry
+
+### Endpoint API
+
+```
+POST /satusehat-api/careplan-sync/dashboard    → statistik (total, synced, failed, dll.)
+POST /satusehat-api/careplan-sync/list         → daftar dengan filter & paginasi
+POST /satusehat-api/careplan-sync/sync-one     → sync 1 registrasi
+POST /satusehat-api/careplan-sync/run-sync     → trigger bulk sync semua pending
+POST /satusehat-api/careplan-sync/retry-failed → reset failed/waiting → null (untuk retry)
+```
+
+### Supervisor (Production)
+
+```bash
+sudo cp config/supervisor/satusehat-careplan-listener.conf /etc/supervisor/conf.d/
+sudo supervisorctl reread && sudo supervisorctl update
+sudo supervisorctl start satusehat-careplan-listener
+```
+
+---
+
+## 13. Shared Services
 
 ### `PatientBuilder` — `app/Services/SatuSehat/PatientBuilder.php`
 
@@ -607,14 +1014,58 @@ Membangun FHIR Patient payload. Logika di sini adalah **single source of truth**
 ### `EncounterBuilder` — `app/Services/SatuSehat/EncounterBuilder.php`
 
 ```php
+// POST Encounter baru (status arrived)
 EncounterBuilder::build(object $reg, string $orgId): array
+
+// PUT Encounter (update status in-progress / finished)
+EncounterBuilder::buildPut(
+    object $reg,
+    string $orgId,
+    string $newFhirStatus,    // 'in-progress' | 'finished' | 'cancelled'
+    string $locationId,       // FHIR Location.id yang aktif
+    string $locationDisplay,  // Display name lokasi
+    bool   $withPractitioner = false  // true untuk event dokter (sertakan participant.individual)
+): array
+
+// Build statusHistory[] dari tabel satusehat_encounter_status_history
+EncounterBuilder::buildStatusHistory(
+    ?string $registrasiUuid,
+    string  $defaultPeriodStart,
+    string  $currentStatus = 'arrived'
+): array
 ```
 
-Membangun FHIR Encounter payload. Digunakan oleh:
-- `EncounterSyncCtrl::syncOne()` — sync dari UI Vue
-- `SyncEncounterSatuSehat::handle()` — bulk sync via Artisan scheduler
+**`build()`** — digunakan untuk POST Encounter baru:
+- Dipakai oleh `EncounterSyncCtrl::syncOne()` dan `SyncEncounterToSatuSehat::handlePost()`
+- Mendukung multi-lokasi: Front Office, RO, dan Poli dalam satu payload
+- Menyertakan `serviceType` (hanya untuk POST)
 
-Keduanya memanggil `EncounterBuilder::build()` sehingga perubahan payload cukup dilakukan di satu tempat.
+**`buildPut()`** — digunakan untuk PUT Encounter:
+- Dipakai oleh `SyncEncounterToSatuSehat::handleRo()` dan `handleDokter()`
+- **Pemanggil wajib update DB `satusehat_encounter_status_history` SEBELUM memanggil metode ini**
+- Menyertakan `"id"` di root payload (wajib untuk FHIR PUT)
+- Tidak menyertakan `serviceType` (berbeda dengan POST)
+- `period.end` selalu diisi dengan waktu sekarang (WIB)
+
+**`buildStatusHistory()`** — dipakai internal oleh `build()` dan `buildPut()`:
+- Membaca tabel `satusehat_encounter_status_history` berurutan berdasarkan `period_start`
+- Jika belum ada record, return default `[{ "status": "arrived", "period": { "start": ... } }]`
+- Konversi otomatis timestamp UTC → ISO8601 +07:00 (WIB)
+
+### `CarePlanBuilder` — `app/Services/SatuSehat/CarePlanBuilder.php`
+
+```php
+CarePlanBuilder::build(object $reg, string $orgId): array
+```
+
+Membangun FHIR CarePlan payload. Digunakan oleh:
+- `CarePlanSyncCtrl::syncOne()` — sync dari UI Vue
+- `SyncCarePlanToSatuSehat::handle()` — job auto-sync
+- `SyncCarePlanSatuSehat::handle()` — bulk sync via Artisan scheduler
+
+Builder secara otomatis fetch:
+- `pemeriksaan_dokter` (by `registrasi_uuid`) → `description`, `period.end`
+- `layanan_pasien` (by `registrasi_uuid`, kecualikan obat) → `activity[].detail.description`
 
 ### `BridgeBase` — `app/Http/Controllers/SatuSehat/BridgeBase.php`
 
@@ -625,7 +1076,7 @@ Base class untuk semua controller SatuSehat. Menyediakan:
 
 ---
 
-## 13. Referensi API Routes
+## 14. Referensi API Routes
 
 File: `routes/satusehat.php`
 
@@ -664,8 +1115,22 @@ File: `routes/satusehat.php`
 
 | Method | URL | Keterangan |
 |--------|-----|------------|
-| `POST` | `/satusehat/encounters/sync-one` | Sync 1 registrasi |
-| `GET`  | `/satusehat/encounters/sync-status` | Statistik |
+| `POST` | `/satusehat-api/encounter-sync/dashboard` | Statistik: total, synced, failed, waiting |
+| `POST` | `/satusehat-api/encounter-sync/list` | Daftar dengan filter status & rentang tanggal |
+| `POST` | `/satusehat-api/encounter-sync/sync-one` | Sync 1 registrasi by UUID |
+| `POST` | `/satusehat-api/encounter-sync/detail` | Ambil detail FHIR Encounter dari SatuSehat |
+| `POST` | `/satusehat-api/encounter-sync/run-sync` | Trigger bulk sync semua pending |
+| `POST` | `/satusehat-api/encounter-sync/retry-failed` | Reset failed/waiting → null untuk retry |
+
+### CarePlan
+
+| Method | URL | Keterangan |
+|--------|-----|------------|
+| `POST` | `/satusehat-api/careplan-sync/dashboard` | Statistik: total, synced, failed, waiting, pct |
+| `POST` | `/satusehat-api/careplan-sync/list` | Daftar dengan filter status & paginasi |
+| `POST` | `/satusehat-api/careplan-sync/sync-one` | Sync 1 registrasi by UUID |
+| `POST` | `/satusehat-api/careplan-sync/run-sync` | Trigger bulk sync semua pending |
+| `POST` | `/satusehat-api/careplan-sync/retry-failed` | Reset failed/waiting → null untuk retry |
 
 ### Wilayah
 
@@ -679,7 +1144,7 @@ File: `routes/satusehat.php`
 
 ---
 
-## 14. Artisan Commands
+## 15. Artisan Commands
 
 ### `satusehat:listen-pasien`
 
@@ -697,7 +1162,46 @@ php artisan satusehat:listen-pasien [--timeout=5000] [--max-jobs=1000]
 ### `satusehat:listen-registrasi`
 
 ```bash
-php artisan satusehat:listen-registrasi [--timeout=5000] [--max-jobs=1000]
+php artisan satusehat:listen-registrasi [--timeout=5000] [--max-jobs=1000] [--heartbeat=30]
+```
+
+| Option | Default | Keterangan |
+|--------|---------|------------|
+| `--timeout` | `5000` | Timeout polling pg_notify (ms) |
+| `--max-jobs` | `1000` | Restart daemon setelah N job (cegah memory leak) |
+| `--heartbeat` | `30` | Interval log heartbeat dalam detik (0 = nonaktif) |
+
+**Channel**: `satusehat_registrasi_upsert` — dipancarkan oleh trigger `fn_notify_registrasi_upsert()`.
+
+**Events yang diproses**:
+- `encounter_post` — dispatch `SyncEncounterToSatuSehat($uuid, 'encounter_post')` → POST Encounter
+- `encounter_ro` — dispatch `SyncEncounterToSatuSehat($uuid, 'encounter_ro')` → PUT in-progress
+- `encounter_dokter` — dispatch `SyncEncounterToSatuSehat($uuid, 'encounter_dokter')` → PUT finished
+
+**Guard di daemon** (sebelum dispatch):
+- Event tidak dikenal → skip dengan warning
+- `encounter_post` + sudah punya `encounter_id` + status `synced` → skip (sudah ter-sync)
+
+**Di production**, jalankan via Supervisor — lihat `config/supervisor/satusehat-registrasi-listener.conf`.
+
+### `satusehat:sync-encounter`
+
+```bash
+php artisan satusehat:sync-encounter [--batch=30] [--date-from=YYYY-MM-DD] [--date-to=YYYY-MM-DD]
+```
+
+| Option | Default | Keterangan |
+|--------|---------|------------|
+| `--batch` | `30` | Jumlah registrasi per run |
+| `--date-from` | _(7 hari lalu)_ | Filter tanggal mulai |
+| `--date-to` | _(hari ini)_ | Filter tanggal akhir |
+
+Bulk sync registrasi yang belum ter-sync (status `null`, `failed`, `waiting_patient`, `no_location`). Dijalankan otomatis setiap 30 menit via scheduler sebagai jaring pengaman.
+
+### `satusehat:listen-careplan`
+
+```bash
+php artisan satusehat:listen-careplan [--timeout=5000] [--max-jobs=1000]
 ```
 
 | Option | Default | Keterangan |
@@ -705,15 +1209,18 @@ php artisan satusehat:listen-registrasi [--timeout=5000] [--max-jobs=1000]
 | `--timeout` | `5000` | Timeout polling pg_notify (ms) |
 | `--max-jobs` | `1000` | Restart daemon setelah N job (cegah memory leak) |
 
-**Catatan**: Di production, jalankan via Supervisor — lihat `config/supervisor/satusehat-registrasi-listener.conf`.
+**Channel**: `satusehat_careplan_notify` — dipicu saat `status_dokter` berubah ke `'Sudah Diperiksa'`.
+Di production, jalankan via Supervisor — lihat `config/supervisor/satusehat-careplan-listener.conf`.
 
-### `satusehat:sync-encounter`
+### `satusehat:sync-careplan`
 
 ```bash
-php artisan satusehat:sync-encounter [--batch=30] [--delay=300]
+php artisan satusehat:sync-careplan [--batch=30] [--delay=200]
 ```
 
-Bulk sync registrasi yang belum ter-sync (termasuk status `waiting_patient` setelah pasien di-sync).
+Bulk sync CarePlan: picks up semua registrasi dengan `status_dokter = 'Sudah Diperiksa'`, `satusehat_careplan_id IS NULL`, dan status `null`, `failed`, `waiting_encounter`, atau `waiting_patient`.
+
+Dijalankan otomatis setiap 15 menit via scheduler (lihat `Kernel.php`).
 
 ### Queue Worker (untuk job)
 
@@ -721,28 +1228,33 @@ Bulk sync registrasi yang belum ter-sync (termasuk status `waiting_patient` sete
 php artisan queue:work --queue=default --sleep=3 --tries=3
 ```
 
-Job `SyncPasienToSatuSehat` membutuhkan queue worker aktif.
+Semua job SatuSehat (`SyncPasienToSatuSehat`, `SyncEncounterToSatuSehat`, `SyncCarePlanToSatuSehat`) membutuhkan queue worker aktif.
 
 ---
 
-## 15. Alur Kerja Lengkap (Onboarding)
+## 16. Alur Kerja Lengkap (Onboarding)
 
 Checklist untuk setup pertama kali di environment baru:
 
 1. **Isi `.env`** — `SATUSEHAT_CLIENT_ID`, `SATUSEHAT_CLIENT_SECRET`, `SATUSEHAT_ORGANIZATION_ID`, `SATUSEHAT_ENV`
-2. **Jalankan SQL** — `psql -f database/sql/satu-sehat.sql` (DDL + trigger)
+2. **Jalankan SQL** — `psql -f database/sql/satu-sehat.sql` (DDL + trigger + kolom CarePlan)
 3. **Sync Wilayah** — UI Wilayah → fetch semua level → update master
 4. **Sync Organization** — UI Organization → Sync dari SatuSehat
 5. **Sync Location** — UI Location → Sync dari SatuSehat
 6. **Sync Practitioner** — UI Practitioner → Sync All (untuk semua dokter/nakes)
 7. **Sync Pasien Existing** — UI Pasien → Sync All (untuk pasien lama)
 8. **Jalankan Queue Worker** — `php artisan queue:work`
-9. **Jalankan Daemon LISTEN** — via Supervisor atau manual `php artisan satusehat:listen-pasien`
-10. **Test** — daftarkan pasien baru, cek `pasien.id_satu_sehat` terisi otomatis
+9. **Jalankan Daemon LISTEN (3 daemon)**:
+   - `php artisan satusehat:listen-pasien` — auto-sync pasien baru
+   - `php artisan satusehat:listen-registrasi` — auto-sync encounter baru
+   - `php artisan satusehat:listen-careplan` — auto-sync careplan saat dokter selesai periksa
+   - Di production: jalankan ketiganya via Supervisor (lihat Bagian 17)
+10. **Aktifkan Laravel Scheduler** — tambahkan cron `* * * * *` di crontab (lihat Bagian 17)
+11. **Test** — daftarkan pasien baru → cek `id_satu_sehat` terisi → selesaikan pemeriksaan → cek `satusehat_careplan_id` terisi
 
 ---
 
-## 16. Deployment Production
+## 17. Deployment Production
 
 ### Queue Worker (Supervisor)
 
@@ -793,21 +1305,47 @@ sudo supervisorctl reread && sudo supervisorctl update
 sudo supervisorctl start satusehat-registrasi-listener
 ```
 
-### Scheduled Command (Laravel Scheduler)
+### SatuSehat CarePlan Listener (Supervisor)
 
-Di `app/Console/Kernel.php`:
-```php
-$schedule->command('satusehat:sync-encounter --limit=100')->hourly();
+File: `config/supervisor/satusehat-careplan-listener.conf`
+
+```bash
+sudo cp config/supervisor/satusehat-careplan-listener.conf /etc/supervisor/conf.d/
+sudo supervisorctl reread && sudo supervisorctl update
+sudo supervisorctl start satusehat-careplan-listener
 ```
 
-Aktifkan cron:
+### Scheduled Commands (Laravel Scheduler)
+
+Di `app/Console/Kernel.php` sudah terdaftar tiga jadwal:
+
+```php
+// Safety net: pasien belum sync
+$schedule->command('satusehat:sync-patient --batch=50 --delay=300')
+         ->hourly()->withoutOverlapping();
+
+// Safety net: encounter pending / waiting_patient
+$schedule->command('satusehat:sync-encounter --batch=30 --delay=300')
+         ->everyThirtyMinutes()->withoutOverlapping();
+
+// Safety net: careplan pending / waiting_encounter / waiting_patient
+$schedule->command('satusehat:sync-careplan --batch=30')
+         ->everyFifteenMinutes()->withoutOverlapping();
+```
+
+Aktifkan cron (satu baris, berlaku untuk semua scheduler):
 ```bash
 * * * * * cd /var/www/eye-hospital && php artisan schedule:run >> /dev/null 2>&1
 ```
 
+Verifikasi jadwal terdaftar:
+```bash
+php artisan schedule:list
+```
+
 ---
 
-## 17. Troubleshooting
+## 18. Troubleshooting
 
 ### Pasien tidak ter-sync otomatis
 
@@ -825,13 +1363,56 @@ php artisan queue:failed  # lihat job yang gagal
 
 ### Encounter ditolak SatuSehat (400/422)
 
-**Kemungkinan penyebab:**
+**Kemungkinan penyebab (POST):**
 - Organization belum di-sync → `identifier_system` kosong, fallback dipakai
 - Pasien belum punya `id_satu_sehat`
 - Dokter/nakes belum punya `satusehat_ihs_id`
 - `satusehat_location_id` tidak terisi di registrasi
 
-**Solusi:** Pastikan urutan onboarding di Bagian 15 diikuti.
+**Solusi:** Pastikan urutan onboarding di Bagian 16 diikuti.
+
+### Encounter PUT gagal (event ro / dokter)
+
+**Kemungkinan penyebab:**
+- `satusehat_encounter_id` kosong → Encounter belum pernah di-POST; tunggu event `encounter_post` selesai dulu
+- Location RO atau Poli tidak ditemukan di `satusehat_locations` → sync Location dari UI terlebih dahulu
+- Token SatuSehat expired (sangat jarang, BridgeBase auto-refresh)
+
+**Cek status rollback:**
+```sql
+-- Lihat history status encounter
+SELECT * FROM satusehat_encounter_status_history
+WHERE registrasi_uuid = 'your-uuid'
+ORDER BY period_start;
+
+-- Cek fhir_status & encounter_status di registrasi
+SELECT satusehat_encounter_id, satusehat_encounter_status,
+       satusehat_encounter_fhir_status
+FROM registrasi WHERE uuid = 'your-uuid';
+```
+
+**Reset & retry manual:**
+```bash
+# Dari UI Encounter Sync → klik Retry Failed
+# ATAU reset via SQL (hati-hati):
+UPDATE registrasi
+SET satusehat_encounter_status = NULL,
+    satusehat_encounter_fhir_status = 'arrived'
+WHERE uuid = 'your-uuid';
+DELETE FROM satusehat_encounter_status_history
+WHERE registrasi_uuid = 'your-uuid' AND status IN ('in-progress', 'finished');
+```
+
+**Simulasi trigger manual untuk testing:**
+```sql
+-- Trigger encounter_ro (pastikan encounter_id sudah ada):
+UPDATE registrasi SET status_ro = 'Sudah Diperiksa RO'
+WHERE uuid = 'your-uuid';
+
+-- Trigger encounter_dokter:
+UPDATE registrasi SET status_dokter = 'Sudah Diperiksa'
+WHERE uuid = 'your-uuid' AND status_dokter = 'Belum Diperiksa';
+```
 
 ### Token SatuSehat expired
 
@@ -840,13 +1421,48 @@ BridgeBase meng-cache token dan refresh otomatis. Jika tetap gagal, cek `SATUSEH
 ### Daemon LISTEN tidak menerima notifikasi
 
 ```bash
-# Cek trigger terpasang
-psql -c "\d pasien"  # lihat list trigger
+# Cek trigger terpasang di tabel pasien
 psql -c "SELECT tgname FROM pg_trigger WHERE tgrelid = 'pasien'::regclass;"
 
-# Test manual
+# Cek trigger terpasang di tabel registrasi
+psql -c "SELECT tgname FROM pg_trigger WHERE tgrelid = 'registrasi'::regclass;"
+
+# Verifikasi fungsi trigger registrasi versi 3-event
+psql -c "SELECT prosrc FROM pg_proc WHERE proname = 'fn_notify_registrasi_upsert';"
+
+# Test manual notifikasi pasien
 psql -c "LISTEN satusehat_pasien_insert;"
 # (di session lain) INSERT INTO pasien (...) VALUES (...);
+
+# Test manual notifikasi encounter (encounter_post)
+psql -c "LISTEN satusehat_registrasi_upsert;"
+# (di session lain) UPDATE registrasi SET satusehat_location_id = 'loc-id'
+#   WHERE uuid = 'your-uuid' AND satusehat_encounter_id IS NULL;
+```
+
+### CarePlan tidak ter-sync otomatis
+
+**Kemungkinan penyebab:**
+- Queue worker tidak berjalan → `php artisan queue:work`
+- Daemon CarePlan tidak berjalan → `sudo supervisorctl status satusehat-careplan-listener`
+- Encounter belum ter-sync → status `waiting_encounter`; tunggu scheduler atau sync encounter manual
+- Pasien belum punya `id_satu_sehat` → status `waiting_patient`; sync pasien dulu
+
+**Cek log:**
+```bash
+tail -f /var/log/supervisor/satusehat-careplan-listener.log
+tail -f storage/logs/satusehat-sync-careplan.log
+```
+
+**Reset & retry dari UI:**
+- Buka menu SatuSehat → CarePlan Sync
+- Klik **"Retry Failed"** untuk reset status `failed`/`waiting` → trigger ulang bulk sync
+
+**Test notifikasi manual:**
+```sql
+-- Simulasi trigger careplan
+UPDATE registrasi SET status_dokter = 'Sudah Diperiksa'
+WHERE uuid = 'your-reg-uuid' AND satusehat_careplan_id IS NULL;
 ```
 
 ### Double-sync (job dikirim 2x untuk pasien yang sama)

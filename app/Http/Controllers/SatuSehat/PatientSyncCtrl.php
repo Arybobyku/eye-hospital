@@ -375,6 +375,8 @@ class PatientSyncCtrl extends Controller
             return response()->json(['data' => $this->error]);
         }
 
+        set_time_limit(300);
+
         $method = $request->method ?? 'nik';
         $batch  = min((int)($request->batch ?? 20), 50);
 

@@ -12,9 +12,10 @@ use App\Jobs\SyncPasienToSatuSehat;
  *
  * Cara menjalankan (development):
  *   php artisan satusehat:listen-pasien
+ *   php artisan satusehat:listen-pasien --heartbeat=10
  *
  * Cara menjalankan di production (dengan Supervisor):
- *   Lihat config/supervisor/satusehat-listener.conf
+ *   Lihat config/supervisor/satusehat-group.conf
  *
  * Mekanisme:
  *   - PostgreSQL trigger fn_notify_pasien_inserted() memanggil pg_notify()
@@ -34,7 +35,8 @@ class ListenPasienSatuSehat extends Command
 {
     protected $signature = 'satusehat:listen-pasien
                             {--timeout=5000  : Timeout polling pg_notify dalam milidetik}
-                            {--max-jobs=1000 : Restart daemon setelah N job agar tidak memory leak}';
+                            {--max-jobs=1000 : Restart daemon setelah N job agar tidak memory leak}
+                            {--heartbeat=30  : Interval heartbeat log dalam detik (0 = nonaktif)}';
 
     protected $description = 'Daemon LISTEN PostgreSQL — auto-sync pasien baru ke SatuSehat via pg_notify';
 
@@ -49,12 +51,21 @@ class ListenPasienSatuSehat extends Command
 
     public function handle(): int
     {
-        $timeoutMs = (int)$this->option('timeout');
-        $maxJobs   = (int)$this->option('max-jobs');
-        $jobCount  = 0;
+        $timeoutMs    = (int)$this->option('timeout');
+        $maxJobs      = (int)$this->option('max-jobs');
+        $heartbeatSec = (int)$this->option('heartbeat');
+        $jobCount     = 0;
+        $pollCount    = 0;
+        $lastHeartbeat = time();
 
-        $this->info('[SatuSehat Listener] Memulai daemon — channel: ' . self::CHANNEL);
-        $this->info('[SatuSehat Listener] PID: ' . getmypid());
+        $this->info('┌─────────────────────────────────────────────────────────');
+        $this->info('│ [PASIEN] Daemon SatuSehat Pasien Listener');
+        $this->info('│ PID       : ' . getmypid());
+        $this->info('│ Channel   : ' . self::CHANNEL);
+        $this->info('│ Timeout   : ' . $timeoutMs . ' ms per poll');
+        $this->info('│ Max-jobs  : ' . $maxJobs);
+        $this->info('│ Heartbeat : ' . ($heartbeatSec > 0 ? "{$heartbeatSec} detik" : 'nonaktif'));
+        $this->info('└─────────────────────────────────────────────────────────');
 
         // ── Daftarkan signal handler untuk graceful shutdown ─────────────
         if (function_exists('pcntl_signal')) {
@@ -63,26 +74,24 @@ class ListenPasienSatuSehat extends Command
         }
 
         while (!$this->shouldStop) {
-            // Dispatch pending signals (SIGTERM/SIGINT)
             if (function_exists('pcntl_signal_dispatch')) {
                 pcntl_signal_dispatch();
             }
 
-            // Cek batas max-jobs → restart daemon agar tidak memory leak
             if ($jobCount >= $maxJobs) {
-                $this->info("[SatuSehat Listener] Batas {$maxJobs} job tercapai — restart daemon.");
-                return self::SUCCESS; // Supervisor akan restart otomatis
+                $this->info("[PASIEN] Batas {$maxJobs} job tercapai — restart daemon.");
+                return self::SUCCESS;
             }
 
             // ── Dapatkan / reconnect koneksi PostgreSQL ──────────────────
             try {
                 $pdo = $this->getListeningPdo();
             } catch (\Throwable $e) {
-                $this->error('[SatuSehat Listener] Koneksi DB gagal: ' . $e->getMessage());
-                $this->info('[SatuSehat Listener] Mencoba reconnect dalam 5 detik...');
+                $this->error('[PASIEN] ✗ Koneksi DB gagal: ' . $e->getMessage());
+                $this->info('[PASIEN] Mencoba reconnect dalam 5 detik...');
                 sleep(5);
-                DB::reconnect();          // reset pool Laravel
-                $this->listeningPdo = null; // paksa re-LISTEN setelah reconnect
+                DB::reconnect();
+                $this->listeningPdo = null;
                 continue;
             }
 
@@ -90,44 +99,75 @@ class ListenPasienSatuSehat extends Command
             try {
                 $notification = $pdo->pgsqlGetNotify(\PDO::FETCH_ASSOC, $timeoutMs);
             } catch (\Throwable $e) {
-                // Koneksi putus — reconnect di iterasi berikutnya
-                $this->warn('[SatuSehat Listener] Koneksi terputus: ' . $e->getMessage());
+                $this->warn('[PASIEN] ✗ Koneksi terputus: ' . $e->getMessage());
                 DB::reconnect();
-                $this->listeningPdo = null; // paksa re-LISTEN
+                $this->listeningPdo = null;
                 sleep(2);
                 continue;
             }
 
-            // Tidak ada notifikasi dalam timeout window → lanjut polling
+            $pollCount++;
+
+            // ── Heartbeat ─────────────────────────────────────────────────
+            if ($heartbeatSec > 0 && (time() - $lastHeartbeat) >= $heartbeatSec) {
+                $this->line(
+                    '<fg=gray>[PASIEN] ♥ Heartbeat — mendengarkan | channel: '
+                    . self::CHANNEL
+                    . ' | poll#' . number_format($pollCount)
+                    . ' | dispatched: ' . $jobCount
+                    . ' | ' . now()->format('H:i:s') . '</>'
+                );
+                $lastHeartbeat = time();
+            }
+
             if (!$notification) {
                 continue;
             }
 
-            // ── Proses notifikasi ─────────────────────────────────────────
-            $channel = $notification['name']    ?? '';
+            // ── NOTIFIKASI DITERIMA ───────────────────────────────────────
+            // pgsqlGetNotify() mengembalikan key 'message' (bukan 'name') untuk channel
+            $channel = $notification['message'] ?? '';
             $payload = $notification['payload'] ?? '';
 
+            $this->newLine();
+            $this->line('<fg=cyan;options=bold>╔══ [PASIEN] NOTIFIKASI pg_notify DITERIMA ══════════════════╗</>');
+            $this->line('<fg=cyan>║  Channel : ' . $channel . '</>');
+            $this->line('<fg=cyan>║  Waktu   : ' . now()->format('Y-m-d H:i:s') . '</>');
+            $this->line('<fg=cyan>║  Payload : ' . $payload . '</>');
+            $this->line('<fg=cyan;options=bold>╚════════════════════════════════════════════════════════════╝</>');
+
             if ($channel !== self::CHANNEL) {
-                continue; // bukan channel kita — abaikan
+                $this->warn("[PASIEN] ⚠ Channel tidak dikenal '{$channel}' — diabaikan.");
+                $this->newLine();
+                continue;
             }
 
             $data = json_decode($payload, true);
             if (empty($data['uuid'])) {
-                $this->warn('[SatuSehat Listener] Payload tidak valid: ' . $payload);
+                $this->error('[PASIEN] ✗ Payload tidak valid atau uuid kosong: ' . $payload);
+                $this->newLine();
                 continue;
             }
 
-            $uuid         = $data['uuid'];
-            $nik          = $data['no_identitas'] ?? '';
-            $ihsId        = $data['id_satu_sehat'] ?? null;
+            $uuid  = $data['uuid'];
+            $nik   = $data['no_identitas'] ?? '';
+            $ihsId = $data['id_satu_sehat'] ?? null;
 
-            // Guard awal di sini (hemat 1 DB query di job kalau jelas tidak perlu sync)
+            $this->line('<fg=cyan>  UUID   : ' . $uuid . '</>');
+            $this->line('<fg=cyan>  NIK    : ' . ($nik ?: '-') . '</>');
+            $this->line('<fg=cyan>  IHS ID : ' . ($ihsId ?? 'null (belum sync)') . '</>');
+
+            // Guard: sudah punya IHS ID → skip
             if ($ihsId) {
-                $this->line("[SatuSehat Listener] Skip {$uuid} — sudah punya IHS ID");
+                $this->line('<fg=gray>  → SKIP: pasien sudah punya IHS ID (' . $ihsId . ')</>');
+                $this->newLine();
                 continue;
             }
+
+            // Guard: NIK tidak valid
             if (!preg_match('/^\d{16}$/', trim($nik))) {
-                $this->line("[SatuSehat Listener] Skip {$uuid} — NIK tidak valid ({$nik})");
+                $this->line('<fg=yellow>  → SKIP: NIK tidak valid (' . $nik . '), tidak bisa sync ke SatuSehat</>');
+                $this->newLine();
                 continue;
             }
 
@@ -135,28 +175,29 @@ class ListenPasienSatuSehat extends Command
             try {
                 SyncPasienToSatuSehat::dispatch($uuid);
                 $jobCount++;
-                $this->line("[SatuSehat Listener] ✓ Dispatched job untuk pasien {$uuid} (NIK: {$nik}) — total: {$jobCount}");
+                $this->line('<fg=green;options=bold>  → ✓ Job SyncPasienToSatuSehat dispatched!</>');
+                $this->line('<fg=green>    UUID  : ' . $uuid . '</>');
+                $this->line('<fg=green>    NIK   : ' . $nik . '</>');
+                $this->line('<fg=green>    Total dispatched: ' . $jobCount . '</>');
             } catch (\Throwable $e) {
-                $this->error("[SatuSehat Listener] Gagal dispatch job untuk {$uuid}: " . $e->getMessage());
+                $this->error('  → ✗ Gagal dispatch job: ' . $e->getMessage());
             }
+
+            $this->newLine();
         }
 
-        $this->info('[SatuSehat Listener] Daemon dihentikan (graceful shutdown).');
+        $this->info('[PASIEN] Daemon dihentikan (graceful shutdown).');
         return self::SUCCESS;
     }
 
     /**
      * Ambil koneksi PDO yang sudah dalam state LISTEN.
      *
-     * Menggunakan $this->listeningPdo sebagai referensi — jika null
-     * (pertama kali atau setelah reconnect), buat koneksi baru dan jalankan LISTEN.
-     *
      * pgsqlGetNotify() HARUS dipanggil pada PDO object yang sama
      * dengan yang menjalankan LISTEN — jadi kita simpan referensinya.
      */
     private function getListeningPdo(): \PDO
     {
-        // Gunakan PDO yang sudah di-LISTEN jika masih valid
         if ($this->listeningPdo !== null) {
             return $this->listeningPdo;
         }
@@ -167,11 +208,10 @@ class ListenPasienSatuSehat extends Command
             throw new \RuntimeException('Koneksi bukan PostgreSQL. LISTEN/NOTIFY hanya didukung PostgreSQL.');
         }
 
-        // Jalankan LISTEN pada koneksi ini — LISTEN bersifat per-session
         $pdo->exec('LISTEN ' . self::CHANNEL);
         $this->listeningPdo = $pdo;
 
-        $this->info('[SatuSehat Listener] LISTEN aktif pada channel: ' . self::CHANNEL);
+        $this->info('[PASIEN] ✓ LISTEN aktif pada channel: ' . self::CHANNEL);
         return $this->listeningPdo;
     }
 }

@@ -2221,6 +2221,49 @@ public function storeLaporanPembedahan(Request $request)
             ], 500);
         }
     }
+    public function listResumeMedisRawatJalan(Request $request)
+    {
+        try {
+            $uuidPasien = $request->input('uuid_pasien');
+            $search     = $request->input('search', '');
+            $limit      = (int) $request->input('limit', 10);
+            $page       = (int) $request->input('page', 1);
+            $offset     = ($page - 1) * $limit;
+
+            $query = DokumenResumeMedisRawatJalan::where('uuid_pasien', $uuidPasien)
+                ->when($search, function ($q) use ($search) {
+                    $q->where(function ($q2) use ($search) {
+                        $q2->where('no_surat', 'ILIKE', "%{$search}%")
+                           ->orWhere('dokter', 'ILIKE', "%{$search}%")
+                           ->orWhere('diagnosa', 'ILIKE', "%{$search}%")
+                           ->orWhere('tanggal_berobat', 'ILIKE', "%{$search}%");
+                    });
+                })
+                ->orderBy('created_at', 'desc');
+
+            $total = $query->count();
+            $data  = $query->offset($offset)->limit($limit)->get();
+
+            return response()->json([
+                'status' => true,
+                'data'   => $data,
+                'pagination' => [
+                    'total'        => $total,
+                    'per_page'     => $limit,
+                    'current_page' => $page,
+                    'from'         => $total > 0 ? $offset + 1 : 0,
+                    'to'           => min($offset + $limit, $total),
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Gagal mengambil data resume medis rawat jalan',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
     public function getResumeMedisRawatJalan(Request $request)
     {
         $data = DokumenResumeMedisRawatJalan::where('uuid_pasien', $request->uuid_pasien)

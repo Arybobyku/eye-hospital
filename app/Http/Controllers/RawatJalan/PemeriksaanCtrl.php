@@ -17,6 +17,7 @@ use App\Jobs\SendPoliJob;
 use App\Models\EdukasiPasien;
 use App\Models\Cppt;
 use Carbon\Carbon;
+use App\Services\SatuSehat\SatuSehatLocationResolver;
 
 class PemeriksaanCtrl extends Controller
 {
@@ -924,6 +925,15 @@ class PemeriksaanCtrl extends Controller
 			$update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 		}
 
+		// ── SatuSehat: simpan Location ID ruang RO (jika belum ada) ──────────
+		if (empty($data->satusehat_location_ro_id)) {
+			$roLocationId = SatuSehatLocationResolver::resolveRo();
+			if ($roLocationId) {
+				Registrasi::where('uuid', '=', $request->uuid)
+					->update(['satusehat_location_ro_id' => $roLocationId]);
+			}
+		}
+
 		$arr = array('status_antrian_ro' => 'active');
 		$update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 
@@ -965,6 +975,15 @@ class PemeriksaanCtrl extends Controller
 		if ($data && $data->last_position != '-') {
 			$arr = array('last_position' => 'Pemeriksaan RO');
 			$update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
+		}
+
+		// ── SatuSehat: simpan Location ID ruang RO (jika belum ada) ──────────
+		if (empty($data->satusehat_location_ro_id)) {
+			$roLocationId = SatuSehatLocationResolver::resolveRo();
+			if ($roLocationId) {
+				Registrasi::where('uuid', '=', $request->uuid)
+					->update(['satusehat_location_ro_id' => $roLocationId]);
+			}
 		}
 
 		$arr = array('status_antrian_ro' => 'active');
@@ -1025,6 +1044,16 @@ class PemeriksaanCtrl extends Controller
 			$arr = array('ro_jam_periksa' => date('H:i'));
 			$update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 		}
+
+		// ── SatuSehat: simpan Location ID ruang RO saat pasien dipanggil ─────
+		if (empty($cek->satusehat_location_ro_id)) {
+			$roLocationId = SatuSehatLocationResolver::resolveRo();
+			if ($roLocationId) {
+				Registrasi::where('uuid', '=', $request->uuid)
+					->update(['satusehat_location_ro_id' => $roLocationId]);
+			}
+		}
+
 		$arr = array('status_antrian_ro' => 'active');
 		$update = Registrasi::where('uuid', '=', $request->uuid)->update($arr);
 

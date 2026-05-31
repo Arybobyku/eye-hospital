@@ -98,7 +98,7 @@ class ApiLogCtrl extends Controller
         }
 
         $total = $query->count();
-        $data  = $query->orderByDesc('created_at')
+        $data  = $query->orderByDesc('id')
                        ->skip($skip)
                        ->take($this->take)
                        ->select([

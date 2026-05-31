@@ -126,6 +126,17 @@ return [
         'emergency' => [
             'path' => storage_path('logs/laravel.log'),
         ],
+
+        // ── SatuSehat dedicated log channel ──────────────────────────────────
+        // Semua log dari job & daemon SatuSehat ditulis ke file terpisah.
+        // Pantau dengan: tail -f storage/logs/satusehat.log
+        'satusehat' => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/satusehat.log'),
+            'level'  => 'debug',
+            'days'   => 30,
+            'replace_placeholders' => true,
+        ],
     ],
 
 ];

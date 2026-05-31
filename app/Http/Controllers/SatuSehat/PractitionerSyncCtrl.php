@@ -83,7 +83,7 @@ class PractitionerSyncCtrl extends Controller
 
         $query = DB::table('pengguna')
             ->where('delete_soft', 1)
-            ->whereRaw("sebagai ILIKE '%dokter%'")
+            // ->whereRaw("sebagai ILIKE '%dokter%'")
             ->select([
                 'uuid', 'nama', 'nik', 'sebagai',
                 'satusehat_ihs_id', 'satusehat_sync_status', 'satusehat_synced_at',
